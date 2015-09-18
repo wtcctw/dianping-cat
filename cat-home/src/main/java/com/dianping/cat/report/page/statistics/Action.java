@@ -11,6 +11,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	SERVICE_REPORT(Constants.REPORT_SERVICE),
 
+	CLIENT_REPORT(Constants.REPORT_CLIENT),
+
 	SERVICE_HISTORY_REPORT("historyService"),
 
 	HEAVY_REPORT(Constants.REPORT_HEAVY),

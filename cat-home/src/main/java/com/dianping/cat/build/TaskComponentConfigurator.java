@@ -76,6 +76,7 @@ import com.dianping.cat.report.page.problem.task.ProblemReportBuilder;
 import com.dianping.cat.report.page.state.service.StateReportService;
 import com.dianping.cat.report.page.state.task.StateReportBuilder;
 import com.dianping.cat.report.page.statistics.service.BugReportService;
+import com.dianping.cat.report.page.statistics.service.ClientReportService;
 import com.dianping.cat.report.page.statistics.service.HeavyReportService;
 import com.dianping.cat.report.page.statistics.service.JarReportService;
 import com.dianping.cat.report.page.statistics.service.ServiceReportService;
@@ -84,6 +85,7 @@ import com.dianping.cat.report.page.statistics.service.UtilizationReportService;
 import com.dianping.cat.report.page.statistics.task.bug.BugReportBuilder;
 import com.dianping.cat.report.page.statistics.task.heavy.HeavyReportBuilder;
 import com.dianping.cat.report.page.statistics.task.jar.JarReportBuilder;
+import com.dianping.cat.report.page.statistics.task.service.ClientReportBuilder;
 import com.dianping.cat.report.page.statistics.task.service.ServiceReportBuilder;
 import com.dianping.cat.report.page.statistics.task.system.SystemReportBuilder;
 import com.dianping.cat.report.page.statistics.task.utilization.UtilizationReportBuilder;
@@ -190,6 +192,9 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TaskBuilder.class, SystemReportBuilder.ID, SystemReportBuilder.class).req(MetricReportService.class,
 		      SystemReportService.class, ProductLineConfigManager.class));
+
+		all.add(C(TaskBuilder.class, ClientReportBuilder.ID, ClientReportBuilder.class).req(ClientReportService.class,
+		      TransactionReportService.class, ServerFilterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, CachedReportBuilder.ID, CachedReportBuilder.class).req(CachedReportTask.class));
 

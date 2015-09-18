@@ -17,7 +17,7 @@ public class SystemReportService extends AbstractReportService<SystemReport> {
 
 	@Override
 	public SystemReport makeReport(String domain, Date start, Date end) {
-		throw new RuntimeException("SystemReportService do not suppot makeReport feature");
+		throw new RuntimeException("System report service do not suppot makeReport feature");
 	}
 
 	@Override
@@ -43,17 +43,17 @@ public class SystemReportService extends AbstractReportService<SystemReport> {
 
 	@Override
 	public SystemReport queryHourlyReport(String domain, Date start, Date end) {
-		throw new RuntimeException("HighloadReportService do not suppot queryHourlyReport feature");
+		throw new RuntimeException("System report service do not suppot queryHourlyReport feature");
 	}
 
 	@Override
 	public SystemReport queryMonthlyReport(String domain, Date start) {
-		throw new RuntimeException("HighloadReportService do not suppot queryMonthlyReport feature");
+		throw new RuntimeException("System report service do not suppot queryMonthlyReport feature");
 	}
 
 	@Override
 	public SystemReport queryWeeklyReport(String domain, Date start) {
-		throw new RuntimeException("HighloadReportService do not suppot queryWeeklyReport feature");
+		throw new RuntimeException("System report service do not suppot queryWeeklyReport feature");
 	}
 
 }

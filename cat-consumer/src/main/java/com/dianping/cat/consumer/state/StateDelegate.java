@@ -67,6 +67,7 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 			m_taskManager.createTask(startTime, domain, Constants.REPORT_ROUTER, TaskProlicy.DAILY);
 			m_taskManager.createTask(startTime, domain, Constants.CACHED_REPORT, TaskProlicy.DAILY);
 			m_taskManager.createTask(startTime, domain, Constants.REPORT_SYSTEM, TaskProlicy.DAILY);
+			m_taskManager.createTask(startTime, domain, Constants.REPORT_CLIENT, TaskProlicy.DAILY);
 			m_taskManager.createTask(startTime, domain, Constants.APP, TaskProlicy.DAILY);
 		}
 		// clear local report

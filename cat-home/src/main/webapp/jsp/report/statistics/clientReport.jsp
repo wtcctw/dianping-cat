@@ -21,15 +21,13 @@
 			<input type="text" id="time" style="width:100px;" value="<fmt:formatDate value='${payload.day}' pattern='yyyy-MM-dd'/>"/>
 			</div>
 			&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
-			&nbsp;&nbsp;&nbsp;&nbsp;
-			<strong class="text-success" style="font-size:large;margin-right:10%">高峰期：16 : 00 - 18 : 00</strong>
 		</div>
 		<br>
-		<%@ include file="systemDetail.jsp"%>
+		<%@ include file="clientDetail.jsp"%>
 		<script type="text/javascript">
 		  $(document).ready(function(){
 			  init();
-			  $('#system_report').addClass("active");
+			  $('#client_report').addClass("active");
 			  $('#time').datetimepicker({
 					format:'Y-m-d',
 					timepicker:false,
@@ -39,7 +37,7 @@
 	      
 	      function queryNew(){
 	        var time=$("#time").val();
-	        window.location.href="?op=system&day="+time;
+	        window.location.href="?op=client&day="+time;
 	      }
 		</script>
 </a:offline>

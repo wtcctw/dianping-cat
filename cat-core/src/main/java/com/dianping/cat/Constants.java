@@ -39,6 +39,8 @@ public class Constants {
 
 	public static final String REPORT_SERVICE = "service";
 
+	public static final String REPORT_CLIENT = "client";
+
 	public static final String REPORT_UTILIZATION = "utilization";
 
 	public static final String REPORT_HEAVY = "heavy";
