@@ -20,11 +20,11 @@
 		<tr>
 			<td>${entry.key}</td>
 			<td>${method.value.id}</td>
-			<td>${w:format(method.value.totalCount,'###,##0')}</td>
-			<td>${w:format(method.value.failureCount,'###,##0')}</td>
-			<td>${w:format(method.value.failurePercent,'0.00')}</td>
-			<td>${w:format(method.value.avg,'###,##0.00')}</td>
-			<td>${w:format(method.value.timeout,'###,##0.0000')}</td>
+			<td>${w:format(method.value.totalCount,'##0')}</td>
+			<td>${w:format(method.value.failureCount,'##0')}</td>
+			<td>${w:format(method.value.failurePercent,'##0.0000')}</td>
+			<td>${w:format(method.value.avg,'##0.00')}</td>
+			<td>${w:format(method.value.timeout,'##0.00')}</td>
 			</tr>
 		</c:forEach>
 	</c:forEach>
