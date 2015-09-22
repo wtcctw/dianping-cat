@@ -58,7 +58,9 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 
 		for (long startTime : startTimes) {
 			if (startTime <= time) {
-				m_reports.remove(startTime);
+				synchronized (m_reports) {
+					m_reports.remove(startTime);
+				}
 			}
 		}
 	}

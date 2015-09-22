@@ -16,6 +16,7 @@ import org.unidal.initialization.ModuleInitializer;
 import org.unidal.lookup.ContainerLoader;
 
 import com.dianping.cat.configuration.client.entity.ClientConfig;
+import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.ForkedTransaction;
@@ -118,6 +119,42 @@ public class Cat {
 			initializer.execute(ctx, module);
 		}
 	}
+	
+	public static void initializeByDomain(String domain, String... servers) {
+      initializeByDomain(domain, 2280, 80, servers);
+  }
+
+  public static void initializeByDomain(String domain, int port, int httpPort, String... servers) {
+      try {
+          File configFile = null;
+          try {
+              configFile = File.createTempFile("cat-client", ".xml");
+          } catch (Exception ex) {
+              String catHome = getCatHome();
+              configFile = File.createTempFile("cat-client", ".xml", new File(catHome));
+              ex.printStackTrace();
+          }
+          ClientConfig config = new ClientConfig().setMode("client");
+
+          if (null != domain) {
+              Domain domainObj = new Domain(domain);
+              domainObj.setEnabled(true);
+              config.addDomain(domainObj);
+          }
+
+          for (String server : servers) {
+              Server serverObj = new Server(server);
+              serverObj.setHttpPort(httpPort);
+              serverObj.setPort(port);
+              config.addServer(serverObj);
+          }
+
+          Files.forIO().writeTo(configFile, config.toString());
+          initialize(configFile);
+      } catch (Exception ex) {
+      	ex.printStackTrace();
+      }
+  }
 
 	public static void initialize(String... servers) {
 		File configFile = null;
