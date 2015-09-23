@@ -30,7 +30,7 @@ public class SenderManager extends ContainerHolder implements Initializable {
 		String channelName = channel.getName();
 
 		try {
-			boolean result = true;
+			boolean result = false;
 			String str = "nosend";
 
 			if (m_configManager.isSendMachine()) {
