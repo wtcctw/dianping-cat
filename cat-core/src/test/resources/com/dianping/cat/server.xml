@@ -2,6 +2,8 @@
 	<storage>
 		<hdfs id="logview" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="logview"/>
 		<hdfs id="dump" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="dump"/>
+		<harfs id="logview" max-size="128M" server-uri="har://hdfs-10.1.77.86/user/cat" base-dir="logview"/>
+		<harfs id="dump" max-size="128M" server-uri="har://hdfs-10.1.77.86/user/cat" base-dir="dump"/>
 		<properties>
 			<property name="hadoop.security.authentication" value="kerberos"/>
 			<property name="dfs.namenode.kerberos.principal" value="hadoop/dev80.hadoop@DIANPING.COM"/>

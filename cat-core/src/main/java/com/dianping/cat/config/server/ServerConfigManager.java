@@ -19,6 +19,7 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.Domain;
+import com.dianping.cat.configuration.server.entity.Harfs;
 import com.dianping.cat.configuration.server.entity.HdfsConfig;
 import com.dianping.cat.configuration.server.entity.LongConfig;
 import com.dianping.cat.configuration.server.entity.Property;
@@ -81,6 +82,48 @@ public class ServerConfigManager implements LogEnabled {
 		}
 
 		return "";
+	}
+
+	public String getHarfsBaseDir(String id) {
+		if (m_config != null) {
+			Harfs harfsConfig = m_config.getStorage().findHarfs(id);
+
+			if (harfsConfig != null) {
+				String baseDir = harfsConfig.getBaseDir();
+
+				if (baseDir != null && baseDir.trim().length() > 0) {
+					return baseDir;
+				}
+			}
+		}
+		return null;
+	}
+
+	public long getHarfsFileMaxSize(String id) {
+		if (m_config != null) {
+			StorageConfig storage = m_config.getStorage();
+			Harfs hdfsConfig = storage.findHarfs(id);
+
+			return toLong(hdfsConfig == null ? null : hdfsConfig.getMaxSize(), DEFAULT_HDFS_FILE_MAX_SIZE);
+		} else {
+			return DEFAULT_HDFS_FILE_MAX_SIZE;
+		}
+	}
+
+	public String getHarfsServerUri(String id) {
+		if (m_config != null) {
+			Harfs hdfsConfig = m_config.getStorage().findHarfs(id);
+
+			if (hdfsConfig != null) {
+				String serverUri = hdfsConfig.getServerUri();
+
+				if (serverUri != null && serverUri.trim().length() > 0) {
+					return serverUri;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	public String getHdfsBaseDir(String id) {
@@ -161,6 +204,16 @@ public class ServerConfigManager implements LogEnabled {
 		return null;
 	}
 
+	public int getHdfsUploadThreadCount() {
+		if (m_config != null) {
+			StorageConfig storage = m_config.getStorage();
+
+			return storage.getUploadThread();
+		} else {
+			return 5;
+		}
+	}
+
 	public int getLocalReportStroageTime() {
 		if (m_config != null) {
 			StorageConfig storage = m_config.getStorage();
@@ -178,16 +231,6 @@ public class ServerConfigManager implements LogEnabled {
 			return storage.getLocalLogivewStorageTime();
 		} else {
 			return 30;
-		}
-	}
-	
-	public int getHdfsUploadThreadCount() {
-		if (m_config != null) {
-			StorageConfig storage = m_config.getStorage();
-
-			return storage.getUploadThread();
-		} else {
-			return 5;
 		}
 	}
 

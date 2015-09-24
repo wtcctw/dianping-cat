@@ -21,10 +21,12 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.PathBuilder;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.storage.MessageBucket;
@@ -43,6 +45,10 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 	private ServerConfigManager m_serverConfigManager;
 
 	private Map<String, HdfsMessageBucket> m_buckets = new ConcurrentHashMap<String, HdfsMessageBucket>();
+
+	public final String HDFS_BUCKET = "HdfsMessageBucket";
+
+	public final String HARFS_BUCKET = "HarfsMessageBucket";
 
 	private void closeIdleBuckets() throws IOException {
 		long now = System.currentTimeMillis();
@@ -88,10 +94,24 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 
 		try {
 			MessageId id = MessageId.parse(messageId);
-			final String path = m_pathBuilder.getLogviewPath(new Date(id.getTimestamp()), "");
+			Date date = new Date(id.getTimestamp());
+			String p = null;
 			final StringBuilder sb = new StringBuilder();
-			FileSystem fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
+			FileSystem fs = null;
 
+			if (date.before(TimeHelper.getCurrentDay())) {
+				((DefaultTransaction) t).setName(HARFS_BUCKET);
+
+				p = m_pathBuilder.getHarLogviewPath(date, "");
+				fs = m_manager.getHarFileSystem(ServerConfigManager.DUMP_DIR, sb);
+			} else {
+				((DefaultTransaction) t).setName(HDFS_BUCKET);
+
+				p = m_pathBuilder.getLogviewPath(date, "");
+				fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
+			}
+
+			final String path = p;
 			sb.append('/').append(path);
 
 			final String key = id.getDomain() + '-' + id.getIpAddress();
@@ -114,7 +134,7 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 			t.addData(paths.toString());
 			for (String dataFile : paths) {
 				try {
-					Cat.getProducer().logEvent("HDFSBucket", dataFile);
+					Cat.logEvent("HDFSBucket", dataFile);
 					HdfsMessageBucket bucket = m_buckets.get(dataFile);
 
 					if (bucket == null) {

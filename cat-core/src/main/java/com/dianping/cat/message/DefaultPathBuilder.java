@@ -6,6 +6,13 @@ import java.util.Date;
 public class DefaultPathBuilder implements PathBuilder {
 
 	@Override
+	public String getHarLogviewPath(Date timestamp, String name) {
+		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}.har/{0,date,HH}/{1}");
+
+		return format.format(new Object[] { timestamp, name });
+	}
+
+	@Override
 	public String getLogviewPath(Date timestamp, String name) {
 		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/{1}");
 

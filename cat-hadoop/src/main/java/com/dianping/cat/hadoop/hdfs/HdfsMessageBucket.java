@@ -80,7 +80,13 @@ public class HdfsMessageBucket implements MessageBucket {
 
 		public MessageBlockReader(FileSystemManager manager, String dataFile) throws IOException {
 			StringBuilder sb = new StringBuilder();
-			FileSystem fs = manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
+			FileSystem fs = null;
+
+			if (dataFile.contains(".har")) {
+				fs = manager.getHarFileSystem(ServerConfigManager.DUMP_DIR, sb);
+			} else {
+				fs = manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
+			}
 			Path basePath = new Path(sb.toString());
 
 			m_indexFile = fs.open(new Path(basePath, dataFile + ".idx"));
@@ -131,5 +137,5 @@ public class HdfsMessageBucket implements MessageBucket {
 			}
 		}
 	}
-	
+
 }

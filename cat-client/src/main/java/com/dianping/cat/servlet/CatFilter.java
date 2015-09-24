@@ -268,10 +268,18 @@ public class CatFilter implements Filter {
 			}
 
 			private void customizeUri(Transaction t, HttpServletRequest req) {
-				Object catPageUri = req.getAttribute(CatConstants.CAT_PAGE_URI);
+				if (t instanceof DefaultTransaction) {
+					Object catPageType = req.getAttribute(CatConstants.CAT_PAGE_TYPE);
 
-				if (t instanceof DefaultTransaction && catPageUri instanceof String) {
-					((DefaultTransaction) t).setName(catPageUri.toString());
+					if (catPageType instanceof String) {
+						((DefaultTransaction) t).setType(catPageType.toString());
+					}
+
+					Object catPageUri = req.getAttribute(CatConstants.CAT_PAGE_URI);
+
+					if (catPageUri instanceof String) {
+						((DefaultTransaction) t).setName(catPageUri.toString());
+					}
 				}
 			}
 
