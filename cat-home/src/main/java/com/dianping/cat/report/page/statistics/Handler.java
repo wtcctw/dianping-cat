@@ -38,6 +38,7 @@ import com.dianping.cat.home.heavy.entity.HeavySql;
 import com.dianping.cat.home.heavy.entity.Service;
 import com.dianping.cat.home.heavy.entity.Url;
 import com.dianping.cat.home.jar.entity.JarReport;
+import com.dianping.cat.home.service.client.entity.ClientReport;
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.system.entity.SystemReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
@@ -46,6 +47,7 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
 import com.dianping.cat.report.page.statistics.config.BugConfigManager;
 import com.dianping.cat.report.page.statistics.service.BugReportService;
+import com.dianping.cat.report.page.statistics.service.ClientReportService;
 import com.dianping.cat.report.page.statistics.service.HeavyReportService;
 import com.dianping.cat.report.page.statistics.service.JarReportService;
 import com.dianping.cat.report.page.statistics.service.ServiceReportService;
@@ -75,6 +77,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ServiceReportService m_serviceReportService;
+
+	@Inject
+	private ClientReportService m_clientReportService;
 
 	@Inject
 	private JarReportService m_jarReportService;
@@ -239,9 +244,20 @@ public class Handler implements PageHandler<Context> {
 		case SYSTREM_REPORT:
 			buildSystemReport(model, payload);
 			break;
+		case CLIENT_REPORT:
+			buildClientReport(model, payload);
+			break;
 		}
 		model.setPage(ReportPage.STATISTICS);
 		m_jspViewer.view(ctx, model);
+	}
+
+	private void buildClientReport(Model model, Payload payload) {
+		Date startDate = payload.getDay();
+		Date endDate = TimeHelper.addDays(startDate, 1);
+		ClientReport report = m_clientReportService.queryReport(Constants.CAT, startDate, endDate);
+
+		model.setClientReport(report);
 	}
 
 	private boolean isBug(String domain, String exception) {

@@ -67,6 +67,14 @@
 					</li>
 				</ul>
 				<ul class="nav  nav-list" style="top: 0px;">
+					<li id="client_report" >
+						<a href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=client">
+							<i class="menu-icon fa  fa-exchange"></i>
+							<span class="menu-text">服务调用排行</span>
+						</a>
+					</li>
+				</ul>
+				<ul class="nav  nav-list" style="top: 0px;">
 					<li id="utilization_report" >
 						<a href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=utilization">
 							<i class="menu-icon  fa fa-glass"></i>

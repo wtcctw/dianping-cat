@@ -16,6 +16,7 @@ import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.heavy.entity.Service;
 import com.dianping.cat.home.heavy.entity.Url;
 import com.dianping.cat.home.jar.entity.JarReport;
+import com.dianping.cat.home.service.client.entity.ClientReport;
 import com.dianping.cat.home.service.entity.Domain;
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.system.entity.SystemReport;
@@ -46,6 +47,9 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	@EntityMeta
 	private SystemReport m_systemReport;
+
+	@EntityMeta
+	private ClientReport m_clientReport;
 
 	@EntityMeta
 	private UtilizationReport m_utilizationReport;
@@ -104,6 +108,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public List<Url> getCallUrls() {
 		return m_callUrls;
+	}
+
+	public ClientReport getClientReport() {
+		return m_clientReport;
 	}
 
 	@Override
@@ -207,6 +215,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setCallUrls(List<Url> callUrls) {
 		m_callUrls = callUrls;
+	}
+
+	public void setClientReport(ClientReport clientReport) {
+		m_clientReport = clientReport;
 	}
 
 	public void setErrorStatis(Map<String, ErrorStatis> errorStatis) {

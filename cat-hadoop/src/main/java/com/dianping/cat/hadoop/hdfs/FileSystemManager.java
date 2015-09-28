@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.HarFileSystem;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -24,10 +25,16 @@ public class FileSystemManager implements Initializable {
 
 	private Map<String, FileSystem> m_fileSystems = new HashMap<String, FileSystem>();
 
+	private Map<String, HarFileSystem> m_harFileSystems = new HashMap<String, HarFileSystem>();
+
 	private Configuration m_config;
 
 	public long getFileMaxSize(String id) {
 		return m_configManager.getHdfsFileMaxSize(id);
+	}
+
+	public long getHarFileMaxSize(String id) {
+		return m_configManager.getHarfsFileMaxSize(id);
 	}
 
 	public FileSystem getFileSystem(String id, StringBuilder basePath) throws IOException {
@@ -54,6 +61,42 @@ public class FileSystemManager implements Initializable {
 				URI uri = URI.create(serverUri);
 				fs = FileSystem.get(uri, m_config);
 				m_fileSystems.put(id, fs);
+			}
+
+			if (baseDir == null) {
+				basePath.append(id);
+			} else {
+				basePath.append(baseDir);
+			}
+		}
+
+		return fs;
+	}
+
+	public HarFileSystem getHarFileSystem(String id, StringBuilder basePath) throws IOException {
+		String serverUri = m_configManager.getHarfsServerUri(id);
+		String baseDir = m_configManager.getHarfsBaseDir(id);
+		HarFileSystem fs = m_harFileSystems.get(id);
+
+		if (serverUri == null || !serverUri.startsWith("har:")) {
+			// no config found, use local HDFS
+			if (fs == null) {
+				fs = new HarFileSystem(FileSystem.getLocal(m_config));
+				m_harFileSystems.put(id, fs);
+			}
+
+			basePath.append(m_defaultBaseDir).append("/");
+
+			if (baseDir == null) {
+				basePath.append(id);
+			} else {
+				basePath.append(baseDir);
+			}
+		} else {
+			if (fs == null) {
+				URI uri = URI.create(serverUri);
+				fs = new HarFileSystem(FileSystem.get(uri, m_config));
+				m_harFileSystems.put(id, fs);
 			}
 
 			if (baseDir == null) {
