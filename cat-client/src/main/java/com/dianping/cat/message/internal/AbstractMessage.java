@@ -1,12 +1,6 @@
 package com.dianping.cat.message.internal;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
-
-import java.nio.charset.Charset;
-
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 
 public abstract class AbstractMessage implements Message {
 	private String m_type;
@@ -125,13 +119,4 @@ public abstract class AbstractMessage implements Message {
 		m_type = type;
 	}
 
-	@Override
-	public String toString() {
-		PlainTextMessageCodec codec = new PlainTextMessageCodec();
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer();
-
-		codec.encodeMessage(this, buf);
-		codec.reset();
-		return buf.toString(Charset.forName("utf-8"));
-	}
 }

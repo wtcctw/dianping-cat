@@ -112,7 +112,7 @@ public final class TcpSocketReceiver implements LogEnabled {
 		bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
 		bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
 		bootstrap.childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
-
+		
 		try {
 			m_future = bootstrap.bind(port).sync();
 			m_logger.info("start netty server!");
