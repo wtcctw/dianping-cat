@@ -20,7 +20,7 @@ import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
+import com.dianping.cat.hadoop.hdfs.bucket.HdfsMessageBucketManager;
 import com.dianping.cat.message.codec.HtmlMessageCodec;
 import com.dianping.cat.message.codec.WaterfallMessageCodec;
 import com.dianping.cat.message.spi.MessageCodec;

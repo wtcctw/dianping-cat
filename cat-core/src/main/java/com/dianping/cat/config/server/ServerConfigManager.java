@@ -312,6 +312,14 @@ public class ServerConfigManager implements LogEnabled {
 		return StringUtils.isNotEmpty(type) && type.startsWith("Cache.memcached");
 	}
 
+	public boolean isHarMode() {
+		if (m_config != null) {
+			return m_config.getStorage().isHarMode();
+		} else {
+			return false;
+		}
+	}
+
 	public boolean isHdfsOn() {
 		if (m_config != null) {
 			return m_config.getHdfsMachine();

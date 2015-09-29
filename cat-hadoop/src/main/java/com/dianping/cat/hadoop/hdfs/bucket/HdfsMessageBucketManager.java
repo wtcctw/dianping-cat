@@ -1,4 +1,4 @@
-package com.dianping.cat.hadoop.hdfs;
+package com.dianping.cat.hadoop.hdfs.bucket;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,10 +21,10 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.PathBuilder;
-import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.internal.MessageId;
@@ -33,6 +33,7 @@ import com.dianping.cat.message.storage.MessageBucket;
 import com.dianping.cat.message.storage.MessageBucketManager;
 
 public class HdfsMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable {
+
 	public static final String ID = "hdfs";
 
 	@Inject
@@ -44,19 +45,19 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
 
-	private Map<String, HdfsMessageBucket> m_buckets = new ConcurrentHashMap<String, HdfsMessageBucket>();
+	private Map<String, MessageBucket> m_buckets = new ConcurrentHashMap<String, MessageBucket>();
 
-	public final String HDFS_BUCKET = "HdfsMessageBucket";
+	public static final String HDFS_BUCKET = "HdfsMessageBucket";
 
-	public final String HARFS_BUCKET = "HarfsMessageBucket";
+	public static final String HARFS_BUCKET = "HarfsMessageBucket";
 
 	private void closeIdleBuckets() throws IOException {
 		long now = System.currentTimeMillis();
 		long hour = 3600 * 1000L;
 		Set<String> closed = new HashSet<String>();
 
-		for (Map.Entry<String, HdfsMessageBucket> entry : m_buckets.entrySet()) {
-			HdfsMessageBucket bucket = entry.getValue();
+		for (Map.Entry<String, MessageBucket> entry : m_buckets.entrySet()) {
+			MessageBucket bucket = entry.getValue();
 
 			if (now - bucket.getLastAccessTime() >= hour) {
 				try {
@@ -68,10 +69,49 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 			}
 		}
 		for (String close : closed) {
-			HdfsMessageBucket bucket = m_buckets.remove(close);
+			MessageBucket bucket = m_buckets.remove(close);
 
 			release(bucket);
 		}
+	}
+
+	private List<String> filterFiles(final MessageId id, Transaction t) throws Exception {
+		final List<String> paths = new ArrayList<String>();
+		Date date = new Date(id.getTimestamp());
+		final StringBuilder sb = new StringBuilder();
+		FileSystem fs = null;
+		String p = "";
+
+		if (m_serverConfigManager.isHarMode() && date.before(TimeHelper.getCurrentDay())) {
+			((DefaultTransaction) t).setName(HARFS_BUCKET);
+
+			p = m_pathBuilder.getHarLogviewPath(date, "");
+			fs = m_manager.getHarFileSystem(ServerConfigManager.DUMP_DIR, date);
+		} else {
+			((DefaultTransaction) t).setName(HDFS_BUCKET);
+
+			p = m_pathBuilder.getLogviewPath(date, "");
+			fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
+		}
+
+		final String path = p;
+		sb.append(path);
+
+		final Path basePath = new Path(sb.toString());
+		final String key = id.getDomain() + '-' + id.getIpAddress();
+
+		fs.listStatus(basePath, new PathFilter() {
+			@Override
+			public boolean accept(Path p) {
+				String name = p.getName();
+
+				if (name.contains(key) && !name.endsWith(".idx")) {
+					paths.add(path + name);
+				}
+				return false;
+			}
+		});
+		return paths;
 	}
 
 	@Override
@@ -87,60 +127,30 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 			return null;
 		}
 
-		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction("BucketService", getClass().getSimpleName());
-
+		Transaction t = Cat.newTransaction("BucketService", getClass().getSimpleName());
 		t.setStatus(Message.SUCCESS);
 
 		try {
 			MessageId id = MessageId.parse(messageId);
 			Date date = new Date(id.getTimestamp());
-			String p = null;
-			final StringBuilder sb = new StringBuilder();
-			FileSystem fs = null;
-
-			if (date.before(TimeHelper.getCurrentDay())) {
-				((DefaultTransaction) t).setName(HARFS_BUCKET);
-
-				p = m_pathBuilder.getHarLogviewPath(date, "");
-				fs = m_manager.getHarFileSystem(ServerConfigManager.DUMP_DIR, sb);
-			} else {
-				((DefaultTransaction) t).setName(HDFS_BUCKET);
-
-				p = m_pathBuilder.getLogviewPath(date, "");
-				fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
-			}
-
-			final String path = p;
-			sb.append('/').append(path);
-
-			final String key = id.getDomain() + '-' + id.getIpAddress();
-			final String str = sb.toString();
-			final Path basePath = new Path(str);
-			final List<String> paths = new ArrayList<String>();
-
-			fs.listStatus(basePath, new PathFilter() {
-				@Override
-				public boolean accept(Path p) {
-					String name = p.getName();
-
-					if (name.contains(key) && !name.endsWith(".idx")) {
-						paths.add(path + name);
-					}
-					return false;
-				}
-			});
+			final List<String> paths = filterFiles(id, t);
 
 			t.addData(paths.toString());
 			for (String dataFile : paths) {
 				try {
-					Cat.logEvent("HDFSBucket", dataFile);
-					HdfsMessageBucket bucket = m_buckets.get(dataFile);
+					String type = t.getName();
+					StringBuilder sb = new StringBuilder();
+
+					sb.append(type).append("-").append(date.toString()).append("-").append(dataFile);
+					String bKey = sb.toString();
+
+					Cat.logEvent(type, bKey);
+					MessageBucket bucket = m_buckets.get(bKey);
 
 					if (bucket == null) {
-						bucket = (HdfsMessageBucket) lookup(MessageBucket.class, HdfsMessageBucket.ID);
-						bucket.initialize(dataFile);
-						m_buckets.put(dataFile, bucket);
+						bucket = lookup(MessageBucket.class, type);
+						bucket.initialize(dataFile, date);
+						m_buckets.put(bKey, bucket);
 					}
 					if (bucket != null) {
 						MessageTree tree = bucket.findById(messageId);
@@ -157,11 +167,14 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 			}
 		} catch (IOException e) {
 			t.setStatus(e);
-			cat.logError(e);
+			Cat.logError(e);
 		} catch (RuntimeException e) {
 			t.setStatus(e);
-			cat.logError(e);
+			Cat.logError(e);
 			throw e;
+		} catch (Exception e) {
+			t.setStatus(e);
+			Cat.logError(e);
 		} finally {
 			t.complete();
 		}
@@ -200,4 +213,5 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 		public void shutdown() {
 		}
 	}
+
 }

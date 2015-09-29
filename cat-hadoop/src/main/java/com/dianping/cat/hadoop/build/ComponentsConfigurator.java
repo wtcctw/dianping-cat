@@ -8,9 +8,10 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
-import com.dianping.cat.hadoop.hdfs.HdfsMessageBucket;
-import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
 import com.dianping.cat.hadoop.hdfs.HdfsUploader;
+import com.dianping.cat.hadoop.hdfs.bucket.HarfsMessageBucket;
+import com.dianping.cat.hadoop.hdfs.bucket.HdfsMessageBucket;
+import com.dianping.cat.hadoop.hdfs.bucket.HdfsMessageBucketManager;
 import com.dianping.cat.message.PathBuilder;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
@@ -36,6 +37,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .is(PER_LOOKUP) //
 		      .req(FileSystemManager.class) //
 		      .req(MessageCodec.class, PlainTextMessageCodec.ID));
+
+		all.add(C(MessageBucket.class, HarfsMessageBucket.ID, HarfsMessageBucket.class) //
+		      .is(PER_LOOKUP) //
+		      .req(FileSystemManager.class) //
+		      .req(MessageCodec.class, PlainTextMessageCodec.ID));
+		
 		all.add(C(MessageBucketManager.class, HdfsMessageBucketManager.ID, HdfsMessageBucketManager.class) //
 		      .req(FileSystemManager.class, ServerConfigManager.class) //
 		      .req(PathBuilder.class));

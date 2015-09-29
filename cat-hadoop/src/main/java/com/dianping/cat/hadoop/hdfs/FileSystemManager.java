@@ -2,6 +2,7 @@ package com.dianping.cat.hadoop.hdfs;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public class FileSystemManager implements Initializable {
 
 	private Map<String, FileSystem> m_fileSystems = new HashMap<String, FileSystem>();
 
-	private Map<String, HarFileSystem> m_harFileSystems = new HashMap<String, HarFileSystem>();
+	private Map<String, HarfsPoolManager> m_harFileSystems = new HashMap<String, HarfsPoolManager>();
 
 	private Configuration m_config;
 
@@ -68,45 +69,22 @@ public class FileSystemManager implements Initializable {
 			} else {
 				basePath.append(baseDir);
 			}
+			basePath.append("/");
 		}
 
 		return fs;
 	}
 
-	public HarFileSystem getHarFileSystem(String id, StringBuilder basePath) throws IOException {
-		String serverUri = m_configManager.getHarfsServerUri(id);
-		String baseDir = m_configManager.getHarfsBaseDir(id);
-		HarFileSystem fs = m_harFileSystems.get(id);
+	public HarFileSystem getHarFileSystem(String id, Date date) throws IOException {
+		FileSystem fs = getFileSystem(id, new StringBuilder());
+		HarfsPoolManager harfsPoolManager = m_harFileSystems.get(id);
 
-		if (serverUri == null || !serverUri.startsWith("har:")) {
-			// no config found, use local HDFS
-			if (fs == null) {
-				fs = new HarFileSystem(FileSystem.getLocal(m_config));
-				m_harFileSystems.put(id, fs);
-			}
-
-			basePath.append(m_defaultBaseDir).append("/");
-
-			if (baseDir == null) {
-				basePath.append(id);
-			} else {
-				basePath.append(baseDir);
-			}
-		} else {
-			if (fs == null) {
-				URI uri = URI.create(serverUri);
-				fs = new HarFileSystem(FileSystem.get(uri, m_config));
-				m_harFileSystems.put(id, fs);
-			}
-
-			if (baseDir == null) {
-				basePath.append(id);
-			} else {
-				basePath.append(baseDir);
-			}
+		if (harfsPoolManager == null) {
+			harfsPoolManager = new HarfsPoolManager(m_configManager);
+			m_harFileSystems.put(id, harfsPoolManager);
 		}
 
-		return fs;
+		return harfsPoolManager.getHarfsConnection(id, date, fs);
 	}
 
 	// prepare file /etc/krb5.conf
@@ -165,5 +143,9 @@ public class FileSystemManager implements Initializable {
 		} else {
 			m_config = new Configuration();
 		}
+	}
+
+	public Configuration getConfig() {
+		return m_config;
 	}
 }

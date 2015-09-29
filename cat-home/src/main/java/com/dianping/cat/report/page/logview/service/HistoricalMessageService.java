@@ -8,7 +8,7 @@ import java.nio.charset.Charset;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
+import com.dianping.cat.hadoop.hdfs.bucket.HdfsMessageBucketManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.codec.HtmlMessageCodec;

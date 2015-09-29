@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
 
@@ -154,6 +155,11 @@ public class LocalMessageBucket implements MessageBucket {
 				return null;
 			}
 		}
+	}
+
+	@Override
+	public void initialize(String dataFile, Date date) throws IOException {
+		initialize(dataFile);
 	}
 
 }
