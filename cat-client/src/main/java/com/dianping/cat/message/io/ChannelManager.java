@@ -29,7 +29,7 @@ import org.unidal.tuple.Pair;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.KVConfig;
 import com.dianping.cat.message.internal.MessageIdFactory;
-import com.dianping.cat.message.spi.MessageQueue;
+import com.dianping.cat.message.spi.MessageQueueHandler;
 import com.site.helper.JsonBuilder;
 
 public class ChannelManager implements Task {
@@ -48,7 +48,7 @@ public class ChannelManager implements Task {
 
 	private volatile double m_sample = 1d;
 
-	private MessageQueue m_queue;
+	private MessageQueueHandler m_handler;
 
 	private ChannelHolder m_activeChannelHolder;
 
@@ -56,10 +56,10 @@ public class ChannelManager implements Task {
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
-	public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses, MessageQueue queue,
+	public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses, MessageQueueHandler handler,
 	      ClientConfigManager configManager, MessageIdFactory idFactory) {
 		m_logger = logger;
-		m_queue = queue;
+		m_handler = handler;
 		m_configManager = configManager;
 		m_idfactory = idFactory;
 
@@ -256,7 +256,7 @@ public class ChannelManager implements Task {
 	private boolean isChannelStalled(ChannelFuture activeFuture) {
 		m_retriedTimes++;
 
-		int size = m_queue.size();
+		int size = m_handler.getSize();
 		boolean stalled = activeFuture != null && size >= TcpSocketSender.SIZE - 10;
 
 		if (stalled) {

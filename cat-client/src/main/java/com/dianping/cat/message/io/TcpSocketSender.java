@@ -21,12 +21,13 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.spi.MessageCodec;
-import com.dianping.cat.message.spi.MessageQueue;
+import com.dianping.cat.message.spi.MessageQueueHandler;
 import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class TcpSocketSender implements Task, MessageSender, LogEnabled {
+
 	public static final String ID = "tcp-socket-sender";
 
 	public static final int SIZE = 5000;
@@ -43,9 +44,9 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	@Inject
 	private MessageIdFactory m_factory;
 
-	private MessageQueue m_queue = new DefaultMessageQueue(SIZE);
+	private MessageQueueHandler m_queueHandler;
 
-	private MessageQueue m_atomicTrees = new DefaultMessageQueue(SIZE);
+	private MessageQueueHandler m_atomicTreeHandler;
 
 	private List<InetSocketAddress> m_serverAddresses;
 
@@ -92,7 +93,9 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	@Override
 	public void initialize() {
-		m_manager = new ChannelManager(m_logger, m_serverAddresses, m_queue, m_configManager, m_factory);
+		m_queueHandler = new MessageQueueHandler(SIZE, m_factory);
+		m_atomicTreeHandler = new MessageQueueHandler(SIZE, m_factory);
+		m_manager = new ChannelManager(m_logger, m_serverAddresses, m_queueHandler, m_configManager, m_factory);
 
 		Threads.forGroup("cat").start(this);
 		Threads.forGroup("cat").start(m_manager);
@@ -129,10 +132,10 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		tree = null;
 	}
 
-	private MessageTree mergeTree(MessageQueue trees) {
+	private MessageTree mergeTree(MessageQueueHandler handler) {
 		int max = MAX_CHILD_NUMBER;
 		DefaultTransaction tran = new DefaultTransaction("_CatMergeTree", "_CatMergeTree", null);
-		MessageTree first = trees.poll();
+		MessageTree first = handler.poll();
 
 		tran.setStatus(Transaction.SUCCESS);
 		tran.setCompleted(true);
@@ -140,7 +143,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		tran.addChild(first.getMessage());
 
 		while (max >= 0) {
-			MessageTree tree = trees.poll();
+			MessageTree tree = handler.poll();
 
 			if (tree == null) {
 				break;
@@ -162,7 +165,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 			if (channel != null && checkWritable(channel)) {
 				try {
-					MessageTree tree = m_queue.poll();
+					MessageTree tree = m_queueHandler.poll();
 
 					if (tree != null) {
 						sendInternal(tree);
@@ -186,13 +189,13 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	@Override
 	public void send(MessageTree tree) {
 		if (isAtomicMessage(tree)) {
-			boolean result = m_atomicTrees.offer(tree, m_manager.getSample());
+			boolean result = m_atomicTreeHandler.offer(tree, m_manager.getSample());
 
 			if (!result) {
 				logQueueFullInfo(tree);
 			}
 		} else {
-			boolean result = m_queue.offer(tree, m_manager.getSample());
+			boolean result = m_queueHandler.offer(tree, m_manager.getSample());
 
 			if (!result) {
 				logQueueFullInfo(tree);
@@ -219,14 +222,14 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		m_serverAddresses = serverAddresses;
 	}
 
-	private boolean shouldMerge(MessageQueue trees) {
-		MessageTree tree = trees.peek();
+	private boolean shouldMerge(MessageQueueHandler handler) {
+		MessageTree tree = handler.peek();
 
 		if (tree != null) {
 			long firstTime = tree.getMessage().getTimestamp();
 			int maxDuration = 1000 * 30;
 
-			if (System.currentTimeMillis() - firstTime > maxDuration || trees.size() >= MAX_CHILD_NUMBER) {
+			if (System.currentTimeMillis() - firstTime > maxDuration || handler.getSize() >= MAX_CHILD_NUMBER) {
 				return true;
 			}
 		}
@@ -249,9 +252,9 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		@Override
 		public void run() {
 			while (true) {
-				if (shouldMerge(m_atomicTrees)) {
-					MessageTree tree = mergeTree(m_atomicTrees);
-					boolean result = m_queue.offer(tree);
+				if (shouldMerge(m_atomicTreeHandler)) {
+					MessageTree tree = mergeTree(m_atomicTreeHandler);
+					boolean result = m_queueHandler.offer(tree);
 
 					if (!result) {
 						logQueueFullInfo(tree);
@@ -270,5 +273,4 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		public void shutdown() {
 		}
 	}
-
 }

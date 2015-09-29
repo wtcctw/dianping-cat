@@ -26,7 +26,7 @@ public class FileSystemManager implements Initializable {
 
 	private Map<String, FileSystem> m_fileSystems = new HashMap<String, FileSystem>();
 
-	private Map<String, HarConnectionPool> m_harFileSystems = new HashMap<String, HarConnectionPool>();
+	private Map<String, HarConnectionPool> m_harConnPools = new HashMap<String, HarConnectionPool>();
 
 	private Configuration m_config;
 
@@ -77,11 +77,11 @@ public class FileSystemManager implements Initializable {
 
 	public HarFileSystem getHarFileSystem(String id, Date date) throws IOException {
 		FileSystem fs = getFileSystem(id, new StringBuilder());
-		HarConnectionPool harPool = m_harFileSystems.get(id);
+		HarConnectionPool harPool = m_harConnPools.get(id);
 
 		if (harPool == null) {
 			harPool = new HarConnectionPool(m_configManager);
-			m_harFileSystems.put(id, harPool);
+			m_harConnPools.put(id, harPool);
 		}
 
 		return harPool.getHarfsConnection(id, date, fs);
