@@ -151,7 +151,7 @@ public class ServerConfigManager implements LogEnabled {
 			return DEFAULT_HDFS_FILE_MAX_SIZE;
 		}
 	}
-
+	
 	public String getHdfsLocalBaseDir(String id) {
 		if (m_config != null) {
 			StorageConfig storage = m_config.getStorage();
