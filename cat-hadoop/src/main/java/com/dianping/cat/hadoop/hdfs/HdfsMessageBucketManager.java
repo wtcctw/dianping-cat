@@ -1,4 +1,4 @@
-package com.dianping.cat.hadoop.hdfs.bucket;
+package com.dianping.cat.hadoop.hdfs;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +21,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.PathBuilder;

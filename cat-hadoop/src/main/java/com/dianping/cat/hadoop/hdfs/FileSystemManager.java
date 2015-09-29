@@ -26,7 +26,7 @@ public class FileSystemManager implements Initializable {
 
 	private Map<String, FileSystem> m_fileSystems = new HashMap<String, FileSystem>();
 
-	private Map<String, HarfsPoolManager> m_harFileSystems = new HashMap<String, HarfsPoolManager>();
+	private Map<String, HarConnectionPool> m_harFileSystems = new HashMap<String, HarConnectionPool>();
 
 	private Configuration m_config;
 
@@ -77,14 +77,14 @@ public class FileSystemManager implements Initializable {
 
 	public HarFileSystem getHarFileSystem(String id, Date date) throws IOException {
 		FileSystem fs = getFileSystem(id, new StringBuilder());
-		HarfsPoolManager harfsPoolManager = m_harFileSystems.get(id);
+		HarConnectionPool harPool = m_harFileSystems.get(id);
 
-		if (harfsPoolManager == null) {
-			harfsPoolManager = new HarfsPoolManager(m_configManager);
-			m_harFileSystems.put(id, harfsPoolManager);
+		if (harPool == null) {
+			harPool = new HarConnectionPool(m_configManager);
+			m_harFileSystems.put(id, harPool);
 		}
 
-		return harfsPoolManager.getHarfsConnection(id, date, fs);
+		return harPool.getHarfsConnection(id, date, fs);
 	}
 
 	// prepare file /etc/krb5.conf

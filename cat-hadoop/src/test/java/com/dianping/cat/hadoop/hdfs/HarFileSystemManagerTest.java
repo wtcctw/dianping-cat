@@ -8,7 +8,6 @@ import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.hadoop.hdfs.bucket.HdfsMessageBucketManager;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.storage.MessageBucketManager;
 

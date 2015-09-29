@@ -6,6 +6,7 @@ import java.util.Date;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
+import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
 import com.dianping.cat.hadoop.hdfs.MessageBlockReader;
 
 public class HdfsMessageBucket extends AbstractHdfsMessageBucket {

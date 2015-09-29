@@ -8,10 +8,10 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
+import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
 import com.dianping.cat.hadoop.hdfs.HdfsUploader;
 import com.dianping.cat.hadoop.hdfs.bucket.HarfsMessageBucket;
 import com.dianping.cat.hadoop.hdfs.bucket.HdfsMessageBucket;
-import com.dianping.cat.hadoop.hdfs.bucket.HdfsMessageBucketManager;
 import com.dianping.cat.message.PathBuilder;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;

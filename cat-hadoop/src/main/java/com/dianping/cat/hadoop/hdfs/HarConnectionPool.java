@@ -13,13 +13,13 @@ import org.apache.hadoop.fs.HarFileSystem;
 
 import com.dianping.cat.config.server.ServerConfigManager;
 
-public class HarfsPoolManager {
+public class HarConnectionPool {
 
 	private ServerConfigManager m_serverConfigManager;
 
 	private MessageFormat m_format = new MessageFormat("{0}/{1}/{2,date,yyyyMMdd}.har");
 
-	private Map<Date, HarFileSystem> m_harfses = new LinkedHashMap<Date, HarFileSystem>() {
+	private Map<Date, HarFileSystem> m_hars = new LinkedHashMap<Date, HarFileSystem>() {
 
 		private static final long serialVersionUID = 1L;
 
@@ -30,7 +30,7 @@ public class HarfsPoolManager {
 
 	};
 
-	public HarfsPoolManager(ServerConfigManager manager) {
+	public HarConnectionPool(ServerConfigManager manager) {
 		m_serverConfigManager = manager;
 	}
 
@@ -38,7 +38,7 @@ public class HarfsPoolManager {
 		String serverUri = m_serverConfigManager.getHarfsServerUri(id);
 		String baseUri = m_serverConfigManager.getHarfsBaseDir(id);
 		String harUri = m_format.format(new Object[] { serverUri, baseUri, date });
-		HarFileSystem har = m_harfses.get(date);
+		HarFileSystem har = m_hars.get(date);
 
 		if (har == null) {
 			synchronized (this) {
@@ -47,7 +47,7 @@ public class HarfsPoolManager {
 					har = new HarFileSystem(fs);
 
 					har.initialize(uri, har.getConf());
-					m_harfses.put(date, har);
+					m_hars.put(date, har);
 				}
 			}
 		}
