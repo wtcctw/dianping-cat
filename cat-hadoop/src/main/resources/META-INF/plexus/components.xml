@@ -54,7 +54,7 @@
 		<component>
 			<role>com.dianping.cat.message.storage.MessageBucketManager</role>
 			<role-hint>hdfs</role-hint>
-			<implementation>com.dianping.cat.hadoop.hdfs.bucket.HdfsMessageBucketManager</implementation>
+			<implementation>com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
