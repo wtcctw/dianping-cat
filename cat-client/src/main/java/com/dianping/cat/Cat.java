@@ -219,7 +219,7 @@ public class Cat {
 	public static void logMetricForCount(String name) {
 		logMetricInternal(name, "C", "1");
 	}
-
+	
 	/**
 	 * Increase the counter specified by <code>name</code> by one.
 	 * 
