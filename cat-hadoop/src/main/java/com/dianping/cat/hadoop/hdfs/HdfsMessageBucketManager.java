@@ -21,7 +21,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.PathBuilder;
 import com.dianping.cat.message.Transaction;
@@ -74,42 +73,62 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 		}
 	}
 
-	private List<String> filterFiles(final MessageId id, Transaction t) throws Exception {
+	private List<String> filterFiles(FileSystem fs, MessageId id, final String base, final String path) {
+		final List<String> paths = new ArrayList<String>();
+
+		try {
+			final Path basePath = new Path(base + path);
+			final String key = id.getDomain() + '-' + id.getIpAddress();
+
+			if (fs != null) {
+				fs.listStatus(basePath, new PathFilter() {
+					@Override
+					public boolean accept(Path p) {
+						String name = p.getName();
+
+						if (name.contains(key) && !name.endsWith(".idx")) {
+							paths.add(path + name);
+						}
+						return false;
+					}
+				});
+			}
+		} catch (IOException e) {
+			Cat.logError(e);
+		}
+		return paths;
+	}
+
+	private List<String> filterFiles(final MessageId id, Transaction t) {
 		final List<String> paths = new ArrayList<String>();
 		Date date = new Date(id.getTimestamp());
 		final StringBuilder sb = new StringBuilder();
 		FileSystem fs = null;
 		String p = "";
 
-		if (m_serverConfigManager.isHarMode() && date.before(TimeHelper.getCurrentDay())) {
-			((DefaultTransaction) t).setName(HARFS_BUCKET);
+		if (m_serverConfigManager.isHarMode()) {
+			try {
+				p = m_pathBuilder.getHarLogviewPath(date, "");
+				fs = m_manager.getHarFileSystem(ServerConfigManager.DUMP_DIR, date);
 
-			p = m_pathBuilder.getHarLogviewPath(date, "");
-			fs = m_manager.getHarFileSystem(ServerConfigManager.DUMP_DIR, date);
-		} else {
-			((DefaultTransaction) t).setName(HDFS_BUCKET);
-
-			p = m_pathBuilder.getLogviewPath(date, "");
-			fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
+				paths.addAll(filterFiles(fs, id, sb.toString(), p));
+				((DefaultTransaction) t).setName(HARFS_BUCKET);
+			} catch (IOException e) {
+				Cat.logError(e);
+			}
 		}
 
-		final String path = p;
-		sb.append(path);
+		if (paths.isEmpty()) {
+			try {
+				p = m_pathBuilder.getLogviewPath(date, "");
+				fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
 
-		final Path basePath = new Path(sb.toString());
-		final String key = id.getDomain() + '-' + id.getIpAddress();
-
-		fs.listStatus(basePath, new PathFilter() {
-			@Override
-			public boolean accept(Path p) {
-				String name = p.getName();
-
-				if (name.contains(key) && !name.endsWith(".idx")) {
-					paths.add(path + name);
-				}
-				return false;
+				paths.addAll(filterFiles(fs, id, sb.toString(), p));
+				((DefaultTransaction) t).setName(HDFS_BUCKET);
+			} catch (IOException e) {
+				Cat.logError(e);
 			}
-		});
+		}
 		return paths;
 	}
 
@@ -164,9 +183,6 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 					Cat.logError(e);
 				}
 			}
-		} catch (IOException e) {
-			t.setStatus(e);
-			Cat.logError(e);
 		} catch (RuntimeException e) {
 			t.setStatus(e);
 			Cat.logError(e);
