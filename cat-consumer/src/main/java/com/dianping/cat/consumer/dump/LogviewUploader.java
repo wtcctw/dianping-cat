@@ -223,9 +223,6 @@ public class LogviewUploader implements Task {
 	}
 
 	private boolean shouldUpload(String path) {
-		if (path.indexOf("draft") > -1 || path.indexOf("outbox") > -1) {
-			return false;
-		}
 		long current = System.currentTimeMillis();
 		long currentHour = current - current % ONE_HOUR;
 		long lastHour = currentHour - ONE_HOUR;
