@@ -35,19 +35,24 @@ public class HarConnectionPool {
 	}
 
 	public HarFileSystem getHarfsConnection(String id, Date date, FileSystem fs) throws IOException {
-		String serverUri = m_serverConfigManager.getHarfsServerUri(id);
-		String baseUri = m_serverConfigManager.getHarfsBaseDir(id);
-		String harUri = m_format.format(new Object[] { serverUri, baseUri, date });
 		HarFileSystem har = m_hars.get(date);
 
 		if (har == null) {
 			synchronized (this) {
 				if (har == null) {
+					String serverUri = m_serverConfigManager.getHarfsServerUri(id);
+					String baseUri = m_serverConfigManager.getHarfsBaseDir(id);
+					String harUri = m_format.format(new Object[] { serverUri, baseUri, date });
 					URI uri = URI.create(harUri);
 					har = new HarFileSystem(fs);
 
-					har.initialize(uri, har.getConf());
-					m_hars.put(date, har);
+					try {
+						har.initialize(uri, har.getConf());
+						m_hars.put(date, har);
+					} catch (IOException e) {
+						// ignore
+						return null;
+					}
 				}
 			}
 		}
