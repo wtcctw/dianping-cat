@@ -66,7 +66,6 @@ import com.dianping.cat.report.graph.svg.GraphBuilder;
 import com.dianping.cat.report.graph.svg.ValueTranslater;
 import com.dianping.cat.report.page.ConfigReloadTask;
 import com.dianping.cat.report.page.DomainGroupConfigManager;
-import com.dianping.cat.report.page.activity.config.ActivityConfigManager;
 import com.dianping.cat.report.page.app.service.AppConnectionService;
 import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.app.service.AppSpeedService;
@@ -214,7 +213,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      RouterConfigManager.class, DailyReportDao.class));
 		all.add(C(TopoGraphFormatConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(ActivityConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      RouterConfigManager.class, BlackListManager.class, AllReportConfigManager.class));
 
