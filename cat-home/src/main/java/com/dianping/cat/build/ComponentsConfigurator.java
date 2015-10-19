@@ -78,7 +78,6 @@ import com.dianping.cat.report.page.metric.service.MetricReportService;
 import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
 import com.dianping.cat.report.page.state.StateGraphBuilder;
 import com.dianping.cat.report.page.state.service.StateReportService;
-import com.dianping.cat.report.page.statistics.config.BugConfigManager;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager;
@@ -186,7 +185,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TopologyGraphConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ExceptionRuleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(DomainGroupConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(BugConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(NetworkRuleConfigManager.class)
 		      .req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
 		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class, MetricConfigManager.class,

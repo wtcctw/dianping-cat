@@ -121,8 +121,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	EXCEPTION_EXCLUDE_DELETE("exceptionExcludeDelete"),
 
-	BUG_CONFIG_UPDATE("bugConfigUpdate"),
-
 	NET_GRAPH_CONFIG_UPDATE("netGraphConfigUpdate"),
 
 	WEB_RULE("webRule"),
@@ -228,8 +226,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 	ROUTER_CONFIG_UPDATE("routerConfigUpdate"),
 
 	ALERT_SENDER_CONFIG_UPDATE("alertSenderConfigUpdate"),
-
-	ACTIVITY_CONFIG_UPDATE("activityConfigUpdate"),
 
 	SERVER_FILTER_CONFIG_UPDATE("serverFilterConfigUpdate"),
 

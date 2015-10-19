@@ -6,12 +6,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -25,12 +21,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.home.bug.entity.BugReport;
-import com.dianping.cat.home.bug.entity.Domain;
-import com.dianping.cat.home.bug.entity.ExceptionItem;
-import com.dianping.cat.home.bug.transform.BaseVisitor;
 import com.dianping.cat.home.heavy.entity.HeavyCache;
 import com.dianping.cat.home.heavy.entity.HeavyCall;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
@@ -45,8 +36,6 @@ import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
-import com.dianping.cat.report.page.statistics.config.BugConfigManager;
-import com.dianping.cat.report.page.statistics.service.BugReportService;
 import com.dianping.cat.report.page.statistics.service.ClientReportService;
 import com.dianping.cat.report.page.statistics.service.HeavyReportService;
 import com.dianping.cat.report.page.statistics.service.JarReportService;
@@ -67,9 +56,6 @@ public class Handler implements PageHandler<Context> {
 	private SystemReportService m_systemReportService;
 
 	@Inject
-	private BugReportService m_bugReportService;
-
-	@Inject
 	private HeavyReportService m_heavyReportService;
 
 	@Inject
@@ -88,28 +74,10 @@ public class Handler implements PageHandler<Context> {
 	private ProjectService m_projectService;
 
 	@Inject
-	private BugConfigManager m_bugConfigManager;
-
-	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
 	@Inject
 	private AlertSummaryExecutor m_executor;
-
-	private void buildBugInfo(Model model, Payload payload) {
-		BugReport bugReport = queryBugReport(payload);
-		BugReportVisitor visitor = new BugReportVisitor();
-		visitor.visitBugReport(bugReport);
-
-		Map<String, ErrorStatis> errors = visitor.getErrors();
-		errors = sortErrorStatis(errors);
-		model.setErrorStatis(errors);
-
-		if (payload.getAction() == Action.BUG_HTTP_JSON) {
-			new ClearBugReport().visitBugReport(bugReport);
-		}
-		model.setBugReport(bugReport);
-	}
 
 	private void buildHeavyInfo(Model model, Payload payload) {
 		HeavyReport heavyReport = queryHeavyReport(payload);
@@ -217,11 +185,6 @@ public class Handler implements PageHandler<Context> {
 		case SERVICE_HISTORY_REPORT:
 			buildServiceInfo(model, payload);
 			break;
-		case BUG_HISTORY_REPORT:
-		case BUG_REPORT:
-		case BUG_HTTP_JSON:
-			buildBugInfo(model, payload);
-			break;
 		case HEAVY_HISTORY_REPORT:
 		case HEAVY_REPORT:
 			buildHeavyInfo(model, payload);
@@ -260,18 +223,6 @@ public class Handler implements PageHandler<Context> {
 		model.setClientReport(report);
 	}
 
-	private boolean isBug(String domain, String exception) {
-		Set<String> bugConfig = m_bugConfigManager.queryBugConfigsByDomain(domain);
-
-		return !bugConfig.contains(exception);
-	}
-
-	private BugReport queryBugReport(Payload payload) {
-		Pair<Date, Date> pair = queryStartEndTime(payload);
-
-		return m_bugReportService.queryReport(Constants.CAT, pair.getKey(), pair.getValue());
-	}
-
 	private HeavyReport queryHeavyReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 
@@ -295,7 +246,7 @@ public class Handler implements PageHandler<Context> {
 		Date end = null;
 		Action action = payload.getAction();
 		String name = action.getName();
-		if ((!name.startsWith("history")) && (action != Action.BUG_HTTP_JSON)) {
+		if (!name.startsWith("history")) {
 			if (payload.getPeriod().isCurrent()) {
 				start = new Date(payload.getDate() - TimeHelper.ONE_HOUR);
 				end = new Date(start.getTime() + TimeHelper.ONE_HOUR);
@@ -354,129 +305,4 @@ public class Handler implements PageHandler<Context> {
 		return result;
 	}
 
-	private Map<String, ErrorStatis> sortErrorStatis(Map<String, ErrorStatis> errors) {
-		Comparator<java.util.Map.Entry<String, ErrorStatis>> errorCompator = new Comparator<java.util.Map.Entry<String, ErrorStatis>>() {
-
-			@Override
-			public int compare(java.util.Map.Entry<String, ErrorStatis> o1, java.util.Map.Entry<String, ErrorStatis> o2) {
-				String department1 = String.valueOf(o1.getValue().getDepartment());
-				String department2 = String.valueOf(o2.getValue().getDepartment());
-				String productLine1 = String.valueOf(o1.getValue().getProductLine());
-				String productLine2 = String.valueOf(o2.getValue().getProductLine());
-
-				if (department1.equals(department2)) {
-					return productLine1.compareTo(productLine2);
-				} else {
-					return department1.compareTo(department2);
-				}
-			}
-		};
-		errors = SortHelper.sortMap(errors, errorCompator);
-
-		for (ErrorStatis temp : errors.values()) {
-			Comparator<java.util.Map.Entry<String, ExceptionItem>> compator = new Comparator<java.util.Map.Entry<String, ExceptionItem>>() {
-
-				@Override
-				public int compare(java.util.Map.Entry<String, ExceptionItem> o1,
-				      java.util.Map.Entry<String, ExceptionItem> o2) {
-					return o2.getValue().getCount() - o1.getValue().getCount();
-				}
-			};
-			Map<String, ExceptionItem> bugs = temp.getBugs();
-			Map<String, ExceptionItem> exceptions = temp.getExceptions();
-
-			temp.setBugs(SortHelper.sortMap(bugs, compator));
-			temp.setExceptions(SortHelper.sortMap(exceptions, compator));
-		}
-		return errors;
-	}
-
-	public class BugReportVisitor extends BaseVisitor {
-
-		private Domain m_currentDomain;
-
-		private Map<String, ErrorStatis> m_errors = new HashMap<String, ErrorStatis>();
-
-		public ErrorStatis findOrCreateErrorStatis(String productLine) {
-			ErrorStatis statis = m_errors.get(productLine);
-
-			if (statis == null) {
-				statis = new ErrorStatis();
-				m_errors.put(productLine, statis);
-			}
-			return statis;
-		}
-
-		public Map<String, ErrorStatis> getErrors() {
-			return m_errors;
-		}
-
-		@Override
-		public void visitDomain(Domain domain) {
-			m_currentDomain = domain;
-			super.visitDomain(domain);
-		}
-
-		@Override
-		public void visitExceptionItem(ExceptionItem exceptionItem) {
-			String exception = exceptionItem.getId();
-			int count = exceptionItem.getCount();
-			Project project = m_projectService.findByDomain(m_currentDomain.getId());
-
-			if (project != null) {
-				String productLine = project.getCmdbProductline();
-				String department = project.getBu();
-				ErrorStatis statis = findOrCreateErrorStatis(productLine);
-
-				statis.setDepartment(department);
-				statis.setProductLine(productLine);
-				m_currentDomain.setDepartment(department);
-				m_currentDomain.setProductLine(productLine);
-
-				Map<String, ExceptionItem> items = null;
-
-				if (isBug(m_currentDomain.getId(), exception)) {
-					items = statis.getBugs();
-				} else {
-					items = statis.getExceptions();
-				}
-
-				ExceptionItem item = items.get(exception);
-
-				if (item == null) {
-					item = new ExceptionItem(exception);
-					item.setCount(count);
-					item.getMessages().addAll(exceptionItem.getMessages());
-					items.put(exception, item);
-				} else {
-					List<String> messages = item.getMessages();
-					item.setCount(item.getCount() + count);
-					messages.addAll(exceptionItem.getMessages());
-
-					if (messages.size() > 10) {
-						messages = messages.subList(0, 10);
-					}
-				}
-			}
-		}
-	}
-
-	public class ClearBugReport extends BaseVisitor {
-
-		@Override
-		public void visitDomain(Domain domain) {
-			String domainName = domain.getId();
-			Set<String> removes = new HashSet<String>();
-			Map<String, ExceptionItem> items = domain.getExceptionItems();
-
-			for (ExceptionItem item : items.values()) {
-				if (!isBug(domainName, item.getId())) {
-					removes.add(item.getId());
-				}
-			}
-			for (String remove : removes) {
-				items.remove(remove);
-			}
-		}
-	}
 }

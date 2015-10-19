@@ -119,7 +119,6 @@ public class Handler implements PageHandler<Context> {
 		case DOMAIN_GROUP_CONFIG_UPDATE:
 		case DOMAIN_GROUP_CONFIG_DELETE:
 		case DOMAIN_GROUP_CONFIG_SUBMIT:
-		case BUG_CONFIG_UPDATE:
 		case ROUTER_CONFIG_UPDATE:
 		case ALERT_SENDER_CONFIG_UPDATE:
 		case BLACK_CONFIG_UPDATE:
@@ -274,7 +273,6 @@ public class Handler implements PageHandler<Context> {
 			break;
 
 		case DISPLAY_POLICY:
-		case ACTIVITY_CONFIG_UPDATE:
 			m_displayConfigProfessor.process(action, payload, model);
 			break;
 		}

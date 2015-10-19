@@ -180,18 +180,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.statistics.config.BugConfigManager</role>
-			<implementation>com.dianping.cat.report.page.statistics.config.BugConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.alert.network.NetworkRuleConfigManager</role>
 			<implementation>com.dianping.cat.report.alert.network.NetworkRuleConfigManager</implementation>
 			<requirements>
@@ -443,18 +431,6 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.config.SenderConfigManager</role>
 			<implementation>com.dianping.cat.report.alert.sender.config.SenderConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.activity.config.ActivityConfigManager</role>
-			<implementation>com.dianping.cat.report.page.activity.config.ActivityConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -746,36 +722,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.storage.task.StorageReportService</role>
 			<implementation>com.dianping.cat.report.page.storage.task.StorageReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.statistics.service.BugReportService</role>
-			<implementation>com.dianping.cat.report.page.statistics.service.BugReportService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
@@ -1294,22 +1240,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
-			<role-hint>bug</role-hint>
-			<implementation>com.dianping.cat.report.page.statistics.task.bug.BugReportBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.problem.service.ProblemReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.statistics.service.BugReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4761,9 +4691,6 @@
 					<role>com.dianping.cat.report.page.statistics.service.SystemReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.statistics.service.BugReportService</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.statistics.service.HeavyReportService</role>
 				</requirement>
 				<requirement>
@@ -4780,9 +4707,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.statistics.config.BugConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
@@ -4804,36 +4728,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.statistics.service.SystemReportService</role>
 			<implementation>com.dianping.cat.report.page.statistics.service.SystemReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.statistics.service.BugReportService</role>
-			<implementation>com.dianping.cat.report.page.statistics.service.BugReportService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
@@ -5008,18 +4902,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.statistics.config.BugConfigManager</role>
-			<implementation>com.dianping.cat.report.page.statistics.config.BugConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5870,47 +5752,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.activity.Handler</role>
-			<implementation>com.dianping.cat.report.page.activity.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.activity.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.activity.config.ActivityConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>transaction</role-hint>
-					<field-name>m_service</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.activity.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.activity.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.activity.config.ActivityConfigManager</role>
-			<implementation>com.dianping.cat.report.page.activity.config.ActivityConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.top.Handler</role>
 			<implementation>com.dianping.cat.report.page.top.Handler</implementation>
 			<requirements>
@@ -6143,9 +5984,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.statistics.config.BugConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
@@ -6421,9 +6259,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.statistics.service.BugReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6745,9 +6580,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.activity.config.ActivityConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
