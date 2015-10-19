@@ -9,7 +9,7 @@ public class DomainValidator {
 	public boolean validate(String domain) {
 		boolean result = true;
 
-		if (!m_valids.contains(domain)) {
+		if (!m_valids.containsKey(domain)) {
 			int length = domain.length();
 			char c;
 
