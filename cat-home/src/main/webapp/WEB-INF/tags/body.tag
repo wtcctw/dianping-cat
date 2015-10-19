@@ -47,9 +47,6 @@
 						<li id="dashbord_network"><a href="/cat/r/network?op=dashboard&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>网络大盘</a>
 							<b class="arrow"></b></li>
-						<li id="dashbord_application"><a href="/cat/r/dependency?op=dashboard&domain=${model.domain}">
-							<i class="menu-icon fa fa-caret-right"></i>应用大盘</a>
-							<b class="arrow"></b></li>
 						<li id="dashbord_database"><a href="/cat/r/storage?op=dashboard&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>数据库大盘</a>
 							<b class="arrow"></b></li>
@@ -186,9 +183,6 @@
 						<b class="arrow fa fa-angle-down"></b>
 				</a> <b class="arrow"></b>
 					<ul class="submenu">
-						<li id="system_cdn"><a href="/cat/r/cdn?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
-							<i class="menu-icon fa fa-caret-right"></i>CDN监控</a>
-							<b class="arrow"></b></li>
 						<li id="system_network"><a href="/cat/r/network?op=metric&product=&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
 							<i class="menu-icon fa fa-caret-right"></i>网络监控</a>
 							<b class="arrow"></b></li>

@@ -62,9 +62,6 @@
          <page name="system" title="System" path="system" standalone="false" template="default">
             <description>System</description>
          </page>
-         <page name="cdn" title="Cdn" path="cdn" standalone="false" template="default">
-            <description>Cdn</description>
-         </page>
          <page name="app" title="App" path="app" template="default">
             <description>App</description>
          </page>

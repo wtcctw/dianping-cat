@@ -3,9 +3,7 @@ package com.dianping.cat.report.page.dependency;
 public enum Action implements org.unidal.web.mvc.Action {
 	LINE_CHART("lineChart"),
 
-	TOPOLOGY("dependencyGraph"),
-
-	DEPENDENCY_DASHBOARD("dashboard");
+	TOPOLOGY("dependencyGraph");
 
 	private String m_name;
 

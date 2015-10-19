@@ -4628,9 +4628,6 @@
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</role>
 				</requirement>
 				<requirement>
@@ -4694,18 +4691,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
-			<implementation>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5371,57 +5356,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.system.graph.SystemGraphCreator</role>
 			<implementation>com.dianping.cat.report.page.system.graph.SystemGraphCreator</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.metric.service.BaselineService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.graph.metric.DataExtractor</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.graph.metric.MetricDataFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.graph.metric.CachedMetricReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.AlertInfo</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.cdn.Handler</role>
-			<implementation>com.dianping.cat.report.page.cdn.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.cdn.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.web.CityManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.cdn.graph.CdnGraphCreator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.cdn.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.cdn.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.cdn.graph.CdnGraphCreator</role>
-			<implementation>com.dianping.cat.report.page.cdn.graph.CdnGraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.metric.service.BaselineService</role>
@@ -6421,6 +6355,18 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
+			<implementation>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>

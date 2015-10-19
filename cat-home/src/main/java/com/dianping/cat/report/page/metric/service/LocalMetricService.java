@@ -17,7 +17,6 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.ApiPayload;
 import com.dianping.cat.report.ReportBucket;
 import com.dianping.cat.report.ReportBucketManager;
-import com.dianping.cat.report.page.cdn.graph.CdnReportConvertor;
 import com.dianping.cat.report.page.system.graph.SystemReportConvertor;
 import com.dianping.cat.report.page.web.graph.WebReportConvertor;
 import com.dianping.cat.report.service.LocalModelService;
@@ -86,16 +85,7 @@ public class LocalMetricService extends LocalModelService<MetricReport> {
 
 			convert.visitMetricReport(report);
 			report = convert.getReport();
-		} else if (Constants.METRIC_CDN.equals(metricType)) {
-			String cdn = payload.getCdn();
-			String province = payload.getProvince();
-			String city = payload.getCity();
-			CdnReportConvertor cdnReportConvertor = new CdnReportConvertor(m_ipService);
-
-			cdnReportConvertor.setProvince(province).setCity(city).setCdn(cdn);
-			cdnReportConvertor.visitMetricReport(report);
-			report = cdnReportConvertor.getReport();
-		}
+		} 
 		MetricReportFilter filter = new MetricReportFilter(payload.getMin(), payload.getMax());
 
 		return filter.buildXml(report);
