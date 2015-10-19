@@ -31,7 +31,6 @@ import com.dianping.cat.home.heavy.entity.Url;
 import com.dianping.cat.home.jar.entity.JarReport;
 import com.dianping.cat.home.service.client.entity.ClientReport;
 import com.dianping.cat.home.service.entity.ServiceReport;
-import com.dianping.cat.home.system.entity.SystemReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
@@ -40,20 +39,15 @@ import com.dianping.cat.report.page.statistics.service.ClientReportService;
 import com.dianping.cat.report.page.statistics.service.HeavyReportService;
 import com.dianping.cat.report.page.statistics.service.JarReportService;
 import com.dianping.cat.report.page.statistics.service.ServiceReportService;
-import com.dianping.cat.report.page.statistics.service.SystemReportService;
 import com.dianping.cat.report.page.statistics.service.UtilizationReportService;
 import com.dianping.cat.report.page.statistics.task.heavy.HeavyReportMerger.ServiceComparator;
 import com.dianping.cat.report.page.statistics.task.heavy.HeavyReportMerger.UrlComparator;
 import com.dianping.cat.report.page.statistics.task.jar.JarReportBuilder;
-import com.dianping.cat.report.page.statistics.task.system.SystemReportBuilder;
 import com.dianping.cat.service.ProjectService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
-
-	@Inject
-	private SystemReportService m_systemReportService;
 
 	@Inject
 	private HeavyReportService m_heavyReportService;
@@ -134,15 +128,6 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private void buildSystemReport(Model model, Payload payload) {
-		Date startDate = payload.getDay();
-		Date endDate = TimeHelper.addDays(startDate, 1);
-		SystemReport systemReport = m_systemReportService.queryReport(Constants.CAT, startDate, endDate);
-
-		model.setSystemReport(systemReport);
-		model.setKeys(SystemReportBuilder.KEYS);
-	}
-
 	private void buildUtilizationInfo(Model model, Payload payload) {
 		UtilizationReport utilizationReport = queryUtilizationReport(payload);
 		Collection<com.dianping.cat.home.utilization.entity.Domain> dUList = utilizationReport.getDomains().values();
@@ -203,9 +188,6 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case JAR_REPORT:
 			buildJarInfo(model, payload);
-			break;
-		case SYSTREM_REPORT:
-			buildSystemReport(model, payload);
 			break;
 		case CLIENT_REPORT:
 			buildClientReport(model, payload);

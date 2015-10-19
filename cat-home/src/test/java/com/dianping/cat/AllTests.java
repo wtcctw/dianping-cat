@@ -42,7 +42,6 @@ import com.dianping.cat.report.task.problem.ProblemDailyGraphTest;
 import com.dianping.cat.report.task.problem.ProblemGraphCreatorTest;
 import com.dianping.cat.report.task.service.ServiceReportMergerTest;
 import com.dianping.cat.report.task.storage.HistoryStorageReportMergerTest;
-import com.dianping.cat.report.task.system.SystemReportStatisticsTest;
 import com.dianping.cat.report.task.transaction.DailyTransactionReportGraphTest;
 import com.dianping.cat.report.task.transaction.HistoryTransactionMergerTest;
 import com.dianping.cat.report.task.transaction.TransactionDailyGraphMergerTest;
@@ -138,8 +137,6 @@ DatabaseReportFilterTest.class,
 HeartbeatDailyMergerTest.class,
 
 WebReportConvertorTest.class,
-
-SystemReportStatisticsTest.class,
 
 MetricIdAndRuleMappingTest.class,
 
