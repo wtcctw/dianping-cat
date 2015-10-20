@@ -129,9 +129,6 @@
 							<li id="activityConfigUpdate"><a href="/cat/s/config?op=activityConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>临时活动配置</a>
 								<b class="arrow"></b></li>
-							<li id="storageGroupConfigUpdate"><a href="/cat/s/config?op=storageGroupConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>存储分组配置</a>
-								<b class="arrow"></b></li>
 							<li id="storageDatabaseRule"><a href="/cat/s/config?op=storageRule&type=SQL">
 								<i class="menu-icon fa fa-caret-right"></i>数据库访问告警</a>
 								<b class="arrow"></b></li>
@@ -165,9 +162,6 @@
 						<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
-							<li id="bugConfigUpdate"><a href="/cat/s/config?op=bugConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>框架异常</a>
-								<b class="arrow"></b></li>
 							<li id="alertPolicy"><a href="/cat/s/config?op=alertPolicy">
 								<i class="menu-icon fa fa-caret-right"></i>告警策略</a>
 								<b class="arrow"></b></li>
