@@ -41,7 +41,7 @@
 	<c:otherwise>
 		<res:useJs value="${res.js.local['raphael-min.js']}" target="head-js" />
 		<res:useJs value="${res.js.local['startopo.js']}" target="head-js" />
-			<a:report title="Dependency Report"
+			<a:hourly_report title="Dependency Report"
 		navUrlPrefix="domain=${model.domain}&op=dashboard">
 		<jsp:attribute name="subtitle">${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 		<jsp:body>
@@ -56,7 +56,7 @@
 			</div>
 	    </div>
 	</jsp:body>
-	</a:report>
+	</a:hourly_report>
 	</c:otherwise>
 </c:choose>
 

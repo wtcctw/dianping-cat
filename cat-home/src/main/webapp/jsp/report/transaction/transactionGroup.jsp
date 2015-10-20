@@ -13,7 +13,7 @@
 	type="com.dianping.cat.report.page.transaction.Model" scope="request" />
 <c:set var="report" value="${model.report}" />
 
-<a:report
+<a:hourly_report
 	title="Transaction Report${empty payload.type ? '' : ' :: '}<a href='?op=groupReport&group=${payload.group}&domain=${model.domain}&date=${model.date}&type=${payload.encodedType}'>${payload.type}</a>"
 	navUrlPrefix="op=groupReport&group=${payload.group}&queryname=${model.queryName}&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.encodedType}"
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
@@ -216,4 +216,4 @@
 	</c:when>
 </c:choose>
 </jsp:body>
-</a:report>
+</a:hourly_report>

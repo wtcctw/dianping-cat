@@ -10,7 +10,7 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.highload.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.highload.Model" scope="request" />
 
-<a:body>
+<a:application>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 		<div id="queryBar">
@@ -39,4 +39,4 @@
 	        window.location.href="?op=view&date="+time;
 	      }
 		</script>
-</a:body>
+</a:application>

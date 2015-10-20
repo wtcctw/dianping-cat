@@ -38,7 +38,7 @@
 	</style>
 	</c:when>
 	<c:otherwise>
-		<a:body>
+		<a:application>
 			<res:useCss value='${res.css.local.table_css}' target="head-css" />
 			<res:useJs value="${res.js.local['netgraph.js']}" target="head-js" />
 
@@ -62,7 +62,7 @@
 					</div>
 				</c:forEach>
 			</div>
-			</a:body>
+			</a:application>
 			<style type="text/css">
 		.topology {
 			width: 520px;

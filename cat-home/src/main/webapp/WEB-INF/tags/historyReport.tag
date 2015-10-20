@@ -8,7 +8,7 @@
 <%@ attribute name="timestamp"%>
 <%@ attribute name="subtitle" fragment="true"%>
 
-<a:body>
+<a:application>
 <script>
 	function buildHref(domain){
 		var href = '<a href="?op=${payload.action.name}&domain='+domain+'&date=${model.date}">&nbsp;[&nbsp;'+domain+'&nbsp;]&nbsp;</a>';
@@ -114,4 +114,4 @@
 	</div>
 	<jsp:doBody />
 	</div>
-</a:body>
+</a:application>

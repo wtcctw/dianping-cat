@@ -7,7 +7,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.database.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.database.Model" scope="request"/>
 
-<a:body>
+<a:application>
 <res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <div class="report">
 	<div class="breadcrumbs" id="breadcrumbs">
@@ -71,7 +71,7 @@
 		</c:forEach>
 	</div>
 </div>
-</a:body>
+</a:application>
 	
 <script type="text/javascript">
 		function databaseChange(){

@@ -15,12 +15,12 @@
       <path>/WEB-INF/tags/base.tag</path>
    </tag-file>
    <tag-file>
-      <name>app</name>
-      <path>/WEB-INF/tags/app.tag</path>
+      <name>mobile</name>
+      <path>/WEB-INF/tags/mobile.tag</path>
    </tag-file>
    <tag-file>
-      <name>body</name>
-      <path>/WEB-INF/tags/body.tag</path>
+      <name>application</name>
+      <path>/WEB-INF/tags/application.tag</path>
    </tag-file>
    <tag-file>
       <name>home</name>
@@ -31,7 +31,7 @@
       <path>/WEB-INF/tags/config.tag</path>
    </tag-file>   
    <tag-file>
-      <name>report</name>
+      <name>hourly_report</name>
       <path>/WEB-INF/tags/hourlyReport.tag</path>
    </tag-file>
    <tag-file>
