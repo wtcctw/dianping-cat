@@ -47,31 +47,32 @@
 				<!-- /section:basics/sidebar.mobile.toggle -->
 				<div class="navbar-header pull-left">
 					<!-- #section:basics/navbar.layout.brand -->
-					<a href="/cat/r/home"  class="navbar-brand">
+					<i class="navbar-brand">
 						<span>CAT</span>
 						<small style="font-size:65%">
 							（Central Application Tracking）
 						</small>
-					</a>
+					<button class="btn btn-success btn-sm" id="nav_application" onclick="nav(1)">
+						<i class="ace-icon fa fa-signal"></i>Application
+					</button>
+					<button class="btn btn-grey btn-sm" id="nav_mobile" onclick="nav(2)">
+						<i class="menu-icon glyphicon glyphicon-phone"></i>Mobile
+					</button>
+					<!-- #section:basics/sidebar.layout.shortcuts -->
+					<button class="btn btn-warning btn-sm" id="nav_browser" onclick="nav(3)">
+						<i class="ace-icon fa fa-users"></i>Browser
+					</button>
+					<button class="btn btn-danger btn-sm" id="nav_server" onclick="nav(4)">
+						<i class="ace-icon fa fa-cogs"></i>Servers
+					</button>
+					<button class="btn btn-danger btn-sm" id="nav_document" onclick="nav(5)">
+						<i class="ace-icon fa fa-cogs"></i>Documents
+					</button>
+					<button class="btn btn-danger btn-sm" id="nav_config" onclick="nav(6)">
+						<i class="ace-icon fa fa-cogs"></i>Configs
+					</button>
+					</i>
 				</div>
-				<div class="navbar-header pull-left position" style="width:350px;padding-top:5px;">
-					<form id="wrap_search" style="margin-bottom:0px;">
-						<div class="input-group">
-							<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showDomain()" type="button"  id="switch">全部</button></span>
-							<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showFrequent()" type="button"  id="frequent">常用</button></span>
-							<span class="input-icon" style="width:300px;">
-							<input id="search" type="text" value="${model.domain}" class="search-input search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
-							<i class="ace-icon fa fa-search nav-search-icon"></i>
-							</span>
-							<span class="input-group-btn">
-								<button class="btn btn-sm btn-pink" type="button" id="search_go">
-									Go
-								</button> 
-							</span>
-						</div>
-					</form>
-				</div>
-				
 				<!-- #section:basics/navbar.dropdown -->
 				<div class="navbar-buttons navbar-header pull-right" role="navigation">
 				<ul class="nav ace-nav" style="height:auto;">
@@ -98,6 +99,23 @@
 				</ul>
 				</div> 
 			</div>
+		</div>
+		<div class="" style="width:350px;margin-left:150px;">
+			<form id="wrap_search" style="margin-bottom:0px;">
+				<div class="input-group">
+					<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showDomain()" type="button"  id="switch">全部</button></span>
+					<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showFrequent()" type="button"  id="frequent">常用</button></span>
+					<span class="input-icon" style="width:300px;">
+					<input id="search" type="text" value="${model.domain}" class="search-input search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
+					<i class="ace-icon fa fa-search nav-search-icon"></i>
+					</span>
+					<span class="input-group-btn">
+						<button class="btn btn-sm btn-pink" type="button" id="search_go">
+							Go
+						</button> 
+					</span>
+				</div>
+			</form>
 		</div>
 		<jsp:doBody/>
 		
@@ -293,6 +311,27 @@
 			});
 		});
 	</script>
+	<script  type="text/javascript">
+	$(document).ready(function() {
+		$("#nav_application").click(function(){
+			window.location.href = "http://localhost:2281/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+		});
+		$("#nav_mobile").click(function(){
+			window.location.href = "/cat/r/app?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+		});
+		$("#nav_browser").click(function(){
+			window.location.href = "/cat/r/web?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+		});
+		$("#nav_server").click(function(){
+			window.location.href = "/cat/r/database?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+		});
+		$("#nav_document").click(function(){
+			window.location.href = "/cat/r/home?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+		});
+		$("#nav_config").click(function(){
+			window.location.href = "/cat/s/config?op=projects";
+		});});
+</script>
 </body>
 </html>
 

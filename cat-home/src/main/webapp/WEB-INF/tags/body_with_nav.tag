@@ -10,29 +10,6 @@
 			<script type="text/javascript">
 				try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
 			</script>
-			<div class="sidebar-shortcuts" id="sidebar-shortcuts">
-				<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-					<button class="btn btn-success" id="tab_realtime">
-						<i class="ace-icon fa fa-signal"></i>&nbsp;&nbsp;实时
-					</button>
-					<button class="btn btn-grey" id="tab_offtime">
-						<i class="ace-icon fa fa-film"></i>&nbsp;&nbsp;离线
-					</button>
-					<!-- #section:basics/sidebar.layout.shortcuts -->
-					<button class="btn btn-warning" id="tab_document">
-						<i class="ace-icon fa fa-users"></i>&nbsp;&nbsp;文档
-					</button>
-					<button class="btn btn-danger" id="tab_config">
-						<i class="ace-icon fa fa-cogs"></i>&nbsp;&nbsp;配置
-					</button>
-				</div>
-				<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
-					<span class="btn btn-success"></span>
-					<span class="btn btn-info"></span>
-					<span class="btn btn-warning"></span>
-					<span class="btn btn-danger"></span>
-				</div>
-			</div>
 			<ul class="nav nav-list" style="top: 0px;">
 				<li id="Dashboard_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-tachometer"></i> <span class="menu-text">Dashboard</span>
 						<b class="arrow fa fa-angle-down"></b>

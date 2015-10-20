@@ -45,13 +45,31 @@
 				<!-- /section:basics/sidebar.mobile.toggle -->
 				<div class="navbar-header pull-left">
 					<!-- #section:basics/navbar.layout.brand -->
-					<a href="/cat/r/home"  class="navbar-brand">
+					<i  class="navbar-brand">
 						<span>CAT</span>
 						<small style="font-size:65%">
 							（Central Application Tracking）
 						</small>
-					</a>
-					
+					<button class="btn btn-success btn-sm" id="nav_application">
+						<i class="ace-icon fa fa-signal"></i>Application
+					</button>
+					<button class="btn btn-grey btn-sm" id="nav_mobile">
+						<i class="menu-icon glyphicon glyphicon-phone"></i>Mobile
+					</button>
+					<!-- #section:basics/sidebar.layout.shortcuts -->
+					<button class="btn btn-warning btn-sm" id="nav_browser">
+						<i class="ace-icon fa fa-users"></i>Browser
+					</button>
+					<button class="btn btn-danger btn-sm" id="nav_server">
+						<i class="ace-icon fa fa-cogs"></i>Servers
+					</button>
+					<button class="btn btn-danger btn-sm" id="nav_document">
+						<i class="ace-icon fa fa-cogs"></i>Documents
+					</button>
+					<button class="btn btn-danger btn-sm" id="nav_config">
+						<i class="ace-icon fa fa-cogs"></i>Configs
+					</button>
+					</i>
 				</div>
 				<!-- #section:basics/navbar.dropdown -->
 				<div class="navbar-buttons navbar-header pull-right" role="navigation">
@@ -219,6 +237,28 @@
 			$('#'+page+"_report").addClass("active open");
 		});
 	</script>
+	<script  type="text/javascript">
+	$(document).ready(function() {
+		$("#nav_application").click(function(){
+			window.location.href = "http://localhost:2281/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+		});
+		$("#nav_mobile").click(function(){
+			window.location.href = "/cat/r/app?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+		});
+		$("#nav_browser").click(function(){
+			window.location.href = "/cat/r/web?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+		});
+		$("#nav_server").click(function(){
+			window.location.href = "/cat/r/database?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+		});
+		$("#nav_document").click(function(){
+			window.location.href = "/cat/r/home?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+		});
+		$("#nav_config").click(function(){
+			window.location.href = "/cat/s/config?op=projects";
+		});});
+</script>	
+</script>
 </body>
 </html>
 
