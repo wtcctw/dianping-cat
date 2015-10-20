@@ -82,6 +82,7 @@
 		<script type="text/javascript">
 		  $(document).ready(function(){
 			  init();
+			  $('#Offline_report').addClass('active open');
 			  $('#overload_report').addClass("active");
 			  
 	        <c:if test="${payload.fullScreen}">

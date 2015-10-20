@@ -14,6 +14,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#Offline_report').addClass('active open');
 		$('#utilization_report').addClass('active');
 		initTable($('#web_content'));
 		initTable($('#service_content'));

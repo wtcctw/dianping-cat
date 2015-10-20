@@ -11,6 +11,7 @@
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#Offline_report').addClass('active open');
 		$('#alert_report').addClass('active');
 		
 		$(document).delegate('.detail', 'click', function(e){

@@ -12,6 +12,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#Offline_report').addClass('active open');
 		$('#service_report').addClass('active');
 	});
 </script>

@@ -14,6 +14,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#Offline_report').addClass('active open');
 		$('#jar_report').addClass('active');
 		init();
 	});

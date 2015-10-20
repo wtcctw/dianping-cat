@@ -13,6 +13,7 @@
 <script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#Offline_report').addClass('active open');
 		$('#summary_report').addClass('active');
 		$('#summarytime').datetimepicker({
 			format:'Y-m-d H:i',

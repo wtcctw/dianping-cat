@@ -25,6 +25,7 @@
 		</div>
 		<script type="text/javascript">
 		  $(document).ready(function(){
+			  $('#Offline_report').addClass('active open');
 			  $('#highload_report').addClass("active");
 			  $('#time').datetimepicker({
 					format:'Y-m-d',
