@@ -7,7 +7,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.statistics.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.statistics.Model" scope="request"/>
 
-<a:offline>
+<a:body>
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
 <link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
 <script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
@@ -51,4 +51,4 @@
 			<%@ include file="detail.jsp"%>
 		</div>
 </div>
-</a:offline>
+</a:body>
