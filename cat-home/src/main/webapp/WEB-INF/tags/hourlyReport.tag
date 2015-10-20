@@ -8,7 +8,7 @@
 <%@ attribute name="timestamp"%>
 <%@ attribute name="subtitle" fragment="true"%>
 
-<a:body_with_nav>
+<a:body>
 <script>
 	function buildHref(domain){
 		var href = '<a href="?op=${payload.action.name}&domain='+domain+'&date=${model.date}">&nbsp;[&nbsp;'+domain+'&nbsp;]&nbsp;</a>';
@@ -72,19 +72,39 @@
 		</table>
 	</div>
 	<div class="breadcrumbs" id="breadcrumbs">
-		<script type="text/javascript">
-			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
-		</script>
-		<span class="text-danger title">【报表时间】</span><span class="text-success"><jsp:invoke fragment="subtitle"/></span>
-		<div class="nav-search nav" id="nav-search">
+		<table>
+			<tr><td><span class="text-success"><jsp:invoke fragment="subtitle"/></span></td>
+				<td><div class="" style="width:250px;">
+					<form id="wrap_search" style="margin-left:10px;margin-bottom:0px;">
+					<div class="input-group">
+						<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showDomain()" type="button"  id="switch">全部</button></span>
+						<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showFrequent()" type="button"  id="frequent">常用</button></span>
+						<span class="input-icon" style="width:200px;">
+						<input id="search" type="text" value="${model.domain}" class="search-input search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
+						<i class="ace-icon fa fa-search nav-search-icon"></i>
+						</span>
+						<span class="input-group-btn">
+							<button class="btn btn-sm btn-pink" type="button" id="search_go">
+								Go
+							</button> 
+						</span>
+					</div>
+				</form>
+			</div></td>
+			<td><div class="nav-search nav" id="nav-search">
 			<span class="text-danger switch">【<a class="switch" href="${model.baseUri}?op=history&domain=${model.domain}&ip=${model.ipAddress}"><span class="text-danger">切到历史模式</span></a>】</span>
 			<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&ip=${model.ipAddress}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]
 				</c:forEach>
 				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
-		</div><!-- /.nav-search -->
+		</div></td>
+			</tr>
+		</table>
+		
+		<script type="text/javascript">
+			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+		</script>
 	</div>
 	<jsp:doBody />
 </div>
-
-</a:body_with_nav>
+</a:body>

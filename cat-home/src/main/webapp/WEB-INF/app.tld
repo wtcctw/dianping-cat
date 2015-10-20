@@ -15,24 +15,12 @@
       <path>/WEB-INF/tags/base.tag</path>
    </tag-file>
    <tag-file>
-      <name>base_with_nav</name>
-      <path>/WEB-INF/tags/base_with_nav.tag</path>
-   </tag-file>
-   <tag-file>
-      <name>storage_base</name>
-      <path>/WEB-INF/tags/storage_base.tag</path>
+      <name>app</name>
+      <path>/WEB-INF/tags/app.tag</path>
    </tag-file>
    <tag-file>
       <name>body</name>
       <path>/WEB-INF/tags/body.tag</path>
-   </tag-file>
-   <tag-file>
-      <name>body_with_nav</name>
-      <path>/WEB-INF/tags/body_with_nav.tag</path>
-   </tag-file>
-   <tag-file>
-      <name>storage_body</name>
-      <path>/WEB-INF/tags/storage_body.tag</path>
    </tag-file>
    <tag-file>
       <name>home</name>

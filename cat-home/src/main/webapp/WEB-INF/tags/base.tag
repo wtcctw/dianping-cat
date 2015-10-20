@@ -1,6 +1,8 @@
 <%@ tag trimDirectiveWhitespaces="true"  pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
+<%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
+<%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <jsp:useBean id="navBar" class="com.dianping.cat.report.view.NavigationBar" scope="page" />
 <res:bean id="res" />
 <html lang="en"><head>
@@ -9,7 +11,7 @@
 	<title>CAT</title>
 	<meta name="description" content="Restyling jQuery UI Widgets and Elements">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-	<script src='${model.webapp}/assets/js/jquery.min.js'> </script>
+	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
 	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap.min.css">
 	<link rel="stylesheet" href="${model.webapp}/assets/css/font-awesome.min.css">
 	<link rel="stylesheet" href="${model.webapp}/assets/css/jquery-ui.min.css">
@@ -45,12 +47,12 @@
 				<!-- /section:basics/sidebar.mobile.toggle -->
 				<div class="navbar-header pull-left">
 					<!-- #section:basics/navbar.layout.brand -->
-					<i  class="navbar-brand">
+					<i class="navbar-brand">
 						<span>CAT</span>
 						<small style="font-size:65%">
 							（Central Application Tracking）
 						</small>
-					<button class="btn btn-success btn-sm" id="nav_application">
+					<button class="btn btn-success btn-sm" id="nav_application" >
 						<i class="ace-icon fa fa-signal"></i>Application
 					</button>
 					<button class="btn btn-grey btn-sm" id="nav_mobile">
@@ -186,6 +188,7 @@
 					values: [ 75, 300 ]
 				});
 			
+			
 				//jquery accordion
 				$( "#accordion" ).accordion({
 					collapsible: true ,
@@ -216,6 +219,26 @@
 			}
 			return "";
 		}
+		function showDomain() {
+			var b = $('#switch').html();
+			if (b == '全部') {
+				$('.domainNavbar').slideDown();
+				$('#switch').html("收起");
+			} else {
+				$('.domainNavbar').slideUp();
+				$('#switch').html("全部");
+			}
+		}
+		function showFrequent(){
+			var b = $('#frequent').html();
+			if (b == '常用') {
+				$('.frequentNavbar').slideDown();
+				$('#frequent').html("收起");
+			} else {
+				$('.frequentNavbar').slideUp();
+				$('#frequent').html("常用");
+			}
+		}
 		$(document).ready(function() {
 			var ct = getcookie("ct");
 			if (ct != "") {
@@ -235,12 +258,46 @@
 			}
 			var page = '${model.page.title}';
 			$('#'+page+"_report").addClass("active open");
+			
+			
+			//custom autocomplete (category selection)
+			$.widget( "custom.catcomplete", $.ui.autocomplete, {
+				_renderMenu: function( ul, items ) {
+					var that = this,
+					currentCategory = "";
+					$.each( items, function( index, item ) {
+						if ( item.category != currentCategory ) {
+							ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+							currentCategory = item.category;
+						}
+						that._renderItemData( ul, item );
+					});
+				}
+			});
+			
+			var data = [];
+			<c:forEach var="item" items="${model.domainGroups}">
+				<c:set var="detail" value="${item.value}" />
+					<c:forEach var="productline" items="${detail.projectLines}" varStatus="index">
+					<c:forEach var="domain" items="${productline.value.lineDomains}">
+							var item = {};
+							item['label'] = '${domain}';
+							item['category'] ='${productline.key}';
+							
+							data.push(item);
+					</c:forEach>
+			</c:forEach></c:forEach>
+			
+			$( "#search" ).catcomplete({
+				delay: 0,
+				source: data
+			});
 		});
 	</script>
 	<script  type="text/javascript">
 	$(document).ready(function() {
 		$("#nav_application").click(function(){
-			window.location.href = "http://localhost:2281/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+			window.location.href = "/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
 		});
 		$("#nav_mobile").click(function(){
 			window.location.href = "/cat/r/app?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
@@ -257,7 +314,6 @@
 		$("#nav_config").click(function(){
 			window.location.href = "/cat/s/config?op=projects";
 		});});
-</script>	
 </script>
 </body>
 </html>
