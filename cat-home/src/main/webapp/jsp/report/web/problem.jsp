@@ -9,7 +9,7 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.web.Model" scope="request" />
 <c:set var="report" value="${model.problemReport}" />
 
-<a:body>
+<a:web_body>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <div class="breadcrumbs">
 		<span class="text-danger title">【报表时间】</span><span class="text-success">${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
@@ -94,4 +94,4 @@
 </table>
 <res:useJs value="${res.js.local.problem_js}" target="buttom-js" />
 <res:useJs value="${res.js.local.problemHistory_js}" target="bottom-js" />
-</a:body>
+</a:web_body>

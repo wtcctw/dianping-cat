@@ -6,7 +6,7 @@
 <jsp:useBean id="ctx"	type="com.dianping.cat.report.page.web.Context" scope="request" />
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.web.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.web.Model" scope="request" />
-<a:body>
+<a:web_body>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
@@ -219,4 +219,4 @@
 	</script>
 	
 		<%@include file="webDetail.jsp"%>
-</a:body>
+</a:web_body>

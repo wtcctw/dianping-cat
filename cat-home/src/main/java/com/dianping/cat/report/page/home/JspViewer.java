@@ -10,6 +10,8 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		Action action = model.getAction();
 
 		switch (action) {
+		case WEBVIEW:
+			return JspFile.WEBVIEW.getPath();
 		case VIEW:
 		case CHECKPOINT:
 		case THREAD_DUMP:
