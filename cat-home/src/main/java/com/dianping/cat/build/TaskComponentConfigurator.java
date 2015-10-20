@@ -75,19 +75,15 @@ import com.dianping.cat.report.page.problem.task.ProblemMerger;
 import com.dianping.cat.report.page.problem.task.ProblemReportBuilder;
 import com.dianping.cat.report.page.state.service.StateReportService;
 import com.dianping.cat.report.page.state.task.StateReportBuilder;
-import com.dianping.cat.report.page.statistics.service.BugReportService;
 import com.dianping.cat.report.page.statistics.service.ClientReportService;
 import com.dianping.cat.report.page.statistics.service.HeavyReportService;
 import com.dianping.cat.report.page.statistics.service.JarReportService;
 import com.dianping.cat.report.page.statistics.service.ServiceReportService;
-import com.dianping.cat.report.page.statistics.service.SystemReportService;
 import com.dianping.cat.report.page.statistics.service.UtilizationReportService;
-import com.dianping.cat.report.page.statistics.task.bug.BugReportBuilder;
 import com.dianping.cat.report.page.statistics.task.heavy.HeavyReportBuilder;
 import com.dianping.cat.report.page.statistics.task.jar.JarReportBuilder;
 import com.dianping.cat.report.page.statistics.task.service.ClientReportBuilder;
 import com.dianping.cat.report.page.statistics.task.service.ServiceReportBuilder;
-import com.dianping.cat.report.page.statistics.task.system.SystemReportBuilder;
 import com.dianping.cat.report.page.statistics.task.utilization.UtilizationReportBuilder;
 import com.dianping.cat.report.page.storage.task.StorageReportBuilder;
 import com.dianping.cat.report.page.storage.task.StorageReportService;
@@ -156,9 +152,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TaskBuilder.class, HeartbeatReportBuilder.ID, HeartbeatReportBuilder.class) //
 		      .req(GraphDao.class, HeartbeatReportService.class));
 
-		all.add(C(TaskBuilder.class, BugReportBuilder.ID, BugReportBuilder.class).req(ProblemReportService.class,
-		      BugReportService.class, ServerFilterConfigManager.class));
-
 		all.add(C(TaskBuilder.class, ServiceReportBuilder.ID, ServiceReportBuilder.class).req(CrossReportService.class,
 		      ServiceReportService.class, ServerFilterConfigManager.class));
 
@@ -189,9 +182,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TaskBuilder.class, JarReportBuilder.ID, JarReportBuilder.class).req(HeartbeatReportService.class,
 		      JarReportService.class, ServerFilterConfigManager.class));
-
-		all.add(C(TaskBuilder.class, SystemReportBuilder.ID, SystemReportBuilder.class).req(MetricReportService.class,
-		      SystemReportService.class, ProductLineConfigManager.class));
 
 		all.add(C(TaskBuilder.class, ClientReportBuilder.ID, ClientReportBuilder.class).req(ClientReportService.class,
 		      TransactionReportService.class, ServerFilterConfigManager.class));

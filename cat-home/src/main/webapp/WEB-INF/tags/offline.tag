@@ -35,26 +35,10 @@
 					</div>
 				</div>
 				<ul class="nav  nav-list" style="top: 0px;">
-					<li id="system_report" >
-						<a href="/cat/r/statistics?domain=${model.domain}&op=system">
-							<i class="menu-icon  fa  fa-tachometer"></i>
-							<span class="menu-text">Paas系统消耗</span>
-						</a>
-					</li>
-				</ul>
-				<ul class="nav  nav-list" style="top: 0px;">
 					<li id="overload_report" >
 						<a href="/cat/r/overload?domain=${model.domain}&op=${payload.action.name}">
 							<i class="menu-icon  fa  fa-flask"></i>
 							<span class="menu-text">报表容量统计</span>
-						</a>
-					</li>
-				</ul>
-				<ul class="nav  nav-list" style="top: 0px;">
-					<li id="bug_report" >
-						<a href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=view">
-							<i class="menu-icon  fa fa-bar-chart-o"></i>
-							<span class="menu-text">全局统计异常</span>
 						</a>
 					</li>
 				</ul>

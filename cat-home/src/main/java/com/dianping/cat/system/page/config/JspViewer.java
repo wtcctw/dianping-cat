@@ -132,9 +132,6 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.EXCEPTION.getPath();
 		case EXCEPTION_EXCLUDE_ADD:
 			return JspFile.EXCEPTION_EXCLUDE_CONFIG.getPath();
-			// Bug
-		case BUG_CONFIG_UPDATE:
-			return JspFile.BUG_CONFIG_UPDATE.getPath();
 		case WEB_RULE:
 		case WEB_RULE_ADD_OR_UPDATE_SUBMIT:
 		case WEB_RULE_DELETE:
@@ -214,8 +211,6 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.DOMAIN_GROUP_CONFIG_LIST.getPath();
 		case DOMAIN_GROUP_CONFIG_UPDATE:
 			return JspFile.DOMAIN_GROUP_CONFIG_UPDATE.getPath();
-		case ACTIVITY_CONFIG_UPDATE:
-			return JspFile.ACTIVITY_CONFIG_UPDATE.getPath();
 		case SERVER_FILTER_CONFIG_UPDATE:
 			return JspFile.SERVER_FILTER_CONFIG_UPDATE.getPath();
 		case BLACK_CONFIG_UPDATE:

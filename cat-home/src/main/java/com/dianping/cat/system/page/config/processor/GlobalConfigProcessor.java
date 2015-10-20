@@ -18,7 +18,6 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.group.entity.Domain;
 import com.dianping.cat.report.alert.sender.config.SenderConfigManager;
 import com.dianping.cat.report.page.DomainGroupConfigManager;
-import com.dianping.cat.report.page.statistics.config.BugConfigManager;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.page.config.Action;
@@ -32,9 +31,6 @@ public class GlobalConfigProcessor {
 
 	@Inject
 	public ProjectService m_projectService;
-
-	@Inject
-	private BugConfigManager m_bugConfigManager;
 
 	@Inject
 	private RouterConfigManager m_routerConfigManager;
@@ -123,15 +119,6 @@ public class GlobalConfigProcessor {
 		case DOMAIN_GROUP_CONFIG_SUBMIT:
 			m_domainGroupConfigManger.insertFromJson(payload.getContent());
 			model.setDomainGroup(m_domainGroupConfigManger.getDomainGroup());
-			break;
-		case BUG_CONFIG_UPDATE:
-			String xml = payload.getBug();
-			if (!StringUtils.isEmpty(xml)) {
-				model.setOpState(m_bugConfigManager.insert(xml));
-			} else {
-				model.setOpState(true);
-			}
-			model.setBug(m_configHtmlParser.parse(m_bugConfigManager.getBugConfig().toString()));
 			break;
 		case ROUTER_CONFIG_UPDATE:
 			String routerConfig = payload.getContent();
