@@ -52,6 +52,7 @@ public class HarConnectionPool implements Initializable {
 		}
 		for (String close : closed) {
 			m_hars.remove(close);
+			Cat.logEvent("HarConnClose", close);
 		}
 	}
 
