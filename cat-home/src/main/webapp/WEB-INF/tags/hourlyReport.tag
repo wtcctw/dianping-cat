@@ -30,24 +30,6 @@
 			$('#frequent').html("常用");
 		}
 	}
-	var data = [];
-	<c:forEach var="item" items="${model.domainGroups}">
-		<c:set var="detail" value="${item.value}" />
-			<c:forEach var="productline" items="${detail.projectLines}" varStatus="index">
-			<c:forEach var="domain" items="${productline.value.lineDomains}">
-					var item = {};
-					item['label'] = '${domain}';
-					item['category'] ='${productline.key}';
-					
-					data.push(item);
-			</c:forEach>
-	</c:forEach></c:forEach>
-	
-	$( "#search" ).catcomplete({
-		delay: 0,
-		source: data
-	});
-
 	function buildHref(domain){
 		var href = '<a href="?op=${payload.action.name}&domain='+domain+'&date=${model.date}">&nbsp;[&nbsp;'+domain+'&nbsp;]&nbsp;</a>';
 		return href;
@@ -74,6 +56,39 @@
 				return false;
 			}		
 		);
+		
+		//custom autocomplete (category selection)
+		$.widget( "custom.catcomplete", $.ui.autocomplete, {
+			_renderMenu: function( ul, items ) {
+				var that = this,
+				currentCategory = "";
+				$.each( items, function( index, item ) {
+					if ( item.category != currentCategory ) {
+						ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+						currentCategory = item.category;
+					}
+					that._renderItemData( ul, item );
+				});
+			}
+		});
+		
+		var data = [];
+		<c:forEach var="item" items="${model.domainGroups}">
+			<c:set var="detail" value="${item.value}" />
+				<c:forEach var="productline" items="${detail.projectLines}" varStatus="index">
+				<c:forEach var="domain" items="${productline.value.lineDomains}">
+						var item = {};
+						item['label'] = '${domain}';
+						item['category'] ='${productline.key}';
+						
+						data.push(item);
+				</c:forEach>
+		</c:forEach></c:forEach>
+		
+		$("#search").catcomplete({
+			delay: 0,
+			source: data
+		});
 	});
 </script>
 <div class="report">
