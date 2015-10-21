@@ -81,7 +81,14 @@ public class FileSystemManager implements Initializable {
 
 		if (harPool == null) {
 			harPool = new HarConnectionPool(m_configManager);
-			m_harConnPools.put(id, harPool);
+
+			try {
+				harPool.initialize();
+				m_harConnPools.put(id, harPool);
+			} catch (InitializationException e) {
+				Cat.logError(e);
+				return null;
+			}
 		}
 
 		return harPool.getHarfsConnection(id, date, fs);
