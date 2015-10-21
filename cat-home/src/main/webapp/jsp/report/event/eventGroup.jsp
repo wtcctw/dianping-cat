@@ -9,7 +9,7 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.event.Model" scope="request" />
 <c:set var="report" value="${model.report}" />
 
-<a:report
+<a:hourly_report
 	title="Event Report${empty payload.type ? '' : ' :: '}<a href='?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}'>${payload.type}</a>"
 	navUrlPrefix="op=groupReport&op=groupReport&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.encodedType}"
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
@@ -153,4 +153,4 @@ $(document).ready(function() {
 </c:choose>
 
 </jsp:body>
-</a:report>
+</a:hourly_report>

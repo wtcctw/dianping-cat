@@ -9,7 +9,7 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.problem.Model" scope="request" />
 <c:set var="report" value="${model.report}" />
 
-<a:report title="Problem Report"
+<a:hourly_report title="Problem Report"
 	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}&group=${payload.group}&group=${payload.group}${payload.queryString}"
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
@@ -126,4 +126,4 @@
 <res:useJs value="${res.js.local.problemHistory_js}" target="bottom-js" />
 </jsp:body>
 
-</a:report>
+</a:hourly_report>

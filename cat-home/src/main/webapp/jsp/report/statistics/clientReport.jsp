@@ -9,7 +9,7 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.statistics.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.statistics.Model" scope="request" />
 
-<a:offline>
+<a:application>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useCss value='${res.css.local.table_css}' target="head-css" />
@@ -27,6 +27,7 @@
 		<script type="text/javascript">
 		  $(document).ready(function(){
 			  init();
+			  $('#Offline_report').addClass('active open');
 			  $('#client_report').addClass("active");
 			  $('#time').datetimepicker({
 					format:'Y-m-d',
@@ -40,4 +41,4 @@
 	        window.location.href="?op=client&day="+time;
 	      }
 		</script>
-</a:offline>
+</a:application>

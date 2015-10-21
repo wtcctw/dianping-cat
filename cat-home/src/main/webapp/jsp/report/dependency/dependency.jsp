@@ -7,7 +7,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.dependency.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.dependency.Model" scope="request"/>
 
-<a:report title="Dependency Report"
+<a:hourly_report title="Dependency Report"
 	navUrlPrefix="op=lineChart&domain=${model.domain}">
 	<jsp:attribute name="subtitle">${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
@@ -23,7 +23,7 @@
 			<%@ include file="dependencyLineGraph.jsp"%>
 	  </div>
 </jsp:body>
-</a:report>
+</a:hourly_report>
 <script type="text/javascript">
 	$(document).ready(function() {
 		var tab = '${payload.tab}';

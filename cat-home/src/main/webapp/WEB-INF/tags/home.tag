@@ -11,29 +11,6 @@
 				<script type="text/javascript">
 					try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
 				</script>
-				<div class="sidebar-shortcuts" id="sidebar-shortcuts">
-					<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-						<button class="btn btn-success" id="tab_realtime">
-							<i class="ace-icon fa fa-signal"></i>&nbsp;&nbsp;实时
-						</button>
-						<button class="btn btn-grey" id="tab_offtime">
-							<i class="ace-icon fa fa-film"></i>&nbsp;&nbsp;离线
-						</button>
-						<!-- #section:basics/sidebar.layout.shortcuts -->
-						<button class="btn btn-warning" id="tab_document">
-							<i class="ace-icon fa fa-users"></i>&nbsp;&nbsp;文档
-						</button>
-						<button class="btn btn-danger" id="tab_config">
-							<i class="ace-icon fa fa-cogs"></i>&nbsp;&nbsp;配置
-						</button>
-					</div>
-					<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
-						<span class="btn btn-success"></span>
-						<span class="btn btn-info"></span>
-						<span class="btn btn-warning"></span>
-						<span class="btn btn-danger"></span>
-					</div>
-				</div>
 				<ul class="nav  nav-list" style="top: 0px;">
 					<li id="indexButton" >
 						<a href="/cat/r/home?op=view&docName=index">
@@ -132,20 +109,3 @@
  				</div>
 			</div><!-- /.main-content -->
 		</div></a:base>
-		<script  type="text/javascript">
-	$(document).ready(function() {
-		$("#tab_realtime").click(function(){
-			window.location.href = "/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
-		});
-		$("#tab_offtime").click(function(){
-			window.location.href = "/cat/r/statistics?op=service&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
-		});
-		$("#tab_document").click(function(){
-			window.location.href = "/cat/r/home?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
-		});
-		$("#tab_config").click(function(){
-			window.location.href = "/cat/s/config?op=projects";
-		});});
-		$("#tab_document").addClass("disabled");
-
-</script>

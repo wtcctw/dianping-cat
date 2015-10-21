@@ -9,7 +9,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.app.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model" scope="request" />
 
-<a:body>
+<a:application>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
@@ -187,7 +187,7 @@
 	</script>
 
 			<%@include file="speedDetail.jsp"%>
-</a:body>
+</a:application>
 
 <style type="text/css">
 .row-fluid .span2 {
