@@ -10,6 +10,44 @@
 
 <a:application>
 <script>
+	function showDomain() {
+		var b = $('#switch').html();
+		if (b == '全部') {
+			$('.domainNavbar').slideDown();
+			$('#switch').html("收起");
+		} else {
+			$('.domainNavbar').slideUp();
+			$('#switch').html("全部");
+		}
+	}
+	function showFrequent(){
+		var b = $('#frequent').html();
+		if (b == '常用') {
+			$('.frequentNavbar').slideDown();
+			$('#frequent').html("收起");
+		} else {
+			$('.frequentNavbar').slideUp();
+			$('#frequent').html("常用");
+		}
+	}
+	var data = [];
+	<c:forEach var="item" items="${model.domainGroups}">
+		<c:set var="detail" value="${item.value}" />
+			<c:forEach var="productline" items="${detail.projectLines}" varStatus="index">
+			<c:forEach var="domain" items="${productline.value.lineDomains}">
+					var item = {};
+					item['label'] = '${domain}';
+					item['category'] ='${productline.key}';
+					
+					data.push(item);
+			</c:forEach>
+	</c:forEach></c:forEach>
+	
+	$( "#search" ).catcomplete({
+		delay: 0,
+		source: data
+	});
+
 	function buildHref(id){
 		var href = '<a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id='+id+'&date=${model.date}">&nbsp;[&nbsp;'+id+'&nbsp;]&nbsp;</a>';
 		return href;
