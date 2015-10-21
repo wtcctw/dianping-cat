@@ -8,7 +8,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.app.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model" scope="request" />
 
-<a:application>
+<a:mobile>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useCss value='${res.css.local.table_css}' target="head-css" />
@@ -46,4 +46,4 @@
 	        window.location.href="?op=statistics&day="+time+"&domain=${model.domain}&type=${payload.type}";
 	      }
 		</script>
-</a:application>
+</a:mobile>

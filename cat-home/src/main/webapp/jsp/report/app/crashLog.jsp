@@ -6,9 +6,9 @@
 <jsp:useBean id="ctx" type="com.dianping.cat.report.page.app.Context" scope="request" />
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.app.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model" scope="request" />
-<a:application>
+<a:mobile>
 	<%@include file="crashLogDetail.jsp"%>
-</a:application>
+</a:mobile>
 
 <script type="text/javascript">
 	function query(){
