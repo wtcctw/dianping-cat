@@ -52,6 +52,7 @@ public class HarConnectionPool implements Initializable {
 		}
 		for (String close : closed) {
 			m_hars.remove(close);
+			Cat.logEvent("HarConnClose", close);
 		}
 	}
 
@@ -76,15 +77,17 @@ public class HarConnectionPool implements Initializable {
 						m_hars.put(harUri, har);
 					} catch (IOException e) {
 						// ignore
-						harfs.close();
-						return null;
 					}
 				}
 			}
 		}
 
-		har.setValue(current);
-		return har.getKey();
+		if (har != null) {
+			har.setValue(current);
+			return har.getKey();
+		} else {
+			return null;
+		}
 	}
 
 	@Override

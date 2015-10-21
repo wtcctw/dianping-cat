@@ -1,7 +1,7 @@
 <%@ tag trimDirectiveWhitespaces="true" pageEncoding="UTF-8"%>
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 
-<a:base_with_nav>
+<a:base>
 	<div class="main-container" id="main-container">
 		<script type="text/javascript">
 			try{ace.settings.check('main-container' , 'fixed')}catch(e){}
@@ -10,29 +10,6 @@
 			<script type="text/javascript">
 				try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
 			</script>
-			<div class="sidebar-shortcuts" id="sidebar-shortcuts">
-				<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-					<button class="btn btn-success" id="tab_realtime">
-						<i class="ace-icon fa fa-signal"></i>&nbsp;&nbsp;实时
-					</button>
-					<button class="btn btn-grey" id="tab_offtime">
-						<i class="ace-icon fa fa-film"></i>&nbsp;&nbsp;离线
-					</button>
-					<!-- #section:basics/sidebar.layout.shortcuts -->
-					<button class="btn btn-warning" id="tab_document">
-						<i class="ace-icon fa fa-users"></i>&nbsp;&nbsp;文档
-					</button>
-					<button class="btn btn-danger" id="tab_config">
-						<i class="ace-icon fa fa-cogs"></i>&nbsp;&nbsp;配置
-					</button>
-				</div>
-				<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
-					<span class="btn btn-success"></span>
-					<span class="btn btn-info"></span>
-					<span class="btn btn-warning"></span>
-					<span class="btn btn-danger"></span>
-				</div>
-			</div>
 			<ul class="nav nav-list" style="top: 0px;">
 				<li id="Dashboard_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-tachometer"></i> <span class="menu-text">Dashboard</span>
 						<b class="arrow fa fa-angle-down"></b>
@@ -59,7 +36,7 @@
 						<b class="arrow fa fa-angle-down"></b>
 				</a> <b class="arrow"></b>
 					<ul class="submenu">
-						<li id="web_trend"><a href="/cat/r/web?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
+						<li id="web_trend"><a href="/cat/r/web?domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>URL访问趋势</a>
 							<b class="arrow"></b></li>
 						<li id="web_piechart"><a href="/cat/r/web?op=piechart&domain=${model.domain}">
@@ -129,7 +106,7 @@
 						<i class="menu-icon  glyphicon glyphicon-random"></i>
 						<span class="menu-text">Cross</span>
 					</a>
-				</li>
+				</li>		
 				<li id="Cache_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-flash"></i> <span class="menu-text">Cache</span>
 						<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
@@ -179,11 +156,59 @@
 						<span class="menu-text">State</span>
 					</a>
 				</li>
+				<li id="Offline_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-film"></i> <span class="menu-text">Offline</span>
+						<b class="arrow fa fa-angle-down"></b>
+					</a> <b class="arrow"></b>
+					<ul class="submenu">
+						<li id="overload_report" >
+						<a href="/cat/r/overload?domain=${model.domain}&op=${payload.action.name}">
+							<i class="menu-icon  fa  fa-flask"></i>
+							<span class="menu-text">报表容量统计</span>
+						</a>
+					</li>
+					<li id="service_report" >
+						<a href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=service">
+							<i class="menu-icon glyphicon glyphicon-check"></i>
+							<span class="menu-text">服务可用排行</span>
+						</a>
+					</li>
+					<li id="client_report" >
+						<a href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=client">
+							<i class="menu-icon fa  fa-exchange"></i>
+							<span class="menu-text">服务调用排行</span>
+						</a>
+					</li>
+					<li id="utilization_report" >
+						<a href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=utilization">
+							<i class="menu-icon  fa fa-glass"></i>
+							<span class="menu-text">线上容量规划</span>
+						</a>
+					</li>
+					<li id="jar_report" >
+						<a href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=jar">
+							<i class="menu-icon  fa fa-briefcase"></i>
+							<span class="menu-text">线上JAR版本</span>
+						</a>
+					</li>
+					<li id="heavy_report" >
+						<a href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=heavy">
+							<i class="menu-icon  fa fa-circle"></i>
+							<span class="menu-text">重量访问排行</span>
+						</a>
+					</li>
+					<li id="summary_report" >
+						<a href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=summary">
+							<i class="menu-icon  fa fa-lightbulb-o"></i>
+							<span class="menu-text">告警智能分析</span>
+						</a>
+					</li>
+					</ul>
+				</li>
 				<li id="System_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-gavel"></i> <span class="menu-text">System</span>
 						<b class="arrow fa fa-angle-down"></b>
 				</a> <b class="arrow"></b>
 					<ul class="submenu">
-						<li id="system_network"><a href="/cat/r/network?op=metric&product=&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}">
+						<li id="system_network"><a href="/cat/r/network?op=metric&product=&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
 							<i class="menu-icon fa fa-caret-right"></i>网络监控</a>
 							<b class="arrow"></b></li>
 						<li id="system_paas"><a href="/cat/r/system?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
@@ -220,22 +245,5 @@
 				</div>
 		</div>
 	</div>
-</a:base_with_nav>
-<script  type="text/javascript">
-	$(document).ready(function() {
-		$("#tab_realtime").click(function(){
-			window.location.href = "/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
-		});
-		$("#tab_offtime").click(function(){
-			window.location.href = "/cat/r/statistics?op=service&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
-		});
-		$("#tab_document").click(function(){
-			window.location.href = "/cat/r/home?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
-		});
-		$("#tab_config").click(function(){
-			window.location.href = "/cat/s/config?op=projects";
-		});});
-		$("#tab_realtime").addClass("disabled");
-
-</script>
+</a:base>
 

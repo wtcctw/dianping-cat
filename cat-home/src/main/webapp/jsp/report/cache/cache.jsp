@@ -13,7 +13,7 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.cache.Model"
 	scope="request" />
 <c:set var="report" value="${model.report}" />
-<a:report
+<a:hourly_report
 	title="Cache Report${empty payload.type ? '' : ' :: '}<a href='?domain=${model.domain}&date=${model.date}&type=${payload.type}'>${payload.type}</a>"
 	navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.type}"
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
@@ -150,7 +150,7 @@
 
 </jsp:body>
 
-</a:report>
+</a:hourly_report>
 <script type="text/javascript" src="/cat/js/appendHostname.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
