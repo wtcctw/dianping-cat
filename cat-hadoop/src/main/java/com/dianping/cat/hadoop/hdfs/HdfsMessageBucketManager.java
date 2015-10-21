@@ -108,11 +108,8 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 	}
 
 	private Pair<List<String>, String> loadFileFromHar(MessageId id, Date date) throws IOException {
-		String p = m_pathBuilder.getHarLogviewPath(date, "");
-		StringBuilder sb = new StringBuilder();
 		FileSystem fs = m_manager.getHarFileSystem(ServerConfigManager.DUMP_DIR, date);
-
-		List<String> paths = filterFiles(fs, id, sb.toString(), p);
+		List<String> paths = filterFiles(fs, id, ".", "");
 
 		return new Pair<List<String>, String>(paths, HARFS_BUCKET);
 	}

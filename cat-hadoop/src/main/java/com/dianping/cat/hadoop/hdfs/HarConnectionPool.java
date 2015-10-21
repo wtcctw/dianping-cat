@@ -76,15 +76,17 @@ public class HarConnectionPool implements Initializable {
 						m_hars.put(harUri, har);
 					} catch (IOException e) {
 						// ignore
-						harfs.close();
-						return null;
 					}
 				}
 			}
 		}
 
-		har.setValue(current);
-		return har.getKey();
+		if (har != null) {
+			har.setValue(current);
+			return har.getKey();
+		} else {
+			return null;
+		}
 	}
 
 	@Override
