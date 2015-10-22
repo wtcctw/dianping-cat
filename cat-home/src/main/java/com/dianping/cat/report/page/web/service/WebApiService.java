@@ -12,9 +12,9 @@ import java.util.Map.Entry;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.app.WebApiData;
-import com.dianping.cat.app.WebApiDataDao;
-import com.dianping.cat.app.WebApiDataEntity;
+import com.dianping.cat.web.WebApiData;
+import com.dianping.cat.web.WebApiDataDao;
+import com.dianping.cat.web.WebApiDataEntity;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.report.page.app.display.AppDataSequence;
 

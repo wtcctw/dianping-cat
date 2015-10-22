@@ -1,11 +1,11 @@
-package com.dianping.cat.config.app;
+package com.dianping.cat.config.web;
 
 import java.util.Map;
 
 import org.unidal.dal.jdbc.QueryEngine;
 import org.unidal.dal.jdbc.mapping.TableProvider;
 
-import com.dianping.cat.app.WebApiData;
+import com.dianping.cat.web.WebApiData;
 
 public class WebApiTableProvider implements TableProvider {
 
@@ -13,7 +13,7 @@ public class WebApiTableProvider implements TableProvider {
 
 	private String m_physicalTableName = "web_api_data";
 
-	private String m_dataSourceName = "app";
+	private String m_dataSourceName = "web";
 
 	@Override
 	public String getDataSourceName(Map<String, Object> hints) {

@@ -2350,7 +2350,7 @@
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>web-api-data</role-hint>
-			<implementation>com.dianping.cat.config.app.WebApiTableProvider</implementation>
+			<implementation>com.dianping.cat.config.web.WebApiTableProvider</implementation>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
@@ -2542,16 +2542,6 @@
 			</configuration>
 		</component>
 		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>web-api-data</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>web-api-data</logical-table-name>
-				<physical-table-name>web_api_data</physical-table-name>
-				<data-source-name>app</data-source-name>
-			</configuration>
-		</component>
-		<component>
 			<role>com.dianping.cat.app.AppCommandDataDao</role>
 			<implementation>com.dianping.cat.app.AppCommandDataDao</implementation>
 			<requirements>
@@ -2572,15 +2562,6 @@
 		<component>
 			<role>com.dianping.cat.app.AppSpeedDataDao</role>
 			<implementation>com.dianping.cat.app.AppSpeedDataDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.app.WebApiDataDao</role>
-			<implementation>com.dianping.cat.app.WebApiDataDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -5038,7 +5019,7 @@
 					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
+					<role>com.dianping.cat.config.web.WebConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.web.CityManager</role>
@@ -5081,8 +5062,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.app.AppConfigManager</role>
-			<implementation>com.dianping.cat.config.app.AppConfigManager</implementation>
+			<role>com.dianping.cat.config.web.WebConfigManager</role>
+			<implementation>com.dianping.cat.config.web.WebConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -5104,7 +5085,7 @@
 					<role>com.dianping.cat.report.page.web.service.WebApiService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
+					<role>com.dianping.cat.config.web.WebConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5113,7 +5094,7 @@
 			<implementation>com.dianping.cat.report.page.web.service.WebApiService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.app.WebApiDataDao</role>
+					<role>com.dianping.cat.web.WebApiDataDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
@@ -5121,8 +5102,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.app.WebApiDataDao</role>
-			<implementation>com.dianping.cat.app.WebApiDataDao</implementation>
+			<role>com.dianping.cat.web.WebApiDataDao</role>
+			<implementation>com.dianping.cat.web.WebApiDataDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -5234,6 +5215,18 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.AppConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>

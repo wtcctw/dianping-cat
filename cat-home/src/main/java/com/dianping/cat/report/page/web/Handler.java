@@ -17,6 +17,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
@@ -43,7 +44,7 @@ public class Handler implements PageHandler<Context> {
 	private UrlPatternConfigManager m_patternManager;
 
 	@Inject
-	private AppConfigManager m_appConfigManager;
+	private WebConfigManager m_webConfigManager;
 
 	@Inject
 	private CityManager m_cityManager;
@@ -165,8 +166,8 @@ public class Handler implements PageHandler<Context> {
 	private void normalize(Model model, Payload payload) {
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.WEB);
-		model.setCities(m_appConfigManager.queryConfigItem(AppConfigManager.CITY));
-		model.setOperators(m_appConfigManager.queryConfigItem(AppConfigManager.OPERATOR));
+		model.setCities(m_webConfigManager.queryConfigItem(AppConfigManager.CITY));
+		model.setOperators(m_webConfigManager.queryConfigItem(AppConfigManager.OPERATOR));
 		model.setCodes(m_patternManager.queryCodes());
 
 		PatternItem first = m_patternManager.queryUrlPatternRules().iterator().next();

@@ -150,6 +150,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.web.WebConfigManager</role>
+			<implementation>com.dianping.cat.config.web.WebConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
 			<implementation>com.dianping.cat.config.app.AppSpeedConfigManager</implementation>
 			<requirements>
