@@ -15,6 +15,10 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.dianping.cat</groupId>
+			<artifactId>cat-core</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.1</version>
@@ -37,6 +41,10 @@
 			<version>1.3.0</version>
 			<scope>test</scope>
 		</dependency>
+	  <dependency>
+         <groupId>org.unidal.framework</groupId>
+         <artifactId>foundation-service</artifactId>
+      </dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
@@ -66,4 +74,41 @@
 			<version>1.3.2</version>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+	            <groupId>org.unidal.maven.plugins</groupId>
+	            <artifactId>codegen-maven-plugin</artifactId>
+	            <executions>
+	               <execution>
+	                  <id>generate dal model files</id>
+	                  <phase>generate-sources</phase>
+	                  <goals>
+	                     <goal>dal-model</goal>
+	                  </goals>
+	                  <configuration>
+	                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/influxdb-config-manifest.xml
+						 </manifest>
+	                  </configuration>
+	               </execution>
+	            </executions>
+	        </plugin>
+			<plugin>
+					<groupId>org.unidal.maven.plugins</groupId>
+					<artifactId>plexus-maven-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>generate plexus component descriptor</id>
+							<phase>process-classes</phase>
+							<goals>
+								<goal>plexus</goal>
+							</goals>
+							<configuration>
+								<className>com.dianping.cat.influxdb.build.ComponentsConfigurator</className>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+		</plugins>
+	</build>
 </project>
