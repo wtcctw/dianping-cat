@@ -113,7 +113,10 @@
 								<i class="menu-icon fa fa-caret-right"></i>缓存访问告警</a>
 								<b class="arrow"></b></li>
 							<li id="storageRPCRule"><a href="/cat/s/config?op=storageRule&type=RPC">
-								<i class="menu-icon fa fa-caret-right"></i>缓存访问告警</a>
+								<i class="menu-icon fa fa-caret-right"></i>服务访问告警</a>
+								<b class="arrow"></b></li>
+							<li id="storageGroupConfigUpdate"><a href="/cat/s/config?op=storageGroupConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>存储分组配置</a>
 								<b class="arrow"></b></li>
 						</ul>
 					</li>
