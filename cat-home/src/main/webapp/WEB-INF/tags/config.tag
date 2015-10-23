@@ -112,6 +112,9 @@
 							<li id="storageCacheRule"><a href="/cat/s/config?op=storageRule&type=Cache">
 								<i class="menu-icon fa fa-caret-right"></i>缓存访问告警</a>
 								<b class="arrow"></b></li>
+							<li id="storageRPCRule"><a href="/cat/s/config?op=storageRule&type=RPC">
+								<i class="menu-icon fa fa-caret-right"></i>缓存访问告警</a>
+								<b class="arrow"></b></li>
 						</ul>
 					</li>
 					<li id="alert_config" class="hsub">

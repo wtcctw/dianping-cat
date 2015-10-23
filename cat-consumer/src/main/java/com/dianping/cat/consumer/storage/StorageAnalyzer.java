@@ -115,8 +115,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 		m_updater.updateStorageReport(report, param);
 	}
 
-	private void processRpcTransaction(MessageTree tree, Transaction t) {
-		String serverId = null;
+	private void processRPCTransaction(MessageTree tree, Transaction t) {		String serverId = null;
 		String domain = tree.getDomain();
 		String ip = tree.getIpAddress();
 		String method = "call";
@@ -126,7 +125,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 			if (message instanceof Event) {
 				String type = message.getType();
 
-				if (type.equals("PigeonCall.server") || type.equals("Call.server")) {
+				if (type.equals("PigeonCall.app") ) {
 					serverId = message.getName();
 					break;
 				}
@@ -134,7 +133,9 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 		}
 
 		if (serverId != null) {
-			String id = queryRpcId(serverId);
+			String id = queryRPCId(serverId);
+			System.err.println(t);
+			System.err.println(id);
 			StorageReport report = m_reportManager.getHourlyReport(getStartTime(), id, true);
 			StorageUpdateParam param = new StorageUpdateParam();
 
@@ -185,7 +186,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 		} else if (m_serverConfigManager.isSQLTransaction(type)) {
 			processSQLTransaction(tree, t);
 		} else if (m_serverConfigManager.isRpcClient(type)) {
-			processRpcTransaction(tree, t);
+			processRPCTransaction(tree, t);
 		}
 
 		List<Message> children = t.getChildren();
@@ -201,7 +202,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 		return name + "-Cache";
 	}
 
-	private String queryRpcId(String name) {
+	private String queryRPCId(String name) {
 		return name + "-RPC";
 	}
 

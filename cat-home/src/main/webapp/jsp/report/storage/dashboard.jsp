@@ -24,6 +24,7 @@
   	<c:set var="linkMap" value="${model.links}" />
   	<c:if test="${payload.type eq 'SQL'}"><c:set var="name" value="数据库" /></c:if>
   	<c:if test="${payload.type eq 'Cache'}"><c:set var="name" value="缓存" /></c:if>
+  	<c:if test="${payload.type eq 'RPC'}"><c:set var="name" value="服务" /></c:if>
   
   <span>
 	<c:forEach var="entry" items="${model.alertInfos}">
@@ -199,6 +200,9 @@
 		<c:if test="${payload.type eq 'Cache'}">
 			$('#dashbord_cache').addClass('active');
 		</c:if>
+		<c:if test="${payload.type eq 'RPC'}">
+		$('#dashbord_rpc').addClass('active');
+	</c:if>
 		
 	});
 </script>

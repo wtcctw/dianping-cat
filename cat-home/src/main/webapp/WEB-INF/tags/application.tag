@@ -24,6 +24,9 @@
 						<li id="dashbord_network"><a href="/cat/r/network?op=dashboard&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>网络大盘</a>
 							<b class="arrow"></b></li>
+						<li id="dashbord_rpc"><a href="/cat/r/storage?op=dashboard&domain=${model.domain}&type=RPC">
+							<i class="menu-icon fa fa-caret-right"></i>服务大盘</a>
+							<b class="arrow"></b></li>
 						<li id="dashbord_database"><a href="/cat/r/storage?op=dashboard&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>数据库大盘</a>
 							<b class="arrow"></b></li>
@@ -76,7 +79,16 @@
 						<i class="menu-icon  glyphicon glyphicon-random"></i>
 						<span class="menu-text">Cross</span>
 					</a>
-				</li>		
+				</li>
+				<li id="RPC_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-flash"></i> <span class="menu-text">Service</span>
+						<b class="arrow fa fa-angle-down"></b>
+					</a> <b class="arrow"></b>
+					<ul class="submenu">
+						<li id="rpc_operation"><a href="/cat/r/storage?id=shop-server&type=RPC&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}">
+							<i class="menu-icon fa fa-caret-right"></i>服务趋势</a>
+							<b class="arrow"></b></li>
+					</ul>
+				</li>
 				<li id="Cache_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-flash"></i> <span class="menu-text">Cache</span>
 						<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>

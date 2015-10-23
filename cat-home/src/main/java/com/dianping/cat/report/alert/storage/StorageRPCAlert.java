@@ -4,12 +4,12 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.report.alert.AlertType;
 
-public class StorageCacheAlert extends AbstractStorageAlert {
+public class StorageRPCAlert extends AbstractStorageAlert {
 
 	@Inject
 	private StorageCacheRuleConfigManager m_configManager;
 
-	public static final String ID = AlertType.STORAGE_RPC.getName();
+	public static final String ID = AlertType.STORAGE_CACHE.getName();
 
 	@Override
 	public String getName() {

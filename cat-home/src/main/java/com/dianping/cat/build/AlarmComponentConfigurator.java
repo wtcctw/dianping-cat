@@ -94,6 +94,8 @@ import com.dianping.cat.report.alert.sender.spliter.WeixinSpliter;
 import com.dianping.cat.report.alert.service.AlertEntityService;
 import com.dianping.cat.report.alert.storage.StorageCacheAlert;
 import com.dianping.cat.report.alert.storage.StorageCacheRuleConfigManager;
+import com.dianping.cat.report.alert.storage.StorageRPCAlert;
+import com.dianping.cat.report.alert.storage.StorageRPCRuleConfigManager;
 import com.dianping.cat.report.alert.storage.StorageSQLAlert;
 import com.dianping.cat.report.alert.storage.StorageSQLRuleConfigManager;
 import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
@@ -243,6 +245,10 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(StorageCacheAlert.class).req(StorageMergeHelper.class, DataChecker.class, AlertManager.class)
 		      .req(ModelService.class, StorageAnalyzer.ID)
 		      .req(StorageCacheRuleConfigManager.class, StorageGroupConfigManager.class, StorageAlertInfoBuilder.class));
+
+		all.add(C(StorageRPCAlert.class).req(StorageMergeHelper.class, DataChecker.class, AlertManager.class)
+		      .req(ModelService.class, StorageAnalyzer.ID)
+		      .req(StorageRPCRuleConfigManager.class, StorageGroupConfigManager.class, StorageAlertInfoBuilder.class));
 
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionRuleConfigManager.class, AggregationConfigManager.class));
 
