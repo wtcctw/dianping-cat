@@ -31,6 +31,21 @@
 							<b class="arrow"></b></li>
 					</ul>
 				</li>
+				<li id="Web_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-globe"></i> <span class="menu-text">Web</span>
+						<b class="arrow fa fa-angle-down"></b>
+				</a> <b class="arrow"></b>
+					<ul class="submenu">
+						<li id="web_trend"><a href="/cat/r/web?domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>URL访问趋势</a>
+							<b class="arrow"></b></li>
+						<li id="web_piechart"><a href="/cat/r/web?op=piechart&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>URL访问分布</a>
+							<b class="arrow"></b></li>
+						<li id="web_problem"><a href="/cat/r/web?op=problem&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>JS错误日志</a>
+							<b class="arrow"></b></li>
+					</ul>
+				</li>
 				<li id="App_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-phone"></i> <span class="menu-text">App</span>
 						<b class="arrow fa fa-angle-down"></b>
 				</a> <b class="arrow"></b>

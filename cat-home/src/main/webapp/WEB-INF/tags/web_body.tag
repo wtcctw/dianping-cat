@@ -21,7 +21,7 @@
 						<li id="web_piechart"><a href="/cat/r/web?op=piechart&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>URL访问分布</a>
 							<b class="arrow"></b></li>
-						<li id="web_problem"><a href="/cat/r/web?op=problem&domain=${model.domain}">
+						<li id="web_problem"><a href="/cat/r/browser?op=jsError">
 							<i class="menu-icon fa fa-caret-right"></i>JS错误日志</a>
 							<b class="arrow"></b></li>
 					</ul>

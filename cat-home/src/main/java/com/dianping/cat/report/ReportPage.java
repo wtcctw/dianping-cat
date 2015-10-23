@@ -61,7 +61,9 @@ public enum ReportPage implements Page {
 
    ACTIVITY("activity", "activity", "Activity", "Activity", true),
 
-   TOP("top", "top", "Top", "Top", true);
+   TOP("top", "top", "Top", "Top", true),
+   
+   BROWSER("browser", "browser", "Browser", "Browser", true);
 
    private String m_name;
 
