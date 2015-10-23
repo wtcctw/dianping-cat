@@ -14,8 +14,8 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.report.ReportManager;
 
 public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> implements LogEnabled {
 
@@ -32,6 +32,8 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	private StorageReportUpdater m_updater;
 
 	public static final String ID = "storage";
+
+	private static final long LONG_RPC_THRESHOLD = 100;
 
 	private static final long LONG_SQL_THRESHOLD = 1000;
 
@@ -80,7 +82,6 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 
 			processTransaction(tree, root);
 		}
-
 	}
 
 	private void processCacheTransaction(MessageTree tree, Transaction t) {
@@ -110,9 +111,36 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 		StorageReport report = m_reportManager.getHourlyReport(getStartTime(), id, true);
 		StorageUpdateParam param = new StorageUpdateParam();
 
-		param.setId(id).setDomain(domain).setIp(ip).setMethod(method).setTransaction(t)
-		      .setThreshold(LONG_CACHE_THRESHOLD);
+		param.setDomain(domain).setIp(ip).setMethod(method).setTransaction(t).setThreshold(LONG_CACHE_THRESHOLD);
 		m_updater.updateStorageReport(report, param);
+	}
+
+	private void processRpcTransaction(MessageTree tree, Transaction t) {
+		String serverId = null;
+		String domain = tree.getDomain();
+		String ip = tree.getIpAddress();
+		String method = "call";
+		List<Message> messages = t.getChildren();
+
+		for (Message message : messages) {
+			if (message instanceof Event) {
+				String type = message.getType();
+
+				if (type.equals("PigeonCall.server") || type.equals("Call.server")) {
+					serverId = message.getName();
+					break;
+				}
+			}
+		}
+
+		if (serverId != null) {
+			String id = queryRpcId(serverId);
+			StorageReport report = m_reportManager.getHourlyReport(getStartTime(), id, true);
+			StorageUpdateParam param = new StorageUpdateParam();
+
+			param.setDomain(domain).setIp(ip).setMethod(method).setTransaction(t).setThreshold(LONG_RPC_THRESHOLD);
+			m_updater.updateStorageReport(report, param);
+		}
 	}
 
 	private void processSQLTransaction(MessageTree tree, Transaction t) {
@@ -144,8 +172,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 			StorageReport report = m_reportManager.getHourlyReport(getStartTime(), id, true);
 			StorageUpdateParam param = new StorageUpdateParam();
 
-			param.setId(id).setDomain(domain).setIp(ip).setMethod(method).setTransaction(t)
-			      .setThreshold(LONG_SQL_THRESHOLD);// .setSqlName(sqlName).setSqlStatement(sqlStatement);
+			param.setDomain(domain).setIp(ip).setMethod(method).setTransaction(t).setThreshold(LONG_SQL_THRESHOLD);
 			m_updater.updateStorageReport(report, param);
 		}
 	}
@@ -153,10 +180,12 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	private void processTransaction(MessageTree tree, Transaction t) {
 		String type = t.getType();
 
-		if (m_serverConfigManager.isSQLTransaction(type)) {
-			processSQLTransaction(tree, t);
-		} else if (m_serverConfigManager.isCacheTransaction(type)) {
+		if (m_serverConfigManager.isCacheTransaction(type)) {
 			processCacheTransaction(tree, t);
+		} else if (m_serverConfigManager.isSQLTransaction(type)) {
+			processSQLTransaction(tree, t);
+		} else if (m_serverConfigManager.isRpcClient(type)) {
+			processRpcTransaction(tree, t);
 		}
 
 		List<Message> children = t.getChildren();
@@ -172,7 +201,12 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 		return name + "-Cache";
 	}
 
+	private String queryRpcId(String name) {
+		return name + "-RPC";
+	}
+
 	private String querySQLId(String name) {
 		return name + "-SQL";
 	}
+
 }

@@ -47,8 +47,6 @@ public class StorageReportUpdater {
 		if (!t.isSuccess()) {
 			operation.incError();
 			segment.incError();
-		} else {
-			// updateSqlInfo(param, d);
 		}
 		if (duration > param.getThreshold()) {
 			operation.incLongCount();
@@ -56,25 +54,7 @@ public class StorageReportUpdater {
 		}
 	}
 
-	// private void updateSqlInfo(StorageUpdateParam param, Domain d) {
-	// String sqlName = param.getSqlName();
-	//
-	// if (StringUtils.isNotEmpty(sqlName)) {
-	// Sql sql = d.findOrCreateSql(sqlName);
-	// String sqlStatement = sql.getStatement();
-	//
-	// if (StringUtils.isEmpty(sqlStatement)) {
-	// sqlStatement = sqlStatement.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-	//
-	// sql.setStatement(sqlStatement);
-	// }
-	// sql.incCount();
-	// }
-	// }
-
 	public static class StorageUpdateParam {
-
-		private String m_id;
 
 		private String m_ip;
 
@@ -84,18 +64,12 @@ public class StorageReportUpdater {
 
 		private String m_sqlName;
 
-		private String m_sqlStatement;
-
 		private Transaction m_transaction;
 
 		private long m_threshold;
 
 		public String getDomain() {
 			return m_domain;
-		}
-
-		public String getId() {
-			return m_id;
 		}
 
 		public String getIp() {
@@ -108,10 +82,6 @@ public class StorageReportUpdater {
 
 		public String getSqlName() {
 			return m_sqlName;
-		}
-
-		public String getSqlStatement() {
-			return m_sqlStatement;
 		}
 
 		public long getThreshold() {
@@ -127,11 +97,6 @@ public class StorageReportUpdater {
 			return this;
 		}
 
-		public StorageUpdateParam setId(String id) {
-			m_id = id;
-			return this;
-		}
-
 		public StorageUpdateParam setIp(String ip) {
 			m_ip = ip;
 			return this;
@@ -144,11 +109,6 @@ public class StorageReportUpdater {
 
 		public StorageUpdateParam setSqlName(String sqlName) {
 			m_sqlName = sqlName;
-			return this;
-		}
-
-		public StorageUpdateParam setSqlStatement(String sqlStatement) {
-			m_sqlStatement = sqlStatement;
 			return this;
 		}
 
