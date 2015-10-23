@@ -92,42 +92,10 @@
 	});
 </script>
 <div class="report">
-	<div class="domainNavbar" style="display:none;font-size:small">
-		<table border="1" rules="all" >
-			<c:forEach var="item" items="${model.domainGroups}">
-				<tr>
-					<c:set var="detail" value="${item.value}" />
-					<td class="department" rowspan="${w:size(detail.projectLines)}">${item.key}</td>
-					<c:forEach var="productline" items="${detail.projectLines}" varStatus="index">
-							<c:if test="${index.index != 0}">
-								<tr>
-							</c:if>
-							<td class="department">${productline.key}</td>
-							<td><div class="domain"><c:forEach var="domain" items="${productline.value.lineDomains}">&nbsp;<c:choose><c:when test="${model.domain eq domain}"><a class='domainItem'
-													href="?op=${payload.action.name}&domain=${domain}&date=${model.date}&reportType=${payload.reportType}"
-													class="current">[&nbsp;${domain}&nbsp;]</a></c:when>
-													<c:otherwise><a class='domainItem'
-													href="?op=${payload.action.name}&domain=${domain}&date=${model.date}&reportType=${payload.reportType}">[&nbsp;${domain}&nbsp;]</a>
-											</c:otherwise></c:choose>&nbsp;
-									</c:forEach>
-								</div>
-							</td><c:if test="${index.index != 0}"></tr></c:if>
-					</c:forEach>
-				</tr>
-			</c:forEach>
-		</table>
-	</div>
-	<div class="frequentNavbar" style="display:none;font-size:small">
-		<table class="table table-striped table-hover table-bordered table-condensed" border="1" rules="all">
-			<tr>
-				<td class="domain"  style="word-break:break-all" id="frequentNavbar"></td>
-			<tr>
-		</table>
-	</div>
 	<div class="breadcrumbs" id="breadcrumbs">
 		<table>
 			<tr><td><span class="text-success"><jsp:invoke fragment="subtitle"/></span></td>
-				<td><div class="" style="width:250px;">
+				<td><div id="warp_search_group" class="" style="width:250px;">
 					<form id="wrap_search" style="margin-left:10px;margin-bottom:0px;">
 					<div class="input-group">
 						<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showDomain()" type="button"  id="switch">全部</button></span>
@@ -157,6 +125,38 @@
 		<script type="text/javascript">
 			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
 		</script>
+	</div>
+	<div class="domainNavbar" style="display:none;font-size:small">
+		<table border="1" rules="all" >
+			<c:forEach var="item" items="${model.domainGroups}">
+				<tr>
+					<c:set var="detail" value="${item.value}" />
+					<td class="department" rowspan="${w:size(detail.projectLines)}">${item.key}</td>
+					<c:forEach var="productline" items="${detail.projectLines}" varStatus="index">
+							<c:if test="${index.index != 0}">
+								<tr>
+							</c:if>
+							<td class="department">${productline.key}</td>
+							<td><div class="domain"><c:forEach var="domain" items="${productline.value.lineDomains}">&nbsp;<c:choose><c:when test="${model.domain eq domain}"><a class='domainItem'
+													href="?op=${payload.action.name}&domain=${domain}&date=${model.date}&reportType=${payload.reportType}"
+													class="current">[&nbsp;${domain}&nbsp;]</a></c:when>
+													<c:otherwise><a class='domainItem'
+													href="?op=${payload.action.name}&domain=${domain}&date=${model.date}&reportType=${payload.reportType}">[&nbsp;${domain}&nbsp;]</a>
+											</c:otherwise></c:choose>&nbsp;
+									</c:forEach>
+								</div>
+							</td><c:if test="${index.index != 0}"></tr></c:if>
+					</c:forEach>
+				</tr>
+			</c:forEach>
+		</table>
+	</div>
+	<div class="frequentNavbar" style="display:none;font-size:small">
+		<table border="1" rules="all">
+			<tr>
+				<td class="domain"  style="word-break:break-all" id="frequentNavbar"></td>
+			<tr>
+		</table>
 	</div>
 	<jsp:doBody />
 </div>

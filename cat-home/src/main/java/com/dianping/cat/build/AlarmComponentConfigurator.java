@@ -60,6 +60,7 @@ import com.dianping.cat.report.alert.sender.decorator.FrontEndExceptionDecorator
 import com.dianping.cat.report.alert.sender.decorator.HeartbeatDecorator;
 import com.dianping.cat.report.alert.sender.decorator.NetworkDecorator;
 import com.dianping.cat.report.alert.sender.decorator.StorageCacheDecorator;
+import com.dianping.cat.report.alert.sender.decorator.StorageRPCDecorator;
 import com.dianping.cat.report.alert.sender.decorator.StorageSQLDecorator;
 import com.dianping.cat.report.alert.sender.decorator.SystemDecorator;
 import com.dianping.cat.report.alert.sender.decorator.ThirdpartyDecorator;
@@ -76,6 +77,7 @@ import com.dianping.cat.report.alert.sender.receiver.FrontEndExceptionContactor;
 import com.dianping.cat.report.alert.sender.receiver.HeartbeatContactor;
 import com.dianping.cat.report.alert.sender.receiver.NetworkContactor;
 import com.dianping.cat.report.alert.sender.receiver.StorageCacheContactor;
+import com.dianping.cat.report.alert.sender.receiver.StorageRPCContactor;
 import com.dianping.cat.report.alert.sender.receiver.StorageSQLContactor;
 import com.dianping.cat.report.alert.sender.receiver.SystemContactor;
 import com.dianping.cat.report.alert.sender.receiver.ThirdpartyContactor;
@@ -164,6 +166,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      AlertConfigManager.class));
 		all.add(C(Contactor.class, StorageSQLContactor.ID, StorageSQLContactor.class).req(AlertConfigManager.class));
 		all.add(C(Contactor.class, StorageCacheContactor.ID, StorageCacheContactor.class).req(AlertConfigManager.class));
+		all.add(C(Contactor.class, StorageRPCContactor.ID, StorageRPCContactor.class).req(AlertConfigManager.class));
 		all.add(C(ContactorManager.class));
 
 		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProductLineConfigManager.class,
@@ -182,6 +185,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Decorator.class, EventDecorator.ID, EventDecorator.class));
 		all.add(C(Decorator.class, StorageSQLDecorator.ID, StorageSQLDecorator.class));
 		all.add(C(Decorator.class, StorageCacheDecorator.ID, StorageCacheDecorator.class));
+		all.add(C(Decorator.class, StorageRPCDecorator.ID, StorageRPCDecorator.class));
 
 		all.add(C(DecoratorManager.class));
 

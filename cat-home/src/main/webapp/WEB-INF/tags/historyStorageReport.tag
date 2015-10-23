@@ -91,47 +91,15 @@
 	});
 </script>
 <div class="report">
-	<div class="domainNavbar" style="display:none;font-size:small">
-		<table border="1" rules="all" >
-			<c:forEach var="item" items="${model.departments}">
-				<tr>
-					<c:set var="detail" value="${item.value}" />
-					<td class="department" rowspan="${w:size(detail.productlines)}">${item.key}</td>
-					<c:forEach var="productline" items="${detail.productlines}" varStatus="index">
-							<c:if test="${index.index != 0}">
-								<tr>
-							</c:if>
-							<td class="department">${productline.key}</td>
-							<td><div class="domain"><c:forEach var="id" items="${productline.value.storages}">&nbsp;<c:choose><c:when test="${payload.id eq id}"><a class='domainItem'
-													href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${id}&date=${model.date}&reportType=${payload.reportType}"
-													class="current">[&nbsp;${id}&nbsp;]</a></c:when>
-													<c:otherwise><a class='domainItem'
-													href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${id}&date=${model.date}&reportType=${payload.reportType}">[&nbsp;${id}&nbsp;]</a>
-											</c:otherwise></c:choose>&nbsp;
-									</c:forEach>
-								</div>
-							</td><c:if test="${index.index != 0}"></tr></c:if>
-					</c:forEach>
-				</tr>
-			</c:forEach>
-		</table>
-	</div>
-	<div class="frequentNavbar" style="display:none;font-size:small">
-		<table class="table table-striped table-hover table-bordered table-condensed" border="1" rules="all">
-			<tr>
-				<td class="domain"  style="word-break:break-all" id="frequentNavbar"></td>
-			<tr>
-		</table>
-	</div>
 	<div class="breadcrumbs" id="breadcrumbs">
 		<table>
 			<tr><td><span class="text-success"><jsp:invoke fragment="subtitle"/></span></td>
-				<td><div class="" style="width:250px;">
+				<td><div id="warp_search_group" class="" style="width:250px;">
 					<form id="wrap_search" style="margin-bottom:0px;">
 						<div class="input-group">
 							<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showDomain()" type="button"  id="switch">全部</button></span>
 							<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showFrequent()" type="button"  id="frequent">常用</button></span>
-							<span class="input-icon" style="width:300px;">
+							<span class="input-icon" style="width:200px;">
 							<input id="search" type="text" value="${payload.id}" class="search-input search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
 							<i class="ace-icon fa fa-search nav-search-icon"></i>
 							</span>
@@ -162,6 +130,39 @@
 		</div>
 			</td>
 			</tr>
+		</table>
+	</div>
+	
+	<div class="domainNavbar" style="display:none;font-size:small">
+		<table border="1" rules="all" >
+			<c:forEach var="item" items="${model.departments}">
+				<tr>
+					<c:set var="detail" value="${item.value}" />
+					<td class="department" rowspan="${w:size(detail.productlines)}">${item.key}</td>
+					<c:forEach var="productline" items="${detail.productlines}" varStatus="index">
+							<c:if test="${index.index != 0}">
+								<tr>
+							</c:if>
+							<td class="department">${productline.key}</td>
+							<td><div class="domain"><c:forEach var="id" items="${productline.value.storages}">&nbsp;<c:choose><c:when test="${payload.id eq id}"><a class='domainItem'
+													href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${id}&date=${model.date}&reportType=${payload.reportType}"
+													class="current">[&nbsp;${id}&nbsp;]</a></c:when>
+													<c:otherwise><a class='domainItem'
+													href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${id}&date=${model.date}&reportType=${payload.reportType}">[&nbsp;${id}&nbsp;]</a>
+											</c:otherwise></c:choose>&nbsp;
+									</c:forEach>
+								</div>
+							</td><c:if test="${index.index != 0}"></tr></c:if>
+					</c:forEach>
+				</tr>
+			</c:forEach>
+		</table>
+	</div>
+	<div class="frequentNavbar" style="display:none;font-size:small">
+		<table border="1" rules="all">
+			<tr>
+				<td class="domain"  style="word-break:break-all" id="frequentNavbar"></td>
+			<tr>
 		</table>
 	</div>
 	<jsp:doBody />

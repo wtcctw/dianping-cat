@@ -185,12 +185,13 @@ public class StorageAlertInfoManager implements Initializable {
 			long current = TimeHelper.getCurrentMinute().getTime();
 			Date start = new Date(current + (1 - StorageConstants.DEFAULT_MINUTE_COUNT) * TimeHelper.ONE_MINUTE);
 			Date end = new Date(current + TimeHelper.ONE_MINUTE - TimeHelper.ONE_SECOND);
-			Transaction t = Cat.newTransaction("ReloadTask", "StorageAlertRecover");
+			Transaction t = Cat.newTransaction("ReloadTask", "StorageAlertLoad");
 
 			try {
 				try {
 					buildAlertInfos(start, end, StorageConstants.SQL_TYPE);
 					buildAlertInfos(start, end, StorageConstants.CACHE_TYPE);
+					buildAlertInfos(start, end, StorageConstants.RPC_TYPE);
 				} catch (DalNotFoundException e) {
 					// ignore
 				} catch (Exception e) {

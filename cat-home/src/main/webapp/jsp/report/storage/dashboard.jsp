@@ -172,6 +172,7 @@
 	}
 
 	$(document).ready(function() {
+		$("#warp_search_group").hide();
 		$( ".alert-modal" ).on('click', function(e) {
 			var targetId = $(this).data("id");
 			var hour = $(this).data("hour");

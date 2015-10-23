@@ -92,6 +92,37 @@
 	});
 </script>
 <div class="report">
+	<div class="breadcrumbs" id="breadcrumbs">
+		<table>
+			<tr><td><span class="text-success"><jsp:invoke fragment="subtitle"/></span></td>
+				<td><div id="warp_search_group" class="" style="width:250px;">
+					<form id="wrap_search" style="margin-bottom:0px;">
+						<div class="input-group">
+							<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showDomain()" type="button"  id="switch">全部</button></span>
+							<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showFrequent()" type="button"  id="frequent">常用</button></span>
+							<span class="input-icon" style="width:200px;">
+							<input id="search" type="text" value="${payload.id}" class="search-input search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
+							<i class="ace-icon fa fa-search nav-search-icon"></i>
+							</span>
+							<span class="input-group-btn">
+								<button class="btn btn-sm btn-pink" type="button" id="search_go">
+									Go
+								</button> 
+							</span>
+						</div>
+					</form>
+			</div></td>
+			<td><div class="nav-search nav" id="nav-search">
+			<span class="text-danger switch">【<a class="switch" href="${model.baseUri}?op=history&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}"><span class="text-danger">切到历史模式</span></a>】</span>
+			<c:forEach var="nav" items="${model.navs}">
+					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&ip=${model.ipAddress}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]
+				</c:forEach>
+				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
+		</div></td>
+			</tr>
+		</table>
+	</div>
+	
 	<div class="domainNavbar" style="display:none;font-size:small">
 		<table border="1" rules="all" >
 			<c:forEach var="item" items="${model.departments}">
@@ -118,40 +149,10 @@
 		</table>
 	</div>
 	<div class="frequentNavbar" style="display:none;font-size:small">
-		<table class="table table-striped table-hover table-bordered table-condensed" border="1" rules="all">
+		<table border="1" rules="all">
 			<tr>
 				<td class="domain"  style="word-break:break-all" id="frequentNavbar"></td>
 			<tr>
-		</table>
-	</div>
-	<div class="breadcrumbs" id="breadcrumbs">
-		<table>
-			<tr><td><span class="text-success"><jsp:invoke fragment="subtitle"/></span></td>
-				<td><div class="" style="width:250px;">
-					<form id="wrap_search" style="margin-bottom:0px;">
-						<div class="input-group">
-							<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showDomain()" type="button"  id="switch">全部</button></span>
-							<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showFrequent()" type="button"  id="frequent">常用</button></span>
-							<span class="input-icon" style="width:300px;">
-							<input id="search" type="text" value="${payload.id}" class="search-input search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
-							<i class="ace-icon fa fa-search nav-search-icon"></i>
-							</span>
-							<span class="input-group-btn">
-								<button class="btn btn-sm btn-pink" type="button" id="search_go">
-									Go
-								</button> 
-							</span>
-						</div>
-					</form>
-			</div></td>
-			<td><div class="nav-search nav" id="nav-search">
-			<span class="text-danger switch">【<a class="switch" href="${model.baseUri}?op=history&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}"><span class="text-danger">切到历史模式</span></a>】</span>
-			<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&ip=${model.ipAddress}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]
-				</c:forEach>
-				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
-		</div></td>
-			</tr>
 		</table>
 	</div>
 	<jsp:doBody />
