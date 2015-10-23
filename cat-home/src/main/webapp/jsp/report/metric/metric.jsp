@@ -23,7 +23,7 @@
 		</c:forEach>
 	</c:when>
 	<c:otherwise>
-	<a:body>
+	<a:application>
 		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 		<div class="report">
 			<div class="breadcrumbs" id="breadcrumbs">
@@ -70,7 +70,7 @@
 			</c:forEach></div>
 		
 		</div>
-		</a:body>
+		</a:application>
 	</c:otherwise>
 </c:choose>
 

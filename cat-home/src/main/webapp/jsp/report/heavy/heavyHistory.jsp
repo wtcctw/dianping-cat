@@ -7,7 +7,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.statistics.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.statistics.Model" scope="request"/>
 
-<a:body>
+<a:application>
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -44,4 +44,4 @@
 		</div>
 </div>
 </div>
-</a:body>
+</a:application>

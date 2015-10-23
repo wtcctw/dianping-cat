@@ -21,13 +21,16 @@ public class HarfsMessageBucket extends AbstractHdfsMessageBucket {
 	@Override
 	public void initialize(String dataFile, Date date) throws IOException {
 		FileSystem fs = m_manager.getHarFileSystem(m_id, date);
-
 		int index = dataFile.indexOf("/");
-		String parent = dataFile.substring(0, index);
-		dataFile = dataFile.substring(index + 1);
-		Path basePath = new Path(parent);
 
-		m_reader = new MessageBlockReader(fs, basePath, dataFile);
+		if (index > 0) {
+			String parent = dataFile.substring(0, index);
+			dataFile = dataFile.substring(index + 1);
+			Path basePath = new Path(parent);
+			m_reader = new MessageBlockReader(fs, basePath, dataFile);
+		} else {
+			m_reader = new MessageBlockReader(fs, dataFile);
+		}
 	}
 
 }

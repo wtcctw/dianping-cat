@@ -10,7 +10,7 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.overload.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.overload.Model" scope="request" />
 
-<a:body>
+<a:application>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useCss value='${res.css.local.table_css}' target="head-css" />
@@ -173,4 +173,4 @@
 	        window.location.href="?op=view&startTime="+startTime+"&endTime="+endTime;
 	      }
 		</script>
-</a:body>
+</a:application>

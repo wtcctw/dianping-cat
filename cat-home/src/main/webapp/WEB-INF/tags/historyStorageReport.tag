@@ -8,8 +8,28 @@
 <%@ attribute name="timestamp"%>
 <%@ attribute name="subtitle" fragment="true"%>
 
-<a:storage_body>
+<a:application>
 <script>
+	function showDomain() {
+		var b = $('#switch').html();
+		if (b == '全部') {
+			$('.domainNavbar').slideDown();
+			$('#switch').html("收起");
+		} else {
+			$('.domainNavbar').slideUp();
+			$('#switch').html("全部");
+		}
+	}
+	function showFrequent(){
+		var b = $('#frequent').html();
+		if (b == '常用') {
+			$('.frequentNavbar').slideDown();
+			$('#frequent').html("收起");
+		} else {
+			$('.frequentNavbar').slideUp();
+			$('#frequent').html("常用");
+		}
+	}
 	function buildHref(id){
 		var href = '<a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id='+id+'&date=${model.date}">&nbsp;[&nbsp;'+id+'&nbsp;]&nbsp;</a>';
 		return href;
@@ -36,6 +56,38 @@
 				return false;
 			}		
 		);
+		//custom autocomplete (category selection)
+		$.widget( "custom.catcomplete", $.ui.autocomplete, {
+			_renderMenu: function( ul, items ) {
+				var that = this,
+				currentCategory = "";
+				$.each( items, function( index, item ) {
+					if ( item.category != currentCategory ) {
+						ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+						currentCategory = item.category;
+					}
+					that._renderItemData( ul, item );
+				});
+			}
+		});
+		
+		var data = [];
+		<c:forEach var="item" items="${model.domainGroups}">
+			<c:set var="detail" value="${item.value}" />
+				<c:forEach var="productline" items="${detail.projectLines}" varStatus="index">
+				<c:forEach var="domain" items="${productline.value.lineDomains}">
+						var item = {};
+						item['label'] = '${domain}';
+						item['category'] ='${productline.key}';
+						
+						data.push(item);
+				</c:forEach>
+		</c:forEach></c:forEach>
+		
+		$("#search").catcomplete({
+			delay: 0,
+			source: data
+		});
 	});
 </script>
 <div class="report">
@@ -72,12 +124,27 @@
 		</table>
 	</div>
 	<div class="breadcrumbs" id="breadcrumbs">
-		<script type="text/javascript">
-			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
-		</script>
-		<span class="text-danger title">【报表时间】</span><span class="text-success"><jsp:invoke fragment="subtitle"/></span>
-		<!-- #section:basics/content.searchbox -->
-		<div class="nav-search nav" id="nav-search">
+		<table>
+			<tr><td><span class="text-success"><jsp:invoke fragment="subtitle"/></span></td>
+				<td><div class="" style="width:250px;">
+					<form id="wrap_search" style="margin-bottom:0px;">
+						<div class="input-group">
+							<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showDomain()" type="button"  id="switch">全部</button></span>
+							<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showFrequent()" type="button"  id="frequent">常用</button></span>
+							<span class="input-icon" style="width:300px;">
+							<input id="search" type="text" value="${payload.id}" class="search-input search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
+							<i class="ace-icon fa fa-search nav-search-icon"></i>
+							</span>
+							<span class="input-group-btn">
+								<button class="btn btn-sm btn-pink" type="button" id="search_go">
+									Go
+								</button> 
+							</span>
+						</div>
+					</form>
+			</div></td>
+			<td>	
+				<div class="nav-search nav" id="nav-search">
 			<span class="text-danger">【<a href="?domain=${model.domain}&type=${payload.type}&id=${payload.id}" class="switch"><span class="text-danger">切到小时模式</span></a>】</span>
 					&nbsp;&nbsp;<c:forEach var="nav" items="${model.historyNavs}">
 					<c:choose>
@@ -92,8 +159,11 @@
 				&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&step=-1&${navUrlPrefix}">${model.currentNav.last}</a> ]
 				&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&step=1&${navUrlPrefix}">${model.currentNav.next}</a> ]
 				&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&reportType=${payload.reportType}&nav=next&${navUrlPrefix}">now</a> ]
-		</div><!-- /.nav-search -->
+		</div>
+			</td>
+			</tr>
+		</table>
 	</div>
 	<jsp:doBody />
 	</div>
-</a:storage_body>
+</a:application>

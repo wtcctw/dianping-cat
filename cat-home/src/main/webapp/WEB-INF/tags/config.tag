@@ -182,19 +182,3 @@
  				</div>
 			</div>
 		</div></a:base>
-		<script  type="text/javascript">
-	$(document).ready(function() {
-		$("#tab_realtime").click(function(){
-			window.location.href = "/cat/r/t?";
-		});
-		$("#tab_offtime").click(function(){
-			window.location.href = "/cat/r/statistics?op=service";
-		});
-		$("#tab_document").click(function(){
-			window.location.href = "/cat/r/home?";
-		});
-		$("#tab_config").click(function(){
-			window.location.href = "/cat/s/config?op=projects";
-		});});
-		$("#tab_config").addClass("disabled");
-</script>

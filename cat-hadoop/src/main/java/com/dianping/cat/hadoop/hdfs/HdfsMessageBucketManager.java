@@ -18,6 +18,7 @@ import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
@@ -99,44 +100,28 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 		return paths;
 	}
 
-	private List<String> filterFiles(final MessageId id, Transaction t) {
-		final List<String> paths = new ArrayList<String>();
-		Date date = new Date(id.getTimestamp());
-		final StringBuilder sb = new StringBuilder();
-		FileSystem fs = null;
-		String p = "";
-
-		if (m_serverConfigManager.isHarMode()) {
-			try {
-				p = m_pathBuilder.getHarLogviewPath(date, "");
-				fs = m_manager.getHarFileSystem(ServerConfigManager.DUMP_DIR, date);
-
-				paths.addAll(filterFiles(fs, id, sb.toString(), p));
-				((DefaultTransaction) t).setName(HARFS_BUCKET);
-			} catch (IOException e) {
-				Cat.logError(e);
-			}
-		}
-
-		if (paths.isEmpty()) {
-			try {
-				p = m_pathBuilder.getLogviewPath(date, "");
-				fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
-
-				paths.addAll(filterFiles(fs, id, sb.toString(), p));
-				((DefaultTransaction) t).setName(HDFS_BUCKET);
-			} catch (IOException e) {
-				Cat.logError(e);
-			}
-		}
-		return paths;
-	}
-
 	@Override
 	public void initialize() throws InitializationException {
 		if (m_serverConfigManager.isHdfsOn()) {
 			Threads.forGroup("cat").start(new IdleChecker());
 		}
+	}
+
+	private Pair<List<String>, String> loadFileFromHar(MessageId id, Date date) throws IOException {
+		FileSystem fs = m_manager.getHarFileSystem(ServerConfigManager.DUMP_DIR, date);
+		List<String> paths = filterFiles(fs, id, ".", "");
+
+		return new Pair<List<String>, String>(paths, HARFS_BUCKET);
+	}
+
+	private Pair<List<String>, String> loadFileFromHdfs(MessageId id, Date date) throws IOException {
+		StringBuilder sb = new StringBuilder();
+		String p = m_pathBuilder.getLogviewPath(date, "");
+		FileSystem fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
+
+		List<String> paths = filterFiles(fs, id, sb.toString(), p);
+
+		return new Pair<List<String>, String>(paths, HDFS_BUCKET);
 	}
 
 	@Override
@@ -151,38 +136,20 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 		try {
 			MessageId id = MessageId.parse(messageId);
 			Date date = new Date(id.getTimestamp());
-			final List<String> paths = filterFiles(id, t);
+			Pair<List<String>, String> pair = null;
 
-			t.addData(paths.toString());
-			for (String dataFile : paths) {
-				try {
-					String type = t.getName();
-					StringBuilder sb = new StringBuilder();
-
-					sb.append(type).append("-").append(date.toString()).append("-").append(dataFile);
-					String bKey = sb.toString();
-
-					Cat.logEvent(type, bKey);
-					MessageBucket bucket = m_buckets.get(bKey);
-
-					if (bucket == null) {
-						bucket = lookup(MessageBucket.class, type);
-						bucket.initialize(dataFile, date);
-						m_buckets.put(bKey, bucket);
-					}
-					if (bucket != null) {
-						MessageTree tree = bucket.findById(messageId);
-
-						if (tree != null && tree.getMessageId().equals(messageId)) {
-							t.addData("path", dataFile);
-							return tree;
-						}
-					}
-				} catch (Exception e) {
-					t.setStatus(e);
-					Cat.logError(e);
-				}
+			if (m_serverConfigManager.isHarMode()) {
+				pair = loadFileFromHar(id, date);
 			}
+
+			if (pair == null || pair.getKey().isEmpty()) {
+				pair = loadFileFromHdfs(id, date);
+			}
+
+			((DefaultTransaction) t).setName(pair.getValue());
+			t.addData(pair.getKey().toString());
+
+			return readMessage(messageId, date, t, pair.getKey());
 		} catch (RuntimeException e) {
 			t.setStatus(e);
 			Cat.logError(e);
@@ -192,6 +159,39 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 			Cat.logError(e);
 		} finally {
 			t.complete();
+		}
+		return null;
+	}
+
+	private MessageTree readMessage(String messageId, Date date, Transaction t, List<String> paths) {
+		for (String dataFile : paths) {
+			try {
+				String type = t.getName();
+				StringBuilder sb = new StringBuilder();
+
+				sb.append(type).append("-").append(date.toString()).append("-").append(dataFile);
+				String bKey = sb.toString();
+
+				Cat.logEvent(type, bKey);
+				MessageBucket bucket = m_buckets.get(bKey);
+
+				if (bucket == null) {
+					bucket = lookup(MessageBucket.class, type);
+					bucket.initialize(dataFile, date);
+					m_buckets.put(bKey, bucket);
+				}
+				if (bucket != null) {
+					MessageTree tree = bucket.findById(messageId);
+
+					if (tree != null && tree.getMessageId().equals(messageId)) {
+						t.addData("path", dataFile);
+						return tree;
+					}
+				}
+			} catch (Exception e) {
+				t.setStatus(e);
+				Cat.logError(e);
+			}
 		}
 		return null;
 	}
@@ -228,5 +228,4 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 		public void shutdown() {
 		}
 	}
-
 }

@@ -19,6 +19,11 @@ public class MessageBlockReader {
 		m_dataFile = fs.open(new Path(basePath, dataFile));
 	}
 
+	public MessageBlockReader(FileSystem fs, String dataFile) throws IOException {
+		m_indexFile = fs.open(new Path(dataFile + ".idx"));
+		m_dataFile = fs.open(new Path(dataFile));
+	}
+
 	public void close() throws IOException {
 		synchronized (m_indexFile) {
 			m_indexFile.close();
