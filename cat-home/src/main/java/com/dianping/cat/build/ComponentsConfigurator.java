@@ -50,6 +50,7 @@ import com.dianping.cat.report.alert.network.NetworkRuleConfigManager;
 import com.dianping.cat.report.alert.sender.config.AlertConfigManager;
 import com.dianping.cat.report.alert.sender.config.SenderConfigManager;
 import com.dianping.cat.report.alert.storage.StorageCacheRuleConfigManager;
+import com.dianping.cat.report.alert.storage.StorageRPCRuleConfigManager;
 import com.dianping.cat.report.alert.storage.StorageSQLRuleConfigManager;
 import com.dianping.cat.report.alert.system.SystemRuleConfigManager;
 import com.dianping.cat.report.alert.thirdParty.ThirdPartyConfigManager;
@@ -203,6 +204,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      ContentFetcher.class));
 		all.add(C(StorageGroupConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(StorageCacheRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
+		      ContentFetcher.class));
+		all.add(C(StorageRPCRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
 		      ContentFetcher.class));
 		all.add(C(AlertConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class, ContentFetcher.class));

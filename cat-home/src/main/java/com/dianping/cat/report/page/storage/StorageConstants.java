@@ -8,6 +8,8 @@ public class StorageConstants {
 	public static final String SQL_TYPE = "SQL";
 
 	public static final String CACHE_TYPE = "Cache";
+	
+	public static final String RPC_TYPE = "RPC";
 
 	public static final String COUNT = "count";
 
