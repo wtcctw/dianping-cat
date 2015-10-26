@@ -5866,6 +5866,12 @@
 					<role>com.dianping.cat.report.page.browser.graph.WebGraphCreator</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.web.JsErrorLogDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.web.JsErrorLogContentDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>problem</role-hint>
 					<field-name>m_service</field-name>
@@ -5912,6 +5918,24 @@
 		<component>
 			<role>com.dianping.cat.web.AjaxDataDao</role>
 			<implementation>com.dianping.cat.web.AjaxDataDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.web.JsErrorLogDao</role>
+			<implementation>com.dianping.cat.web.JsErrorLogDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.web.JsErrorLogContentDao</role>
+			<implementation>com.dianping.cat.web.JsErrorLogContentDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>

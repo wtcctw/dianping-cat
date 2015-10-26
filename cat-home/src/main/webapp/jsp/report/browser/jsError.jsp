@@ -8,6 +8,9 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.browser.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.browser.Model" scope="request"/>
 <a:web_body>
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
+	
 <table>
 	<tr>
 			<th>
@@ -18,23 +21,185 @@
 				<div class="input-group" style="float:left;width:60px">
 	              <span class="input-group-addon">结束</span>
         	      <input type="text" id="time2" style="width:60px;"/></div>
+	             <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">level</span>
+					<select id="level" style="width:100px">
+						<option value=''>ALL</option>
+						<c:forEach var="level" items="${model.levels}">
+							<option value="${level}">${level}</option>
+						</c:forEach>
+					</select>
 	            </div>
-				<div class="input-group" style="float:left;">
+	         <!--    <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">browser</span>
+					<select id="browser" style="width:100px">
+						<option value=''>All</option>
+					</select>
+	            </div> -->
+	            <div class="input-group" style="float:left;">
 					<span class="input-group-addon">模块</span>
 		            <form id="wrap_search" style="margin-bottom:0px;">
 						<span class="input-icon" style="width:350px;">
-							<input type="text" placeholder="" class="search-input search-input form-control ui-autocomplete-input" id="command" autocomplete="on" data=""/>
+							<input type="text" placeholder="" class="search-input search-input form-control ui-autocomplete-input" id="module" autocomplete="on" data=""/>
 							<i class="ace-icon fa fa-search nav-search-icon"></i>
 						</span>
 					</form>
 	            </div>
+	              <input class="btn btn-primary btn-sm"
+					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
+					type="submit" />
 			</th>
 			</tr>
 		</table>
+	<table class="table table-hover table-striped table-condensed"  style="width:100%">
+	<tr>
+		<th width="30%">Msg</th>
+		<th width="5%">Count</th>
+		<th width="55%">SampleLinks</th>
+	</tr>
+	<tr>
+		<td><strong>Total</strong></td>
+		<td class="right">${w:format(model.totalCount,'#,###,###,###,##0')}&nbsp;</td>
+		<td></td>
+	</tr>
+	<c:forEach var="error" items="${model.errors}" varStatus="index">
+	<tr>
+		<td>${error.msg}</td>
+		<td  class="right">${w:format(error.count,'#,###,###,###,##0')}&nbsp;</td>
+		<td >
+			<c:forEach var="id" items="${error.ids}" varStatus="linkIndex">
+				<a href="/cat/r/browser?op=jsErrorDetail&id=${id}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
+			</c:forEach>
+		</td>
+	</tr>
+	</c:forEach>
+</table>
 <script type="text/javascript">
-$(document).ready(function() {
-	$('#Web_report').addClass('active open');
-	$('#web_problem').addClass('active');
+$(document).ready(
+	function() {
+		$('#Web_report').addClass('active open');
+		$('#web_problem').addClass('active');
+		$('#time').datetimepicker({
+			format:'Y-m-d H:i',
+			step:30,
+			maxDate:0
+		});
+		$('#time2').datetimepicker({
+			datepicker:false,
+			format:'H:i',
+			step:30,
+			maxDate:0
+		});
+		
+		var startTime = '${payload.startTime}';
+		if (startTime == null || startTime.length == 0) {
+			$("#time").val(getDate());
+		} else {
+			$("#time").val('${payload.day} ' + startTime);
+		}
+		
+		var endTime = '${payload.endTime}';
+		if(endTime == null || endTime.length == 0){
+			$("#time2").val(getTime());
+		}else{
+			$("#time2").val(endTime);
+		}
+		
+		var level = '${payload.level}';
+		if(level != null && level.length != 0) {
+			$("#level").val(level);
+		}
+		
+		var module = '${payload.module}';
+		if(module != null && module.length != 0) {
+			$("#module").val(module);
+		}
+		 
+		//custom autocomplete (category selection)
+		$.widget( "custom.catcomplete", $.ui.autocomplete, {
+			_renderMenu: function( ul, items ) {
+				var that = this,
+				currentCategory = "";
+				$.each( items, function( index, item ) {
+					if ( item.category != currentCategory ) {
+						ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+						currentCategory = item.category;
+					}
+					that._renderItemData( ul, item );
+				});
+			}
+		});
+		
+		var data = [];
+		<c:forEach var="module" items="${model.modules}">
+			var item = {};
+			item['label'] = '${module}';
+			item['category'] ="modules";
+			data.push(item);
+		</c:forEach>
+		
+		$("#module").catcomplete({
+			delay: 0,
+			source: data
+		});
+		
 });
+
+function query() {
+	var time = $("#time").val();
+	var times = time.split(" ");
+	var period = times[0];
+	var start = converTimeFormat(times[1]);
+	var end = converTimeFormat($("#time2").val());
+	var level = $("#level").val();
+	var module = $("#module").val();
+	
+	var href = "?op=jsError&day=" + period + "&start=" +start + "&end=" + end +
+			"&level=" + level + "&module=" + module;
+	window.location.href = href;
+}
+
+function getDate() {
+	var myDate = new Date();
+	var myMonth = new Number(myDate.getMonth());
+	var month = myMonth + 1;
+	var day = myDate.getDate();
+	
+	if(month<10){
+		month = '0' + month;
+	}
+	if(day<10){
+		day = '0' + day;
+	}
+	return myDate.getFullYear() + "-" + month + "-" + day + " 00:00";
+}
+
+function getTime(){
+	var myDate = new Date();
+	var myHour = new Number(myDate.getHours());
+	var myMinute = new Number(myDate.getMinutes());
+	
+	if(myHour < 10){
+		myHour = '0' + myHour;
+	}
+	if(myMinute < 10){
+		myMinute = '0' + myMinute;
+	}
+	return myHour + ":" + myMinute;
+}
+
+function converTimeFormat(time){
+	var times = time.split(":");
+	var hour = times[0];
+	var minute = times[1];
+	
+	if(hour.length == 1){
+		hour = "0" + hour;
+	}
+	if(minute.length == 1) {
+		minute = "0" + minute;
+	}
+	return hour + ":" + minute;
+}
 </script>
 </a:web_body>

@@ -5,7 +5,9 @@ public enum JspFile {
 
 	PIECHART("/jsp/report/browser/piechart.jsp"),
 
-	JS_ERROR("/jsp/report/browser/jsError.jsp")
+	JS_ERROR("/jsp/report/browser/jsError.jsp"),
+	
+	JS_ERROR_DETAIL("/jsp/report/browser/jsErrorDetail.jsp")
 	;
 
 	private String m_path;

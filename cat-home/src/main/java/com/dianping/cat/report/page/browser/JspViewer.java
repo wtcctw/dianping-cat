@@ -12,6 +12,8 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		switch (action) {
 		case JS_ERROR:
 			return JspFile.JS_ERROR.getPath();
+		case JS_ERROR_DETAIL:
+			return JspFile.JS_ERROR_DETAIL.getPath();
 		case VIEW:
 			return JspFile.VIEW.getPath();
 		case PIECHART:

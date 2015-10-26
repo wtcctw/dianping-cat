@@ -1,10 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entities do-package="com.dianping.cat.web" gen="true">
 	<entity name="js-error-log" table="js_error_log" alias="jel">
+	    <member name="count" value-type="int" all="false" select-expr="count(*)" length="19" nullable="false" />
+	   	<member name="modules" value-type="String" all="false" select-expr="distinct module" length="19" nullable="false" />
+	    <member name="msg" field="msg" value-type="String" length="200" nullable="false" />
+	    <var name="start-time" value-type="Date" />
+	    <var name="end-time" value-type="Date" />
+	    <var name="start-num" value-type="int" />
+		<readsets>
+		<readset name="MSG_DATA">
+      		<member name="count"/>
+      		<member name="msg"/>
+      	</readset>
+      	<readset name="DISTINCT_MODULES">
+      		<member name="modules"/>
+      	</readset>
+      	</readsets>
 		<query-defs>
 		<query name="insert" type="INSERT" batch="true">
 			<statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
         VALUES(<VALUES/>)]]></statement>
+		</query>
+		<query name="find-data-by-time-module-level-browser" type="SELECT" multiple="true">
+			<param name="start-time" />
+			<param name="end-time" />
+			<param name="module" />
+			<param name="level" />
+			<param name="browser" />
+			<statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='error-time'/> >= ${start-time} 
+			AND  <FIELD name='error-time'/> < ${end-time}
+        <IF type='NOT_NULL' field='module'>
+			AND  <FIELD name='module'/> = ${module}
+		</IF>
+		<IF type='NE' field='level' value='-1'>
+			AND  <FIELD name='level'/> = ${level}
+		</IF>
+		<IF type='NOT_NULL' field='browser'>
+			AND  <FIELD name='browser'/> = ${browser}
+		</IF>
+        group by  <FIELD name='msg'/>  ]]></statement>
+		</query>
+		<query name="find-ids" type="SELECT" multiple="true">
+			<param name="start-time" />
+			<param name="end-time" />
+			<param name="module" />
+			<param name="level" />
+			<param name="browser" />
+			<param name="msg" />
+			<statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='error-time'/> >= ${start-time} 
+			AND  <FIELD name='error-time'/> < ${end-time}
+        <IF type='NOT_NULL' field='module'>
+			AND  <FIELD name='module'/> = ${module}
+		</IF>
+		<IF type='NE' field='level' value='-1'>
+			AND  <FIELD name='level'/> = ${level}
+		</IF>
+		<IF type='NOT_NULL' field='browser'>
+			AND  <FIELD name='browser'/> = ${browser}
+		</IF>
+		AND <FIELD name='msg'/> = ${msg}
+		LIMIT 20
+         ]]></statement>
+		</query>
+		<query name="find-modules" type="SELECT" multiple="true">
+		<statement><![CDATA[SELECT <FIELDS/>
+        	FROM <TABLE/>
+         ]]></statement>
 		</query>
 		</query-defs>
 	</entity>

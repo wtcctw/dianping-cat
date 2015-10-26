@@ -1,13 +1,18 @@
 package com.dianping.cat.config.web.js;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum Level {
-	DEV(0, "dev"),
+	DEV(0, "DEV"),
 
-	INFO(1, "info"),
+	INFO(1, "INFO"),
 
-	WARN(2, "warn"),
+	WARN(2, "WARN"),
 
-	ERROR(3, "error");
+	ERROR(3, "ERROR");
+
+	private static List<String> m_levels = Arrays.asList("DEV", "INFO", "WARN", "ERROR");
 
 	private int m_code;
 
@@ -41,6 +46,10 @@ public enum Level {
 			}
 		}
 		throw new RuntimeException("Invalid level");
+	}
+
+	public static List<String> getLevels() {
+		return m_levels;
 	}
 
 }

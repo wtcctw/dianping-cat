@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 
@@ -55,6 +56,16 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private Map<Integer, Code> m_codes;
 
 	private String m_defaultApi;
+	
+	private List<String> m_levels;
+
+	private Set<String> m_modules;
+
+	private int m_totalCount;
+
+	private List<ErrorMsg> m_errors;
+
+	private String m_detail;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -206,4 +217,45 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	public void setStart(Date start) {
 		m_start = start;
 	}
+
+	public String getDetail() {
+		return m_detail;
+	}
+
+	public void setDetail(String detail) {
+		m_detail = detail;
+	}
+	
+	public List<ErrorMsg> getErrors() {
+		return m_errors;
+	}
+
+	public void setErrors(List<ErrorMsg> errors) {
+		m_errors = errors;
+	}
+
+	public int getTotalCount() {
+		return m_totalCount;
+	}
+
+	public void setTotalCount(int totalCount) {
+		m_totalCount = totalCount;
+	}
+
+	public Set<String> getModules() {
+		return m_modules;
+	}
+
+	public void setModules(Set<String> modules) {
+		m_modules = modules;
+	}
+
+	public List<String> getLevels() {
+		return m_levels;
+	}
+
+	public void setLevels(List<String> levels) {
+		m_levels = levels;
+	}
+	
 }

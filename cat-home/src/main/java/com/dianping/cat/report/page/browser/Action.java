@@ -6,7 +6,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	PIECHART("piechart"),
 
-	JS_ERROR("jsError");
+	JS_ERROR("jsError"),
+	
+	JS_ERROR_DETAIL("jsErrorDetail");
 
 	private String m_name;
 
