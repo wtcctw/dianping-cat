@@ -76,7 +76,7 @@
       </query>
     </query-defs>
   </entity>
-  <entity name="web-api-data" table="web_api_data" alias="wad">
+  <entity name="ajax-data" table="ajax_data" alias="ad">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="period" field="period" value-type="Date" nullable="false" />
     <member name="minute-order" field="minute_order" value-type="int" length="5" nullable="false" />

@@ -5,15 +5,15 @@ import java.util.Map;
 import org.unidal.dal.jdbc.QueryEngine;
 import org.unidal.dal.jdbc.mapping.TableProvider;
 
-import com.dianping.cat.app.WebApiData;
+import com.dianping.cat.web.AjaxData;
 
-public class WebApiTableProvider implements TableProvider {
+public class AjaxDataTableProvider implements TableProvider {
 
-	private String m_logicalTableName = "web-api-data";
+	private String m_logicalTableName = "ajax-data";
 
-	private String m_physicalTableName = "web_api_data";
+	private String m_physicalTableName = "ajax_data";
 
-	private String m_dataSourceName = "app";
+	private String m_dataSourceName = "web";
 
 	@Override
 	public String getDataSourceName(Map<String, Object> hints) {
@@ -27,7 +27,7 @@ public class WebApiTableProvider implements TableProvider {
 
 	@Override
 	public String getPhysicalTableName(Map<String, Object> hints) {
-		WebApiData webApiData = (WebApiData) hints.get(QueryEngine.HINT_DATA_OBJECT);
+		AjaxData webApiData = (AjaxData) hints.get(QueryEngine.HINT_DATA_OBJECT);
 
 		return m_physicalTableName + "_" + webApiData.getApiId();
 	}

@@ -1,8 +1,11 @@
 package com.dianping.cat.report.page.browser;
 
 public enum JspFile {
-	JS_ERROR("/jsp/report/browser/jsError.jsp"),
+	VIEW("/jsp/report/browser/web.jsp"),
 
+	PIECHART("/jsp/report/browser/piechart.jsp"),
+
+	JS_ERROR("/jsp/report/browser/jsError.jsp")
 	;
 
 	private String m_path;

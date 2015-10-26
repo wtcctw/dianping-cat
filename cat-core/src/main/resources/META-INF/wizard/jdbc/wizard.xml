@@ -39,6 +39,7 @@
          <table name="app_command_data"/>
          <table name="app_speed_data"/>
          <table name="app_connection_data"/>
+         <table name="web_api_data"/>
       </group>
    </jdbc>
    <jdbc package="com.dianping.cat.web" name="web">
@@ -50,7 +51,7 @@
          <properties>useUnicode=true&amp;autoReconnect=true</properties>
       </datasource>
       <group name="web" package="com.dianping.cat.web">
-         <table name="web_api_data_0"/>
+         <table name="ajax_data"/>
          <table name="js_error_log"/>
          <table name="js_error_log_content"/>
       </group>

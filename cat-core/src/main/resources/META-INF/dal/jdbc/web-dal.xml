@@ -17,7 +17,7 @@
 		</query>
 		</query-defs>
 	</entity>
-	<entity name="web-api-data" table="web_api_data" alias="wad">
+	<entity name="ajax-data" table="ajax_data" alias="ad">
 		<member name="access-number-sum" value-type="long" all="false"
 			select-expr="sum(access_number)" length="19" nullable="false" />
 		<member name="response-sum-time-sum" value-type="long" all="false"

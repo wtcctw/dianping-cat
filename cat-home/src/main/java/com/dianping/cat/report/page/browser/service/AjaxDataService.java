@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.web.service;
+package com.dianping.cat.report.page.browser.service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,16 +12,16 @@ import java.util.Map.Entry;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.app.WebApiData;
-import com.dianping.cat.app.WebApiDataDao;
-import com.dianping.cat.app.WebApiDataEntity;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.report.page.app.display.AppDataSequence;
+import com.dianping.cat.web.AjaxData;
+import com.dianping.cat.web.AjaxDataDao;
+import com.dianping.cat.web.AjaxDataEntity;
 
-public class WebApiService {
+public class AjaxDataService {
 
 	@Inject
-	private WebApiDataDao m_dao;
+	private AjaxDataDao m_dao;
 
 	@Inject
 	private UrlPatternConfigManager m_urlConfigManager;
@@ -32,20 +32,20 @@ public class WebApiService {
 
 	public static final String DELAY = "delay";
 
-	private AppDataSequence<WebApiData> buildAppSequence(List<WebApiData> fromDatas, Date period) {
-		Map<Integer, List<WebApiData>> dataMap = new LinkedHashMap<Integer, List<WebApiData>>();
+	private AppDataSequence<AjaxData> buildAppSequence(List<AjaxData> fromDatas, Date period) {
+		Map<Integer, List<AjaxData>> dataMap = new LinkedHashMap<Integer, List<AjaxData>>();
 		int max = -5;
 
-		for (WebApiData from : fromDatas) {
+		for (AjaxData from : fromDatas) {
 			int minute = from.getMinuteOrder();
 
 			if (max < 0 || max < minute) {
 				max = minute;
 			}
-			List<WebApiData> data = dataMap.get(minute);
+			List<AjaxData> data = dataMap.get(minute);
 
 			if (data == null) {
-				data = new LinkedList<WebApiData>();
+				data = new LinkedList<AjaxData>();
 
 				dataMap.put(minute, data);
 			}
@@ -54,15 +54,15 @@ public class WebApiService {
 		int n = max / 5 + 1;
 		int length = queryAppDataDuration(period, n);
 
-		return new AppDataSequence<WebApiData>(length, dataMap);
+		return new AppDataSequence<AjaxData>(length, dataMap);
 	}
 
-	public Double[] computeDelayAvg(AppDataSequence<WebApiData> convertedData) {
+	public Double[] computeDelayAvg(AppDataSequence<AjaxData> convertedData) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
-		for (Entry<Integer, List<WebApiData>> entry : convertedData.getRecords().entrySet()) {
-			for (WebApiData data : entry.getValue()) {
+		for (Entry<Integer, List<AjaxData>> entry : convertedData.getRecords().entrySet()) {
+			for (AjaxData data : entry.getValue()) {
 				long count = data.getAccessNumberSum();
 				long sum = data.getResponseSumTimeSum();
 				double avg = sum / count;
@@ -76,12 +76,12 @@ public class WebApiService {
 		return value;
 	}
 
-	public Double[] computeRequestCount(AppDataSequence<WebApiData> convertedData) {
+	public Double[] computeRequestCount(AppDataSequence<AjaxData> convertedData) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
-		for (Entry<Integer, List<WebApiData>> entry : convertedData.getRecords().entrySet()) {
-			for (WebApiData data : entry.getValue()) {
+		for (Entry<Integer, List<AjaxData>> entry : convertedData.getRecords().entrySet()) {
+			for (AjaxData data : entry.getValue()) {
 				double count = data.getAccessNumberSum();
 				int index = data.getMinuteOrder() / 5;
 
@@ -93,7 +93,7 @@ public class WebApiService {
 		return value;
 	}
 
-	public Double[] computeSuccessRatio(int commandId, AppDataSequence<WebApiData> convertedData) {
+	public Double[] computeSuccessRatio(int commandId, AppDataSequence<AjaxData> convertedData) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
@@ -102,7 +102,7 @@ public class WebApiService {
 		}
 
 		try {
-			for (Entry<Integer, List<WebApiData>> entry : convertedData.getRecords().entrySet()) {
+			for (Entry<Integer, List<AjaxData>> entry : convertedData.getRecords().entrySet()) {
 				int key = entry.getKey();
 				int index = key / 5;
 
@@ -116,11 +116,11 @@ public class WebApiService {
 		return value;
 	}
 
-	private double computeSuccessRatio(int commandId, List<WebApiData> datas) {
+	private double computeSuccessRatio(int commandId, List<AjaxData> datas) {
 		long success = 0;
 		long sum = 0;
 
-		for (WebApiData data : datas) {
+		for (AjaxData data : datas) {
 			long number = data.getAccessNumberSum();
 
 			if (m_urlConfigManager.isSuccessCode(data.getCode())) {
@@ -169,8 +169,8 @@ public class WebApiService {
 	// }
 	// }
 
-	public List<WebApiData> queryByField(WebApiQueryEntity entity, WebApiField groupByField) {
-		List<WebApiData> datas = new ArrayList<WebApiData>();
+	public List<AjaxData> queryByField(AjaxDataQueryEntity entity, AjaxDataField groupByField) {
+		List<AjaxData> datas = new ArrayList<AjaxData>();
 		int apiId = entity.getId();
 		Date period = entity.getDate();
 		int city = entity.getCity();
@@ -183,15 +183,15 @@ public class WebApiService {
 			switch (groupByField) {
 			case OPERATOR:
 				datas = m_dao.findDataByOperator(apiId, period, city, operator, code, startMinuteOrder, endMinuteOrder,
-				      WebApiDataEntity.READSET_OPERATOR_DATA);
+						AjaxDataEntity.READSET_OPERATOR_DATA);
 				break;
 			case CITY:
 				datas = m_dao.findDataByCity(apiId, period, city, operator, code, startMinuteOrder, endMinuteOrder,
-				      WebApiDataEntity.READSET_CITY_DATA);
+						AjaxDataEntity.READSET_CITY_DATA);
 				break;
 			case CODE:
 				datas = m_dao.findDataByCode(apiId, period, city, operator, code, startMinuteOrder, endMinuteOrder,
-				      WebApiDataEntity.READSET_CODE_DATA);
+						AjaxDataEntity.READSET_CODE_DATA);
 				break;
 			}
 		} catch (Exception e) {
@@ -200,8 +200,8 @@ public class WebApiService {
 		return datas;
 	}
 
-	public double queryOneDayDelayAvg(WebApiQueryEntity entity) {
-		Double[] values = queryValue(entity, WebApiService.DELAY);
+	public double queryOneDayDelayAvg(AjaxDataQueryEntity entity) {
+		Double[] values = queryValue(entity, AjaxDataService.DELAY);
 		double delaySum = 0;
 		int size = 0;
 
@@ -214,29 +214,29 @@ public class WebApiService {
 		return size > 0 ? delaySum / size : -1;
 	}
 
-	public Double[] queryValue(WebApiQueryEntity entity, String type) {
+	public Double[] queryValue(AjaxDataQueryEntity entity, String type) {
 		int apiId = entity.getId();
 		Date period = entity.getDate();
 		int city = entity.getCity();
 		int operator = entity.getOperator();
 		int code = entity.getCode();
-		List<WebApiData> datas = new ArrayList<WebApiData>();
+		List<AjaxData> datas = new ArrayList<AjaxData>();
 
 		try {
 			if (SUCCESS.equals(type)) {
 				datas = m_dao.findDataByMinuteCode(apiId, period, city, operator, code,
-				      WebApiDataEntity.READSET_SUCCESS_DATA);
-				AppDataSequence<WebApiData> s = buildAppSequence(datas, entity.getDate());
+						AjaxDataEntity.READSET_SUCCESS_DATA);
+				AppDataSequence<AjaxData> s = buildAppSequence(datas, entity.getDate());
 
 				return computeSuccessRatio(apiId, s);
 			} else if (REQUEST.equals(type)) {
-				datas = m_dao.findDataByMinute(apiId, period, city, operator, code, WebApiDataEntity.READSET_COUNT_DATA);
-				AppDataSequence<WebApiData> s = buildAppSequence(datas, entity.getDate());
+				datas = m_dao.findDataByMinute(apiId, period, city, operator, code, AjaxDataEntity.READSET_COUNT_DATA);
+				AppDataSequence<AjaxData> s = buildAppSequence(datas, entity.getDate());
 
 				return computeRequestCount(s);
 			} else if (DELAY.equals(type)) {
-				datas = m_dao.findDataByMinute(apiId, period, city, operator, code, WebApiDataEntity.READSET_AVG_DATA);
-				AppDataSequence<WebApiData> s = buildAppSequence(datas, entity.getDate());
+				datas = m_dao.findDataByMinute(apiId, period, city, operator, code, AjaxDataEntity.READSET_AVG_DATA);
+				AppDataSequence<AjaxData> s = buildAppSequence(datas, entity.getDate());
 
 				return computeDelayAvg(s);
 			} else {

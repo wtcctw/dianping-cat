@@ -2353,6 +2353,11 @@
 			<implementation>com.dianping.cat.config.web.WebApiTableProvider</implementation>
 		</component>
 		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>ajax-data</role-hint>
+			<implementation>com.dianping.cat.config.web.AjaxDataTableProvider</implementation>
+		</component>
+		<component>
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
 			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</implementation>
 			<configuration>
@@ -2542,6 +2547,16 @@
 			</configuration>
 		</component>
 		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>web-api-data</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>web-api-data</logical-table-name>
+				<physical-table-name>web_api_data</physical-table-name>
+				<data-source-name>app</data-source-name>
+			</configuration>
+		</component>
+		<component>
 			<role>com.dianping.cat.app.AppCommandDataDao</role>
 			<implementation>com.dianping.cat.app.AppCommandDataDao</implementation>
 			<requirements>
@@ -2562,6 +2577,15 @@
 		<component>
 			<role>com.dianping.cat.app.AppSpeedDataDao</role>
 			<implementation>com.dianping.cat.app.AppSpeedDataDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.app.WebApiDataDao</role>
+			<implementation>com.dianping.cat.app.WebApiDataDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -5094,7 +5118,7 @@
 			<implementation>com.dianping.cat.report.page.web.service.WebApiService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.web.WebApiDataDao</role>
+					<role>com.dianping.cat.app.WebApiDataDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
@@ -5102,8 +5126,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.web.WebApiDataDao</role>
-			<implementation>com.dianping.cat.web.WebApiDataDao</implementation>
+			<role>com.dianping.cat.app.WebApiDataDao</role>
+			<implementation>com.dianping.cat.app.WebApiDataDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -5768,6 +5792,26 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.browser.JspViewer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.WebConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.browser.CityManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.browser.graph.WebGraphCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>problem</role-hint>
+					<field-name>m_service</field-name>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5776,6 +5820,43 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.browser.CityManager</role>
+			<implementation>com.dianping.cat.report.page.browser.CityManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.browser.graph.WebGraphCreator</role>
+			<implementation>com.dianping.cat.report.page.browser.graph.WebGraphCreator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.browser.service.AjaxDataService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.WebConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.browser.service.AjaxDataService</role>
+			<implementation>com.dianping.cat.report.page.browser.service.AjaxDataService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.web.AjaxDataDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.web.AjaxDataDao</role>
+			<implementation>com.dianping.cat.web.AjaxDataDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>

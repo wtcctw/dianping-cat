@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.web.graph;
+package com.dianping.cat.report.page.browser.graph;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -8,7 +8,6 @@ import java.util.Map;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
-import com.dianping.cat.app.WebApiData;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
@@ -16,14 +15,15 @@ import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
-import com.dianping.cat.report.page.web.service.WebApiField;
-import com.dianping.cat.report.page.web.service.WebApiQueryEntity;
-import com.dianping.cat.report.page.web.service.WebApiService;
+import com.dianping.cat.report.page.browser.service.AjaxDataField;
+import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
+import com.dianping.cat.report.page.browser.service.AjaxDataService;
+import com.dianping.cat.web.AjaxData;
 
 public class WebGraphCreator {
 
 	@Inject
-	private WebApiService m_WebApiService;
+	private AjaxDataService m_WebApiService;
 
 	@Inject
 	private WebConfigManager m_webConfigManager;
@@ -34,7 +34,7 @@ public class WebGraphCreator {
 		lineChart.setUnit("");
 		lineChart.setHtmlTitle(queryType(type));
 
-		if (WebApiService.SUCCESS.equals(type)) {
+		if (AjaxDataService.SUCCESS.equals(type)) {
 			lineChart.setMinYlable(lineChart.queryMinYlable(datas));
 			lineChart.setMaxYlabel(100D);
 		}
@@ -51,7 +51,7 @@ public class WebGraphCreator {
 		return lineChart;
 	}
 
-	public LineChart buildLineChart(WebApiQueryEntity queryEntity1, WebApiQueryEntity queryEntity2, String type) {
+	public LineChart buildLineChart(AjaxDataQueryEntity queryEntity1, AjaxDataQueryEntity queryEntity2, String type) {
 		List<Double[]> datas = new LinkedList<Double[]>();
 
 		if (queryEntity1 != null) {
@@ -67,13 +67,13 @@ public class WebGraphCreator {
 		return buildChartData(datas, type);
 	}
 
-	public Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(WebApiQueryEntity entity, WebApiField field) {
+	public Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(AjaxDataQueryEntity entity, AjaxDataField field) {
 		List<PieChartDetailInfo> infos = new LinkedList<PieChartDetailInfo>();
 		PieChart pieChart = new PieChart().setMaxSize(Integer.MAX_VALUE);
 		List<Item> items = new ArrayList<Item>();
-		List<WebApiData> datas = m_WebApiService.queryByField(entity, field);
+		List<AjaxData> datas = m_WebApiService.queryByField(entity, field);
 
-		for (WebApiData data : datas) {
+		for (AjaxData data : datas) {
 			Pair<Integer, Item> pair = buildPieChartItem(entity.getId(), data, field);
 			Item item = pair.getValue();
 			PieChartDetailInfo info = new PieChartDetailInfo();
@@ -89,7 +89,7 @@ public class WebGraphCreator {
 		return new Pair<PieChart, List<PieChartDetailInfo>>(pieChart, infos);
 	}
 
-	private Pair<Integer, String> buildPieChartFieldTitlePair(int command, WebApiData data, WebApiField field) {
+	private Pair<Integer, String> buildPieChartFieldTitlePair(int command, AjaxData data, AjaxDataField field) {
 		String title = "Unknown";
 		int keyValue = -1;
 
@@ -136,7 +136,7 @@ public class WebGraphCreator {
 		return new Pair<Integer, String>(keyValue, title);
 	}
 
-	private Pair<Integer, Item> buildPieChartItem(int command, WebApiData data, WebApiField field) {
+	private Pair<Integer, Item> buildPieChartItem(int command, AjaxData data, AjaxDataField field) {
 		Item item = new Item();
 		Pair<Integer, String> pair = buildPieChartFieldTitlePair(command, data, field);
 
@@ -147,11 +147,11 @@ public class WebGraphCreator {
 	}
 
 	private String queryType(String type) {
-		if (WebApiService.SUCCESS.equals(type)) {
+		if (AjaxDataService.SUCCESS.equals(type)) {
 			return "成功率（%/5分钟）";
-		} else if (WebApiService.REQUEST.equals(type)) {
+		} else if (AjaxDataService.REQUEST.equals(type)) {
 			return "请求数（个/5分钟）";
-		} else if (WebApiService.DELAY.equals(type)) {
+		} else if (AjaxDataService.DELAY.equals(type)) {
 			return "延时平均值（毫秒/5分钟）";
 		} else {
 			throw new RuntimeException("unexpected query type, type:" + type);

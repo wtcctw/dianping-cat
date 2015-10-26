@@ -1,6 +1,11 @@
 package com.dianping.cat.report.page.browser;
 
 public enum Action implements org.unidal.web.mvc.Action {
+	
+	VIEW("view"),
+
+	PIECHART("piechart"),
+
 	JS_ERROR("jsError");
 
 	private String m_name;
