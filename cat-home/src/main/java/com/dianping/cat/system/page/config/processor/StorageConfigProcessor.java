@@ -3,6 +3,7 @@ package com.dianping.cat.system.page.config.processor;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.report.alert.storage.StorageCacheRuleConfigManager;
+import com.dianping.cat.report.alert.storage.StorageRPCRuleConfigManager;
 import com.dianping.cat.report.alert.storage.StorageRuleConfigManager;
 import com.dianping.cat.report.alert.storage.StorageSQLRuleConfigManager;
 import com.dianping.cat.report.page.storage.StorageConstants;
@@ -13,8 +14,11 @@ import com.dianping.cat.system.page.config.Payload;
 public class StorageConfigProcessor extends BaseProcesser {
 
 	@Inject
-	private StorageSQLRuleConfigManager m_SQLConfigManager;
+	private StorageSQLRuleConfigManager m_sqlConfigManager;
 
+	@Inject
+	private StorageRPCRuleConfigManager m_rpcConfigManager;
+	
 	@Inject
 	private StorageCacheRuleConfigManager m_cacheConfigManager;
 
@@ -25,7 +29,9 @@ public class StorageConfigProcessor extends BaseProcesser {
 		if (StorageConstants.CACHE_TYPE.equals(type)) {
 			configManager = m_cacheConfigManager;
 		} else if (StorageConstants.SQL_TYPE.equals(type)) {
-			configManager = m_SQLConfigManager;
+			configManager = m_sqlConfigManager;
+		} else if (StorageConstants.RPC_TYPE.equals(type)) {
+			configManager = m_rpcConfigManager;
 		} else {
 			throw new RuntimeException("Error type: " + type);
 		}

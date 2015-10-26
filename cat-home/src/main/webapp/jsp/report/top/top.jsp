@@ -91,6 +91,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+	$("#warp_search_group").hide();
 	$('#minute'+${model.minute}).addClass('disabled');
 	$( ".hreftip" ).tooltip({
 		show: true,

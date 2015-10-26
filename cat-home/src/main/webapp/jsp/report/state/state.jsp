@@ -222,6 +222,7 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		appendHostname(${model.ipToHostnameStr});
+		$("#warp_search_group").hide();
 	});
 </script>
 

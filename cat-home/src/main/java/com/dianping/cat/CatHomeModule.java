@@ -22,6 +22,7 @@ import com.dianping.cat.report.alert.exception.FrontEndExceptionAlert;
 import com.dianping.cat.report.alert.heartbeat.HeartbeatAlert;
 import com.dianping.cat.report.alert.network.NetworkAlert;
 import com.dianping.cat.report.alert.storage.StorageCacheAlert;
+import com.dianping.cat.report.alert.storage.StorageRPCAlert;
 import com.dianping.cat.report.alert.storage.StorageSQLAlert;
 import com.dianping.cat.report.alert.system.SystemAlert;
 import com.dianping.cat.report.alert.thirdParty.ThirdPartyAlert;
@@ -63,6 +64,7 @@ public class CatHomeModule extends AbstractModule {
 			EventAlert eventAlert = ctx.lookup(EventAlert.class);
 			StorageSQLAlert storageDatabaseAlert = ctx.lookup(StorageSQLAlert.class);
 			StorageCacheAlert storageCacheAlert = ctx.lookup(StorageCacheAlert.class);
+			StorageRPCAlert storageRpcAlert = ctx.lookup(StorageRPCAlert.class);
 
 			Threads.forGroup("cat").start(networkAlert);
 			Threads.forGroup("cat").start(databaseAlert);
@@ -79,6 +81,7 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("cat").start(eventAlert);
 			Threads.forGroup("cat").start(storageDatabaseAlert);
 			Threads.forGroup("cat").start(storageCacheAlert);
+			Threads.forGroup("cat").start(storageRpcAlert);
 		}
 
 		final MessageConsumer consumer = ctx.lookup(MessageConsumer.class);

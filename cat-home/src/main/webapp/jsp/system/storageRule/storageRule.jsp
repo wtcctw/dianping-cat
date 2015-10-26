@@ -67,6 +67,9 @@
 			<c:if test="${payload.type eq 'Cache'}">
 				$('#storageCacheRule').addClass('active');
 			</c:if>
+			<c:if test="${payload.type eq 'RPC'}">
+				$('#storageRPCRule').addClass('active');
+			</c:if>
  		});
 	</script>
 </a:config>

@@ -28,7 +28,9 @@ public enum AlertType {
 
 	STORAGE_SQL("SQL"),
 
-	STORAGE_CACHE("Cache");
+	STORAGE_CACHE("Cache"),
+
+	STORAGE_RPC("RPC");
 
 	private String m_name;
 
