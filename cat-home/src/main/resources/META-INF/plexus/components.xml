@@ -396,9 +396,16 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.page.router.config.SubnetInfoManager</role>
+			<implementation>com.dianping.cat.system.page.router.config.SubnetInfoManager</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
 			<implementation>com.dianping.cat.system.page.router.config.RouterConfigManager</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.config.SubnetInfoManager</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
@@ -4438,7 +4445,14 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.config.SubnetInfoManager</role>
+				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.router.config.SubnetInfoManager</role>
+			<implementation>com.dianping.cat.system.page.router.config.SubnetInfoManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.metric.Handler</role>

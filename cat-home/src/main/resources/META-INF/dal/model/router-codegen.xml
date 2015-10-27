@@ -2,7 +2,10 @@
 <model>
   <entity name="router-config" root="true">
     <entity-ref name="default-server" type="list" names="default-servers" />
+    <entity-ref name="network-policy" type="list" names="network-policies" />
+    <entity-ref name="server-group" type="list" names="server-groups" />
     <entity-ref name="domain" type="list" names="domains" />
+    <entity-ref name="machine" type="list" names="machines" />
   </entity>
   <entity name="default-server">
     <attribute name="id" value-type="String" />
@@ -10,15 +13,42 @@
     <attribute name="port" value-type="int" />
     <attribute name="enable" value-type="boolean" />
   </entity>
+  <entity name="network-policy">
+    <attribute name="id" value-type="String" />
+    <attribute name="title" value-type="String" />
+    <attribute name="server-group" value-type="String" />
+    <entity-ref name="network" type="list" names="networks" />
+  </entity>
+  <entity name="network">
+    <attribute name="id" value-type="String" />
+  </entity>
+  <entity name="server-group">
+    <attribute name="id" value-type="String" />
+    <attribute name="title" value-type="String" />
+    <entity-ref name="group-server" type="list" names="group-servers" />
+  </entity>
+  <entity name="group-server">
+    <attribute name="id" value-type="String" />
+  </entity>
   <entity name="domain">
     <attribute name="id" value-type="String" />
     <attribute name="sample" value-type="double" />
+    <entity-ref name="group" type="list" names="groups" />
+  </entity>
+  <entity name="group">
+    <attribute name="id" value-type="String" />
     <entity-ref name="server" type="list" names="servers" />
   </entity>
   <entity name="server">
     <attribute name="id" value-type="String" />
     <attribute name="port" value-type="int" />
+  </entity>
+  <entity name="machine">
+    <attribute name="id" value-type="String" />
+    <attribute name="domain" value-type="String" />
+    <attribute name="target" value-type="String" />
     <attribute name="weight" value-type="double" />
+    <attribute name="total" value-type="int" />
   </entity>
 </model>
 

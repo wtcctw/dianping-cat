@@ -1,6 +1,7 @@
 package com.dianping.cat.system.page.router;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -31,34 +32,30 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private RouterConfigManager m_configManager;
 
-	private String buildRouterInfo(String domain, RouterConfig report) {
+	private String buildRouterInfo(String ip, String domain, RouterConfig report) {
+		String group = m_configManager.queryServerGroupByIp(ip);
 		Domain domainConfig = m_configManager.getRouterConfig().findDomain(domain);
+		List<Server> servers = new ArrayList<Server>();
 
-		if (domainConfig == null || domainConfig.getServers().isEmpty()) {
+		if (domainConfig == null || domainConfig.findGroup(group) == null
+		      || domainConfig.findGroup(group).getServers().isEmpty()) {
+
 			if (report != null) {
 				Domain d = report.findDomain(domain);
-				String str = null;
 
-				if (d == null) {
-					m_configManager.getRouterConfig().getDefaultServers();
-
-					List<Server> servers = m_configManager.queryServersByDomain(domain);
-
-					str = buildServerStr(servers);
+				if (d != null && d.findGroup(group) != null && !d.findGroup(group).getServers().isEmpty()) {
+					servers = d.findGroup(group).getServers();
 				} else {
-					List<Server> servers = d.getServers();
-
-					str = buildServerStr(servers);
+					servers = m_configManager.queryServersByDomain(group, domain);
 				}
-				return str;
 			} else {
-				List<Server> servers = m_configManager.queryServersByDomain(domain);
-
-				return buildServerStr(servers);
+				servers = m_configManager.queryServersByDomain(group, domain);
 			}
 		} else {
-			return buildServerStr(domainConfig.getServers());
+			servers = domainConfig.findGroup(group).getServers();
 		}
+		return buildServerStr(servers);
+
 	}
 
 	private String buildSampleInfo(String domain) {
@@ -97,10 +94,11 @@ public class Handler implements PageHandler<Context> {
 		Date end = new Date(start.getTime() + TimeHelper.ONE_DAY);
 		RouterConfig report = m_reportService.queryReport(Constants.CAT, start, end);
 		String domain = payload.getDomain();
+		String ip = payload.getIp();
 
 		switch (action) {
 		case API:
-			String routerInfo = buildRouterInfo(domain, report);
+			String routerInfo = buildRouterInfo(ip, domain, report);
 
 			model.setContent(routerInfo);
 			break;
@@ -108,7 +106,7 @@ public class Handler implements PageHandler<Context> {
 			KVConfig config = new KVConfig();
 			Map<String, String> kvs = config.getKvs();
 
-			kvs.put("routers", buildRouterInfo(domain, report));
+			kvs.put("routers", buildRouterInfo(ip, domain, report));
 			kvs.put("sample", buildSampleInfo(domain));
 			model.setContent(new JsonBuilder().toJson(config));
 			break;
