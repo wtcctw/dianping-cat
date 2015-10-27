@@ -196,9 +196,16 @@ public class GlobalConfigProcessor {
 
 	private boolean updateProject(Payload payload) {
 		Project project = payload.getProject();
+
 		project.setKeyId(project.getId());
 
-		return m_projectService.update(project);
+		Project temp = m_projectService.findByDomain(project.getDomain());
+
+		if (temp == null) {
+			return m_projectService.insert(project);
+		} else {
+			return m_projectService.update(project);
+		}
 	}
 
 	public static class ProjectCompartor implements Comparator<Project> {
