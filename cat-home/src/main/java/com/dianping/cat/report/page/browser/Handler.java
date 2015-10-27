@@ -1,14 +1,14 @@
 package com.dianping.cat.report.page.browser;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 
@@ -19,7 +19,6 @@ import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
@@ -36,7 +35,6 @@ import com.dianping.cat.web.JsErrorLogContentEntity;
 import com.dianping.cat.web.JsErrorLogDao;
 import com.dianping.cat.web.JsErrorLogEntity;
 
-import org.codehaus.plexus.util.StringUtils;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
@@ -52,13 +50,13 @@ public class Handler implements PageHandler<Context> {
 	private JspViewer m_jspViewer;
 
 	@Inject
+	private ModuleManager m_moduleManager;
+
+	@Inject
 	private UrlPatternConfigManager m_patternManager;
 
 	@Inject
 	private WebConfigManager m_webConfigManager;
-
-	@Inject
-	private CityManager m_cityManager;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
@@ -72,7 +70,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private JsErrorLogContentDao m_jsErrorLogContentlDao;
 
-	private static final String ALL = "ALL";
+	private final int LIMIT = 1000;
 
 	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
 	private ModelService<ProblemReport> m_service;
@@ -82,34 +80,6 @@ public class Handler implements PageHandler<Context> {
 	@InboundActionMeta(name = "browser")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
-	}
-
-	private LineChart buildLineChart(Payload payload) {
-		AjaxDataQueryEntity entity1 = payload.getQueryEntity1();
-		AjaxDataQueryEntity entity2 = payload.getQueryEntity2();
-		String type = payload.getType();
-		LineChart lineChart = new LineChart();
-
-		try {
-			lineChart = m_graphCreator.buildLineChart(entity1, entity2, type);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return lineChart;
-	}
-
-	private Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(Payload payload) {
-		try {
-			Pair<PieChart, List<PieChartDetailInfo>> pair = m_graphCreator.buildPieChart(payload.getQueryEntity1(),
-			      payload.getGroupByField());
-			List<PieChartDetailInfo> infos = pair.getValue();
-			Collections.sort(infos, new ChartSorter().buildPieChartInfoComparator());
-
-			return pair;
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return null;
 	}
 
 	@Override
@@ -147,12 +117,42 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
+	private LineChart buildLineChart(Payload payload) {
+		AjaxDataQueryEntity entity1 = payload.getQueryEntity1();
+		AjaxDataQueryEntity entity2 = payload.getQueryEntity2();
+		String type = payload.getType();
+		LineChart lineChart = new LineChart();
+
+		try {
+			lineChart = m_graphCreator.buildLineChart(entity1, entity2, type);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return lineChart;
+	}
+
+	private Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(Payload payload) {
+		try {
+			Pair<PieChart, List<PieChartDetailInfo>> pair = m_graphCreator.buildPieChart(payload.getQueryEntity1(),
+			      payload.getGroupByField());
+			List<PieChartDetailInfo> infos = pair.getValue();
+			Collections.sort(infos, new ChartSorter().buildPieChartInfoComparator());
+
+			return pair;
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return null;
+	}
+
 	private void viewJsErrorDetail(Payload payload, Model model) {
 		try {
 			int id = payload.getId();
 
 			JsErrorLogContent detail = m_jsErrorLogContentlDao.findByPK(id, JsErrorLogContentEntity.READSET_FULL);
+
 			model.setDetail(new String(detail.getContent(), "UTF-8"));
+
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -160,95 +160,66 @@ public class Handler implements PageHandler<Context> {
 
 	private void viewJsError(Payload payload, Model model) {
 		try {
-			String day = payload.getDay();
-			Date startTime = buildDate(day, payload.getStartTime(), TimeHelper.getCurrentDay());
-			Date endTime = buildDate(day, payload.getEndTime(), TimeHelper.getCurrentDay(1));
-			int levelCode = buildLevel(payload.getLevel(), -1);
-			String module = buildModule(payload.getModule());
-
-			List<JsErrorLog> result = m_jsErrorLogDao.findDataByTimeModuleLevelBrowser(startTime, endTime, module,
-			      levelCode, null, JsErrorLogEntity.READSET_MSG_DATA);
+			Date startTime = payload.buildStartTime();
+			Date endTime = payload.buildEndTime();
+			int levelCode = payload.buildLevel();
+			String module = payload.getModule();
+			Map<String, ErrorMsg> errorMsgs = new HashMap<String, ErrorMsg>();
+			int offset = 0;
 			int totalCount = 0;
-			List<ErrorMsg> errorMsgs = new ArrayList<ErrorMsg>();
 
-			for (JsErrorLog log : result) {
-				ErrorMsg errorMsg = new ErrorMsg();
-				errorMsg.setMsg(log.getMsg());
+			while (true) {
+				List<JsErrorLog> result = m_jsErrorLogDao.findDataByTimeModuleLevelBrowser(startTime, endTime, module,
+				      levelCode, null, offset, LIMIT, JsErrorLogEntity.READSET_FULL);
 
-				int count = log.getCount();
+				for (JsErrorLog log : result) {
+					processLog(errorMsgs, log);
+				}
+
+				int count = result.size();
 				totalCount += count;
-				errorMsg.setCount(count);
+				offset += count;
 
-				buildIds(errorMsg, count, startTime, endTime, module, levelCode, null);
-				errorMsgs.add(errorMsg);
+				if (count < LIMIT) {
+					break;
+				}
 			}
 
-			model.setErrors(errorMsgs);
+			List<ErrorMsg> errorMsgList = sort(errorMsgs);
+
+			model.setErrors(errorMsgList);
 			model.setTotalCount(totalCount);
 			model.setLevels(Level.getLevels());
-
-			buildModuleList(model);
+			model.setModules(m_moduleManager.getModules());
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
 	}
 
-	private void buildIds(ErrorMsg errorMsg, int count, Date startTime, Date endTime, String module, int levelCode,
-	      String browser) {
-		List<Integer> ids = new ArrayList<Integer>();
+	private List<ErrorMsg> sort(Map<String, ErrorMsg> errorMsgs) {
+		List<ErrorMsg> errorMsgList = new ArrayList<ErrorMsg>();
+		Iterator<Entry<String, ErrorMsg>> iter = errorMsgs.entrySet().iterator();
 
-		try {
-			List<JsErrorLog> result = m_jsErrorLogDao.findIds(startTime, endTime, module, levelCode, browser,
-			      errorMsg.getMsg(), JsErrorLogEntity.READSET_FULL);
-
-			for (JsErrorLog log : result) {
-				ids.add(log.getId());
-			}
-		} catch (DalException e) {
-			Cat.logError(e);
+		while (iter.hasNext()) {
+			errorMsgList.add(iter.next().getValue());
 		}
 
-		errorMsg.setIds(ids);
+		Collections.sort(errorMsgList);
+		return errorMsgList;
 	}
 
-	private String buildModule(String module) {
-		if (StringUtils.isEmpty(module)) {
-			return null;
-		} else {
-			return module;
-		}
-	}
+	private void processLog(Map<String, ErrorMsg> errorMsgs, JsErrorLog log) {
+		String msg = log.getMsg();
+		ErrorMsg errorMsg = errorMsgs.get(msg);
 
-	private int buildLevel(String level, int defaultValue) {
-		if (StringUtils.isEmpty(level) || level.equals(ALL)) {
-			return defaultValue;
-		} else {
-			return Level.getCodeByName(level);
-
+		if (errorMsg == null) {
+			errorMsg = new ErrorMsg();
+			errorMsg.setMsg(msg);
+			errorMsgs.put(msg, errorMsg);
 		}
-	}
 
-	private Date buildDate(String day, String time, Date defaultDate) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		if (StringUtils.isBlank(day) || StringUtils.isBlank(time)) {
-			return defaultDate;
-		} else {
-			try {
-				Date date = sdf.parse(day + " " + time);
-				return date;
-			} catch (ParseException e) {
-				return defaultDate;
-			}
-		}
-	}
-
-	private void buildModuleList(Model model) throws DalException {
-		Set<String> moduleList = new HashSet<String>();
-		List<JsErrorLog> modules = m_jsErrorLogDao.findModules(JsErrorLogEntity.READSET_DISTINCT_MODULES);
-		for (JsErrorLog log : modules) {
-			moduleList.add(log.getModules());
-		}
-		model.setModules(moduleList);
+		errorMsg.addCount();
+		errorMsg.addId(log.getId());
 	}
 
 	private void normalize(Model model, Payload payload) {

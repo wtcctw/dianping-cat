@@ -1,9 +1,11 @@
 package com.dianping.cat.report.page.browser;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.web.js.Level;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
@@ -11,6 +13,7 @@ import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.browser.service.AjaxDataField;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
 
+import org.codehaus.plexus.util.StringUtils;
 import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
@@ -64,6 +67,8 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private int m_id;
 
 	private SimpleDateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+	private static final String ALL = "ALL";
 
 	public Payload() {
 		super(ReportPage.WEB);
@@ -215,7 +220,7 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	public void setUrl(String url) {
 		m_url = url;
 	}
-	
+
 	public String getMsg() {
 		return m_msg;
 	}
@@ -240,12 +245,34 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		m_day = day;
 	}
 
+	public Date buildStartTime() {
+		if (StringUtils.isNotBlank(m_day) && StringUtils.isNotBlank(m_startTime)) {
+			try {
+				Date date = m_format.parse(m_day + " " + m_startTime);
+				return date;
+			} catch (ParseException e) {
+			}
+		}
+		return TimeHelper.getCurrentDay();
+	}
+
 	public String getStartTime() {
 		return m_startTime;
 	}
 
 	public void setStartTime(String startTime) {
 		m_startTime = startTime;
+	}
+
+	public Date buildEndTime() {
+		if (StringUtils.isNotBlank(m_day) && StringUtils.isNotBlank(m_endTime)) {
+			try {
+				Date date = m_format.parse(m_day + " " + m_endTime);
+				return date;
+			} catch (ParseException e) {
+			}
+		}
+		return TimeHelper.getCurrentDay(1);
 	}
 
 	public String getEndTime() {
@@ -255,6 +282,15 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	public void setEndTime(String endTime) {
 		m_endTime = endTime;
 	}
+
+	public int buildLevel() {
+		if (StringUtils.isEmpty(m_level) || ALL.equals(m_level)) {
+			return -1;
+		} else {
+			return Level.getCodeByName(m_level);
+		}
+	}
+
 	public String getLevel() {
 		return m_level;
 	}
@@ -264,7 +300,11 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	}
 
 	public String getModule() {
-		return m_module;
+		if (StringUtils.isEmpty(m_module)) {
+			return null;
+		} else {
+			return m_module;
+		}
 	}
 
 	public void setModule(String module) {

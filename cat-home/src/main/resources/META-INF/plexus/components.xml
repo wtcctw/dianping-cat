@@ -5851,13 +5851,13 @@
 					<role>com.dianping.cat.report.page.browser.JspViewer</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.browser.ModuleManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.web.WebConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.browser.CityManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
@@ -5888,8 +5888,22 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.browser.CityManager</role>
-			<implementation>com.dianping.cat.report.page.browser.CityManager</implementation>
+			<role>com.dianping.cat.report.page.browser.ModuleManager</role>
+			<implementation>com.dianping.cat.report.page.browser.ModuleManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.web.JsErrorLogDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.web.JsErrorLogDao</role>
+			<implementation>com.dianping.cat.web.JsErrorLogDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.browser.graph.WebGraphCreator</role>
@@ -5918,15 +5932,6 @@
 		<component>
 			<role>com.dianping.cat.web.AjaxDataDao</role>
 			<implementation>com.dianping.cat.web.AjaxDataDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.web.JsErrorLogDao</role>
-			<implementation>com.dianping.cat.web.JsErrorLogDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
