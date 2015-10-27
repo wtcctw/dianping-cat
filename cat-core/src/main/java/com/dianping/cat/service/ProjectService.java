@@ -133,14 +133,19 @@ public class ProjectService implements Initializable {
 		}
 	}
 
-	private boolean insert(Project project) throws DalException {
+	public boolean insert(Project project) {
 		m_domainToProjects.put(project.getDomain(), project);
 
-		int result = m_projectDao.insert(project);
+		try {
+			int result = m_projectDao.insert(project);
 
-		if (result == 1) {
-			return true;
-		} else {
+			if (result == 1) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (DalException e) {
+			Cat.logError(e);
 			return false;
 		}
 	}
