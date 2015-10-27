@@ -134,8 +134,6 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 
 		if (serverId != null) {
 			String id = queryRPCId(serverId);
-			System.err.println(t);
-			System.err.println(id);
 			StorageReport report = m_reportManager.getHourlyReport(getStartTime(), id, true);
 			StorageUpdateParam param = new StorageUpdateParam();
 
