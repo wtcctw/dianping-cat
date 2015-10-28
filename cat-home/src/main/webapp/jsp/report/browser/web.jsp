@@ -22,6 +22,7 @@
 				$("#city2").val($("#city").val());
 				$("#operator2").val($("#operator").val());
 				$("#time2").val($("#time").val());
+				$("#network2").val($("#network").val());
 			} else {
 				$('#history').slideUp();
 			}
@@ -59,10 +60,13 @@
 			}else{
 				operator = operatorCode;
 			}
+			
+			var network = $("#network").val();
 			var split = ";";
 			var commandId = ${model.pattern2Items}[command].id;
 			var query1 = time + split + commandId + split + code + split
-					    + city + split + operator + split + split;
+					    + city + split + operator + split + split + split
+					    + network;
 			var query2 = "";
 			var value = document.getElementById("checkbox").checked;
 
@@ -73,8 +77,10 @@
 				var code2 = $("#code2").val();
 				var city2 = $("#city2").val();
 				var operator2 = $("#operator2").val();
+				var network2 = $("#network2").val();
 				query2 = time2 + split + commandId2 + split + code2 + split
-						+ split + city2 + split + operator2 + split + split;
+						+ city2 + split + operator2 + split + split + split
+						+ network2;
 			}
 
 			var checkboxs = document.getElementsByName("typeCheckbox");
@@ -129,6 +135,7 @@
 					$("#code").val(words[2]);
 					$("#city").val(words[3]);
 					$("#operator").val(words[4]);
+					$("#network").val(words[7]);
 					
 					var datePair = {};
 					datePair["当前值"]=$("#time").val();
@@ -154,6 +161,7 @@
 						$("#code2").val(words[2]);
 						$("#city2").val(words[3]);
 						$("#operator2").val(words[4]);
+						$("#network2").val(words[7]);
 					} else {
 						$("#time2").val(getDate());
 					}
