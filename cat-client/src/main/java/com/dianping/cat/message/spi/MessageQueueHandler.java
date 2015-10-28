@@ -3,6 +3,7 @@ package com.dianping.cat.message.spi;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.dianping.cat.message.internal.MessageIdFactory;
+import com.dianping.cat.message.io.ChannelManager;
 import com.dianping.cat.message.io.DefaultMessageQueue;
 
 public class MessageQueueHandler {
@@ -26,22 +27,29 @@ public class MessageQueueHandler {
 		return m_queue.offer(tree);
 	}
 
-	public boolean offer(MessageTree tree, double sampleRatio) {
-		if (tree.isSample() && sampleRatio < 1.0) {
-			if (sampleRatio > 0) {
-				int count = m_count.incrementAndGet();
+	public boolean offer(MessageTree tree, ChannelManager manager) {
+		if (!manager.isBlock()) {
+			double sampleRatio = manager.getSample();
 
-				if (count % (1 / sampleRatio) == 0) {
-					return m_queue.offer(tree);
+			if (tree.isSample() && sampleRatio < 1.0) {
+				if (sampleRatio > 0) {
+					int count = m_count.incrementAndGet();
+
+					if (count % (1 / sampleRatio) == 0) {
+						return m_queue.offer(tree);
+					} else {
+						m_factory.reuse(tree.getMessageId());
+					}
 				} else {
 					m_factory.reuse(tree.getMessageId());
 				}
+				return true;
 			} else {
-				m_factory.reuse(tree.getMessageId());
+				return m_queue.offer(tree);
 			}
-			return false;
 		} else {
-			return m_queue.offer(tree);
+			m_factory.reuse(tree.getMessageId());
+			return true;
 		}
 	}
 

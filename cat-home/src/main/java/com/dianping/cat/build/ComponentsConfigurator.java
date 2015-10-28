@@ -22,7 +22,6 @@ import com.dianping.cat.config.app.AppSpeedTableProvider;
 import com.dianping.cat.config.app.WebApiTableProvider;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
-import com.dianping.cat.config.server.BlackListManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.config.AllReportConfigManager;
@@ -215,7 +214,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TopoGraphFormatConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      RouterConfigManager.class, BlackListManager.class, AllReportConfigManager.class));
+		      RouterConfigManager.class, AllReportConfigManager.class));
 
 		return all;
 	}

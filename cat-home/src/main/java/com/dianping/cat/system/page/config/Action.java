@@ -62,7 +62,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	METRIC_RULE_ADD_OR_UPDATE_SUBMIT("metricRuleAddSubmit"),
 
 	METRIC_CONFIG_DELETE("metricConfigDelete"),
-	
+
 	METRIC_CONFIG_BATCH_DELETE("metricConfigBatchDelete"),
 
 	METRIC_RULE_CONFIG_UPDATE("metricRuleConfigUpdate"),
@@ -229,9 +229,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	SERVER_FILTER_CONFIG_UPDATE("serverFilterConfigUpdate"),
 
-	ALL_REPORT_CONFIG("allReportConfig"),
-
-	BLACK_CONFIG_UPDATE("blackConfigUpdate");
+	ALL_REPORT_CONFIG("allReportConfig");
 
 	private String m_name;
 

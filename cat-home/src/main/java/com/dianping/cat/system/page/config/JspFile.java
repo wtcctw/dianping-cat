@@ -149,8 +149,6 @@ public enum JspFile {
 
 	SERVER_FILTER_CONFIG_UPDATE("/jsp/system/server/serverFilterUpdate.jsp"),
 
-	BLACK_CONFIG_UPDATE("/jsp/system/black/blackConfigUpdate.jsp"),
-
 	ALL_REPORT_CONFIG("/jsp/system/transactionRule/allReportConfig.jsp");
 
 	private String m_path;

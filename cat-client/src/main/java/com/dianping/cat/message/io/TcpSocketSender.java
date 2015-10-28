@@ -189,13 +189,13 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	@Override
 	public void send(MessageTree tree) {
 		if (isAtomicMessage(tree)) {
-			boolean result = m_atomicTreeHandler.offer(tree, m_manager.getSample());
+			boolean result = m_atomicTreeHandler.offer(tree, m_manager);
 
 			if (!result) {
 				logQueueFullInfo(tree);
 			}
 		} else {
-			boolean result = m_queueHandler.offer(tree, m_manager.getSample());
+			boolean result = m_queueHandler.offer(tree, m_manager);
 
 			if (!result) {
 				logQueueFullInfo(tree);

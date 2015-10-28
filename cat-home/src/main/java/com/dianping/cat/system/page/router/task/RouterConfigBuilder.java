@@ -25,7 +25,7 @@ public class RouterConfigBuilder implements TaskBuilder {
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
-		RouterConfig routerConfig = m_routerConfigHandler.buildRouterConfig(name, domain, period);
+		RouterConfig routerConfig = m_routerConfigHandler.buildRouterConfig(domain, period);
 		DailyReport dailyReport = new DailyReport();
 
 		dailyReport.setCreationDate(new Date());

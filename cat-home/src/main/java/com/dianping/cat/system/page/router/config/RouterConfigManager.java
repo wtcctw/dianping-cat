@@ -2,7 +2,9 @@ package com.dianping.cat.system.page.router.config;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +35,11 @@ import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.router.entity.DefaultServer;
 import com.dianping.cat.home.router.entity.Domain;
+import com.dianping.cat.home.router.entity.GroupServer;
+import com.dianping.cat.home.router.entity.NetworkPolicy;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.entity.Server;
+import com.dianping.cat.home.router.entity.ServerGroup;
 import com.dianping.cat.home.router.transform.DefaultNativeParser;
 import com.dianping.cat.home.router.transform.DefaultSaxParser;
 import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
@@ -52,6 +57,8 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 
 	@Inject
 	private DailyReportContentDao m_dailyReportContentDao;
+
+	private SubnetInfoProcessor m_subnetInfoProcessor;
 
 	private int m_configId;
 
@@ -127,6 +134,8 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		if (m_routerConfig == null) {
 			m_routerConfig = new RouterConfig();
 		}
+
+		m_subnetInfoProcessor = new SubnetInfoProcessor(this);
 	}
 
 	public boolean insert(String xml) {
@@ -134,6 +143,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 			m_routerConfig = DefaultSaxParser.parse(xml);
 			boolean result = storeConfig();
 
+			m_subnetInfoProcessor.refreshData();
 			return result;
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -146,24 +156,48 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		return new Server().setId(m_routerConfig.getBackupServer()).setPort(m_routerConfig.getBackupServerPort());
 	}
 
-	public List<Server> queryEnableServers() {
-		List<DefaultServer> servers = m_routerConfig.getDefaultServers();
-		List<Server> result = new ArrayList<Server>();
+	public Map<String, Server> queryEnableServers() {
+		Map<String, DefaultServer> servers = m_routerConfig.getDefaultServers();
+		Map<String, Server> results = new HashMap<String, Server>();
 
-		for (DefaultServer server : servers) {
+		for (Entry<String, DefaultServer> entry : servers.entrySet()) {
+			DefaultServer server = entry.getValue();
+
 			if (server.isEnable()) {
-				result.add(new Server().setId(server.getId()).setPort(server.getPort()).setWeight(server.getWeight()));
+				Server s = new Server().setId(server.getId()).setPort(server.getPort()).setWeight(server.getWeight());
+				results.put(entry.getKey(), s);
 			}
 		}
-		return result;
+		return results;
 	}
 
-	public List<Server> queryServersByDomain(String domain) {
+	public String queryServerGroupByIp(String ip) {
+		return m_subnetInfoProcessor.queryBySubnet(ip);
+	}
+
+	public List<Server> queryServersByDomain(String group, String domain) {
 		Domain domainConfig = m_routerConfig.findDomain(domain);
 		List<Server> result = new ArrayList<Server>();
+		boolean valid = domainConfig == null || domainConfig.findGroup(group) == null
+		      || domainConfig.findGroup(group).getServers().isEmpty();
 
-		if (domainConfig == null || domainConfig.getServers().isEmpty()) {
-			List<Server> servers = queryEnableServers();
+		if (valid) {
+			List<Server> servers = new ArrayList<Server>();
+			Map<String, Server> enables = queryEnableServers();
+			ServerGroup serverGroup = m_routerConfig.getServerGroups().get(group);
+
+			if (serverGroup != null && !serverGroup.getGroupServers().isEmpty()) {
+				Collection<GroupServer> groupServers = serverGroup.getGroupServers().values();
+
+				for (GroupServer s : groupServers) {
+					if (enables.containsKey(s.getId())) {
+						servers.add(enables.get(s.getId()));
+					}
+				}
+			} else {
+				servers = new ArrayList<Server>(enables.values());
+			}
+
 			int length = servers.size();
 			int hashCode = domain.hashCode();
 
@@ -174,11 +208,22 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 			}
 			addServerList(result, queryBackUpServer());
 		} else {
-			for (Server server : domainConfig.getServers()) {
+			for (Server server : domainConfig.findGroup(group).getServers()) {
 				result.add(server);
 			}
 		}
 		return result;
+	}
+
+	public Map<String, NetworkPolicy> queryUnblockPolicies() {
+		Map<String, NetworkPolicy> networkPolicies = new HashMap<String, NetworkPolicy>();
+
+		for (Entry<String, NetworkPolicy> entry : m_routerConfig.getNetworkPolicies().entrySet()) {
+			if (!entry.getValue().isBlock()) {
+				networkPolicies.put(entry.getKey(), entry.getValue());
+			}
+		}
+		return networkPolicies;
 	}
 
 	public void refreshConfig() throws Exception {
@@ -186,10 +231,27 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		refreshReportInfo();
 	}
 
+	private void refreshConfigInfo() throws DalException, SAXException, IOException {
+		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+		long modifyTime = config.getModifyDate().getTime();
+
+		synchronized (this) {
+			if (modifyTime > m_modifyTime) {
+				String content = config.getContent();
+				RouterConfig routerConfig = DefaultSaxParser.parse(content);
+
+				m_routerConfig = routerConfig;
+				m_modifyTime = modifyTime;
+
+				m_subnetInfoProcessor.refreshData();
+			}
+		}
+	}
+
 	private void refreshReportInfo() throws Exception {
 		Date period = TimeHelper.getCurrentDay(-1);
 		long time = period.getTime();
-		
+
 		try {
 			DailyReport report = m_dailyReportDao.findByDomainNamePeriod(Constants.CAT, RouterConfigBuilder.ID, period,
 			      DailyReportEntity.READSET_FULL);
@@ -217,18 +279,14 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	private void refreshConfigInfo() throws DalException, SAXException, IOException {
-		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
-		long modifyTime = config.getModifyDate().getTime();
+	public boolean shouldBlock(String ip) {
+		String group = m_subnetInfoProcessor.queryServerGroupByIp(ip);
+		NetworkPolicy networkPolicy = m_routerConfig.findNetworkPolicy(group);
 
-		synchronized (this) {
-			if (modifyTime > m_modifyTime) {
-				String content = config.getContent();
-				RouterConfig routerConfig = DefaultSaxParser.parse(content);
-
-				m_routerConfig = routerConfig;
-				m_modifyTime = modifyTime;
-			}
+		if (networkPolicy != null) {
+			return networkPolicy.isBlock();
+		} else {
+			return false;
 		}
 	}
 
@@ -249,5 +307,4 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		}
 		return true;
 	}
-
 }
