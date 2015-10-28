@@ -3,6 +3,8 @@ package com.dianping.cat.report.page.state;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
@@ -59,10 +61,10 @@ public class StateBuilder {
 	private List<String> queryAllServers() {
 		List<String> strs = new ArrayList<String>();
 		String backUpServer = m_routerManager.getRouterConfig().getBackupServer();
-		List<DefaultServer> servers = m_routerManager.getRouterConfig().getDefaultServers();
+		Map<String, DefaultServer> servers = m_routerManager.getRouterConfig().getDefaultServers();
 
-		for (DefaultServer server : servers) {
-			strs.add(server.getId());
+		for (Entry<String, DefaultServer> server : servers.entrySet()) {
+			strs.add(server.getValue().getId());
 		}
 		strs.add(backUpServer);
 		return strs;

@@ -10,9 +10,6 @@
 				<requirement>
 					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.BlackListManager</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -164,18 +161,6 @@
 		<component>
 			<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
 			<implementation>com.dianping.cat.config.app.AppSpeedConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.server.BlackListManager</role>
-			<implementation>com.dianping.cat.config.server.BlackListManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

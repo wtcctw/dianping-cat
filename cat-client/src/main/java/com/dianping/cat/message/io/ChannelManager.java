@@ -48,6 +48,8 @@ public class ChannelManager implements Task {
 
 	private volatile double m_sample = 1d;
 
+	private volatile boolean m_block = false;
+
 	private MessageQueueHandler m_handler;
 
 	private ChannelHolder m_activeChannelHolder;
@@ -204,6 +206,10 @@ public class ChannelManager implements Task {
 		return m_sample;
 	}
 
+	public boolean isBlock() {
+		return m_block;
+	}
+
 	private ChannelHolder initChannel(List<InetSocketAddress> addresses, String serverConfig) {
 		try {
 			int len = addresses.size();
@@ -280,6 +286,7 @@ public class ChannelManager implements Task {
 			KVConfig routerConfig = (KVConfig) m_jsonBuilder.parse(content.trim(), KVConfig.class);
 			String current = routerConfig.getValue("routers");
 			m_sample = Double.valueOf(routerConfig.getValue("sample").trim());
+			m_block = Boolean.valueOf(routerConfig.getValue("block").trim());
 
 			return current.trim();
 		} catch (Exception e) {

@@ -21,7 +21,6 @@ import com.dianping.cat.config.app.AppConnectionTableProvider;
 import com.dianping.cat.config.app.AppSpeedTableProvider;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
-import com.dianping.cat.config.server.BlackListManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.web.AjaxDataTableProvider;
@@ -92,6 +91,7 @@ import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.page.router.config.RouterConfigHandler;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
+import com.dianping.cat.system.page.router.config.SubnetInfoManager;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
@@ -210,14 +210,15 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AlertConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(RouterConfigManager.class).req(ConfigDao.class, ContentFetcher.class, DailyReportDao.class,
-		      DailyReportContentDao.class));
+		all.add(C(SubnetInfoManager.class));
+		all.add(C(RouterConfigManager.class).req(SubnetInfoManager.class, ConfigDao.class, ContentFetcher.class,
+		      DailyReportDao.class, DailyReportContentDao.class));
 		all.add(C(RouterConfigHandler.class).req(StateReportService.class, RouterConfigService.class,
 		      RouterConfigManager.class, DailyReportDao.class));
 		all.add(C(TopoGraphFormatConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      RouterConfigManager.class, BlackListManager.class, AllReportConfigManager.class));
+		      RouterConfigManager.class, AllReportConfigManager.class));
 
 		return all;
 	}
