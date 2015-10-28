@@ -149,6 +149,8 @@ public class Handler implements PageHandler<Context> {
 		case WEB_RULE_DELETE:
 			m_patternConfigProcessor.processPatternConfig(action, payload, model);
 			break;
+		case WEB_CONSTANTS:
+			break;
 
 		case TOPOLOGY_GRAPH_NODE_CONFIG_LIST:
 		case TOPOLOGY_GRAPH_NODE_CONFIG_ADD_OR_UPDATE:

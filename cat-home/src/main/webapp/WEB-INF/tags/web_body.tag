@@ -39,6 +39,9 @@
 						<li id="webRule"><a href="/cat/s/config?op=webRule">
 								<i class="menu-icon fa fa-caret-right"></i>Web告警</a>
 								<b class="arrow"></b></li>
+						<li id="webConstants"><a href="/cat/s/config?op=webConstants">
+								<i class="menu-icon fa fa-caret-right"></i>常量配置</a>
+								<b class="arrow"></b></li>
 					</ul>
 				</li>
 				<li id="Web_documents" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-book"></i> <span class="menu-text">Documents</span>

@@ -14,7 +14,7 @@
 
 <br/>
 <h4 class="text-danger">Web单次接口</h4>
-	<pre>	http://{ip}/broker-service/api/single</pre>
+	<pre>	http://{ip}/web-broker-service/api/ajax</pre>
 	
 	<p>参数说明</p>
 	<table style="width:70%" class="table table-bordered table-striped table-condensed  ">
@@ -23,11 +23,13 @@
 		<tr><td>ts</td><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
 		<tr><td>tu</td><td>targetUrl</td><td>调用的URL或API</td><td>String</td></tr>
 		<tr><td>d</td><td>duration</td><td>访问耗时</td><td>long 毫秒</td></tr>
-		<tr><td>hs</td><td>httpStatus</td><td>httpStatus</td><td>整型</td></tr>
-		<tr><td>ec</td><td>errorCode</td><td>ErrorCode</td><td>整型，如果没有的话，传空</td></tr>
+		<tr><td>c</td><td>code</td><td>返回结果码</td><td>整型</td></tr>
+		<tr><td>s</td><td>requestByte</td><td>发送字节数</td><td>整型，以byte为单位</td></tr>
+		<tr><td>r</td><td>responseByte</td><td>返回字节数</td><td>整型，以byte为单位</td></tr>
+		<tr><td>n</td><td>network</td><td>网络类型</td><td>整型, 2G,3G,4G,WIFI(iOS只有3G和WIFI)，1=wifi, 2=2G, 3=3G, 4=4G, 0=Unknown</td></tr>
 	</table>
 
-自定义 HttpStatus 表
+ code表
 	<table style="width:70%" class="table table-bordered table-striped table-condensed  ">
 		<tr><th>code名称</th><th>code含义</th></tr>	
 		<tr><td>-100</td><td>如果当前没有连接，不能连接到网络</td></tr>
@@ -43,25 +45,60 @@
 	</table>
 <br/>
 
-<p>ec 参数</p>
-<p>今后 ec 参数仅仅是用来标识 response json 中的 code 值</p>
-
 <br/>
 <h4 class="text-danger">JS 错误接口</h4>
-	<pre>	http://{ip}/broker-service/api/js</pre>
+	<pre>	http://{ip}/web-broker-service/api/js</pre>
 	
 	<p>参数说明</p>
 	<table style="width:70%" class="table table-bordered table-striped table-condensed  ">
 		<tr><th>query名</th><th>实际名称</th><th>描述</th><th>类型</th></tr>	
 		<tr><td>v</td><td>version</td><td>API版本号</td><td>暂定为1</td></tr>
-		<tr><td>timestamp</td><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
-		<tr><td>error</td><td>error</td><td>错误的类型</td><td>String</td></tr>
-		<tr><td>file</td><td>file</td><td>错误的发生的js文件</td><td>String</td></tr>
-		<tr><td>url</td><td>url</td><td>错误的发生的html页面</td><td>String</td></tr>
-		<tr><td>line</td><td>line</td><td>错误的行数</td><td>int</td></tr>
-		<tr><td>data</td><td>data</td><td>data类型</td><td>String，如果没有的话，传空串</td></tr>
+		<tr><td>t</td><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
+		<tr><td>msg</td><td>message</td><td>错误的类型,简要信息</td><td>String</td></tr>
+		<tr><td>n</td><td>appName</td><td>错误的发生的应用模块</td><td>String</td></tr>
+		<tr><td>l</td><td>level</td><td>错误等级</td><td>String</td></tr>
+		<tr><td>a</td><td>agent</td><td>浏览器信息</td><td>String</td></tr>
+		<tr><td>data</td><td>data</td><td>详细出错信息</td><td>String，如果没有的话，传空串</td></tr>
 	</table>
 	<br/>
+
+<h4 class="text-danger">web访问批量接口</h4>
+	<pre>	http://{ip}/web-broker-service/api/log</pre>
+	
+	批量接口POST内容，前面加上v=1&c=，不同请求之间用回车<span class="text-danger">ENTER</span>分隔，字段之间用<span class="text-danger">TAB</span>分隔。
+
+	<pre>
+	timstamp<span class="text-danger">TAB</span>targetUrl<span class="text-danger">TAB</span>dnslookup<span class="text-danger">TAB</span>tcpconnect<span class="text-danger">TAB</span>request<span class="text-danger">TAB</span>response<span class="text-danger">ENTER</span>
+	
+	sample如下:
+	
+	v=1&c=
+	1400037748182<span class="text-danger">TAB</span>ERROR<span class="text-danger">TAB</span>11233333<span class="text-danger">TAB</span>shopInfo<span class="text-danger">TAB</span>url1<span class="text-danger">TAB</span>test1<span class="text-danger">ENTER</span>
+	1400037748182<span class="text-danger">TAB</span>INFO<span class="text-danger">TAB</span>22339283<span class="text-danger">TAB</span>shopInfo<span class="text-danger">TAB</span>url2<span class="text-danger">TAB</span>test2<span class="text-danger">ENTER</span>
+	1400037748182<span class="text-danger">TAB</span>WARN<span class="text-danger">TAB</span>13456664<span class="text-danger">TAB</span>shopInfo<span class="text-danger">TAB</span>url3<span class="text-danger">TAB</span>test3<span class="text-danger">ENTER</span>
+	</pre>
+	<p class="text-danger">v=1&c=不需要做urlencode,后面的批量的content部分需要urlencode。</p>
+	<p>参数说明</p>
+	<table style="width:70%" class="table table-bordered table-striped table-condensed  ">
+		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>	
+		<tr><td>v</td><td>API版本号</td><td>暂定为1</td></tr>
+		<tr><td>c</td><td>具体内容</td><td>content内容</td></tr>
+	</table>
+	<p>content内容说明</p>
+	<pre>
+	timestamp<span class="text-danger">TAB</span>level<span class="text-danger">TAB</span>requestId<span class="text-danger">TAB</span>appName<span class="text-danger">TAB</span>Url<span class="text-danger">TAB</span>message<span class="text-danger">ENTER</span>
+	</pre>
+	<table style="width:70%" class="table table-bordered table-striped table-condensed  ">
+		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>	
+		<tr><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
+		<tr><td>level</td><td>log等级</td><td>DEV,INFO,WARN,ERROR</td></tr>
+		<tr><td>requestId</td><td>用户dpId</td><td>String</td></tr>
+		<tr><td>appName</td><td>应用名</td><td>String</td></tr>
+		<tr><td>Url</td><td>请求访问的URL</td><td>String</td></tr>
+		<tr><td>message</td><td>日志信息</td><td>String</td></tr>
+	</table>
+<br/>
+	
 <h4 class="text-danger">CDN监控接口</h4>
 	<pre>	http://{ip}/broker-service/api/cdn</pre>
 	
