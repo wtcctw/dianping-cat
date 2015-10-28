@@ -10,7 +10,6 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.app.WebApiData;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
@@ -26,7 +25,7 @@ public class WebGraphCreator {
 	private WebApiService m_WebApiService;
 
 	@Inject
-	private WebConfigManager m_webConfigManager;
+	private AppConfigManager m_webConfigManager;
 
 	public LineChart buildChartData(final List<Double[]> datas, String type) {
 		LineChart lineChart = new LineChart();

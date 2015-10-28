@@ -17,7 +17,6 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
@@ -44,7 +43,7 @@ public class Handler implements PageHandler<Context> {
 	private UrlPatternConfigManager m_patternManager;
 
 	@Inject
-	private WebConfigManager m_webConfigManager;
+	private AppConfigManager m_webConfigManager;
 
 	@Inject
 	private CityManager m_cityManager;

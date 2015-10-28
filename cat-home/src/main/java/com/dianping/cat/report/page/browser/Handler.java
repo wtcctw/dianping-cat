@@ -13,7 +13,6 @@ import java.util.Map.Entry;
 import javax.servlet.ServletException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
@@ -225,8 +224,9 @@ public class Handler implements PageHandler<Context> {
 	private void normalize(Model model, Payload payload) {
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.WEB);
-		model.setCities(m_webConfigManager.queryConfigItem(AppConfigManager.CITY));
-		model.setOperators(m_webConfigManager.queryConfigItem(AppConfigManager.OPERATOR));
+		model.setCities(m_webConfigManager.queryConfigItem(WebConfigManager.CITY));
+		model.setOperators(m_webConfigManager.queryConfigItem(WebConfigManager.OPERATOR));
+		model.setNetworks(m_webConfigManager.queryConfigItem(WebConfigManager.NETWORK));
 		model.setCodes(m_patternManager.queryCodes());
 
 		PatternItem first = m_patternManager.queryUrlPatternRules().iterator().next();

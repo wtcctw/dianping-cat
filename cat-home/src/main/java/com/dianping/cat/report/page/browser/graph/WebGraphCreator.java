@@ -8,9 +8,8 @@ import java.util.Map;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
-import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.web.WebConfigManager;
-import com.dianping.cat.configuration.app.entity.Code;
+import com.dianping.cat.configuration.web.entity.Code;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
@@ -95,9 +94,9 @@ public class WebGraphCreator {
 
 		switch (field) {
 		case OPERATOR:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> operators = m_webConfigManager
-			      .queryConfigItem(AppConfigManager.OPERATOR);
-			com.dianping.cat.configuration.app.entity.Item operator = null;
+			Map<Integer, com.dianping.cat.configuration.web.entity.Item> operators = m_webConfigManager
+			      .queryConfigItem(WebConfigManager.OPERATOR);
+			com.dianping.cat.configuration.web.entity.Item operator = null;
 			keyValue = data.getOperator();
 
 			if (operators != null && (operator = operators.get(keyValue)) != null) {
@@ -105,13 +104,23 @@ public class WebGraphCreator {
 			}
 			break;
 		case CITY:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> cities = m_webConfigManager
-			      .queryConfigItem(AppConfigManager.CITY);
-			com.dianping.cat.configuration.app.entity.Item city = null;
+			Map<Integer, com.dianping.cat.configuration.web.entity.Item> cities = m_webConfigManager
+			      .queryConfigItem(WebConfigManager.CITY);
+			com.dianping.cat.configuration.web.entity.Item city = null;
 			keyValue = data.getCity();
 
 			if (cities != null && (city = cities.get(keyValue)) != null) {
 				title = city.getName();
+			}
+			break;
+		case NETWORK:
+			Map<Integer, com.dianping.cat.configuration.web.entity.Item> networks = m_webConfigManager
+			      .queryConfigItem(WebConfigManager.NETWORK);
+			com.dianping.cat.configuration.web.entity.Item network = null;
+			keyValue = data.getNetwork();
+
+			if (networks != null && (network = networks.get(keyValue)) != null) {
+				title = network.getName();
 			}
 			break;
 		case CODE:
@@ -153,6 +162,10 @@ public class WebGraphCreator {
 			return "请求数（个/5分钟）";
 		} else if (AjaxDataService.DELAY.equals(type)) {
 			return "延时平均值（毫秒/5分钟）";
+		} else if (AjaxDataService.REQUEST_PACKAGE.equals(type)) {
+			return "平均发包大小(byte)";
+		} else if (AjaxDataService.RESPONSE_PACKAGE.equals(type)) {
+			return "平均回包大小(byte)";
 		} else {
 			throw new RuntimeException("unexpected query type, type:" + type);
 		}

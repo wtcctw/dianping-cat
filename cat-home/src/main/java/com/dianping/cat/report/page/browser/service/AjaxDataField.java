@@ -7,7 +7,9 @@ public enum AjaxDataField {
 
 	CITY("city"),
 
-	CODE("code");
+	CODE("code"),
+	
+	NETWORK("network");
 
 	private String m_name;
 

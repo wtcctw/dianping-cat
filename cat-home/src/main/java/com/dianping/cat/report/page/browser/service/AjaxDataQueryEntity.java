@@ -30,6 +30,8 @@ public class AjaxDataQueryEntity {
 
 	private int m_endMinuteOrder = DEFAULT_VALUE;
 
+	private int m_network = DEFAULT_VALUE;
+
 	public AjaxDataQueryEntity() {
 		Calendar cal = Calendar.getInstance();
 
@@ -53,6 +55,7 @@ public class AjaxDataQueryEntity {
 			m_operator = parseValue(strs.get(4));
 			m_startMinuteOrder = convert2MinuteOrder(strs.get(5));
 			m_endMinuteOrder = convert2MinuteOrder(strs.get(6));
+			m_network = parseValue(strs.get(7));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -101,6 +104,10 @@ public class AjaxDataQueryEntity {
 
 	public int getStartMinuteOrder() {
 		return m_startMinuteOrder;
+	}
+
+	public int getNetwork() {
+		return m_network;
 	}
 
 	protected Date parseDate(String dateStr) throws Exception {
@@ -154,5 +161,9 @@ public class AjaxDataQueryEntity {
 
 	public void setStartMinuteOrder(int startMinuteOrder) {
 		m_startMinuteOrder = startMinuteOrder;
+	}
+
+	public void setNetwork(int network) {
+		m_network = network;
 	}
 }

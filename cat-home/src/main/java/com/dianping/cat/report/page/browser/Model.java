@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 
-import com.dianping.cat.configuration.app.entity.Item;
+import com.dianping.cat.configuration.web.entity.Item;
 import com.dianping.cat.configuration.web.url.entity.Code;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -54,6 +54,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Map<Integer, Code> m_codes;
 
+	private Map<Integer, Item> m_networks;
+
 	private String m_defaultApi;
 
 	private List<String> m_levels;
@@ -72,6 +74,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public ProblemStatistics getAllStatistics() {
 		return m_allStatistics;
+	}
+
+	public Map<Integer, Item> getNetworks() {
+		return m_networks;
 	}
 
 	public Map<Integer, Item> getCities() {
@@ -167,6 +173,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setCodes(Map<Integer, Code> codes) {
 		m_codes = codes;
+	}
+
+	public void setNetworks(Map<Integer, Item> networks) {
+		m_networks = networks;
 	}
 
 	public void setCompareEnd(Date compareEnd) {

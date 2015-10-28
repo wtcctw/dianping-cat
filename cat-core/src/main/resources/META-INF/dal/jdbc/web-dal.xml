@@ -61,6 +61,10 @@
 			select-expr="sum(access_number)" length="19" nullable="false" />
 		<member name="response-sum-time-sum" value-type="long" all="false"
 			select-expr="sum(response_sum_time)" length="19" nullable="false" />
+		<member name="request-sum-byte-sum" value-type="long" all="false"
+			select-expr="sum(request_sum_byte)" length="19" nullable="false" />
+		<member name="response-sum-byte-sum" value-type="long" all="false"
+			select-expr="sum(response_sum_byte)" length="19" nullable="false" />
 		<var name="api-id" value-type="int" />
 		<var name="start-minute-order" value-type="int" />
 		<var name="end-minute-order" value-type="int" />
@@ -73,6 +77,16 @@
 				<member name="minute-order" />
 				<member name="access-number-sum" />
 				<member name="response-sum-time-sum" />
+			</readset>
+			<readset name="REQUEST-BYTE-AVG-DATA">
+				<member name="minute-order" />
+				<member name="access-number-sum" />
+				<member name="request-sum-byte-sum" />
+			</readset>
+			<readset name="RESPONSE-BYTE-AVG-DATA">
+				<member name="minute-order" />
+				<member name="access-number-sum" />
+				<member name="response-sum-byte-sum" />
 			</readset>
 			<readset name="SUCCESS-DATA">
 				<member name="minute-order" />
@@ -92,6 +106,10 @@
 				<member name="city" />
 				<member name="access-number-sum" />
 			</readset>
+			<readset name="NETWORK-DATA">
+				<member name="network" />
+				<member name="access-number-sum" />
+			</readset>
 		</readsets>
 		<query-defs>
 			<query name="insert" type="INSERT" batch="true">
@@ -101,7 +119,10 @@
 			<query name="insert-or-update" type="INSERT" batch="true">
 				<statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
         VALUES(<VALUES/>) ON DUPLICATE KEY UPDATE 
-        access_number = access_number + ${access-number}
+        access_number = access_number + ${access-number},
+        response_sum_time = response_sum_time + ${response-sum-time},
+        request_sum_byte = request_sum_byte + ${request-sum-byte},
+        response_sum_byte = response_sum_byte + ${response-sum-byte}
          ]]></statement>
 			</query>
 			<query name="delete-before-period" type="DELETE">
@@ -115,6 +136,7 @@
 				<param name="city" />
 				<param name="operator" />
 				<param name="code" />
+				<param name="network" />
 				<statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
@@ -126,6 +148,9 @@
 		</IF>
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
+		</IF>
+		<IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
 		</IF>
         group by  <FIELD name='minute-order'/>  ]]></statement>
 			</query>
@@ -143,6 +168,7 @@
 				<param name="city" />
 				<param name="operator" />
 				<param name="code" />
+				<param name="network" />
 				<statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
@@ -155,6 +181,9 @@
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
 		</IF>
+		<IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
         group by  <FIELD name='minute-order'/>,<FIELD name='code'/>  ]]></statement>
 			</query>
 			<query name="find-data-by-code" type="SELECT" multiple="true">
@@ -163,6 +192,7 @@
 				<param name="city" />
 				<param name="operator" />
 				<param name="code" />
+				<param name="network" />
 				<param name="start-minute-order" />
 				<param name="end-minute-order" />
 				<statement><![CDATA[SELECT <FIELDS/>
@@ -183,6 +213,9 @@
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
 		</IF>
+		<IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
         group by  <FIELD name='code'/> ]]></statement>
 			</query>
 			<query name="find-data-by-operator" type="SELECT" multiple="true">
@@ -191,6 +224,7 @@
 				<param name="city" />
 				<param name="operator" />
 				<param name="code" />
+				<param name="network" />
 				<param name="start-minute-order" />
 				<param name="end-minute-order" />
 				<statement><![CDATA[SELECT <FIELDS/>
@@ -211,6 +245,9 @@
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
 		</IF>		
+		<IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
         group by  <FIELD name='operator'/>  ]]></statement>
 			</query>
 			<query name="find-data-by-city" type="SELECT" multiple="true">
@@ -219,6 +256,7 @@
 				<param name="city" />
 				<param name="operator" />
 				<param name="code" />
+				<param name="network" />
 				<param name="start-minute-order" />
 				<param name="end-minute-order" />
 				<statement><![CDATA[SELECT <FIELDS/>
@@ -238,8 +276,43 @@
 		</IF>     
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
+		</IF>
+		<IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
 		</IF>	
         group by  <FIELD name='city'/>  ]]></statement>
+	</query>
+	<query name="find-data-by-network" type="SELECT" multiple="true">
+		<param name="api-id" />
+		<param name="period" />
+		<param name="city" />
+		<param name="operator" />
+		<param name="code" />
+		<param name="network" />
+		<param name="start-minute-order" />
+		<param name="end-minute-order" />
+		<statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF>
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>     
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+		<IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>	
+        group by  <FIELD name='network'/>  ]]></statement>
 			</query>
 		</query-defs>
 	</entity>

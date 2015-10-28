@@ -5101,7 +5101,7 @@
 					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.web.WebConfigManager</role>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.web.CityManager</role>
@@ -5144,8 +5144,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.web.WebConfigManager</role>
-			<implementation>com.dianping.cat.config.web.WebConfigManager</implementation>
+			<role>com.dianping.cat.config.app.AppConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -5167,7 +5167,7 @@
 					<role>com.dianping.cat.report.page.web.service.WebApiService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.web.WebConfigManager</role>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5297,18 +5297,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.app.AppConfigManager</role>
-			<implementation>com.dianping.cat.config.app.AppConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5902,6 +5890,18 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.web.WebConfigManager</role>
+			<implementation>com.dianping.cat.config.web.WebConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>

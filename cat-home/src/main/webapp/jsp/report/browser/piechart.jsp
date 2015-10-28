@@ -66,9 +66,10 @@
 			var code = $("#code").val();
 			var city = $("#city").val();
 			var operator = $("#operator").val();
+			var network = $("#network").val();
 			var split = ";";
 			var query1 = period + split + commandId + split + code + split
-					+ city + split + operator + split + start + split + end;
+					+ city + split + operator + split + start + split + end + split + network;
 			
 			var field = $("#piechartSelect").val();
 			var href = "?op=piechart&query1=" + query1 + "&groupByField=" + field+"&api1="+$("#command").val();
@@ -79,6 +80,7 @@
 			document.getElementById("code").disabled = false;
 			document.getElementById("city").disabled = false;
 			document.getElementById("operator").disabled = false;
+			document.getElementById("network").disabled = false;
 			document.getElementById($("#piechartSelect").val()).disabled = true;
 		}
 
@@ -122,6 +124,7 @@
 					$("#code").val(words[2]);
 					$("#city").val(words[3]);
 					$("#operator").val(words[4]);
+					$("#network").val(words[7]);
 					$("#piechartSelect").val('${payload.groupByField.name}');
 					refreshDisabled();
 					

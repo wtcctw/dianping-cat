@@ -25,12 +25,12 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.configuration.app.entity.AppConfig;
-import com.dianping.cat.configuration.app.entity.Code;
-import com.dianping.cat.configuration.app.entity.Command;
-import com.dianping.cat.configuration.app.entity.ConfigItem;
-import com.dianping.cat.configuration.app.entity.Item;
-import com.dianping.cat.configuration.app.transform.DefaultSaxParser;
+import com.dianping.cat.configuration.web.entity.Code;
+import com.dianping.cat.configuration.web.entity.Command;
+import com.dianping.cat.configuration.web.entity.ConfigItem;
+import com.dianping.cat.configuration.web.entity.Item;
+import com.dianping.cat.configuration.web.transform.DefaultSaxParser;
+import com.dianping.cat.configuration.web.entity.WebConfig;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
@@ -54,7 +54,7 @@ public class WebConfigManager implements Initializable {
 
 	private int m_configId;
 
-	private volatile AppConfig m_config;
+	private volatile WebConfig m_config;
 
 	private long m_modifyTime;
 
@@ -133,9 +133,9 @@ public class WebConfigManager implements Initializable {
 		}
 	}
 
-	private AppConfig copyAppConfig() throws SAXException, IOException {
+	private WebConfig copyWebConfig() throws SAXException, IOException {
 		String xml = m_config.toString();
-		AppConfig config = DefaultSaxParser.parse(xml);
+		WebConfig config = DefaultSaxParser.parse(xml);
 
 		return config;
 	}
@@ -221,7 +221,7 @@ public class WebConfigManager implements Initializable {
 		return m_commands;
 	}
 
-	public AppConfig getConfig() {
+	public WebConfig getConfig() {
 		return m_config;
 	}
 
@@ -265,7 +265,7 @@ public class WebConfigManager implements Initializable {
 			Cat.logError(e);
 		}
 		if (m_config == null) {
-			m_config = new AppConfig();
+			m_config = new WebConfig();
 		}
 		Threads.forGroup("cat").start(new ConfigReloadTask());
 	}
@@ -333,7 +333,7 @@ public class WebConfigManager implements Initializable {
 		ArrayList<Command> results = new ArrayList<Command>();
 
 		try {
-			AppConfig config = copyAppConfig();
+			WebConfig config = copyWebConfig();
 			Map<Integer, Command> commands = config.getCommands();
 
 			for (Entry<Integer, Command> entry : commands.entrySet()) {
@@ -407,14 +407,14 @@ public class WebConfigManager implements Initializable {
 		return null;
 	}
 
-	public void refreshAppConfig() throws DalException, SAXException, IOException {
+	public void refreshWebConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 
 		synchronized (this) {
 			if (modifyTime > m_modifyTime) {
 				String content = config.getContent();
-				AppConfig appConfig = DefaultSaxParser.parse(content);
+				WebConfig appConfig = DefaultSaxParser.parse(content);
 
 				m_config = appConfig;
 				m_modifyTime = modifyTime;
@@ -557,7 +557,7 @@ public class WebConfigManager implements Initializable {
 			boolean active = true;
 			while (active) {
 				try {
-					refreshAppConfig();
+					refreshWebConfig();
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
