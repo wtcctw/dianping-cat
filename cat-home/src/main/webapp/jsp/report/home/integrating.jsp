@@ -35,12 +35,12 @@
   <xmp class="well">
        <dependency>
             <groupId>com.dianping.cat</groupId>
-            <artifactId>cat-core</artifactId>   
-            <version>1.2.7</version>
+            <artifactId>cat-client</artifactId>   
+            <version>1.3.7</version>
        </dependency>
   </xmp>
   </dd>
-  <dt><h5 class="text-success">3、配置domain (cat-core 1.1.3之后版本，优先读取A配置)</h5></dt>
+  <dt><h5 class="text-success">3、配置domain (cat-client 1.1.3之后版本，优先读取A配置)</h5></dt>
    <p class="text-danger">A) 在资源文件中新建app.properties文件</p>
    <dd><p class="detailContent">在resources资源文件META-INF下，注意是<span class="text-danger">src/main/resources/META-INF/</span>文件夹，
   而不是<span class="text-danger">webapps下的那个META-INF</span>,添加<span class="text-danger">app.properties</span>，加上domain配置，如：<span class="text-danger">app.name=tuangou-web</span></p>
