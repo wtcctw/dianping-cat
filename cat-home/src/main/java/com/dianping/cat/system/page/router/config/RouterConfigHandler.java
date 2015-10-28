@@ -67,6 +67,7 @@ public class RouterConfigHandler implements LogEnabled {
 		visitor.visitStateReport(report);
 
 		Map<String, Map<String, Long>> statistics = visitor.getStatistics();
+		System.out.println(statistics);
 		Map<String, Map<Server, Long>> servers = findAvaliableGroups();
 
 		for (Entry<String, Map<Server, Long>> entry : servers.entrySet()) {
@@ -116,7 +117,7 @@ public class RouterConfigHandler implements LogEnabled {
 		Map<String, Server> servers = m_configManager.queryEnableServers();
 		Map<String, ServerGroup> groups = m_configManager.getRouterConfig().getServerGroups();
 
-		for (Entry<String, NetworkPolicy> entry : m_configManager.getRouterConfig().getNetworkPolicies().entrySet()) {
+		for (Entry<String, NetworkPolicy> entry : m_configManager.queryUnblockPolicies().entrySet()) {
 			Map<Server, Long> networResults = new HashMap<Server, Long>();
 			ServerGroup serverGroup = groups.get(entry.getValue().getServerGroup());
 
@@ -178,7 +179,7 @@ public class RouterConfigHandler implements LogEnabled {
 			try {
 				Group serverGroup = domain.findGroup(group);
 
-				if (serverGroup != null) {
+				if (serverGroup != null && !serverGroup.getServers().isEmpty()) {
 					List<Server> domainServers = serverGroup.getServers();
 					Domain defaultDomainConfig = m_configManager.getRouterConfig().findDomain(domain.getId());
 
@@ -212,13 +213,15 @@ public class RouterConfigHandler implements LogEnabled {
 
 				if (checkDomainConfig(group, defaultDomainConfig)) {
 					Domain domainConfig = routerConfig.findOrCreateDomain(domainName);
-					Group serverGroup = domainConfig.findOrCreateGroup(group);
 					Server server = findMinServer(servers);
-					Long oldValue = servers.get(server);
 
-					serverGroup.addServer(server);
-					servers.put(server, oldValue + value);
+					if (server != null) {
+						Group serverGroup = domainConfig.findOrCreateGroup(group);
+						Long oldValue = servers.get(server);
 
+						serverGroup.addServer(server);
+						servers.put(server, oldValue + value);
+					}
 				} else {
 					Domain domainConfig = routerConfig.findOrCreateDomain(domainName);
 					Group serverGroup = defaultDomainConfig.findGroup(group);

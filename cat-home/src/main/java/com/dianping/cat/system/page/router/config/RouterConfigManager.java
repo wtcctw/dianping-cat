@@ -36,6 +36,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.router.entity.DefaultServer;
 import com.dianping.cat.home.router.entity.Domain;
 import com.dianping.cat.home.router.entity.GroupServer;
+import com.dianping.cat.home.router.entity.NetworkPolicy;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.entity.Server;
 import com.dianping.cat.home.router.entity.ServerGroup;
@@ -100,6 +101,17 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 
 	public Map<Long, Pair<RouterConfig, Long>> getRouterConfigs() {
 		return m_routerConfigs;
+	}
+
+	public Map<String, NetworkPolicy> queryUnblockPolicies() {
+		Map<String, NetworkPolicy> networkPolicies = new HashMap<String, NetworkPolicy>();
+
+		for (Entry<String, NetworkPolicy> entry : m_routerConfig.getNetworkPolicies().entrySet()) {
+			if (!entry.getValue().isBlock()) {
+				networkPolicies.put(entry.getKey(), entry.getValue());
+			}
+		}
+		return networkPolicies;
 	}
 
 	@Override
@@ -283,5 +295,16 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 
 	public String queryServerGroupByIp(String ip) {
 		return m_subnetInfoManager.queryBySubnet(ip);
+	}
+
+	public boolean shouldBlock(String ip) {
+		String group = m_subnetInfoManager.queryServerGroupByIp(ip);
+		NetworkPolicy networkPolicy = m_routerConfig.findNetworkPolicy(group);
+
+		if (networkPolicy != null) {
+			return networkPolicy.isBlock();
+		} else {
+			return false;
+		}
 	}
 }

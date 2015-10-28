@@ -10,13 +10,12 @@ import java.util.Map.Entry;
 import org.apache.commons.net.util.SubnetUtils;
 import org.apache.commons.net.util.SubnetUtils.SubnetInfo;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.home.router.entity.Network;
 import com.dianping.cat.home.router.entity.NetworkPolicy;
 import com.dianping.cat.home.router.entity.RouterConfig;
 
-public class SubnetInfoManager {
+public class SubnetInfoManager{
 
 	private Map<String, List<SubnetInfo>> m_subNetInfos = new HashMap<String, List<SubnetInfo>>();
 
@@ -46,21 +45,21 @@ public class SubnetInfoManager {
 
 	public String queryBySubnet(String ip) {
 		for (Entry<String, List<SubnetInfo>> entry : m_subNetInfos.entrySet()) {
-			try {
-				List<SubnetInfo> subnetInfos = entry.getValue();
-				String serverGroup = entry.getKey();
+			List<SubnetInfo> subnetInfos = entry.getValue();
+			String serverGroup = entry.getKey();
 
-				if (!subnetInfos.isEmpty()) {
-					for (SubnetInfo info : subnetInfos) {
+			if (!subnetInfos.isEmpty()) {
+				for (SubnetInfo info : subnetInfos) {
+					try {
 						if (info.isInRange(ip)) {
 							return serverGroup;
 						}
+					} catch (Exception e) {
+						// ignore
 					}
-				} else {
-					return serverGroup;
 				}
-			} catch (Exception e) {
-				Cat.logError(e);
+			} else {
+				return serverGroup;
 			}
 		}
 		return "default";

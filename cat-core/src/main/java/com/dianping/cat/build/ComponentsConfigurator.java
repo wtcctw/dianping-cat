@@ -24,7 +24,6 @@ import com.dianping.cat.config.app.command.CommandFormatHandler;
 import com.dianping.cat.config.app.command.DefaultCommandFormatlHandler;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
-import com.dianping.cat.config.server.BlackListManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.web.js.AggregationConfigManager;
@@ -56,7 +55,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(C(MessageConsumer.class, RealtimeConsumer.class) //
-		      .req(MessageAnalyzerManager.class, ServerStatisticManager.class, BlackListManager.class));
+		      .req(MessageAnalyzerManager.class, ServerStatisticManager.class));
 
 		all.add(C(ServerConfigManager.class));
 		all.add(C(HostinfoService.class).req(HostinfoDao.class, ServerConfigManager.class));
@@ -82,13 +81,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(CommandFormatHandler.class, DefaultCommandFormatlHandler.class));
 
-		all.add(C(CommandFormatConfigManager.class).req(CommandFormatHandler.class, ConfigDao.class, ContentFetcher.class));
+		all.add(C(CommandFormatConfigManager.class)
+		      .req(CommandFormatHandler.class, ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(AppConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(AppSpeedConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-
-		all.add(C(BlackListManager.class).req(ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(AppComparisonConfigManager.class).req(ConfigDao.class));
 

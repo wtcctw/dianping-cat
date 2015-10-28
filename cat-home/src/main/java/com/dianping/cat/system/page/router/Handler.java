@@ -105,7 +105,9 @@ public class Handler implements PageHandler<Context> {
 		case JSON:
 			KVConfig config = new KVConfig();
 			Map<String, String> kvs = config.getKvs();
+			boolean block = m_configManager.shouldBlock(ip);
 
+			kvs.put("block", String.valueOf(block));
 			kvs.put("routers", buildRouterInfo(ip, domain, report));
 			kvs.put("sample", buildSampleInfo(domain));
 			model.setContent(new JsonBuilder().toJson(config));

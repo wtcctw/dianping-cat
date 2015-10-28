@@ -23,6 +23,7 @@
   <entity name="network-policy">
     <attribute name="id" value-type="String" key="true"/>
     <attribute name="server-group" value-type="String" />
+    <attribute name="block" value-type="boolean" primitive="true" default-value="false"/>
     <entity-ref name="network" type="map" names="networks" method-find-or-create='true'/>
   </entity>
   <entity name="network">

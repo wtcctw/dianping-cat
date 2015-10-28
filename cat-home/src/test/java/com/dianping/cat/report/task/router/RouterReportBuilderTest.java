@@ -15,11 +15,11 @@ import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
 
 public class RouterReportBuilderTest extends ComponentTestCase {
 
-	@Test
+//	@Test
 	public void test() throws ParseException {
 		RouterConfigBuilder builder = (RouterConfigBuilder) lookup(TaskBuilder.class, RouterConfigBuilder.ID);
 
-		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2015-10-26 00:00:00");
+		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2015-10-27 00:00:00");
 
 		builder.buildDailyTask(Constants.REPORT_ROUTER, "cat", period);
 	}
@@ -27,7 +27,7 @@ public class RouterReportBuilderTest extends ComponentTestCase {
 	@Test
 	public void test2() throws ParseException {
 		RouterConfigHandler handler = (RouterConfigHandler) lookup(RouterConfigHandler.class);
-		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2015-10-26 00:00:00");
+		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2015-10-27 00:00:00");
 
 		RouterConfig routerConfig = handler.buildRouterConfig("cat", period);
 

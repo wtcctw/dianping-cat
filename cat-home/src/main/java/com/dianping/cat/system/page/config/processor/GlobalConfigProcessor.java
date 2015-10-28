@@ -10,7 +10,6 @@ import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.config.server.BlackListManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.core.dal.Project;
@@ -40,9 +39,6 @@ public class GlobalConfigProcessor {
 
 	@Inject
 	private SenderConfigManager m_senderConfigManager;
-
-	@Inject
-	private BlackListManager m_blackListManager;
 
 	@Inject
 	private StorageGroupConfigManager m_groupConfigManager;
@@ -134,16 +130,6 @@ public class GlobalConfigProcessor {
 				model.setOpState(m_senderConfigManager.insert(senderConfig));
 			}
 			model.setContent(m_configHtmlParser.parse(m_senderConfigManager.getConfig().toString()));
-			break;
-		case BLACK_CONFIG_UPDATE:
-			String blackConfig = payload.getContent();
-
-			if (!StringUtils.isEmpty(blackConfig)) {
-				model.setOpState(m_blackListManager.insert(blackConfig));
-			} else {
-				model.setOpState(true);
-			}
-			model.setContent(m_configHtmlParser.parse(m_blackListManager.getBlackList().toString()));
 			break;
 		case STORAGE_GROUP_CONFIG_UPDATE:
 			String storageGroup = payload.getContent();
