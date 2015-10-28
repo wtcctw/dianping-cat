@@ -58,8 +58,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 	@Inject
 	private DailyReportContentDao m_dailyReportContentDao;
 
-	@Inject
-	private SubnetInfoManager m_subnetInfoManager;
+	private SubnetInfoProcessor m_subnetInfoProcessor;
 
 	private int m_configId;
 
@@ -103,17 +102,6 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		return m_routerConfigs;
 	}
 
-	public Map<String, NetworkPolicy> queryUnblockPolicies() {
-		Map<String, NetworkPolicy> networkPolicies = new HashMap<String, NetworkPolicy>();
-
-		for (Entry<String, NetworkPolicy> entry : m_routerConfig.getNetworkPolicies().entrySet()) {
-			if (!entry.getValue().isBlock()) {
-				networkPolicies.put(entry.getKey(), entry.getValue());
-			}
-		}
-		return networkPolicies;
-	}
-
 	@Override
 	public void initialize() throws InitializationException {
 		try {
@@ -146,7 +134,8 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		if (m_routerConfig == null) {
 			m_routerConfig = new RouterConfig();
 		}
-		m_subnetInfoManager.initialize(m_routerConfig);
+
+		m_subnetInfoProcessor = new SubnetInfoProcessor(this);
 	}
 
 	public boolean insert(String xml) {
@@ -154,7 +143,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 			m_routerConfig = DefaultSaxParser.parse(xml);
 			boolean result = storeConfig();
 
-			m_subnetInfoManager.refreshNetInfo(m_routerConfig);
+			m_subnetInfoProcessor.refreshData();
 			return result;
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -180,6 +169,10 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 			}
 		}
 		return results;
+	}
+
+	public String queryServerGroupByIp(String ip) {
+		return m_subnetInfoProcessor.queryBySubnet(ip);
 	}
 
 	public List<Server> queryServersByDomain(String group, String domain) {
@@ -222,6 +215,17 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		return result;
 	}
 
+	public Map<String, NetworkPolicy> queryUnblockPolicies() {
+		Map<String, NetworkPolicy> networkPolicies = new HashMap<String, NetworkPolicy>();
+
+		for (Entry<String, NetworkPolicy> entry : m_routerConfig.getNetworkPolicies().entrySet()) {
+			if (!entry.getValue().isBlock()) {
+				networkPolicies.put(entry.getKey(), entry.getValue());
+			}
+		}
+		return networkPolicies;
+	}
+
 	public void refreshConfig() throws Exception {
 		refreshConfigInfo();
 		refreshReportInfo();
@@ -239,7 +243,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 				m_routerConfig = routerConfig;
 				m_modifyTime = modifyTime;
 
-				m_subnetInfoManager.refreshNetInfo(m_routerConfig);
+				m_subnetInfoProcessor.refreshData();
 			}
 		}
 	}
@@ -275,6 +279,17 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
+	public boolean shouldBlock(String ip) {
+		String group = m_subnetInfoProcessor.queryServerGroupByIp(ip);
+		NetworkPolicy networkPolicy = m_routerConfig.findNetworkPolicy(group);
+
+		if (networkPolicy != null) {
+			return networkPolicy.isBlock();
+		} else {
+			return false;
+		}
+	}
+
 	private boolean storeConfig() {
 		synchronized (this) {
 			try {
@@ -291,20 +306,5 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 			}
 		}
 		return true;
-	}
-
-	public String queryServerGroupByIp(String ip) {
-		return m_subnetInfoManager.queryBySubnet(ip);
-	}
-
-	public boolean shouldBlock(String ip) {
-		String group = m_subnetInfoManager.queryServerGroupByIp(ip);
-		NetworkPolicy networkPolicy = m_routerConfig.findNetworkPolicy(group);
-
-		if (networkPolicy != null) {
-			return networkPolicy.isBlock();
-		} else {
-			return false;
-		}
 	}
 }
