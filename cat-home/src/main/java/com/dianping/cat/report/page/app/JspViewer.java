@@ -23,6 +23,7 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.APP_MODIFY_RESULT.getPath();
 		case LINECHART_JSON:
 		case PIECHART_JSON:
+		case SPEED_JSON:
 		case APP_CONFIG_FETCH:
 			return JspFile.APP_FETCH_DATA.getPath();
 		case HOURLY_CRASH_LOG:
