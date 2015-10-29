@@ -21,6 +21,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	SPEED("speed"),
 
+	SPEED_JSON("speedJson"),
+
 	CONN_LINECHART("connLinechart"),
 
 	CONN_PIECHART("connPiechart"),

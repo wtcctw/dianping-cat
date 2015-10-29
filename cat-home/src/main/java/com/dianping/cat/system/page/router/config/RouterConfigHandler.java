@@ -67,7 +67,6 @@ public class RouterConfigHandler implements LogEnabled {
 		visitor.visitStateReport(report);
 
 		Map<String, Map<String, Long>> statistics = visitor.getStatistics();
-		System.out.println(statistics);
 		Map<String, Map<Server, Long>> servers = findAvaliableGroups();
 
 		for (Entry<String, Map<Server, Long>> entry : servers.entrySet()) {

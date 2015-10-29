@@ -411,6 +411,22 @@ public class Handler implements PageHandler<Context> {
 				Cat.logError(e);
 			}
 			break;
+		case SPEED_JSON:
+			try {
+				Map<String, List<Speed>> speeds = buildPageStepInfo();
+				SpeedQueryEntity queryEntity1 = normalizeQueryEntity(payload, speeds);
+				AppSpeedDisplayInfo info = m_appSpeedService.buildSpeedDisplayInfo(queryEntity1,
+				      payload.getSpeedQueryEntity2());
+				Map<String, Object> speedChartObjs = new HashMap<String, Object>();
+
+				speedChartObjs.put("lineCharts", info.getLineChart());
+				speedChartObjs.put("appSpeedDetails", info.getAppSpeedDetails());
+				speedChartObjs.put("appSpeedSummarys", info.getAppSpeedSummarys());
+				model.setFetchData(new JsonBuilder().toJson(speedChartObjs));
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+			break;
 		case CONN_LINECHART:
 			Pair<LineChart, List<AppDataDetail>> lineChartPair = buildConnLineChart(model, payload);
 

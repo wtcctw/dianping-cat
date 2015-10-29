@@ -13,15 +13,16 @@ import org.apache.commons.net.util.SubnetUtils.SubnetInfo;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.home.router.entity.Network;
 import com.dianping.cat.home.router.entity.NetworkPolicy;
-import com.dianping.cat.home.router.entity.RouterConfig;
 
-public class SubnetInfoManager{
+public class SubnetInfoProcessor {
 
 	private Map<String, List<SubnetInfo>> m_subNetInfos = new HashMap<String, List<SubnetInfo>>();
 
 	private Map<String, String> m_mappingData = new HashMap<String, String>();
 
-	Comparator<Entry<String, List<SubnetInfo>>> compator = new Comparator<Entry<String, List<SubnetInfo>>>() {
+	private RouterConfigManager m_routerConfigManager;
+
+	Comparator<Entry<String, List<SubnetInfo>>> m_compator = new Comparator<Entry<String, List<SubnetInfo>>>() {
 
 		@Override
 		public int compare(Entry<String, List<SubnetInfo>> o1, Entry<String, List<SubnetInfo>> o2) {
@@ -30,36 +31,34 @@ public class SubnetInfoManager{
 			} else if (o2.getValue().isEmpty() && !o1.getValue().isEmpty()) {
 				return -1;
 			}
-
 			return 0;
 		}
 	};
 
-	public void cleanCache() {
-		m_mappingData.clear();
-	}
+	public SubnetInfoProcessor(RouterConfigManager routerConfigManager) {
+		m_routerConfigManager = routerConfigManager;
 
-	public void initialize(RouterConfig routerConfig) {
-		refreshNetInfo(routerConfig);
+		refreshNetInfo();
 	}
 
 	public String queryBySubnet(String ip) {
 		for (Entry<String, List<SubnetInfo>> entry : m_subNetInfos.entrySet()) {
 			List<SubnetInfo> subnetInfos = entry.getValue();
-			String serverGroup = entry.getKey();
+			String group = entry.getKey();
+			NetworkPolicy networkPolicy = m_routerConfigManager.getRouterConfig().findNetworkPolicy(group);
 
-			if (!subnetInfos.isEmpty()) {
+			if (subnetInfos.isEmpty() && !networkPolicy.isBlock()) {
+				return group;
+			} else {
 				for (SubnetInfo info : subnetInfos) {
 					try {
 						if (info.isInRange(ip)) {
-							return serverGroup;
+							return group;
 						}
 					} catch (Exception e) {
 						// ignore
 					}
 				}
-			} else {
-				return serverGroup;
 			}
 		}
 		return "default";
@@ -76,8 +75,14 @@ public class SubnetInfoManager{
 		return group;
 	}
 
-	protected void refreshNetInfo(RouterConfig routerConfig) {
-		Map<String, NetworkPolicy> networkPolicies = routerConfig.getNetworkPolicies();
+	protected void refreshData() {
+		refreshNetInfo();
+
+		m_mappingData = new HashMap<String, String>();
+	}
+
+	private void refreshNetInfo() {
+		Map<String, NetworkPolicy> networkPolicies = m_routerConfigManager.getRouterConfig().getNetworkPolicies();
 		Map<String, List<SubnetInfo>> subNetInfos = new HashMap<String, List<SubnetInfo>>();
 
 		for (Entry<String, NetworkPolicy> netPolicy : networkPolicies.entrySet()) {
@@ -92,6 +97,6 @@ public class SubnetInfoManager{
 			subNetInfos.put(netPolicy.getKey(), infos);
 		}
 
-		m_subNetInfos = SortHelper.sortMap(subNetInfos, compator);
+		m_subNetInfos = SortHelper.sortMap(subNetInfos, m_compator);
 	}
 }

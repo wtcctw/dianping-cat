@@ -80,12 +80,12 @@
 						<span class="menu-text">Cross</span>
 					</a>
 				</li>
-				<li id="RPC_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-flash"></i> <span class="menu-text">Service</span>
+				<li id="RPC_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-cloud"></i> <span class="menu-text">Service</span>
 						<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 					<ul class="submenu">
 						<li id="rpc_operation"><a href="/cat/r/storage?id=shop-server&type=RPC&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}">
-							<i class="menu-icon fa fa-caret-right"></i>服务趋势</a>
+							<i class="menu-icon fa fa-caret-right"></i>访问趋势</a>
 							<b class="arrow"></b></li>
 					</ul>
 				</li>

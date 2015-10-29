@@ -217,7 +217,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			m_statistics.onBytes(size);
 		}
 	}
-
+	
 	public void setServerAddresses(List<InetSocketAddress> serverAddresses) {
 		m_serverAddresses = serverAddresses;
 	}

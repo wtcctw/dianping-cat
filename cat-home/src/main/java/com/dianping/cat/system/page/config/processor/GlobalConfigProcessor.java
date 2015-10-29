@@ -183,6 +183,9 @@ public class GlobalConfigProcessor {
 	private boolean updateProject(Payload payload) {
 		Project project = payload.getProject();
 
+		if (project.getDomain() == null) {
+			project.setDomain(Constants.CAT);
+		}
 		project.setKeyId(project.getId());
 
 		Project temp = m_projectService.findByDomain(project.getDomain());
