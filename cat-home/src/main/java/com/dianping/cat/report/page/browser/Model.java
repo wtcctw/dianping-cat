@@ -11,9 +11,7 @@ import org.unidal.web.mvc.view.annotation.EntityMeta;
 import com.dianping.cat.configuration.web.entity.Item;
 import com.dianping.cat.configuration.web.url.entity.Code;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.JsonBuilder;
-import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.mvc.AbstractReportModel;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
@@ -46,8 +44,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private String m_json;
 
-	private ProblemReport m_problemReport;
-
 	private Map<Integer, Item> m_cities;
 
 	private Map<Integer, Item> m_operators;
@@ -68,12 +64,30 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private String m_detail;
 
+	private Date m_errorTime;
+
+	private String m_level;
+
+	private String m_module;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
 
 	public ProblemStatistics getAllStatistics() {
 		return m_allStatistics;
+	}
+
+	public Date getErrorTime() {
+		return m_errorTime;
+	}
+
+	public String getLevel() {
+		return m_level;
+	}
+
+	public String getModule() {
+		return m_module;
 	}
 
 	public Map<Integer, Item> getNetworks() {
@@ -119,14 +133,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_end;
 	}
 
-	public List<String> getIps() {
-		if (m_problemReport == null) {
-			return new ArrayList<String>();
-		} else {
-			return SortHelper.sortIpAddress(m_problemReport.getIps());
-		}
-	}
-
 	public String getJson() {
 		return m_json;
 	}
@@ -155,12 +161,20 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_pieChartDetailInfos;
 	}
 
-	public ProblemReport getProblemReport() {
-		return m_problemReport;
-	}
-
 	public Date getStart() {
 		return m_start;
+	}
+
+	public void setLevel(String level) {
+		m_level = level;
+	}
+
+	public void setModule(String module) {
+		m_module = module;
+	}
+
+	public void setErrorTime(Date errorTime) {
+		m_errorTime = errorTime;
 	}
 
 	public void setAllStatistics(ProblemStatistics allStatistics) {
@@ -217,10 +231,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setPieChartDetailInfos(List<PieChartDetailInfo> pieChartDetailInfos) {
 		m_pieChartDetailInfos = pieChartDetailInfos;
-	}
-
-	public void setProblemReport(ProblemReport problemReport) {
-		m_problemReport = problemReport;
 	}
 
 	public void setStart(Date start) {

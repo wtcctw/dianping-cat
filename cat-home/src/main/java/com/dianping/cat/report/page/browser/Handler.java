@@ -149,9 +149,12 @@ public class Handler implements PageHandler<Context> {
 			int id = payload.getId();
 
 			JsErrorLogContent detail = m_jsErrorLogContentlDao.findByPK(id, JsErrorLogContentEntity.READSET_FULL);
+			JsErrorLog jsErrorLog = m_jsErrorLogDao.findByPK(id, JsErrorLogEntity.READSET_FULL);
 
+			model.setErrorTime(jsErrorLog.getErrorTime());
+			model.setLevel(Level.getNameByCode(jsErrorLog.getLevel()));
+			model.setModule(jsErrorLog.getModule());
 			model.setDetail(new String(detail.getContent(), "UTF-8"));
-
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

@@ -47,6 +47,15 @@ public enum Level {
 		}
 		throw new RuntimeException("Invalid level");
 	}
+	
+	public static String getNameByCode(int code) {
+		for (Level level : Level.values()) {
+			if (level.getCode() == code) {
+				return level.getName();
+			}
+		}
+		throw new RuntimeException("Invalid level");
+	}
 
 	public static List<String> getLevels() {
 		return m_levels;
