@@ -14,6 +14,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.KVConfig;
 import com.dianping.cat.helper.JsonBuilder;
@@ -32,40 +33,42 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private RouterConfigManager m_configManager;
 
-	private String buildRouterInfo(String ip, String domain, RouterConfig report) {
+	private JsonBuilder m_jsonBuilder = new JsonBuilder();
+
+	private String buildRouterInfo(String ip, String domain, RouterConfig config) {
 		String group = m_configManager.queryServerGroupByIp(ip);
 		Domain domainConfig = m_configManager.getRouterConfig().findDomain(domain);
 		List<Server> servers = new ArrayList<Server>();
 
-		if (domainConfig == null || domainConfig.findGroup(group) == null
-		      || domainConfig.findGroup(group).getServers().isEmpty()) {
+		if (domainConfigNotExist(group, domainConfig)) {
+			if (config != null) {
+				Domain d = config.findDomain(domain);
 
-			if (report != null) {
-				Domain d = report.findDomain(domain);
-
-				if (d != null && d.findGroup(group) != null && !d.findGroup(group).getServers().isEmpty()) {
+				if (d != null && d.findGroup(group) != null) {
 					servers = d.findGroup(group).getServers();
-				} else {
-					servers = m_configManager.queryServersByDomain(group, domain);
+
+					if (servers.isEmpty()) {
+						Cat.logError(new RuntimeException("Error when build router config, domain: " + domain));
+					}
 				}
-			} else {
+			}
+
+			if (servers.isEmpty()) {
 				servers = m_configManager.queryServersByDomain(group, domain);
 			}
 		} else {
 			servers = domainConfig.findGroup(group).getServers();
 		}
 		return buildServerStr(servers);
-
 	}
 
-	private String buildSampleInfo(String domain) {
-		double sample = 1;
+	private double buildSampleInfo(String domain, double defaultValue) {
 		Domain domainConfig = m_configManager.getRouterConfig().findDomain(domain);
 
 		if (domainConfig != null) {
-			sample = domainConfig.getSample();
+			defaultValue = domainConfig.getSample();
 		}
-		return String.valueOf(sample);
+		return defaultValue;
 	}
 
 	private String buildServerStr(List<Server> servers) {
@@ -75,6 +78,11 @@ public class Handler implements PageHandler<Context> {
 			sb.append(server.getId()).append(":").append(server.getPort()).append(";");
 		}
 		return sb.toString();
+	}
+
+	private boolean domainConfigNotExist(String group, Domain domainConfig) {
+		return domainConfig == null || domainConfig.findGroup(group) == null
+		      || domainConfig.findGroup(group).getServers().isEmpty();
 	}
 
 	@Override
@@ -92,7 +100,7 @@ public class Handler implements PageHandler<Context> {
 		Action action = payload.getAction();
 		Date start = payload.getDate();
 		Date end = new Date(start.getTime() + TimeHelper.ONE_DAY);
-		RouterConfig report = m_reportService.queryReport(Constants.CAT, start, end);
+		RouterConfig report = queryAvailableConfig(start, end);
 		String domain = payload.getDomain();
 		String ip = payload.getIp();
 
@@ -109,8 +117,8 @@ public class Handler implements PageHandler<Context> {
 
 			kvs.put("block", String.valueOf(block));
 			kvs.put("routers", buildRouterInfo(ip, domain, report));
-			kvs.put("sample", buildSampleInfo(domain));
-			model.setContent(new JsonBuilder().toJson(config));
+			kvs.put("sample", String.valueOf(buildSampleInfo(domain, 1.0)));
+			model.setContent(m_jsonBuilder.toJson(config));
 			break;
 		case MODEL:
 			if (report != null) {
@@ -119,5 +127,16 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		ctx.getHttpServletResponse().getWriter().write(model.getContent());
+	}
+
+	private RouterConfig queryAvailableConfig(Date start, Date end) {
+		RouterConfig report = m_reportService.queryReport(Constants.CAT, start, end);
+
+		if (report == null) {
+			Date lastStart = new Date(start.getTime() - TimeHelper.ONE_DAY);
+
+			report = m_reportService.queryDailyReport(Constants.CAT, lastStart, start);
+		}
+		return report;
 	}
 }

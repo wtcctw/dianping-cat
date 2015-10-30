@@ -1,14 +1,9 @@
 package com.dianping.cat.system.page.router.config;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-
-import org.unidal.tuple.Pair;
 
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.transform.BaseVisitor;
@@ -40,13 +35,11 @@ public class StateReportVisitor extends BaseVisitor {
 		m_routerConfigManager = routerConfigManager;
 	}
 
-	private void generateStatistics(ProcessDomain processDomain, Map<String, Pair<Double, List<String>>> weights) {
-		Set<String> ips = processDomain.getIps();
-		int size = ips.size();
+	private void buildStatistics(ProcessDomain processDomain, Map<String, Double> weights) {
+		long total = processDomain.getTotal();
 
-		for (Entry<String, Pair<Double, List<String>>> entry : weights.entrySet()) {
+		for (Entry<String, Double> entry : weights.entrySet()) {
 			String group = entry.getKey();
-			double weight = entry.getValue().getKey() * entry.getValue().getValue().size() / size;
 			Map<String, Long> datas = m_statistics.get(group);
 
 			if (datas == null) {
@@ -54,33 +47,38 @@ public class StateReportVisitor extends BaseVisitor {
 
 				m_statistics.put(group, datas);
 			}
+
 			String domain = processDomain.getName();
 			Long value = datas.get(domain);
 
 			if (value == null) {
 				datas.put(domain, 0L);
 			} else {
-				datas.put(domain, value + (long) (processDomain.getTotal() * weight));
+				datas.put(domain, value + (long) (total * entry.getValue()));
 			}
 		}
 	}
 
-	private Map<String, Pair<Double, List<String>>> generateWeights(ProcessDomain processDomain) {
-		Map<String, Pair<Double, List<String>>> weights = new HashMap<String, Pair<Double, List<String>>>();
+	private Map<String, Double> buildWeights(ProcessDomain processDomain) {
+		Map<String, Double> results = new HashMap<String, Double>();
+		Map<String, Integer> weights = new HashMap<String, Integer>();
+		int size = processDomain.getIps().size();
 
 		for (String ip : processDomain.getIps()) {
 			String group = m_routerConfigManager.queryServerGroupByIp(ip);
-			Pair<Double, List<String>> pair = weights.get(group);
+			Integer value = weights.get(group);
 
-			if (pair == null) {
-				pair = new Pair<Double, List<String>>(0.0, new ArrayList<String>());
-				weights.put(group, pair);
+			if (value == null) {
+				weights.put(group, 1);
+			} else {
+				weights.put(group, value + 1);
 			}
-
-			pair.setKey(pair.getKey() + 1.0);
-			pair.getValue().add(ip);
 		}
-		return weights;
+
+		for (Entry<String, Integer> entry : weights.entrySet()) {
+			results.put(entry.getKey(), (double) entry.getValue() / size);
+		}
+		return results;
 	}
 
 	public Map<String, Map<String, Long>> getStatistics() {
@@ -95,8 +93,8 @@ public class StateReportVisitor extends BaseVisitor {
 
 	@Override
 	public void visitProcessDomain(ProcessDomain processDomain) {
-		Map<String, Pair<Double, List<String>>> weights = generateWeights(processDomain);
+		Map<String, Double> weights = buildWeights(processDomain);
 
-		generateStatistics(processDomain, weights);
+		buildStatistics(processDomain, weights);
 	}
 }
