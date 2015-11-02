@@ -9,7 +9,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:config>
+<a:web_body>
 			<h3 class="text-center text-success">编辑WEB监控规则</h3>
 			<form name="webRuleUpdate" id="form" method="post">
 				<table style='width:100%' class='table table-striped table-condensed table-bordered table-hover'>
@@ -55,7 +55,7 @@
 					</tr>
 				</table>
 			</form>
-</a:config>
+</a:web_body>
 
 <script type="text/javascript">
 
@@ -95,7 +95,7 @@ function update() {
 			$("#operator").val(operator);
 			$("#metric").val(metric);
 		}
-		$('#userMonitor_config').addClass('active open');
+		$('#Web_config').addClass('active open');
 		$('#webRule').addClass('active');
 		initRuleConfigs(["DescVal","DescPer","AscVal","AscPer"]);
 		$(document).delegate("#ruleSubmitButton","click",function(){

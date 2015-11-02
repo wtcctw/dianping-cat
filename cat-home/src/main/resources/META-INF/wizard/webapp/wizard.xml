@@ -77,11 +77,11 @@
          <page name="storage" title="Storage" path="storage" template="default">
             <description>Storage</description>
          </page>
-         <page name="activity" title="Activity" path="activity" template="default">
-            <description>Activity</description>
-         </page>
-         <page name="top" title="Top" path="top" default="true" view="/jsp/report/top/top.jsp" template="default">
+         <page name="top" title="Top" default="true" path="top" view="/jsp/report/top/top.jsp" template="default">
             <description>Top</description>
+         </page>
+         <page name="browser" title="Browser" path="browser" template="default">
+            <description>Browser</description>
          </page>
       </module>
       <module name="system" path="s" default="false">

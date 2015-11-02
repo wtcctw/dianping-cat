@@ -161,6 +161,7 @@
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
     <index name="IX_condition" unique="true" members="period ASC, minute_order ASC, city ASC, operator ASC, code ASC" />
+    <index name="updatetime" members="updatetime ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>
@@ -191,5 +192,6 @@
       </query>
     </query-defs>
   </entity>
-</entities>
+  
+  </entities>
 

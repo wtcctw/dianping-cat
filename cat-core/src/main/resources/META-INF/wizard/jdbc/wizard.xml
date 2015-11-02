@@ -42,4 +42,18 @@
          <table name="web_api_data"/>
       </group>
    </jdbc>
+   <jdbc package="com.dianping.cat.web" name="web">
+      <datasource>
+         <driver>com.mysql.jdbc.Driver</driver>
+         <url>jdbc:mysql://127.0.0.1:3306/WebDataComm</url>
+         <user>root</user>
+         <password></password>
+         <properties>useUnicode=true&amp;autoReconnect=true</properties>
+      </datasource>
+      <group name="web" package="com.dianping.cat.web">
+         <table name="ajax_data"/>
+         <table name="js_error_log"/>
+         <table name="js_error_log_content"/>
+      </group>
+   </jdbc>
 </wizard>

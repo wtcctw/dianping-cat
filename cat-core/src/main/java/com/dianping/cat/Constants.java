@@ -48,6 +48,8 @@ public class Constants {
 	public static final String REPORT_NET_TOPOLOGY = "NetTopology";
 
 	public static final String BROKER_SERVICE = "broker-service";
+	
+	public static final String WEB_BROKER_SERVICE = "web-broker-service";
 
 	public static final String METRIC_USER_MONITOR = "userMonitor";
 

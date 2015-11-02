@@ -6,7 +6,7 @@
 <jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
-<a:config>
+<a:web_body>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['editor.js']}" target="head-js" />
 	<script src='${model.webapp}/assets/js/editor/ace.js'></script>
@@ -25,11 +25,11 @@
 				</table>
 			</form>
 			<h4 class="text-center text-danger" id="state">&nbsp;</h4>
-</a:config>
+</a:web_body>
 <script type="text/javascript">
 		$(document).ready(function() {
-			$('#userMonitor_config').addClass('active open');
-			$('#urlPatternConfigUpdate').addClass('active');
+			$('#Web_config').addClass('active open');
+			$('#urlPatterns').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){
 				$('#state').html('操作成功');

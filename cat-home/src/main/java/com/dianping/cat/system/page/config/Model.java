@@ -12,6 +12,7 @@ import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.ConfigItem;
@@ -115,6 +116,12 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private Map<Integer, Item> m_platforms;
 
+	private Map<Integer, com.dianping.cat.configuration.web.entity.Item> m_webCities;
+
+	private Map<Integer, com.dianping.cat.configuration.web.entity.Item> m_webOperators;
+
+	private Map<Integer, com.dianping.cat.configuration.web.entity.Item> m_webNetworks;
+
 	private List<Command> m_commands;
 
 	private Map<String, List<City>> m_citiyInfos;
@@ -158,6 +165,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private List<String> m_invalidatePaths;
 
 	private AppConfigManager m_appConfigManager;
+	
+	private WebConfigManager m_webConfigManager;
 
 	private Item m_appItem;
 
@@ -165,6 +174,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		super(ctx);
 		try {
 			m_appConfigManager = ContainerLoader.getDefaultContainer().lookup(AppConfigManager.class);
+			m_webConfigManager = ContainerLoader.getDefaultContainer().lookup(WebConfigManager.class);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -246,6 +256,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_appConfigManager.getConfig().getConfigItems();
 	}
 
+	public Map<String, com.dianping.cat.configuration.web.entity.ConfigItem> getWebConfigItems() {
+		return m_webConfigManager.getConfig().getConfigItems();
+	}
+	
 	public Map<Integer, Item> getConnectionTypes() {
 		return m_connectionTypes;
 	}
@@ -361,6 +375,18 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public Map<Integer, Item> getOperators() {
 		return m_operators;
+	}
+
+	public Map<Integer, com.dianping.cat.configuration.web.entity.Item> getWebOperators() {
+		return m_webOperators;
+	}
+
+	public Map<Integer, com.dianping.cat.configuration.web.entity.Item> getWebCities() {
+		return m_webCities;
+	}
+
+	public Map<Integer, com.dianping.cat.configuration.web.entity.Item> getWebNetworks() {
+		return m_webNetworks;
 	}
 
 	public String getOpState() {
@@ -597,6 +623,18 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setOperators(Map<Integer, Item> operators) {
 		m_operators = operators;
+	}
+
+	public void setWebOperators(Map<Integer, com.dianping.cat.configuration.web.entity.Item> webOperators) {
+		m_webOperators = webOperators;
+	}
+
+	public void setWebCities(Map<Integer, com.dianping.cat.configuration.web.entity.Item> webCities) {
+		m_webCities = webCities;
+	}
+
+	public void setWebNetworks(Map<Integer, com.dianping.cat.configuration.web.entity.Item> webNetworks) {
+		m_webNetworks = webNetworks;
 	}
 
 	public void setOpState(boolean result) {
