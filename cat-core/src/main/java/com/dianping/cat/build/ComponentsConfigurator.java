@@ -26,6 +26,7 @@ import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
+import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.config.web.js.AggregationConfigManager;
 import com.dianping.cat.config.web.js.AggregationHandler;
 import com.dianping.cat.config.web.js.DefaultAggregationHandler;
@@ -85,6 +86,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(CommandFormatHandler.class, ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(AppConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		
+		all.add(C(WebConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(AppSpeedConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
@@ -101,6 +104,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 
 		all.addAll(new CatCoreDatabaseConfigurator().defineComponents());
+		all.addAll(new AppDatabaseConfigurator().defineComponents());
+		all.addAll(new WebDatabaseConfigurator().defineComponents());
+		
 		all.addAll(new CodecComponentConfigurator().defineComponents());
 		all.addAll(new StorageComponentConfigurator().defineComponents());
 

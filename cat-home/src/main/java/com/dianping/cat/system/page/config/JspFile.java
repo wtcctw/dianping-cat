@@ -96,6 +96,8 @@ public enum JspFile {
 	WEB_RULE("/jsp/system/webRule/webRule.jsp"),
 
 	WEB_RULE_UPDATE("/jsp/system/webRule/webRuleUpdate.jsp"),
+	
+	WEB_CONSTANTS_LIST("/jsp/system/webRule/webConstantsList.jsp"),
 
 	TRANSACTION_RULE("/jsp/system/transactionRule/transactionRule.jsp"),
 

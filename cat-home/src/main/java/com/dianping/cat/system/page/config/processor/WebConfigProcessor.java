@@ -6,7 +6,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.config.web.js.AggregationConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.web.js.entity.AggregationRule;
@@ -33,7 +33,7 @@ public class WebConfigProcessor extends BaseProcesser {
 	private CityManager m_cityManager;
 
 	@Inject
-	private AppConfigManager m_appConfigManager;
+	private WebConfigManager m_appConfigManager;
 
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
@@ -41,10 +41,11 @@ public class WebConfigProcessor extends BaseProcesser {
 	private void buildWebConfigInfo(Model model) {
 		Map<Integer, PatternItem> patterns = m_urlPatternConfigManager.getId2Items();
 
-		model.setCities(m_appConfigManager.queryConfigItem(AppConfigManager.CITY));
-		model.setOperators(m_appConfigManager.queryConfigItem(AppConfigManager.OPERATOR));
+		model.setWebCities(m_appConfigManager.queryConfigItem(WebConfigManager.CITY));
+		model.setWebOperators(m_appConfigManager.queryConfigItem(WebConfigManager.OPERATOR));
 		model.setPatternItems(patterns);
 		model.setWebCodes(m_urlPatternConfigManager.getUrlPattern().getCodes());
+		model.setWebNetworks(m_appConfigManager.queryConfigItem(WebConfigManager.NETWORK));
 	}
 
 	private void deleteAggregationRule(Payload payload) {

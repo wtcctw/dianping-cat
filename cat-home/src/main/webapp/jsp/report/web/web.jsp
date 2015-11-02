@@ -6,6 +6,7 @@
 <jsp:useBean id="ctx"	type="com.dianping.cat.report.page.web.Context" scope="request" />
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.web.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.web.Model" scope="request" />
+
 <a:application>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
