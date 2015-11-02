@@ -7,7 +7,6 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.influxdb.InfluxDBManager;
 import com.dianping.cat.influxdb.config.InfluxDBConfigManager;
