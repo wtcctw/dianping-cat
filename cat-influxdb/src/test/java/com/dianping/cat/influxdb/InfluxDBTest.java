@@ -31,7 +31,9 @@ import com.github.dockerjava.core.DockerClientConfig;
 public class InfluxDBTest {
 
 	private InfluxDB influxDB;
+
 	protected DockerClient dockerClient;
+
 	protected CreateContainerResponse container;
 
 	/**
@@ -44,13 +46,8 @@ public class InfluxDBTest {
 	public void setUp() throws InterruptedException, IOException {
 		// Disable logging for the DockerClient.
 		Logger.getLogger("com.sun.jersey").setLevel(Level.OFF);
-		DockerClientConfig config = DockerClientConfig
-				.createDefaultConfigBuilder()
-				.withVersion("1.16")
-				.withUri("tcp://localhost:4243")
-				.withUsername("roott")
-				.withPassword("root")
-				.build();
+		DockerClientConfig config = DockerClientConfig.createDefaultConfigBuilder().withVersion("1.16")
+		      .withUri("tcp://localhost:4243").withUsername("roott").withPassword("root").build();
 		this.dockerClient = DockerClientBuilder.getInstance(config).build();
 		// this.dockerClient.pullImageCmd("majst01/influxdb-java");
 
@@ -167,13 +164,8 @@ public class InfluxDBTest {
 		this.influxDB.createDatabase(dbName);
 
 		BatchPoints batchPoints = BatchPoints.database(dbName).tag("async", "true").retentionPolicy("default").build();
-		Point point1 = Point
-				.measurement("cpu")
-				.tag("atag", "test")
-				.field("idle", 90L)
-				.field("usertime", 9L)
-				.field("system", 1L)
-				.build();
+		Point point1 = Point.measurement("cpu").tag("atag", "test").field("idle", 90L).field("usertime", 9L)
+		      .field("system", 1L).build();
 		Point point2 = Point.measurement("disk").tag("atag", "test").field("used", 80L).field("free", 1L).build();
 		batchPoints.point(point1);
 		batchPoints.point(point2);

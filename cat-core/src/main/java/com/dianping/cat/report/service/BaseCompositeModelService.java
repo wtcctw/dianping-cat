@@ -148,7 +148,6 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 
 	protected abstract T merge(ModelRequest request, final List<ModelResponse<T>> responses);
 
-	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(64);
 
