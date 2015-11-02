@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletException;
 
@@ -25,6 +26,13 @@ import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.influxdb.InfluxDB;
+import com.dianping.cat.influxdb.InfluxDBFactory;
+import com.dianping.cat.influxdb.InfluxDB.ConsistencyLevel;
+import com.dianping.cat.influxdb.dto.BatchPoints;
+import com.dianping.cat.influxdb.dto.Point;
+import com.dianping.cat.influxdb.dto.Query;
+import com.dianping.cat.influxdb.dto.QueryResult;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.DomainGroupConfigManager;
@@ -142,6 +150,33 @@ public class Handler implements PageHandler<Context> {
 		// display only, no action here
 	}
 
+	public void test() {
+		InfluxDB influxDB = InfluxDBFactory.connect("http://10.128.53.56:8086", "root", "123456");
+		String dbName = "aTimeSeries";
+		influxDB.createDatabase(dbName);
+
+		BatchPoints batchPoints = BatchPoints.database(dbName).tag("async", "true").retentionPolicy("default")
+		      .consistency(ConsistencyLevel.ALL).build();
+
+		Point point1 = Point.measurement("cpu").time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+		      .field("idle", 90L).field("system", 9L).field("system", 1L).build();
+		Point point2 = Point.measurement("disk").time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
+		      .field("used", 80L).field("free", 1L).build();
+		batchPoints.point(point1);
+		batchPoints.point(point2);
+		influxDB.write(batchPoints);
+		QueryResult result = influxDB.query(new Query("SELECT idle FROM cpu", dbName));
+		QueryResult result2 = influxDB.query(new Query("SELECT used FROM disk", dbName));
+
+		System.out.println(result);
+		System.out.println(result2);
+		
+		
+		
+		
+		// influxDB.deleteDatabase(dbName);
+	}
+
 	@Override
 	@OutboundActionMeta(name = "p")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
@@ -149,6 +184,7 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 		normalize(model, payload);
 
+		test();
 		ProblemReport report = null;
 		ProblemStatistics problemStatistics = new ProblemStatistics();
 		String ip = model.getIpAddress();
