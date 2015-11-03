@@ -73,19 +73,20 @@
 		});
 		
 		var data = [];
-		<c:forEach var="item" items="${model.domainGroups}">
-			<c:set var="detail" value="${item.value}" />
-				<c:forEach var="productline" items="${detail.projectLines}" varStatus="index">
-				<c:forEach var="domain" items="${productline.value.lineDomains}">
+		<c:forEach var="item" items="${model.departments}">
+			<c:set var="department" value="${item.value}" />
+				<c:forEach var="entry" items="${department.productlines}" varStatus="index">
+				<c:set var="productline" value="${entry.value}" />
+				<c:forEach var="storage" items="${productline.storages}">
 						var item = {};
-						item['label'] = '${domain}';
-						item['category'] ='${productline.key}';
+						item['label'] = '${storage}';
+						item['category'] ='${entry.key}';
 						
 						data.push(item);
 				</c:forEach>
 		</c:forEach></c:forEach>
 		
-		$("#search").catcomplete({
+		$( "#search" ).catcomplete({
 			delay: 0,
 			source: data
 		});
