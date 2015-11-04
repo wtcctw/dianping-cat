@@ -72,6 +72,9 @@
 			<c:if test="${payload.type eq 'Cache'}">
 				<th class="right"><a data-rel="tooltip" data-placement="left" title="一段时间内长时间(超过50ms)操作总量" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};long">Long</a></th>
 			</c:if>
+			<c:if test="${payload.type eq 'RPC'}">
+				<th class="right"><a data-rel="tooltip" data-placement="left" title="一段时间内长时间(超过100ms)操作总量" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};long">Long</a></th>
+			</c:if>
 			<th class="right"><a data-rel="tooltip" data-placement="left" title="一段时间内操作平均响应时间(ms)" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};avg">Avg</a></th>
 			<th class="right"><a data-rel="tooltip" data-placement="left" title="一段时间内错误操作总数" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};error">Error</a></th>
 		</c:forEach>

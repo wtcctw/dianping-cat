@@ -202,8 +202,8 @@
 			$('#dashbord_cache').addClass('active');
 		</c:if>
 		<c:if test="${payload.type eq 'RPC'}">
-		$('#dashbord_rpc').addClass('active');
-	</c:if>
+			$('#dashbord_rpc').addClass('active');
+		</c:if>
 		
 	});
 </script>
