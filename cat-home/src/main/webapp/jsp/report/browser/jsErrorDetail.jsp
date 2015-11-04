@@ -21,4 +21,12 @@
 		<td>${model.detail}</td>
 	</tr>
 </table>
+<script type="text/javascript">
+$(document).ready(
+	function() {
+		$('#Web_report').addClass('active open');
+		$('#web_problem').addClass('active');
+});
+
+</script>
 </a:web_body>
