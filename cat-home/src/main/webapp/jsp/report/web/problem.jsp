@@ -94,4 +94,5 @@
 </table>
 <res:useJs value="${res.js.local.problem_js}" target="buttom-js" />
 <res:useJs value="${res.js.local.problemHistory_js}" target="bottom-js" />
+
 </a:application>

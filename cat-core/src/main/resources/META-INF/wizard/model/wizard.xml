@@ -15,4 +15,7 @@
    <model package="com.dianping.cat.config.server" name="server-filter-config">
       <sample-model>src/main/resources/config/serverFilter.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.configuration.web" name="web-config">
+      <sample-model>../cat-home/src/main/resources/config/web-config.xml</sample-model>
+   </model>
 </wizard>

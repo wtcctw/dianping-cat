@@ -25,7 +25,7 @@ public class WebGraphCreator {
 	private WebApiService m_WebApiService;
 
 	@Inject
-	private AppConfigManager m_appConfigManager;
+	private AppConfigManager m_webConfigManager;
 
 	public LineChart buildChartData(final List<Double[]> datas, String type) {
 		LineChart lineChart = new LineChart();
@@ -94,7 +94,7 @@ public class WebGraphCreator {
 
 		switch (field) {
 		case OPERATOR:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> operators = m_appConfigManager
+			Map<Integer, com.dianping.cat.configuration.app.entity.Item> operators = m_webConfigManager
 			      .queryConfigItem(AppConfigManager.OPERATOR);
 			com.dianping.cat.configuration.app.entity.Item operator = null;
 			keyValue = data.getOperator();
@@ -104,7 +104,7 @@ public class WebGraphCreator {
 			}
 			break;
 		case CITY:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> cities = m_appConfigManager
+			Map<Integer, com.dianping.cat.configuration.app.entity.Item> cities = m_webConfigManager
 			      .queryConfigItem(AppConfigManager.CITY);
 			com.dianping.cat.configuration.app.entity.Item city = null;
 			keyValue = data.getCity();
@@ -114,7 +114,7 @@ public class WebGraphCreator {
 			}
 			break;
 		case CODE:
-			Map<Integer, Code> codes = m_appConfigManager.queryCodeByCommand(command);
+			Map<Integer, Code> codes = m_webConfigManager.queryCodeByCommand(command);
 			Code code = null;
 			keyValue = data.getCode();
 
