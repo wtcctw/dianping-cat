@@ -125,7 +125,7 @@ public class RouterConfigHandler implements LogEnabled {
 				Map<Server, Long> networkResults = new HashMap<Server, Long>();
 
 				for (GroupServer s : serverGroup.getGroupServers().values()) {
-					Server server = servers.get(s);
+					Server server = servers.get(s.getId());
 
 					if (server != null) {
 						networkResults.put(server, 0L);
