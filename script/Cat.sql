@@ -298,6 +298,47 @@ CREATE TABLE `web_api_data_1` (
   KEY `updatetime` (`updatetime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='web基本数据';
 
+CREATE TABLE `ajax_data_1` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
+  `period` date NOT NULL COMMENT '时间',
+  `minute_order` smallint(6) NOT NULL COMMENT '分钟',
+  `city` smallint(6) NOT NULL COMMENT '城市',
+  `operator` tinyint(4) NOT NULL COMMENT '运营商',
+  `code` smallint(6) NOT NULL COMMENT '返回码',
+  `network` tinyint(4) NOT NULL COMMENT '网络类型',
+  `access_number` bigint(20) NOT NULL COMMENT '访问量',
+  `response_sum_time` bigint(20) NOT NULL COMMENT '响应时间大小',
+  `request_sum_byte` bigint(20) NOT NULL COMMENT '发送字节',
+  `response_sum_byte` bigint(20) NOT NULL COMMENT '返回字节',
+  `updatetime` datetime NOT NULL COMMENT '数据更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `IX_condition` (`period`,`minute_order`,`city`,`operator`,`code`,`network`),
+  KEY `updatetime` (`updatetime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='web基本数据';
+
+CREATE TABLE `js_error_log_1` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `module` varchar(50) NOT NULL DEFAULT '' COMMENT '出错的js模块',
+  `browser` varchar(20) DEFAULT NULL COMMENT '浏览器',
+  `level` tinyint(4) NOT NULL COMMENT '错误级别',
+  `msg` varchar(200) NOT NULL DEFAULT '' COMMENT '出错的简要信息，用于分类',
+  `creation_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'log创建时间',
+  `error_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '错误发生时间',
+  `updatetime` datetime NOT NULL COMMENT '数据更新时间',
+  PRIMARY KEY (`id`),
+  KEY `IX_CONDITION` (`error_time`,`module`),
+  KEY `updatetime` (`updatetime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `js_error_log_content_1` (
+  `id` int(11) unsigned NOT NULL,
+  `content` longblob COMMENT '出错的详细信息',
+  `creation_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'log创建时间',
+  `updatetime` datetime NOT NULL COMMENT '数据更新时间',
+  PRIMARY KEY (`id`),
+  KEY `updatetime` (`updatetime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `overload` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
   `report_id` int(11) NOT NULL COMMENT '报告id',

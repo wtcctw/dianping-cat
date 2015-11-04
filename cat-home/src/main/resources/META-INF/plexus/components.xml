@@ -474,6 +474,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.server.config.ScreenConfigManager</role>
+			<implementation>com.dianping.cat.report.page.server.config.ScreenConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.graph.metric.CachedMetricReportService</role>
 			<implementation>com.dianping.cat.report.graph.metric.impl.CachedMetricReportServiceImpl</implementation>
 			<requirements>
@@ -5930,6 +5942,70 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.server.Handler</role>
+			<implementation>com.dianping.cat.report.page.server.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.server.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.influxdb.InfluxDBManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.server.config.ScreenConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.server.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.server.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.influxdb.InfluxDBManager</role>
+			<implementation>com.dianping.cat.influxdb.InfluxDBManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>
+			<implementation>com.dianping.cat.influxdb.config.InfluxDBConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.server.config.ScreenConfigManager</role>
+			<implementation>com.dianping.cat.report.page.server.config.ScreenConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
+			<implementation>com.dianping.cat.system.page.config.ConfigHtmlParser</implementation>
+		</component>
+		<component>
 			<role>org.unidal.web.mvc.Module</role>
 			<role-hint>com.dianping.cat.system.SystemModule</role-hint>
 			<implementation>com.dianping.cat.system.SystemModule</implementation>
@@ -6116,10 +6192,6 @@
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
-			<implementation>com.dianping.cat.system.page.config.ConfigHtmlParser</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.router.config.RouterConfigHandler</role>
