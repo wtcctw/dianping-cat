@@ -118,7 +118,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	private void processRPCTransaction(MessageTree tree, Transaction t) {
 		String serverId = null;
 		String domain = tree.getDomain();
-		String ip = null;
+		String ip = "default";
 		String method = "call";
 		List<Message> messages = t.getChildren();
 
@@ -129,11 +129,11 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 				if (type.equals("PigeonCall.app")) {
 					serverId = message.getName();
 				}
+				
 				if (type.equals("PigeonCall.server")) {
 					ip = message.getName();
-					
 					int index = ip.indexOf(':');
-					
+
 					if (index > -1) {
 						ip = ip.substring(0, index);
 					}
