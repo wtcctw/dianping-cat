@@ -115,9 +115,10 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 		m_updater.updateStorageReport(report, param);
 	}
 
-	private void processRPCTransaction(MessageTree tree, Transaction t) {		String serverId = null;
+	private void processRPCTransaction(MessageTree tree, Transaction t) {
+		String serverId = null;
 		String domain = tree.getDomain();
-		String ip = tree.getIpAddress();
+		String ip = "default";
 		String method = "call";
 		List<Message> messages = t.getChildren();
 
@@ -125,9 +126,17 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 			if (message instanceof Event) {
 				String type = message.getType();
 
-				if (type.equals("PigeonCall.app") ) {
+				if (type.equals("PigeonCall.app")) {
 					serverId = message.getName();
-					break;
+				}
+				
+				if (type.equals("PigeonCall.server")) {
+					ip = message.getName();
+					int index = ip.indexOf(':');
+
+					if (index > -1) {
+						ip = ip.substring(0, index);
+					}
 				}
 			}
 		}
