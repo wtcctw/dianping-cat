@@ -253,7 +253,7 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 			} catch (ParseException e) {
 			}
 		}
-		return TimeHelper.getCurrentDay();
+		return TimeHelper.getCurrentHour();
 	}
 
 	public String getStartTime() {

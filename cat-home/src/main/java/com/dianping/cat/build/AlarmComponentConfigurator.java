@@ -31,6 +31,8 @@ import com.dianping.cat.report.alert.DefaultDataChecker;
 import com.dianping.cat.report.alert.MetricReportGroupService;
 import com.dianping.cat.report.alert.app.AppAlert;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
+import com.dianping.cat.report.alert.browser.JsAlert;
+import com.dianping.cat.report.alert.browser.JsRuleConfigManager;
 import com.dianping.cat.report.alert.business.BusinessAlert;
 import com.dianping.cat.report.alert.business.BusinessRuleConfigManager;
 import com.dianping.cat.report.alert.database.DatabaseAlert;
@@ -58,6 +60,7 @@ import com.dianping.cat.report.alert.sender.decorator.EventDecorator;
 import com.dianping.cat.report.alert.sender.decorator.ExceptionDecorator;
 import com.dianping.cat.report.alert.sender.decorator.FrontEndExceptionDecorator;
 import com.dianping.cat.report.alert.sender.decorator.HeartbeatDecorator;
+import com.dianping.cat.report.alert.sender.decorator.JsDecorator;
 import com.dianping.cat.report.alert.sender.decorator.NetworkDecorator;
 import com.dianping.cat.report.alert.sender.decorator.StorageCacheDecorator;
 import com.dianping.cat.report.alert.sender.decorator.StorageRPCDecorator;
@@ -75,6 +78,7 @@ import com.dianping.cat.report.alert.sender.receiver.EventContactor;
 import com.dianping.cat.report.alert.sender.receiver.ExceptionContactor;
 import com.dianping.cat.report.alert.sender.receiver.FrontEndExceptionContactor;
 import com.dianping.cat.report.alert.sender.receiver.HeartbeatContactor;
+import com.dianping.cat.report.alert.sender.receiver.JsContactor;
 import com.dianping.cat.report.alert.sender.receiver.NetworkContactor;
 import com.dianping.cat.report.alert.sender.receiver.StorageCacheContactor;
 import com.dianping.cat.report.alert.sender.receiver.StorageRPCContactor;
@@ -129,6 +133,7 @@ import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper
 import com.dianping.cat.report.page.web.service.WebApiService;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ProjectService;
+import com.dianping.cat.web.JsErrorLogDao;
 
 public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -156,6 +161,8 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      AlertConfigManager.class));
 		all.add(C(Contactor.class, FrontEndExceptionContactor.ID, FrontEndExceptionContactor.class).req(
 		      AggregationConfigManager.class, AlertConfigManager.class));
+		all.add(C(Contactor.class, JsContactor.ID, JsContactor.class).req(JsRuleConfigManager.class,
+		      AlertConfigManager.class));
 		all.add(C(Contactor.class, AppContactor.ID, AppContactor.class).req(AlertConfigManager.class,
 		      AppConfigManager.class, ProjectService.class));
 		all.add(C(Contactor.class, WebContactor.ID, WebContactor.class).req(AlertConfigManager.class,
@@ -181,6 +188,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Decorator.class, FrontEndExceptionDecorator.ID, FrontEndExceptionDecorator.class));
 		all.add(C(Decorator.class, AppDecorator.ID, AppDecorator.class));
 		all.add(C(Decorator.class, WebDecorator.ID, WebDecorator.class));
+		all.add(C(Decorator.class, JsDecorator.ID, JsDecorator.class));
 		all.add(C(Decorator.class, TransactionDecorator.ID, TransactionDecorator.class));
 		all.add(C(Decorator.class, EventDecorator.ID, EventDecorator.class));
 		all.add(C(Decorator.class, StorageSQLDecorator.ID, StorageSQLDecorator.class));
@@ -263,6 +271,8 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      AlertManager.class).req(ModelService.class, TopAnalyzer.ID));
 
 		all.add(C(ThirdPartyAlert.class).req(AlertManager.class));
+
+		all.add(C(JsAlert.class).req(JsErrorLogDao.class, JsRuleConfigManager.class, AlertManager.class));
 
 		all.add(C(HttpConnector.class));
 

@@ -147,6 +147,10 @@ public class Handler implements PageHandler<Context> {
 		case WEB_RULE_ADD_OR_UPDATE:
 		case WEB_RULE_ADD_OR_UPDATE_SUBMIT:
 		case WEB_RULE_DELETE:
+		case JS_RULE_LIST:
+		case JS_RULE_UPDATE:
+		case JS_RULE_DELETE:
+		case JS_RULE_UPDATE_SUBMIT:
 			m_patternConfigProcessor.processPatternConfig(action, payload, model);
 			break;
 		case WEB_CONSTANTS:
