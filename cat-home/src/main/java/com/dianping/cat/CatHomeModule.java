@@ -68,22 +68,22 @@ public class CatHomeModule extends AbstractModule {
 			StorageRPCAlert storageRpcAlert = ctx.lookup(StorageRPCAlert.class);
 			JsAlert jsAlert = ctx.lookup(JsAlert.class);
 
-			Threads.forGroup("cat").start(networkAlert);
-			Threads.forGroup("cat").start(databaseAlert);
-			Threads.forGroup("cat").start(systemAlert);
-			Threads.forGroup("cat").start(metricAlert);
-			Threads.forGroup("cat").start(exceptionAlert);
-			Threads.forGroup("cat").start(frontEndExceptionAlert);
-			Threads.forGroup("cat").start(heartbeatAlert);
-			Threads.forGroup("cat").start(thirdPartyAlert);
-			Threads.forGroup("cat").start(alertBuildingTask);
-			Threads.forGroup("cat").start(appAlert);
-			Threads.forGroup("cat").start(webAlert);
-			Threads.forGroup("cat").start(transactionAlert);
-			Threads.forGroup("cat").start(eventAlert);
-			Threads.forGroup("cat").start(storageDatabaseAlert);
-			Threads.forGroup("cat").start(storageCacheAlert);
-			Threads.forGroup("cat").start(storageRpcAlert);
+//			Threads.forGroup("cat").start(networkAlert);
+//			Threads.forGroup("cat").start(databaseAlert);
+//			Threads.forGroup("cat").start(systemAlert);
+//			Threads.forGroup("cat").start(metricAlert);
+//			Threads.forGroup("cat").start(exceptionAlert);
+//			Threads.forGroup("cat").start(frontEndExceptionAlert);
+//			Threads.forGroup("cat").start(heartbeatAlert);
+//			Threads.forGroup("cat").start(thirdPartyAlert);
+//			Threads.forGroup("cat").start(alertBuildingTask);
+//			Threads.forGroup("cat").start(appAlert);
+//			Threads.forGroup("cat").start(webAlert);
+//			Threads.forGroup("cat").start(transactionAlert);
+//			Threads.forGroup("cat").start(eventAlert);
+//			Threads.forGroup("cat").start(storageDatabaseAlert);
+//			Threads.forGroup("cat").start(storageCacheAlert);
+//			Threads.forGroup("cat").start(storageRpcAlert);
 			Threads.forGroup("cat").start(jsAlert);
 		}
 

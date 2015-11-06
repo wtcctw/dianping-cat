@@ -10,7 +10,7 @@
 		<attribute name="domain" value-type="String" />
 		<attribute name="level" value-type="String" />
 		<attribute name="limit" value-type="int" primitive="true" />
-		<attribute name="emails" value-type="String" />
+		<attribute name="mails" value-type="String" />
 	</entity>
 </model>
 	
