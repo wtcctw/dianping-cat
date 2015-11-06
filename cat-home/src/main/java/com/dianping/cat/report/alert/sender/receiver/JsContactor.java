@@ -41,7 +41,7 @@ public class JsContactor extends DefaultContactor implements Contactor {
 				ExceptionLimit rule = m_jsRuleConfigManager.queryExceptionLimit(domainAndLevel[0], domainAndLevel[1]);
 
 				if (rule != null) {
-					mailReceivers.addAll(split(rule.getEmails()));
+					mailReceivers.addAll(split(rule.getMails()));
 				}
 			}
 
@@ -58,7 +58,15 @@ public class JsContactor extends DefaultContactor implements Contactor {
 			return weixinReceivers;
 		} else {
 			weixinReceivers.addAll(buildDefaultWeixinReceivers(receiver));
+			String[] domainAndLevel = id.split(JsRuleConfigManager.SPLITTER);
 
+			if (domainAndLevel.length > 1) {
+				ExceptionLimit rule = m_jsRuleConfigManager.queryExceptionLimit(domainAndLevel[0], domainAndLevel[1]);
+
+				if (rule != null) {
+					weixinReceivers.addAll(split(rule.getMails()));
+				}
+			}
 			return weixinReceivers;
 		}
 	}
