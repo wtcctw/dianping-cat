@@ -372,6 +372,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.alert.browser.JsRuleConfigManager</role>
+			<implementation>com.dianping.cat.report.alert.browser.JsRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.network.config.NetGraphConfigManager</role>
 			<implementation>com.dianping.cat.report.page.network.config.NetGraphConfigManager</implementation>
 			<requirements>
@@ -2728,6 +2740,19 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
+			<role-hint>Js</role-hint>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.JsContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.alert.browser.JsRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.sender.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>App</role-hint>
 			<implementation>com.dianping.cat.report.alert.sender.receiver.AppContactor</implementation>
 			<requirements>
@@ -2891,6 +2916,11 @@
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>Web</role-hint>
 			<implementation>com.dianping.cat.report.alert.sender.decorator.WebDecorator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
+			<role-hint>Js</role-hint>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.JsDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
@@ -3384,6 +3414,21 @@
 			<role>com.dianping.cat.report.alert.thirdParty.ThirdPartyAlert</role>
 			<implementation>com.dianping.cat.report.alert.thirdParty.ThirdPartyAlert</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.browser.JsAlert</role>
+			<implementation>com.dianping.cat.report.alert.browser.JsAlert</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.web.JsErrorLogDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.browser.JsRuleConfigManager</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
@@ -6216,6 +6261,12 @@
 					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.alert.browser.JsRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.browser.ModuleManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
 				</requirement>
 			</requirements>
@@ -6247,6 +6298,18 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.browser.JsRuleConfigManager</role>
+			<implementation>com.dianping.cat.report.alert.browser.JsRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -13,6 +13,7 @@ import org.unidal.web.mvc.ViewModel;
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.web.WebConfigManager;
+import com.dianping.cat.config.web.js.Level;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.ConfigItem;
@@ -49,6 +50,12 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private AggregationRule m_aggregationRule;
 
 	private List<AggregationRule> m_aggregationRules;
+
+	private List<String> m_modules;
+
+	private List<com.dianping.cat.home.js.entity.ExceptionLimit> m_jsRules;
+
+	private com.dianping.cat.home.js.entity.ExceptionLimit m_jsRule;
 
 	private PatternItem m_patternItem;
 
@@ -165,7 +172,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private List<String> m_invalidatePaths;
 
 	private AppConfigManager m_appConfigManager;
-	
+
 	private WebConfigManager m_webConfigManager;
 
 	private Item m_appItem;
@@ -259,7 +266,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public Map<String, com.dianping.cat.configuration.web.entity.ConfigItem> getWebConfigItems() {
 		return m_webConfigManager.getConfig().getConfigItems();
 	}
-	
+
 	public Map<Integer, Item> getConnectionTypes() {
 		return m_connectionTypes;
 	}
@@ -483,6 +490,34 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public String getWebCodesJson() {
 		return new JsonBuilder().toJson(m_webCodes);
+	}
+
+	public List<com.dianping.cat.home.js.entity.ExceptionLimit> getJsRules() {
+		return m_jsRules;
+	}
+
+	public com.dianping.cat.home.js.entity.ExceptionLimit getJsRule() {
+		return m_jsRule;
+	}
+
+	public List<String> getLevels() {
+		return Level.getLevels();
+	}
+
+	public List<String> getModules() {
+		return m_modules;
+	}
+
+	public void setModules(List<String> modules) {
+		m_modules = modules;
+	}
+
+	public void setJsRules(List<com.dianping.cat.home.js.entity.ExceptionLimit> jsRules) {
+		m_jsRules = jsRules;
+	}
+
+	public void setJsRule(com.dianping.cat.home.js.entity.ExceptionLimit jsRule) {
+		m_jsRule = jsRule;
 	}
 
 	public void setAggregationRule(AggregationRule aggregationRule) {

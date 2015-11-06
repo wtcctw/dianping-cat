@@ -166,14 +166,15 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 	}
 
 	private StorageReport fetchStorageReport(String name, ModelPeriod period) {
+		String all = Constants.ALL;
 		ModelRequest request = new ModelRequest(name + "-" + getName(), period.getStartTime()) //
-		      .setProperty("ip", Constants.ALL).setProperty("requireAll", "true");
+		      .setProperty("ip", all).setProperty("requireAll", "true");
 		ModelResponse<StorageReport> response = m_service.invoke(request);
 
 		if (response != null) {
 			StorageReport report = response.getModel();
 
-			return m_reportMergeHelper.mergeAllDomains(report, Constants.ALL);
+			return m_reportMergeHelper.mergeReport(report, all, all);
 		} else {
 			return null;
 		}
@@ -212,10 +213,12 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 	private void processStorage(String id) {
 		StorageReport currentReport = fetchStorageReport(id, ModelPeriod.CURRENT);
+		Set<String> machines = currentReport.getIps();
+		machines.add(Constants.ALL);
 
 		if (currentReport != null) {
-			for (String ip : currentReport.getIps()) {
-				if (m_storageConfigManager.isSQLAlertMachine(id, ip, getName())) {
+			for (String ip : machines) {
+				if (m_storageConfigManager.shouldAlert(id, ip, getName())) {
 					processMachine(id, currentReport, ip);
 				}
 			}

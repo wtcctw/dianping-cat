@@ -40,6 +40,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@ObjectMeta("aggregation")
 	private AggregationRule m_rule = new AggregationRule();
+	
+	@ObjectMeta("jsRule")
+	private com.dianping.cat.home.js.entity.ExceptionLimit m_jsRule = new com.dianping.cat.home.js.entity.ExceptionLimit();
 
 	@ObjectMeta("domainConfig")
 	private DomainConfig m_domainConfig = new DomainConfig();
@@ -346,6 +349,14 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public String getType() {
 		return m_type;
+	}
+	
+	public com.dianping.cat.home.js.entity.ExceptionLimit getJsRule() {
+		return m_jsRule;
+	}
+	
+	public void setJsRule(com.dianping.cat.home.js.entity.ExceptionLimit jsRule) {
+		m_jsRule = jsRule;
 	}
 
 	public boolean isAll() {

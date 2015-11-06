@@ -108,6 +108,8 @@ public class AlertManager implements Initializable {
 			return "缓存访问告警";
 		case STORAGE_RPC:
 			return "服务访问告警";
+		case JS:
+			return "JS异常告警";
 		}
 		return type;
 	}

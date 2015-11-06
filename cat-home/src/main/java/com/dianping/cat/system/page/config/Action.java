@@ -130,7 +130,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	WEB_RULE_ADD_OR_UPDATE_SUBMIT("webRuleSubmit"),
 
 	WEB_RULE_DELETE("webRuleDelete"),
-	
+
 	WEB_CONSTANTS("webConstants"),
 
 	APP_NAME_CHECK("appNameCheck"),
@@ -231,7 +231,15 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	SERVER_FILTER_CONFIG_UPDATE("serverFilterConfigUpdate"),
 
-	ALL_REPORT_CONFIG("allReportConfig");
+	ALL_REPORT_CONFIG("allReportConfig"),
+
+	JS_RULE_LIST("jsRuleList"),
+
+	JS_RULE_UPDATE("jsRuleUpdate"),
+
+	JS_RULE_DELETE("jsRuleDelete"),
+
+	JS_RULE_UPDATE_SUBMIT("jsRuleUpdateSubmit");
 
 	private String m_name;
 

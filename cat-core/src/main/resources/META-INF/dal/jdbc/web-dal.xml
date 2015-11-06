@@ -2,6 +2,7 @@
 <entities do-package="com.dianping.cat.web" gen="true">
 	<entity name="js-error-log" table="js_error_log" alias="jel">
 	   	<member name="modules" value-type="String" all="false" select-expr="distinct module" length="19" nullable="false" />
+	    <member name="count" value-type="long" all="false" select-expr="count(*)" length="19" nullable="false" />
 	    <var name="start-time" value-type="Date" />
 	    <var name="end-time" value-type="Date" />
 	    <var name="offset" value-type="int" />
@@ -9,6 +10,11 @@
 		<readsets>
       	<readset name="DISTINCT_MODULES">
       		<member name="modules"/>
+      	</readset>
+      	<readset name="COUNT-DATA">
+      		<member name="count"/>
+      		<member name="module"/>
+      		<member name="level"/>
       	</readset>
       	</readsets>
 		<query-defs>
@@ -38,6 +44,16 @@
 			AND  <FIELD name='browser'/> = ${browser}
 		</IF>
 		LIMIT ${offset}, ${limit}
+         ]]></statement>
+		</query>
+		<query name="find-count-by-time-module-level" type="SELECT" multiple="true">
+			<param name="start-time" />
+			<param name="end-time" />
+		<statement><![CDATA[SELECT <FIELDS/>
+        	FROM <TABLE/>
+        	  WHERE <FIELD name='error-time'/> >= ${start-time} 
+			AND  <FIELD name='error-time'/> < ${end-time}
+			GROUP BY module, level
          ]]></statement>
 		</query>
 		<query name="find-modules" type="SELECT" multiple="true">

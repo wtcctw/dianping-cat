@@ -38,12 +38,10 @@
 	            </div> -->
 	            <div class="input-group" style="float:left;">
 					<span class="input-group-addon">模块</span>
-		            <form id="wrap_search" style="margin-bottom:0px;">
 						<span class="input-icon" style="width:350px;">
 							<input type="text" placeholder="" class="search-input search-input form-control ui-autocomplete-input" id="module" autocomplete="on" data=""/>
 							<i class="ace-icon fa fa-search nav-search-icon"></i>
 						</span>
-					</form>
 	            </div>
 	              <input class="btn btn-primary btn-sm"
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
@@ -171,7 +169,14 @@ function getDate() {
 	if(day<10){
 		day = '0' + day;
 	}
-	return myDate.getFullYear() + "-" + month + "-" + day + " 00:00";
+	
+	var myHour = new Number(myDate.getHours());
+	
+	if(myHour < 10){
+		myHour = '0' + myHour;
+	}
+	
+	return myDate.getFullYear() + "-" + month + "-" + day + " " + myHour + ":00";
 }
 
 function getTime(){
