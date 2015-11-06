@@ -12,6 +12,7 @@
 <a:config>
 			<c:if test="${payload.type eq 'SQL'}"><c:set var="name" value="数据库" /></c:if>
 		  	<c:if test="${payload.type eq 'Cache'}"><c:set var="name" value="缓存" /></c:if>
+		  	<c:if test="${payload.type eq 'RPC'}"><c:set var="name" value="服务" /></c:if>
 			<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
 			<thead>
 				<tr>

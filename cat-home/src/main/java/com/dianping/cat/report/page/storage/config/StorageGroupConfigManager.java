@@ -90,7 +90,7 @@ public class StorageGroupConfigManager implements Initializable {
 		refreshData();
 	}
 
-	public boolean isSQLAlertMachine(String id, String ip, String type) {
+	public boolean shouldAlert(String id, String ip, String type) {
 		boolean result = true;
 		StorageGroup group = m_config.getStorageGroups().get(type);
 

@@ -43,7 +43,6 @@ public class HarConnectionPool implements Initializable {
 
 			if (now - pair.getValue() >= hour) {
 				try {
-					pair.getKey().close();
 					closed.add(entry.getKey());
 				} catch (Exception e) {
 					Cat.logError(e);
