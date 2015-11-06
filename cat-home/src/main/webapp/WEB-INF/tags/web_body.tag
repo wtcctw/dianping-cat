@@ -24,7 +24,7 @@
 						<li id="web_problem"><a href="/cat/r/browser?op=jsError">
 							<i class="menu-icon fa fa-caret-right"></i>JS错误日志</a>
 							<b class="arrow"></b></li>
-						<li id="hive_track"><a href="http://mobile-tracer-web01.nh/">
+						<li id="hive_track"><a href="http://mobile-tracer-web01.nh/" target="_blank">
 							<i class="menu-icon fa fa-caret-right"></i>跟踪日志</a>
 							<b class="arrow"></b></li>
 					</ul>
