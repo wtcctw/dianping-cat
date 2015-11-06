@@ -69,7 +69,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private JsErrorLogContentDao m_jsErrorLogContentlDao;
 
-	private final int LIMIT = 1000;
+	private final int LIMIT = 10000;
 
 	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
 	private ModelService<ProblemReport> m_service;
@@ -155,6 +155,7 @@ public class Handler implements PageHandler<Context> {
 			model.setLevel(Level.getNameByCode(jsErrorLog.getLevel()));
 			model.setModule(jsErrorLog.getModule());
 			model.setDetail(new String(detail.getContent(), "UTF-8"));
+			model.setAgent(jsErrorLog.getBrowser());
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

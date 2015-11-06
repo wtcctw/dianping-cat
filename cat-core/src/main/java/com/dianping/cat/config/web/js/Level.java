@@ -1,22 +1,16 @@
 package com.dianping.cat.config.web.js;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public enum Level {
-	DEV(0, "DEV"),
-
-	INFO(1, "INFO"),
-
-	WARN(2, "WARN"),
-
-	ERROR(3, "ERROR");
-
-	private static List<String> m_levels = Arrays.asList("DEV", "INFO", "WARN", "ERROR");
+	ERROR(3, "ERROR"), WARN(2, "WARN"), INFO(1, "INFO"), DEV(0, "DEV");
 
 	private int m_code;
 
 	private String m_name;
+
+	private static List<String> m_levels;
 
 	private Level(int code, String name) {
 		m_code = code;
@@ -47,7 +41,7 @@ public enum Level {
 		}
 		throw new RuntimeException("Invalid level");
 	}
-	
+
 	public static String getNameByCode(int code) {
 		for (Level level : Level.values()) {
 			if (level.getCode() == code) {
@@ -58,6 +52,13 @@ public enum Level {
 	}
 
 	public static List<String> getLevels() {
+		if (m_levels == null) {
+			m_levels = new ArrayList<String>();
+			
+			for (Level level : Level.values()) {
+				m_levels.add(level.getName());
+			}
+		}
 		return m_levels;
 	}
 
