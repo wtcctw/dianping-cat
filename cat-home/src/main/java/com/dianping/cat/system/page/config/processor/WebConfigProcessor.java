@@ -11,7 +11,9 @@ import com.dianping.cat.config.web.js.AggregationConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.web.js.entity.AggregationRule;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
+import com.dianping.cat.report.alert.browser.JsRuleConfigManager;
 import com.dianping.cat.report.alert.web.WebRuleConfigManager;
+import com.dianping.cat.report.page.browser.ModuleManager;
 import com.dianping.cat.report.page.web.CityManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.ConfigHtmlParser;
@@ -37,6 +39,12 @@ public class WebConfigProcessor extends BaseProcesser {
 
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
+	
+	@Inject
+	private JsRuleConfigManager m_jsRuleConfigManager;
+
+	@Inject
+	private ModuleManager m_moduleManager;
 
 	private void buildWebConfigInfo(Model model) {
 		Map<Integer, PatternItem> patterns = m_urlPatternConfigManager.getId2Items();
@@ -121,6 +129,21 @@ public class WebConfigProcessor extends BaseProcesser {
 			buildWebConfigInfo(model);
 			model.setRules(m_webRuleConfigManager.getMonitorRules().getRules().values());
 			model.setOpState(deleteRule(m_webRuleConfigManager, payload.getRuleId()));
+			break;
+		case JS_RULE_LIST:
+			model.setJsRules(m_jsRuleConfigManager.queryAllExceptionLimits());
+			break;
+		case JS_RULE_DELETE:
+			m_jsRuleConfigManager.deleteExceptionLimit(payload.getRuleId());
+			model.setJsRules(m_jsRuleConfigManager.queryAllExceptionLimits());
+			break;
+		case JS_RULE_UPDATE:
+			model.setModules(m_moduleManager.getModules());
+			model.setJsRule(m_jsRuleConfigManager.queryExceptionLimit(payload.getRuleId()));
+			break;
+		case JS_RULE_UPDATE_SUBMIT:
+			m_jsRuleConfigManager.insertExceptionLimit(payload.getJsRule());
+			model.setJsRules(m_jsRuleConfigManager.queryAllExceptionLimits());
 			break;
 		default:
 			throw new RuntimeException("Error action name " + action.getName());

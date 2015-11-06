@@ -140,6 +140,12 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.WEB_RULE_UPDATE.getPath();
 		case WEB_CONSTANTS:
 			return JspFile.WEB_CONSTANTS_LIST.getPath();
+		case JS_RULE_LIST:
+		case JS_RULE_DELETE:
+		case JS_RULE_UPDATE_SUBMIT:
+			return JspFile.JS_RULE_LIST.getPath();
+		case JS_RULE_UPDATE:
+			return JspFile.JS_RULE_UPDATE.getPath();
 		case APP_NAME_CHECK:
 			return JspFile.APP_NAME_CHECK.getPath();
 		case APP_LIST:

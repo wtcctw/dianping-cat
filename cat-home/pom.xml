@@ -137,6 +137,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/storage-alert-info-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/app-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/client-report-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/js-rule-config-manifest.xml,
 						</manifest>
                   </configuration>
                </execution>

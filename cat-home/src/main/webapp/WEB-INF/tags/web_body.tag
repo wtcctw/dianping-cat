@@ -24,7 +24,7 @@
 						<li id="web_problem"><a href="/cat/r/browser?op=jsError">
 							<i class="menu-icon fa fa-caret-right"></i>JS错误日志</a>
 							<b class="arrow"></b></li>
-						<li id="hive_track"><a href="http://mobile-tracer-web01.nh/">
+						<li id="hive_track"><a href="http://mobile-tracer-web01.nh/" target="_blank">
 							<i class="menu-icon fa fa-caret-right"></i>跟踪日志</a>
 							<b class="arrow"></b></li>
 					</ul>
@@ -33,8 +33,8 @@
 						<b class="arrow fa fa-angle-down"></b>
 				</a> <b class="arrow"></b>
 					<ul class="submenu">
-						<li id="aggregations"><a href="/cat/s/config?op=aggregations">
-								<i class="menu-icon fa fa-caret-right"></i>Js报错</a>
+						<li id="jsRule"><a href="/cat/s/config?op=jsRuleList">
+								<i class="menu-icon fa fa-caret-right"></i>JS告警</a>
 								<b class="arrow"></b></li>
 						<li id="urlPatterns"><a href="/cat/s/config?op=urlPatterns">
 								<i class="menu-icon fa fa-caret-right"></i>Web监控</a>

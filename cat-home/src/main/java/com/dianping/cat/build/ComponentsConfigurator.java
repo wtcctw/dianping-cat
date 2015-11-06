@@ -40,6 +40,7 @@ import com.dianping.cat.home.dal.report.UserDefineRuleDao;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.alert.AlertInfo;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
+import com.dianping.cat.report.alert.browser.JsRuleConfigManager;
 import com.dianping.cat.report.alert.business.BusinessRuleConfigManager;
 import com.dianping.cat.report.alert.config.UserDefinedRuleManager;
 import com.dianping.cat.report.alert.event.EventRuleConfigManager;
@@ -207,6 +208,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(StorageRPCRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
 		      ContentFetcher.class));
 		all.add(C(AlertConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(JsRuleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(RouterConfigManager.class).req(ConfigDao.class, ContentFetcher.class, DailyReportDao.class,
