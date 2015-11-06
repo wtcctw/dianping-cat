@@ -20,6 +20,7 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.helper.TimeHelper;
 
 public class HarConnectionPool implements Initializable {
 
@@ -35,13 +36,12 @@ public class HarConnectionPool implements Initializable {
 
 	private void closeIdleHarfs() throws IOException {
 		long now = System.currentTimeMillis();
-		long hour = 3600 * 1000L;
 		Set<String> closed = new HashSet<String>();
 
 		for (Entry<String, Pair<HarFileSystem, Long>> entry : m_hars.entrySet()) {
 			Pair<HarFileSystem, Long> pair = entry.getValue();
 
-			if (now - pair.getValue() >= hour) {
+			if (now - pair.getValue() >= TimeHelper.ONE_HOUR) {
 				try {
 					closed.add(entry.getKey());
 				} catch (Exception e) {
