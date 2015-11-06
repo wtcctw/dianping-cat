@@ -49,7 +49,7 @@
 				</tr>
 				<tr>
 					<td>告警阈值</td>
-					<td><input type="text" class="input-xlarge"  placeholder="告警阈值" name="jsRule.limit" required value="${model.jsRule.limit}"/></td>
+					<td><input type="text" class="input-xlarge"  placeholder="告警阈值" name="jsRule.limit" required value="${model.jsRule.limit}"/> / 分钟</td>
 				</tr>
 				<tr>
 					<td>联系邮件</td>
