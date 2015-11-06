@@ -155,6 +155,7 @@ public class Handler implements PageHandler<Context> {
 			model.setLevel(Level.getNameByCode(jsErrorLog.getLevel()));
 			model.setModule(jsErrorLog.getModule());
 			model.setDetail(new String(detail.getContent(), "UTF-8"));
+			model.setAgent(jsErrorLog.getBrowser());
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
