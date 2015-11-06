@@ -101,6 +101,8 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ProjectService m_projectService;
 
+	private JsonBuilder m_jsonBuilder = new JsonBuilder();
+
 	private List<AppDataDetail> buildAppDataDetails(Payload payload) {
 		List<AppDataDetail> appDetails = new ArrayList<AppDataDetail>();
 
@@ -188,8 +190,8 @@ public class Handler implements PageHandler<Context> {
 			Pair<PieChart, List<PieChartDetailInfo>> pair = m_appConnectionGraphCreator.buildPieChart(
 			      payload.getQueryEntity1(), payload.getGroupByField());
 			List<PieChartDetailInfo> infos = pair.getValue();
-			Collections.sort(infos, new ChartSorter().buildPieChartInfoComparator());
 
+			Collections.sort(infos, new ChartSorter().buildPieChartInfoComparator());
 			return pair;
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -291,6 +293,7 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
+		Map<String, Object> jsonObjs = new HashMap<String, Object>();
 
 		normalize(model, payload);
 
@@ -317,7 +320,7 @@ public class Handler implements PageHandler<Context> {
 			lineChartObjs.put("lineCharts", model.getLineChart());
 			lineChartObjs.put("lineChartDailyInfo", model.getComparisonAppDetails());
 			lineChartObjs.put("lineChartDetails", model.getAppDataDetailInfos());
-			model.setFetchData(new JsonBuilder().toJson(lineChartObjs));
+			model.setFetchData(m_jsonBuilder.toJson(lineChartObjs));
 			break;
 		case PIECHART_JSON:
 			Pair<PieChart, List<PieChartDetailInfo>> pieChartJsonPair = buildPieChart(payload);
@@ -327,7 +330,7 @@ public class Handler implements PageHandler<Context> {
 
 				pieChartObjs.put("pieCharts", pieChartJsonPair.getKey());
 				pieChartObjs.put("pieChartDetails", pieChartJsonPair.getValue());
-				model.setFetchData(new JsonBuilder().toJson(pieChartObjs));
+				model.setFetchData(m_jsonBuilder.toJson(pieChartObjs));
 			}
 			break;
 		case APP_ADD:
@@ -383,7 +386,7 @@ public class Handler implements PageHandler<Context> {
 				if ("xml".equalsIgnoreCase(type)) {
 					model.setFetchData(m_appConfigManager.getConfig().toString());
 				} else if (StringUtils.isEmpty(type) || "json".equalsIgnoreCase(type)) {
-					model.setFetchData(new JsonBuilder().toJson(m_appConfigManager.getConfig()));
+					model.setFetchData(m_jsonBuilder.toJson(m_appConfigManager.getConfig()));
 				}
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -417,12 +420,11 @@ public class Handler implements PageHandler<Context> {
 				SpeedQueryEntity queryEntity1 = normalizeQueryEntity(payload, speeds);
 				AppSpeedDisplayInfo info = m_appSpeedService.buildSpeedDisplayInfo(queryEntity1,
 				      payload.getSpeedQueryEntity2());
-				Map<String, Object> speedChartObjs = new HashMap<String, Object>();
 
-				speedChartObjs.put("lineCharts", info.getLineChart());
-				speedChartObjs.put("appSpeedDetails", info.getAppSpeedDetails());
-				speedChartObjs.put("appSpeedSummarys", info.getAppSpeedSummarys());
-				model.setFetchData(new JsonBuilder().toJson(speedChartObjs));
+				jsonObjs.put("lineCharts", info.getLineChart());
+				jsonObjs.put("appSpeedDetails", info.getAppSpeedDetails());
+				jsonObjs.put("appSpeedSummarys", info.getAppSpeedSummarys());
+				model.setFetchData(m_jsonBuilder.toJson(jsonObjs));
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -432,6 +434,13 @@ public class Handler implements PageHandler<Context> {
 
 			model.setLineChart(lineChartPair.getKey());
 			model.setAppDataDetailInfos(lineChartPair.getValue());
+			break;
+		case CONN_LINECHART_JSON:
+			lineChartPair = buildConnLineChart(model, payload);
+
+			jsonObjs.put("lineChart", lineChartPair.getKey());
+			jsonObjs.put("detailInfos", lineChartPair.getValue());
+			model.setFetchData(m_jsonBuilder.toJson(jsonObjs));
 			break;
 		case CONN_PIECHART:
 			pieChartPair = buildConnPieChart(payload);
@@ -444,6 +453,15 @@ public class Handler implements PageHandler<Context> {
 
 			model.setCommandId(commandId);
 			model.setCodes(m_appConfigManager.queryInternalCodes(commandId));
+			break;
+		case CONN_PIECHART_JSON:
+			pieChartPair = buildConnPieChart(payload);
+
+			if (pieChartPair != null) {
+				jsonObjs.put("pieChart", pieChartPair.getKey());
+				jsonObjs.put("detailInfos", pieChartPair.getValue());
+				model.setFetchData(m_jsonBuilder.toJson(jsonObjs));
+			}
 			break;
 		case STATISTICS:
 			AppReport report = queryAppReport(payload);
