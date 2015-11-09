@@ -22,6 +22,7 @@ import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
+import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.page.app.display.ChartSorter;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.browser.graph.WebGraphCreator;
@@ -45,6 +46,17 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.config.web.js.Level;
 
 public class Handler implements PageHandler<Context> {
+	private final int LIMIT = 10000;
+
+	@Inject
+	private WebGraphCreator m_graphCreator;
+
+	@Inject
+	private JsErrorLogContentDao m_jsErrorLogContentlDao;
+
+	@Inject
+	private JsErrorLogDao m_jsErrorLogDao;
+
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -52,27 +64,71 @@ public class Handler implements PageHandler<Context> {
 	private ModuleManager m_moduleManager;
 
 	@Inject
+	private PayloadNormalizer m_normalizePayload;
+
+	@Inject
 	private UrlPatternConfigManager m_patternManager;
+
+	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
+	private ModelService<ProblemReport> m_service;
 
 	@Inject
 	private WebConfigManager m_webConfigManager;
 
-	@Inject
-	private PayloadNormalizer m_normalizePayload;
+	public void addBrowserCount(String browser, Map<String, Integer> distributions) {
+		Integer count = distributions.get(browser);
 
-	@Inject
-	private WebGraphCreator m_graphCreator;
+		if (count == null) {
+			count = 1;
+		} else {
+			count++;
+		}
+		
+		distributions.put(browser, count);
+	}
 
-	@Inject
-	private JsErrorLogDao m_jsErrorLogDao;
+	private LineChart buildLineChart(Payload payload) {
+		AjaxDataQueryEntity entity1 = payload.getQueryEntity1();
+		AjaxDataQueryEntity entity2 = payload.getQueryEntity2();
+		String type = payload.getType();
+		LineChart lineChart = new LineChart();
 
-	@Inject
-	private JsErrorLogContentDao m_jsErrorLogContentlDao;
+		try {
+			lineChart = m_graphCreator.buildLineChart(entity1, entity2, type);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return lineChart;
+	}
 
-	private final int LIMIT = 10000;
+	private Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(Payload payload) {
+		try {
+			Pair<PieChart, List<PieChartDetailInfo>> pair = m_graphCreator.buildPieChart(payload.getQueryEntity1(),
+			      payload.getGroupByField());
+			List<PieChartDetailInfo> infos = pair.getValue();
+			Collections.sort(infos, new ChartSorter().buildPieChartInfoComparator());
 
-	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
-	private ModelService<ProblemReport> m_service;
+			return pair;
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return null;
+	}
+
+	public String buildDistributionChart(Map<String, Integer> distributions) {
+		PieChart chart = new PieChart();
+		List<Item> items = new ArrayList<Item>();
+
+		for (Entry<String, Integer> entry : distributions.entrySet()) {
+			Item item = new Item();
+
+			item.setNumber(entry.getValue()).setTitle(entry.getKey());
+			items.add(item);
+		}
+		chart.addItems(items);
+
+		return chart.getJsonString();
+	}
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -116,48 +172,47 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private LineChart buildLineChart(Payload payload) {
-		AjaxDataQueryEntity entity1 = payload.getQueryEntity1();
-		AjaxDataQueryEntity entity2 = payload.getQueryEntity2();
-		String type = payload.getType();
-		LineChart lineChart = new LineChart();
+	private void normalize(Model model, Payload payload) {
+		model.setAction(payload.getAction());
+		model.setPage(ReportPage.WEB);
+		model.setCities(m_webConfigManager.queryConfigItem(WebConfigManager.CITY));
+		model.setOperators(m_webConfigManager.queryConfigItem(WebConfigManager.OPERATOR));
+		model.setNetworks(m_webConfigManager.queryConfigItem(WebConfigManager.NETWORK));
+		model.setCodes(m_patternManager.queryCodes());
 
-		try {
-			lineChart = m_graphCreator.buildLineChart(entity1, entity2, type);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return lineChart;
+		PatternItem first = m_patternManager.queryUrlPatternRules().iterator().next();
+
+		model.setDefaultApi(first.getName() + "|" + first.getPattern());
+		model.setPattermItems(m_patternManager.queryUrlPatterns());
+		m_normalizePayload.normalize(model, payload);
 	}
 
-	private Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(Payload payload) {
-		try {
-			Pair<PieChart, List<PieChartDetailInfo>> pair = m_graphCreator.buildPieChart(payload.getQueryEntity1(),
-			      payload.getGroupByField());
-			List<PieChartDetailInfo> infos = pair.getValue();
-			Collections.sort(infos, new ChartSorter().buildPieChartInfoComparator());
+	private void processLog(Map<String, ErrorMsg> errorMsgs, JsErrorLog log, Map<String, Integer> distributions) {
+		String msg = log.getMsg();
+		ErrorMsg errorMsg = errorMsgs.get(msg);
 
-			return pair;
-		} catch (Exception e) {
-			Cat.logError(e);
+		if (errorMsg == null) {
+			errorMsg = new ErrorMsg();
+			errorMsg.setMsg(msg);
+			errorMsgs.put(msg, errorMsg);
 		}
-		return null;
+
+		errorMsg.addCount();
+		errorMsg.addId(log.getId());
+
+		addBrowserCount(log.getBrowser(), distributions);
 	}
 
-	private void viewJsErrorDetail(Payload payload, Model model) {
-		try {
-			int id = payload.getId();
+	private List<ErrorMsg> sort(Map<String, ErrorMsg> errorMsgs) {
+		List<ErrorMsg> errorMsgList = new ArrayList<ErrorMsg>();
+		Iterator<Entry<String, ErrorMsg>> iter = errorMsgs.entrySet().iterator();
 
-			JsErrorLogContent detail = m_jsErrorLogContentlDao.findByPK(id, JsErrorLogContentEntity.READSET_FULL);
-			JsErrorLog jsErrorLog = m_jsErrorLogDao.findByPK(id, JsErrorLogEntity.READSET_FULL);
-
-			model.setErrorTime(jsErrorLog.getErrorTime());
-			model.setLevel(Level.getNameByCode(jsErrorLog.getLevel()));
-			model.setModule(jsErrorLog.getModule());
-			model.setDetail(new String(detail.getContent(), "UTF-8"));
-		} catch (Exception e) {
-			Cat.logError(e);
+		while (iter.hasNext()) {
+			errorMsgList.add(iter.next().getValue());
 		}
+
+		Collections.sort(errorMsgList);
+		return errorMsgList;
 	}
 
 	private void viewJsError(Payload payload, Model model) {
@@ -169,13 +224,14 @@ public class Handler implements PageHandler<Context> {
 			Map<String, ErrorMsg> errorMsgs = new HashMap<String, ErrorMsg>();
 			int offset = 0;
 			int totalCount = 0;
+			Map<String, Integer> distributions = new HashMap<String, Integer>();
 
 			while (true) {
 				List<JsErrorLog> result = m_jsErrorLogDao.findDataByTimeModuleLevelBrowser(startTime, endTime, module,
 				      levelCode, null, offset, LIMIT, JsErrorLogEntity.READSET_FULL);
 
 				for (JsErrorLog log : result) {
-					processLog(errorMsgs, log);
+					processLog(errorMsgs, log, distributions);
 				}
 
 				int count = result.size();
@@ -193,50 +249,26 @@ public class Handler implements PageHandler<Context> {
 			model.setTotalCount(totalCount);
 			model.setLevels(Level.getLevels());
 			model.setModules(m_moduleManager.getModules());
+			model.setDistributionChart(buildDistributionChart(distributions));
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
 	}
 
-	private List<ErrorMsg> sort(Map<String, ErrorMsg> errorMsgs) {
-		List<ErrorMsg> errorMsgList = new ArrayList<ErrorMsg>();
-		Iterator<Entry<String, ErrorMsg>> iter = errorMsgs.entrySet().iterator();
+	private void viewJsErrorDetail(Payload payload, Model model) {
+		try {
+			int id = payload.getId();
 
-		while (iter.hasNext()) {
-			errorMsgList.add(iter.next().getValue());
+			JsErrorLogContent detail = m_jsErrorLogContentlDao.findByPK(id, JsErrorLogContentEntity.READSET_FULL);
+			JsErrorLog jsErrorLog = m_jsErrorLogDao.findByPK(id, JsErrorLogEntity.READSET_FULL);
+
+			model.setErrorTime(jsErrorLog.getErrorTime());
+			model.setLevel(Level.getNameByCode(jsErrorLog.getLevel()));
+			model.setModule(jsErrorLog.getModule());
+			model.setDetail(new String(detail.getContent(), "UTF-8"));
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
-
-		Collections.sort(errorMsgList);
-		return errorMsgList;
-	}
-
-	private void processLog(Map<String, ErrorMsg> errorMsgs, JsErrorLog log) {
-		String msg = log.getMsg();
-		ErrorMsg errorMsg = errorMsgs.get(msg);
-
-		if (errorMsg == null) {
-			errorMsg = new ErrorMsg();
-			errorMsg.setMsg(msg);
-			errorMsgs.put(msg, errorMsg);
-		}
-
-		errorMsg.addCount();
-		errorMsg.addId(log.getId());
-	}
-
-	private void normalize(Model model, Payload payload) {
-		model.setAction(payload.getAction());
-		model.setPage(ReportPage.WEB);
-		model.setCities(m_webConfigManager.queryConfigItem(WebConfigManager.CITY));
-		model.setOperators(m_webConfigManager.queryConfigItem(WebConfigManager.OPERATOR));
-		model.setNetworks(m_webConfigManager.queryConfigItem(WebConfigManager.NETWORK));
-		model.setCodes(m_patternManager.queryCodes());
-
-		PatternItem first = m_patternManager.queryUrlPatternRules().iterator().next();
-
-		model.setDefaultApi(first.getName() + "|" + first.getPattern());
-		model.setPattermItems(m_patternManager.queryUrlPatterns());
-		m_normalizePayload.normalize(model, payload);
 	}
 
 }

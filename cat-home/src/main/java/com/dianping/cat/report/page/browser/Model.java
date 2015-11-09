@@ -70,6 +70,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private String m_module;
 
+	private String m_distributionChart;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -275,6 +277,14 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setLevels(List<String> levels) {
 		m_levels = levels;
+	}
+	
+	public String getDistributionChart() {
+		return m_distributionChart;
+	}
+
+	public void setDistributionChart(String distributionChart) {
+		m_distributionChart = distributionChart;
 	}
 
 }
