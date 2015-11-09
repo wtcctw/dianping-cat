@@ -16,8 +16,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
-import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
@@ -27,7 +25,6 @@ import com.dianping.cat.report.page.app.display.ChartSorter;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.browser.graph.WebGraphCreator;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
-import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.web.JsErrorLog;
 import com.dianping.cat.web.JsErrorLogContent;
 import com.dianping.cat.web.JsErrorLogContentDao;
@@ -68,9 +65,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private UrlPatternConfigManager m_patternManager;
-
-	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
-	private ModelService<ProblemReport> m_service;
 
 	@Inject
 	private WebConfigManager m_webConfigManager;
