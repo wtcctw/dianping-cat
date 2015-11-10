@@ -55,6 +55,33 @@ import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
 
 public class Handler implements PageHandler<Context> {
+	public static class StringCompartor implements Comparator<String> {
+
+		@Override
+		public int compare(String o1, String o2) {
+			String hour1 = o1.substring(0, 2);
+			String hour2 = o2.substring(0, 2);
+
+			if (!hour1.equals(hour2)) {
+				int hour1Value = Integer.parseInt(hour1);
+				int hour2Value = Integer.parseInt(hour2);
+
+				if (hour1Value == 0 && hour2Value == 23) {
+					return -1;
+				} else if (hour1Value == 23 && hour2Value == 0) {
+					return 1;
+				} else {
+					return hour2Value - hour1Value;
+				}
+			} else {
+				String first = o1.substring(3, 5);
+				String end = o2.substring(3, 5);
+
+				return Integer.parseInt(end) - Integer.parseInt(first);
+			}
+		}
+	}
+
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -120,12 +147,12 @@ public class Handler implements PageHandler<Context> {
 		return links;
 	}
 
-	private List<Alteration> buildAlterations(long start, long end, StorageType type) {
+	private List<Alteration> buildAlterations(Date start, Date end, StorageType type) {
 		List<Alteration> results = new LinkedList<Alteration>();
 
 		try {
-			List<Alteration> alterations = m_alterationDao.findByTypeDruation(new Date(start), new Date(end),
-			      type.getName(), AlterationEntity.READSET_FULL);
+			List<Alteration> alterations = m_alterationDao.findByTypeDruation(start, end, type.getName(),
+			      AlterationEntity.READSET_FULL);
 
 			for (Alteration alteration : alterations) {
 				results.add(alteration);
@@ -136,6 +163,13 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 		}
 		return results;
+	}
+
+	private void buildDepartments(Payload payload, Model model, StorageReport storageReport) {
+		Map<String, Department> departments = m_storageGroupConfigManager.queryStorageDepartments(
+		      SortHelper.sortDomain(storageReport.getIds()), payload.getType().getName());
+
+		model.setDepartments(departments);
 	}
 
 	private void buildLineCharts(Model model, Payload payload, StorageReport storageReport) {
@@ -173,6 +207,17 @@ public class Handler implements PageHandler<Context> {
 		return StringUtils.join(ops, ";");
 	}
 
+	private void buildPieCharts(Model model, Payload payload, StorageReport report) {
+		PieChartVisitor visitor = new PieChartVisitor();
+
+		visitor.visitStorageReport(report);
+		model.setDistributionChart(visitor.getPiechartJson());
+	}
+
+	private String buildReportId(Payload payload) {
+		return payload.getId() + "-" + payload.getType().getName();
+	}
+
 	private StorageReport filterReport(Payload payload, Model model, StorageReport storageReport) {
 		if (storageReport != null) {
 			Set<String> allOps = storageReport.getOps();
@@ -187,24 +232,6 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		return storageReport;
-	}
-
-	private StorageReport mergeReport(Payload payload, StorageReport storageReport) {
-		storageReport = m_mergeHelper.mergeReport(storageReport, payload.getIpAddress(), Constants.ALL);
-		StorageSorter sorter = new StorageSorter(storageReport, payload.getSort());
-
-		return sorter.getSortedReport();
-	}
-
-	private void buildDepartments(Payload payload, Model model, StorageReport storageReport) {
-		Map<String, Department> departments = m_storageGroupConfigManager.queryStorageDepartments(
-		      SortHelper.sortDomain(storageReport.getIds()), payload.getType().getName());
-
-		model.setDepartments(departments);
-	}
-
-	private String buildReportId(Payload payload) {
-		return payload.getId() + "-" + payload.getType().getName();
 	}
 
 	@Override
@@ -258,20 +285,22 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case DASHBOARD:
 			int minuteCounts = payload.getMinuteCounts();
-			long end = payload.getDate() + model.getMinute() * TimeHelper.ONE_MINUTE;
-			long start = end - (minuteCounts - 1) * TimeHelper.ONE_MINUTE;
-			Date startDate = new Date(start);
+			long time = payload.getDate();
+			long end = time + model.getMinute() * TimeHelper.ONE_MINUTE;
+			Date startDate = new Date(end - (minuteCounts - 1) * TimeHelper.ONE_MINUTE);
 			Date endDate = new Date(end);
-			List<Alert> alerts = m_alertService.query(startDate, endDate, payload.getType().getName());
+			StorageType type = payload.getType();
+			
+			List<Alert> alerts = m_alertService.query(startDate, endDate, type.getName());
 			Map<String, StorageAlertInfo> alertInfos = m_alertInfoBuilder.buildStorageAlertInfos(startDate, endDate,
-			      minuteCounts, payload.getType(), alerts);
-			alertInfos = sortStorage(alertInfos);
+			      minuteCounts, type, alerts);
+			alertInfos = sortAlertInfos(alertInfos);
 
-			model.setLinks(buildAlertLinks(alertInfos, payload.getType().getName()));
+			model.setLinks(buildAlertLinks(alertInfos, type.getName()));
 			model.setAlertInfos(alertInfos);
-			model.setReportStart(new Date(payload.getDate()));
-			model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
-			model.setAlterations(buildAlterations(start, end, payload.getType()));
+			model.setReportStart(new Date(time));
+			model.setReportEnd(new Date(time + TimeHelper.ONE_HOUR - 1));
+			model.setAlterations(buildAlterations(startDate, endDate, type));
 			break;
 		}
 
@@ -282,11 +311,11 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private void buildPieCharts(Model model, Payload payload, StorageReport report) {
-		PieChartVisitor visitor = new PieChartVisitor();
+	private StorageReport mergeReport(Payload payload, StorageReport storageReport) {
+		storageReport = m_mergeHelper.mergeReport(storageReport, payload.getIpAddress(), Constants.ALL);
+		StorageSorter sorter = new StorageSorter(storageReport, payload.getSort());
 
-		visitor.visitStorageReport(report);
-		model.setDistributionChart(visitor.getPiechartJson());
+		return sorter.getSortedReport();
 	}
 
 	private void normalize(Model model, Payload payload) {
@@ -353,52 +382,19 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	public Map<String, StorageAlertInfo> sortStorage(Map<String, StorageAlertInfo> alertInfos) {
+	public Map<String, StorageAlertInfo> sortAlertInfos(Map<String, StorageAlertInfo> alertInfos) {
 		Map<String, StorageAlertInfo> results = new LinkedHashMap<String, StorageAlertInfo>();
 
 		for (Entry<String, StorageAlertInfo> entry : alertInfos.entrySet()) {
-			StorageAlertInfo result = sortAlertInfo(entry.getValue());
+			StorageAlertInfo result = sortByAlertLevelCount(entry.getValue());
 
 			results.put(entry.getKey(), result);
 		}
 
-		return sortTimeOrder(results);
+		return SortHelper.sortMap(results, new MinuteComparator());
 	}
 
-	private Map<String, StorageAlertInfo> sortTimeOrder(Map<String, StorageAlertInfo> tmp) {
-		Map<String, StorageAlertInfo> results = SortHelper.sortMap(tmp,
-		      new Comparator<Map.Entry<String, StorageAlertInfo>>() {
-			      @Override
-			      public int compare(Map.Entry<String, StorageAlertInfo> o1, Map.Entry<String, StorageAlertInfo> o2) {
-				      String key1 = o1.getKey();
-				      String key2 = o2.getKey();
-				      String hour1 = key1.substring(0, 2);
-				      String hour2 = key2.substring(0, 2);
-
-				      if (!hour1.equals(hour2)) {
-					      int hour1Value = Integer.parseInt(hour1);
-					      int hour2Value = Integer.parseInt(hour2);
-
-					      if (hour1Value == 0 && hour2Value == 23) {
-						      return -1;
-					      } else if (hour1Value == 23 && hour2Value == 0) {
-						      return 1;
-					      } else {
-						      return hour2Value - hour1Value;
-					      }
-				      } else {
-					      String first = key1.substring(3, 5);
-					      String end = key2.substring(3, 5);
-
-					      return Integer.parseInt(end) - Integer.parseInt(first);
-				      }
-			      }
-		      });
-
-		return results;
-	}
-
-	private StorageAlertInfo sortAlertInfo(StorageAlertInfo alertInfo) {
+	private StorageAlertInfo sortByAlertLevelCount(StorageAlertInfo alertInfo) {
 		List<Entry<String, Storage>> entries = new ArrayList<Entry<String, Storage>>(alertInfo.getStorages().entrySet());
 		Collections.sort(entries, new Comparator<Map.Entry<String, Storage>>() {
 			@Override
@@ -418,12 +414,14 @@ public class Handler implements PageHandler<Context> {
 		return result;
 	}
 
-	public static class StringCompartor implements Comparator<String> {
+	public static class MinuteComparator implements Comparator<Map.Entry<String, StorageAlertInfo>> {
 
 		@Override
-		public int compare(String o1, String o2) {
-			String hour1 = o1.substring(0, 2);
-			String hour2 = o2.substring(0, 2);
+		public int compare(Map.Entry<String, StorageAlertInfo> o1, Map.Entry<String, StorageAlertInfo> o2) {
+			String key1 = o1.getKey();
+			String key2 = o2.getKey();
+			String hour1 = key1.substring(0, 2);
+			String hour2 = key2.substring(0, 2);
 
 			if (!hour1.equals(hour2)) {
 				int hour1Value = Integer.parseInt(hour1);
@@ -437,8 +435,8 @@ public class Handler implements PageHandler<Context> {
 					return hour2Value - hour1Value;
 				}
 			} else {
-				String first = o1.substring(3, 5);
-				String end = o2.substring(3, 5);
+				String first = key1.substring(3, 5);
+				String end = key2.substring(3, 5);
 
 				return Integer.parseInt(end) - Integer.parseInt(first);
 			}

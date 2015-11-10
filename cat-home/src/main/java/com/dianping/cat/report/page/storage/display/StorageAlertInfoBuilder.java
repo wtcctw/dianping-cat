@@ -30,7 +30,7 @@ public class StorageAlertInfoBuilder {
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("HH:mm");
 
-	private Map<String, StorageAlertInfo> buildBlankAlert(long start, long end, int minuteCounts, StorageType type) {
+	private Map<String, StorageAlertInfo> prepareBlankAlert(long start, long end, int minuteCounts, StorageType type) {
 		Map<String, StorageAlertInfo> results = new LinkedHashMap<String, StorageAlertInfo>();
 
 		for (long s = start; s <= end; s += TimeHelper.ONE_MINUTE) {
@@ -48,7 +48,7 @@ public class StorageAlertInfoBuilder {
 
 	public Map<String, StorageAlertInfo> buildStorageAlertInfos(Date start, Date end, int minuteCounts,
 	      StorageType type, List<Alert> alerts) {
-		Map<String, StorageAlertInfo> results = buildBlankAlert(start.getTime(), end.getTime(), minuteCounts, type);
+		Map<String, StorageAlertInfo> results = prepareBlankAlert(start.getTime(), end.getTime(), minuteCounts, type);
 
 		for (Alert alert : alerts) {
 			long time = alert.getAlertTime().getTime();
