@@ -43,8 +43,6 @@ com.dianping.cat.report.page.monitor.Handler.class,
 
 com.dianping.cat.report.page.network.Handler.class,
 
-com.dianping.cat.report.page.web.Handler.class,
-
 com.dianping.cat.report.page.system.Handler.class,
 
 com.dianping.cat.report.page.app.Handler.class,

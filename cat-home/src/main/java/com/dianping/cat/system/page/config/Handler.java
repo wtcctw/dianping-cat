@@ -134,10 +134,6 @@ public class Handler implements PageHandler<Context> {
 			m_thirdPartyConfigProcessor.process(action, payload, model);
 			break;
 
-		case AGGREGATION_ALL:
-		case AGGREGATION_UPDATE:
-		case AGGREGATION_UPDATE_SUBMIT:
-		case AGGREGATION_DELETE:
 		case URL_PATTERN_CONFIG_UPDATE:
 		case URL_PATTERN_ALL:
 		case URL_PATTERN_UPDATE:

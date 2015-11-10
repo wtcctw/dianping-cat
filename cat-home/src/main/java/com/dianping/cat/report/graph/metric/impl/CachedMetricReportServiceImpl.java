@@ -17,7 +17,6 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.metric.CachedMetricReportService;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
 import com.dianping.cat.report.page.system.graph.SystemReportConvertor;
-import com.dianping.cat.report.page.web.graph.WebReportConvertor;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
@@ -113,37 +112,6 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 				ipAddrs = new HashSet<String>(Arrays.asList(ipAddrsArray));
 			}
 			SystemReportConvertor convert = new SystemReportConvertor(type, ipAddrs);
-
-			convert.visitMetricReport(report);
-			return convert.getReport();
-		}
-	}
-
-	@Override
-	public MetricReport queryUserMonitorReport(String product, Map<String, String> properties, Date start) {
-		long time = start.getTime();
-		ModelPeriod period = ModelPeriod.getByTime(time);
-
-		if (period == ModelPeriod.CURRENT || period == ModelPeriod.LAST) {
-			ModelRequest request = new ModelRequest(product, time);
-
-			request.getProperties().putAll(properties);
-
-			if (m_service.isEligable(request)) {
-				ModelResponse<MetricReport> response = m_service.invoke(request);
-				MetricReport report = response.getModel();
-
-				return report;
-			} else {
-				throw new RuntimeException("Internal error: no eligable metric service registered for " + request + "!");
-			}
-		} else {
-			MetricReport report = getReportFromCache(product, time);
-			String city = properties.get("city");
-			String channel = properties.get("channel");
-			String type = properties.get("type");
-
-			WebReportConvertor convert = new WebReportConvertor(type, city, channel);
 
 			convert.visitMetricReport(report);
 			return convert.getReport();

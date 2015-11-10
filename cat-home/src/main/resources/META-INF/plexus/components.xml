@@ -206,21 +206,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.web.WebRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.web.WebRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.alert.transaction.TransactionRuleConfigManager</role>
 			<implementation>com.dianping.cat.report.alert.transaction.TransactionRuleConfigManager</implementation>
 			<requirements>
@@ -3190,27 +3175,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.web.WebAlert</role>
-			<implementation>com.dianping.cat.report.alert.web.WebAlert</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.web.service.WebApiService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.web.WebRuleConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.DataChecker</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.alert.transaction.TransactionAlert</role>
 			<implementation>com.dianping.cat.report.alert.transaction.TransactionAlert</implementation>
 			<requirements>
@@ -5087,108 +5051,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.web.Handler</role>
-			<implementation>com.dianping.cat.report.page.web.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.web.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.web.CityManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.web.graph.WebGraphCreator</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>problem</role-hint>
-					<field-name>m_service</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.web.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.web.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
-			<implementation>com.dianping.cat.config.web.url.UrlPatternConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.web.url.UrlPatternHandler</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.app.AppConfigManager</role>
-			<implementation>com.dianping.cat.config.app.AppConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.web.CityManager</role>
-			<implementation>com.dianping.cat.report.page.web.CityManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.web.graph.WebGraphCreator</role>
-			<implementation>com.dianping.cat.report.page.web.graph.WebGraphCreator</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.web.service.WebApiService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.web.service.WebApiService</role>
-			<implementation>com.dianping.cat.report.page.web.service.WebApiService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.app.WebApiDataDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.app.WebApiDataDao</role>
-			<implementation>com.dianping.cat.app.WebApiDataDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.system.Handler</role>
 			<implementation>com.dianping.cat.report.page.system.Handler</implementation>
 			<requirements>
@@ -5293,6 +5155,18 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.AppConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5883,6 +5757,21 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
+			<implementation>com.dianping.cat.config.web.url.UrlPatternConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.url.UrlPatternHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.config.web.WebConfigManager</role>
 			<implementation>com.dianping.cat.config.web.WebConfigManager</implementation>
 			<requirements>
@@ -6212,9 +6101,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.web.WebRuleConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.web.CityManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.web.WebConfigManager</role>

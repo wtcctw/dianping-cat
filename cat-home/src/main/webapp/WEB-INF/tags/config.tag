@@ -33,18 +33,6 @@
 						<b class="arrow fa fa-angle-down"></b>
 						</a><b class="arrow"></b>
 						<ul class="submenu">
-							<li id="aggregations"><a href="/cat/s/config?op=aggregations">
-								<i class="menu-icon fa fa-caret-right"></i>Js报错</a>
-								<b class="arrow"></b></li>
-							<li id="urlPatternConfigUpdate"><a href="/cat/s/config?op=urlPatternConfigUpdate" style="display:none">
-								<i class="menu-icon fa fa-caret-right"></i>Web全局配置</a>
-								<b class="arrow"></b></li>
-							<li id="urlPatterns"><a href="/cat/s/config?op=urlPatterns">
-								<i class="menu-icon fa fa-caret-right"></i>Web监控</a>
-								<b class="arrow"></b></li>
-							<li id="webRule"><a href="/cat/s/config?op=webRule">
-								<i class="menu-icon fa fa-caret-right"></i>Web告警</a>
-								<b class="arrow"></b></li>
 							<li id="appList"><a href="/cat/s/config?op=appList">
 								<i class="menu-icon fa fa-caret-right"></i>App监控</a>
 								<b class="arrow"></b></li>

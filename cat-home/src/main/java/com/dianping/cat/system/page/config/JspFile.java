@@ -3,10 +3,6 @@ package com.dianping.cat.system.page.config;
 public enum JspFile {
 	PROJECT_ALL("/jsp/system/project/project.jsp"),
 
-	AGGREGATION_ALL("/jsp/system/aggregation/aggregation.jsp"),
-
-	AGGREGATION_UPATE("/jsp/system/aggregation/aggregationUpdate.jsp"),
-
 	URL_PATTERN_ALL("/jsp/system/urlPattern/urlPattern.jsp"),
 
 	URL_PATTERN_CONFIG_UPDATE("/jsp/system/urlPattern/urlPatternConfig.jsp"),

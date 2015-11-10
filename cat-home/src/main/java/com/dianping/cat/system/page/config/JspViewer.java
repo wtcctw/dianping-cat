@@ -18,14 +18,6 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.PROJECT_ALL.getPath();
 		case URL_PATTERN_CONFIG_UPDATE:
 			return JspFile.URL_PATTERN_CONFIG_UPDATE.getPath();
-		case AGGREGATION_ALL:
-			return JspFile.AGGREGATION_ALL.getPath();
-		case AGGREGATION_DELETE:
-			return JspFile.AGGREGATION_ALL.getPath();
-		case AGGREGATION_UPDATE:
-			return JspFile.AGGREGATION_UPATE.getPath();
-		case AGGREGATION_UPDATE_SUBMIT:
-			return JspFile.AGGREGATION_ALL.getPath();
 		case URL_PATTERN_ALL:
 			return JspFile.URL_PATTERN_ALL.getPath();
 		case URL_PATTERN_DELETE:

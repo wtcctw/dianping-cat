@@ -7,14 +7,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	PROJECT_DELETE("projectDelete"),
 
-	AGGREGATION_ALL("aggregations"),
-
-	AGGREGATION_UPDATE("aggregationUpdate"),
-
-	AGGREGATION_UPDATE_SUBMIT("aggregationUpdateSubmit"),
-
-	AGGREGATION_DELETE("aggregationDelete"),
-
 	URL_PATTERN_ALL("urlPatterns"),
 
 	URL_PATTERN_CONFIG_UPDATE("urlPatternConfigUpdate"),
