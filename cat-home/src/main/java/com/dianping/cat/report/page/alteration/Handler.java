@@ -29,7 +29,7 @@ import com.dianping.cat.home.dal.report.Alteration;
 import com.dianping.cat.home.dal.report.AlterationDao;
 import com.dianping.cat.home.dal.report.AlterationEntity;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.storage.StorageConstants;
+import com.dianping.cat.report.page.storage.StorageType;
 
 public class Handler implements PageHandler<Context> {
 
@@ -170,7 +170,7 @@ public class Handler implements PageHandler<Context> {
 	public boolean isIllegalArgs(Payload payload) {
 		if (StringUtils.isEmpty(payload.getType())) {
 			return true;
-		} else if (StorageConstants.SQL_TYPE.equals(payload.getType())) {
+		} else if (StorageType.SQL.getName().equals(payload.getType())) {
 			boolean ret = normalizeArgs(payload);
 
 			if (!ret) {

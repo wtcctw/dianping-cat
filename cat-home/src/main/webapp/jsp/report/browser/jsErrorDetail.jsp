@@ -17,6 +17,10 @@
 		<td>${model.module}</td>
 	</tr>
 	<tr>
+		<td>Agent : </td>
+		<td>${model.agent}</td>
+	</tr>
+	<tr>
 		<td>Detail: </td>
 		<td>${model.detail}</td>
 	</tr>

@@ -17,6 +17,8 @@ public enum AlertType {
 	ThirdParty("ThirdParty"),
 
 	FrontEndException("FrontEnd"),
+	
+	JS("Js"),
 
 	App("App"),
 

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.storage;
+package com.dianping.cat.report.page.storage.display;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -13,6 +13,7 @@ import com.dianping.cat.consumer.storage.model.entity.Domain;
 import com.dianping.cat.consumer.storage.model.entity.Machine;
 import com.dianping.cat.consumer.storage.model.entity.Operation;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
+import com.dianping.cat.report.page.storage.StorageConstants;
 
 public class StorageSorter {
 

@@ -70,6 +70,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private String m_module;
 
+	private String m_agent;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -163,6 +165,14 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public Date getStart() {
 		return m_start;
+	}
+
+	public String getAgent() {
+		return m_agent;
+	}
+
+	public void setAgent(String agent) {
+		m_agent = agent;
 	}
 
 	public void setLevel(String level) {

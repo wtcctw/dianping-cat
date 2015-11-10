@@ -68,6 +68,10 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 		return m_reportManager;
 	}
 
+	private boolean isNotBlank(String serverId) {
+		return serverId != null && !serverId.trim().isEmpty();
+	}
+
 	@Override
 	protected void loadReports() {
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
@@ -129,7 +133,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 				if (type.equals("PigeonCall.app")) {
 					serverId = message.getName();
 				}
-				
+
 				if (type.equals("PigeonCall.server")) {
 					ip = message.getName();
 					int index = ip.indexOf(':');
@@ -141,7 +145,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 			}
 		}
 
-		if (serverId != null) {
+		if (isNotBlank(serverId)) {
 			String id = queryRPCId(serverId);
 			StorageReport report = m_reportManager.getHourlyReport(getStartTime(), id, true);
 			StorageUpdateParam param = new StorageUpdateParam();

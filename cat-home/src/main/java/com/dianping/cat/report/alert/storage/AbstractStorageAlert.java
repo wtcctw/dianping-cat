@@ -31,7 +31,6 @@ import com.dianping.cat.report.alert.sender.AlertEntity;
 import com.dianping.cat.report.alert.sender.AlertManager;
 import com.dianping.cat.report.page.storage.StorageConstants;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
-import com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder;
 import com.dianping.cat.report.page.storage.transform.StorageMergeHelper;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
@@ -54,9 +53,6 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 	@Inject
 	protected StorageGroupConfigManager m_storageConfigManager;
-
-	@Inject
-	protected StorageAlertInfoBuilder m_alertBuilder;
 
 	protected Logger m_logger;
 
@@ -166,14 +162,15 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 	}
 
 	private StorageReport fetchStorageReport(String name, ModelPeriod period) {
+		String all = Constants.ALL;
 		ModelRequest request = new ModelRequest(name + "-" + getName(), period.getStartTime()) //
-		      .setProperty("ip", Constants.ALL).setProperty("requireAll", "true");
+		      .setProperty("ip", all).setProperty("requireAll", "true");
 		ModelResponse<StorageReport> response = m_service.invoke(request);
 
 		if (response != null) {
 			StorageReport report = response.getModel();
 
-			return m_reportMergeHelper.mergeAllDomains(report, Constants.ALL);
+			return m_reportMergeHelper.mergeReport(report, all, all);
 		} else {
 			return null;
 		}
@@ -205,19 +202,17 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 			      .setLevel(alertResult.getAlertLevel());
 			entity.setMetric(param.toString()).setType(getName()).setGroup(param.getName());
 			m_alertManager.addAlert(entity);
-
-			m_alertBuilder.processAlertEntity(getName(), minute, entity, param);
 		}
 	}
 
 	private void processStorage(String id) {
 		StorageReport currentReport = fetchStorageReport(id, ModelPeriod.CURRENT);
+		Set<String> machines = currentReport.getIps();
+		machines.add(Constants.ALL);
 
 		if (currentReport != null) {
-			for (String ip : currentReport.getIps()) {
-				if (m_storageConfigManager.isSQLAlertMachine(id, ip, getName())) {
-					processMachine(id, currentReport, ip);
-				}
+			for (String ip : machines) {
+				processMachine(id, currentReport, ip);
 			}
 		}
 	}
