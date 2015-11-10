@@ -65,10 +65,6 @@ public class StorageAlertInfoBuilder {
 		return results;
 	}
 
-	public StorageAlertInfo clone(StorageAlertInfo alertInfo) {
-		return makeAlertInfo(alertInfo.getId(), alertInfo.getStartTime());
-	}
-
 	public StorageAlertInfo makeAlertInfo(String id, Date start) {
 		StorageAlertInfo alertInfo = new StorageAlertInfo(id);
 

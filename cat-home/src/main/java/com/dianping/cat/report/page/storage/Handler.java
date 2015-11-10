@@ -55,33 +55,6 @@ import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
 
 public class Handler implements PageHandler<Context> {
-	public static class StringCompartor implements Comparator<String> {
-
-		@Override
-		public int compare(String o1, String o2) {
-			String hour1 = o1.substring(0, 2);
-			String hour2 = o2.substring(0, 2);
-
-			if (!hour1.equals(hour2)) {
-				int hour1Value = Integer.parseInt(hour1);
-				int hour2Value = Integer.parseInt(hour2);
-
-				if (hour1Value == 0 && hour2Value == 23) {
-					return -1;
-				} else if (hour1Value == 23 && hour2Value == 0) {
-					return 1;
-				} else {
-					return hour2Value - hour1Value;
-				}
-			} else {
-				String first = o1.substring(3, 5);
-				String end = o2.substring(3, 5);
-
-				return Integer.parseInt(end) - Integer.parseInt(first);
-			}
-		}
-	}
-
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -290,7 +263,7 @@ public class Handler implements PageHandler<Context> {
 			Date startDate = new Date(end - (minuteCounts - 1) * TimeHelper.ONE_MINUTE);
 			Date endDate = new Date(end);
 			StorageType type = payload.getType();
-			
+
 			List<Alert> alerts = m_alertService.query(startDate, endDate, type.getName());
 			Map<String, StorageAlertInfo> alertInfos = m_alertInfoBuilder.buildStorageAlertInfos(startDate, endDate,
 			      minuteCounts, type, alerts);
@@ -386,32 +359,28 @@ public class Handler implements PageHandler<Context> {
 		Map<String, StorageAlertInfo> results = new LinkedHashMap<String, StorageAlertInfo>();
 
 		for (Entry<String, StorageAlertInfo> entry : alertInfos.entrySet()) {
-			StorageAlertInfo result = sortByAlertLevelCount(entry.getValue());
+			StorageAlertInfo alertInfo = entry.getValue();
+			List<Entry<String, Storage>> entries = new ArrayList<Entry<String, Storage>>(alertInfo.getStorages()
+			      .entrySet());
+			Collections.sort(entries, new Comparator<Map.Entry<String, Storage>>() {
+				@Override
+				public int compare(Map.Entry<String, Storage> o1, Map.Entry<String, Storage> o2) {
+					int gap = o2.getValue().getLevel() - o1.getValue().getLevel();
 
+					return gap == 0 ? o2.getValue().getCount() - o1.getValue().getCount() : gap;
+				}
+			});
+
+			StorageAlertInfo result = m_alertInfoBuilder.makeAlertInfo(alertInfo.getId(), alertInfo.getStartTime());
+			Map<String, Storage> storages = result.getStorages();
+
+			for (Entry<String, Storage> storage : entries) {
+				storages.put(storage.getKey(), storage.getValue());
+			}
 			results.put(entry.getKey(), result);
 		}
 
 		return SortHelper.sortMap(results, new MinuteComparator());
-	}
-
-	private StorageAlertInfo sortByAlertLevelCount(StorageAlertInfo alertInfo) {
-		List<Entry<String, Storage>> entries = new ArrayList<Entry<String, Storage>>(alertInfo.getStorages().entrySet());
-		Collections.sort(entries, new Comparator<Map.Entry<String, Storage>>() {
-			@Override
-			public int compare(Map.Entry<String, Storage> o1, Map.Entry<String, Storage> o2) {
-				int gap = o2.getValue().getLevel() - o1.getValue().getLevel();
-
-				return gap == 0 ? o2.getValue().getCount() - o1.getValue().getCount() : gap;
-			}
-		});
-
-		StorageAlertInfo result = m_alertInfoBuilder.clone(alertInfo);
-		Map<String, Storage> storages = result.getStorages();
-
-		for (Entry<String, Storage> storage : entries) {
-			storages.put(storage.getKey(), storage.getValue());
-		}
-		return result;
 	}
 
 	public static class MinuteComparator implements Comparator<Map.Entry<String, StorageAlertInfo>> {
@@ -437,6 +406,33 @@ public class Handler implements PageHandler<Context> {
 			} else {
 				String first = key1.substring(3, 5);
 				String end = key2.substring(3, 5);
+
+				return Integer.parseInt(end) - Integer.parseInt(first);
+			}
+		}
+	}
+
+	public static class StringCompartor implements Comparator<String> {
+
+		@Override
+		public int compare(String o1, String o2) {
+			String hour1 = o1.substring(0, 2);
+			String hour2 = o2.substring(0, 2);
+
+			if (!hour1.equals(hour2)) {
+				int hour1Value = Integer.parseInt(hour1);
+				int hour2Value = Integer.parseInt(hour2);
+
+				if (hour1Value == 0 && hour2Value == 23) {
+					return -1;
+				} else if (hour1Value == 23 && hour2Value == 0) {
+					return 1;
+				} else {
+					return hour2Value - hour1Value;
+				}
+			} else {
+				String first = o1.substring(3, 5);
+				String end = o2.substring(3, 5);
 
 				return Integer.parseInt(end) - Integer.parseInt(first);
 			}
