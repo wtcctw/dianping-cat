@@ -263,7 +263,7 @@ public class Handler implements PageHandler<Context> {
 			Date startDate = new Date(end - (minuteCounts - 1) * TimeHelper.ONE_MINUTE);
 			Date endDate = new Date(end);
 			StorageType type = payload.getType();
-			
+
 			List<Alert> alerts = m_alertService.query(startDate, endDate, type.getName());
 			Map<String, StorageAlertInfo> alertInfos = m_alertInfoBuilder.buildStorageAlertInfos(startDate, endDate,
 			      minuteCounts, type, alerts);
@@ -359,32 +359,28 @@ public class Handler implements PageHandler<Context> {
 		Map<String, StorageAlertInfo> results = new LinkedHashMap<String, StorageAlertInfo>();
 
 		for (Entry<String, StorageAlertInfo> entry : alertInfos.entrySet()) {
-			StorageAlertInfo result = sortByAlertLevelCount(entry.getValue());
+			StorageAlertInfo alertInfo = entry.getValue();
+			List<Entry<String, Storage>> entries = new ArrayList<Entry<String, Storage>>(alertInfo.getStorages()
+			      .entrySet());
+			Collections.sort(entries, new Comparator<Map.Entry<String, Storage>>() {
+				@Override
+				public int compare(Map.Entry<String, Storage> o1, Map.Entry<String, Storage> o2) {
+					int gap = o2.getValue().getLevel() - o1.getValue().getLevel();
 
+					return gap == 0 ? o2.getValue().getCount() - o1.getValue().getCount() : gap;
+				}
+			});
+
+			StorageAlertInfo result = m_alertInfoBuilder.makeAlertInfo(alertInfo.getId(), alertInfo.getStartTime());
+			Map<String, Storage> storages = result.getStorages();
+
+			for (Entry<String, Storage> storage : entries) {
+				storages.put(storage.getKey(), storage.getValue());
+			}
 			results.put(entry.getKey(), result);
 		}
 
 		return SortHelper.sortMap(results, new MinuteComparator());
-	}
-
-	private StorageAlertInfo sortByAlertLevelCount(StorageAlertInfo alertInfo) {
-		List<Entry<String, Storage>> entries = new ArrayList<Entry<String, Storage>>(alertInfo.getStorages().entrySet());
-		Collections.sort(entries, new Comparator<Map.Entry<String, Storage>>() {
-			@Override
-			public int compare(Map.Entry<String, Storage> o1, Map.Entry<String, Storage> o2) {
-				int gap = o2.getValue().getLevel() - o1.getValue().getLevel();
-
-				return gap == 0 ? o2.getValue().getCount() - o1.getValue().getCount() : gap;
-			}
-		});
-
-		StorageAlertInfo result = m_alertInfoBuilder.clone(alertInfo);
-		Map<String, Storage> storages = result.getStorages();
-
-		for (Entry<String, Storage> storage : entries) {
-			storages.put(storage.getKey(), storage.getValue());
-		}
-		return result;
 	}
 
 	public static class MinuteComparator implements Comparator<Map.Entry<String, StorageAlertInfo>> {
