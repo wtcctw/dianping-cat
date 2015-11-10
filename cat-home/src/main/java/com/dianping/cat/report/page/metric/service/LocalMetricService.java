@@ -18,7 +18,6 @@ import com.dianping.cat.mvc.ApiPayload;
 import com.dianping.cat.report.ReportBucket;
 import com.dianping.cat.report.ReportBucketManager;
 import com.dianping.cat.report.page.system.graph.SystemReportConvertor;
-import com.dianping.cat.report.page.web.graph.WebReportConvertor;
 import com.dianping.cat.report.service.LocalModelService;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
@@ -66,14 +65,7 @@ public class LocalMetricService extends LocalModelService<MetricReport> {
 		String metricType = payload.getMetricType();
 		String type = payload.getType();
 
-		if (Constants.METRIC_USER_MONITOR.equals(metricType)) {
-			String city = payload.getCity();
-			String channel = payload.getChannel();
-			WebReportConvertor convert = new WebReportConvertor(type, city, channel);
-
-			convert.visitMetricReport(report);
-			report = convert.getReport();
-		} else if (Constants.METRIC_SYSTEM_MONITOR.equals(metricType)) {
+		if (Constants.METRIC_SYSTEM_MONITOR.equals(metricType)) {
 			String ipAddrsStr = payload.getIpAddress();
 			Set<String> ipAddrs = null;
 

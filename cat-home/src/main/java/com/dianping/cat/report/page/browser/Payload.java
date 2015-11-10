@@ -74,6 +74,36 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		super(ReportPage.WEB);
 	}
 
+	public Date buildEndTime() {
+		if (StringUtils.isNotBlank(m_day) && StringUtils.isNotBlank(m_endTime)) {
+			try {
+				Date date = m_format.parse(m_day + " " + m_endTime);
+				return date;
+			} catch (ParseException e) {
+			}
+		}
+		return TimeHelper.getCurrentDay(1);
+	}
+
+	public int buildLevel() {
+		if (StringUtils.isEmpty(m_level) || ALL.equals(m_level)) {
+			return -1;
+		} else {
+			return Level.getCodeByName(m_level);
+		}
+	}
+
+	public Date buildStartTime() {
+		if (StringUtils.isNotBlank(m_day) && StringUtils.isNotBlank(m_startTime)) {
+			try {
+				Date date = m_format.parse(m_day + " " + m_startTime);
+				return date;
+			} catch (ParseException e) {
+			}
+		}
+		return TimeHelper.getCurrentHour();
+	}
+
 	private Date generateDate(String time, long start) {
 		Date date = null;
 		String[] times = time.split(":");
@@ -114,6 +144,14 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public String getApi2() {
 		return m_api2;
+	}
+
+	public String getDay() {
+		return m_day;
+	}
+
+	public String getEndTime() {
+		return m_endTime;
 	}
 
 	public AjaxDataField getGroupByField() {
@@ -163,6 +201,26 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return new Pair<Date, Date>(currentStart, compareStart);
 	}
 
+	public int getId() {
+		return m_id;
+	}
+
+	public String getLevel() {
+		return m_level;
+	}
+
+	public String getModule() {
+		if (StringUtils.isEmpty(m_module)) {
+			return null;
+		} else {
+			return m_module;
+		}
+	}
+
+	public String getMsg() {
+		return m_msg;
+	}
+
 	@Override
 	public ReportPage getPage() {
 		return m_page;
@@ -192,6 +250,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		}
 	}
 
+	public String getStartTime() {
+		return m_startTime;
+	}
+
 	public String getType() {
 		return m_type;
 	}
@@ -204,13 +266,41 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
 
+	public void setDay(String day) {
+		m_day = day;
+	}
+
+	public void setEndTime(String endTime) {
+		m_endTime = endTime;
+	}
+
 	public void setGroupByField(String groupByField) {
 		m_groupByField = AjaxDataField.getByName(groupByField, AjaxDataField.CODE);
+	}
+
+	public void setId(int id) {
+		m_id = id;
+	}
+
+	public void setLevel(String level) {
+		m_level = level;
+	}
+
+	public void setModule(String module) {
+		m_module = module;
+	}
+
+	public void setMsg(String msg) {
+		m_msg = msg;
 	}
 
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.BROWSER);
+	}
+
+	public void setStartTime(String startTime) {
+		m_startTime = startTime;
 	}
 
 	public void setType(String type) {
@@ -219,96 +309,6 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public void setUrl(String url) {
 		m_url = url;
-	}
-
-	public String getMsg() {
-		return m_msg;
-	}
-
-	public void setMsg(String msg) {
-		m_msg = msg;
-	}
-
-	public int getId() {
-		return m_id;
-	}
-
-	public void setId(int id) {
-		m_id = id;
-	}
-
-	public String getDay() {
-		return m_day;
-	}
-
-	public void setDay(String day) {
-		m_day = day;
-	}
-
-	public Date buildStartTime() {
-		if (StringUtils.isNotBlank(m_day) && StringUtils.isNotBlank(m_startTime)) {
-			try {
-				Date date = m_format.parse(m_day + " " + m_startTime);
-				return date;
-			} catch (ParseException e) {
-			}
-		}
-		return TimeHelper.getCurrentHour();
-	}
-
-	public String getStartTime() {
-		return m_startTime;
-	}
-
-	public void setStartTime(String startTime) {
-		m_startTime = startTime;
-	}
-
-	public Date buildEndTime() {
-		if (StringUtils.isNotBlank(m_day) && StringUtils.isNotBlank(m_endTime)) {
-			try {
-				Date date = m_format.parse(m_day + " " + m_endTime);
-				return date;
-			} catch (ParseException e) {
-			}
-		}
-		return TimeHelper.getCurrentDay(1);
-	}
-
-	public String getEndTime() {
-		return m_endTime;
-	}
-
-	public void setEndTime(String endTime) {
-		m_endTime = endTime;
-	}
-
-	public int buildLevel() {
-		if (StringUtils.isEmpty(m_level) || ALL.equals(m_level)) {
-			return -1;
-		} else {
-			return Level.getCodeByName(m_level);
-		}
-	}
-
-	public String getLevel() {
-		return m_level;
-	}
-
-	public void setLevel(String level) {
-		m_level = level;
-	}
-
-	public String getModule() {
-		if (StringUtils.isEmpty(m_module)) {
-			return null;
-		} else {
-			return m_module;
-		}
-	}
-
-	public void setModule(String module) {
-		m_module = module;
 	}
 
 	@Override

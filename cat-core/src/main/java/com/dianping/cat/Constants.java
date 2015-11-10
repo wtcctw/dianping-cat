@@ -63,8 +63,6 @@ public class Constants {
 
 	public static final String REPORT_STORAGE_ALERT_DATABASE = "storageDatabaseAlert";
 
-	public static final String REPORT_NOTIFY = "dailyNotify";
-
 	public static final String REPORT_JAR = "jar";
 
 	public static final String APP_DATABASE_PRUNER = "appDatabasePruner";

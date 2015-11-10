@@ -7,14 +7,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	PROJECT_DELETE("projectDelete"),
 
-	AGGREGATION_ALL("aggregations"),
-
-	AGGREGATION_UPDATE("aggregationUpdate"),
-
-	AGGREGATION_UPDATE_SUBMIT("aggregationUpdateSubmit"),
-
-	AGGREGATION_DELETE("aggregationDelete"),
-
 	URL_PATTERN_ALL("urlPatterns"),
 
 	URL_PATTERN_CONFIG_UPDATE("urlPatternConfigUpdate"),
@@ -206,8 +198,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 	STORAGE_GROUP_CONFIG_UPDATE("storageGroupConfigUpdate"),
 
 	APP_CONFIG_UPDATE("appConfigUpdate"),
-
-	APP_COMPARISON_CONFIG_UPDATE("appComparisonConfigUpdate"),
 
 	THIRD_PARTY_RULE_CONFIGS("thirdPartyRuleConfigs"),
 

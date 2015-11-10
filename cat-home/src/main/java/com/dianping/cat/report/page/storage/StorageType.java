@@ -14,11 +14,6 @@ public enum StorageType {
 
 	private List<String> m_defaultMethods;
 
-	private StorageType(String name, List<String> defaultMethods) {
-		m_name = name;
-		m_defaultMethods = defaultMethods;
-	}
-
 	public static StorageType getByName(String name, StorageType defaultStorage) {
 		for (StorageType action : StorageType.values()) {
 			if (action.getName().equals(name)) {
@@ -27,6 +22,11 @@ public enum StorageType {
 		}
 
 		return defaultStorage;
+	}
+
+	private StorageType(String name, List<String> defaultMethods) {
+		m_name = name;
+		m_defaultMethods = defaultMethods;
 	}
 
 	public List<String> getDefaultMethods() {

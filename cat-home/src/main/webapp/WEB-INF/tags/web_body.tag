@@ -36,6 +36,9 @@
 						<li id="jsRule"><a href="/cat/s/config?op=jsRuleList">
 								<i class="menu-icon fa fa-caret-right"></i>JS告警</a>
 								<b class="arrow"></b></li>
+						<li id="urlPatternConfigUpdate"><a href="/cat/s/config?op=urlPatternConfigUpdate" style="display:none">
+								<i class="menu-icon fa fa-caret-right"></i>Web全局配置</a>
+								<b class="arrow"></b></li>
 						<li id="urlPatterns"><a href="/cat/s/config?op=urlPatterns">
 								<i class="menu-icon fa fa-caret-right"></i>Web监控</a>
 								<b class="arrow"></b></li>

@@ -48,10 +48,6 @@ public class LineGraphBuilder extends BaseVisitor {
 		m_sysMinute = (System.currentTimeMillis()) / 1000 / 60 % 60;
 	}
 
-	private boolean isCurrentPeriod() {
-		return m_period == m_start.getTime();
-	}
-
 	private String appendStr(String... arg) {
 		int length = arg.length;
 		StringBuilder sb = new StringBuilder();
@@ -81,20 +77,6 @@ public class LineGraphBuilder extends BaseVisitor {
 		return result;
 	}
 
-	private Item generateItem() {
-		Item result = new Item();
-		long size = (int) m_sysMinute + 1;
-
-		if (!isCurrentPeriod()) {
-			size = SIZE;
-		}
-
-		for (int i = 0; i < size; i++) {
-			result.setValue(i, 0.0);
-		}
-		return result;
-	}
-
 	public Item findOrCreateItem(String type, String id) {
 		Map<String, Item> items = m_dependencies.get(type);
 
@@ -111,6 +93,24 @@ public class LineGraphBuilder extends BaseVisitor {
 		}
 
 		return result;
+	}
+
+	private Item generateItem() {
+		Item result = new Item();
+		long size = (int) m_sysMinute + 1;
+
+		if (!isCurrentPeriod()) {
+			size = SIZE;
+		}
+
+		for (int i = 0; i < size; i++) {
+			result.setValue(i, 0.0);
+		}
+		return result;
+	}
+
+	private boolean isCurrentPeriod() {
+		return m_period == m_start.getTime();
 	}
 
 	public Map<String, List<LineChart>> queryDependencyGraph() {
