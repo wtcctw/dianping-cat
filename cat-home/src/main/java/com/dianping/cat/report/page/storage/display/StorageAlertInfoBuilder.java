@@ -30,18 +30,6 @@ public class StorageAlertInfoBuilder {
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("HH:mm");
 
-	private Map<String, StorageAlertInfo> prepareBlankAlert(long start, long end, int minuteCounts, StorageType type) {
-		Map<String, StorageAlertInfo> results = new LinkedHashMap<String, StorageAlertInfo>();
-
-		for (long s = start; s <= end; s += TimeHelper.ONE_MINUTE) {
-			String title = m_sdf.format(new Date(s));
-			StorageAlertInfo blankAlertInfo = makeAlertInfo(type.getName(), new Date(start));
-
-			results.put(title, blankAlertInfo);
-		}
-		return results;
-	}
-
 	public int buildLevel(int level, int other) {
 		return level > other ? level : other;
 	}
@@ -101,6 +89,18 @@ public class StorageAlertInfoBuilder {
 		tg.incCount();
 		tg.setLevel(buildLevel(tg.getLevel(), level));
 		tg.getDetails().add(new Detail(alert.getContent()).setLevel(level));
+	}
+
+	private Map<String, StorageAlertInfo> prepareBlankAlert(long start, long end, int minuteCounts, StorageType type) {
+		Map<String, StorageAlertInfo> results = new LinkedHashMap<String, StorageAlertInfo>();
+
+		for (long s = start; s <= end; s += TimeHelper.ONE_MINUTE) {
+			String title = m_sdf.format(new Date(s));
+			StorageAlertInfo blankAlertInfo = makeAlertInfo(type.getName(), new Date(start));
+
+			results.put(title, blankAlertInfo);
+		}
+		return results;
 	}
 
 	private int queryLevel(String level) {

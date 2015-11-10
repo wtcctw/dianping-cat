@@ -55,33 +55,6 @@ import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
 
 public class Handler implements PageHandler<Context> {
-	public static class StringCompartor implements Comparator<String> {
-
-		@Override
-		public int compare(String o1, String o2) {
-			String hour1 = o1.substring(0, 2);
-			String hour2 = o2.substring(0, 2);
-
-			if (!hour1.equals(hour2)) {
-				int hour1Value = Integer.parseInt(hour1);
-				int hour2Value = Integer.parseInt(hour2);
-
-				if (hour1Value == 0 && hour2Value == 23) {
-					return -1;
-				} else if (hour1Value == 23 && hour2Value == 0) {
-					return 1;
-				} else {
-					return hour2Value - hour1Value;
-				}
-			} else {
-				String first = o1.substring(3, 5);
-				String end = o2.substring(3, 5);
-
-				return Integer.parseInt(end) - Integer.parseInt(first);
-			}
-		}
-	}
-
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -437,6 +410,33 @@ public class Handler implements PageHandler<Context> {
 			} else {
 				String first = key1.substring(3, 5);
 				String end = key2.substring(3, 5);
+
+				return Integer.parseInt(end) - Integer.parseInt(first);
+			}
+		}
+	}
+
+	public static class StringCompartor implements Comparator<String> {
+
+		@Override
+		public int compare(String o1, String o2) {
+			String hour1 = o1.substring(0, 2);
+			String hour2 = o2.substring(0, 2);
+
+			if (!hour1.equals(hour2)) {
+				int hour1Value = Integer.parseInt(hour1);
+				int hour2Value = Integer.parseInt(hour2);
+
+				if (hour1Value == 0 && hour2Value == 23) {
+					return -1;
+				} else if (hour1Value == 23 && hour2Value == 0) {
+					return 1;
+				} else {
+					return hour2Value - hour1Value;
+				}
+			} else {
+				String first = o1.substring(3, 5);
+				String end = o2.substring(3, 5);
 
 				return Integer.parseInt(end) - Integer.parseInt(first);
 			}

@@ -73,6 +73,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_queryName;
 	}
 
+	public String getRawDate() {
+		return m_rawDate;
+	}
+
 	public String getRemoteIp() {
 		return m_remoteIp;
 	}
@@ -87,6 +91,12 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public void setCallSort(String callSort) {
 		m_callSort = callSort;
+	}
+
+	public void setDate(String date) {
+		m_rawDate = date;
+
+		super.setDate(date);
 	}
 
 	public void setMethod(String method) {
@@ -119,16 +129,6 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		if (m_action == null) {
 			m_action = Action.HOURLY_PROJECT;
 		}
-	}
-
-	public String getRawDate() {
-		return m_rawDate;
-	}
-
-	public void setDate(String date) {
-		m_rawDate = date;
-
-		super.setDate(date);
 	}
 
 }

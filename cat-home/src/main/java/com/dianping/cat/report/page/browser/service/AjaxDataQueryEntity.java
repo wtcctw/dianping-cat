@@ -98,16 +98,16 @@ public class AjaxDataQueryEntity {
 		return m_id;
 	}
 
+	public int getNetwork() {
+		return m_network;
+	}
+
 	public int getOperator() {
 		return m_operator;
 	}
 
 	public int getStartMinuteOrder() {
 		return m_startMinuteOrder;
-	}
-
-	public int getNetwork() {
-		return m_network;
 	}
 
 	protected Date parseDate(String dateStr) throws Exception {
@@ -155,15 +155,15 @@ public class AjaxDataQueryEntity {
 		m_id = id;
 	}
 
+	public void setNetwork(int network) {
+		m_network = network;
+	}
+
 	public void setOperator(int operator) {
 		m_operator = operator;
 	}
 
 	public void setStartMinuteOrder(int startMinuteOrder) {
 		m_startMinuteOrder = startMinuteOrder;
-	}
-
-	public void setNetwork(int network) {
-		m_network = network;
 	}
 }

@@ -41,10 +41,6 @@ public class CacheReport {
 
 	private Set<String> m_methods = new LinkedHashSet<String>();
 
-	private String firstLetterUpper(String input) {
-		return input.substring(0, 1).toUpperCase() + input.substring(1);
-	}
-
 	public void addNewNameItem(TransactionName transactionName, EventName eventName) {
 		String arrays[] = transactionName.getId().split(":");
 		String categroy = arrays[0];
@@ -85,6 +81,10 @@ public class CacheReport {
 		}
 	}
 
+	private String firstLetterUpper(String input) {
+		return input.substring(0, 1).toUpperCase() + input.substring(1);
+	}
+
 	public String getDomain() {
 		return m_domain;
 	}
@@ -105,6 +105,10 @@ public class CacheReport {
 		return m_ips;
 	}
 
+	public Set<String> getMethods() {
+		return m_methods;
+	}
+
 	public List<CacheNameItem> getNameItems() {
 		List<CacheNameItem> result = new ArrayList<CacheNameItem>(m_nameItems.values());
 		Collections.sort(result, new CacheNameItemCompator(m_sortBy));
@@ -119,10 +123,6 @@ public class CacheReport {
 		List<CacheTypeItem> result = new ArrayList<CacheTypeItem>(m_typeItems.values());
 		Collections.sort(result, new CacheTypeItemCompator(m_sortBy));
 		return result;
-	}
-
-	public Set<String> getMethods() {
-		return m_methods;
 	}
 
 	public void setDomain(String domain) {
@@ -190,6 +190,10 @@ public class CacheReport {
 			return m_category;
 		}
 
+		public double getHited() {
+			return m_hited;
+		}
+
 		private Long getMethodCount(String field) {
 			Long value = m_methodCounts.get(field);
 
@@ -201,28 +205,24 @@ public class CacheReport {
 			return value;
 		}
 
-		private long incMethodCount(String method, Long value) {
-			Long source = getMethodCount(method);
-			long result = source + value;
-
-			m_methodCounts.put(method, result);
-			return result;
-		}
-
-		public double getHited() {
-			return m_hited;
+		public Map<String, Long> getMethodCounts() {
+			return m_methodCounts;
 		}
 
 		public long getMissed() {
 			return m_missed;
 		}
 
-		public Map<String, Long> getMethodCounts() {
-			return m_methodCounts;
-		}
-
 		public TransactionName getName() {
 			return m_name;
+		}
+
+		private long incMethodCount(String method, Long value) {
+			Long source = getMethodCount(method);
+			long result = source + value;
+
+			m_methodCounts.put(method, result);
+			return result;
 		}
 
 		public void setHited(double hited) {

@@ -23,33 +23,33 @@ public class ErrorMsg implements Comparable<ErrorMsg> {
 		}
 	}
 
-	public String getMsg() {
-		return m_msg;
-	}
-
-	public void setMsg(String msg) {
-		m_msg = msg;
+	@Override
+	public int compareTo(ErrorMsg o) {
+		return o.getCount() - this.m_count;
 	}
 
 	public int getCount() {
 		return m_count;
 	}
 
-	public void setCount(int count) {
-		m_count = count;
-	}
-
 	public List<Integer> getIds() {
 		return m_ids;
+	}
+
+	public String getMsg() {
+		return m_msg;
+	}
+
+	public void setCount(int count) {
+		m_count = count;
 	}
 
 	public void setIds(List<Integer> ids) {
 		m_ids = ids;
 	}
 
-	@Override
-	public int compareTo(ErrorMsg o) {
-		return o.getCount() - this.m_count;
+	public void setMsg(String msg) {
+		m_msg = msg;
 	}
 
 }

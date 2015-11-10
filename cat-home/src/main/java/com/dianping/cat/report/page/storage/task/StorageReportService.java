@@ -46,6 +46,20 @@ public class StorageReportService extends AbstractReportService<StorageReport> {
 		return report;
 	}
 
+	private Set<String> queryAllIds(Date start, Date end, String name, String reportId) {
+		Set<String> ids = new HashSet<String>();
+		String type = reportId.substring(reportId.lastIndexOf("-"));
+
+		for (String myId : queryAllDomainNames(start, end, name)) {
+			if (myId.endsWith(type)) {
+				String prefix = myId.substring(0, myId.lastIndexOf("-"));
+
+				ids.add(prefix);
+			}
+		}
+		return ids;
+	}
+
 	@Override
 	public StorageReport queryDailyReport(String id, Date start, Date end) {
 		StorageReportMerger merger = new StorageReportMerger(new StorageReport(id));
@@ -149,20 +163,6 @@ public class StorageReportService extends AbstractReportService<StorageReport> {
 
 		storageReport.getIds().addAll(ids);
 		return storageReport;
-	}
-
-	private Set<String> queryAllIds(Date start, Date end, String name, String reportId) {
-		Set<String> ids = new HashSet<String>();
-		String type = reportId.substring(reportId.lastIndexOf("-"));
-
-		for (String myId : queryAllDomainNames(start, end, name)) {
-			if (myId.endsWith(type)) {
-				String prefix = myId.substring(0, myId.lastIndexOf("-"));
-
-				ids.add(prefix);
-			}
-		}
-		return ids;
 	}
 
 	@Override
