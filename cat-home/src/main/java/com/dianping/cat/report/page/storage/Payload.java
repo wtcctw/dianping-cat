@@ -155,8 +155,8 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		m_sort = sort;
 	}
 
-	public void setType(StorageType type) {
-		m_type = type;
+	public void setType(String type) {
+		m_type = StorageType.getByName(type, StorageType.SQL);
 	}
 
 	@Override

@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum StorageType {
-	SQL("SQL", Arrays.asList("add", "get", "mGet", "remove")),
+	SQL("SQL", Arrays.asList("select", "delete", "insert", "update")),
 
-	CACHE("Cache", Arrays.asList("select", "delete", "insert", "update")),
+	CACHE("Cache", Arrays.asList("add", "get", "mGet", "remove")),
 
 	RPC("RPC", Arrays.asList("call"));
 
