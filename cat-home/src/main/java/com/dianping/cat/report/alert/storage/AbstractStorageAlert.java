@@ -31,7 +31,6 @@ import com.dianping.cat.report.alert.sender.AlertEntity;
 import com.dianping.cat.report.alert.sender.AlertManager;
 import com.dianping.cat.report.page.storage.StorageConstants;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
-import com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder;
 import com.dianping.cat.report.page.storage.transform.StorageMergeHelper;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
@@ -54,9 +53,6 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 	@Inject
 	protected StorageGroupConfigManager m_storageConfigManager;
-
-	@Inject
-	protected StorageAlertInfoBuilder m_alertBuilder;
 
 	protected Logger m_logger;
 
@@ -206,8 +202,6 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 			      .setLevel(alertResult.getAlertLevel());
 			entity.setMetric(param.toString()).setType(getName()).setGroup(param.getName());
 			m_alertManager.addAlert(entity);
-
-			m_alertBuilder.processAlertEntity(getName(), minute, entity, param);
 		}
 	}
 
@@ -218,9 +212,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 		if (currentReport != null) {
 			for (String ip : machines) {
-				if (m_storageConfigManager.shouldAlert(id, ip, getName())) {
-					processMachine(id, currentReport, ip);
-				}
+				processMachine(id, currentReport, ip);
 			}
 		}
 	}

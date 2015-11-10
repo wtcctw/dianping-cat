@@ -1,6 +1,11 @@
 package com.dianping.cat.report.alert.service;
 
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -10,7 +15,7 @@ import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.sender.AlertEntity;
 import com.dianping.cat.report.alert.sender.AlertMessageEntity;
 
-public class AlertEntityService {
+public class AlertService {
 
 	@Inject
 	private AlertDao m_alertDao;
@@ -28,7 +33,22 @@ public class AlertEntityService {
 		return alert;
 	}
 
-	public void storeAlert(AlertEntity alertEntity, AlertMessageEntity message) {
+	public List<Alert> query(Date start, Date end, String type) {
+		List<Alert> alerts = new LinkedList<Alert>();
+
+		try {
+			alerts = m_alertDao.queryAlertsByTimeCategory(start, end, type,
+			      com.dianping.cat.home.dal.report.AlertEntity.READSET_FULL);
+		} catch (DalNotFoundException e) {
+			// ignore
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+
+		return alerts;
+	}
+
+	public void insert(AlertEntity alertEntity, AlertMessageEntity message) {
 		if (alertEntity.getType().equals(AlertType.FrontEndException.getName())) {
 			return;
 		}
@@ -44,5 +64,4 @@ public class AlertEntityService {
 			Cat.logError(e);
 		}
 	}
-
 }

@@ -19,7 +19,6 @@ import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
-import com.dianping.cat.report.page.storage.StorageConstants;
 
 public abstract class StorageRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 
@@ -31,6 +30,8 @@ public abstract class StorageRuleConfigManager extends BaseRuleConfigManager imp
 	protected abstract String getConfigName();
 
 	public final static String EVERY_ONE = "*";
+
+	public static final String FIELD_SEPARATOR = ";";
 
 	@Override
 	public void initialize() throws InitializationException {
@@ -69,7 +70,7 @@ public abstract class StorageRuleConfigManager extends BaseRuleConfigManager imp
 
 		for (Entry<String, Rule> entry : rules.entrySet()) {
 			String ruleId = entry.getValue().getId();
-			String[] conditions = ruleId.split(StorageConstants.FIELD_SEPARATOR);
+			String[] conditions = ruleId.split(FIELD_SEPARATOR);
 
 			if (conditions.length >= 4) {
 				String name = conditions[0];

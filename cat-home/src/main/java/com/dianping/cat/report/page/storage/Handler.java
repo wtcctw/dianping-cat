@@ -2,6 +2,8 @@ package com.dianping.cat.report.page.storage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -29,6 +31,7 @@ import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.home.dal.report.Alert;
 import com.dianping.cat.home.dal.report.Alteration;
 import com.dianping.cat.home.dal.report.AlterationDao;
 import com.dianping.cat.home.dal.report.AlterationEntity;
@@ -36,11 +39,13 @@ import com.dianping.cat.home.storage.alert.entity.Storage;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.alert.service.AlertService;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager.Department;
+import com.dianping.cat.report.page.storage.display.StorageAlertInfoBuilder;
+import com.dianping.cat.report.page.storage.display.StorageSorter;
 import com.dianping.cat.report.page.storage.task.StorageReportService;
-import com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager;
 import com.dianping.cat.report.page.storage.transform.HourlyLineChartVisitor;
 import com.dianping.cat.report.page.storage.transform.PieChartVisitor;
 import com.dianping.cat.report.page.storage.transform.StorageMergeHelper;
@@ -66,9 +71,6 @@ public class Handler implements PageHandler<Context> {
 	private StorageMergeHelper m_mergeHelper;
 
 	@Inject
-	private StorageAlertInfoManager m_alertInfoManager;
-
-	@Inject
 	private StorageGroupConfigManager m_storageGroupConfigManager;
 
 	@Inject
@@ -76,6 +78,12 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private AlterationDao m_alterationDao;
+
+	@Inject
+	private AlertService m_alertService;
+
+	@Inject
+	private StorageAlertInfoBuilder m_alertInfoBuilder;
 
 	private Map<String, Map<String, List<String>>> buildAlertLinks(Map<String, StorageAlertInfo> alertInfos, String type) {
 		Map<String, Map<String, List<String>>> links = new LinkedHashMap<String, Map<String, List<String>>>();
@@ -112,16 +120,12 @@ public class Handler implements PageHandler<Context> {
 		return links;
 	}
 
-	private List<Alteration> buildAlterations(Payload payload, Model model) {
-		int minuteCounts = payload.getMinuteCounts();
-		int minute = model.getMinute();
-		long end = payload.getDate() + (minute + 1) * TimeHelper.ONE_MINUTE - TimeHelper.ONE_SECOND;
-		long start = payload.getDate() + (minute + 1 - minuteCounts) * TimeHelper.ONE_MINUTE;
+	private List<Alteration> buildAlterations(long start, long end, StorageType type) {
 		List<Alteration> results = new LinkedList<Alteration>();
 
 		try {
 			List<Alteration> alterations = m_alterationDao.findByTypeDruation(new Date(start), new Date(end),
-			      payload.getType(), AlterationEntity.READSET_FULL);
+			      type.getName(), AlterationEntity.READSET_FULL);
 
 			for (Alteration alteration : alterations) {
 				results.add(alteration);
@@ -194,13 +198,13 @@ public class Handler implements PageHandler<Context> {
 
 	private void buildDepartments(Payload payload, Model model, StorageReport storageReport) {
 		Map<String, Department> departments = m_storageGroupConfigManager.queryStorageDepartments(
-		      SortHelper.sortDomain(storageReport.getIds()), payload.getType());
-		
+		      SortHelper.sortDomain(storageReport.getIds()), payload.getType().getName());
+
 		model.setDepartments(departments);
 	}
 
 	private String buildReportId(Payload payload) {
-		return payload.getId() + "-" + payload.getType();
+		return payload.getId() + "-" + payload.getType().getName();
 	}
 
 	@Override
@@ -253,13 +257,21 @@ public class Handler implements PageHandler<Context> {
 			buildDepartments(payload, model, storageReport);
 			break;
 		case DASHBOARD:
-			Map<String, StorageAlertInfo> alertInfos = m_alertInfoManager.queryAlertInfos(payload, model);
+			int minuteCounts = payload.getMinuteCounts();
+			long end = payload.getDate() + model.getMinute() * TimeHelper.ONE_MINUTE;
+			long start = end - (minuteCounts - 1) * TimeHelper.ONE_MINUTE;
+			Date startDate = new Date(start);
+			Date endDate = new Date(end);
+			List<Alert> alerts = m_alertService.query(startDate, endDate, payload.getType().getName());
+			Map<String, StorageAlertInfo> alertInfos = m_alertInfoBuilder.buildStorageAlertInfos(startDate, endDate,
+			      minuteCounts, payload.getType(), alerts);
+			alertInfos = sortStorage(alertInfos);
 
-			model.setLinks(buildAlertLinks(alertInfos, payload.getType()));
+			model.setLinks(buildAlertLinks(alertInfos, payload.getType().getName()));
 			model.setAlertInfos(alertInfos);
 			model.setReportStart(new Date(payload.getDate()));
 			model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
-			model.setAlterations(buildAlterations(payload, model));
+			model.setAlterations(buildAlterations(start, end, payload.getType()));
 			break;
 		}
 
@@ -299,14 +311,7 @@ public class Handler implements PageHandler<Context> {
 			model.setMinutes(minutes);
 		} else {
 			if (payload.getOperations() == null) {
-				String type = payload.getType();
-				List<String> defaultMethods = new ArrayList<String>();
-
-				if (StorageConstants.CACHE_TYPE.equals(type)) {
-					defaultMethods = StorageConstants.CACHE_METHODS;
-				} else if (StorageConstants.SQL_TYPE.equals(type)) {
-					defaultMethods = StorageConstants.SQL_METHODS;
-				}
+				List<String> defaultMethods = payload.getType().getDefaultMethods();
 
 				payload.setOperations(buildOperationStr(defaultMethods));
 			}
@@ -347,4 +352,97 @@ public class Handler implements PageHandler<Context> {
 			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
 		}
 	}
+
+	public Map<String, StorageAlertInfo> sortStorage(Map<String, StorageAlertInfo> alertInfos) {
+		Map<String, StorageAlertInfo> results = new LinkedHashMap<String, StorageAlertInfo>();
+
+		for (Entry<String, StorageAlertInfo> entry : alertInfos.entrySet()) {
+			StorageAlertInfo result = sortAlertInfo(entry.getValue());
+
+			results.put(entry.getKey(), result);
+		}
+
+		return sortTimeOrder(results);
+	}
+
+	private Map<String, StorageAlertInfo> sortTimeOrder(Map<String, StorageAlertInfo> tmp) {
+		Map<String, StorageAlertInfo> results = SortHelper.sortMap(tmp,
+		      new Comparator<Map.Entry<String, StorageAlertInfo>>() {
+			      @Override
+			      public int compare(Map.Entry<String, StorageAlertInfo> o1, Map.Entry<String, StorageAlertInfo> o2) {
+				      String key1 = o1.getKey();
+				      String key2 = o2.getKey();
+				      String hour1 = key1.substring(0, 2);
+				      String hour2 = key2.substring(0, 2);
+
+				      if (!hour1.equals(hour2)) {
+					      int hour1Value = Integer.parseInt(hour1);
+					      int hour2Value = Integer.parseInt(hour2);
+
+					      if (hour1Value == 0 && hour2Value == 23) {
+						      return -1;
+					      } else if (hour1Value == 23 && hour2Value == 0) {
+						      return 1;
+					      } else {
+						      return hour2Value - hour1Value;
+					      }
+				      } else {
+					      String first = key1.substring(3, 5);
+					      String end = key2.substring(3, 5);
+
+					      return Integer.parseInt(end) - Integer.parseInt(first);
+				      }
+			      }
+		      });
+
+		return results;
+	}
+
+	private StorageAlertInfo sortAlertInfo(StorageAlertInfo alertInfo) {
+		List<Entry<String, Storage>> entries = new ArrayList<Entry<String, Storage>>(alertInfo.getStorages().entrySet());
+		Collections.sort(entries, new Comparator<Map.Entry<String, Storage>>() {
+			@Override
+			public int compare(Map.Entry<String, Storage> o1, Map.Entry<String, Storage> o2) {
+				int gap = o2.getValue().getLevel() - o1.getValue().getLevel();
+
+				return gap == 0 ? o2.getValue().getCount() - o1.getValue().getCount() : gap;
+			}
+		});
+
+		StorageAlertInfo result = m_alertInfoBuilder.clone(alertInfo);
+		Map<String, Storage> storages = result.getStorages();
+
+		for (Entry<String, Storage> storage : entries) {
+			storages.put(storage.getKey(), storage.getValue());
+		}
+		return result;
+	}
+
+	public static class StringCompartor implements Comparator<String> {
+
+		@Override
+		public int compare(String o1, String o2) {
+			String hour1 = o1.substring(0, 2);
+			String hour2 = o2.substring(0, 2);
+
+			if (!hour1.equals(hour2)) {
+				int hour1Value = Integer.parseInt(hour1);
+				int hour2Value = Integer.parseInt(hour2);
+
+				if (hour1Value == 0 && hour2Value == 23) {
+					return -1;
+				} else if (hour1Value == 23 && hour2Value == 0) {
+					return 1;
+				} else {
+					return hour2Value - hour1Value;
+				}
+			} else {
+				String first = o1.substring(3, 5);
+				String end = o2.substring(3, 5);
+
+				return Integer.parseInt(end) - Integer.parseInt(first);
+			}
+		}
+	}
+
 }

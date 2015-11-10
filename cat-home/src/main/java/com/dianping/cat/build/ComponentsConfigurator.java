@@ -34,7 +34,6 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.DailyReportContentDao;
 import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.helper.JsonBuilder;
-import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.UserDefineRuleDao;
 import com.dianping.cat.mvc.PayloadNormalizer;
@@ -49,6 +48,7 @@ import com.dianping.cat.report.alert.heartbeat.HeartbeatRuleConfigManager;
 import com.dianping.cat.report.alert.network.NetworkRuleConfigManager;
 import com.dianping.cat.report.alert.sender.config.AlertConfigManager;
 import com.dianping.cat.report.alert.sender.config.SenderConfigManager;
+import com.dianping.cat.report.alert.service.AlertService;
 import com.dianping.cat.report.alert.storage.StorageCacheRuleConfigManager;
 import com.dianping.cat.report.alert.storage.StorageRPCRuleConfigManager;
 import com.dianping.cat.report.alert.storage.StorageSQLRuleConfigManager;
@@ -81,9 +81,7 @@ import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
 import com.dianping.cat.report.page.state.StateGraphBuilder;
 import com.dianping.cat.report.page.state.service.StateReportService;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
-import com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder;
-import com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager;
-import com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer;
+import com.dianping.cat.report.page.storage.display.StorageAlertInfoBuilder;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
@@ -127,10 +125,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ProjectUpdateTask.class).req(ProjectService.class, HostinfoService.class)//
 		      .req(TransactionReportService.class));
 
-		all.add(C(StorageAlertInfoRTContainer.class));
-		all.add(C(StorageAlertInfoBuilder.class).req(StorageAlertInfoRTContainer.class));
-		all.add(C(StorageAlertInfoManager.class).req(ServerConfigManager.class, AlertDao.class)
-		      .req(StorageAlertInfoRTContainer.class).req(StorageAlertInfoBuilder.class));
+		all.add(C(StorageAlertInfoBuilder.class).req(AlertService.class));
 
 		return all;
 	}

@@ -97,7 +97,7 @@ import com.dianping.cat.report.alert.sender.spliter.SmsSpliter;
 import com.dianping.cat.report.alert.sender.spliter.Spliter;
 import com.dianping.cat.report.alert.sender.spliter.SpliterManager;
 import com.dianping.cat.report.alert.sender.spliter.WeixinSpliter;
-import com.dianping.cat.report.alert.service.AlertEntityService;
+import com.dianping.cat.report.alert.service.AlertService;
 import com.dianping.cat.report.alert.storage.StorageCacheAlert;
 import com.dianping.cat.report.alert.storage.StorageCacheRuleConfigManager;
 import com.dianping.cat.report.alert.storage.StorageRPCAlert;
@@ -127,7 +127,6 @@ import com.dianping.cat.report.page.event.transform.EventMergeHelper;
 import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager;
 import com.dianping.cat.report.page.metric.service.BaselineService;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
-import com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder;
 import com.dianping.cat.report.page.storage.transform.StorageMergeHelper;
 import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
 import com.dianping.cat.report.page.web.service.WebApiService;
@@ -216,7 +215,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(SenderManager.class).req(ServerConfigManager.class));
 
 		all.add(C(AlertManager.class).req(AlertPolicyManager.class, DecoratorManager.class, ContactorManager.class,
-		      AlertEntityService.class, SpliterManager.class, SenderManager.class, ServerConfigManager.class));
+		      AlertService.class, SpliterManager.class, SenderManager.class, ServerConfigManager.class));
 
 		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class, AlertInfo.class)
 		      .req(MetricReportGroupService.class, BusinessRuleConfigManager.class, DataChecker.class,
@@ -252,15 +251,15 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(StorageSQLAlert.class).req(StorageMergeHelper.class, DataChecker.class, AlertManager.class)
 		      .req(ModelService.class, StorageAnalyzer.ID)
-		      .req(StorageSQLRuleConfigManager.class, StorageGroupConfigManager.class, StorageAlertInfoBuilder.class));
+		      .req(StorageSQLRuleConfigManager.class, StorageGroupConfigManager.class));
 
 		all.add(C(StorageCacheAlert.class).req(StorageMergeHelper.class, DataChecker.class, AlertManager.class)
 		      .req(ModelService.class, StorageAnalyzer.ID)
-		      .req(StorageCacheRuleConfigManager.class, StorageGroupConfigManager.class, StorageAlertInfoBuilder.class));
+		      .req(StorageCacheRuleConfigManager.class, StorageGroupConfigManager.class));
 
 		all.add(C(StorageRPCAlert.class).req(StorageMergeHelper.class, DataChecker.class, AlertManager.class)
 		      .req(ModelService.class, StorageAnalyzer.ID)
-		      .req(StorageRPCRuleConfigManager.class, StorageGroupConfigManager.class, StorageAlertInfoBuilder.class));
+		      .req(StorageRPCRuleConfigManager.class, StorageGroupConfigManager.class));
 
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionRuleConfigManager.class, AggregationConfigManager.class));
 
@@ -279,7 +278,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ThirdPartyAlertBuilder.class).req(HttpConnector.class, ThirdPartyAlert.class,
 		      ThirdPartyConfigManager.class));
 
-		all.add(C(AlertEntityService.class).req(AlertDao.class));
+		all.add(C(AlertService.class).req(AlertDao.class));
 
 		all.add(C(AlertInfoBuilder.class).req(AlertDao.class, TopologyGraphManager.class));
 

@@ -104,33 +104,11 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</role>
-			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
-			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</implementation>
+			<role>com.dianping.cat.report.page.storage.display.StorageAlertInfoBuilder</role>
+			<implementation>com.dianping.cat.report.page.storage.display.StorageAlertInfoBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</role>
-			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.AlertDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
+					<role>com.dianping.cat.report.alert.service.AlertService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3035,7 +3013,7 @@
 					<role>com.dianping.cat.report.alert.sender.receiver.ContactorManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.service.AlertEntityService</role>
+					<role>com.dianping.cat.report.alert.service.AlertService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.sender.spliter.SpliterManager</role>
@@ -3299,9 +3277,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3327,9 +3302,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3354,9 +3326,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3454,8 +3423,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.service.AlertEntityService</role>
-			<implementation>com.dianping.cat.report.alert.service.AlertEntityService</implementation>
+			<role>com.dianping.cat.report.alert.service.AlertService</role>
+			<implementation>com.dianping.cat.report.alert.service.AlertService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AlertDao</role>
@@ -5666,9 +5635,6 @@
 					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
 				</requirement>
 				<requirement>
@@ -5676,6 +5642,12 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AlterationDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.service.AlertService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.storage.display.StorageAlertInfoBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5723,34 +5695,6 @@
 			<implementation>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</role>
-			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.AlertDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
-			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</role>
-			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
 			<implementation>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</implementation>
 			<requirements>
@@ -5759,6 +5703,24 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.service.AlertService</role>
+			<implementation>com.dianping.cat.report.alert.service.AlertService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlertDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.storage.display.StorageAlertInfoBuilder</role>
+			<implementation>com.dianping.cat.report.page.storage.display.StorageAlertInfoBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.alert.service.AlertService</role>
 				</requirement>
 			</requirements>
 		</component>
