@@ -1549,35 +1549,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.notify.ReportRender</role>
-			<implementation>com.dianping.cat.report.task.notify.ReportRenderImpl</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.notify.render.AppDataComparisonRender</role>
-			<implementation>com.dianping.cat.report.task.notify.render.AppDataComparisonRender</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.notify.AppDataComparisonNotifier</role>
-			<implementation>com.dianping.cat.report.task.notify.AppDataComparisonNotifier</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.app.service.AppDataService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.notify.render.AppDataComparisonRender</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.build.AppDatabaseConfigurator</role>
 			<implementation>com.dianping.cat.build.AppDatabaseConfigurator</implementation>
 			<requirements>
@@ -1586,37 +1557,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.app.AppSpeedDataDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
-			<role-hint>dailyNotify</role-hint>
-			<implementation>com.dianping.cat.report.task.notify.NotifyTaskBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.task.notify.ReportRender</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.event.service.EventReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.problem.service.ProblemReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.notify.AppDataComparisonNotifier</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6383,9 +6323,6 @@
 					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.event.service.EventReportService</role>
 				</requirement>
 				<requirement>
@@ -6396,18 +6333,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
-			<implementation>com.dianping.cat.config.app.AppComparisonConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>

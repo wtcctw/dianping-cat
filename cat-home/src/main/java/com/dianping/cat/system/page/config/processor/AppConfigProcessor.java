@@ -16,7 +16,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatConfigManager;
@@ -46,9 +45,6 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 
 	@Inject
 	private AppSpeedConfigManager m_appSpeedConfigManager;
-
-	@Inject
-	private AppComparisonConfigManager m_appComparisonConfigManager;
 
 	@Inject
 	private EventReportService m_eventReportService;
@@ -341,13 +337,6 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			buildAppConfigInfo(m_appConfigManager, model);
 			model.setOpState(deleteRule(m_appRuleConfigManager, payload.getRuleId()));
 			model.setRules(m_appRuleConfigManager.getMonitorRules().getRules().values());
-			break;
-		case APP_COMPARISON_CONFIG_UPDATE:
-			String appComparisonConfig = payload.getContent();
-			if (!StringUtils.isEmpty(appComparisonConfig)) {
-				model.setOpState(m_appComparisonConfigManager.insert(appComparisonConfig));
-			}
-			model.setContent(m_configHtmlParser.parse(m_appComparisonConfigManager.getConfig().toString()));
 			break;
 		case APP_RULE_BATCH_UPDATE:
 			appRuleBatchUpdate(payload, model);

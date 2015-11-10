@@ -16,7 +16,6 @@ import com.dianping.cat.analysis.MessageConsumer;
 import com.dianping.cat.analysis.MessageHandler;
 import com.dianping.cat.analysis.RealtimeConsumer;
 import com.dianping.cat.analysis.TcpSocketReceiver;
-import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatConfigManager;
@@ -90,8 +89,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(WebConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(AppSpeedConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-
-		all.add(C(AppComparisonConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(UrlPatternHandler.class, DefaultUrlPatternHandler.class));
 

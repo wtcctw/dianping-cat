@@ -8,7 +8,6 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppSpeedDataDao;
-import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.server.ServerConfigManager;
@@ -30,8 +29,6 @@ import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.OverloadDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
-import com.dianping.cat.report.alert.sender.sender.SenderManager;
-import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.app.service.AppReportService;
 import com.dianping.cat.report.page.app.task.AppDatabasePruner;
 import com.dianping.cat.report.page.app.task.AppReportBuilder;
@@ -100,11 +97,6 @@ import com.dianping.cat.report.task.cached.CachedReportBuilder;
 import com.dianping.cat.report.task.cached.CachedReportTask;
 import com.dianping.cat.report.task.cmdb.CmdbInfoReloadBuilder;
 import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
-import com.dianping.cat.report.task.notify.AppDataComparisonNotifier;
-import com.dianping.cat.report.task.notify.NotifyTaskBuilder;
-import com.dianping.cat.report.task.notify.ReportRender;
-import com.dianping.cat.report.task.notify.ReportRenderImpl;
-import com.dianping.cat.report.task.notify.render.AppDataComparisonRender;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.page.router.config.RouterConfigHandler;
@@ -216,20 +208,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(CapacityUpdater.class, WeeklyCapacityUpdater.ID, "m_weeklyUpdater")
 		      .req(CapacityUpdater.class, MonthlyCapacityUpdater.ID, "m_monthlyUpdater"));
 
-		all.add(C(ReportRender.class, ReportRenderImpl.class));
-
-		all.add(C(AppDataComparisonRender.class));
-
-		all.add(C(AppDataComparisonNotifier.class).req(AppDataService.class)
-		      .req(AppComparisonConfigManager.class, AppConfigManager.class)
-		      .req(SenderManager.class, AppDataComparisonRender.class));
-
 		all.add(C(AppDatabaseConfigurator.class).req(AppCommandDataDao.class, AppSpeedDataDao.class));
-
-		all.add(C(TaskBuilder.class, NotifyTaskBuilder.ID, NotifyTaskBuilder.class)
-		      .req(ReportRender.class, SenderManager.class).req(ProjectService.class)
-		      .req(TransactionReportService.class, EventReportService.class, ProblemReportService.class)//
-		      .req(AppDataComparisonNotifier.class, ServerFilterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, AppDatabasePruner.ID, AppDatabasePruner.class).req(AppCommandDataDao.class,
 		      AppSpeedDataDao.class, AppSpeedConfigManager.class, AppConfigManager.class));

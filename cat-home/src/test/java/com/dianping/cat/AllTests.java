@@ -45,7 +45,6 @@ import com.dianping.cat.report.task.transaction.DailyTransactionReportGraphTest;
 import com.dianping.cat.report.task.transaction.HistoryTransactionMergerTest;
 import com.dianping.cat.report.task.transaction.TransactionDailyGraphMergerTest;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreatorTest;
-import com.dianping.cat.system.notify.RenderTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -95,9 +94,6 @@ EventDailyGraphMergerTest.class,
 TransactionDailyGraphMergerTest.class,
 
 ProblemDailyGraphMergerTest.class,
-
-/* alarm .render */
-RenderTest.class,
 
 StateReportMergerTest.class,
 
