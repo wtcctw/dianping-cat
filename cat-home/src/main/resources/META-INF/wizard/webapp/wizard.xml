@@ -80,6 +80,9 @@
          <page name="browser" title="Browser" path="browser" template="default">
             <description>Browser</description>
          </page>
+         <page name="eslog" title="Eslog" path="eslog" template="default">
+            <description>Eslog</description>
+         </page>
       </module>
       <module name="system" path="s" default="false">
          <page name="login" title="Login" path="login" standalone="false">

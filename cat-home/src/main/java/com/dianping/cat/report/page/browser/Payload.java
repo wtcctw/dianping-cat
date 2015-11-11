@@ -71,7 +71,7 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private static final String ALL = "ALL";
 
 	public Payload() {
-		super(ReportPage.WEB);
+		super(ReportPage.BROWSER);
 	}
 
 	public Date buildEndTime() {

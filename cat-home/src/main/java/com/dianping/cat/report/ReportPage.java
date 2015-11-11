@@ -6,8 +6,6 @@ import org.unidal.web.mvc.annotation.ModuleMeta;
 public enum ReportPage implements Page {
 
    HOME("home", "home", "Home", "Home Page", true),
-   
-   WEBHOME("webhome", "webhome", "WebHome", "Web Home Page", true),
 
    PROBLEM("problem", "p", "Problem", "Problem Discovered", true),
 
@@ -43,11 +41,7 @@ public enum ReportPage implements Page {
 
    NETWORK("network", "network", "Network", "Network", false),
 
-   WEB("web", "web", "Web", "Web", true),
-
    SYSTEM("system", "system", "System", "System", false),
-
-   CDN("cdn", "cdn", "Cdn", "Cdn", false),
 
    APP("app", "app", "App", "App", true),
 
@@ -59,11 +53,11 @@ public enum ReportPage implements Page {
 
    STORAGE("storage", "storage", "Storage", "Storage", true),
 
-   ACTIVITY("activity", "activity", "Activity", "Activity", true),
-
    TOP("top", "top", "Top", "Top", true),
-   
-   BROWSER("browser", "browser", "Browser", "Browser", true);
+
+   BROWSER("browser", "browser", "Browser", "Browser", true),
+
+   ESLOG("eslog", "eslog", "Eslog", "Eslog", true);
 
    private String m_name;
 
