@@ -11,9 +11,16 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@FieldMeta("op")
 	private Action m_action;
 
-	private ReportPage m_page;
+	@FieldMeta("timeRange")
+	private int m_timeRange = 24;
 
-	private String m_config;
+	@FieldMeta("screen")
+	private String m_screen;
+
+	@FieldMeta("content")
+	private String m_content;
+
+	private ReportPage m_page;
 
 	public Payload() {
 		super(ReportPage.SERVER);
@@ -24,8 +31,8 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_action;
 	}
 
-	public String getConfig() {
-		return m_config;
+	public String getContent() {
+		return m_content;
 	}
 
 	@Override
@@ -33,17 +40,33 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_page;
 	}
 
+	public String getScreen() {
+		return m_screen;
+	}
+
+	public int getTimeRange() {
+		return m_timeRange;
+	}
+
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
 
-	public void setConfig(String config) {
-		m_config = config;
+	public void setContent(String content) {
+		m_content = content;
 	}
 
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.SERVER);
+	}
+
+	public void setScreen(String screen) {
+		m_screen = screen;
+	}
+
+	public void setTimeRange(int timeRange) {
+		m_timeRange = timeRange;
 	}
 
 	@Override

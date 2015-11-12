@@ -3,7 +3,11 @@ package com.dianping.cat.report.page.server;
 public enum JspFile {
 	VIEW("/jsp/report/server/server.jsp"),
 
+	SCREEN("/jsp/report/server/screen.jsp"),
+
 	CONFIG("/jsp/report/server/config.jsp"),
+
+	AGGREGATE("/jsp/report/server/aggregate.jsp"),
 
 	;
 

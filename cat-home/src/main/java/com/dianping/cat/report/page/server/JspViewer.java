@@ -13,6 +13,10 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.VIEW.getPath();
 		case CONFIG_UPDATE:
 			return JspFile.CONFIG.getPath();
+		case SCREEN:
+			return JspFile.SCREEN.getPath();
+		case AGGREGATE:
+			return JspFile.AGGREGATE.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

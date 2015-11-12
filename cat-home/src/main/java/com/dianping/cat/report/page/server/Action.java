@@ -3,6 +3,8 @@ package com.dianping.cat.report.page.server;
 public enum Action implements org.unidal.web.mvc.Action {
 	VIEW("view"),
 
+	AGGREGATE("aggregate"),
+
 	SCREEN("screen"),
 
 	CONFIG_UPDATE("configUpdate");

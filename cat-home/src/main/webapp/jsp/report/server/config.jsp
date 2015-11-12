@@ -6,21 +6,24 @@
 <jsp:useBean id="ctx" type="com.dianping.cat.report.page.server.Context" scope="request"/>
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.server.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.server.Model" scope="request"/>
+
 <a:serverBody>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['editor.js']}" target="head-js" />
 	<script src='${model.webapp}/assets/js/editor/ace.js'></script>
 
-	<form name="configUpdate" id="form" method="post"
-		action="${model.pageUri}?op=configUpdate">
-		<table class="table table-striped table-condensed  table-hover">
-			<tr><td>
-			<input id="config" name="config" value="" type="hidden"/>
-			<div id="editor" class="editor">${model.config}</div>
-			</td></tr>
+	<form name="configUpdate" id="form" method="post" action="${model.pageUri}?op=configUpdate">
+		<table class="table table-striped table-condensed table-hover">
+			<tr>
+				<td>
+					<input id="content" name="content" value="" type="hidden"/>
+					<div id="editor" class="editor">${model.config}</div>
+				</td>
+			</tr>
 			<tr>
 				<td  style="text-align:center"><input class='btn btn-primary' id="addOrUpdateEdgeSubmit"
-					type="submit" name="submit" value="提交" /></td>
+					type="submit" name="submit" value="提交" />
+				</td>
 			</tr>
 		</table>
 	</form>

@@ -1,11 +1,12 @@
 package com.dianping.cat.influxdb;
 
 import org.junit.Test;
+import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.influxdb.dto.Query;
 import com.dianping.cat.influxdb.dto.QueryResult;
 
-public class InfluxdbDemo {
+public class InfluxdbDemo extends ComponentTestCase {
 
 	@Test
 	public void test() {

@@ -3,20 +3,8 @@ package com.dianping.cat.influxdb.impl;
 import java.util.EnumSet;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Utils for time related methods.
- *
- * @author stefan.majer [at] gmail.com
- *
- */
 public enum TimeUtil {
 	;
-	/**
-	 * Convert from a TimeUnit to a influxDB timeunit String.
-	 *
-	 * @param t
-	 * @return the String representation.
-	 */
 	public static String toTimePrecision(final TimeUnit t) {
 		switch (t) {
 		case HOURS:
@@ -32,13 +20,8 @@ public enum TimeUtil {
 		case NANOSECONDS:
 			return "n";
 		default:
-			EnumSet<TimeUnit> allowedTimeunits = EnumSet.of(
-					TimeUnit.HOURS,
-					TimeUnit.MINUTES,
-					TimeUnit.SECONDS,
-					TimeUnit.MILLISECONDS,
-					TimeUnit.MICROSECONDS,
-					TimeUnit.NANOSECONDS);
+			EnumSet<TimeUnit> allowedTimeunits = EnumSet.of(TimeUnit.HOURS, TimeUnit.MINUTES, TimeUnit.SECONDS,
+			      TimeUnit.MILLISECONDS, TimeUnit.MICROSECONDS, TimeUnit.NANOSECONDS);
 			throw new IllegalArgumentException("time precision must be one of:" + allowedTimeunits);
 		}
 	}

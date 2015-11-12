@@ -12,6 +12,7 @@ import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 
 class InfluxDBErrorHandler implements ErrorHandler {
+
 	@Override
 	public Throwable handleError(final RetrofitError cause) {
 		Response r = cause.getResponse();

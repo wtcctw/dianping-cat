@@ -11,6 +11,54 @@
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	
-	hello
+	<table>
+			<tr>
+				<th class="left">
+				<div style="float:left;">
+					&nbsp;开始
+					<input type="text" id="startTime" style="width:150px;"/>
+						结束
+					<input type="text" id="endTime" style="width:150px;"/></div>
+				</th>
+			</tr>
+		</table>
+	
+	<script type="text/javascript">
+			
+	$(document).ready(
+		function() {
+			$('#startTime').datetimepicker({
+				format:'Y-m-d H:i',
+				step:30,
+				maxDate:0
+			});
+			$('#endTime').datetimepicker({
+				format:'Y-m-d H:i',
+				step:30,
+				maxDate:0
+			});
+			
+			$('#startTime').val("${w:format(model.startTime,'yyyy-MM-dd HH:mm')}");
+			$('#endTime').val("${w:format(model.endTime,'yyyy-MM-dd HH:mm')}");
+			$('#domain').val('${payload.domain}');
+			
+			$('#serverChart').addClass('active open');
+			$('#serverGraph').addClass('active');
+			
+			$.widget( "custom.catcomplete", $.ui.autocomplete, {
+				_renderMenu: function( ul, items ) {
+					var that = this,
+					currentCategory = "";
+					$.each( items, function( index, item ) {
+						if ( item.category != currentCategory ) {
+							ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+							currentCategory = item.category;
+						}
+						that._renderItemData( ul, item );
+					});
+				}
+			});
+		});		
+	</script>
 	
 </a:serverBody>

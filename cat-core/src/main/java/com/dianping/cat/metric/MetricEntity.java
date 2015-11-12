@@ -1,11 +1,13 @@
-package com.dianping.cat.influxdb.entity;
+package com.dianping.cat.metric;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class InsertEntity {
+public class MetricEntity {
 
 	public static final String END_POINT = "endPoint";
+
+	private String m_category;
 
 	private String m_measure;
 
@@ -17,7 +19,8 @@ public class InsertEntity {
 
 	private Map<String, Object> m_fields = new HashMap<String, Object>();
 
-	public InsertEntity(String measure, String endPoint, long timestamp) {
+	public MetricEntity(String category, String measure, String endPoint, long timestamp) {
+		m_category = category;
 		m_measure = measure;
 		m_endPoint = endPoint;
 		m_timestamp = timestamp;
@@ -41,6 +44,10 @@ public class InsertEntity {
 		m_tags.putAll(tags);
 	}
 
+	public String getCategory() {
+		return m_category;
+	}
+
 	public String getEndPoint() {
 		return m_endPoint;
 	}
@@ -59,6 +66,10 @@ public class InsertEntity {
 
 	public long getTimestamp() {
 		return m_timestamp;
+	}
+
+	public void setCategory(String category) {
+		m_category = category;
 	}
 
 	public void setEndPoint(String endPoint) {

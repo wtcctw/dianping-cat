@@ -15,6 +15,10 @@
 						<b class="arrow fa fa-angle-down"></b>
 				</a> <b class="arrow"></b>
 					<ul class="submenu">
+						<li id="serverAggregate"><a href="/cat/r/server?domain=${model.domain}&op=aggregate">
+							<i class="menu-icon fa fa-caret-right"></i>指标聚合</a>
+							<b class="arrow"></b>
+						</li>
 						<li id="serverScreen"><a href="/cat/r/server?domain=${model.domain}&op=screen">
 							<i class="menu-icon fa fa-caret-right"></i>系统大盘</a>
 							<b class="arrow"></b>

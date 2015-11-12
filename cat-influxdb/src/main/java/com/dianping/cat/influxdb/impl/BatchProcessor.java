@@ -16,14 +16,8 @@ import com.dianping.cat.influxdb.dto.Point;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 
-/**
- * A BatchProcessor can be attached to a InfluxDB Instance to collect single point writes and aggregates them to BatchPoints to get
- * a better write performance.
- *
- * @author stefan.majer [at] gmail.com
- *
- */
 public class BatchProcessor {
+
 	protected final BlockingQueue<BatchEntry> queue = new LinkedBlockingQueue<BatchEntry>();
 
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -35,105 +29,6 @@ public class BatchProcessor {
 	private final TimeUnit flushIntervalUnit;
 
 	private final int flushInterval;
-
-	/**
-	 * The Builder to create a BatchProcessor instance.
-	 */
-	public static final class Builder {
-		private final InfluxDBImpl influxDB;
-
-		private int actions;
-
-		private TimeUnit flushIntervalUnit;
-
-		private int flushInterval;
-
-		/**
-		 * @param influxDB
-		 *           is mandatory.
-		 */
-		public Builder(final InfluxDB influxDB) {
-			this.influxDB = (InfluxDBImpl) influxDB;
-		}
-
-		/**
-		 * The number of actions after which a batchwrite must be performed.
-		 *
-		 * @param maxActions
-		 *           number of Points written after which a write must happen.
-		 * @return this Builder to use it fluent
-		 */
-		public Builder actions(final int maxActions) {
-			this.actions = maxActions;
-			return this;
-		}
-
-		/**
-		 * The interval at which at least should issued a write.
-		 *
-		 * @param interval
-		 *           the interval
-		 * @param unit
-		 *           the TimeUnit of the interval
-		 *
-		 * @return this Builder to use it fluent
-		 */
-		public Builder interval(final int interval, final TimeUnit unit) {
-			this.flushInterval = interval;
-			this.flushIntervalUnit = unit;
-			return this;
-		}
-
-		/**
-		 * Create the BatchProcessor.
-		 *
-		 * @return the BatchProcessor instance.
-		 */
-		public BatchProcessor build() {
-			Preconditions.checkNotNull(this.actions, "actions may not be null");
-			Preconditions.checkNotNull(this.flushInterval, "flushInterval may not be null");
-			Preconditions.checkNotNull(this.flushIntervalUnit, "flushIntervalUnit may not be null");
-			return new BatchProcessor(this.influxDB, this.actions, this.flushIntervalUnit, this.flushInterval);
-		}
-	}
-
-	static class BatchEntry {
-		private final Point point;
-
-		private final String db;
-
-		private final String rp;
-
-		public BatchEntry(final Point point, final String db, final String rp) {
-			super();
-			this.point = point;
-			this.db = db;
-			this.rp = rp;
-		}
-
-		public Point getPoint() {
-			return this.point;
-		}
-
-		public String getDb() {
-			return this.db;
-		}
-
-		public String getRp() {
-			return this.rp;
-		}
-	}
-
-	/**
-	 * Static method to create the Builder for this BatchProcessor.
-	 *
-	 * @param influxDB
-	 *           the influxdb database handle.
-	 * @return the Builder to create the BatchProcessor.
-	 */
-	public static Builder builder(final InfluxDB influxDB) {
-		return new Builder(influxDB);
-	}
 
 	BatchProcessor(final InfluxDBImpl influxDB, final int actions, final TimeUnit flushIntervalUnit,
 	      final int flushInterval) {
@@ -151,6 +46,22 @@ public class BatchProcessor {
 			}
 		}, this.flushInterval, this.flushInterval, this.flushIntervalUnit);
 
+	}
+
+	public static Builder builder(final InfluxDB influxDB) {
+		return new Builder(influxDB);
+	}
+
+	void flush() {
+		this.write();
+		this.scheduler.shutdown();
+	}
+
+	void put(final BatchEntry batchEntry) {
+		this.queue.add(batchEntry);
+		if (this.queue.size() >= this.actions) {
+			write();
+		}
 	}
 
 	void write() {
@@ -177,27 +88,62 @@ public class BatchProcessor {
 		}
 	}
 
-	/**
-	 * Put a single BatchEntry to the cache for later processing.
-	 *
-	 * @param batchEntry
-	 *           the batchEntry to write to the cache.
-	 */
-	void put(final BatchEntry batchEntry) {
-		this.queue.add(batchEntry);
-		if (this.queue.size() >= this.actions) {
-			write();
+	static class BatchEntry {
+		private final Point point;
+
+		private final String db;
+
+		private final String rp;
+
+		public BatchEntry(final Point point, final String db, final String rp) {
+			super();
+			this.point = point;
+			this.db = db;
+			this.rp = rp;
+		}
+
+		public String getDb() {
+			return this.db;
+		}
+
+		public Point getPoint() {
+			return this.point;
+		}
+
+		public String getRp() {
+			return this.rp;
 		}
 	}
 
-	/**
-	 * Flush the current open writes to influxdb and end stop the reaper thread. This should only be called if no batch processing is
-	 * needed anymore.
-	 *
-	 */
-	void flush() {
-		this.write();
-		this.scheduler.shutdown();
-	}
+	public static final class Builder {
+		private final InfluxDBImpl influxDB;
 
+		private int actions;
+
+		private TimeUnit flushIntervalUnit;
+
+		private int flushInterval;
+
+		public Builder(final InfluxDB influxDB) {
+			this.influxDB = (InfluxDBImpl) influxDB;
+		}
+
+		public Builder actions(final int maxActions) {
+			this.actions = maxActions;
+			return this;
+		}
+
+		public BatchProcessor build() {
+			Preconditions.checkNotNull(this.actions, "actions may not be null");
+			Preconditions.checkNotNull(this.flushInterval, "flushInterval may not be null");
+			Preconditions.checkNotNull(this.flushIntervalUnit, "flushIntervalUnit may not be null");
+			return new BatchProcessor(this.influxDB, this.actions, this.flushIntervalUnit, this.flushInterval);
+		}
+
+		public Builder interval(final int interval, final TimeUnit unit) {
+			this.flushInterval = interval;
+			this.flushIntervalUnit = unit;
+			return this;
+		}
+	}
 }
