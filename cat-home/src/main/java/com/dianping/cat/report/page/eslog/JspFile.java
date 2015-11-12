@@ -1,7 +1,9 @@
 package com.dianping.cat.report.page.eslog;
 
 public enum JspFile {
-	VIEW("/jsp/report/eslog.jsp"),
+	VIEW("/jsp/report/eslog/eslog.jsp"),
+
+	CONFIG("/jsp/report/eslog/config.jsp"),
 
 	;
 

@@ -75,6 +75,7 @@ import com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
+import com.dianping.cat.report.page.eslog.EsServerConfigManager;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
 import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
 import com.dianping.cat.report.page.state.StateGraphBuilder;
@@ -209,6 +210,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(RouterConfigHandler.class).req(StateReportService.class, RouterConfigService.class,
 		      RouterConfigManager.class, DailyReportDao.class));
 		all.add(C(TopoGraphFormatConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(EsServerConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      RouterConfigManager.class, AllReportConfigManager.class));

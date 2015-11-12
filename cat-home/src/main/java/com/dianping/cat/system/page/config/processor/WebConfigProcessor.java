@@ -7,7 +7,6 @@ import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.web.WebConfigManager;
-import com.dianping.cat.config.web.js.AggregationConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.report.alert.browser.JsRuleConfigManager;
@@ -22,9 +21,6 @@ public class WebConfigProcessor extends BaseProcesser {
 
 	@Inject
 	private UrlPatternConfigManager m_urlPatternConfigManager;
-
-	@Inject
-	private AggregationConfigManager m_aggreationConfigManager;
 
 	@Inject
 	private WebRuleConfigManager m_webRuleConfigManager;

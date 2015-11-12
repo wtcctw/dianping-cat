@@ -26,7 +26,6 @@ import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.web.WebConfigManager;
-import com.dianping.cat.config.web.js.AggregationConfigManager;
 import com.dianping.cat.config.web.js.AggregationHandler;
 import com.dianping.cat.config.web.js.DefaultAggregationHandler;
 import com.dianping.cat.config.web.url.DefaultUrlPatternHandler;
@@ -76,8 +75,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageHandler.class, DefaultMessageHandler.class));
 
 		all.add(C(AggregationHandler.class, DefaultAggregationHandler.class));
-
-		all.add(C(AggregationConfigManager.class).req(AggregationHandler.class, ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(CommandFormatHandler.class, DefaultCommandFormatlHandler.class));
 

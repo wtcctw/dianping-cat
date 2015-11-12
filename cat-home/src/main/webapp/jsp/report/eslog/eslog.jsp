@@ -6,12 +6,9 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx" type="com.dianping.cat.report.page.eslog.Context"
-	scope="request" />
-<jsp:useBean id="payload"
-	type="com.dianping.cat.report.page.eslog.Payload" scope="request" />
-<jsp:useBean id="model" type="com.dianping.cat.report.page.eslog.Model"
-	scope="request" />
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.eslog.Context" scope="request" />
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.eslog.Payload" scope="request" />
+<jsp:useBean id="model" type="com.dianping.cat.report.page.eslog.Model" scope="request" />
 
 <a:mobile>
 	<link rel="stylesheet" type="text/css"

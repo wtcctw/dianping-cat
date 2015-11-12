@@ -10,7 +10,6 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
-import com.dianping.cat.config.web.js.AggregationConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.event.EventAnalyzer;
@@ -42,7 +41,6 @@ import com.dianping.cat.report.alert.event.EventRuleConfigManager;
 import com.dianping.cat.report.alert.exception.AlertExceptionBuilder;
 import com.dianping.cat.report.alert.exception.ExceptionAlert;
 import com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager;
-import com.dianping.cat.report.alert.exception.FrontEndExceptionAlert;
 import com.dianping.cat.report.alert.heartbeat.HeartbeatAlert;
 import com.dianping.cat.report.alert.heartbeat.HeartbeatRuleConfigManager;
 import com.dianping.cat.report.alert.network.NetworkAlert;
@@ -76,7 +74,6 @@ import com.dianping.cat.report.alert.sender.receiver.ContactorManager;
 import com.dianping.cat.report.alert.sender.receiver.DatabaseContactor;
 import com.dianping.cat.report.alert.sender.receiver.EventContactor;
 import com.dianping.cat.report.alert.sender.receiver.ExceptionContactor;
-import com.dianping.cat.report.alert.sender.receiver.FrontEndExceptionContactor;
 import com.dianping.cat.report.alert.sender.receiver.HeartbeatContactor;
 import com.dianping.cat.report.alert.sender.receiver.JsContactor;
 import com.dianping.cat.report.alert.sender.receiver.NetworkContactor;
@@ -155,8 +152,6 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      AlertConfigManager.class));
 		all.add(C(Contactor.class, ThirdpartyContactor.ID, ThirdpartyContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
-		all.add(C(Contactor.class, FrontEndExceptionContactor.ID, FrontEndExceptionContactor.class).req(
-		      AggregationConfigManager.class, AlertConfigManager.class));
 		all.add(C(Contactor.class, JsContactor.ID, JsContactor.class).req(JsRuleConfigManager.class,
 		      AlertConfigManager.class));
 		all.add(C(Contactor.class, AppContactor.ID, AppContactor.class).req(AlertConfigManager.class,
@@ -255,12 +250,9 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ModelService.class, StorageAnalyzer.ID)
 		      .req(StorageRPCRuleConfigManager.class, StorageGroupConfigManager.class));
 
-		all.add(C(AlertExceptionBuilder.class).req(ExceptionRuleConfigManager.class, AggregationConfigManager.class));
+		all.add(C(AlertExceptionBuilder.class).req(ExceptionRuleConfigManager.class));
 
 		all.add(C(ExceptionAlert.class).req(ExceptionRuleConfigManager.class, AlertExceptionBuilder.class,
-		      AlertManager.class).req(ModelService.class, TopAnalyzer.ID));
-
-		all.add(C(FrontEndExceptionAlert.class).req(ExceptionRuleConfigManager.class, AlertExceptionBuilder.class,
 		      AlertManager.class).req(ModelService.class, TopAnalyzer.ID));
 
 		all.add(C(ThirdPartyAlert.class).req(AlertManager.class));
