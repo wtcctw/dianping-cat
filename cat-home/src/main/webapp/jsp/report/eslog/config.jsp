@@ -30,5 +30,6 @@
 <script type="text/javascript">
 		$(document).ready(function() {
 			$('#App_report').addClass('open active');
+			$('#esConfig').addClass('open active');
 		});
 	</script>
