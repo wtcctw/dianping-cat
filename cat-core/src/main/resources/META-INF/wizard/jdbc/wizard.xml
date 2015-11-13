@@ -54,6 +54,7 @@
          <table name="ajax_data"/>
          <table name="js_error_log"/>
          <table name="js_error_log_content"/>
+         <table name="web_speed_data"/>
       </group>
    </jdbc>
 </wizard>

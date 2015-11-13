@@ -2373,13 +2373,13 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>web-api-data</role-hint>
-			<implementation>com.dianping.cat.config.web.WebApiTableProvider</implementation>
+			<role-hint>ajax-data</role-hint>
+			<implementation>com.dianping.cat.config.web.AjaxDataTableProvider</implementation>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>ajax-data</role-hint>
-			<implementation>com.dianping.cat.config.web.AjaxDataTableProvider</implementation>
+			<role-hint>web-speed-data</role-hint>
+			<implementation>com.dianping.cat.config.web.WebSpeedDataTableProvider</implementation>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
@@ -5863,72 +5863,28 @@
 			<implementation>com.dianping.cat.report.page.browser.Handler</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.page.browser.graph.WebGraphCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.web.JsErrorLogContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.web.JsErrorLogDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.browser.JspViewer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.browser.ModuleManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.web.WebConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.browser.graph.WebGraphCreator</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.web.JsErrorLogDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.web.JsErrorLogContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>problem</role-hint>
-					<field-name>m_service</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.browser.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.browser.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.browser.ModuleManager</role>
-			<implementation>com.dianping.cat.report.page.browser.ModuleManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.web.JsErrorLogDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.web.JsErrorLogDao</role>
-			<implementation>com.dianping.cat.web.JsErrorLogDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.web.WebConfigManager</role>
-			<implementation>com.dianping.cat.config.web.WebConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5966,11 +5922,50 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.web.WebConfigManager</role>
+			<implementation>com.dianping.cat.config.web.WebConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.web.JsErrorLogContentDao</role>
 			<implementation>com.dianping.cat.web.JsErrorLogContentDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.web.JsErrorLogDao</role>
+			<implementation>com.dianping.cat.web.JsErrorLogDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.browser.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.browser.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.browser.ModuleManager</role>
+			<implementation>com.dianping.cat.report.page.browser.ModuleManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.web.JsErrorLogDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6782,6 +6777,42 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.web.Handler</role>
+			<implementation>com.dianping.cat.system.page.web.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.page.web.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.WebSpeedConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.ConfigModificationDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.web.JspViewer</role>
+			<implementation>com.dianping.cat.system.page.web.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.web.WebSpeedConfigManager</role>
+			<implementation>com.dianping.cat.config.web.WebSpeedConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
