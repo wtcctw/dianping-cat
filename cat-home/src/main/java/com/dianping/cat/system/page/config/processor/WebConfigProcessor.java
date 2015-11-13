@@ -7,14 +7,11 @@ import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.web.WebConfigManager;
-import com.dianping.cat.config.web.js.AggregationConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
-import com.dianping.cat.configuration.web.js.entity.AggregationRule;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.report.alert.browser.JsRuleConfigManager;
 import com.dianping.cat.report.alert.web.WebRuleConfigManager;
 import com.dianping.cat.report.page.browser.ModuleManager;
-import com.dianping.cat.report.page.web.CityManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.ConfigHtmlParser;
 import com.dianping.cat.system.page.config.Model;
@@ -26,13 +23,7 @@ public class WebConfigProcessor extends BaseProcesser {
 	private UrlPatternConfigManager m_urlPatternConfigManager;
 
 	@Inject
-	private AggregationConfigManager m_aggreationConfigManager;
-
-	@Inject
 	private WebRuleConfigManager m_webRuleConfigManager;
-
-	@Inject
-	private CityManager m_cityManager;
 
 	@Inject
 	private WebConfigManager m_appConfigManager;
@@ -56,26 +47,8 @@ public class WebConfigProcessor extends BaseProcesser {
 		model.setWebNetworks(m_appConfigManager.queryConfigItem(WebConfigManager.NETWORK));
 	}
 
-	private void deleteAggregationRule(Payload payload) {
-		m_aggreationConfigManager.deleteAggregationRule(payload.getPattern());
-	}
-
 	public void processPatternConfig(Action action, Payload payload, Model model) {
 		switch (action) {
-		case AGGREGATION_ALL:
-			model.setAggregationRules(m_aggreationConfigManager.queryAggregationRules());
-			break;
-		case AGGREGATION_UPDATE:
-			model.setAggregationRule(m_aggreationConfigManager.queryAggration(payload.getPattern()));
-			break;
-		case AGGREGATION_UPDATE_SUBMIT:
-			updateAggregationRule(payload);
-			model.setAggregationRules(m_aggreationConfigManager.queryAggregationRules());
-			break;
-		case AGGREGATION_DELETE:
-			deleteAggregationRule(payload);
-			model.setAggregationRules(m_aggreationConfigManager.queryAggregationRules());
-			break;
 		case URL_PATTERN_CONFIG_UPDATE:
 			String config = payload.getContent();
 
@@ -148,10 +121,5 @@ public class WebConfigProcessor extends BaseProcesser {
 		default:
 			throw new RuntimeException("Error action name " + action.getName());
 		}
-	}
-
-	private void updateAggregationRule(Payload payload) {
-		AggregationRule proto = payload.getRule();
-		m_aggreationConfigManager.insertAggregationRule(proto);
 	}
 }

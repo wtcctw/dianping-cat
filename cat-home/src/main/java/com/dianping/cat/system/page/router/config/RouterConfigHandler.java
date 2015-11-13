@@ -67,14 +67,14 @@ public class RouterConfigHandler implements LogEnabled {
 		visitor.visitStateReport(report);
 
 		Map<String, Map<String, Long>> statistics = visitor.getStatistics();
-		Map<String, Map<Server, Long>> servers = findAvaliableGroups();
+		Map<String, Map<Server, Long>> servers = findAvaliableGpToSvrs();
 
 		for (Entry<String, Map<Server, Long>> entry : servers.entrySet()) {
 			String group = entry.getKey();
 			Map<String, Long> numbers = statistics.get(group);
 
 			if (numbers != null) {
-				processMainServer(entry.getValue(), routerConfig, numbers, entry.getKey());
+				processMainServer(entry.getValue(), routerConfig, numbers, group);
 			}
 		}
 
@@ -83,7 +83,7 @@ public class RouterConfigHandler implements LogEnabled {
 			Map<String, Long> numbers = statistics.get(group);
 
 			if (numbers != null) {
-				processBackServer(entry.getValue(), routerConfig, numbers, entry.getKey());
+				processBackServer(entry.getValue(), routerConfig, numbers, group);
 			}
 
 		}
@@ -111,26 +111,28 @@ public class RouterConfigHandler implements LogEnabled {
 		m_logger = logger;
 	}
 
-	private Map<String, Map<Server, Long>> findAvaliableGroups() {
+	private Map<String, Map<Server, Long>> findAvaliableGpToSvrs() {
 		Map<String, Map<Server, Long>> results = new HashMap<String, Map<Server, Long>>();
 		Map<String, Server> servers = m_configManager.queryEnableServers();
-		Map<String, ServerGroup> groups = m_configManager.getRouterConfig().getServerGroups();
+		RouterConfig routerConfig = m_configManager.getRouterConfig();
+		Map<String, ServerGroup> groups = routerConfig.getServerGroups();
 
-		for (Entry<String, NetworkPolicy> entry : m_configManager.queryUnblockPolicies().entrySet()) {
-			Map<Server, Long> networResults = new HashMap<Server, Long>();
-			ServerGroup serverGroup = groups.get(entry.getValue().getServerGroup());
+		for (Entry<String, NetworkPolicy> entry : routerConfig.getNetworkPolicies().entrySet()) {
+			NetworkPolicy networkPolicy = entry.getValue();
+			ServerGroup serverGroup = groups.get(networkPolicy.getServerGroup());
 
-			if (serverGroup != null) {
-				for (Entry<String, GroupServer> e : serverGroup.getGroupServers().entrySet()) {
-					String id = e.getKey();
-					Server server = servers.get(id);
+			if (!networkPolicy.isBlock() && serverGroup != null) {
+				Map<Server, Long> networkResults = new HashMap<Server, Long>();
+
+				for (GroupServer s : serverGroup.getGroupServers().values()) {
+					Server server = servers.get(s.getId());
 
 					if (server != null) {
-						networResults.put(server, 0L);
+						networkResults.put(server, 0L);
 					}
 				}
+				results.put(entry.getKey(), networkResults);
 			}
-			results.put(entry.getKey(), networResults);
 		}
 		return results;
 	}

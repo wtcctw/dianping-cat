@@ -12,17 +12,13 @@ public enum ProductLineConfig {
 
 	METRIC("metricProductLine", "业务监控", ""),
 
-	USER("userProductLine", "外部监控", Constants.BROKER_SERVICE),
-
 	APPLICATION("applicationProductLine", "应用监控", ""),
 
 	NETWORK("networkProductLine", "网络监控", "switch-|f5-"),
 
 	SYSTEM("systemProductLine", "系统监控", "system-"),
 
-	DATABASE("databaseProductLine", "数据库监控", "db-"),
-
-	CDN("cdnProductLine", "CDN监控", "cdn");
+	DATABASE("databaseProductLine", "数据库监控", "db-");
 
 	private String m_configName;
 

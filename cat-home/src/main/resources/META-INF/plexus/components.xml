@@ -104,33 +104,11 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</role>
-			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
-			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</implementation>
+			<role>com.dianping.cat.report.page.storage.display.StorageAlertInfoBuilder</role>
+			<implementation>com.dianping.cat.report.page.storage.display.StorageAlertInfoBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</role>
-			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.AlertDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
+					<role>com.dianping.cat.report.alert.service.AlertService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -215,21 +193,6 @@
 		<component>
 			<role>com.dianping.cat.report.alert.app.AppRuleConfigManager</role>
 			<implementation>com.dianping.cat.report.alert.app.AppRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.web.WebRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.web.WebRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -446,6 +409,18 @@
 		<component>
 			<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
 			<implementation>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.eslog.EsServerConfigManager</role>
+			<implementation>com.dianping.cat.report.page.eslog.EsServerConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -1586,35 +1561,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.notify.ReportRender</role>
-			<implementation>com.dianping.cat.report.task.notify.ReportRenderImpl</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.notify.render.AppDataComparisonRender</role>
-			<implementation>com.dianping.cat.report.task.notify.render.AppDataComparisonRender</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.notify.AppDataComparisonNotifier</role>
-			<implementation>com.dianping.cat.report.task.notify.AppDataComparisonNotifier</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.app.service.AppDataService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.notify.render.AppDataComparisonRender</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.build.AppDatabaseConfigurator</role>
 			<implementation>com.dianping.cat.build.AppDatabaseConfigurator</implementation>
 			<requirements>
@@ -1623,37 +1569,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.app.AppSpeedDataDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
-			<role-hint>dailyNotify</role-hint>
-			<implementation>com.dianping.cat.report.task.notify.NotifyTaskBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.task.notify.ReportRender</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.event.service.EventReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.problem.service.ProblemReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.notify.AppDataComparisonNotifier</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2727,19 +2642,6 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
-			<role-hint>FrontEnd</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.receiver.FrontEndExceptionContactor</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.web.js.AggregationConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.sender.config.AlertConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>Js</role-hint>
 			<implementation>com.dianping.cat.report.alert.sender.receiver.JsContactor</implementation>
 			<requirements>
@@ -3035,7 +2937,7 @@
 					<role>com.dianping.cat.report.alert.sender.receiver.ContactorManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.service.AlertEntityService</role>
+					<role>com.dianping.cat.report.alert.service.AlertService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.sender.spliter.SpliterManager</role>
@@ -3212,27 +3114,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.web.WebAlert</role>
-			<implementation>com.dianping.cat.report.alert.web.WebAlert</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.web.service.WebApiService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.web.WebRuleConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.DataChecker</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.alert.transaction.TransactionAlert</role>
 			<implementation>com.dianping.cat.report.alert.transaction.TransactionAlert</implementation>
 			<requirements>
@@ -3299,9 +3180,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3326,9 +3204,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3355,9 +3230,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3367,33 +3239,11 @@
 				<requirement>
 					<role>com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.web.js.AggregationConfigManager</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.exception.ExceptionAlert</role>
 			<implementation>com.dianping.cat.report.alert.exception.ExceptionAlert</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.exception.AlertExceptionBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>top</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.exception.FrontEndExceptionAlert</role>
-			<implementation>com.dianping.cat.report.alert.exception.FrontEndExceptionAlert</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager</role>
@@ -3454,8 +3304,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.service.AlertEntityService</role>
-			<implementation>com.dianping.cat.report.alert.service.AlertEntityService</implementation>
+			<role>com.dianping.cat.report.alert.service.AlertService</role>
+			<implementation>com.dianping.cat.report.alert.service.AlertService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AlertDao</role>
@@ -5118,108 +4968,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.web.Handler</role>
-			<implementation>com.dianping.cat.report.page.web.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.web.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.web.CityManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.web.graph.WebGraphCreator</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>problem</role-hint>
-					<field-name>m_service</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.web.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.web.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
-			<implementation>com.dianping.cat.config.web.url.UrlPatternConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.web.url.UrlPatternHandler</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.app.AppConfigManager</role>
-			<implementation>com.dianping.cat.config.app.AppConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.web.CityManager</role>
-			<implementation>com.dianping.cat.report.page.web.CityManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.web.graph.WebGraphCreator</role>
-			<implementation>com.dianping.cat.report.page.web.graph.WebGraphCreator</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.web.service.WebApiService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.web.service.WebApiService</role>
-			<implementation>com.dianping.cat.report.page.web.service.WebApiService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.app.WebApiDataDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.app.WebApiDataDao</role>
-			<implementation>com.dianping.cat.app.WebApiDataDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.system.Handler</role>
 			<implementation>com.dianping.cat.report.page.system.Handler</implementation>
 			<requirements>
@@ -5324,6 +5072,18 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.AppConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5666,9 +5426,6 @@
 					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
 				</requirement>
 				<requirement>
@@ -5676,6 +5433,12 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AlterationDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.service.AlertService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.storage.display.StorageAlertInfoBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5723,34 +5486,6 @@
 			<implementation>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</role>
-			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.AlertDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
-			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</role>
-			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
 			<implementation>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</implementation>
 			<requirements>
@@ -5759,6 +5494,24 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.service.AlertService</role>
+			<implementation>com.dianping.cat.report.alert.service.AlertService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlertDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.storage.display.StorageAlertInfoBuilder</role>
+			<implementation>com.dianping.cat.report.page.storage.display.StorageAlertInfoBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.alert.service.AlertService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5922,6 +5675,21 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
+			<implementation>com.dianping.cat.config.web.url.UrlPatternConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.url.UrlPatternHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.config.web.WebConfigManager</role>
 			<implementation>com.dianping.cat.config.web.WebConfigManager</implementation>
 			<requirements>
@@ -5968,6 +5736,46 @@
 					<role>com.dianping.cat.web.JsErrorLogDao</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.eslog.Handler</role>
+			<implementation>com.dianping.cat.report.page.eslog.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.eslog.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.eslog.EsServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.eslog.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.eslog.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.eslog.EsServerConfigManager</role>
+			<implementation>com.dianping.cat.report.page.eslog.EsServerConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
+			<implementation>com.dianping.cat.system.page.config.ConfigHtmlParser</implementation>
 		</component>
 		<component>
 			<role>org.unidal.web.mvc.Module</role>
@@ -6158,10 +5966,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
-			<implementation>com.dianping.cat.system.page.config.ConfigHtmlParser</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.system.page.router.config.RouterConfigHandler</role>
 			<implementation>com.dianping.cat.system.page.router.config.RouterConfigHandler</implementation>
 			<requirements>
@@ -6241,13 +6045,7 @@
 					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.web.js.AggregationConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.alert.web.WebRuleConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.web.CityManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.web.WebConfigManager</role>
@@ -6263,21 +6061,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.web.js.AggregationConfigManager</role>
-			<implementation>com.dianping.cat.config.web.js.AggregationConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.web.js.AggregationHandler</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6530,9 +6313,6 @@
 					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.event.service.EventReportService</role>
 				</requirement>
 				<requirement>
@@ -6543,18 +6323,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
-			<implementation>com.dianping.cat.config.app.AppComparisonConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>

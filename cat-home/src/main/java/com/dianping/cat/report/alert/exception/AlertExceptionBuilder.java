@@ -9,19 +9,14 @@ import java.util.Map.Entry;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
-import com.dianping.cat.config.web.js.AggregationConfigManager;
-import com.dianping.cat.configuration.web.js.entity.AggregationRule;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
-import com.dianping.cat.report.page.dependency.TopMetric.Item;
 import com.dianping.cat.report.alert.AlertLevel;
+import com.dianping.cat.report.page.dependency.TopMetric.Item;
 
 public class AlertExceptionBuilder {
 
 	@Inject
 	private ExceptionRuleConfigManager m_exceptionConfigManager;
-
-	@Inject
-	private AggregationConfigManager m_aggregationConfigManager;
 
 	public Map<String, List<AlertException>> buildAlertExceptions(List<Item> items) {
 		Map<String, List<AlertException>> alertExceptions = new LinkedHashMap<String, List<AlertException>>();
@@ -67,25 +62,6 @@ public class AlertExceptionBuilder {
 			      totalException));
 		}
 
-		return alertExceptions;
-	}
-
-	public List<AlertException> buildFrontEndAlertExceptions(Item frontEndItem) {
-		List<AlertException> alertExceptions = new ArrayList<AlertException>();
-
-		for (Entry<String, Double> entry : frontEndItem.getException().entrySet()) {
-			String exception = entry.getKey();
-			AggregationRule rule = m_aggregationConfigManager.queryAggration(exception);
-
-			if (rule != null) {
-				int warn = rule.getWarn();
-				double value = entry.getValue().doubleValue();
-
-				if (value >= warn) {
-					alertExceptions.add(new AlertException(exception, AlertLevel.WARNING, value));
-				}
-			}
-		}
 		return alertExceptions;
 	}
 

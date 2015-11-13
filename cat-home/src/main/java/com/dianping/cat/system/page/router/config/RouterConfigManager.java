@@ -2,14 +2,16 @@ package com.dianping.cat.system.page.router.config;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
+import org.apache.commons.net.util.SubnetUtils;
+import org.apache.commons.net.util.SubnetUtils.SubnetInfo;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -36,6 +38,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.router.entity.DefaultServer;
 import com.dianping.cat.home.router.entity.Domain;
 import com.dianping.cat.home.router.entity.GroupServer;
+import com.dianping.cat.home.router.entity.Network;
 import com.dianping.cat.home.router.entity.NetworkPolicy;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.entity.Server;
@@ -58,8 +61,6 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 	@Inject
 	private DailyReportContentDao m_dailyReportContentDao;
 
-	private SubnetInfoProcessor m_subnetInfoProcessor;
-
 	private int m_configId;
 
 	private volatile RouterConfig m_routerConfig;
@@ -70,8 +71,13 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 
 	private static final String CONFIG_NAME = "routerConfig";
 
-	private Map<Long, Pair<RouterConfig, Long>> m_routerConfigs = new LinkedHashMap<Long, Pair<RouterConfig, Long>>() {
+	public static final String DEFAULT = "default";
 
+	private Map<String, List<SubnetInfo>> m_subNetInfos = new HashMap<String, List<SubnetInfo>>();
+
+	private Map<String, String> m_ipToGroupInfo = new HashMap<String, String>();
+
+	private Map<Long, Pair<RouterConfig, Long>> m_routerConfigs = new LinkedHashMap<Long, Pair<RouterConfig, Long>>() {
 		private static final long serialVersionUID = 1L;
 
 		@Override
@@ -134,17 +140,23 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		if (m_routerConfig == null) {
 			m_routerConfig = new RouterConfig();
 		}
-
-		m_subnetInfoProcessor = new SubnetInfoProcessor(this);
 	}
 
 	public boolean insert(String xml) {
 		try {
-			m_routerConfig = DefaultSaxParser.parse(xml);
-			boolean result = storeConfig();
+			RouterConfig routerConfig = DefaultSaxParser.parse(xml);
 
-			m_subnetInfoProcessor.refreshData();
-			return result;
+			if (validate(routerConfig)) {
+				m_routerConfig = routerConfig;
+				boolean result = storeConfig();
+
+				if (result) {
+					refreshNetInfo();
+				}
+				return result;
+			} else {
+				return false;
+			}
 		} catch (Exception e) {
 			Cat.logError(e);
 			m_logger.error(e.getMessage(), e);
@@ -157,7 +169,11 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 	}
 
 	public Map<String, Server> queryEnableServers() {
-		Map<String, DefaultServer> servers = m_routerConfig.getDefaultServers();
+		return queryEnableServers(m_routerConfig);
+	}
+
+	private Map<String, Server> queryEnableServers(RouterConfig routerConfig) {
+		Map<String, DefaultServer> servers = routerConfig.getDefaultServers();
 		Map<String, Server> results = new HashMap<String, Server>();
 
 		for (Entry<String, DefaultServer> entry : servers.entrySet()) {
@@ -171,30 +187,57 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		return results;
 	}
 
+	private String queryGroupBySubnet(String ip) {
+		for (Entry<String, List<SubnetInfo>> entry : m_subNetInfos.entrySet()) {
+			List<SubnetInfo> subnetInfos = entry.getValue();
+			String group = entry.getKey();
+
+			for (SubnetInfo info : subnetInfos) {
+				try {
+					if (info.isInRange(ip)) {
+						return group;
+					}
+				} catch (Exception e) {
+					// ignore
+				}
+			}
+		}
+		return null;
+	}
+
 	public String queryServerGroupByIp(String ip) {
-		return m_subnetInfoProcessor.queryBySubnet(ip);
+		String group = m_ipToGroupInfo.get(ip);
+
+		if (group == null) {
+			group = queryGroupBySubnet(ip);
+
+			if (group == null) {
+				group = DEFAULT;
+			}
+
+			m_ipToGroupInfo.put(ip, group);
+		}
+		return group;
 	}
 
 	public List<Server> queryServersByDomain(String group, String domain) {
 		Domain domainConfig = m_routerConfig.findDomain(domain);
 		List<Server> result = new ArrayList<Server>();
-		boolean valid = domainConfig == null || domainConfig.findGroup(group) == null
+		boolean noExist = domainConfig == null || domainConfig.findGroup(group) == null
 		      || domainConfig.findGroup(group).getServers().isEmpty();
 
-		if (valid) {
+		if (noExist) {
 			List<Server> servers = new ArrayList<Server>();
 			Map<String, Server> enables = queryEnableServers();
 			ServerGroup serverGroup = m_routerConfig.getServerGroups().get(group);
 
-			if (serverGroup != null && !serverGroup.getGroupServers().isEmpty()) {
-				Collection<GroupServer> groupServers = serverGroup.getGroupServers().values();
-
-				for (GroupServer s : groupServers) {
-					if (enables.containsKey(s.getId())) {
-						servers.add(enables.get(s.getId()));
-					}
+			if (serverGroup != null) {
+				for (GroupServer s : serverGroup.getGroupServers().values()) {
+					servers.add(enables.get(s.getId()));
 				}
-			} else {
+			}
+
+			if (servers.isEmpty()) {
 				servers = new ArrayList<Server>(enables.values());
 			}
 
@@ -215,17 +258,6 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		return result;
 	}
 
-	public Map<String, NetworkPolicy> queryUnblockPolicies() {
-		Map<String, NetworkPolicy> networkPolicies = new HashMap<String, NetworkPolicy>();
-
-		for (Entry<String, NetworkPolicy> entry : m_routerConfig.getNetworkPolicies().entrySet()) {
-			if (!entry.getValue().isBlock()) {
-				networkPolicies.put(entry.getKey(), entry.getValue());
-			}
-		}
-		return networkPolicies;
-	}
-
 	public void refreshConfig() throws Exception {
 		refreshConfigInfo();
 		refreshReportInfo();
@@ -242,10 +274,34 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 
 				m_routerConfig = routerConfig;
 				m_modifyTime = modifyTime;
-
-				m_subnetInfoProcessor.refreshData();
+				refreshNetInfo();
 			}
 		}
+	}
+
+	private void refreshNetInfo() {
+		Map<String, List<SubnetInfo>> subNetInfos = new HashMap<String, List<SubnetInfo>>();
+
+		for (Entry<String, NetworkPolicy> netPolicy : m_routerConfig.getNetworkPolicies().entrySet()) {
+			ArrayList<SubnetInfo> infos = new ArrayList<SubnetInfo>();
+
+			if (DEFAULT.equals(netPolicy.getKey())) {
+				for (Entry<String, Network> network : netPolicy.getValue().getNetworks().entrySet()) {
+					try {
+						SubnetUtils subnetUtils = new SubnetUtils(network.getValue().getId());
+						SubnetInfo netInfo = subnetUtils.getInfo();
+
+						infos.add(netInfo);
+					} catch (Exception e) {
+						Cat.logError(e);
+					}
+				}
+				subNetInfos.put(netPolicy.getKey(), infos);
+			}
+		}
+
+		m_subNetInfos = subNetInfos;
+		m_ipToGroupInfo = new HashMap<String, String>();
 	}
 
 	private void refreshReportInfo() throws Exception {
@@ -280,7 +336,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 	}
 
 	public boolean shouldBlock(String ip) {
-		String group = m_subnetInfoProcessor.queryServerGroupByIp(ip);
+		String group = queryServerGroupByIp(ip);
 		NetworkPolicy networkPolicy = m_routerConfig.findNetworkPolicy(group);
 
 		if (networkPolicy != null) {
@@ -305,6 +361,31 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 				return false;
 			}
 		}
+		return true;
+	}
+
+	public boolean validate(final RouterConfig routerConfig) {
+		Set<String> servers = routerConfig.getDefaultServers().keySet();
+
+		for (ServerGroup serverGroup : routerConfig.getServerGroups().values()) {
+			for (GroupServer server : serverGroup.getGroupServers().values()) {
+				if (!servers.contains(server.getId())) {
+					Cat.logError(new RuntimeException("Error router config in group server, has no server ip: " + server));
+					return false;
+				}
+			}
+		}
+
+		if (queryEnableServers(routerConfig).isEmpty()) {
+			Cat.logError(new RuntimeException("Error router config, enable servers not exist."));
+			return false;
+		}
+
+		if (routerConfig.findNetworkPolicy(DEFAULT) == null) {
+			Cat.logError(new RuntimeException("Error router config, default network policy doesn't exist."));
+			return false;
+		}
+
 		return true;
 	}
 }

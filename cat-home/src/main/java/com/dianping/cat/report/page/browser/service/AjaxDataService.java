@@ -61,6 +61,17 @@ public class AjaxDataService {
 		return new AppDataSequence<AjaxData>(length, dataMap);
 	}
 
+	private long buildSumData(AjaxData data, String type) {
+		if (DELAY.equals(type)) {
+			return data.getResponseSumTimeSum();
+		} else if (REQUEST_PACKAGE.equals(type)) {
+			return data.getRequestSumByteSum();
+		} else if (RESPONSE_PACKAGE.equals(type)) {
+			return data.getResponseSumByteSum();
+		}
+		throw new RuntimeException("unexpected query type, type:" + type);
+	}
+
 	public Double[] computeAvg(AppDataSequence<AjaxData> convertedData, String type) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
@@ -78,17 +89,6 @@ public class AjaxDataService {
 			}
 		}
 		return value;
-	}
-
-	private long buildSumData(AjaxData data, String type) {
-		if (DELAY.equals(type)) {
-			return data.getResponseSumTimeSum();
-		} else if (REQUEST_PACKAGE.equals(type)) {
-			return data.getRequestSumByteSum();
-		} else if (RESPONSE_PACKAGE.equals(type)) {
-			return data.getResponseSumByteSum();
-		}
-		throw new RuntimeException("unexpected query type, type:" + type);
 	}
 
 	public Double[] computeRequestCount(AppDataSequence<AjaxData> convertedData) {

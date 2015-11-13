@@ -71,29 +71,19 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private String m_module;
 
 	private String m_distributionChart;
+	
+	private String m_agent;
 
 	public Model(Context ctx) {
 		super(ctx);
 	}
 
+	public String getAgent() {
+		return m_agent;
+	}
+
 	public ProblemStatistics getAllStatistics() {
 		return m_allStatistics;
-	}
-
-	public Date getErrorTime() {
-		return m_errorTime;
-	}
-
-	public String getLevel() {
-		return m_level;
-	}
-
-	public String getModule() {
-		return m_module;
-	}
-
-	public Map<Integer, Item> getNetworks() {
-		return m_networks;
 	}
 
 	public Map<Integer, Item> getCities() {
@@ -121,6 +111,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_defaultApi;
 	}
 
+	public String getDetail() {
+		return m_detail;
+	}
+
 	@Override
 	public String getDomain() {
 		return getDisplayDomain();
@@ -135,12 +129,32 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_end;
 	}
 
+	public List<ErrorMsg> getErrors() {
+		return m_errors;
+	}
+
+	public Date getErrorTime() {
+		return m_errorTime;
+	}
+
 	public String getJson() {
 		return m_json;
 	}
 
+	public String getLevel() {
+		return m_level;
+	}
+
 	public LineChart getLineChart() {
 		return m_lineChart;
+	}
+
+	public String getModule() {
+		return m_module;
+	}
+
+	public Map<Integer, Item> getNetworks() {
+		return m_networks;
 	}
 
 	public Map<Integer, Item> getOperators() {
@@ -167,16 +181,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_start;
 	}
 
-	public void setLevel(String level) {
-		m_level = level;
+	public int getTotalCount() {
+		return m_totalCount;
 	}
 
-	public void setModule(String module) {
-		m_module = module;
-	}
-
-	public void setErrorTime(Date errorTime) {
-		m_errorTime = errorTime;
+	public void setAgent(String agent) {
+		m_agent = agent;
 	}
 
 	public void setAllStatistics(ProblemStatistics allStatistics) {
@@ -191,10 +201,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_codes = codes;
 	}
 
-	public void setNetworks(Map<Integer, Item> networks) {
-		m_networks = networks;
-	}
-
 	public void setCompareEnd(Date compareEnd) {
 		m_compareEnd = compareEnd;
 	}
@@ -207,16 +213,40 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_defaultApi = defaultApi;
 	}
 
+	public void setDetail(String detail) {
+		m_detail = detail;
+	}
+
 	public void setEnd(Date end) {
 		m_end = end;
+	}
+
+	public void setErrors(List<ErrorMsg> errors) {
+		m_errors = errors;
+	}
+
+	public void setErrorTime(Date errorTime) {
+		m_errorTime = errorTime;
 	}
 
 	public void setJson(String json) {
 		m_json = json;
 	}
 
+	public void setLevel(String level) {
+		m_level = level;
+	}
+
 	public void setLineChart(LineChart lineChart) {
 		m_lineChart = lineChart;
+	}
+
+	public void setModule(String module) {
+		m_module = module;
+	}
+
+	public void setNetworks(Map<Integer, Item> networks) {
+		m_networks = networks;
 	}
 
 	public void setOperators(Map<Integer, Item> operators) {
@@ -237,26 +267,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setStart(Date start) {
 		m_start = start;
-	}
-
-	public String getDetail() {
-		return m_detail;
-	}
-
-	public void setDetail(String detail) {
-		m_detail = detail;
-	}
-
-	public List<ErrorMsg> getErrors() {
-		return m_errors;
-	}
-
-	public void setErrors(List<ErrorMsg> errors) {
-		m_errors = errors;
-	}
-
-	public int getTotalCount() {
-		return m_totalCount;
 	}
 
 	public void setTotalCount(int totalCount) {

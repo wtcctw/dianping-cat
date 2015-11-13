@@ -29,7 +29,7 @@ import com.dianping.cat.report.alert.sender.decorator.DecoratorManager;
 import com.dianping.cat.report.alert.sender.receiver.ContactorManager;
 import com.dianping.cat.report.alert.sender.sender.SenderManager;
 import com.dianping.cat.report.alert.sender.spliter.SpliterManager;
-import com.dianping.cat.report.alert.service.AlertEntityService;
+import com.dianping.cat.report.alert.service.AlertService;
 
 public class AlertManager implements Initializable {
 
@@ -49,7 +49,7 @@ public class AlertManager implements Initializable {
 	protected SenderManager m_senderManager;
 
 	@Inject
-	protected AlertEntityService m_alertEntityService;
+	protected AlertService m_alertService;
 
 	@Inject
 	private ServerConfigManager m_configManager;
@@ -178,7 +178,7 @@ public class AlertManager implements Initializable {
 			message = new AlertMessageEntity(group, title, type, "", null);
 		}
 		message.setContent(dbContent);
-		m_alertEntityService.storeAlert(alert, message);
+		m_alertService.insert(alert, message);
 		return result;
 	}
 

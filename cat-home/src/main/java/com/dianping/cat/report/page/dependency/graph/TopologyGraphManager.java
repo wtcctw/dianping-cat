@@ -65,6 +65,34 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	private Logger m_logger;
 
+	public Set<TopologyEdge> buildEdges(Set<String> domains, Date start, Date end) {
+		Set<TopologyEdge> result = new HashSet<TopologyEdge>();
+
+		for (long current = start.getTime(); current <= end.getTime(); current = current + TimeHelper.ONE_MINUTE) {
+			result.addAll(buildEdges(domains, current));
+		}
+		return result;
+	}
+
+	public Set<TopologyEdge> buildEdges(Set<String> domains, long time) {
+		TopologyGraph topologyGraph = queryTopologyGraph(time);
+		Set<TopologyEdge> result = new HashSet<TopologyEdge>();
+
+		if (topologyGraph != null) {
+			Map<String, TopologyEdge> edges = topologyGraph.getEdges();
+
+			for (TopologyEdge edge : edges.values()) {
+				String self = edge.getSelf();
+				String to = edge.getTarget();
+
+				if (domains.contains(self) && domains.contains(to)) {
+					result.add(m_currentBuilder.cloneEdge(edge));
+				}
+			}
+		}
+		return result;
+	}
+
 	public ProductLinesDashboard buildDependencyDashboard(long time) {
 		TopologyGraph topologyGraph = queryTopologyGraph(time);
 		ProductLinesDashboard dashboardGraph = new ProductLinesDashboard();

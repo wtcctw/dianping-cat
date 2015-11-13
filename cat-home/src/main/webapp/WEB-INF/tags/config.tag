@@ -2,6 +2,11 @@
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 
 <a:base>
+	<script  type="text/javascript">
+		$(document).ready(function() {
+			$("#nav_config").addClass("disabled");
+		});
+	</script>
 	<div class="main-container" id="main-container">
 			<script type="text/javascript">
 				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
@@ -33,18 +38,6 @@
 						<b class="arrow fa fa-angle-down"></b>
 						</a><b class="arrow"></b>
 						<ul class="submenu">
-							<li id="aggregations"><a href="/cat/s/config?op=aggregations">
-								<i class="menu-icon fa fa-caret-right"></i>Js报错</a>
-								<b class="arrow"></b></li>
-							<li id="urlPatternConfigUpdate"><a href="/cat/s/config?op=urlPatternConfigUpdate" style="display:none">
-								<i class="menu-icon fa fa-caret-right"></i>Web全局配置</a>
-								<b class="arrow"></b></li>
-							<li id="urlPatterns"><a href="/cat/s/config?op=urlPatterns">
-								<i class="menu-icon fa fa-caret-right"></i>Web监控</a>
-								<b class="arrow"></b></li>
-							<li id="webRule"><a href="/cat/s/config?op=webRule">
-								<i class="menu-icon fa fa-caret-right"></i>Web告警</a>
-								<b class="arrow"></b></li>
 							<li id="appList"><a href="/cat/s/config?op=appList">
 								<i class="menu-icon fa fa-caret-right"></i>App监控</a>
 								<b class="arrow"></b></li>
@@ -56,9 +49,6 @@
 								<b class="arrow"></b></li>
 							<li id="appRule"><a href="/cat/s/config?op=appRule">
 								<i class="menu-icon fa fa-caret-right"></i>App告警</a>
-								<b class="arrow"></b></li>
-							<li id="appComparisonConfigUpdate" style="display:none"><a href="/cat/s/config?op=appComparisonConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>对比美团</a>
 								<b class="arrow"></b></li>
 						</ul>
 					</li>
@@ -102,9 +92,6 @@
 								<b class="arrow"></b></li>
 							<li id="topoGraphFormatUpdate"><a href="/cat/s/config?op=topoGraphFormatUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>应用大盘配置</a>
-								<b class="arrow"></b></li>
-							<li id="activityConfigUpdate"><a href="/cat/s/config?op=activityConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>临时活动配置</a>
 								<b class="arrow"></b></li>
 							<li id="storageDatabaseRule"><a href="/cat/s/config?op=storageRule&type=SQL">
 								<i class="menu-icon fa fa-caret-right"></i>数据库访问告警</a>

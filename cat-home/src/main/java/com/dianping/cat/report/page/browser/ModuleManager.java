@@ -24,13 +24,13 @@ public class ModuleManager implements Initializable {
 
 	private List<String> m_modules;
 
+	public List<String> getModules() {
+		return m_modules;
+	}
+
 	@Override
 	public void initialize() throws InitializationException {
 		Threads.forGroup("cat").start(new ModuleReloader());
-	}
-
-	public List<String> getModules() {
-		return m_modules;
 	}
 
 	public class ModuleReloader implements Task {
@@ -38,6 +38,11 @@ public class ModuleManager implements Initializable {
 		private final static long DURATION = TimeHelper.ONE_HOUR;
 
 		private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd.HH");
+
+		@Override
+		public String getName() {
+			return "Module-Reloader";
+		}
 
 		@Override
 		public void run() {
@@ -75,11 +80,6 @@ public class ModuleManager implements Initializable {
 					active = false;
 				}
 			}
-		}
-
-		@Override
-		public String getName() {
-			return "Module-Reloader";
 		}
 
 		@Override

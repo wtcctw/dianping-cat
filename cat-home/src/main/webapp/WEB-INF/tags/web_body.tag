@@ -2,6 +2,11 @@
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 
 <a:base>
+	<script  type="text/javascript">
+		$(document).ready(function() {
+			$("#nav_browser").addClass("disabled");
+		});
+	</script>
 	<div class="main-container" id="main-container">
 		<script type="text/javascript">
 			try{ace.settings.check('main-container' , 'fixed')}catch(e){}
@@ -35,6 +40,9 @@
 					<ul class="submenu">
 						<li id="jsRule"><a href="/cat/s/config?op=jsRuleList">
 								<i class="menu-icon fa fa-caret-right"></i>JS告警</a>
+								<b class="arrow"></b></li>
+						<li id="urlPatternConfigUpdate"><a href="/cat/s/config?op=urlPatternConfigUpdate" style="display:none">
+								<i class="menu-icon fa fa-caret-right"></i>Web全局配置</a>
 								<b class="arrow"></b></li>
 						<li id="urlPatterns"><a href="/cat/s/config?op=urlPatterns">
 								<i class="menu-icon fa fa-caret-right"></i>Web监控</a>

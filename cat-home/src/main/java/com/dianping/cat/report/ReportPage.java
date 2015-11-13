@@ -41,8 +41,6 @@ public enum ReportPage implements Page {
 
    NETWORK("network", "network", "Network", "Network", false),
 
-   WEB("web", "web", "Web", "Web", true),
-
    SYSTEM("system", "system", "System", "System", false),
 
    APP("app", "app", "App", "App", true),
@@ -57,7 +55,9 @@ public enum ReportPage implements Page {
 
    TOP("top", "top", "Top", "Top", true),
 
-   BROWSER("browser", "browser", "Browser", "Browser", true);
+   BROWSER("browser", "browser", "Browser", "Browser", true),
+
+   ESLOG("eslog", "eslog", "Eslog", "Eslog", true);
 
    private String m_name;
 

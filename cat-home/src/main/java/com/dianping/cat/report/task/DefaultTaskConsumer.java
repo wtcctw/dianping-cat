@@ -58,7 +58,7 @@ public class DefaultTaskConsumer extends TaskConsumer {
 		try {
 			result = m_reportFacade.builderReport(doing);
 			t.setStatus(Transaction.SUCCESS);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			Cat.logError(e);
 			t.setStatus(e);
 		} finally {

@@ -43,8 +43,6 @@ com.dianping.cat.report.page.monitor.Handler.class,
 
 com.dianping.cat.report.page.network.Handler.class,
 
-com.dianping.cat.report.page.web.Handler.class,
-
 com.dianping.cat.report.page.system.Handler.class,
 
 com.dianping.cat.report.page.app.Handler.class,
@@ -59,7 +57,9 @@ com.dianping.cat.report.page.storage.Handler.class,
 
 com.dianping.cat.report.page.top.Handler.class,
 
-com.dianping.cat.report.page.browser.Handler.class
+com.dianping.cat.report.page.browser.Handler.class,
+
+com.dianping.cat.report.page.eslog.Handler.class
 })
 public class ReportModule extends AbstractModule {
 

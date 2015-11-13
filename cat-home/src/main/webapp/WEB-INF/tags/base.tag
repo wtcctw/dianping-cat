@@ -50,7 +50,7 @@
 					<i class="navbar-brand">
 						<span>CAT</span>
 						<small style="font-size:65%">
-							（Central Application Tracking）
+							<a href="/cat/r">（Central Application Tracking）</a>
 						</small>
 					<button class="btn btn-success btn-sm" id="nav_application" >
 						<i class="ace-icon fa fa-signal"></i>Application
@@ -65,11 +65,11 @@
 					<button class="btn btn-purple btn-sm" id="nav_server">
 						<i class="ace-icon fa fa-cogs"></i>Servers
 					</button>
-					<button class="btn btn-yellow btn-sm" id="nav_document">
-						<i class="ace-icon fa fa-cogs"></i>Documents
-					</button>
 					<button class="btn btn-inverse btn-sm" id="nav_config">
 						<i class="ace-icon fa fa-cogs"></i>Configs
+					</button>
+					<button class="btn btn-yellow btn-sm" id="nav_document">
+						<i class="ace-icon fa fa-cogs"></i>Documents
 					</button>
 					</i>
 				</div>

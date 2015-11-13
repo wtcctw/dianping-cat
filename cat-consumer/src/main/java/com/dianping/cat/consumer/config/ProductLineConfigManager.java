@@ -265,16 +265,12 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	private ProductLineConfig queryProductLineConfig(String line, String domain) {
-		if (ProductLineConfig.USER.isTypeOf(domain)) {
-			return ProductLineConfig.USER;
-		} else if (ProductLineConfig.NETWORK.isTypeOf(line)) {
+		if (ProductLineConfig.NETWORK.isTypeOf(line)) {
 			return ProductLineConfig.NETWORK;
 		} else if (ProductLineConfig.SYSTEM.isTypeOf(line)) {
 			return ProductLineConfig.SYSTEM;
 		} else if (ProductLineConfig.DATABASE.isTypeOf(line)) {
 			return ProductLineConfig.DATABASE;
-		} else if (ProductLineConfig.CDN.isTypeOf(line)) {
-			return ProductLineConfig.CDN;
 		} else {
 			return ProductLineConfig.METRIC;
 		}

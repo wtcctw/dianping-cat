@@ -37,7 +37,6 @@ import com.dianping.cat.home.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
 import com.dianping.cat.home.group.entity.DomainGroup;
 import com.dianping.cat.home.rule.entity.Rule;
-import com.dianping.cat.report.page.web.CityManager.City;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.processor.BaseProcesser.RuleItem;
 
@@ -131,8 +130,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private List<Command> m_commands;
 
-	private Map<String, List<City>> m_citiyInfos;
-
 	private String m_duplicateDomains;
 
 	private List<String> m_tags;
@@ -225,14 +222,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public Map<Integer, Item> getCities() {
 		return m_cities;
-	}
-
-	public String getCityInfo() {
-		return new JsonBuilder().toJson(m_citiyInfos);
-	}
-
-	public Map<String, List<City>> getCityInfos() {
-		return m_citiyInfos;
 	}
 
 	public Code getCode() {
@@ -538,10 +527,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setCities(Map<Integer, Item> cities) {
 		m_cities = cities;
-	}
-
-	public void setCityInfos(Map<String, List<City>> cityInfos) {
-		m_citiyInfos = cityInfos;
 	}
 
 	public void setCode(Code code) {

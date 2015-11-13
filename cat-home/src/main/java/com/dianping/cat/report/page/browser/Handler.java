@@ -168,7 +168,7 @@ public class Handler implements PageHandler<Context> {
 
 	private void normalize(Model model, Payload payload) {
 		model.setAction(payload.getAction());
-		model.setPage(ReportPage.WEB);
+		model.setPage(ReportPage.BROWSER);
 		model.setCities(m_webConfigManager.queryConfigItem(WebConfigManager.CITY));
 		model.setOperators(m_webConfigManager.queryConfigItem(WebConfigManager.OPERATOR));
 		model.setNetworks(m_webConfigManager.queryConfigItem(WebConfigManager.NETWORK));
@@ -260,6 +260,7 @@ public class Handler implements PageHandler<Context> {
 			model.setLevel(Level.getNameByCode(jsErrorLog.getLevel()));
 			model.setModule(jsErrorLog.getModule());
 			model.setDetail(new String(detail.getContent(), "UTF-8"));
+			model.setAgent(jsErrorLog.getBrowser());
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

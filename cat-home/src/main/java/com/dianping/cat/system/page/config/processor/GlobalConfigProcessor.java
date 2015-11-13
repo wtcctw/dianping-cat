@@ -118,14 +118,20 @@ public class GlobalConfigProcessor {
 			break;
 		case ROUTER_CONFIG_UPDATE:
 			String routerConfig = payload.getContent();
+			
 			if (!StringUtils.isEmpty(routerConfig)) {
-				model.setOpState(m_routerConfigManager.insert(routerConfig));
-				m_routerConfigHandler.updateRouterConfig(TimeHelper.getCurrentDay(-1));
+				boolean ret = m_routerConfigManager.insert(routerConfig);
+
+				if (ret) {
+					m_routerConfigHandler.updateRouterConfig(TimeHelper.getCurrentDay(-1));
+				}
+				model.setOpState(ret);
 			}
 			model.setContent(m_configHtmlParser.parse(m_routerConfigManager.getRouterConfig().toString()));
 			break;
 		case ALERT_SENDER_CONFIG_UPDATE:
 			String senderConfig = payload.getContent();
+			
 			if (!StringUtils.isEmpty(senderConfig)) {
 				model.setOpState(m_senderConfigManager.insert(senderConfig));
 			}
@@ -133,6 +139,7 @@ public class GlobalConfigProcessor {
 			break;
 		case STORAGE_GROUP_CONFIG_UPDATE:
 			String storageGroup = payload.getContent();
+			
 			if (!StringUtils.isEmpty(storageGroup)) {
 				model.setOpState(m_groupConfigManager.insert(storageGroup));
 			}
@@ -140,6 +147,7 @@ public class GlobalConfigProcessor {
 			break;
 		case SERVER_FILTER_CONFIG_UPDATE:
 			String serverConfig = payload.getContent();
+			
 			if (!StringUtils.isEmpty(serverConfig)) {
 				model.setOpState(m_serverFilterConfigManager.insert(serverConfig));
 			}
@@ -147,6 +155,7 @@ public class GlobalConfigProcessor {
 			break;
 		case ALL_REPORT_CONFIG:
 			String transactionConfig = payload.getContent();
+			
 			if (!StringUtils.isEmpty(transactionConfig)) {
 				model.setOpState(m_transactionConfigManager.insert(transactionConfig));
 			}

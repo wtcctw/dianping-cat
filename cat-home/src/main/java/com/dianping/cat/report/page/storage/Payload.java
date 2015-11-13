@@ -8,7 +8,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
 
-public class Payload extends AbstractReportPayload<Action,ReportPage> {
+public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	private ReportPage m_page;
 
@@ -16,7 +16,7 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	private Action m_action;
 
 	@FieldMeta("type")
-	private String m_type = StorageConstants.SQL_TYPE;
+	private StorageType m_type;
 
 	@FieldMeta("operations")
 	private String m_operations;
@@ -40,10 +40,7 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	private int m_frequency = 10;
 
 	@FieldMeta("count")
-	private int m_minuteCounts = StorageConstants.DEFAULT_MINUTE_COUNT;
-
-	@FieldMeta("tops")
-	private int m_topCounts = StorageConstants.DEFAULT_TOP_COUNT;
+	private int m_minuteCounts = 8;
 
 	@FieldMeta("id")
 	private String m_id = Constants.CAT;
@@ -101,11 +98,7 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		return m_sort;
 	}
 
-	public int getTopCounts() {
-		return m_topCounts;
-	}
-
-	public String getType() {
+	public StorageType getType() {
 		return m_type;
 	}
 
@@ -162,18 +155,18 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		m_sort = sort;
 	}
 
-	public void setTopCounts(int topCounts) {
-		m_topCounts = topCounts;
-	}
-
 	public void setType(String type) {
-		m_type = type;
+		m_type = StorageType.getByName(type, StorageType.SQL);
 	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
 			m_action = Action.HOURLY_STORAGE;
+		}
+
+		if (m_type == null) {
+			m_type = StorageType.SQL;
 		}
 	}
 }

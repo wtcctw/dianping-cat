@@ -56,9 +56,6 @@
          <page name="network" title="Network" path="network" view="/jsp/report/network/nettopology.jsp" standalone="false" template="default">
             <description>Network</description>
          </page>
-         <page name="web" title="Web" path="web" template="default">
-            <description>Web</description>
-         </page>
          <page name="system" title="System" path="system" standalone="false" template="default">
             <description>System</description>
          </page>
@@ -82,6 +79,9 @@
          </page>
          <page name="browser" title="Browser" path="browser" template="default">
             <description>Browser</description>
+         </page>
+         <page name="eslog" title="Eslog" path="eslog" template="default">
+            <description>Eslog</description>
          </page>
       </module>
       <module name="system" path="s" default="false">
