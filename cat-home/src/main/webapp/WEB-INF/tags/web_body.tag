@@ -2,6 +2,11 @@
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 
 <a:base>
+	<script  type="text/javascript">
+		$(document).ready(function() {
+			$("#nav_browser").addClass("disabled");
+		});
+	</script>
 	<div class="main-container" id="main-container">
 		<script type="text/javascript">
 			try{ace.settings.check('main-container' , 'fixed')}catch(e){}
@@ -15,10 +20,10 @@
 						<b class="arrow fa fa-angle-down"></b>
 				</a> <b class="arrow"></b>
 					<ul class="submenu">
-						<li id="web_trend"><a href="/cat/r/browser?domain=${model.domain}">
+						<li id="web_trend"><a href="/cat/r/browser">
 							<i class="menu-icon fa fa-caret-right"></i>URL访问趋势</a>
 							<b class="arrow"></b></li>
-						<li id="web_piechart"><a href="/cat/r/browser?op=piechart&domain=${model.domain}">
+						<li id="web_piechart"><a href="/cat/r/browser?op=piechart">
 							<i class="menu-icon fa fa-caret-right"></i>URL访问分布</a>
 							<b class="arrow"></b></li>
 						<li id="web_problem"><a href="/cat/r/browser?op=jsError">
@@ -44,6 +49,9 @@
 								<b class="arrow"></b></li>
 						<li id="webRule"><a href="/cat/s/config?op=webRule">
 								<i class="menu-icon fa fa-caret-right"></i>Web告警</a>
+								<b class="arrow"></b></li>
+						<li id="speed"><a href="/cat/s/web?op=speed">
+								<i class="menu-icon fa fa-caret-right"></i>测速配置</a>
 								<b class="arrow"></b></li>
 						<li id="webConstants"><a href="/cat/s/config?op=webConstants">
 								<i class="menu-icon fa fa-caret-right"></i>常量配置</a>

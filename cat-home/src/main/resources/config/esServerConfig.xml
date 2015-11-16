@@ -1,0 +1,11 @@
+<es-server-config>
+	<log id="app-log" host="192.168.226.137" port="9200" index="localtest"
+		type="docs">
+	</log>
+	<log id="app-log2" host="192.168.226.137" port="9200" index="localtest"
+		type="docs">
+	</log>
+	<log id="app-log3" host="192.168.226.137" port="9200" index="localtest"
+		type="docs">
+	</log>
+</es-server-config>

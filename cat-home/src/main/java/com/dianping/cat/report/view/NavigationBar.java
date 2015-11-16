@@ -19,7 +19,7 @@ public class NavigationBar {
 	public Page[] getVisiblePages() {
 		return new Page[] {
 
-		ReportPage.WEB,
+		ReportPage.BROWSER,
 
 		ReportPage.APP,
 

@@ -24,7 +24,7 @@ import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.web.AjaxDataTableProvider;
-import com.dianping.cat.config.web.WebApiTableProvider;
+import com.dianping.cat.config.web.WebSpeedDataTableProvider;
 import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
@@ -75,6 +75,7 @@ import com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
+import com.dianping.cat.report.page.eslog.EsServerConfigManager;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
 import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
 import com.dianping.cat.report.page.server.config.ScreenConfigManager;
@@ -158,8 +159,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TableProvider.class, "app-command-data", AppCommandTableProvider.class));
 		all.add(C(TableProvider.class, "app-connection-data", AppConnectionTableProvider.class));
 		all.add(C(TableProvider.class, "app-speed-data", AppSpeedTableProvider.class));
-		all.add(C(TableProvider.class, "web-api-data", WebApiTableProvider.class));
 		all.add(C(TableProvider.class, "ajax-data", AjaxDataTableProvider.class));
+		all.add(C(TableProvider.class, "web-speed-data", WebSpeedDataTableProvider.class));
 
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
@@ -210,6 +211,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(RouterConfigHandler.class).req(StateReportService.class, RouterConfigService.class,
 		      RouterConfigManager.class, DailyReportDao.class));
 		all.add(C(TopoGraphFormatConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(EsServerConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      RouterConfigManager.class, AllReportConfigManager.class));

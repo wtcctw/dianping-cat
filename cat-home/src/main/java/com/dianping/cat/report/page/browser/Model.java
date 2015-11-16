@@ -70,6 +70,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private String m_module;
 
+	private String m_distributionChart;
+	
 	private String m_agent;
 
 	public Model(Context ctx) {
@@ -143,20 +145,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_level;
 	}
 
-	public List<String> getLevels() {
-		return m_levels;
-	}
-
 	public LineChart getLineChart() {
 		return m_lineChart;
 	}
 
 	public String getModule() {
 		return m_module;
-	}
-
-	public List<String> getModules() {
-		return m_modules;
 	}
 
 	public Map<Integer, Item> getNetworks() {
@@ -243,20 +237,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_level = level;
 	}
 
-	public void setLevels(List<String> levels) {
-		m_levels = levels;
-	}
-
 	public void setLineChart(LineChart lineChart) {
 		m_lineChart = lineChart;
 	}
 
 	public void setModule(String module) {
 		m_module = module;
-	}
-
-	public void setModules(List<String> modules) {
-		m_modules = modules;
 	}
 
 	public void setNetworks(Map<Integer, Item> networks) {
@@ -285,6 +271,30 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setTotalCount(int totalCount) {
 		m_totalCount = totalCount;
+	}
+
+	public List<String> getModules() {
+		return m_modules;
+	}
+
+	public void setModules(List<String> modules) {
+		m_modules = modules;
+	}
+
+	public List<String> getLevels() {
+		return m_levels;
+	}
+
+	public void setLevels(List<String> levels) {
+		m_levels = levels;
+	}
+	
+	public String getDistributionChart() {
+		return m_distributionChart;
+	}
+
+	public void setDistributionChart(String distributionChart) {
+		m_distributionChart = distributionChart;
 	}
 
 }

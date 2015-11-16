@@ -80,13 +80,13 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 			if (!service.isEligable(request)) {
 				continue;
 			}
-			
+
 			// save current transaction so that child thread can access it
 			if (service instanceof ModelServiceWithCalSupport) {
 				((ModelServiceWithCalSupport) service).setParentTransaction(t);
 			}
 			requireSize++;
-			
+
 			s_threadPool.submit(new Runnable() {
 				@Override
 				public void run() {
@@ -148,6 +148,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 
 	protected abstract T merge(ModelRequest request, final List<ModelResponse<T>> responses);
 
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(64);
 

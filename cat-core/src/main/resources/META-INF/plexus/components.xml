@@ -101,21 +101,6 @@
 			<implementation>com.dianping.cat.config.web.js.DefaultAggregationHandler</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.web.js.AggregationConfigManager</role>
-			<implementation>com.dianping.cat.config.web.js.AggregationConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.web.js.AggregationHandler</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.config.app.command.CommandFormatHandler</role>
 			<implementation>com.dianping.cat.config.app.command.DefaultCommandFormatlHandler</implementation>
 		</component>
@@ -149,6 +134,18 @@
 		<component>
 			<role>com.dianping.cat.config.web.WebConfigManager</role>
 			<implementation>com.dianping.cat.config.web.WebConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.web.WebSpeedConfigManager</role>
+			<implementation>com.dianping.cat.config.web.WebSpeedConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -545,6 +542,16 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>ajax-data</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>ajax-data</logical-table-name>
+				<physical-table-name>ajax_data</physical-table-name>
+				<data-source-name>web</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>js-error-log</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -565,13 +572,22 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>ajax-data</role-hint>
+			<role-hint>web-speed-data</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>ajax-data</logical-table-name>
-				<physical-table-name>ajax_data</physical-table-name>
+				<logical-table-name>web-speed-data</logical-table-name>
+				<physical-table-name>web_speed_data</physical-table-name>
 				<data-source-name>web</data-source-name>
 			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.web.AjaxDataDao</role>
+			<implementation>com.dianping.cat.web.AjaxDataDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.web.JsErrorLogDao</role>
@@ -592,8 +608,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.web.AjaxDataDao</role>
-			<implementation>com.dianping.cat.web.AjaxDataDao</implementation>
+			<role>com.dianping.cat.web.WebSpeedDataDao</role>
+			<implementation>com.dianping.cat.web.WebSpeedDataDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>

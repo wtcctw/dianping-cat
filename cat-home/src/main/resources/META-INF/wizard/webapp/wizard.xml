@@ -83,6 +83,9 @@
          <page name="server" title="Server" path="server" template="default">
             <description>Server</description>
          </page>
+         <page name="eslog" title="Eslog" path="eslog" template="default">
+            <description>Eslog</description>
+         </page>
       </module>
       <module name="system" path="s" default="false">
          <page name="login" title="Login" path="login" standalone="false">
@@ -96,6 +99,9 @@
          </page>
          <page name="router" title="Router" path="router" view="/jsp/system/router/router.jsp" template="default">
             <description>Router</description>
+         </page>
+         <page name="webconfig" title="Webconfig" path="webconfig" template="default">
+            <description>Webconfig</description>
          </page>
       </module>
    </webapp>

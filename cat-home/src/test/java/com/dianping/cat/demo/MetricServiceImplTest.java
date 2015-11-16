@@ -5,15 +5,9 @@ import java.util.Date;
 import java.util.Map;
 
 import org.junit.Test;
-import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.influxdb.InfluxDB;
-import com.dianping.cat.influxdb.config.entity.InfluxdbConfig;
-import com.dianping.cat.influxdb.config.transform.DefaultSaxParser;
-import com.dianping.cat.influxdb.service.InfluxDBConnection;
-import com.dianping.cat.influxdb.service.MetricServiceImpl;
-import com.dianping.cat.metric.DataSourceService;
 import com.dianping.cat.metric.MetricService;
 import com.dianping.cat.metric.MetricType;
 import com.dianping.cat.metric.QueryParameter;

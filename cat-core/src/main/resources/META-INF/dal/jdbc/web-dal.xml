@@ -332,5 +332,83 @@
 			</query>
 		</query-defs>
 	</entity>
+  	<entity name="web-speed-data" table="web_speed_data" alias="wsd">
+		<var name="speed-id" value-type="int" />
+		<query-defs>
+		<query name="insert" type="INSERT" batch="true">
+			<statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+		</query>
+		<query name="insert-or-update" type="INSERT"  batch="true">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>) ON DUPLICATE KEY UPDATE 
+        access_number1 = access_number1 + ${access-number1},
+        access_number2 = access_number2 + ${access-number2},
+        access_number3 = access_number3 + ${access-number3},
+        access_number4 = access_number4 + ${access-number4},
+        access_number5 = access_number5 + ${access-number5},
+        access_number6 = access_number6 + ${access-number6},
+        access_number7 = access_number7 + ${access-number7},
+        access_number8 = access_number8 + ${access-number8},
+        access_number9 = access_number9 + ${access-number9},
+        access_number10 = access_number10 + ${access-number10},
+        access_number11 = access_number11 + ${access-number11},
+        access_number12 = access_number12 + ${access-number12},
+        access_number13 = access_number13 + ${access-number13},
+        access_number14 = access_number14 + ${access-number14},
+        access_number15 = access_number15 + ${access-number15},
+        access_number16 = access_number16 + ${access-number16},
+        access_number17 = access_number17 + ${access-number17},
+        access_number18 = access_number18 + ${access-number18},
+        access_number19 = access_number19 + ${access-number19},
+        access_number20 = access_number20 + ${access-number20},
+        access_number21 = access_number21 + ${access-number21},
+        access_number22 = access_number22 + ${access-number22},
+        access_number23 = access_number23 + ${access-number23},
+        access_number24 = access_number24 + ${access-number24},
+        access_number25 = access_number25 + ${access-number25},
+        access_number26 = access_number26 + ${access-number26},
+        access_number27 = access_number27 + ${access-number27},
+        access_number28 = access_number28 + ${access-number28},
+        access_number29 = access_number29 + ${access-number29},
+        access_number30 = access_number30 + ${access-number30},
+        access_number31 = access_number31 + ${access-number31},
+        access_number32 = access_number32 + ${access-number32},
+        response_sum_time1 = response_sum_time1 + ${response-sum-time1},
+        response_sum_time2 = response_sum_time2 + ${response-sum-time2},
+        response_sum_time3 = response_sum_time3 + ${response-sum-time3},
+        response_sum_time4 = response_sum_time4 + ${response-sum-time4},
+        response_sum_time5 = response_sum_time5 + ${response-sum-time5},
+        response_sum_time6 = response_sum_time6 + ${response-sum-time6},
+        response_sum_time7 = response_sum_time7 + ${response-sum-time7},
+        response_sum_time8 = response_sum_time8 + ${response-sum-time8},
+        response_sum_time9 = response_sum_time9 + ${response-sum-time9},
+        response_sum_time10 = response_sum_time10 + ${response-sum-time10},
+        response_sum_time11 = response_sum_time11 + ${response-sum-time11},
+        response_sum_time12 = response_sum_time12 + ${response-sum-time12},
+        response_sum_time13 = response_sum_time13 + ${response-sum-time13},
+        response_sum_time14 = response_sum_time14 + ${response-sum-time14},
+        response_sum_time15 = response_sum_time15 + ${response-sum-time15},
+        response_sum_time16 = response_sum_time16 + ${response-sum-time16},
+        response_sum_time17 = response_sum_time17 + ${response-sum-time17},
+        response_sum_time18 = response_sum_time18 + ${response-sum-time18},
+        response_sum_time19 = response_sum_time19 + ${response-sum-time19},
+        response_sum_time20 = response_sum_time20 + ${response-sum-time20},
+        response_sum_time21 = response_sum_time21 + ${response-sum-time21},
+        response_sum_time22 = response_sum_time22 + ${response-sum-time22},
+        response_sum_time23 = response_sum_time23 + ${response-sum-time23},
+        response_sum_time24 = response_sum_time24 + ${response-sum-time24},
+        response_sum_time25 = response_sum_time25 + ${response-sum-time25},
+        response_sum_time26 = response_sum_time26 + ${response-sum-time26},
+        response_sum_time27 = response_sum_time27 + ${response-sum-time27},
+        response_sum_time28 = response_sum_time28 + ${response-sum-time28},
+        response_sum_time29 = response_sum_time29 + ${response-sum-time29},
+        response_sum_time30 = response_sum_time30 + ${response-sum-time30},
+        response_sum_time31 = response_sum_time31 + ${response-sum-time31},
+        response_sum_time32 = response_sum_time32 + ${response-sum-time32}
+         ]]></statement>
+      </query>  
+		</query-defs>
+	</entity>
 </entities>
 

@@ -10,7 +10,15 @@
 <a:web_body>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
-	
+	<script type="text/javascript" src="/cat/js/baseGraph.js"></script>
+
+<style type="text/css">
+.graph {
+	width: 500px;
+	height: 300px;
+	margin: 4px auto;
+}
+</style> 
 <table>
 	<tr>
 			<th>
@@ -48,7 +56,7 @@
 					type="submit" />
 			</th>
 			</tr>
-		</table>
+	</table>
 	<table class="table table-hover table-striped table-condensed"  style="width:100%">
 	<tr>
 		<th width="30%">Msg</th>
@@ -72,6 +80,16 @@
 	</tr>
 	</c:forEach>
 </table>
+ <table align="center">
+	<tr>
+		<td><h5 style="text-align:center"  class='text-center text-info'>错误分布</h5>
+		<div id="distributionChart" class="graph"></div></td>
+	</tr>
+	<tr><td  style="display:none">
+		<div id ="distributionChartMeta">${model.distributionChart}</div>
+		</td>
+	</tr>
+</table> 
 <script type="text/javascript">
 $(document).ready(
 	function() {
@@ -141,6 +159,11 @@ $(document).ready(
 			source: data
 		});
 		
+		var distributionChart = ${model.distributionChart};
+
+		if(distributionChart!=null){
+			graphPieChart(document.getElementById('distributionChart'), distributionChart);
+		}	 
 });
 
 function query() {

@@ -68,8 +68,8 @@
 								${basedir}/src/main/resources/META-INF/dal/model/web-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/app-comparison-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/app-speed-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/server-filter-config-manifest.xml,
-					 </manifest>
+								${basedir}/src/main/resources/META-INF/dal/model/web-speed-config-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/server-filter-config-manifest.xml,</manifest>
                   </configuration>
                </execution>
                <execution>
@@ -82,10 +82,11 @@
                      <manifest>${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/jdbc/config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/jdbc/app-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/jdbc/web-manifest.xml,
-								 <![CDATA[,
+								${basedir}/src/main/resources/META-INF/dal/jdbc/web-manifest.xml, <![CDATA[,
                         ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
                         ${basedir}/src/main/resources/META-INF/dal/jdbc/config-manifest.xml,
+                     ,]]><![CDATA[,
+                        ${basedir}/src/main/resources/META-INF/dal/jdbc/web-manifest.xml,
                      ,]]></manifest>
                   </configuration>
                </execution>

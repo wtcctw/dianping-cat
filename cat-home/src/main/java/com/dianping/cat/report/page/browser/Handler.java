@@ -16,17 +16,15 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
-import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
+import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.page.app.display.ChartSorter;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.browser.graph.WebGraphCreator;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
-import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.web.JsErrorLog;
 import com.dianping.cat.web.JsErrorLogContent;
 import com.dianping.cat.web.JsErrorLogContentDao;
@@ -45,6 +43,17 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.config.web.js.Level;
 
 public class Handler implements PageHandler<Context> {
+	private final int LIMIT = 10000;
+
+	@Inject
+	private WebGraphCreator m_graphCreator;
+
+	@Inject
+	private JsErrorLogContentDao m_jsErrorLogContentlDao;
+
+	@Inject
+	private JsErrorLogDao m_jsErrorLogDao;
+
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -52,27 +61,25 @@ public class Handler implements PageHandler<Context> {
 	private ModuleManager m_moduleManager;
 
 	@Inject
+	private PayloadNormalizer m_normalizePayload;
+
+	@Inject
 	private UrlPatternConfigManager m_patternManager;
 
 	@Inject
 	private WebConfigManager m_webConfigManager;
 
-	@Inject
-	private PayloadNormalizer m_normalizePayload;
+	public void addBrowserCount(String browser, Map<String, Integer> distributions) {
+		Integer count = distributions.get(browser);
 
-	@Inject
-	private WebGraphCreator m_graphCreator;
-
-	@Inject
-	private JsErrorLogDao m_jsErrorLogDao;
-
-	@Inject
-	private JsErrorLogContentDao m_jsErrorLogContentlDao;
-
-	private final int LIMIT = 10000;
-
-	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
-	private ModelService<ProblemReport> m_service;
+		if (count == null) {
+			count = 1;
+		} else {
+			count++;
+		}
+		
+		distributions.put(browser, count);
+	}
 
 	private LineChart buildLineChart(Payload payload) {
 		AjaxDataQueryEntity entity1 = payload.getQueryEntity1();
@@ -100,6 +107,21 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 		}
 		return null;
+	}
+
+	public String buildDistributionChart(Map<String, Integer> distributions) {
+		PieChart chart = new PieChart();
+		List<Item> items = new ArrayList<Item>();
+
+		for (Entry<String, Integer> entry : distributions.entrySet()) {
+			Item item = new Item();
+
+			item.setNumber(entry.getValue()).setTitle(entry.getKey());
+			items.add(item);
+		}
+		chart.addItems(items);
+
+		return chart.getJsonString();
 	}
 
 	@Override
@@ -146,7 +168,7 @@ public class Handler implements PageHandler<Context> {
 
 	private void normalize(Model model, Payload payload) {
 		model.setAction(payload.getAction());
-		model.setPage(ReportPage.WEB);
+		model.setPage(ReportPage.BROWSER);
 		model.setCities(m_webConfigManager.queryConfigItem(WebConfigManager.CITY));
 		model.setOperators(m_webConfigManager.queryConfigItem(WebConfigManager.OPERATOR));
 		model.setNetworks(m_webConfigManager.queryConfigItem(WebConfigManager.NETWORK));
@@ -159,7 +181,7 @@ public class Handler implements PageHandler<Context> {
 		m_normalizePayload.normalize(model, payload);
 	}
 
-	private void processLog(Map<String, ErrorMsg> errorMsgs, JsErrorLog log) {
+	private void processLog(Map<String, ErrorMsg> errorMsgs, JsErrorLog log, Map<String, Integer> distributions) {
 		String msg = log.getMsg();
 		ErrorMsg errorMsg = errorMsgs.get(msg);
 
@@ -171,6 +193,8 @@ public class Handler implements PageHandler<Context> {
 
 		errorMsg.addCount();
 		errorMsg.addId(log.getId());
+
+		addBrowserCount(log.getBrowser(), distributions);
 	}
 
 	private List<ErrorMsg> sort(Map<String, ErrorMsg> errorMsgs) {
@@ -194,13 +218,14 @@ public class Handler implements PageHandler<Context> {
 			Map<String, ErrorMsg> errorMsgs = new HashMap<String, ErrorMsg>();
 			int offset = 0;
 			int totalCount = 0;
+			Map<String, Integer> distributions = new HashMap<String, Integer>();
 
 			while (true) {
 				List<JsErrorLog> result = m_jsErrorLogDao.findDataByTimeModuleLevelBrowser(startTime, endTime, module,
 				      levelCode, null, offset, LIMIT, JsErrorLogEntity.READSET_FULL);
 
 				for (JsErrorLog log : result) {
-					processLog(errorMsgs, log);
+					processLog(errorMsgs, log, distributions);
 				}
 
 				int count = result.size();
@@ -218,6 +243,7 @@ public class Handler implements PageHandler<Context> {
 			model.setTotalCount(totalCount);
 			model.setLevels(Level.getLevels());
 			model.setModules(m_moduleManager.getModules());
+			model.setDistributionChart(buildDistributionChart(distributions));
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
