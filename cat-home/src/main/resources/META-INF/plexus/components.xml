@@ -473,6 +473,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.server.config.GraphConfigManager</role>
+			<implementation>com.dianping.cat.report.page.server.config.GraphConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.graph.metric.CachedMetricReportService</role>
 			<implementation>com.dianping.cat.report.graph.metric.impl.CachedMetricReportServiceImpl</implementation>
 			<requirements>

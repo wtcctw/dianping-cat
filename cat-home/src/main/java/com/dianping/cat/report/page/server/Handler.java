@@ -14,11 +14,13 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.home.screen.entity.Graph;
 import com.dianping.cat.metric.MetricService;
 import com.dianping.cat.metric.MetricType;
 import com.dianping.cat.metric.QueryParameter;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.server.config.GraphConfigManager;
 import com.dianping.cat.report.page.server.config.ScreenConfigManager;
 import com.dianping.cat.system.page.config.ConfigHtmlParser;
 
@@ -29,6 +31,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ScreenConfigManager m_screenConfigManager;
+
+	@Inject
+	private GraphConfigManager m_graphConfigManger;
 
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
@@ -83,6 +88,8 @@ public class Handler implements PageHandler<Context> {
 			model.setConfig(m_configHtmlParser.parse(m_screenConfigManager.getConfig().toString()));
 			break;
 		case AGGREGATE:
+			Graph graph = m_graphConfigManger.queryById(10);
+			
 
 			break;
 		}

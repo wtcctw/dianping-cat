@@ -36,6 +36,29 @@ public class MetricServiceImpl implements MetricService, Initializable {
 
 	private SimpleDateFormat m_sdf;
 
+	private Map<String, List<MetricEntity>> buildCategories(List<MetricEntity> entities) {
+		Map<String, List<MetricEntity>> categories = new LinkedHashMap<String, List<MetricEntity>>();
+		for (MetricEntity entity : entities) {
+			String category = entity.getCategory();
+			List<MetricEntity> list = categories.get(category);
+
+			if (list == null) {
+				list = new LinkedList<MetricEntity>();
+
+				categories.put(category, list);
+			}
+			list.add(entity);
+		}
+		return categories;
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		m_sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+		m_sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+	}
+
 	@Override
 	public boolean insert(List<MetricEntity> entities) {
 		Map<String, List<MetricEntity>> categories = buildCategories(entities);
@@ -58,35 +81,6 @@ public class MetricServiceImpl implements MetricService, Initializable {
 			}
 		}
 		return true;
-	}
-
-	private Map<String, List<MetricEntity>> buildCategories(List<MetricEntity> entities) {
-		Map<String, List<MetricEntity>> categories = new LinkedHashMap<String, List<MetricEntity>>();
-		for (MetricEntity entity : entities) {
-			String category = entity.getCategory();
-
-			List<MetricEntity> list = categories.get(category);
-			if (list == null) {
-				list = new LinkedList<MetricEntity>();
-
-				categories.put(category, list);
-			}
-			list.add(entity);
-		}
-		return categories;
-	}
-
-	@Override
-	public <T> Map<Date, T> query(QueryParameter parameter) {
-		InfluxDBConnection conn = m_dataSourceService.getConnection(parameter.getCategory());
-		String format = "select %1$s(value) from %2$s where time >= '%3$tF %3$tT' and time < '%4$tF %4$tT' group by time(%5$s) fill(none)";
-		String query = String.format(format, parameter.getType().getName(), parameter.getMeasurement(),
-		      parameter.getStart(), parameter.getEnd(), parameter.getInterval());
-
-		QueryResult queryResult = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
-		Map<Date, T> datas = parseData(queryResult);
-
-		return datas;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -116,11 +110,43 @@ public class MetricServiceImpl implements MetricService, Initializable {
 		return datas;
 	}
 
-	@Override
-	public void initialize() throws InitializationException {
-		m_sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+	private List<String> parseMeasurements(QueryResult result) {
+		List<String> measurements = new LinkedList<String>();
 
-		m_sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		for (Result r : result.getResults()) {
+			List<Series> series = r.getSeries();
+
+			if (series != null) {
+				for (Series s : series) {
+					if (s != null && s.getValues() != null) {
+						for (List<Object> v : s.getValues()) {
+							measurements.add(String.valueOf(v.get(0)));
+						}
+					}
+				}
+			}
+		}
+		return measurements;
 	}
 
+	@Override
+	public <T> Map<Date, T> query(QueryParameter parameter) {
+		InfluxDBConnection conn = m_dataSourceService.getConnection(parameter.getCategory());
+		String format = "select %1$s(value) from %2$s where time >= '%3$tF %3$tT' and time < '%4$tF %4$tT' group by time(%5$s) fill(none)";
+		String query = String.format(format, parameter.getType().getName(), parameter.getMeasurement(),
+		      parameter.getStart(), parameter.getEnd(), parameter.getInterval());
+		System.out.println(query);
+		QueryResult queryResult = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
+		Map<Date, T> datas = parseData(queryResult);
+
+		return datas;
+	}
+
+	@Override
+	public List<String> queryMeasurements(String category) {
+		InfluxDBConnection conn = m_dataSourceService.getConnection(category);
+		QueryResult result = conn.getInfluxDB().query(new Query("show measurements", conn.getDataBase()));
+
+		return parseMeasurements(result);
+	}
 }

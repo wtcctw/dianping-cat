@@ -21,6 +21,7 @@
   <entity name="segment">
     <attribute name="id" value-type="String" key="true" />
     <attribute name="title" value-type="String" />
+    <attribute name="category" value-type="String" />
     <attribute name="measure" value-type="String" />
     <attribute name="tags" value-type="String" />
     <attribute name="endpoint" value-type="String" />

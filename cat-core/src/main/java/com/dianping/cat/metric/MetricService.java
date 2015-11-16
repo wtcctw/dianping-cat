@@ -10,4 +10,6 @@ public interface MetricService {
 
 	public boolean insert(List<MetricEntity> entities);
 
+	public List<String> queryMeasurements(String category);
+
 }
