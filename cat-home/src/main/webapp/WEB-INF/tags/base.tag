@@ -50,7 +50,7 @@
 					<i class="navbar-brand">
 						<span>CAT</span>
 						<small style="font-size:65%">
-							<a href="/cat/r">（Central Application Tracking）</a>
+							（Central Application Tracking）
 						</small>
 					<button class="btn btn-success btn-sm" id="nav_application" >
 						<i class="ace-icon fa fa-signal"></i>Application
