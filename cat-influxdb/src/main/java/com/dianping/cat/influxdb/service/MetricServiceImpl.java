@@ -2,6 +2,7 @@ package com.dianping.cat.influxdb.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -83,9 +84,8 @@ public class MetricServiceImpl implements MetricService, Initializable {
 		return true;
 	}
 
-	@SuppressWarnings("unchecked")
-	private <T> Map<Date, T> parseData(QueryResult result) {
-		Map<Date, T> datas = new LinkedHashMap<Date, T>();
+	private Map<Long, Double> parseData(QueryResult result) {
+		Map<Long, Double> datas = new LinkedHashMap<Long, Double>();
 
 		for (Result r : result.getResults()) {
 			List<Series> series = r.getSeries();
@@ -96,9 +96,9 @@ public class MetricServiceImpl implements MetricService, Initializable {
 						for (List<Object> v : s.getValues()) {
 							try {
 								Date date = m_sdf.parse(String.valueOf(v.get(0)));
-								T data = (T) (v.get(1));
+								double data = (double) (v.get(1));
 
-								datas.put(date, data);
+								datas.put(date.getTime(), data);
 							} catch (ParseException e) {
 								Cat.logError(e);
 							}
@@ -130,16 +130,22 @@ public class MetricServiceImpl implements MetricService, Initializable {
 	}
 
 	@Override
-	public <T> Map<Date, T> query(QueryParameter parameter) {
+	public Map<Long, Double> query(QueryParameter parameter) {
 		InfluxDBConnection conn = m_dataSourceService.getConnection(parameter.getCategory());
-		String format = "select %1$s(value) from %2$s where time >= '%3$tF %3$tT' and time < '%4$tF %4$tT' group by time(%5$s) fill(none)";
-		String query = String.format(format, parameter.getType().getName(), parameter.getMeasurement(),
-		      parameter.getStart(), parameter.getEnd(), parameter.getInterval());
-		System.out.println(query);
-		QueryResult queryResult = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
-		Map<Date, T> datas = parseData(queryResult);
 
-		return datas;
+		if (conn != null) {
+			String format = "SELECT %1$s(value) FROM %2$s WHERE %3$s TIME >= '%4$tF %4$tT' AND TIME < '%5$tF %5$tT' GROUP BY time(%6$s) fill(none)";
+			String query = String.format(format, parameter.getType().getName(), parameter.getMeasurement(),
+			      parameter.getTags(), parameter.getStart(), parameter.getEnd(), parameter.getInterval());
+			System.out.println(query);
+
+			QueryResult queryResult = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
+			Map<Long, Double> datas = parseData(queryResult);
+
+			return datas;
+		} else {
+			return Collections.emptyMap();
+		}
 	}
 
 	@Override

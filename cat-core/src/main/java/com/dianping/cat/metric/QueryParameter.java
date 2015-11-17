@@ -1,74 +1,99 @@
 package com.dianping.cat.metric;
 
 import java.util.Date;
+import java.util.List;
 
-import com.dianping.cat.metric.MetricType;
+import org.unidal.helper.Splitters;
+import org.unidal.lookup.util.StringUtils;
 
 public class QueryParameter {
 
-	private String category;
+	private String m_category;
 
-	private String measurement;
+	private String m_measurement;
 
-	private MetricType type;
+	private String m_tags;
 
-	private String interval;
+	private MetricType m_type;
 
-	private Date start;
+	private String m_interval;
 
-	private Date end;
+	private Date m_start;
+
+	private Date m_end;
 
 	public String getCategory() {
-		return category;
+		return m_category;
 	}
 
 	public Date getEnd() {
-		return end;
+		return m_end;
 	}
 
 	public String getInterval() {
-		return interval;
+		return m_interval;
 	}
 
 	public String getMeasurement() {
-		return measurement;
+		return m_measurement;
 	}
 
 	public Date getStart() {
-		return start;
+		return m_start;
+	}
+
+	public String getTags() {
+		String tag = "";
+		List<String> tags = Splitters.by(";").noEmptyItem().split(m_tags);
+
+		if (!tags.isEmpty()) {
+			tag = StringUtils.join(tags, " AND ") + " AND ";
+		}
+
+		return tag;
 	}
 
 	public MetricType getType() {
-		return type;
+		return m_type;
 	}
 
 	public QueryParameter setCategory(String category) {
-		this.category = category;
+		m_category = category;
 		return this;
 	}
 
 	public QueryParameter setEnd(Date end) {
-		this.end = end;
+		m_end = end;
+		return this;
+	}
+
+	public QueryParameter setInterval(int interval) {
+		m_interval = interval + "m";
 		return this;
 	}
 
 	public QueryParameter setInterval(String interval) {
-		this.interval = interval;
+		m_interval = interval;
 		return this;
 	}
 
 	public QueryParameter setMeasurement(String measurement) {
-		this.measurement = measurement;
+		m_measurement = measurement;
 		return this;
 	}
 
 	public QueryParameter setStart(Date start) {
-		this.start = start;
+		m_start = start;
+		return this;
+	}
+
+	public QueryParameter setTags(String tags) {
+		m_tags = tags;
 		return this;
 	}
 
 	public QueryParameter setType(MetricType type) {
-		this.type = type;
+		m_type = type;
 		return this;
 	}
 }

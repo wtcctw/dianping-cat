@@ -209,7 +209,7 @@ CREATE TABLE `alteration` (
   `creation_date` datetime NOT NULL COMMENT '数据库创建时间',
   PRIMARY KEY (`id`),
   KEY `ind_date_domain_host` (`date`,`domain`,`hostname`)
-) ENGINE=InnoDB AUTO_INCREMENT=1241 DEFAULT CHARSET=utf8 COMMENT='变更表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='变更表';
 
 CREATE TABLE `alert` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
@@ -348,7 +348,7 @@ CREATE TABLE `overload` (
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`),
   KEY `period` (`period`)
-) ENGINE=InnoDB AUTO_INCREMENT=1242 DEFAULT CHARSET=utf8 COMMENT='过大容量表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='过大容量表';
 
 CREATE TABLE `config_modification` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
@@ -359,11 +359,33 @@ CREATE TABLE `config_modification` (
   `date` datetime NOT NULL COMMENT '修改时间',
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1242 DEFAULT CHARSET=utf8 COMMENT='配置修改记录表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='配置修改记录表';
 
 CREATE TABLE `user_define_rule` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
   `content` text NOT NULL COMMENT '用户定义规则',
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1242 DEFAULT CHARSET=utf8 COMMENT='用户定义规则表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户定义规则表';
+
+CREATE TABLE `metric_screen` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL COMMENT '配置名称',
+  `grap_name` varchar(50) NOT NULL COMMENT 'Graph名称',
+  `category` varchar(50) NOT NULL COMMENT 'Graph类别',
+  `content` longtext COMMENT '配置的具体内容',
+  `creation_date` datetime NOT NULL COMMENT '配置创建时间',
+  `updatetime` datetime NOT NULL COMMENT '配置修改时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_graph` (`name`,`graph_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统监控的screen配置';
+
+CREATE TABLE `metric_graph` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL COMMENT '配置ID',
+  `content` longtext COMMENT '配置的具体内容',
+  `creation_date` datetime NOT NULL COMMENT '配置创建时间',
+  `updatetime` datetime NOT NULL COMMENT '配置修改时间',
+  PRIMARY KEY (`id`),
+  UNIQUE `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统监控的graph配置';

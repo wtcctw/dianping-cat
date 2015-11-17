@@ -32,7 +32,7 @@ public class MetricServiceImplTest extends ComponentTestCase {
 		parameter.setCategory("system").setStart(start).setEnd(end).setMeasurement("userCpu").setType(MetricType.AVG)
 		      .setInterval("1m");
 
-		Map<Date, Double> result = m_metricService.query(parameter);
+		Map<Long, Double> result = m_metricService.query(parameter);
 
 		System.out.println(result);
 	}

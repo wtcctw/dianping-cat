@@ -461,27 +461,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.server.config.ScreenConfigManager</role>
-			<implementation>com.dianping.cat.report.page.server.config.ScreenConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.server.config.GraphConfigManager</role>
-			<implementation>com.dianping.cat.report.page.server.config.GraphConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.graph.metric.CachedMetricReportService</role>
 			<implementation>com.dianping.cat.report.graph.metric.impl.CachedMetricReportServiceImpl</implementation>
 			<requirements>
@@ -544,6 +523,24 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.server.service.ScreenService</role>
+			<implementation>com.dianping.cat.report.page.server.service.ScreenService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MetricScreenDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.server.service.GraphService</role>
+			<implementation>com.dianping.cat.report.page.server.service.GraphService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MetricGraphDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2376,6 +2373,26 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>metric-graph</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>metric-graph</logical-table-name>
+				<physical-table-name>metric_graph</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>metric-screen</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>metric-screen</logical-table-name>
+				<physical-table-name>metric_screen</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>overload</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -2443,6 +2460,24 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.ConfigModificationDao</role>
 			<implementation>com.dianping.cat.home.dal.report.ConfigModificationDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.MetricGraphDao</role>
+			<implementation>com.dianping.cat.home.dal.report.MetricGraphDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.MetricScreenDao</role>
+			<implementation>com.dianping.cat.home.dal.report.MetricScreenDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -5766,7 +5801,10 @@
 					<role>com.dianping.cat.report.page.server.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.server.config.ScreenConfigManager</role>
+					<role>com.dianping.cat.report.page.server.service.ScreenService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.server.service.GraphService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
@@ -5776,6 +5814,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.metric.MetricService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.graph.metric.DataExtractor</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5789,14 +5830,41 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.server.config.ScreenConfigManager</role>
-			<implementation>com.dianping.cat.report.page.server.config.ScreenConfigManager</implementation>
+			<role>com.dianping.cat.report.page.server.service.ScreenService</role>
+			<implementation>com.dianping.cat.report.page.server.service.ScreenService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
+					<role>com.dianping.cat.home.dal.report.MetricScreenDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.MetricScreenDao</role>
+			<implementation>com.dianping.cat.home.dal.report.MetricScreenDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.server.service.GraphService</role>
+			<implementation>com.dianping.cat.report.page.server.service.GraphService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MetricGraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.MetricGraphDao</role>
+			<implementation>com.dianping.cat.home.dal.report.MetricGraphDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>

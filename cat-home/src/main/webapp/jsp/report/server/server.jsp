@@ -22,6 +22,15 @@
 				</th>
 			</tr>
 		</table>
+		
+		<div class="col-xs-12">
+			<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
+	   			<div style="float:left;">
+	   				<div id="${item.id}" class="metricGraph" style="width:450px;height:350px;"></div>
+	   			</div>
+			</c:forEach></div>
+		
+		</div>
 	
 	<script type="text/javascript">
 			
@@ -58,7 +67,12 @@
 					});
 				}
 			});
-		});		
+		});	
+	
+		<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
+			var data = ${item.jsonString};
+			graphMetricChart(document.getElementById('${item.id}'), data);
+		</c:forEach>
 	</script>
 	
 </a:serverBody>

@@ -1,8 +1,11 @@
 package com.dianping.cat.report.page.server;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 
@@ -14,14 +17,18 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.home.screen.entity.Graph;
+import com.dianping.cat.home.graph.entity.Graph;
+import com.dianping.cat.home.graph.entity.Item;
+import com.dianping.cat.home.graph.entity.Segment;
 import com.dianping.cat.metric.MetricService;
 import com.dianping.cat.metric.MetricType;
 import com.dianping.cat.metric.QueryParameter;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.server.config.GraphConfigManager;
-import com.dianping.cat.report.page.server.config.ScreenConfigManager;
+import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.graph.metric.DataExtractor;
+import com.dianping.cat.report.page.server.service.GraphService;
+import com.dianping.cat.report.page.server.service.ScreenService;
 import com.dianping.cat.system.page.config.ConfigHtmlParser;
 
 public class Handler implements PageHandler<Context> {
@@ -30,10 +37,10 @@ public class Handler implements PageHandler<Context> {
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private ScreenConfigManager m_screenConfigManager;
+	private ScreenService m_screenService;
 
 	@Inject
-	private GraphConfigManager m_graphConfigManger;
+	private GraphService m_graphService;
 
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
@@ -43,6 +50,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private MetricService m_metricService;
+
+	@Inject
+	protected DataExtractor m_dataExtractor;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -60,36 +70,48 @@ public class Handler implements PageHandler<Context> {
 
 		normalize(payload, model);
 
+		long date = payload.getDate();
+		int timeRange = payload.getTimeRange();
+		Date start = new Date(date - (timeRange - 1) * TimeHelper.ONE_HOUR);
+		Date end = new Date(date + TimeHelper.ONE_HOUR);
+
 		switch (action) {
 		case VIEW:
+			int length = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_MINUTE);
+			int interval = m_dataExtractor.calculateInterval(length);
+			Graph graph = m_graphService.queryById(payload.getGraphId());
+			List<LineChart> lineCharts = new ArrayList<LineChart>();
+
+			for (Entry<String, Item> entry : graph.getItems().entrySet()) {
+				Item item = entry.getValue();
+				LineChart linechart = new LineChart();
+
+				linechart.setId(entry.getKey());
+
+				for (Entry<String, Segment> e : item.getSegments().entrySet()) {
+					Segment segment = e.getValue();
+					Map<Long, Double> result = fetchData(start, end, e.getValue(), interval);
+					String title = segment.getId();
+
+					linechart.add(title, result);
+				}
+				lineCharts.add(linechart);
+			}
+			model.setLineCharts(lineCharts);
 			break;
 		case SCREEN:
-			long date = payload.getDate();
-			int timeRange = payload.getTimeRange();
-			Date start = new Date(date - (timeRange - 1) * TimeHelper.ONE_HOUR);
-			Date end = new Date(date + TimeHelper.ONE_HOUR);
 			QueryParameter parameter = new QueryParameter();
 
 			parameter.setCategory("system").setStart(start).setEnd(end).setMeasurement("userCpu").setType(MetricType.AVG)
 			      .setInterval("1m");
 
-			Map<Date, Double> result = m_metricService.query(parameter);
+			Map<Long, Double> result = m_metricService.query(parameter);
 
 			System.out.println(result);
 
-			model.setScreens(m_screenConfigManager.getConfig().getScreens().values());
-			break;
-		case CONFIG_UPDATE:
-			String config = payload.getContent();
-
-			if (!StringUtils.isEmpty(config)) {
-				model.setOpState(m_screenConfigManager.insert(config));
-			}
-			model.setConfig(m_configHtmlParser.parse(m_screenConfigManager.getConfig().toString()));
+			model.setGraphs(m_screenService.querByName(payload.getScreen()));
 			break;
 		case AGGREGATE:
-			Graph graph = m_graphConfigManger.queryById(10);
-			
 
 			break;
 		}
@@ -97,6 +119,17 @@ public class Handler implements PageHandler<Context> {
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
+	}
+
+	private Map<Long, Double> fetchData(Date start, Date end, Segment segment, int interval) {
+		MetricType type = MetricType.getByName(segment.getType(), MetricType.AVG);
+		QueryParameter parameter = new QueryParameter();
+		parameter.setCategory(segment.getCategory()).setStart(start).setEnd(end).setMeasurement(segment.getMeasure())
+		      .setType(type).setTags(segment.getTags()).setInterval(interval);
+
+		Map<Long, Double> result = m_metricService.query(parameter);
+
+		return result;
 	}
 
 	private void normalize(Payload payload, Model model) {
@@ -114,9 +147,13 @@ public class Handler implements PageHandler<Context> {
 		String screen = payload.getScreen();
 
 		if (StringUtils.isEmpty(screen)) {
-			screen = m_screenConfigManager.getConfig().getScreens().keySet().iterator().next();
+			// TODO
 
 			payload.setScreen(screen);
+		}
+
+		if (payload.getGraphId() == 0) {
+			payload.setGraphId(1);
 		}
 
 	}

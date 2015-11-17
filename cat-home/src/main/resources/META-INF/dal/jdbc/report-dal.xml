@@ -200,7 +200,55 @@
 			</query>
 		</query-defs>
 	</entity>
-	
+	<entity name="metric-graph" table="metric_graph" alias="mg">
+		<member name="creation-date" insert-expr="NOW()" />
+		<member name="updatetime" insert-expr="NOW()" update-expr="NOW()" />
+		<query-defs>
+			<query name="find-by-name" type="SELECT" >
+				<param name="name"/>
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='name'/> = ${name}
+					]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="metric-screen" table="metric_screen" alias="ms">
+		<member name="creation-date" insert-expr="NOW()" />
+		<member name="updatetime" insert-expr="NOW()" update-expr="NOW()" />
+		<readsets>
+			<readset name="content">
+				<member name="content" />
+			</readset>
+			<readset name="metaInfo">
+				<member name="id" />
+				<member name="name" />
+				<member name="graph-name" />
+				<member name="category" />
+			</readset>
+		 </readsets>
+		<query-defs>
+			<query name="find-by-name-graph" type="SELECT" >
+				<param name="name"/>
+				<param name="graph-name"/>
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='name'/> = ${name}
+					AND <FIELD name='graph-name'/> = ${graph-name} 
+					]]></statement>
+			</query>
+			<query name="find-by-name" type="SELECT" multiple="true">
+				<param name="name"/>
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='name'/> = ${name}
+					]]></statement>
+			</query>
+		</query-defs>
+	</entity>
     <entity name="overload" table="overload" alias="ot">
    		<var name="start-time" value-type="Date" />
 		<var name="end-time" value-type="Date" />

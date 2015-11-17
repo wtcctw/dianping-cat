@@ -5,8 +5,6 @@ public enum JspFile {
 
 	SCREEN("/jsp/report/server/screen.jsp"),
 
-	CONFIG("/jsp/report/server/config.jsp"),
-
 	AGGREGATE("/jsp/report/server/aggregate.jsp"),
 
 	;

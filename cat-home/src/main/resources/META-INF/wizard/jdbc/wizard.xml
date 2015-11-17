@@ -17,6 +17,8 @@
          <table name="overload"/>
          <table name="config_modification"/>
          <table name="user_define_rule"/>
+         <table name="metric_screen"/>
+         <table name="metric_graph"/>
       </group>
    </jdbc>
 </wizard>

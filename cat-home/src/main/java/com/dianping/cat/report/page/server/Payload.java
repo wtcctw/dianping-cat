@@ -20,6 +20,9 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@FieldMeta("content")
 	private String m_content;
 
+	@FieldMeta("graphId")
+	private int m_graphId;
+
 	private ReportPage m_page;
 
 	public Payload() {
@@ -33,6 +36,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public String getContent() {
 		return m_content;
+	}
+
+	public int getGraphId() {
+		return m_graphId;
 	}
 
 	@Override
@@ -54,6 +61,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public void setContent(String content) {
 		m_content = content;
+	}
+
+	public void setGraphId(int graphId) {
+		m_graphId = graphId;
 	}
 
 	@Override

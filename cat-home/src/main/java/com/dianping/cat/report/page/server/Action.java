@@ -5,9 +5,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	AGGREGATE("aggregate"),
 
-	SCREEN("screen"),
-
-	CONFIG_UPDATE("configUpdate");
+	SCREEN("screen");
 
 	private String m_name;
 

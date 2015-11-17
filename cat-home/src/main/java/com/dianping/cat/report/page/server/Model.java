@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 
-import com.dianping.cat.home.screen.entity.Screen;
+import com.dianping.cat.home.graph.entity.Graph;
 import com.dianping.cat.mvc.AbstractReportModel;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
@@ -30,7 +30,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Date m_endTime;
 
-	private Collection<Screen> m_screens;
+	private List<Graph> m_graphs;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -63,16 +63,16 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_endTime;
 	}
 
+	public List<Graph> getGraphs() {
+		return m_graphs;
+	}
+
 	public List<LineChart> getLineCharts() {
 		return m_lineCharts;
 	}
 
 	public String getOpState() {
 		return m_opState;
-	}
-
-	public Collection<Screen> getScreens() {
-		return m_screens;
 	}
 
 	public Date getStartTime() {
@@ -85,6 +85,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setEndTime(Date endTime) {
 		m_endTime = endTime;
+	}
+
+	public void setGraphs(List<Graph> graphs) {
+		m_graphs = graphs;
 	}
 
 	public void setLineCharts(List<LineChart> lineCharts) {
@@ -101,10 +105,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setOpState(String opState) {
 		m_opState = opState;
-	}
-
-	public void setScreens(Collection<Screen> screens) {
-		m_screens = screens;
 	}
 
 	public void setStartTime(Date startTime) {
