@@ -17,8 +17,8 @@ import com.dianping.cat.app.AppCommandData;
 import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppCommandDataEntity;
 import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.report.page.DataSequence;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
-import com.dianping.cat.report.page.app.display.AppDataSequence;
 
 public class AppDataService {
 
@@ -55,7 +55,7 @@ public class AppDataService {
 		return infos;
 	}
 
-	private AppDataSequence<AppCommandData> buildAppSequence(List<AppCommandData> fromDatas, Date period) {
+	private DataSequence<AppCommandData> buildAppSequence(List<AppCommandData> fromDatas, Date period) {
 		Map<Integer, List<AppCommandData>> dataMap = new LinkedHashMap<Integer, List<AppCommandData>>();
 		int max = -5;
 
@@ -77,7 +77,7 @@ public class AppDataService {
 		int n = max / 5 + 1;
 		int length = queryAppDataDuration(period, n);
 
-		return new AppDataSequence<AppCommandData>(length, dataMap);
+		return new DataSequence<AppCommandData>(length, dataMap);
 	}
 
 	private Map<Integer, List<AppCommandData>> buildFields2Datas(List<AppCommandData> datas, AppDataField field) {
@@ -96,7 +96,7 @@ public class AppDataService {
 		return field2Datas;
 	}
 
-	public Double[] computeDelayAvg(AppDataSequence<AppCommandData> convertedData) {
+	public Double[] computeDelayAvg(DataSequence<AppCommandData> convertedData) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
@@ -115,7 +115,7 @@ public class AppDataService {
 		return value;
 	}
 
-	public Double[] computeRequestCount(AppDataSequence<AppCommandData> convertedData) {
+	public Double[] computeRequestCount(DataSequence<AppCommandData> convertedData) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
@@ -132,7 +132,7 @@ public class AppDataService {
 		return value;
 	}
 
-	public Double[] computeSuccessRatio(int commandId, AppDataSequence<AppCommandData> convertedData) {
+	public Double[] computeSuccessRatio(int commandId, DataSequence<AppCommandData> convertedData) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
@@ -339,19 +339,19 @@ public class AppDataService {
 			if (SUCCESS.equals(type)) {
 				datas = m_dao.findDataByMinuteCode(commandId, period, city, operator, network, appVersion, connnectType,
 				      code, platform, AppCommandDataEntity.READSET_SUCCESS_DATA);
-				AppDataSequence<AppCommandData> s = buildAppSequence(datas, entity.getDate());
+				DataSequence<AppCommandData> s = buildAppSequence(datas, entity.getDate());
 
 				return computeSuccessRatio(commandId, s);
 			} else if (REQUEST.equals(type)) {
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, AppCommandDataEntity.READSET_COUNT_DATA);
-				AppDataSequence<AppCommandData> s = buildAppSequence(datas, entity.getDate());
+				DataSequence<AppCommandData> s = buildAppSequence(datas, entity.getDate());
 
 				return computeRequestCount(s);
 			} else if (DELAY.equals(type)) {
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, AppCommandDataEntity.READSET_AVG_DATA);
-				AppDataSequence<AppCommandData> s = buildAppSequence(datas, entity.getDate());
+				DataSequence<AppCommandData> s = buildAppSequence(datas, entity.getDate());
 
 				return computeDelayAvg(s);
 			} else {

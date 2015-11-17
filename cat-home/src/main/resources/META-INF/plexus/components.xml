@@ -5616,6 +5616,9 @@
 			<implementation>com.dianping.cat.report.page.browser.Handler</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.page.browser.service.AjaxDataService</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.browser.graph.WebGraphCreator</role>
 				</requirement>
 				<requirement>
@@ -5644,18 +5647,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.browser.service.WebSpeedService</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.browser.graph.WebGraphCreator</role>
-			<implementation>com.dianping.cat.report.page.browser.graph.WebGraphCreator</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.browser.service.AjaxDataService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.web.WebConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5692,6 +5683,21 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.browser.graph.WebGraphCreator</role>
+			<implementation>com.dianping.cat.report.page.browser.graph.WebGraphCreator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.browser.service.AjaxDataService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.WebConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

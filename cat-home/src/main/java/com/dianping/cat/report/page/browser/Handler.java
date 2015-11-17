@@ -6,9 +6,15 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletException;
 
@@ -24,11 +30,14 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
-import com.dianping.cat.report.page.app.display.ChartSorter;
-import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
+import com.dianping.cat.report.graph.PieChartDetailInfo;
+import com.dianping.cat.report.page.browser.display.AjaxDataDetail;
+import com.dianping.cat.report.page.browser.display.ChartSorter;
 import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
 import com.dianping.cat.report.page.browser.graph.WebGraphCreator;
+import com.dianping.cat.report.page.browser.service.AjaxDataField;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
+import com.dianping.cat.report.page.browser.service.AjaxDataService;
 import com.dianping.cat.report.page.browser.service.SpeedQueryEntity;
 import com.dianping.cat.report.page.browser.service.WebSpeedService;
 import com.dianping.cat.web.JsErrorLog;
@@ -51,6 +60,9 @@ import com.site.lookup.util.StringUtils;
 
 public class Handler implements PageHandler<Context> {
 	private final int LIMIT = 10000;
+
+	@Inject
+	private AjaxDataService m_ajaxDataService;
 
 	@Inject
 	private WebGraphCreator m_graphCreator;
@@ -155,8 +167,7 @@ public class Handler implements PageHandler<Context> {
 
 		switch (action) {
 		case VIEW:
-			LineChart lineChart = buildLineChart(payload);
-			model.setLineChart(lineChart);
+			parallelBuildLineChart(model, payload);
 			break;
 		case PIECHART:
 			Pair<PieChart, List<PieChartDetailInfo>> pieChartPair = buildPieChart(payload);
@@ -165,6 +176,9 @@ public class Handler implements PageHandler<Context> {
 				model.setPieChart(pieChartPair.getKey());
 				model.setPieChartDetailInfos(pieChartPair.getValue());
 			}
+			
+			int commandId = payload.getQueryEntity1().getId();
+			model.setCommandId(commandId);
 			break;
 		case JS_ERROR:
 			viewJsError(payload, model);
@@ -180,6 +194,115 @@ public class Handler implements PageHandler<Context> {
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void parallelBuildLineChart(Model model, final Payload payload) {
+		ExecutorService executor = Executors.newFixedThreadPool(3);
+		List<FutureTask> tasks = new LinkedList<FutureTask>();
+
+		FutureTask lineChartTask = new FutureTask(new CallableTask<LineChart>() {
+			@Override
+			public LineChart call() throws Exception {
+				return buildLineChart(payload);
+			}
+		});
+
+		tasks.add(lineChartTask);
+		executor.execute(lineChartTask);
+
+		FutureTask ajaxDetailTask = new FutureTask(new CallableTask<List<AjaxDataDetail>>() {
+			@Override
+			public List<AjaxDataDetail> call() throws Exception {
+				return buildAjaxDataDetails(payload);
+			}
+
+		});
+		tasks.add(ajaxDetailTask);
+		executor.execute(ajaxDetailTask);
+
+		FutureTask comparisonTask = new FutureTask(new CallableTask<Map<String, AjaxDataDetail>>() {
+			@Override
+			public Map<String, AjaxDataDetail> call() throws Exception {
+				return buildComparisonInfo(payload);
+			}
+		});
+		tasks.add(comparisonTask);
+		executor.execute(comparisonTask);
+
+		LineChart lineChart = fetchTaskResult(tasks, 0);
+		List<AjaxDataDetail> ajaxDataDetails = fetchTaskResult(tasks, 1);
+		Map<String, AjaxDataDetail> comparisonDetails = fetchTaskResult(tasks, 2);
+
+		executor.shutdown();
+		model.setLineChart(lineChart);
+		model.setAjaxDataDetailInfos(ajaxDataDetails);
+		model.setComparisonAjaxDetails(comparisonDetails);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private <T> T fetchTaskResult(List<FutureTask> tasks, int i) {
+		T data = null;
+		FutureTask task = tasks.get(i);
+
+		try {
+			data = (T) task.get(10L, TimeUnit.SECONDS);
+		} catch (Exception e) {
+			task.cancel(true);
+			Cat.logError(e);
+		}
+		return data;
+	}
+
+	protected Map<String, AjaxDataDetail> buildComparisonInfo(Payload payload) {
+		AjaxDataQueryEntity currentEntity = payload.getQueryEntity1();
+		AjaxDataQueryEntity comparisonEntity = payload.getQueryEntity2();
+		Map<String, AjaxDataDetail> result = new HashMap<String, AjaxDataDetail>();
+
+		if (currentEntity != null) {
+			AjaxDataDetail detail = buildComparisonInfo(currentEntity);
+
+			if (detail != null) {
+				result.put("当前值", detail);
+			}
+		}
+
+		if (comparisonEntity != null) {
+			AjaxDataDetail detail = buildComparisonInfo(comparisonEntity);
+
+			if (detail != null) {
+				result.put("对比值", detail);
+			}
+		}
+
+		return result;
+	}
+
+	private AjaxDataDetail buildComparisonInfo(AjaxDataQueryEntity entity) {
+		AjaxDataDetail appDetail = null;
+
+		try {
+			List<AjaxDataDetail> appDetails = m_ajaxDataService.buildAjaxDataDetailInfos(entity, AjaxDataField.CODE);
+
+			if (appDetails.size() >= 1) {
+				appDetail = appDetails.iterator().next();
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return appDetail;
+	}
+
+	private List<AjaxDataDetail> buildAjaxDataDetails(Payload payload) {
+		List<AjaxDataDetail> ajaxDetails = new ArrayList<AjaxDataDetail>();
+
+		try {
+			ajaxDetails = m_ajaxDataService.buildAjaxDataDetailInfos(payload.getQueryEntity1(), payload.getGroupByField());
+			Collections.sort(ajaxDetails, new ChartSorter(payload.getSort()).buildLineChartInfoComparator());
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return ajaxDetails;
 	}
 
 	private void buildSpeedInfo(Payload payload, Model model) {
@@ -316,4 +439,12 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
+	public class CallableTask<T> implements Callable<T> {
+
+		@Override
+		public T call() throws Exception {
+			return null;
+		}
+
+	}
 }

@@ -19,7 +19,8 @@ import com.dianping.cat.mvc.AbstractReportModel;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
-import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
+import com.dianping.cat.report.graph.PieChartDetailInfo;
+import com.dianping.cat.report.page.browser.display.AjaxDataDetail;
 import com.dianping.cat.report.page.browser.display.WebSpeedDetail;
 import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
 import com.dianping.cat.report.page.problem.transform.ProblemStatistics;
@@ -84,8 +85,14 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private String m_agent;
 
 	private WebSpeedDisplayInfo m_webSpeedDisplayInfo;
-	
+
 	private String m_page2StepsJson;
+
+	private Map<String, AjaxDataDetail> m_comparisonAjaxDetails;
+
+	private List<AjaxDataDetail> m_ajaxDataDetailInfos;
+	
+	private int m_commandId;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -93,6 +100,18 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public String getAgent() {
 		return m_agent;
+	}
+
+	public Map<String, AjaxDataDetail> getComparisonAjaxDetails() {
+		return m_comparisonAjaxDetails;
+	}
+
+	public List<AjaxDataDetail> getAjaxDataDetailInfos() {
+		return m_ajaxDataDetailInfos;
+	}
+
+	public void setAjaxDataDetailInfos(List<AjaxDataDetail> ajaxDataDetailInfos) {
+		m_ajaxDataDetailInfos = ajaxDataDetailInfos;
 	}
 
 	public ProblemStatistics getAllStatistics() {
@@ -105,6 +124,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public Map<Integer, Code> getCodes() {
 		return m_codes;
+	}
+	
+	public int getCommandId() {
+		return m_commandId;
 	}
 
 	public Map<String, Map<Integer, WebSpeedDetail>> getWebSpeedDetails() {
@@ -282,6 +305,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	public void setCompareEnd(Date compareEnd) {
 		m_compareEnd = compareEnd;
 	}
+	
+	public void setCommandId(int commandId) {
+		m_commandId = commandId;
+	}
 
 	public void setCompareStart(Date compareStart) {
 		m_compareStart = compareStart;
@@ -293,6 +320,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setDetail(String detail) {
 		m_detail = detail;
+	}
+
+	public void setComparisonAjaxDetails(Map<String, AjaxDataDetail> comparisonAjaxDetail) {
+		m_comparisonAjaxDetails = comparisonAjaxDetail;
 	}
 
 	public void setEnd(Date end) {

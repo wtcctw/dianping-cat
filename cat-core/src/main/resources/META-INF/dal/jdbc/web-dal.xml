@@ -113,18 +113,44 @@
 				<member name="code" />
 				<member name="access-number-sum" />
 				<member name="response-sum-time-sum" />
+				<member name="request-sum-byte-sum" />
+				<member name="response-sum-byte-sum" />
 			</readset>
 			<readset name="OPERATOR-DATA">
 				<member name="operator" />
 				<member name="access-number-sum" />
 			</readset>
+				<readset name="OPERATOR-CODE-DATA">
+				<member name="code" />
+				<member name="operator" />
+				<member name="access-number-sum" />
+				<member name="response-sum-time-sum" />
+				<member name="request-sum-byte-sum" />
+				<member name="response-sum-byte-sum" />
+			</readset>
 			<readset name="CITY-DATA">
 				<member name="city" />
 				<member name="access-number-sum" />
 			</readset>
+			<readset name="CITY-CODE-DATA">
+				<member name="code" />
+				<member name="city" />
+				<member name="access-number-sum" />
+				<member name="response-sum-time-sum" />
+				<member name="request-sum-byte-sum" />
+				<member name="response-sum-byte-sum" />
+			</readset>
 			<readset name="NETWORK-DATA">
 				<member name="network" />
 				<member name="access-number-sum" />
+			</readset>
+			<readset name="NETWORK-CODE-DATA">
+				<member name="code" />
+				<member name="network" />
+				<member name="access-number-sum" />
+				<member name="response-sum-time-sum" />
+				<member name="request-sum-byte-sum" />
+				<member name="response-sum-byte-sum" />
 			</readset>
 		</readsets>
 		<query-defs>
@@ -330,6 +356,78 @@
 		</IF>	
         group by  <FIELD name='network'/>  ]]></statement>
 			</query>
+	<query name="find-data-by-operator-code" type="SELECT" multiple="true">
+        <param name="api-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="code" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+        group by <FIELD name='operator'/>, <FIELD name='code'/>]]></statement>
+      </query>
+      <query name="find-data-by-network-code" type="SELECT" multiple="true">
+        <param name="api-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="code" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+        group by <FIELD name='network'/>, <FIELD name='code'/>]]></statement>
+      </query>
+      <query name="find-data-by-city-code" type="SELECT" multiple="true">
+        <param name="api-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="code" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+        group by <FIELD name='city'/>, <FIELD name='code'/>]]></statement>
+      </query>
 		</query-defs>
 	</entity>
   	<entity name="web-speed-data" table="web_speed_data" alias="wsd">

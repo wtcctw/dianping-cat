@@ -9,9 +9,9 @@ import com.dianping.cat.config.web.js.Level;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.browser.service.AjaxDataField;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
+import com.dianping.cat.report.page.browser.service.AjaxDataService;
 import com.dianping.cat.report.page.browser.service.SpeedQueryEntity;
 
 import org.codehaus.plexus.util.StringUtils;
@@ -29,7 +29,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private String m_url;
 
 	@FieldMeta("type")
-	private String m_type = AppDataService.REQUEST;
+	private String m_type = AjaxDataService.REQUEST;
+
+	@FieldMeta("sort")
+	private String m_sort = AjaxDataService.SUCCESS;
 
 	@FieldMeta("query1")
 	private String m_query1;
@@ -137,6 +140,14 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@Override
 	public Action getAction() {
 		return m_action;
+	}
+
+	public String getSort() {
+		return m_sort;
+	}
+
+	public void setSort(String sort) {
+		m_sort = sort;
 	}
 
 	public String getApi1() {
@@ -250,7 +261,7 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 			return null;
 		}
 	}
-	
+
 	public SpeedQueryEntity getSpeedQueryEntity1() {
 		if (m_query1 != null && m_query1.length() > 0) {
 			return new SpeedQueryEntity(m_query1);
@@ -258,7 +269,7 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 			return new SpeedQueryEntity();
 		}
 	}
-	
+
 	public SpeedQueryEntity getSpeedQueryEntity2() {
 		if (m_query2 != null && m_query2.length() > 0) {
 			return new SpeedQueryEntity(m_query2);
