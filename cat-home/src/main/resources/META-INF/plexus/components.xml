@@ -5895,9 +5895,6 @@
 					<role>com.dianping.cat.system.page.config.processor.ThirdPartyConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.config.processor.WebConfigProcessor</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.system.page.config.processor.TopologyConfigProcessor</role>
 				</requirement>
 				<requirement>
@@ -6080,64 +6077,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.config.processor.WebConfigProcessor</role>
-			<implementation>com.dianping.cat.system.page.config.processor.WebConfigProcessor</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.web.WebRuleConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.web.WebConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.browser.JsRuleConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.browser.ModuleManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.web.WebRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.web.WebRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.browser.JsRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.browser.JsRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
-			<implementation>com.dianping.cat.report.alert.RuleFTLDecorator</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.system.page.config.processor.TopologyConfigProcessor</role>
 			<implementation>com.dianping.cat.system.page.config.processor.TopologyConfigProcessor</implementation>
 			<requirements>
@@ -6211,6 +6150,10 @@
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
+			<implementation>com.dianping.cat.report.alert.RuleFTLDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.config.processor.ExceptionConfigProcessor</role>
@@ -6603,6 +6546,27 @@
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.ConfigModificationDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.browser.JsRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.browser.ModuleManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.WebConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.web.WebRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -6611,6 +6575,33 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.browser.JsRuleConfigManager</role>
+			<implementation>com.dianping.cat.report.alert.browser.JsRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.web.WebRuleConfigManager</role>
+			<implementation>com.dianping.cat.report.alert.web.WebRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 				</requirement>
 			</requirements>
 		</component>

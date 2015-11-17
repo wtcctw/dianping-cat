@@ -5,9 +5,9 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
-<jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
-<jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
+<jsp:useBean id="ctx" type="com.dianping.cat.system.page.web.Context" scope="request"/>
+<jsp:useBean id="payload" type="com.dianping.cat.system.page.web.Payload" scope="request"/>
+<jsp:useBean id="model" type="com.dianping.cat.system.page.web.Model" scope="request"/>
 
 <a:web_body>
 			<h3 class="text-center text-success">编辑WEB监控规则</h3>
@@ -33,13 +33,13 @@
 				<tr><th>地区 
 					<select style="width: 100px;" name="city" id="city">
 						<option value="-1">ALL</option>
-						<c:forEach var="item" items="${model.cities}" varStatus="status">
+						<c:forEach var="item" items="${model.webCities}" varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>
 					</select>
 				 运营商 <select style="width: 120px;" name="operator" id="operator">
 						<option value="-1">ALL</option>
-						<c:forEach var="item" items="${model.operators}"
+						<c:forEach var="item" items="${model.webOperators}"
 							varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>

@@ -5,8 +5,23 @@ public enum JspFile {
 
 	SPEED_UPDATE("/jsp/system/webRule/speedUpdate.jsp"),
 
-	SPEED_LIST("/jsp/system/webRule/speed.jsp")
-	;
+	SPEED_LIST("/jsp/system/webRule/speed.jsp"),
+	
+	JS_RULE_LIST("/jsp/system/webRule/jsRuleList.jsp"),
+
+	JS_RULE_UPDATE("/jsp/system/webRule/jsRuleUpdate.jsp"),
+	
+	WEB_RULE("/jsp/system/webRule/webRule.jsp"),
+
+	WEB_RULE_UPDATE("/jsp/system/webRule/webRuleUpdate.jsp"),
+
+	WEB_CONSTANTS_LIST("/jsp/system/webRule/webConstantsList.jsp"),
+	
+	URL_PATTERN_ALL("/jsp/system/urlPattern/urlPattern.jsp"),
+
+	URL_PATTERN_CONFIG_UPDATE("/jsp/system/urlPattern/urlPatternConfig.jsp"),
+
+	URL_PATTERN_UPATE("/jsp/system/urlPattern/urlPatternUpdate.jsp");
 
 	private String m_path;
 

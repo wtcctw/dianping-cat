@@ -16,16 +16,6 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.PROJECT_ALL.getPath();
 		case PROJECT_DELETE:
 			return JspFile.PROJECT_ALL.getPath();
-		case URL_PATTERN_CONFIG_UPDATE:
-			return JspFile.URL_PATTERN_CONFIG_UPDATE.getPath();
-		case URL_PATTERN_ALL:
-			return JspFile.URL_PATTERN_ALL.getPath();
-		case URL_PATTERN_DELETE:
-			return JspFile.URL_PATTERN_ALL.getPath();
-		case URL_PATTERN_UPDATE:
-			return JspFile.URL_PATTERN_UPATE.getPath();
-		case URL_PATTERN_UPDATE_SUBMIT:
-			return JspFile.URL_PATTERN_ALL.getPath();
 			// Node Config
 		case TOPOLOGY_GRAPH_NODE_CONFIG_ADD_OR_UPDATE:
 			return JspFile.TOPOLOGY_GRAPH_NODE_CONFIG_ADD_OR_UPDATE.getPath();
@@ -124,20 +114,6 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.EXCEPTION.getPath();
 		case EXCEPTION_EXCLUDE_ADD:
 			return JspFile.EXCEPTION_EXCLUDE_CONFIG.getPath();
-		case WEB_RULE:
-		case WEB_RULE_ADD_OR_UPDATE_SUBMIT:
-		case WEB_RULE_DELETE:
-			return JspFile.WEB_RULE.getPath();
-		case WEB_RULE_ADD_OR_UPDATE:
-			return JspFile.WEB_RULE_UPDATE.getPath();
-		case WEB_CONSTANTS:
-			return JspFile.WEB_CONSTANTS_LIST.getPath();
-		case JS_RULE_LIST:
-		case JS_RULE_DELETE:
-		case JS_RULE_UPDATE_SUBMIT:
-			return JspFile.JS_RULE_LIST.getPath();
-		case JS_RULE_UPDATE:
-			return JspFile.JS_RULE_UPDATE.getPath();
 		case APP_NAME_CHECK:
 			return JspFile.APP_NAME_CHECK.getPath();
 		case APP_LIST:
