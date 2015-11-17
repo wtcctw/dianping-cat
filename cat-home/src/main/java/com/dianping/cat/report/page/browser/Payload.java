@@ -12,6 +12,7 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.browser.service.AjaxDataField;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
+import com.dianping.cat.report.page.browser.service.SpeedQueryEntity;
 
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.tuple.Pair;
@@ -245,6 +246,22 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	public AjaxDataQueryEntity getQueryEntity2() {
 		if (m_query2 != null && m_query2.length() > 0) {
 			return new AjaxDataQueryEntity(m_query2);
+		} else {
+			return null;
+		}
+	}
+	
+	public SpeedQueryEntity getSpeedQueryEntity1() {
+		if (m_query1 != null && m_query1.length() > 0) {
+			return new SpeedQueryEntity(m_query1);
+		} else {
+			return new SpeedQueryEntity();
+		}
+	}
+	
+	public SpeedQueryEntity getSpeedQueryEntity2() {
+		if (m_query2 != null && m_query2.length() > 0) {
+			return new SpeedQueryEntity(m_query2);
 		} else {
 			return null;
 		}

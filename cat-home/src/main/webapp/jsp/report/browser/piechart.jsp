@@ -86,6 +86,7 @@
 
 		$(document).ready(
 				function() {
+					$('#Web_report').addClass('active open');
 					$('#web_piechart').addClass('active');
 					$('#time').datetimepicker({
 						format:'Y-m-d H:i',

@@ -14,7 +14,10 @@ import javax.servlet.ServletException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.web.WebConfigManager;
+import com.dianping.cat.config.web.WebSpeedConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
+import com.dianping.cat.configuration.web.speed.entity.Speed;
+import com.dianping.cat.configuration.web.speed.entity.Step;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
@@ -23,8 +26,11 @@ import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.page.app.display.ChartSorter;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
+import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
 import com.dianping.cat.report.page.browser.graph.WebGraphCreator;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
+import com.dianping.cat.report.page.browser.service.SpeedQueryEntity;
+import com.dianping.cat.report.page.browser.service.WebSpeedService;
 import com.dianping.cat.web.JsErrorLog;
 import com.dianping.cat.web.JsErrorLogContent;
 import com.dianping.cat.web.JsErrorLogContentDao;
@@ -41,6 +47,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.config.web.js.Level;
+import com.site.lookup.util.StringUtils;
 
 public class Handler implements PageHandler<Context> {
 	private final int LIMIT = 10000;
@@ -69,6 +76,12 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private WebConfigManager m_webConfigManager;
 
+	@Inject
+	private WebSpeedConfigManager m_webSpeedConfigManager;
+
+	@Inject
+	private WebSpeedService m_webSpeedService;
+
 	public void addBrowserCount(String browser, Map<String, Integer> distributions) {
 		Integer count = distributions.get(browser);
 
@@ -77,7 +90,7 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			count++;
 		}
-		
+
 		distributions.put(browser, count);
 	}
 
@@ -159,11 +172,47 @@ public class Handler implements PageHandler<Context> {
 		case JS_ERROR_DETAIL:
 			viewJsErrorDetail(payload, model);
 			break;
+		case SPEED:
+			buildSpeedInfo(payload, model);
+			break;
 		}
 
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
+	}
+
+	private void buildSpeedInfo(Payload payload, Model model) {
+		try {
+			Map<String, Speed> speeds = m_webSpeedConfigManager.getSpeeds();
+			model.setSpeeds(speeds);
+			model.setPage2StepsJson(m_webSpeedConfigManager.getPage2StepsJson());
+
+			SpeedQueryEntity queryEntity1 = normalizeSpeedQueryEntity(payload, speeds);
+			WebSpeedDisplayInfo info = m_webSpeedService.buildSpeedDisplayInfo(queryEntity1,
+			      payload.getSpeedQueryEntity2());
+			model.setWebSpeedDisplayInfo(info);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
+
+	private SpeedQueryEntity normalizeSpeedQueryEntity(Payload payload, Map<String, Speed> speeds) {
+		SpeedQueryEntity query1 = payload.getSpeedQueryEntity1();
+
+		if (StringUtils.isEmpty(payload.getQuery1())) {
+			if (!speeds.isEmpty()) {
+				Speed first = speeds.get(speeds.keySet().toArray()[0]);
+				Map<Integer, Step> steps = first.getSteps();
+
+				if (first != null && !steps.isEmpty()) {
+					query1.setPageId(first.getId());
+					query1.setStepId(steps.get(steps.keySet().toArray()[0]).getId());
+				}
+			}
+		}
+
+		return query1;
 	}
 
 	private void normalize(Model model, Payload payload) {
@@ -172,6 +221,7 @@ public class Handler implements PageHandler<Context> {
 		model.setCities(m_webConfigManager.queryConfigItem(WebConfigManager.CITY));
 		model.setOperators(m_webConfigManager.queryConfigItem(WebConfigManager.OPERATOR));
 		model.setNetworks(m_webConfigManager.queryConfigItem(WebConfigManager.NETWORK));
+		model.setPlatforms(m_webConfigManager.queryConfigItem(WebConfigManager.PLATFORM));
 		model.setCodes(m_patternManager.queryCodes());
 
 		PatternItem first = m_patternManager.queryUrlPatternRules().iterator().next();

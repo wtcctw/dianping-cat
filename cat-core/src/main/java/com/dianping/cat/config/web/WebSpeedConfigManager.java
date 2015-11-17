@@ -26,6 +26,7 @@ import com.dianping.cat.configuration.web.speed.entity.Speed;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.helper.JsonBuilder;
 
 public class WebSpeedConfigManager implements Initializable {
 
@@ -44,6 +45,10 @@ public class WebSpeedConfigManager implements Initializable {
 	private long m_modifyTime;
 
 	private volatile Map<String, Speed> m_speeds = new ConcurrentHashMap<String, Speed>();
+
+	public String getPage2StepsJson() {
+		return new JsonBuilder().toJson(m_config.getSpeeds());
+	}
 
 	public boolean deleteSpeed(int id) {
 		m_config.removeSpeed(id);
