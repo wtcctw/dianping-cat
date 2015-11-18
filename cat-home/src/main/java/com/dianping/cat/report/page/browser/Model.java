@@ -83,6 +83,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private String m_distributionChart;
 
 	private String m_agent;
+	
+	private String m_dpid;
 
 	private WebSpeedDisplayInfo m_webSpeedDisplayInfo;
 
@@ -102,16 +104,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_agent;
 	}
 
-	public Map<String, AjaxDataDetail> getComparisonAjaxDetails() {
-		return m_comparisonAjaxDetails;
-	}
-
 	public List<AjaxDataDetail> getAjaxDataDetailInfos() {
 		return m_ajaxDataDetailInfos;
-	}
-
-	public void setAjaxDataDetailInfos(List<AjaxDataDetail> ajaxDataDetailInfos) {
-		m_ajaxDataDetailInfos = ajaxDataDetailInfos;
 	}
 
 	public ProblemStatistics getAllStatistics() {
@@ -125,26 +119,9 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	public Map<Integer, Code> getCodes() {
 		return m_codes;
 	}
-	
+
 	public int getCommandId() {
 		return m_commandId;
-	}
-
-	public Map<String, Map<Integer, WebSpeedDetail>> getWebSpeedDetails() {
-		Map<String, Map<Integer, WebSpeedDetail>> map = new LinkedHashMap<String, Map<Integer, WebSpeedDetail>>();
-		Map<String, List<WebSpeedDetail>> details = m_webSpeedDisplayInfo.getWebSpeedDetails();
-
-		if (details != null && !details.isEmpty()) {
-			for (Entry<String, List<WebSpeedDetail>> entry : details.entrySet()) {
-				Map<Integer, WebSpeedDetail> m = new LinkedHashMap<Integer, WebSpeedDetail>();
-
-				for (WebSpeedDetail detail : entry.getValue()) {
-					m.put(detail.getMinuteOrder(), detail);
-				}
-				map.put(entry.getKey(), m);
-			}
-		}
-		return map;
 	}
 
 	public Date getCompareEnd() {
@@ -155,33 +132,13 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_compareStart;
 	}
 
+	public Map<String, AjaxDataDetail> getComparisonAjaxDetails() {
+		return m_comparisonAjaxDetails;
+	}
+	
 	@Override
 	public Action getDefaultAction() {
 		return Action.VIEW;
-	}
-
-	public Map<String, Map<Integer, WebSpeedDetail>> getWebSpeedSummarys() {
-		Map<String, Map<Integer, WebSpeedDetail>> map = new LinkedHashMap<String, Map<Integer, WebSpeedDetail>>();
-		Map<String, WebSpeedDetail> details = m_webSpeedDisplayInfo.getWebSpeedSummarys();
-
-		if (details != null && !details.isEmpty()) {
-			for (Entry<String, WebSpeedDetail> entry : details.entrySet()) {
-				Map<Integer, WebSpeedDetail> m = new LinkedHashMap<Integer, WebSpeedDetail>();
-				WebSpeedDetail d = entry.getValue();
-
-				m.put(d.getMinuteOrder(), d);
-				map.put(entry.getKey(), m);
-			}
-		}
-		return map;
-	}
-
-	public Map<Integer, Item> getPlatforms() {
-		return m_platforms;
-	}
-
-	public void setPlatforms(Map<Integer, Item> platforms) {
-		m_platforms = platforms;
 	}
 
 	public String getDefaultApi() {
@@ -192,6 +149,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_detail;
 	}
 
+	public String getDistributionChart() {
+		return m_distributionChart;
+	}
+
 	@Override
 	public String getDomain() {
 		return getDisplayDomain();
@@ -200,6 +161,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	@Override
 	public Collection<String> getDomains() {
 		return new ArrayList<String>();
+	}
+
+	public String getDpid() {
+		return m_dpid;
 	}
 
 	public Date getEnd() {
@@ -222,6 +187,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_level;
 	}
 
+	public List<String> getLevels() {
+		return m_levels;
+	}
+
 	public LineChart getLineChart() {
 		return m_lineChart;
 	}
@@ -230,12 +199,20 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_module;
 	}
 
+	public List<String> getModules() {
+		return m_modules;
+	}
+
 	public Map<Integer, Item> getNetworks() {
 		return m_networks;
 	}
 
 	public Map<Integer, Item> getOperators() {
 		return m_operators;
+	}
+
+	public String getPage2StepsJson() {
+		return m_page2StepsJson;
 	}
 
 	public Map<String, PatternItem> getPattermItems() {
@@ -254,6 +231,14 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_pieChartDetailInfos;
 	}
 
+	public Map<Integer, Item> getPlatforms() {
+		return m_platforms;
+	}
+
+	public Map<String, Speed> getSpeeds() {
+		return m_speeds;
+	}
+
 	public Date getStart() {
 		return m_start;
 	}
@@ -262,32 +247,49 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_totalCount;
 	}
 
-	public Map<String, Speed> getSpeeds() {
-		return m_speeds;
-	}
+	public Map<String, Map<Integer, WebSpeedDetail>> getWebSpeedDetails() {
+		Map<String, Map<Integer, WebSpeedDetail>> map = new LinkedHashMap<String, Map<Integer, WebSpeedDetail>>();
+		Map<String, List<WebSpeedDetail>> details = m_webSpeedDisplayInfo.getWebSpeedDetails();
 
-	public String getPage2StepsJson() {
-		return m_page2StepsJson;
-	}
+		if (details != null && !details.isEmpty()) {
+			for (Entry<String, List<WebSpeedDetail>> entry : details.entrySet()) {
+				Map<Integer, WebSpeedDetail> m = new LinkedHashMap<Integer, WebSpeedDetail>();
 
-	public void setPage2StepsJson(String page2StepsJson) {
-		m_page2StepsJson = page2StepsJson;
+				for (WebSpeedDetail detail : entry.getValue()) {
+					m.put(detail.getMinuteOrder(), detail);
+				}
+				map.put(entry.getKey(), m);
+			}
+		}
+		return map;
 	}
 
 	public WebSpeedDisplayInfo getWebSpeedDisplayInfo() {
 		return m_webSpeedDisplayInfo;
 	}
 
-	public void setWebSpeedDisplayInfo(WebSpeedDisplayInfo webSpeedDisplayInfo) {
-		m_webSpeedDisplayInfo = webSpeedDisplayInfo;
-	}
+	public Map<String, Map<Integer, WebSpeedDetail>> getWebSpeedSummarys() {
+		Map<String, Map<Integer, WebSpeedDetail>> map = new LinkedHashMap<String, Map<Integer, WebSpeedDetail>>();
+		Map<String, WebSpeedDetail> details = m_webSpeedDisplayInfo.getWebSpeedSummarys();
 
-	public void setSpeeds(Map<String, Speed> speeds) {
-		m_speeds = speeds;
+		if (details != null && !details.isEmpty()) {
+			for (Entry<String, WebSpeedDetail> entry : details.entrySet()) {
+				Map<Integer, WebSpeedDetail> m = new LinkedHashMap<Integer, WebSpeedDetail>();
+				WebSpeedDetail d = entry.getValue();
+
+				m.put(d.getMinuteOrder(), d);
+				map.put(entry.getKey(), m);
+			}
+		}
+		return map;
 	}
 
 	public void setAgent(String agent) {
 		m_agent = agent;
+	}
+
+	public void setAjaxDataDetailInfos(List<AjaxDataDetail> ajaxDataDetailInfos) {
+		m_ajaxDataDetailInfos = ajaxDataDetailInfos;
 	}
 
 	public void setAllStatistics(ProblemStatistics allStatistics) {
@@ -302,16 +304,20 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_codes = codes;
 	}
 
-	public void setCompareEnd(Date compareEnd) {
-		m_compareEnd = compareEnd;
-	}
-	
 	public void setCommandId(int commandId) {
 		m_commandId = commandId;
 	}
 
+	public void setCompareEnd(Date compareEnd) {
+		m_compareEnd = compareEnd;
+	}
+
 	public void setCompareStart(Date compareStart) {
 		m_compareStart = compareStart;
+	}
+	
+	public void setComparisonAjaxDetails(Map<String, AjaxDataDetail> comparisonAjaxDetail) {
+		m_comparisonAjaxDetails = comparisonAjaxDetail;
 	}
 
 	public void setDefaultApi(String defaultApi) {
@@ -322,8 +328,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_detail = detail;
 	}
 
-	public void setComparisonAjaxDetails(Map<String, AjaxDataDetail> comparisonAjaxDetail) {
-		m_comparisonAjaxDetails = comparisonAjaxDetail;
+	public void setDistributionChart(String distributionChart) {
+		m_distributionChart = distributionChart;
+	}
+
+	public void setDpid(String dpid) {
+		m_dpid = dpid;
 	}
 
 	public void setEnd(Date end) {
@@ -346,6 +356,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_level = level;
 	}
 
+	public void setLevels(List<String> levels) {
+		m_levels = levels;
+	}
+
 	public void setLineChart(LineChart lineChart) {
 		m_lineChart = lineChart;
 	}
@@ -354,12 +368,20 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_module = module;
 	}
 
+	public void setModules(List<String> modules) {
+		m_modules = modules;
+	}
+
 	public void setNetworks(Map<Integer, Item> networks) {
 		m_networks = networks;
 	}
 
 	public void setOperators(Map<Integer, Item> operators) {
 		m_operators = operators;
+	}
+
+	public void setPage2StepsJson(String page2StepsJson) {
+		m_page2StepsJson = page2StepsJson;
 	}
 
 	public void setPattermItems(Map<String, PatternItem> pattermItems) {
@@ -374,6 +396,14 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_pieChartDetailInfos = pieChartDetailInfos;
 	}
 
+	public void setPlatforms(Map<Integer, Item> platforms) {
+		m_platforms = platforms;
+	}
+
+	public void setSpeeds(Map<String, Speed> speeds) {
+		m_speeds = speeds;
+	}
+
 	public void setStart(Date start) {
 		m_start = start;
 	}
@@ -382,28 +412,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_totalCount = totalCount;
 	}
 
-	public List<String> getModules() {
-		return m_modules;
-	}
-
-	public void setModules(List<String> modules) {
-		m_modules = modules;
-	}
-
-	public List<String> getLevels() {
-		return m_levels;
-	}
-
-	public void setLevels(List<String> levels) {
-		m_levels = levels;
-	}
-
-	public String getDistributionChart() {
-		return m_distributionChart;
-	}
-
-	public void setDistributionChart(String distributionChart) {
-		m_distributionChart = distributionChart;
+	public void setWebSpeedDisplayInfo(WebSpeedDisplayInfo webSpeedDisplayInfo) {
+		m_webSpeedDisplayInfo = webSpeedDisplayInfo;
 	}
 
 }

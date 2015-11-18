@@ -66,6 +66,9 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	@FieldMeta("msg")
 	private String m_msg;
+	
+	@FieldMeta("dpid")
+	private String m_dpid;
 
 	@FieldMeta("id")
 	private int m_id;
@@ -142,14 +145,6 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_action;
 	}
 
-	public String getSort() {
-		return m_sort;
-	}
-
-	public void setSort(String sort) {
-		m_sort = sort;
-	}
-
 	public String getApi1() {
 		return m_api1;
 	}
@@ -160,6 +155,14 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public String getDay() {
 		return m_day;
+	}
+
+	public String getDpid() {
+		if (StringUtils.isEmpty(m_dpid)) {
+			return null;
+		} else {
+			return m_dpid;
+		}
 	}
 
 	public String getEndTime() {
@@ -262,6 +265,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		}
 	}
 
+	public String getSort() {
+		return m_sort;
+	}
+
 	public SpeedQueryEntity getSpeedQueryEntity1() {
 		if (m_query1 != null && m_query1.length() > 0) {
 			return new SpeedQueryEntity(m_query1);
@@ -298,6 +305,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		m_day = day;
 	}
 
+	public void setDpid(String dpid) {
+		m_dpid = dpid;
+	}
+
 	public void setEndTime(String endTime) {
 		m_endTime = endTime;
 	}
@@ -325,6 +336,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.BROWSER);
+	}
+
+	public void setSort(String sort) {
+		m_sort = sort;
 	}
 
 	public void setStartTime(String startTime) {

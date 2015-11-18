@@ -28,6 +28,7 @@
 			<param name="module" />
 			<param name="level" />
 			<param name="browser" />
+			<param name="dpid" />
 			<param name="offset" />
 			<param name="limit" />
 			<statement><![CDATA[SELECT <FIELDS/>
@@ -42,6 +43,9 @@
 		</IF>
 		<IF type='NOT_NULL' field='browser'>
 			AND  <FIELD name='browser'/> = ${browser}
+		</IF>
+		<IF type='NOT_NULL' field='dpid'>
+			AND  <FIELD name='dpid'/> = ${dpid}
 		</IF>
 		LIMIT ${offset}, ${limit}
          ]]></statement>

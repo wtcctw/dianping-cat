@@ -176,7 +176,7 @@ public class Handler implements PageHandler<Context> {
 				model.setPieChart(pieChartPair.getKey());
 				model.setPieChartDetailInfos(pieChartPair.getValue());
 			}
-			
+
 			int commandId = payload.getQueryEntity1().getId();
 			model.setCommandId(commandId);
 			break;
@@ -388,6 +388,7 @@ public class Handler implements PageHandler<Context> {
 			Date endTime = payload.buildEndTime();
 			int levelCode = payload.buildLevel();
 			String module = payload.getModule();
+			String dpid = payload.getDpid();
 			Map<String, ErrorMsg> errorMsgs = new HashMap<String, ErrorMsg>();
 			int offset = 0;
 			int totalCount = 0;
@@ -395,7 +396,7 @@ public class Handler implements PageHandler<Context> {
 
 			while (true) {
 				List<JsErrorLog> result = m_jsErrorLogDao.findDataByTimeModuleLevelBrowser(startTime, endTime, module,
-				      levelCode, null, offset, LIMIT, JsErrorLogEntity.READSET_FULL);
+				      levelCode, null, dpid, offset, LIMIT, JsErrorLogEntity.READSET_FULL);
 
 				for (JsErrorLog log : result) {
 					processLog(errorMsgs, log, distributions);
@@ -434,6 +435,7 @@ public class Handler implements PageHandler<Context> {
 			model.setModule(jsErrorLog.getModule());
 			model.setDetail(new String(detail.getContent(), "UTF-8"));
 			model.setAgent(jsErrorLog.getBrowser());
+			model.setDpid(jsErrorLog.getDpid());
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

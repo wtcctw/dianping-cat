@@ -46,10 +46,14 @@
 	            </div> -->
 	            <div class="input-group" style="float:left;">
 					<span class="input-group-addon">模块</span>
-						<span class="input-icon" style="width:350px;">
+						<span class="input-icon" style="width:250px;">
 							<input type="text" placeholder="" class="search-input search-input form-control ui-autocomplete-input" id="module" autocomplete="on" data=""/>
 							<i class="ace-icon fa fa-search nav-search-icon"></i>
 						</span>
+	            </div>
+	            <div class="input-group" style="float:left;">
+					<span class="input-group-addon">Dpid</span>
+					<input type="text"  id="dpid"/>
 	            </div>
 	              <input class="btn btn-primary btn-sm"
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
@@ -130,6 +134,11 @@ $(document).ready(
 		if(module != null && module.length != 0) {
 			$("#module").val(module);
 		}
+		
+		var dpid = '${payload.dpid}';
+		if(dpid != null && dpid.length != 0) {
+			$("#dpid").val(dpid);
+		}
 		 
 		//custom autocomplete (category selection)
 		$.widget( "custom.catcomplete", $.ui.autocomplete, {
@@ -174,9 +183,10 @@ function query() {
 	var end = converTimeFormat($("#time2").val());
 	var level = $("#level").val();
 	var module = $("#module").val();
+	var dpid = $("#dpid").val();
 	
 	var href = "?op=jsError&day=" + period + "&start=" +start + "&end=" + end +
-			"&level=" + level + "&module=" + module;
+			"&level=" + level + "&module=" + module + "&dpid=" + dpid;
 	window.location.href = href;
 }
 
