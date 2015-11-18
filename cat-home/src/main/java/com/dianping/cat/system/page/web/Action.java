@@ -1,14 +1,23 @@
 package com.dianping.cat.system.page.web;
 
 public enum Action implements org.unidal.web.mvc.Action {
+
+	CODE_UPDATE("codeUpdate"),
+
+	CODE_SUBMIT("codeSubmit"),
+
+	CODE_DELETE("codeDelete"),
+
+	CODE_LIST("codeList"),
+
 	SPEED_UPDATE("speedUpdate"),
 
 	SPEED_SUBMIT("speedSubmit"),
 
 	SPEED_DELETE("speedDelete"),
-	
+
 	SPEED_LIST("speedList"),
-	
+
 	JS_RULE_LIST("jsRuleList"),
 
 	JS_RULE_UPDATE("jsRuleUpdate"),
@@ -16,7 +25,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	JS_RULE_DELETE("jsRuleDelete"),
 
 	JS_RULE_UPDATE_SUBMIT("jsRuleUpdateSubmit"),
-	
+
 	WEB_RULE("webRule"),
 
 	WEB_RULE_ADD_OR_UPDATE("webRuleUpdate"),
@@ -26,7 +35,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	WEB_RULE_DELETE("webRuleDelete"),
 
 	WEB_CONSTANTS("webConstants"),
-	
+
 	URL_PATTERN_ALL("urlPatterns"),
 
 	URL_PATTERN_CONFIG_UPDATE("urlPatternConfigUpdate"),
@@ -35,7 +44,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	URL_PATTERN_UPDATE_SUBMIT("urlPatternUpdateSubmit"),
 
-	URL_PATTERN_DELETE("urlPatternDelete"),;
+	URL_PATTERN_DELETE("urlPatternDelete"), ;
 
 	private String m_name;
 

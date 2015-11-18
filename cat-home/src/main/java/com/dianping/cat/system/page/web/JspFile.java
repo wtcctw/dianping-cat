@@ -2,6 +2,10 @@ package com.dianping.cat.system.page.web;
 
 public enum JspFile {
 	VIEW("/jsp/system/webconfig.jsp"),
+	
+	CODE_UPDATE("/jsp/system/webRule/codeUpdate.jsp"),
+	
+	CODE_LIST("/jsp/system/webRule/code.jsp"),
 
 	SPEED_UPDATE("/jsp/system/webRule/speedUpdate.jsp"),
 

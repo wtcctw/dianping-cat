@@ -13,6 +13,7 @@ import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.config.web.WebSpeedConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.web.speed.entity.Speed;
+import com.dianping.cat.configuration.web.url.entity.Code;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.dal.report.ConfigModification;
@@ -43,28 +44,28 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ConfigModificationDao m_configModificationDao;
-	
+
 	@Inject
 	private JsRuleConfigManager m_jsRuleConfigManager;
-	
+
 	@Inject
 	private ModuleManager m_moduleManager;
-	
+
 	@Inject
 	private WebConfigManager m_appConfigManager;
-	
+
 	@Inject
 	private UrlPatternConfigManager m_urlPatternConfigManager;
-	
+
 	@Inject
 	private WebRuleConfigManager m_webRuleConfigManager;
-	
+
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
-	
+
 	@Inject
 	protected RuleFTLDecorator m_ruleDecorator;
-	
+
 	private void addNewStep(Step step, Speed speed) {
 		com.dianping.cat.configuration.web.speed.entity.Step newStep = new com.dianping.cat.configuration.web.speed.entity.Step();
 		int stepId = step.getStepid();
@@ -249,11 +250,40 @@ public class Handler implements PageHandler<Context> {
 			m_urlPatternConfigManager.deletePatternItem(payload.getKey());
 			model.setPatternItems(m_urlPatternConfigManager.getId2Items());
 			break;
+		case CODE_DELETE:
+			m_urlPatternConfigManager.removeCode(payload.getId());
+			model.setWebCodes(m_urlPatternConfigManager.queryCodes());
+			break;
+		case CODE_LIST:
+			model.setWebCodes(m_urlPatternConfigManager.queryCodes());
+			break;
+		case CODE_SUBMIT:
+			codeSubmit(model, payload);
+			break;
+		case CODE_UPDATE:
+			Map<Integer, Code> codes = m_urlPatternConfigManager.queryCodes();
+			Code code = codes.get(payload.getId());
+
+			model.setCode(code);
+			model.setWebCodes(codes);
+			break;
+		default:
+			break;
 		}
 
 		m_jspViewer.view(ctx, model);
 	}
-	
+
+	private void codeSubmit(Model model, Payload payload) {
+		try {
+			Code code = payload.getCode();
+			m_urlPatternConfigManager.updateCode(code.getId(), code);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		model.setWebCodes(m_urlPatternConfigManager.queryCodes());
+	}
+
 	private void queryStep(Model model, Payload payload) {
 		String page = payload.getWebPage();
 		int stepId = payload.getStepId();
@@ -272,7 +302,7 @@ public class Handler implements PageHandler<Context> {
 
 		model.setStep(step);
 	}
-	
+
 	public void store(String userName, String accountName, Payload payload) {
 		ConfigModification modification = m_configModificationDao.createLocal();
 
@@ -288,7 +318,7 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(ex);
 		}
 	}
-	
+
 	private void storeModifyInfo(Context ctx, Payload payload) {
 		Cookie cookie = ctx.getCookie("ct");
 

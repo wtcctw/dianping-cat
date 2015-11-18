@@ -40,6 +40,12 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.URL_PATTERN_UPATE.getPath();
 		case URL_PATTERN_UPDATE_SUBMIT:
 			return JspFile.URL_PATTERN_ALL.getPath();
+		case CODE_DELETE:
+		case CODE_LIST:
+		case CODE_SUBMIT:
+			return JspFile.CODE_LIST.getPath();
+		case CODE_UPDATE:
+			return JspFile.CODE_UPDATE.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

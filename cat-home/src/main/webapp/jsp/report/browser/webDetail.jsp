@@ -22,10 +22,10 @@
 	            </div>
 	            <div class="input-group" style="float:left;width:120px">
 	              	<span class="input-group-addon">返回码</span>
-					<select id="code" style="width:120px">
+					<select id="codeStatus" style="width:120px">
 						<option value=''>All</option>
-						<c:forEach var="code" items="${model.codes}">
-							<option value="${code.value.id}">${code.value.name}</option>
+						<c:forEach var="item" items="${model.codes}">
+							<option value="${item.value.id}">${item.value.name}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -34,7 +34,7 @@
 					<select id="city" style="width: 120px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.cities}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value="${item.value.id}">${item.value.name}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -88,10 +88,10 @@
 	            </div>
 	            <div class="input-group" style="float:left;width:120px">
 	              	<span class="input-group-addon">返回码</span>
-					<select id="code2" style="width:120px">
+					<select id="codeStatus2" style="width:120px">
 						<option value=''>All</option>
-						<c:forEach var="code" items="${model.codes}">
-							<option value="${code.value.id}">${code.value.name}</option>
+						<c:forEach var="item" items="${model.codes}">
+							<option value="${item.value.id}">${item.value.name}</option>
 						</c:forEach>
 					</select>
 	            </div>

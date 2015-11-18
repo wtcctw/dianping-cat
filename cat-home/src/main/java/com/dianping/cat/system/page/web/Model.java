@@ -44,6 +44,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private Map<Integer, Code> m_webCodes;
 
+	private Code m_code;
+
 	private Collection<Rule> m_rules;
 
 	private String m_content;
@@ -57,7 +59,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private String m_id;
 
 	private String m_configHeader;
-	
+
 	private WebConfigManager m_webConfigManager;
 
 	public Model(Context ctx) {
@@ -67,6 +69,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
+	}
+
+	public Code getCode() {
+		return m_code;
 	}
 
 	public String getConfigHeader() {
@@ -89,7 +95,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public String getDomain() {
 		return "";
 	}
-	
+
 	public Map<String, ConfigItem> getWebConfigItems() {
 		return m_webConfigManager.getConfig().getConfigItems();
 	}
@@ -109,7 +115,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public List<ExceptionLimit> getJsRules() {
 		return m_jsRules;
 	}
-	
+
 	public List<String> getLevels() {
 		return Level.getLevels();
 	}
@@ -160,6 +166,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public Map<Integer, Item> getWebOperators() {
 		return m_webOperators;
+	}
+
+	public void setCode(Code code) {
+		m_code = code;
 	}
 
 	public void setConfigHeader(String configHeader) {

@@ -26,10 +26,10 @@
 	            </div>
 	            <div class="input-group" style="float:left;width:120px">
 	              	<span class="input-group-addon">返回码</span>
-					<select id="code" style="width:100px">
+					<select id="codeStatus" style="width:100px">
 						<option value=''>All</option>
-						<c:forEach var="code" items="${model.codes}">
-							<option value="${code.value.id}">${code.value.name}</option>
+						<c:forEach var="item" items="${model.codes}">
+							<option value="${item.value.id}">${item.value.name}</option>
 						</c:forEach>
 					</select>
 	            </div>

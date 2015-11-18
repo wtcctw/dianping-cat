@@ -1,5 +1,6 @@
 package com.dianping.cat.system.page.web;
 
+import com.dianping.cat.configuration.web.url.entity.Code;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.home.js.entity.ExceptionLimit;
 import com.dianping.cat.system.SystemPage;
@@ -17,6 +18,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@ObjectMeta("patternItem")
 	private PatternItem m_patternItem = new PatternItem();
+
+	@ObjectMeta("code")
+	private Code m_code = new Code();
 
 	@FieldMeta("page")
 	private String m_webPage;
@@ -41,19 +45,23 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@FieldMeta("content")
 	private String m_content;
-	
+
 	@FieldMeta("configs")
 	private String m_configs;
-	
+
 	@Override
 	public Action getAction() {
 		return m_action;
 	}
-	
+
+	public Code getCode() {
+		return m_code;
+	}
+
 	public String getConfigs() {
 		return m_configs;
 	}
-	
+
 	public String getContent() {
 		return m_content;
 	}
@@ -101,6 +109,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.SPEED_LIST);
+	}
+
+	public void setCode(Code code) {
+		m_code = code;
 	}
 
 	public void setConfigs(String configs) {
