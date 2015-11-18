@@ -134,10 +134,10 @@ public class MetricServiceImpl implements MetricService, Initializable {
 		InfluxDBConnection conn = m_dataSourceService.getConnection(parameter.getCategory());
 
 		if (conn != null) {
-			String format = "SELECT %1$s(value) FROM %2$s WHERE %3$s TIME >= '%4$tF %4$tT' AND TIME < '%5$tF %5$tT' GROUP BY time(%6$s) fill(none)";
+			String format = "SELECT %s(value) FROM %s WHERE %s TIME >= '%s' AND TIME < '%s' GROUP BY time(%s) fill(0)";
 			String query = String.format(format, parameter.getType().getName(), parameter.getMeasurement(),
-			      parameter.getTags(), parameter.getStart(), parameter.getEnd(), parameter.getInterval());
-			System.out.println(query);
+			      parameter.getTags(), m_sdf.format(parameter.getStart()), m_sdf.format(parameter.getEnd()),
+			      parameter.getInterval());
 
 			QueryResult queryResult = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
 			Map<Long, Double> datas = parseData(queryResult);
