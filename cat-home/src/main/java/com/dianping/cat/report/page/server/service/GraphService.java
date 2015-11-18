@@ -52,7 +52,6 @@ public class GraphService {
 			ret = false;
 
 			Cat.logError(e);
-			e.printStackTrace();
 		}
 
 		return ret;

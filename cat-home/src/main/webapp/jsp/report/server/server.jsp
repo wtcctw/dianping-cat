@@ -20,20 +20,26 @@
 						结束
 					<input type="text" id="endTime" style="width:150px;"/></div>
 				</th>
+				<th><input class="btn btn-primary btn-sm " value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()" type="submit" />
+				</th>
 			</tr>
-		</table>
+	</table>
 		
-		<div class="col-xs-12">
-			<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
-	   			<div style="float:left;">
-	   				<div id="${item.id}" class="metricGraph" style="width:450px;height:350px;"></div>
-	   			</div>
-			</c:forEach></div>
-		
-		</div>
+	<div class="col-xs-12">
+		<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
+   			<div style="float:left;">
+   				<div id="${item.id}" class="metricGraph" style="width:450px;height:350px;"></div>
+   			</div>
+		</c:forEach>
+	</div>
 	
 	<script type="text/javascript">
-			
+	function query() {
+		var start = $("#startTime").val();
+		var end = $("#endTime").val();
+		
+		window.location.href = "?graphId=${payload.graphId}&startDate=" + start + "&endDate=" + end; 
+	}
 	$(document).ready(
 		function() {
 			$('#startTime').datetimepicker({
@@ -47,9 +53,8 @@
 				maxDate:0
 			});
 			
-			$('#startTime').val("${w:format(model.startTime,'yyyy-MM-dd HH:mm')}");
-			$('#endTime').val("${w:format(model.endTime,'yyyy-MM-dd HH:mm')}");
-			$('#domain').val('${payload.domain}');
+			$('#startTime').val("${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm')}");
+			$('#endTime').val("${w:format(payload.historyEndDate,'yyyy-MM-dd HH:mm')}");
 			
 			$('#serverChart').addClass('active open');
 			$('#serverGraph').addClass('active');

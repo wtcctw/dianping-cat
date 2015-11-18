@@ -67,11 +67,6 @@ public class QueryParameter {
 		return this;
 	}
 
-	public QueryParameter setInterval(int interval) {
-		m_interval = interval + "m";
-		return this;
-	}
-
 	public QueryParameter setInterval(String interval) {
 		m_interval = interval;
 		return this;

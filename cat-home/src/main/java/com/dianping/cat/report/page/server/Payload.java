@@ -1,8 +1,12 @@
 package com.dianping.cat.report.page.server;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
 
@@ -21,9 +25,14 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private String m_content;
 
 	@FieldMeta("graphId")
-	private int m_graphId;
+	private int m_graphId = 1;
+
+	@FieldMeta("interval")
+	private String m_interval;
 
 	private ReportPage m_page;
+
+	private SimpleDateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	public Payload() {
 		super(ReportPage.SERVER);
@@ -40,6 +49,36 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public int getGraphId() {
 		return m_graphId;
+	}
+
+	public Date getHistoryEndDate() {
+
+		try {
+			if (m_customEnd != null && m_customEnd.length() > 0) {
+				return m_format.parse(m_customEnd);
+			} else {
+				return TimeHelper.getCurrentMinute();
+			}
+		} catch (Exception e) {
+			return TimeHelper.getCurrentMinute();
+		}
+	}
+
+	public Date getHistoryStartDate() {
+		try {
+			if (m_customStart != null && m_customStart.length() > 0) {
+
+				return m_format.parse(m_customStart);
+			} else {
+				return TimeHelper.getCurrentHour(-2);
+			}
+		} catch (Exception e) {
+			return TimeHelper.getCurrentHour(-2);
+		}
+	}
+
+	public String getInterval() {
+		return m_interval;
 	}
 
 	@Override
@@ -65,6 +104,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public void setGraphId(int graphId) {
 		m_graphId = graphId;
+	}
+
+	public void setInterval(String interval) {
+		m_interval = interval;
 	}
 
 	@Override

@@ -54,6 +54,39 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	protected DataExtractor m_dataExtractor;
 
+	private List<LineChart> buildLineCharts(Date start, Date end, String interval, Graph graph) {
+		List<LineChart> lineCharts = new ArrayList<LineChart>();
+
+		for (Entry<String, Item> entry : graph.getItems().entrySet()) {
+			Item item = entry.getValue();
+			LineChart linechart = new LineChart();
+
+			linechart.setId(entry.getKey());
+			linechart.setHtmlTitle(entry.getKey());
+
+			for (Entry<String, Segment> e : item.getSegments().entrySet()) {
+				Segment segment = e.getValue();
+				Map<Long, Double> result = fetchData(start, end, e.getValue(), interval);
+				String title = segment.getId();
+
+				linechart.add(title, result);
+			}
+			lineCharts.add(linechart);
+		}
+		return lineCharts;
+	}
+
+	private Map<Long, Double> fetchData(Date start, Date end, Segment segment, String interval) {
+		MetricType type = MetricType.getByName(segment.getType(), MetricType.AVG);
+		QueryParameter parameter = new QueryParameter();
+		parameter.setCategory(segment.getCategory()).setStart(start).setEnd(end).setMeasurement(segment.getMeasure())
+		      .setType(type).setTags(segment.getTags()).setInterval(interval);
+
+		Map<Long, Double> result = m_metricService.query(parameter);
+
+		return result;
+	}
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "server")
@@ -70,34 +103,20 @@ public class Handler implements PageHandler<Context> {
 
 		normalize(payload, model);
 
-		long date = payload.getDate();
-		int timeRange = payload.getTimeRange();
-		Date start = new Date(date - (timeRange - 1) * TimeHelper.ONE_HOUR);
-		Date end = new Date(date + TimeHelper.ONE_HOUR);
+		Date start = payload.getHistoryStartDate();
+		Date end = payload.getHistoryEndDate();
 
 		switch (action) {
 		case VIEW:
-			int length = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_MINUTE);
-			int interval = m_dataExtractor.calculateInterval(length);
+			normalizeGraphInfo(payload, model);
+			
 			Graph graph = m_graphService.queryById(payload.getGraphId());
-			List<LineChart> lineCharts = new ArrayList<LineChart>();
 
-			for (Entry<String, Item> entry : graph.getItems().entrySet()) {
-				Item item = entry.getValue();
-				LineChart linechart = new LineChart();
+			if (graph != null) {
+				List<LineChart> lineCharts = buildLineCharts(start, end, payload.getInterval(), graph);
 
-				linechart.setId(entry.getKey());
-
-				for (Entry<String, Segment> e : item.getSegments().entrySet()) {
-					Segment segment = e.getValue();
-					Map<Long, Double> result = fetchData(start, end, e.getValue(), interval);
-					String title = segment.getId();
-
-					linechart.add(title, result);
-				}
-				lineCharts.add(linechart);
+				model.setLineCharts(lineCharts);
 			}
-			model.setLineCharts(lineCharts);
 			break;
 		case SCREEN:
 			QueryParameter parameter = new QueryParameter();
@@ -121,28 +140,17 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private Map<Long, Double> fetchData(Date start, Date end, Segment segment, int interval) {
-		MetricType type = MetricType.getByName(segment.getType(), MetricType.AVG);
-		QueryParameter parameter = new QueryParameter();
-		parameter.setCategory(segment.getCategory()).setStart(start).setEnd(end).setMeasurement(segment.getMeasure())
-		      .setType(type).setTags(segment.getTags()).setInterval(interval);
-
-		Map<Long, Double> result = m_metricService.query(parameter);
-
-		return result;
-	}
-
 	private void normalize(Payload payload, Model model) {
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.SERVER);
 		m_normalizePayload.normalize(model, payload);
-
-		int timeRange = payload.getTimeRange();
-		Date startTime = new Date(payload.getDate() - (timeRange - 1) * TimeHelper.ONE_HOUR);
-		Date endTime = new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1);
-
-		model.setStartTime(startTime);
-		model.setEndTime(endTime);
+		//
+		// int timeRange = payload.getTimeRange();
+		// Date startTime = new Date(payload.getDate() - (timeRange - 1) * TimeHelper.ONE_HOUR);
+		// Date endTime = new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1);
+		//
+		// model.setStartTime(startTime);
+		// model.setEndTime(endTime);
 
 		String screen = payload.getScreen();
 
@@ -151,10 +159,16 @@ public class Handler implements PageHandler<Context> {
 
 			payload.setScreen(screen);
 		}
+	}
 
-		if (payload.getGraphId() == 0) {
-			payload.setGraphId(1);
+	private void normalizeGraphInfo(Payload payload, Model model) {
+		if (StringUtils.isEmpty(payload.getInterval())) {
+			long end = payload.getHistoryEndDate().getTime();
+			long start = payload.getHistoryStartDate().getTime();
+			int length = (int) ((end - start) / TimeHelper.ONE_MINUTE);
+			int gap = m_dataExtractor.calculateInterval(length);
+
+			payload.setInterval(gap + "m");
 		}
-
 	}
 }
