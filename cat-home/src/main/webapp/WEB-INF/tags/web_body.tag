@@ -48,7 +48,7 @@
 								<i class="menu-icon fa fa-caret-right"></i>返回码配置</a>
 								<b class="arrow"></b></li>
 						<li id="urlPatterns"><a href="/cat/s/web?op=urlPatterns">
-								<i class="menu-icon fa fa-caret-right"></i>Web监控</a>
+								<i class="menu-icon fa fa-caret-right"></i>URL配置</a>
 								<b class="arrow"></b></li>
 						<li id="webRule"><a href="/cat/s/web?op=webRule">
 								<i class="menu-icon fa fa-caret-right"></i>Web告警</a>

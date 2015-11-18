@@ -175,7 +175,12 @@ public class WebSpeedService extends ContainerHolder {
 			for (WebSpeedData data : entry.getValue()) {
 				long count = data.getAccessNumberSum();
 				long sum = data.getResponseSumTimeSum();
-				double avg = sum / count;
+				double avg = 0;
+
+				if (count > 0) {
+					avg = sum / count;
+				}
+				
 				int index = data.getMinuteOrder() / 5;
 
 				if (index < n) {
@@ -228,7 +233,8 @@ public class WebSpeedService extends ContainerHolder {
 			int platform = entity.getPlatfrom();
 
 			try {
-				WebSpeedDataEntity webSpeedDataEntity = (WebSpeedDataEntity) Class.forName("com.dianping.cat.web.WebSpeedDataEntity").newInstance();
+				WebSpeedDataEntity webSpeedDataEntity = (WebSpeedDataEntity) Class.forName(
+				      "com.dianping.cat.web.WebSpeedDataEntity").newInstance();
 				Field field = webSpeedDataEntity.getClass().getDeclaredField("READSET_AVG_DATA" + stepId);
 				Readset<WebSpeedData> readset = (Readset<WebSpeedData>) field.get(webSpeedDataEntity);
 				datas = m_dao.findDataByMinute(pageId, period, city, operator, network, platform, readset);

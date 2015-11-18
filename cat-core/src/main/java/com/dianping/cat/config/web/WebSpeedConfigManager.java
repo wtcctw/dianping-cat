@@ -19,7 +19,6 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.configuration.web.speed.entity.Step;
 import com.dianping.cat.configuration.web.speed.entity.WebSpeedConfig;
 import com.dianping.cat.configuration.web.speed.transform.DefaultSaxParser;
 import com.dianping.cat.configuration.web.speed.entity.Speed;
@@ -55,19 +54,6 @@ public class WebSpeedConfigManager implements Initializable {
 		return storeConfig();
 	}
 
-	public boolean deleteStep(int pageId, int stepId) {
-		Speed speed = m_config.getSpeeds().get(pageId);
-
-		if (speed != null) {
-			speed.removeStep(stepId);
-		}
-
-		if (speed.getSteps().size() == 0) {
-			m_config.removeSpeed(pageId);
-		}
-		return storeConfig();
-	}
-
 	private int generateId(List<Integer> ids) {
 		int max = 0;
 
@@ -93,18 +79,6 @@ public class WebSpeedConfigManager implements Initializable {
 			ids.add(s.getId());
 		}
 
-		return generateId(ids);
-	}
-
-	public int generateStepId(String page) {
-		List<Integer> ids = new ArrayList<Integer>();
-		Speed speed = m_speeds.get(page);
-
-		if (speed != null) {
-			for (Step step : speed.getSteps().values()) {
-				ids.add(step.getId());
-			}
-		}
 		return generateId(ids);
 	}
 

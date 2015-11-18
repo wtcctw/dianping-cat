@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.config.web.WebSpeedConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
@@ -65,19 +66,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	protected RuleFTLDecorator m_ruleDecorator;
-
-	private void addNewStep(Step step, Speed speed) {
-		com.dianping.cat.configuration.web.speed.entity.Step newStep = new com.dianping.cat.configuration.web.speed.entity.Step();
-		int stepId = step.getStepid();
-
-		if (step.getStepid() == 0) {
-			stepId = m_webSpeedConfigManager.generateStepId(step.getPage());
-		}
-
-		newStep.setId(stepId);
-		newStep.setTitle(step.getStep());
-		speed.addStep(newStep);
-	}
 
 	public boolean addSubmitRule(BaseRuleConfigManager manager, String id, String metrics, String configs) {
 		try {
@@ -153,8 +141,7 @@ public class Handler implements PageHandler<Context> {
 		case SPEED_DELETE:
 			String webpage = payload.getWebPage();
 			int pageId = m_webSpeedConfigManager.querySpeedId(webpage);
-			int stepId = payload.getStepId();
-			m_webSpeedConfigManager.deleteStep(pageId, stepId);
+			m_webSpeedConfigManager.deleteSpeed(pageId);
 			model.setSpeeds(m_webSpeedConfigManager.getSpeeds());
 			break;
 		case SPEED_LIST:
@@ -172,7 +159,20 @@ public class Handler implements PageHandler<Context> {
 				speed.setPage(page);
 			}
 
-			addNewStep(step, speed);
+			for (int i = 1; i <= Constants.MAX_SPEED_POINT; i++) {
+				String title = step.getStep(i);
+
+				if (StringUtils.isNotEmpty(title)) {
+					com.dianping.cat.configuration.web.speed.entity.Step internalStep = new com.dianping.cat.configuration.web.speed.entity.Step();
+					internalStep.setId(i);
+					internalStep.setTitle(title);
+
+					speed.addStep(internalStep);
+				} else {
+					speed.removeStep(i);
+				}
+			}
+			
 			m_webSpeedConfigManager.updateConfig(speed);
 			model.setSpeeds(m_webSpeedConfigManager.getSpeeds());
 			break;
@@ -286,7 +286,6 @@ public class Handler implements PageHandler<Context> {
 
 	private void queryStep(Model model, Payload payload) {
 		String page = payload.getWebPage();
-		int stepId = payload.getStepId();
 		Step step = new Step();
 
 		if (page != null) {
@@ -295,8 +294,14 @@ public class Handler implements PageHandler<Context> {
 			if (speed != null) {
 				step.setPageid(speed.getId());
 				step.setPage(speed.getPage());
-				step.setStepid(stepId);
-				step.setStep(speed.getSteps().get(stepId).getTitle());
+
+				for (int i = 1; i <= Constants.MAX_SPEED_POINT; i++) {
+					com.dianping.cat.configuration.web.speed.entity.Step internalStep = speed.findStep(i);
+
+					if (internalStep != null) {
+						step.setStep(i, internalStep.getTitle());
+					}
+				}
 			}
 		}
 
