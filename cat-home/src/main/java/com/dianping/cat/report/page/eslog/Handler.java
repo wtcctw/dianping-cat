@@ -35,8 +35,6 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
 
-	private static String s_pars ="{ \"query\": { \"filtered\": {  \"query\": { \"match\": {\"dpid\": \"${dpId}\"}}, \"filter\": { \"range\": {\"request_time\": { \"gte\": \"${start}\", \"lte\": \"${end}\"}}}}}}";
-	
 	private void buildConfig(Model model, Payload payload) {
 		String content = payload.getContent();
 
@@ -49,12 +47,12 @@ public class Handler implements PageHandler<Context> {
 		model.setContent(m_configHtmlParser.parse(xml));
 	}
 
-
 	private void buildQuery(Model model, Payload payload) {
 		Date start = payload.getStartDate();
 		Date end = payload.getEndDate();
 		String dpid = payload.getDpid();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		String s_pars = "{ \"query\": { \"filtered\": {  \"query\": { \"match\": {\"dpid\": \"${dpId}\"}}, \"filter\": { \"range\": {\"request_time\": { \"gte\": \"${start}\", \"lte\": \"${end}\"}}}}} , \"sort\": [{ \"request_time\": { \"order\": \"asc\" }}] , \"size\": 10000 }";
 
 		if (dpid != null) {
 			String pars = s_pars.replace("${dpId}", dpid).replace("${start}", sdf.format(start))

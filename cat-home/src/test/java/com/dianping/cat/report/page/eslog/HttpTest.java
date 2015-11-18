@@ -19,7 +19,7 @@ import com.dianping.cat.Cat;
 
 public class HttpTest {
 
-	private static String s_pars ="{ \"query\": { \"filtered\": {  \"query\": { \"match\": {\"dpid\": \"6397090225317379358\"}}, \"filter\": { \"range\": {\"request_time\": { \"gte\": \"2015-11-17T00:21:21.000Z\", \"lte\": \"2015-11-18T08:21:21.000Z\"}}}}}}";
+	private static String s_pars ="{ \"query\": { \"filtered\": {  \"query\": { \"match\": {\"dpid\": \"6397090225317379358\"}}, \"filter\": { \"range\": {\"request_time\": { \"gte\": \"2015-11-17T00:21:21.000Z\", \"lte\": \"2015-11-18T08:21:21.000Z\"}}}}},\"sort\": [{ \"request_time\":   { \"order\": \"asc\" }}],\"size\": 100}";
 	
 	
 	@Test
