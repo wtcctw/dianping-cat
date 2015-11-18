@@ -35,8 +35,6 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
 
-	private static String s_pars = "{ \"query\": { \"bool\": { \"filter\": [ { \"term\": { \"dpid\": \"${dpId}\" } } , {  \"range\" : { \"request_time\" : { \"gte\" : \"${start}\", \"lte\" : \"${end}\" , \"format\": \"yyyy-MM-dd HH:mm:ss\"}  }  } ] } } }";
-
 	private void buildConfig(Model model, Payload payload) {
 		String content = payload.getContent();
 
@@ -53,7 +51,8 @@ public class Handler implements PageHandler<Context> {
 		Date start = payload.getStartDate();
 		Date end = payload.getEndDate();
 		String dpid = payload.getDpid();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		String s_pars = "{ \"query\": { \"filtered\": {  \"query\": { \"match\": {\"dpid\": \"${dpId}\"}}, \"filter\": { \"range\": {\"request_time\": { \"gte\": \"${start}\", \"lte\": \"${end}\"}}}}} , \"sort\": [{ \"request_time\": { \"order\": \"asc\" }}] , \"size\": 10000 }";
 
 		if (dpid != null) {
 			String pars = s_pars.replace("${dpId}", dpid).replace("${start}", sdf.format(start))
@@ -113,7 +112,7 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private String httpPostSend(String urlPrefix, String content) {
+	private static String httpPostSend(String urlPrefix, String pars) {
 		URL url = null;
 		InputStream in = null;
 		OutputStreamWriter writer = null;
@@ -130,7 +129,7 @@ public class Handler implements PageHandler<Context> {
 			conn.setRequestProperty("content-type", "application/x-www-form-urlencoded;charset=UTF-8");
 			writer = new OutputStreamWriter(conn.getOutputStream());
 
-			writer.write(content);
+			writer.write(pars);
 			writer.flush();
 
 			in = conn.getInputStream();
