@@ -103,6 +103,7 @@
 		$(document).ready(
 				function() {
 					$('#web_trend').addClass('active');
+					$('#Web_report').addClass('active open');
 					$('#time').datetimepicker({
 						format:'Y-m-d',
 						timepicker:false,
