@@ -51,7 +51,7 @@ public class Handler implements PageHandler<Context> {
 		Date start = payload.getStartDate();
 		Date end = payload.getEndDate();
 		String dpid = payload.getDpid();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String s_pars = "{ \"query\": { \"filtered\": {  \"query\": { \"match\": {\"dpid\": \"${dpId}\"}}, \"filter\": { \"range\": {\"request_time\": { \"gte\": \"${start}\", \"lte\": \"${end}\"}}}}} , \"sort\": [{ \"request_time\": { \"order\": \"asc\" }}] , \"size\": 10000 }";
 
 		if (dpid != null) {
