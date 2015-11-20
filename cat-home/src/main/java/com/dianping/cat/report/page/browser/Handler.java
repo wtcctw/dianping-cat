@@ -59,6 +59,15 @@ import com.dianping.cat.config.web.js.Level;
 import com.site.lookup.util.StringUtils;
 
 public class Handler implements PageHandler<Context> {
+	public class CallableTask<T> implements Callable<T> {
+
+		@Override
+		public T call() throws Exception {
+			return null;
+		}
+
+	}
+
 	private final int LIMIT = 10000;
 
 	@Inject
@@ -106,6 +115,72 @@ public class Handler implements PageHandler<Context> {
 		distributions.put(browser, count);
 	}
 
+	private List<AjaxDataDetail> buildAjaxDataDetails(Payload payload) {
+		List<AjaxDataDetail> ajaxDetails = new ArrayList<AjaxDataDetail>();
+
+		try {
+			ajaxDetails = m_ajaxDataService.buildAjaxDataDetailInfos(payload.getQueryEntity1(), payload.getGroupByField());
+			Collections.sort(ajaxDetails, new ChartSorter(payload.getSort()).buildLineChartInfoComparator());
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return ajaxDetails;
+	}
+
+	private AjaxDataDetail buildComparisonInfo(AjaxDataQueryEntity entity) {
+		AjaxDataDetail appDetail = null;
+
+		try {
+			List<AjaxDataDetail> appDetails = m_ajaxDataService.buildAjaxDataDetailInfos(entity, AjaxDataField.CODE);
+
+			if (appDetails.size() >= 1) {
+				appDetail = appDetails.iterator().next();
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return appDetail;
+	}
+
+	protected Map<String, AjaxDataDetail> buildComparisonInfo(Payload payload) {
+		AjaxDataQueryEntity currentEntity = payload.getQueryEntity1();
+		AjaxDataQueryEntity comparisonEntity = payload.getQueryEntity2();
+		Map<String, AjaxDataDetail> result = new HashMap<String, AjaxDataDetail>();
+
+		if (currentEntity != null) {
+			AjaxDataDetail detail = buildComparisonInfo(currentEntity);
+
+			if (detail != null) {
+				result.put("当前值", detail);
+			}
+		}
+
+		if (comparisonEntity != null) {
+			AjaxDataDetail detail = buildComparisonInfo(comparisonEntity);
+
+			if (detail != null) {
+				result.put("对比值", detail);
+			}
+		}
+
+		return result;
+	}
+
+	public String buildDistributionChart(Map<String, Integer> distributions) {
+		PieChart chart = new PieChart();
+		List<Item> items = new ArrayList<Item>();
+
+		for (Entry<String, Integer> entry : distributions.entrySet()) {
+			Item item = new Item();
+
+			item.setNumber(entry.getValue()).setTitle(entry.getKey());
+			items.add(item);
+		}
+		chart.addItems(items);
+
+		return chart.getJsonString();
+	}
+
 	private LineChart buildLineChart(Payload payload) {
 		AjaxDataQueryEntity entity1 = payload.getQueryEntity1();
 		AjaxDataQueryEntity entity2 = payload.getQueryEntity2();
@@ -134,19 +209,33 @@ public class Handler implements PageHandler<Context> {
 		return null;
 	}
 
-	public String buildDistributionChart(Map<String, Integer> distributions) {
-		PieChart chart = new PieChart();
-		List<Item> items = new ArrayList<Item>();
+	private void buildSpeedInfo(Payload payload, Model model) {
+		try {
+			Map<String, Speed> speeds = m_webSpeedConfigManager.getSpeeds();
+			model.setSpeeds(speeds);
+			model.setPage2StepsJson(m_webSpeedConfigManager.getPage2StepsJson());
 
-		for (Entry<String, Integer> entry : distributions.entrySet()) {
-			Item item = new Item();
-
-			item.setNumber(entry.getValue()).setTitle(entry.getKey());
-			items.add(item);
+			SpeedQueryEntity queryEntity1 = normalizeSpeedQueryEntity(payload, speeds);
+			WebSpeedDisplayInfo info = m_webSpeedService.buildSpeedDisplayInfo(queryEntity1,
+			      payload.getSpeedQueryEntity2());
+			model.setWebSpeedDisplayInfo(info);
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
-		chart.addItems(items);
+	}
 
-		return chart.getJsonString();
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private <T> T fetchTaskResult(List<FutureTask> tasks, int i) {
+		T data = null;
+		FutureTask task = tasks.get(i);
+
+		try {
+			data = (T) task.get(10L, TimeUnit.SECONDS);
+		} catch (Exception e) {
+			task.cancel(true);
+			Cat.logError(e);
+		}
+		return data;
 	}
 
 	@Override
@@ -196,6 +285,40 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
+	private void normalize(Model model, Payload payload) {
+		model.setAction(payload.getAction());
+		model.setPage(ReportPage.BROWSER);
+		model.setCities(m_webConfigManager.queryConfigItem(WebConfigManager.CITY));
+		model.setOperators(m_webConfigManager.queryConfigItem(WebConfigManager.OPERATOR));
+		model.setNetworks(m_webConfigManager.queryConfigItem(WebConfigManager.NETWORK));
+		model.setPlatforms(m_webConfigManager.queryConfigItem(WebConfigManager.PLATFORM));
+		model.setCodes(m_patternManager.queryCodes());
+
+		PatternItem first = m_patternManager.queryUrlPatternRules().iterator().next();
+
+		model.setDefaultApi(first.getName() + "|" + first.getPattern());
+		model.setPattermItems(m_patternManager.queryUrlPatterns());
+		m_normalizePayload.normalize(model, payload);
+	}
+
+	private SpeedQueryEntity normalizeSpeedQueryEntity(Payload payload, Map<String, Speed> speeds) {
+		SpeedQueryEntity query1 = payload.getSpeedQueryEntity1();
+
+		if (StringUtils.isEmpty(payload.getQuery1())) {
+			if (!speeds.isEmpty()) {
+				Speed first = speeds.get(speeds.keySet().toArray()[0]);
+				Map<Integer, Step> steps = first.getSteps();
+
+				if (first != null && !steps.isEmpty()) {
+					query1.setPageId(first.getId());
+					query1.setStepId(steps.get(steps.keySet().toArray()[0]).getId());
+				}
+			}
+		}
+
+		return query1;
+	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void parallelBuildLineChart(Model model, final Payload payload) {
 		ExecutorService executor = Executors.newFixedThreadPool(3);
@@ -238,120 +361,6 @@ public class Handler implements PageHandler<Context> {
 		model.setLineChart(lineChart);
 		model.setAjaxDataDetailInfos(ajaxDataDetails);
 		model.setComparisonAjaxDetails(comparisonDetails);
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private <T> T fetchTaskResult(List<FutureTask> tasks, int i) {
-		T data = null;
-		FutureTask task = tasks.get(i);
-
-		try {
-			data = (T) task.get(10L, TimeUnit.SECONDS);
-		} catch (Exception e) {
-			task.cancel(true);
-			Cat.logError(e);
-		}
-		return data;
-	}
-
-	protected Map<String, AjaxDataDetail> buildComparisonInfo(Payload payload) {
-		AjaxDataQueryEntity currentEntity = payload.getQueryEntity1();
-		AjaxDataQueryEntity comparisonEntity = payload.getQueryEntity2();
-		Map<String, AjaxDataDetail> result = new HashMap<String, AjaxDataDetail>();
-
-		if (currentEntity != null) {
-			AjaxDataDetail detail = buildComparisonInfo(currentEntity);
-
-			if (detail != null) {
-				result.put("当前值", detail);
-			}
-		}
-
-		if (comparisonEntity != null) {
-			AjaxDataDetail detail = buildComparisonInfo(comparisonEntity);
-
-			if (detail != null) {
-				result.put("对比值", detail);
-			}
-		}
-
-		return result;
-	}
-
-	private AjaxDataDetail buildComparisonInfo(AjaxDataQueryEntity entity) {
-		AjaxDataDetail appDetail = null;
-
-		try {
-			List<AjaxDataDetail> appDetails = m_ajaxDataService.buildAjaxDataDetailInfos(entity, AjaxDataField.CODE);
-
-			if (appDetails.size() >= 1) {
-				appDetail = appDetails.iterator().next();
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return appDetail;
-	}
-
-	private List<AjaxDataDetail> buildAjaxDataDetails(Payload payload) {
-		List<AjaxDataDetail> ajaxDetails = new ArrayList<AjaxDataDetail>();
-
-		try {
-			ajaxDetails = m_ajaxDataService.buildAjaxDataDetailInfos(payload.getQueryEntity1(), payload.getGroupByField());
-			Collections.sort(ajaxDetails, new ChartSorter(payload.getSort()).buildLineChartInfoComparator());
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return ajaxDetails;
-	}
-
-	private void buildSpeedInfo(Payload payload, Model model) {
-		try {
-			Map<String, Speed> speeds = m_webSpeedConfigManager.getSpeeds();
-			model.setSpeeds(speeds);
-			model.setPage2StepsJson(m_webSpeedConfigManager.getPage2StepsJson());
-
-			SpeedQueryEntity queryEntity1 = normalizeSpeedQueryEntity(payload, speeds);
-			WebSpeedDisplayInfo info = m_webSpeedService.buildSpeedDisplayInfo(queryEntity1,
-			      payload.getSpeedQueryEntity2());
-			model.setWebSpeedDisplayInfo(info);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
-
-	private SpeedQueryEntity normalizeSpeedQueryEntity(Payload payload, Map<String, Speed> speeds) {
-		SpeedQueryEntity query1 = payload.getSpeedQueryEntity1();
-
-		if (StringUtils.isEmpty(payload.getQuery1())) {
-			if (!speeds.isEmpty()) {
-				Speed first = speeds.get(speeds.keySet().toArray()[0]);
-				Map<Integer, Step> steps = first.getSteps();
-
-				if (first != null && !steps.isEmpty()) {
-					query1.setPageId(first.getId());
-					query1.setStepId(steps.get(steps.keySet().toArray()[0]).getId());
-				}
-			}
-		}
-
-		return query1;
-	}
-
-	private void normalize(Model model, Payload payload) {
-		model.setAction(payload.getAction());
-		model.setPage(ReportPage.BROWSER);
-		model.setCities(m_webConfigManager.queryConfigItem(WebConfigManager.CITY));
-		model.setOperators(m_webConfigManager.queryConfigItem(WebConfigManager.OPERATOR));
-		model.setNetworks(m_webConfigManager.queryConfigItem(WebConfigManager.NETWORK));
-		model.setPlatforms(m_webConfigManager.queryConfigItem(WebConfigManager.PLATFORM));
-		model.setCodes(m_patternManager.queryCodes());
-
-		PatternItem first = m_patternManager.queryUrlPatternRules().iterator().next();
-
-		model.setDefaultApi(first.getName() + "|" + first.getPattern());
-		model.setPattermItems(m_patternManager.queryUrlPatterns());
-		m_normalizePayload.normalize(model, payload);
 	}
 
 	private void processLog(Map<String, ErrorMsg> errorMsgs, JsErrorLog log, Map<String, Integer> distributions) {
@@ -439,14 +448,5 @@ public class Handler implements PageHandler<Context> {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-	}
-
-	public class CallableTask<T> implements Callable<T> {
-
-		@Override
-		public T call() throws Exception {
-			return null;
-		}
-
 	}
 }

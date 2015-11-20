@@ -56,6 +56,7 @@
 		<tr><td>n</td><td>appName</td><td>错误的发生的应用模块</td><td>String</td></tr>
 		<tr><td>l</td><td>level</td><td>错误等级</td><td>String</td></tr>
 		<tr><td>a</td><td>agent</td><td>浏览器信息</td><td>String</td></tr>
+		<tr><td>id</td><td>dpid</td><td>用户ID，用于搜索错误日志</td><td>String</td></tr>
 		<tr><td>data</td><td>data</td><td>详细出错信息</td><td>String，如果没有的话，传空串</td></tr>
 	</table>
 	<br/>
