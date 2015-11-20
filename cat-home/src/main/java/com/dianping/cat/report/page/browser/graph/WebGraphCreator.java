@@ -9,11 +9,12 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.config.web.WebConfigManager;
-import com.dianping.cat.configuration.web.entity.Code;
+import com.dianping.cat.config.web.url.UrlPatternConfigManager;
+import com.dianping.cat.configuration.web.url.entity.Code;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
+import com.dianping.cat.report.graph.PieChartDetailInfo;
 import com.dianping.cat.report.graph.PieChart.Item;
-import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.browser.service.AjaxDataField;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
 import com.dianping.cat.report.page.browser.service.AjaxDataService;
@@ -26,6 +27,9 @@ public class WebGraphCreator {
 
 	@Inject
 	private WebConfigManager m_webConfigManager;
+	
+	@Inject
+	private UrlPatternConfigManager m_patternManager;
 
 	public LineChart buildChartData(final List<Double[]> datas, String type) {
 		LineChart lineChart = new LineChart();
@@ -124,7 +128,7 @@ public class WebGraphCreator {
 			}
 			break;
 		case CODE:
-			Map<Integer, Code> codes = m_webConfigManager.queryCodeByCommand(command);
+			Map<Integer, Code> codes = m_patternManager.queryCodes();
 			Code code = null;
 			keyValue = data.getCode();
 

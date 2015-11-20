@@ -9,9 +9,10 @@ import com.dianping.cat.config.web.js.Level;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.browser.service.AjaxDataField;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
+import com.dianping.cat.report.page.browser.service.AjaxDataService;
+import com.dianping.cat.report.page.browser.service.SpeedQueryEntity;
 
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.tuple.Pair;
@@ -28,7 +29,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private String m_url;
 
 	@FieldMeta("type")
-	private String m_type = AppDataService.REQUEST;
+	private String m_type = AjaxDataService.REQUEST;
+
+	@FieldMeta("sort")
+	private String m_sort = AjaxDataService.SUCCESS;
 
 	@FieldMeta("query1")
 	private String m_query1;
@@ -62,6 +66,9 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	@FieldMeta("msg")
 	private String m_msg;
+	
+	@FieldMeta("dpid")
+	private String m_dpid;
 
 	@FieldMeta("id")
 	private int m_id;
@@ -148,6 +155,14 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public String getDay() {
 		return m_day;
+	}
+
+	public String getDpid() {
+		if (StringUtils.isEmpty(m_dpid)) {
+			return null;
+		} else {
+			return m_dpid;
+		}
 	}
 
 	public String getEndTime() {
@@ -250,6 +265,26 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		}
 	}
 
+	public String getSort() {
+		return m_sort;
+	}
+
+	public SpeedQueryEntity getSpeedQueryEntity1() {
+		if (m_query1 != null && m_query1.length() > 0) {
+			return new SpeedQueryEntity(m_query1);
+		} else {
+			return new SpeedQueryEntity();
+		}
+	}
+
+	public SpeedQueryEntity getSpeedQueryEntity2() {
+		if (m_query2 != null && m_query2.length() > 0) {
+			return new SpeedQueryEntity(m_query2);
+		} else {
+			return null;
+		}
+	}
+
 	public String getStartTime() {
 		return m_startTime;
 	}
@@ -268,6 +303,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public void setDay(String day) {
 		m_day = day;
+	}
+
+	public void setDpid(String dpid) {
+		m_dpid = dpid;
 	}
 
 	public void setEndTime(String endTime) {
@@ -297,6 +336,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.BROWSER);
+	}
+
+	public void setSort(String sort) {
+		m_sort = sort;
 	}
 
 	public void setStartTime(String startTime) {

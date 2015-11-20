@@ -29,7 +29,6 @@ import com.dianping.cat.system.page.config.processor.GlobalConfigProcessor;
 import com.dianping.cat.system.page.config.processor.HeartbeatConfigProcessor;
 import com.dianping.cat.system.page.config.processor.MetricConfigProcessor;
 import com.dianping.cat.system.page.config.processor.NetworkConfigProcessor;
-import com.dianping.cat.system.page.config.processor.WebConfigProcessor;
 import com.dianping.cat.system.page.config.processor.StorageConfigProcessor;
 import com.dianping.cat.system.page.config.processor.SystemConfigProcessor;
 import com.dianping.cat.system.page.config.processor.ThirdPartyConfigProcessor;
@@ -45,9 +44,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ThirdPartyConfigProcessor m_thirdPartyConfigProcessor;
-
-	@Inject
-	private WebConfigProcessor m_patternConfigProcessor;
 
 	@Inject
 	private TopologyConfigProcessor m_topologyConfigProcessor;
@@ -132,24 +128,6 @@ public class Handler implements PageHandler<Context> {
 		case THIRD_PARTY_RULE_SUBMIT:
 		case THIRD_PARTY_RULE_DELETE:
 			m_thirdPartyConfigProcessor.process(action, payload, model);
-			break;
-
-		case URL_PATTERN_CONFIG_UPDATE:
-		case URL_PATTERN_ALL:
-		case URL_PATTERN_UPDATE:
-		case URL_PATTERN_UPDATE_SUBMIT:
-		case URL_PATTERN_DELETE:
-		case WEB_RULE:
-		case WEB_RULE_ADD_OR_UPDATE:
-		case WEB_RULE_ADD_OR_UPDATE_SUBMIT:
-		case WEB_RULE_DELETE:
-		case JS_RULE_LIST:
-		case JS_RULE_UPDATE:
-		case JS_RULE_DELETE:
-		case JS_RULE_UPDATE_SUBMIT:
-			m_patternConfigProcessor.processPatternConfig(action, payload, model);
-			break;
-		case WEB_CONSTANTS:
 			break;
 
 		case TOPOLOGY_GRAPH_NODE_CONFIG_LIST:

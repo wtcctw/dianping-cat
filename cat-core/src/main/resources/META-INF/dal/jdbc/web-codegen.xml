@@ -53,6 +53,7 @@
     <member name="browser" field="browser" value-type="String" length="20" />
     <member name="level" field="level" value-type="int" length="3" nullable="false" />
     <member name="msg" field="msg" value-type="String" length="200" nullable="false" />
+    <member name="dpid" field="dpid" value-type="String" length="200"/>
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <member name="error-time" field="error_time" value-type="Date" nullable="false" />
     <member name="updatetime" field="updatetime" value-type="Date" nullable="false" />

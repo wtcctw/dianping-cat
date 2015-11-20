@@ -33,11 +33,17 @@
 						class="table table-striped table-condensed table-bordered table-hover">
 						<thead>
 							<tr>
+							<th colspan='2'>
+								<a href="?op=speedUpdate" class="btn btn-primary btn-xs"> <i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a>
+								<a href="?op=speedUpdate&page=${entry.key}" class="btn btn-primary btn-xs">
+									 <i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a> 
+									<a href="?op=speedDelete&page=${entry.key}" class="btn btn-danger btn-xs delete">
+									<i class="ace-icon fa fa-trash-o bigger-120"></i></a>
+								</th>
+							</tr>
+							<tr>
 								<th width="30%">测速点编号</th>
 								<th width="32%">名称</th>
-								<th width="8%">操作 <a href="?op=speedUpdate"
-									class="btn btn-primary btn-xs"> <i
-										class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 							</tr>
 						</thead>
 
@@ -45,10 +51,6 @@
 							<tr>
 								<td>${step.key}</td>
 								<td>${step.value.title}</td>
-								<td><a href="?op=speedUpdate&page=${entry.key}&stepId=${step.key}" class="btn btn-primary btn-xs">
-									 <i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a> 
-									<a href="?op=speedDelete&page=${entry.key}&stepId=${step.key}" class="btn btn-danger btn-xs delete">
-									<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 							</tr>
 						</c:forEach>
 					</table>

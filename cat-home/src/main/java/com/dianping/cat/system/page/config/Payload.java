@@ -10,7 +10,6 @@ import org.unidal.web.mvc.payload.annotation.ObjectMeta;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.web.js.entity.AggregationRule;
-import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.config.entity.Tag;
@@ -32,17 +31,11 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@ObjectMeta("project")
 	private Project m_project = new Project();
 
-	@ObjectMeta("patternItem")
-	private PatternItem m_patternItem = new PatternItem();
-
 	@ObjectMeta("productLine")
 	private ProductLine m_productLine = new ProductLine();
 
 	@ObjectMeta("aggregation")
 	private AggregationRule m_rule = new AggregationRule();
-	
-	@ObjectMeta("jsRule")
-	private com.dianping.cat.home.js.entity.ExceptionLimit m_jsRule = new com.dianping.cat.home.js.entity.ExceptionLimit();
 
 	@ObjectMeta("domainConfig")
 	private DomainConfig m_domainConfig = new DomainConfig();
@@ -299,10 +292,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_pattern;
 	}
 
-	public PatternItem getPatternItem() {
-		return m_patternItem;
-	}
-
 	public ProductLine getProductLine() {
 		return m_productLine;
 	}
@@ -351,14 +340,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_type;
 	}
 	
-	public com.dianping.cat.home.js.entity.ExceptionLimit getJsRule() {
-		return m_jsRule;
-	}
-	
-	public void setJsRule(com.dianping.cat.home.js.entity.ExceptionLimit jsRule) {
-		m_jsRule = jsRule;
-	}
-
 	public boolean isAll() {
 		return m_all;
 	}
@@ -483,10 +464,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setPattern(String pattern) {
 		m_pattern = pattern;
-	}
-
-	public void setPatternItem(PatternItem patternItem) {
-		m_patternItem = patternItem;
 	}
 
 	public void setProductLine(ProductLine productLine) {

@@ -5,23 +5,27 @@
 <a:web_body>
 <table class="table table-striped table-condensed table-bordered table-hover">
 	<tr>
-		<td>Error Time : </td>
+		<td>Error Time </td>
 		<td>${model.errorTime}</td>
 	</tr>
 	<tr>
-		<td>Level : </td>
+		<td>Level </td>
 		<td>${model.level}</td>
 	</tr>
 	<tr>
-		<td>Module : </td>
+		<td>Module </td>
 		<td>${model.module}</td>
 	</tr>
 	<tr>
-		<td>Agent : </td>
+		<td>Dpid </td>
+		<td>${model.dpid}</td>
+	</tr>
+	<tr>
+		<td>Agent </td>
 		<td>${model.agent}</td>
 	</tr>
 	<tr>
-		<td>Detail: </td>
+		<td>Detail </td>
 		<td>${model.detail}</td>
 	</tr>
 </table>

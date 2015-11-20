@@ -8,7 +8,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	JS_ERROR("jsError"),
 	
-	JS_ERROR_DETAIL("jsErrorDetail");
+	JS_ERROR_DETAIL("jsErrorDetail"),
+	
+	SPEED("speed");
 
 	private String m_name;
 

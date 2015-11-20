@@ -1,11 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <es-server-config>
-	<log id="app-log" host="192.168.226.137" port="9200" index="localtest"
-		type="docs">
-	</log>
-	<log id="app-log2" host="192.168.226.137" port="9200" index="localtest"
-		type="docs">
-	</log>
-	<log id="app-log3" host="192.168.226.137" port="9200" index="localtest"
-		type="docs">
-	</log>
+   <log id="app-log" host="192.168.226.137" port="9200" index="localtest" type="docs"/>
+   <log id="app-log-offline" host="logcenter-es-service01.gq" port="9200" index="dpods_log_applog-web" type="docs"/>
 </es-server-config>
