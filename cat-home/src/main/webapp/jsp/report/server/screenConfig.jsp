@@ -9,9 +9,8 @@
 	type="com.dianping.cat.report.page.server.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.server.Model"
 	scope="request" />
-<a:serverBody>
-	<link rel="stylesheet" type="text/css"
-		href="${model.webapp}/js/jquery.datetimepicker.css" />
+<a:serverBody> 
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css" />
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<div class="breadcrumbs" id="breadcrumbs">

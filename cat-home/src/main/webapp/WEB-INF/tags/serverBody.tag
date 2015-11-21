@@ -23,7 +23,7 @@
 							<i class="menu-icon fa fa-caret-right"></i>系统大盘</a>
 							<b class="arrow"></b>
 						</li>
-						<li id="serverGraph"><a href="/cat/r/server?domain=${model.domain}">
+						<li id="serverGraph"><a href="/cat/r/server?domain=${model.domain}&graphId=${payload.graphId}">
 							<i class="menu-icon fa fa-caret-right"></i>系统指标</a>
 							<b class="arrow"></b>
 						</li>

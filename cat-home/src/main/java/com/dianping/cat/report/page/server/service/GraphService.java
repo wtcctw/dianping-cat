@@ -43,7 +43,7 @@ public class GraphService {
 		boolean ret = true;
 		MetricGraph entity = m_dao.createLocal();
 
-		entity.setName(graph.getId());
+		entity.setGraphId(Long.valueOf(graph.getId()));
 		entity.setContent(graph.toString());
 
 		try {
@@ -57,9 +57,9 @@ public class GraphService {
 		return ret;
 	}
 
-	public Graph queryById(int id) {
+	public Graph queryByGraphId(long id) {
 		try {
-			MetricGraph entity = m_dao.findByPK(id, MetricGraphEntity.READSET_FULL);
+			MetricGraph entity = m_dao.findByGrapId(id, MetricGraphEntity.READSET_FULL);
 			String xml = entity.getContent();
 			Graph graph = DefaultSaxParser.parse(xml);
 
@@ -72,21 +72,4 @@ public class GraphService {
 
 		return null;
 	}
-
-	public Graph queryByName(String name) {
-		try {
-			MetricGraph entity = m_dao.findByName(name, MetricGraphEntity.READSET_FULL);
-			String xml = entity.getContent();
-			Graph graph = DefaultSaxParser.parse(xml);
-
-			return graph;
-		} catch (DalNotFoundException e) {
-			// ignore
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-
-		return null;
-	}
-
 }

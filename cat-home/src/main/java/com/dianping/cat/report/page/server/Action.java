@@ -5,6 +5,14 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	AGGREGATE("aggregate"),
 
+	ENDPOINT("endPoint"),
+
+	MEASUREMTN("measurement"),
+
+	BUILDVIEW("buildview"),
+
+	SCREEN_UPDATE("screenAdd"),
+
 	SCREEN("screen");
 
 	private String m_name;

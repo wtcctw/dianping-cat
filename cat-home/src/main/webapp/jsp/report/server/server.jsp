@@ -11,20 +11,43 @@
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	
-	<table>
-			<tr>
-				<th class="left">
-				<div style="float:left;">
-					&nbsp;开始
+	<div class="breadcrumbs" id="breadcrumbs">
+		<script type="text/javascript">
+			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+		</script>
+
+		<ul class="breadcrumb">
+			<table>
+			<tr><th>
+					<span>开始</span>
 					<input type="text" id="startTime" style="width:150px;"/>
-						结束
-					<input type="text" id="endTime" style="width:150px;"/></div>
 				</th>
-				<th><input class="btn btn-primary btn-sm " value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()" type="submit" />
+				<th>
+					<span>&nbsp;结束</span>
+					<input type="text" id="endTime" style="width:150px;"/>
 				</th>
-			</tr>
-	</table>
-		
+				<th>
+					&nbsp;<div class="btn-group">
+					<button data-toggle="dropdown" class="btn btn-info btn-sm dropdown-toggle" data-rel="popover" data-trigger="hover" data-placement="top"
+				    data-content="<div class='row text-danger center'>测试失败</div>" title="${device}" data-original-title="">看图
+						<span class="ace-icon fa fa-caret-down icon-only"></span>
+				    </button>
+					<ul class="dropdown-menu dropdown-info dropdown-menu-left">
+						<li><a href="javascript:query('endPoint')">EndPoint视角</a></li>
+						<li><a href="javascript:query('measurement')">Measure视角</a></li>
+						<li><a href="javascript:query('')">组合视角</a></li>
+					</ul></div>
+				</th></tr>
+			</table>
+		</ul><!-- /.breadcrumb -->
+	</div>
+	
+	<div class="page-content">
+	<div class="page-content-area">
+	<div class="row">
+	<div class="col-xs-12">
+	<div class="tabbable">
+	<br>
 	<div class="col-xs-12">
 		<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
    			<div style="float:left;">
@@ -32,13 +55,14 @@
    			</div>
 		</c:forEach>
 	</div>
+	</div></div></div></div></div>
 	
 	<script type="text/javascript">
-	function query() {
+	function query(view) {
 		var start = $("#startTime").val();
 		var end = $("#endTime").val();
 		
-		window.location.href = "?graphId=${payload.graphId}&startDate=" + start + "&endDate=" + end; 
+		window.location.href = "?graphId=${payload.graphId}&view="+view+"&startDate=" + start + "&endDate=" + end; 
 	}
 	$(document).ready(
 		function() {
@@ -58,26 +82,12 @@
 			
 			$('#serverChart').addClass('active open');
 			$('#serverGraph').addClass('active');
-			
-			$.widget( "custom.catcomplete", $.ui.autocomplete, {
-				_renderMenu: function( ul, items ) {
-					var that = this,
-					currentCategory = "";
-					$.each( items, function( index, item ) {
-						if ( item.category != currentCategory ) {
-							ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
-							currentCategory = item.category;
-						}
-						that._renderItemData( ul, item );
-					});
-				}
-			});
+
+			<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
+				var data = ${item.jsonString};
+				graphMetricChart(document.getElementById('${item.id}'), data);
+			</c:forEach>
 		});	
-	
-		<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
-			var data = ${item.jsonString};
-			graphMetricChart(document.getElementById('${item.id}'), data);
-		</c:forEach>
 	</script>
 	
 </a:serverBody>

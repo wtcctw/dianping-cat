@@ -135,7 +135,7 @@
     <member name="creation-date" field="creation_date" value-type="Date" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
- 	<index name="ix_indexkey_reportperiod" members="index_key ASC, report_period ASC" />
+    <index name="ix_indexkey_reportperiod" members="index_key ASC, report_period ASC" />
     <index name="ix_reportperiod" members="report_period ASC" /> 
     <readsets>
       <readset name="FULL" all="true" />
@@ -209,13 +209,13 @@
   </entity>
   <entity name="metric-graph" table="metric_graph" alias="mg">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
-    <member name="name" field="name" value-type="String" length="50" nullable="false" />
+    <member name="graph-id" field="graph_id" value-type="long" length="19" />
     <member name="content" field="content" value-type="String" length="65535" />
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <member name="updatetime" field="updatetime" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
-    <index name="name" unique="true" members="name ASC" />
+    <index name="graphId" unique="true" members="graph_id ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>
@@ -251,7 +251,9 @@
     <member name="name" field="name" value-type="String" length="50" nullable="false" />
     <member name="graph-name" field="graph_name" value-type="String" length="50" nullable="false" />
     <member name="category" field="category" value-type="String" length="50" nullable="false" />
-    <member name="content" field="content" value-type="String" length="65535" />
+    <member name="end-points" field="endPoints" value-type="String" length="65535" nullable="false" />
+    <member name="measurements" field="measurements" value-type="String" length="65535" nullable="false" />
+    <member name="content" field="content" value-type="String" length="65535" nullable="false" />
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <member name="updatetime" field="updatetime" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />

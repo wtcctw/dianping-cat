@@ -3,9 +3,12 @@ package com.dianping.cat.report.page.server;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -16,6 +19,8 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.graph.entity.Graph;
 import com.dianping.cat.home.graph.entity.Item;
@@ -27,6 +32,7 @@ import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.metric.DataExtractor;
+import com.dianping.cat.report.page.server.service.EndPointService;
 import com.dianping.cat.report.page.server.service.GraphService;
 import com.dianping.cat.report.page.server.service.ScreenService;
 import com.dianping.cat.system.page.config.ConfigHtmlParser;
@@ -52,26 +58,35 @@ public class Handler implements PageHandler<Context> {
 	private MetricService m_metricService;
 
 	@Inject
-	protected DataExtractor m_dataExtractor;
+	private DataExtractor m_dataExtractor;
 
-	private List<LineChart> buildLineCharts(Date start, Date end, String interval, Graph graph) {
-		List<LineChart> lineCharts = new ArrayList<LineChart>();
+	@Inject
+	private EndPointService m_endPointService;
+
+	@Inject
+	private JsonBuilder m_jsonBuilder = new JsonBuilder();
+
+	private List<LineChart> buildLineCharts(Date start, Date end, String interval, String view, Graph graph) {
+		List<LineChart> lineCharts = new LinkedList<LineChart>();
 
 		for (Entry<String, Item> entry : graph.getItems().entrySet()) {
 			Item item = entry.getValue();
-			LineChart linechart = new LineChart();
 
-			linechart.setId(entry.getKey());
-			linechart.setHtmlTitle(entry.getKey());
+			if (StringUtils.isEmpty(view) || view.equals(item.getView())) {
+				LineChart linechart = new LineChart();
 
-			for (Entry<String, Segment> e : item.getSegments().entrySet()) {
-				Segment segment = e.getValue();
-				Map<Long, Double> result = fetchData(start, end, e.getValue(), interval);
-				String title = segment.getId();
+				linechart.setId(entry.getKey());
+				linechart.setHtmlTitle(entry.getKey());
 
-				linechart.add(title, result);
+				for (Entry<String, Segment> e : item.getSegments().entrySet()) {
+					Segment segment = e.getValue();
+					Map<Long, Double> result = fetchData(start, end, e.getValue(), interval);
+					String title = segment.getId();
+
+					linechart.add(title, result);
+				}
+				lineCharts.add(linechart);
 			}
-			lineCharts.add(linechart);
 		}
 		return lineCharts;
 	}
@@ -109,35 +124,152 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case VIEW:
 			normalizeGraphInfo(payload, model);
-			
-			Graph graph = m_graphService.queryById(payload.getGraphId());
+
+			Graph graph = m_graphService.queryByGraphId(payload.getGraphId());
 
 			if (graph != null) {
-				List<LineChart> lineCharts = buildLineCharts(start, end, payload.getInterval(), graph);
+				List<LineChart> lineCharts = buildLineCharts(start, end, payload.getInterval(), payload.getView(), graph);
 
 				model.setLineCharts(lineCharts);
 			}
 			break;
 		case SCREEN:
-			QueryParameter parameter = new QueryParameter();
+			normalizeScreenInfo(payload, model);
 
-			parameter.setCategory("system").setStart(start).setEnd(end).setMeasurement("userCpu").setType(MetricType.AVG)
-			      .setInterval("1m");
+			List<LineChart> lineCharts = new LinkedList<LineChart>();
+			List<Graph> graphs = m_screenService.querByName(payload.getScreen());
 
-			Map<Long, Double> result = m_metricService.query(parameter);
+			for (Graph g : graphs) {
+				List<LineChart> lines = buildLineCharts(start, end, payload.getInterval(), payload.getView(), g);
 
-			System.out.println(result);
-
-			model.setGraphs(m_screenService.querByName(payload.getScreen()));
+				lineCharts.addAll(lines);
+			}
+			model.setLineCharts(lineCharts);
+			break;
+		case SCREEN_UPDATE:
+			
 			break;
 		case AGGREGATE:
 
+			break;
+		case ENDPOINT:
+			List<String> keywords = payload.getKeywordsList();
+
+			if (!keywords.isEmpty()) {
+				Set<String> endPoints = m_endPointService.queryEndPoints(keywords);
+				Map<String, Object> jsons = new HashMap<String, Object>();
+
+				jsons.put("endPoints", endPoints);
+				model.setJson(m_jsonBuilder.toJson(jsons));
+			}
+			break;
+		case MEASUREMTN:
+			List<String> endPoints = payload.getEndPoints();
+
+			if (!endPoints.isEmpty()) {
+				Set<String> measurements = m_endPointService.queryMeasurements(endPoints);
+				Map<String, Object> jsons = new HashMap<String, Object>();
+
+				jsons.put("endPoints", measurements);
+				model.setJson(m_jsonBuilder.toJson(jsons));
+			}
+			break;
+		case BUILDVIEW:
+			graph = buildGraph(payload);
+			boolean success = m_graphService.insert(graph);
+
+			if (success) {
+				Map<String, Object> jsons = new HashMap<String, Object>();
+
+				jsons.put("id", payload.getGraphId());
+				model.setJson(m_jsonBuilder.toJson(jsons));
+			}
 			break;
 		}
 
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
+	}
+
+	private String buildCategory(String measurement) {
+		int index = measurement.indexOf(".");
+
+		if (index > 0) {
+			return measurement.substring(0, index);
+		} else {
+			Cat.logError(new RuntimeException("Error metirc format: " + measurement));
+		}
+		return null;
+	}
+
+	private Graph buildGraph(Payload payload) {
+		List<String> endPoints = payload.getEndPoints();
+		List<String> measurements = payload.getMeasurements();
+		Graph graph = new Graph(String.valueOf(payload.getGraphId()));
+		List<Item> items = buildMeasureView(measurements, endPoints);
+
+		items.addAll(buildEndPointView(measurements, endPoints));
+		for (Item item : items) {
+			graph.addItem(item);
+		}
+		return graph;
+	}
+
+	private List<Item> buildEndPointView(List<String> measurements, List<String> endPoints) {
+		List<Item> items = new ArrayList<Item>();
+
+		for (String endPoint : endPoints) {
+			Item item = new Item(endPoint);
+
+			item.setView("endPoint");
+
+			for (String measure : measurements) {
+				String category = buildCategory(measure);
+
+				if (category != null) {
+					Segment segment = new Segment(measure);
+
+					segment.setCategory(category);
+					segment.setEndPoint(endPoint);
+					segment.setMeasure(measure);
+					segment.setTags("endPoint='" + endPoint + "'");
+					segment.setType(MetricType.AVG.getName());
+
+					item.addSegment(segment);
+					items.add(item);
+				}
+			}
+		}
+		return items;
+	}
+
+	private List<Item> buildMeasureView(List<String> measurements, List<String> endPoints) {
+		List<Item> items = new ArrayList<Item>();
+
+		for (String measure : measurements) {
+			String category = buildCategory(measure);
+
+			if (category != null) {
+				Item item = new Item(measure);
+
+				item.setView("measurement");
+
+				for (String endPoint : endPoints) {
+					Segment segment = new Segment(endPoint);
+
+					segment.setCategory(category);
+					segment.setEndPoint(endPoint);
+					segment.setMeasure(measure);
+					segment.setTags("endPoint='" + endPoint + "'");
+					segment.setType(MetricType.AVG.getName());
+
+					item.addSegment(segment);
+				}
+				items.add(item);
+			}
+		}
+		return items;
 	}
 
 	private void normalize(Payload payload, Model model) {
@@ -170,5 +302,19 @@ public class Handler implements PageHandler<Context> {
 
 			payload.setInterval(gap + "m");
 		}
+	}
+
+	private void normalizeScreenInfo(Payload payload, Model model) {
+		normalizeGraphInfo(payload, model);
+
+		Map<String, List<String>> screenGroups = m_screenService.queryScreenGroups();
+
+		if (StringUtils.isEmpty(payload.getScreen())) {
+			String defaultScreen = screenGroups.entrySet().iterator().next().getKey();
+
+			payload.setScreen(defaultScreen);
+		}
+
+		model.setScreenGroups(screenGroups);
 	}
 }

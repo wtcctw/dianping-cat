@@ -527,6 +527,19 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.server.service.EndPointService</role>
+			<implementation>com.dianping.cat.report.page.server.service.EndPointService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.metric.MetricService</role>
+					<role-hint>influxDB</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.server.service.ScreenService</role>
 			<implementation>com.dianping.cat.report.page.server.service.ScreenService</implementation>
 			<requirements>
@@ -5818,6 +5831,12 @@
 				<requirement>
 					<role>com.dianping.cat.report.graph.metric.DataExtractor</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.server.service.EndPointService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.helper.JsonBuilder</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5854,9 +5873,6 @@
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.MetricGraphDao</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5871,6 +5887,30 @@
 		<component>
 			<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
 			<implementation>com.dianping.cat.system.page.config.ConfigHtmlParser</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.server.service.EndPointService</role>
+			<implementation>com.dianping.cat.report.page.server.service.EndPointService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.metric.MetricService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>
+			<implementation>com.dianping.cat.influxdb.config.InfluxDBConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.eslog.Handler</role>

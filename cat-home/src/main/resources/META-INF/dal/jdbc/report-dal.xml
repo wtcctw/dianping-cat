@@ -204,12 +204,12 @@
 		<member name="creation-date" insert-expr="NOW()" />
 		<member name="updatetime" insert-expr="NOW()" update-expr="NOW()" />
 		<query-defs>
-			<query name="find-by-name" type="SELECT" >
-				<param name="name"/>
+			<query name="find-by-grap-id" type="SELECT" >
+				<param name="graph-id"/>
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
-					WHERE <FIELD name='name'/> = ${name}
+					WHERE <FIELD name='graph-id'/> = ${graph-id}
 					]]></statement>
 			</query>
 		</query-defs>
@@ -229,6 +229,12 @@
 			</readset>
 		 </readsets>
 		<query-defs>
+			<query name="find-all" type="SELECT" multiple="true">
+				<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				]]></statement>
+			</query>
 			<query name="find-by-name-graph" type="SELECT" >
 				<param name="name"/>
 				<param name="graph-name"/>

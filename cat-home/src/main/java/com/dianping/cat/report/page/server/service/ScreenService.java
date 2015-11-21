@@ -1,23 +1,34 @@
 package com.dianping.cat.report.page.server.service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.home.dal.report.MetricScreen;
 import com.dianping.cat.home.dal.report.MetricScreenDao;
 import com.dianping.cat.home.dal.report.MetricScreenEntity;
 import com.dianping.cat.home.graph.entity.Graph;
 import com.dianping.cat.home.graph.transform.DefaultSaxParser;
 
-public class ScreenService {
+public class ScreenService implements Initializable {
 
 	@Inject
 	private MetricScreenDao m_dao;
+
+	private Map<String, List<MetricScreen>> m_cachedScreens = new ConcurrentHashMap<String, List<MetricScreen>>();
 
 	private Graph buildGraph(MetricScreen screen) {
 		try {
@@ -29,6 +40,11 @@ public class ScreenService {
 			Cat.logError(e);
 			return null;
 		}
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		refresh();
 	}
 
 	public boolean insert(String name, String category, Graph graph) {
@@ -102,4 +118,56 @@ public class ScreenService {
 		return null;
 	}
 
+	public Map<String, List<MetricScreen>> queryScreens() {
+		return m_cachedScreens;
+	}
+
+	public Map<String, List<String>> queryScreenGroups() {
+		Map<String, List<String>> mapping = new LinkedHashMap<String, List<String>>();
+
+		for (Entry<String, List<MetricScreen>> entry : m_cachedScreens.entrySet()) {
+			List<String> list = new ArrayList<String>();
+
+			for (MetricScreen screen : entry.getValue()) {
+				list.add(screen.getName());
+			}
+			mapping.put(entry.getKey(), list);
+		}
+
+		SortHelper.sortMap(mapping, new Comparator<Map.Entry<String, List<String>>>() {
+
+			@Override
+			public int compare(Entry<String, List<String>> o1, Entry<String, List<String>> o2) {
+				return o1.getKey().compareTo(o2.getKey());
+			}
+		});
+
+		return mapping;
+	}
+
+	private void refresh() {
+		try {
+			Map<String, List<MetricScreen>> cachedScreens = new ConcurrentHashMap<String, List<MetricScreen>>();
+			List<MetricScreen> entities = m_dao.findAll(MetricScreenEntity.READSET_METAINFO);
+
+			for (MetricScreen entity : entities) {
+				String screenName = entity.getName();
+				List<MetricScreen> screens = cachedScreens.get(screenName);
+
+				if (screens == null) {
+					screens = new LinkedList<MetricScreen>();
+
+					cachedScreens.put(screenName, screens);
+				}
+
+				screens.add(entity);
+			}
+
+			m_cachedScreens = cachedScreens;
+		} catch (DalNotFoundException e) {
+			// ignore
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+	}
 }

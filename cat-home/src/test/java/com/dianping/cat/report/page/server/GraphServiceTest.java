@@ -24,7 +24,7 @@ public class GraphServiceTest extends ComponentTestCase {
 
 		graphService.insert(graph);
 
-		Graph graph2 = graphService.queryByName(id);
+		Graph graph2 = graphService.queryByGraphId(Long.valueOf(id));
 
 		Assert.assertEquals(graph, graph2);
 

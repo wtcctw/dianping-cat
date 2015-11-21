@@ -7,6 +7,10 @@ public enum JspFile {
 
 	AGGREGATE("/jsp/report/server/aggregate.jsp"),
 
+	JSON("/jsp/report/server/json.jsp"),
+
+	SCREEN_CONFIG_UPDATE("/jsp/report/server/screenConfigUpdate.jsp"),
+
 	;
 
 	private String m_path;
