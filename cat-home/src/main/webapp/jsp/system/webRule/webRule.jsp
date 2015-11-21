@@ -5,9 +5,9 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
-<jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
-<jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
+<jsp:useBean id="ctx" type="com.dianping.cat.system.page.web.Context" scope="request"/>
+<jsp:useBean id="payload" type="com.dianping.cat.system.page.web.Payload" scope="request"/>
+<jsp:useBean id="model" type="com.dianping.cat.system.page.web.Model" scope="request"/>
 
 <a:web_body>
 	<script type="text/javascript">
@@ -69,7 +69,7 @@
 						<c:choose>
 							<c:when test="${city ne -1}">
 							<td>
-							<c:forEach var="i" items="${model.cities}">
+							<c:forEach var="i" items="${model.webCities}">
 							<c:if test="${i.value.id eq city}">${i.value.name}</c:if>  
 							</c:forEach>
 							</td>
@@ -82,7 +82,7 @@
 						<c:choose>
 							<c:when test="${operator ne -1}">
 							<td>
-							<c:forEach var="i" items="${model.operators}">
+							<c:forEach var="i" items="${model.webOperators}">
 							<c:if test="${i.value.id eq operator}">${i.value.name}</c:if>  
 							</c:forEach>
 							</td>

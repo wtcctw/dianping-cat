@@ -1,6 +1,9 @@
 package com.dianping.cat;
 
 public class Constants {
+	
+	public static final int MAX_SPEED_POINT = 32;
+	
 	public static final String ALL = "All";
 
 	public static final String CAT = "cat";

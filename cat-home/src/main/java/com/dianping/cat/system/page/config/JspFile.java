@@ -3,12 +3,6 @@ package com.dianping.cat.system.page.config;
 public enum JspFile {
 	PROJECT_ALL("/jsp/system/project/project.jsp"),
 
-	URL_PATTERN_ALL("/jsp/system/urlPattern/urlPattern.jsp"),
-
-	URL_PATTERN_CONFIG_UPDATE("/jsp/system/urlPattern/urlPatternConfig.jsp"),
-
-	URL_PATTERN_UPATE("/jsp/system/urlPattern/urlPatternUpdate.jsp"),
-
 	TOPOLOGY_GRAPH_NODE_CONFIG_ADD_OR_UPDATE("/jsp/system/topology/topologyGraphNodeConfigAdd.jsp"),
 
 	TOPOLOGY_GRAPH_NODE_CONFIG_LIST("/jsp/system/topology/topologyGraphNodeConfigs.jsp"),
@@ -88,16 +82,6 @@ public enum JspFile {
 	UTILIZATION_CONFIG_UPDATE("/jsp/system/utilization/utilizationConfig.jsp"),
 
 	NET_GRAPH_CONFIG_UPDATE("/jsp/system/netGraphConfig/netGraphConfig.jsp"),
-
-	WEB_RULE("/jsp/system/webRule/webRule.jsp"),
-
-	WEB_RULE_UPDATE("/jsp/system/webRule/webRuleUpdate.jsp"),
-
-	WEB_CONSTANTS_LIST("/jsp/system/webRule/webConstantsList.jsp"),
-
-	JS_RULE_LIST("/jsp/system/webRule/jsRuleList.jsp"),
-
-	JS_RULE_UPDATE("/jsp/system/webRule/jsRuleUpdate.jsp"),
 
 	TRANSACTION_RULE("/jsp/system/transactionRule/transactionRule.jsp"),
 

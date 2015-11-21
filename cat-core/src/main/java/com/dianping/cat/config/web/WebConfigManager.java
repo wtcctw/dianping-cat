@@ -52,6 +52,8 @@ public class WebConfigManager implements Initializable {
 
 	private volatile Map<Integer, String> m_excludedCommands = new ConcurrentHashMap<Integer, String>();
 
+	private volatile Map<String, Integer> m_platforms = new ConcurrentHashMap<String, Integer>();
+
 	private int m_configId;
 
 	private volatile WebConfig m_config;
@@ -211,6 +213,10 @@ public class WebConfigManager implements Initializable {
 
 	public Map<String, Integer> getCities() {
 		return m_cities;
+	}
+
+	public Map<String, Integer> getPlatforms() {
+		return m_platforms;
 	}
 
 	public Map<Integer, Code> getCodes() {
@@ -456,6 +462,16 @@ public class WebConfigManager implements Initializable {
 			operatorMap.put(item.getName(), item.getId());
 		}
 		m_operators = operatorMap;
+
+		Map<String, Integer> platformMap = new ConcurrentHashMap<String, Integer>();
+		ConfigItem platforms = m_config.findConfigItem(PLATFORM);
+
+		if (platforms != null && platforms.getItems() != null) {
+			for (Item item : platforms.getItems().values()) {
+				platformMap.put(item.getName(), item.getId());
+			}
+		}
+		m_platforms = platformMap;
 	}
 
 	public boolean shouldAdd2AllCommands(int id) {

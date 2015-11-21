@@ -63,7 +63,7 @@
 			var end = converTimeFormat($("#time2").val());
 			var command = $("#command").val().split('|')[0];
 			var commandId = ${model.pattern2Items}[command].id;
-			var code = $("#code").val();
+			var code = $("#codeStatus").val();
 			var city = $("#city").val();
 			var operator = $("#operator").val();
 			var network = $("#network").val();
@@ -86,6 +86,7 @@
 
 		$(document).ready(
 				function() {
+					$('#Web_report').addClass('active open');
 					$('#web_piechart').addClass('active');
 					$('#Web_report').addClass('active open');
 					$('#time').datetimepicker({
@@ -122,7 +123,7 @@
 					}else{
 						$("#command").val('${model.defaultApi}');
 					}
-					$("#code").val(words[2]);
+					$("#codeStatus").val(words[2]);
 					$("#city").val(words[3]);
 					$("#operator").val(words[4]);
 					$("#network").val(words[7]);
