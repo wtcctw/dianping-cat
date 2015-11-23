@@ -83,6 +83,7 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.eslog.EsServerConfigManager;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
 import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
+import com.dianping.cat.report.page.server.display.MetricScreenTransformer;
 import com.dianping.cat.report.page.server.service.EndPointService;
 import com.dianping.cat.report.page.server.service.GraphService;
 import com.dianping.cat.report.page.server.service.ScreenService;
@@ -239,8 +240,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AppDataService.class).req(AppCommandDataDao.class, AppConfigManager.class));
 		all.add(C(AppConnectionService.class).req(AppConnectionDataDao.class, AppConfigManager.class));
 
+		all.add(C(GraphBuilder.class));
+		all.add(C(MetricScreenTransformer.class));
 		all.add(C(EndPointService.class).req(MetricService.class, InfluxDB.ID).req(InfluxDBConfigManager.class));
-		all.add(C(ScreenService.class).req(MetricScreenDao.class));
+		all.add(C(ScreenService.class).req(MetricScreenDao.class,
+		      com.dianping.cat.report.page.server.service.GraphBuilder.class, MetricScreenTransformer.class));
 		all.add(C(GraphService.class).req(MetricGraphDao.class));
 
 		return all;

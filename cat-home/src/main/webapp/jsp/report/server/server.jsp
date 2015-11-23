@@ -62,7 +62,7 @@
 		var start = $("#startTime").val();
 		var end = $("#endTime").val();
 		
-		window.location.href = "?graphId=${payload.graphId}&view="+view+"&startDate=" + start + "&endDate=" + end; 
+		window.location.href = "?op=graph&graphId=${payload.graphId}&view="+view+"&startDate=" + start + "&endDate=" + end; 
 	}
 	$(document).ready(
 		function() {

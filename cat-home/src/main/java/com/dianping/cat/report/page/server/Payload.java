@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.unidal.helper.Splitters;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
@@ -49,6 +48,12 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@FieldMeta("view")
 	private String m_view;
 
+	@FieldMeta("tag")
+	private String m_tag = "endPoint";
+
+	@FieldMeta("category")
+	private String m_category;
+
 	private ReportPage m_page;
 
 	private SimpleDateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -60,6 +65,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@Override
 	public Action getAction() {
 		return m_action;
+	}
+
+	public String getCategory() {
+		return m_category;
 	}
 
 	public String getContent() {
@@ -76,6 +85,12 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public long getGraphId() {
 		return m_graphId;
+	}
+
+	public List<String> getGraphs() {
+		String[] graphs = m_graph.split(",[ ]*");
+
+		return Arrays.asList(graphs);
 	}
 
 	public Date getHistoryEndDate() {
@@ -135,6 +150,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_screen;
 	}
 
+	public String getTag() {
+		return m_tag;
+	}
+
 	public int getTimeRange() {
 		return m_timeRange;
 	}
@@ -144,7 +163,11 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	}
 
 	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
+		m_action = Action.getByName(action, Action.SCREEN);
+	}
+
+	public void setCategory(String category) {
+		m_category = category;
 	}
 
 	public void setContent(String content) {
@@ -152,7 +175,8 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	}
 
 	public void setEndPoints(String endPoints) {
-		m_endPoints = Splitters.by(",").noEmptyItem().split(endPoints);
+		String[] ends = endPoints.split(",[ ]*");
+		m_endPoints = Arrays.asList(ends);
 	}
 
 	public void setGraph(String graph) {
@@ -172,7 +196,8 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	}
 
 	public void setMeasurements(String measurements) {
-		m_measurements = Splitters.by(",").noEmptyItem().split(measurements);
+		String[] measures = measurements.split(",[ ]*");
+		m_measurements = Arrays.asList(measures);
 	}
 
 	@Override
@@ -182,6 +207,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public void setScreen(String screen) {
 		m_screen = screen;
+	}
+
+	public void setTag(String tag) {
+		m_tag = tag;
 	}
 
 	public void setTimeRange(int timeRange) {
@@ -195,7 +224,7 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
-			m_action = Action.VIEW;
+			m_action = Action.SCREEN;
 		}
 	}
 }

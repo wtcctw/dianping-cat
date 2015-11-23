@@ -9,7 +9,11 @@ public enum JspFile {
 
 	JSON("/jsp/report/server/json.jsp"),
 
-	SCREEN_CONFIG_UPDATE("/jsp/report/server/screenConfigUpdate.jsp"),
+	SCREENS("/jsp/report/server/screens.jsp"),
+
+	SCREEN_UPDATE("/jsp/report/server/screenUpdate.jsp"),
+
+	SCREEN_CONFIG_UPDATE("/jsp/report/server/graphUpdate.jsp"),
 
 	;
 

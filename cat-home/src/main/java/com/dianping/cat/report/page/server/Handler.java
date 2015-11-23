@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.server;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,7 +18,6 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.graph.entity.Graph;
@@ -32,9 +30,12 @@ import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.metric.DataExtractor;
+import com.dianping.cat.report.page.server.display.MetricScreenInfo;
 import com.dianping.cat.report.page.server.service.EndPointService;
+import com.dianping.cat.report.page.server.service.GraphBuilder;
 import com.dianping.cat.report.page.server.service.GraphService;
 import com.dianping.cat.report.page.server.service.ScreenService;
+import com.dianping.cat.report.page.server.service.UpdateGraphParam;
 import com.dianping.cat.system.page.config.ConfigHtmlParser;
 
 public class Handler implements PageHandler<Context> {
@@ -62,6 +63,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private EndPointService m_endPointService;
+
+	@Inject
+	private GraphBuilder m_graphBuilder;
 
 	@Inject
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
@@ -122,7 +126,7 @@ public class Handler implements PageHandler<Context> {
 		Date end = payload.getHistoryEndDate();
 
 		switch (action) {
-		case VIEW:
+		case GRAPH:
 			normalizeGraphInfo(payload, model);
 
 			Graph graph = m_graphService.queryByGraphId(payload.getGraphId());
@@ -137,17 +141,52 @@ public class Handler implements PageHandler<Context> {
 			normalizeScreenInfo(payload, model);
 
 			List<LineChart> lineCharts = new LinkedList<LineChart>();
-			List<Graph> graphs = m_screenService.querByName(payload.getScreen());
+			Map<String, MetricScreenInfo> graphs = m_screenService.queryByName(payload.getScreen());
 
-			for (Graph g : graphs) {
+			for (MetricScreenInfo info : graphs.values()) {
+				Graph g = info.getGraph();
 				List<LineChart> lines = buildLineCharts(start, end, payload.getInterval(), payload.getView(), g);
 
 				lineCharts.addAll(lines);
 			}
 			model.setLineCharts(lineCharts);
+			model.setMetricScreenInfos(m_screenService.queryScreens());
+			break;
+		case SCREENS:
+			Map<String, Map<String, MetricScreenInfo>> screens = m_screenService.queryScreens();
+
+			model.setMetricScreenInfos(screens);
 			break;
 		case SCREEN_UPDATE:
-			
+			String screen = payload.getScreen();
+
+			if (StringUtils.isNotEmpty(screen)) {
+				Map<String, MetricScreenInfo> infos = m_screenService.queryByName(screen);
+
+				model.setGraphs(infos.keySet());
+			}
+			break;
+		case SCREEN_DELETE:
+			m_screenService.deleteByScreen(payload.getScreen());
+			model.setMetricScreenInfos(m_screenService.queryScreens());
+			break;
+		case SCREEN_SUBMIT:
+			m_screenService.insert(payload.getScreen(), payload.getGraphs());
+			model.setMetricScreenInfos(m_screenService.queryScreens());
+			break;
+		case GRAPH_UPDATE:
+			MetricScreenInfo screenInfo = m_screenService.queryByNameGraph(payload.getScreen(), payload.getGraph());
+
+			model.setMetricScreenInfo(screenInfo);
+			break;
+		case GRAPH_SUBMIT:
+			UpdateGraphParam param = new UpdateGraphParam();
+
+			param.setName(payload.getScreen()).setGraphName(payload.getGraph()).setCategory(payload.getCategory())
+			      .setEndPoints(payload.getEndPoints()).setMeasurements(payload.getMeasurements())
+			      .setView(payload.getView());
+			m_screenService.updateGraph(param);
+			model.setMetricScreenInfos(m_screenService.queryScreens());
 			break;
 		case AGGREGATE:
 
@@ -156,7 +195,7 @@ public class Handler implements PageHandler<Context> {
 			List<String> keywords = payload.getKeywordsList();
 
 			if (!keywords.isEmpty()) {
-				Set<String> endPoints = m_endPointService.queryEndPoints(keywords);
+				Set<String> endPoints = m_endPointService.queryEndPoints(payload.getTag(), keywords);
 				Map<String, Object> jsons = new HashMap<String, Object>();
 
 				jsons.put("endPoints", endPoints);
@@ -192,84 +231,12 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private String buildCategory(String measurement) {
-		int index = measurement.indexOf(".");
-
-		if (index > 0) {
-			return measurement.substring(0, index);
-		} else {
-			Cat.logError(new RuntimeException("Error metirc format: " + measurement));
-		}
-		return null;
-	}
-
 	private Graph buildGraph(Payload payload) {
 		List<String> endPoints = payload.getEndPoints();
 		List<String> measurements = payload.getMeasurements();
-		Graph graph = new Graph(String.valueOf(payload.getGraphId()));
-		List<Item> items = buildMeasureView(measurements, endPoints);
 
-		items.addAll(buildEndPointView(measurements, endPoints));
-		for (Item item : items) {
-			graph.addItem(item);
-		}
-		return graph;
-	}
-
-	private List<Item> buildEndPointView(List<String> measurements, List<String> endPoints) {
-		List<Item> items = new ArrayList<Item>();
-
-		for (String endPoint : endPoints) {
-			Item item = new Item(endPoint);
-
-			item.setView("endPoint");
-
-			for (String measure : measurements) {
-				String category = buildCategory(measure);
-
-				if (category != null) {
-					Segment segment = new Segment(measure);
-
-					segment.setCategory(category);
-					segment.setEndPoint(endPoint);
-					segment.setMeasure(measure);
-					segment.setTags("endPoint='" + endPoint + "'");
-					segment.setType(MetricType.AVG.getName());
-
-					item.addSegment(segment);
-					items.add(item);
-				}
-			}
-		}
-		return items;
-	}
-
-	private List<Item> buildMeasureView(List<String> measurements, List<String> endPoints) {
-		List<Item> items = new ArrayList<Item>();
-
-		for (String measure : measurements) {
-			String category = buildCategory(measure);
-
-			if (category != null) {
-				Item item = new Item(measure);
-
-				item.setView("measurement");
-
-				for (String endPoint : endPoints) {
-					Segment segment = new Segment(endPoint);
-
-					segment.setCategory(category);
-					segment.setEndPoint(endPoint);
-					segment.setMeasure(measure);
-					segment.setTags("endPoint='" + endPoint + "'");
-					segment.setType(MetricType.AVG.getName());
-
-					item.addSegment(segment);
-				}
-				items.add(item);
-			}
-		}
-		return items;
+		return m_graphBuilder
+		      .buildGraph(endPoints, measurements, String.valueOf(payload.getGraphId()), payload.getView());
 	}
 
 	private void normalize(Payload payload, Model model) {
@@ -307,14 +274,16 @@ public class Handler implements PageHandler<Context> {
 	private void normalizeScreenInfo(Payload payload, Model model) {
 		normalizeGraphInfo(payload, model);
 
-		Map<String, List<String>> screenGroups = m_screenService.queryScreenGroups();
+		Map<String, Map<String, MetricScreenInfo>> screenGroups = m_screenService.queryScreens();
 
 		if (StringUtils.isEmpty(payload.getScreen())) {
-			String defaultScreen = screenGroups.entrySet().iterator().next().getKey();
+			if (!screenGroups.isEmpty()) {
+				String defaultScreen = screenGroups.keySet().iterator().next();
 
-			payload.setScreen(defaultScreen);
+				payload.setScreen(defaultScreen);
+			} else {
+				payload.setScreen("");
+			}
 		}
-
-		model.setScreenGroups(screenGroups);
 	}
 }

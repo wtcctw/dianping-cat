@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.server.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,11 +42,11 @@ public class EndPointService {
 		return m_endPoints;
 	}
 
-	public Set<String> queryEndPoints(List<String> keywords) {
+	public Set<String> queryEndPoints(String tag, List<String> keywords) {
 		Set<String> endPoints = new HashSet<String>();
 
 		for (String key : m_configManager.getConfig().getInfluxdbs().keySet()) {
-			endPoints.addAll(m_metricService.queryEndPoints(key, keywords));
+			endPoints.addAll(m_metricService.queryEndPoints(key, tag, keywords));
 		}
 
 		return endPoints;
@@ -55,10 +56,21 @@ public class EndPointService {
 		Set<String> measurements = new HashSet<String>();
 
 		for (String key : m_configManager.getConfig().getInfluxdbs().keySet()) {
-			measurements.addAll(m_metricService.queryMeasurements(key, endPoints));
+			List<String> measures = m_metricService.queryMeasurements(key, endPoints);
+			List<String> results = new ArrayList<String>();
+
+			for (String measure : measures) {
+				results.add(convert(measure));
+			}
+
+			measurements.addAll(results);
 		}
 
 		return measurements;
 	}
 
+	private String convert(String measure) {
+		return measure.replaceAll("(domain=[^,]*(,|$))|(endPoint=[^,]*(,|$))", "").replaceAll(",$", "")
+		      .replaceAll(",", ";");
+	}
 }

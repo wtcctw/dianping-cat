@@ -3,10 +3,8 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx" type="com.dianping.cat.report.page.server.Context"
-	scope="request" />
-<jsp:useBean id="payload"
-	type="com.dianping.cat.report.page.server.Payload" scope="request" />
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.server.Context" scope="request" />
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.server.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.server.Model"
 	scope="request" />
 <a:serverBody>
@@ -23,8 +21,8 @@
 		<table>
 			<tr>
 				<th>屏幕
-				<select id="screenGroup" onchange="productChange()" style="width: 200px">
-					<c:forEach var="item" items="${model.screenGroups}" varStatus="status">
+				<select id="screenGroup" style="width: 200px">
+					<c:forEach var="item" items="${model.metricScreenInfos}" varStatus="status">
 					  <option value="${item.key}">${item.key}</option>
 					</c:forEach>
 				</select>

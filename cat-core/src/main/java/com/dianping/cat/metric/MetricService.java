@@ -13,7 +13,7 @@ public interface MetricService {
 
 	public List<String> queryTagValues(String category, String measurement, String tag);
 
-	public List<String> queryEndPoints(String category, List<String> keywords);
+	public List<String> queryEndPoints(String category, String tag, List<String> keywords);
 
 	public List<String> queryMeasurements(String category, List<String> endPoints);
 

@@ -5,54 +5,70 @@ import java.util.List;
 import com.dianping.cat.home.graph.entity.Graph;
 
 public class MetricScreenInfo {
-	private int m_id;
-
 	private String m_name;
 
 	private String m_graphName;
 
 	private String m_category;
 
-	private List<Graph> m_graphs;
+	private List<String> m_endPoints;
+
+	private List<String> m_measures;
+
+	private Graph m_graph;
 
 	public String getCategory() {
 		return m_category;
+	}
+
+	public List<String> getEndPoints() {
+		return m_endPoints;
 	}
 
 	public String getGraphName() {
 		return m_graphName;
 	}
 
-	public List<Graph> getGraphs() {
-		return m_graphs;
+	public Graph getGraph() {
+		return m_graph;
 	}
 
-	public int getId() {
-		return m_id;
+	public List<String> getMeasures() {
+		return m_measures;
 	}
 
 	public String getName() {
 		return m_name;
 	}
 
-	public void setCategory(String category) {
+	public MetricScreenInfo setCategory(String category) {
 		m_category = category;
+		return this;
 	}
 
-	public void setGraphName(String graphName) {
+	public MetricScreenInfo setEndPoints(List<String> endPoints) {
+		m_endPoints = endPoints;
+		return this;
+	}
+
+	public MetricScreenInfo setGraphName(String graphName) {
 		m_graphName = graphName;
+		return this;
 	}
 
-	public void setGraphs(List<Graph> graphs) {
-		m_graphs = graphs;
+	public MetricScreenInfo setGraph(Graph graph) {
+		m_graph = graph;
+		return this;
 	}
 
-	public void setId(int id) {
-		m_id = id;
+	public MetricScreenInfo setMeasures(List<String> measures) {
+		m_measures = measures;
+		return this;
 	}
 
-	public void setName(String name) {
+	public MetricScreenInfo setName(String name) {
 		m_name = name;
+		return this;
 	}
 
 }

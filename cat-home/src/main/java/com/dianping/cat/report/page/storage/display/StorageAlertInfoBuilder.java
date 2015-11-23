@@ -47,7 +47,7 @@ public class StorageAlertInfoBuilder {
 			if (alertInfo != null) {
 				parseAlertEntity(alert, alertInfo);
 			} else {
-				Cat.logError(new RuntimeException("Error date in alert: " + alert.toString() + ", now date: " + date));
+				Cat.logError(new RuntimeException("Error date in alert: " + alert.toString() + ", alert date: " + date));
 			}
 		}
 		return results;

@@ -182,12 +182,12 @@ public class MetricServiceImpl implements MetricService, Initializable {
 	}
 
 	@Override
-	public List<String> queryEndPoints(String category, List<String> keywords) {
+	public List<String> queryEndPoints(String category, String tag, List<String> keywords) {
 		InfluxDBConnection conn = m_dataSourceService.getConnection(category);
 
 		if (conn != null) {
-			String format = "SHOW TAG VALUES FROM  /.*/  WITH KEY = \"endPoint\"  WHERE endPoint =~ /.*%s.*/";
-			String query = String.format(format, StringUtils.join(keywords, "|"));
+			String format = "SHOW TAG VALUES FROM  /.*/  WITH KEY = \"endPoint\"  WHERE %s =~ /.*%s.*/";
+			String query = String.format(format, tag, StringUtils.join(keywords, "|"));
 			QueryResult result = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
 			List<String> results = parseData(result, 0);
 
@@ -210,7 +210,7 @@ public class MetricServiceImpl implements MetricService, Initializable {
 				list.add(query);
 			}
 
-			String format = "SHOW MEASUREMENTS WHERE %s";
+			String format = "SHOW SERIES WHERE %s";
 			String query = String.format(format, StringUtils.join(list, " OR "));
 			QueryResult result = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
 			List<String> results = parseData(result, 0);

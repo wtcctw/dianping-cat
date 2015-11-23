@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.server;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	VIEW("view"),
+	GRAPH("graph"),
 
 	AGGREGATE("aggregate"),
 
@@ -11,9 +11,21 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	BUILDVIEW("buildview"),
 
-	SCREEN_UPDATE("screenAdd"),
+	SCREEN("screen"),
 
-	SCREEN("screen");
+	SCREENS("screens"),
+
+	SCREEN_UPDATE("screenUpdate"),
+
+	SCREEN_DELETE("screenDelete"),
+
+	SCREEN_SUBMIT("screenSubmit"),
+
+	GRAPH_UPDATE("graphUpdate"),
+
+	GRAPH_SUBMIT("graphSubmit"),
+
+	;
 
 	private String m_name;
 

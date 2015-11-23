@@ -263,8 +263,8 @@ public class Handler implements PageHandler<Context> {
 			Date startDate = new Date(end - (minuteCounts - 1) * TimeHelper.ONE_MINUTE);
 			Date endDate = new Date(end);
 			StorageType type = payload.getType();
-
-			List<Alert> alerts = m_alertService.query(startDate, endDate, type.getName());
+			List<Alert> alerts = m_alertService.query(new Date(startDate.getTime() + TimeHelper.ONE_MINUTE), new Date(
+			      endDate.getTime() + TimeHelper.ONE_MINUTE), type.getName());
 			Map<String, StorageAlertInfo> alertInfos = m_alertInfoBuilder.buildStorageAlertInfos(startDate, endDate,
 			      minuteCounts, type, alerts);
 			alertInfos = sortAlertInfos(alertInfos);

@@ -23,8 +23,12 @@
 							<i class="menu-icon fa fa-caret-right"></i>系统大盘</a>
 							<b class="arrow"></b>
 						</li>
-						<li id="serverGraph"><a href="/cat/r/server?domain=${model.domain}&graphId=${payload.graphId}">
+						<li id="serverGraph"><a href="/cat/r/server?domain=${model.domain}&graphId=${payload.graphId}&op=graph">
 							<i class="menu-icon fa fa-caret-right"></i>系统指标</a>
+							<b class="arrow"></b>
+						</li>
+						<li id="serverScreens"><a href="/cat/r/server?op=screens&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>Screen配置</a>
 							<b class="arrow"></b>
 						</li>
 					</ul>

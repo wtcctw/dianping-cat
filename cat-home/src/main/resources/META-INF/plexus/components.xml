@@ -527,6 +527,14 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.graph.svg.GraphBuilder</role>
+			<implementation>com.dianping.cat.report.graph.svg.GraphBuilder</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.server.display.MetricScreenTransformer</role>
+			<implementation>com.dianping.cat.report.page.server.display.MetricScreenTransformer</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.server.service.EndPointService</role>
 			<implementation>com.dianping.cat.report.page.server.service.EndPointService</implementation>
 			<requirements>
@@ -545,6 +553,12 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.MetricScreenDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.server.service.GraphBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.server.display.MetricScreenTransformer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5877,6 +5891,9 @@
 					<role>com.dianping.cat.report.page.server.service.EndPointService</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.server.service.GraphBuilder</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.helper.JsonBuilder</role>
 				</requirement>
 			</requirements>
@@ -5897,6 +5914,12 @@
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.MetricScreenDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.server.service.GraphBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.server.display.MetricScreenTransformer</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5907,6 +5930,14 @@
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.server.service.GraphBuilder</role>
+			<implementation>com.dianping.cat.report.page.server.service.GraphBuilder</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.server.display.MetricScreenTransformer</role>
+			<implementation>com.dianping.cat.report.page.server.display.MetricScreenTransformer</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.server.service.GraphService</role>

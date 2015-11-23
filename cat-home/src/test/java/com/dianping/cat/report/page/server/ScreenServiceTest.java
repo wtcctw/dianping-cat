@@ -10,6 +10,7 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.home.graph.entity.Graph;
 import com.dianping.cat.home.graph.transform.DefaultSaxParser;
+import com.dianping.cat.report.page.server.display.MetricScreenInfo;
 import com.dianping.cat.report.page.server.service.ScreenService;
 
 public class ScreenServiceTest extends ComponentTestCase {
@@ -25,11 +26,11 @@ public class ScreenServiceTest extends ComponentTestCase {
 		screenService.insert("screen1", "system", graph);
 		screenService.insert("screen1", "system", graph2);
 
-		Graph graph3 = screenService.queryByNameGraph("screen1", graph.getId());
-		Graph graph4 = screenService.queryByNameGraph("screen1", graph2.getId());
+		MetricScreenInfo graph3 = screenService.queryByNameGraph("screen1", graph.getId());
+		MetricScreenInfo graph4 = screenService.queryByNameGraph("screen1", graph2.getId());
 
-		Assert.assertEquals(graph, graph3);
-		Assert.assertEquals(graph2, graph4);
+		Assert.assertEquals(graph, graph3.getGraph());
+		Assert.assertEquals(graph2, graph4.getGraph());
 
 	}
 }

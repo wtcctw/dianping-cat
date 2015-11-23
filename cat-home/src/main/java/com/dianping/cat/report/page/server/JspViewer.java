@@ -9,7 +9,7 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		Action action = model.getAction();
 
 		switch (action) {
-		case VIEW:
+		case GRAPH:
 			return JspFile.VIEW.getPath();
 		case SCREEN:
 			return JspFile.SCREEN.getPath();
@@ -19,7 +19,14 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		case MEASUREMTN:
 		case BUILDVIEW:
 			return JspFile.JSON.getPath();
+		case SCREENS:
+		case SCREEN_SUBMIT:
+		case SCREEN_DELETE:
+		case GRAPH_SUBMIT:
+			return JspFile.SCREENS.getPath();
 		case SCREEN_UPDATE:
+			return JspFile.SCREEN_UPDATE.getPath();
+		case GRAPH_UPDATE:
 			return JspFile.SCREEN_CONFIG_UPDATE.getPath();
 		}
 

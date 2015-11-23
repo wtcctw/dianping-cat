@@ -253,6 +253,11 @@
 					WHERE <FIELD name='name'/> = ${name}
 					]]></statement>
 			</query>
+			<query name="delete-by-name" type="DELETE">
+				<param name="name"/>
+				<statement><![CDATA[DELETE FROM <TABLE/>
+        			WHERE <FIELD name='name'/> = ${name}]]></statement>
+			</query>
 		</query-defs>
 	</entity>
     <entity name="overload" table="overload" alias="ot">

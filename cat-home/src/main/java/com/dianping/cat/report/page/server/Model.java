@@ -9,7 +9,6 @@ import java.util.Set;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 
-import com.dianping.cat.home.graph.entity.Graph;
 import com.dianping.cat.mvc.AbstractReportModel;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
@@ -33,15 +32,17 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Date m_endTime;
 
-	private List<Graph> m_graphs;
-
-	private Map<String, List<String>> m_screenGroups;
-
 	private Set<String> m_endPoints;
+
+	private Set<String> m_measures;
+
+	private Set<String> m_graphs;
 
 	private String m_json;
 
 	private MetricScreenInfo m_metricScreenInfo;
+
+	private Map<String, Map<String, MetricScreenInfo>> m_metricScreenInfos;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -57,7 +58,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	@Override
 	public Action getDefaultAction() {
-		return Action.VIEW;
+		return Action.GRAPH;
 	}
 
 	@Override
@@ -78,7 +79,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_endTime;
 	}
 
-	public List<Graph> getGraphs() {
+	public Set<String> getGraphs() {
 		return m_graphs;
 	}
 
@@ -90,16 +91,20 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_lineCharts;
 	}
 
+	public Set<String> getMeasures() {
+		return m_measures;
+	}
+
 	public MetricScreenInfo getMetricScreenInfo() {
 		return m_metricScreenInfo;
 	}
 
-	public String getOpState() {
-		return m_opState;
+	public Map<String, Map<String, MetricScreenInfo>> getMetricScreenInfos() {
+		return m_metricScreenInfos;
 	}
 
-	public Map<String, List<String>> getScreenGroups() {
-		return m_screenGroups;
+	public String getOpState() {
+		return m_opState;
 	}
 
 	public Date getStartTime() {
@@ -118,7 +123,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_endTime = endTime;
 	}
 
-	public void setGraphs(List<Graph> graphs) {
+	public void setGraphs(Set<String> graphs) {
 		m_graphs = graphs;
 	}
 
@@ -130,8 +135,16 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_lineCharts = lineCharts;
 	}
 
+	public void setMeasures(Set<String> measures) {
+		m_measures = measures;
+	}
+
 	public void setMetricScreenInfo(MetricScreenInfo metricScreenInfo) {
 		m_metricScreenInfo = metricScreenInfo;
+	}
+
+	public void setMetricScreenInfos(Map<String, Map<String, MetricScreenInfo>> metricScreenInfos) {
+		m_metricScreenInfos = metricScreenInfos;
 	}
 
 	public void setOpState(boolean result) {
@@ -144,10 +157,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setOpState(String opState) {
 		m_opState = opState;
-	}
-
-	public void setScreenGroups(Map<String, List<String>> screenGroups) {
-		m_screenGroups = screenGroups;
 	}
 
 	public void setStartTime(Date startTime) {

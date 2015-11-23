@@ -150,7 +150,7 @@
 		    var url = "?op=buildview&endPoints="+endPoints+"&measurements="+measures+"&view="+view+"&graphId="+new Date().getTime();
 		    $.getJSON( url, function( data ) {
    			  	$.each( data, function( key, val ) {
-   			  		window.open("?op=view&view="+view+"&graphId="+val,'_blank');
+   			  		window.open("?op=graph&&view="+view+"&graphId="+val,'_blank');
    			  	});	
  			});
 		;
