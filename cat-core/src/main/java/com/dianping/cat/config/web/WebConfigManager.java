@@ -54,6 +54,8 @@ public class WebConfigManager implements Initializable {
 
 	private volatile Map<String, Integer> m_platforms = new ConcurrentHashMap<String, Integer>();
 
+	private volatile Map<String, Integer> m_sources = new ConcurrentHashMap<String, Integer>();
+
 	private int m_configId;
 
 	private volatile WebConfig m_config;
@@ -72,9 +74,7 @@ public class WebConfigManager implements Initializable {
 
 	public static final String CONNECT_TYPE = "连接类型";
 
-	public static final int TOO_LONG_COMMAND_ID = 23;
-
-	public static final int ALL_COMMAND_ID = 0;
+	public static final String SOURCE = "来源";
 
 	public static final int COMMAND_ID = 1200;
 
@@ -217,6 +217,10 @@ public class WebConfigManager implements Initializable {
 
 	public Map<String, Integer> getPlatforms() {
 		return m_platforms;
+	}
+
+	public Map<String, Integer> getSources() {
+		return m_sources;
 	}
 
 	public Map<Integer, Code> getCodes() {
@@ -472,6 +476,16 @@ public class WebConfigManager implements Initializable {
 			}
 		}
 		m_platforms = platformMap;
+
+		Map<String, Integer> sourceMap = new ConcurrentHashMap<String, Integer>();
+		ConfigItem sources = m_config.findConfigItem(SOURCE);
+
+		if (sources != null && sources.getItems() != null) {
+			for (Item item : sources.getItems().values()) {
+				sourceMap.put(item.getName(), item.getId());
+			}
+		}
+		m_sources = sourceMap;
 	}
 
 	public boolean shouldAdd2AllCommands(int id) {

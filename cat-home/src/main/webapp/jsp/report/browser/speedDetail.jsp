@@ -45,7 +45,14 @@
 						varStatus="status">
 						<option value='${item.value.id}'>${item.value.name}</option>
 					</c:forEach>
-			</select> <input class="btn btn-primary btn-sm"
+			</select> <span class="input-group-addon">来源</span><select id="source" style="width: 100px;">
+					<option value=''>All</option>
+					<c:forEach var="item" items="${model.sources}"
+						varStatus="status">
+						<option value='${item.value.id}'>${item.value.name}</option>
+					</c:forEach>
+			</select>
+			 <input class="btn btn-primary btn-sm"
 				value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
 				type="submit" /> <input class="btn btn-primary" id="checkbox"
 				onclick="check()" type="checkbox" /> <label for="checkbox"
@@ -91,6 +98,12 @@
 			</select> <span class="input-group-addon">运营商</span> <select id="operator2" style="width: 100px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.operators}"
+						varStatus="status">
+						<option value='${item.value.id}'>${item.value.name}</option>
+					</c:forEach>
+			</select> <span class="input-group-addon">来源</span><select id="source2" style="width: 100px;">
+					<option value=''>All</option>
+					<c:forEach var="item" items="${model.sources}"
 						varStatus="status">
 						<option value='${item.value.id}'>${item.value.name}</option>
 					</c:forEach>

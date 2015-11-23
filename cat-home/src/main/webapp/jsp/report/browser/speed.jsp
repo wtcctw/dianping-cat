@@ -26,6 +26,7 @@
 				$("#platform2").val($("#platform").val());
 				$("#city2").val($("#city").val());
 				$("#operator2").val($("#operator").val());
+				$("#source2").val($("#source").val());
 				$("#time2").val($("#time").val());
 			} else {
 				$('#history').slideUp();
@@ -82,10 +83,11 @@
 			var platform = $("#platform").val();
 			var city = $("#city").val();
 			var operator = $("#operator").val();
+			var source = $("#source").val();
 			var split = ";";
 			var query1 = time + split + page + split + step + split + network
 					 + split + platform + split + city + split
-					+ operator;
+					+ operator + split + source;
 			var query2 = "";
 			var value = document.getElementById("checkbox").checked;
 
@@ -97,9 +99,11 @@
 				var platform2 = $("#platform2").val();
 				var city2 = $("#city2").val();
 				var operator2 = $("#operator2").val();
+				var source2 = $("#source2").val();
+				
 				query2 = time2 + split + page2 + split + step2 + split
 						+ network2 + split + platform2
-						+ split + city2 + split + operator2;
+						+ split + city2 + split + operator2 + split + source2;
 			}
 
 			window.location.href = "?op=speed&query1=" + query1 + "&query2=" + query2;
@@ -144,6 +148,7 @@
 				$("#platform").val(words[4]);
 				$("#city").val(words[5]);
 				$("#operator").val(words[6]);
+				$("#source").val(words[7]);
 				
 				var datePair = {};
 				datePair["当前值"]=$("#time").val();
@@ -172,6 +177,7 @@
 					$("#platform2").val(words[4]);
 					$("#city2").val(words[5]);
 					$("#operator2").val(words[6]);
+					$("#source2").val(words[7]);
 				} else {
 					$("#time2").val(getDate());
 				}

@@ -62,6 +62,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Map<String, Speed> m_speeds;
 
+	private Map<Integer, Item> m_sources;
+
 	private String m_defaultApi;
 
 	private List<String> m_levels;
@@ -83,7 +85,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private String m_distributionChart;
 
 	private String m_agent;
-	
+
 	private String m_dpid;
 
 	private WebSpeedDisplayInfo m_webSpeedDisplayInfo;
@@ -93,7 +95,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private Map<String, AjaxDataDetail> m_comparisonAjaxDetails;
 
 	private List<AjaxDataDetail> m_ajaxDataDetailInfos;
-	
+
 	private int m_commandId;
 
 	public Model(Context ctx) {
@@ -116,6 +118,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_cities;
 	}
 
+	public Map<Integer, Item> getSources() {
+		return m_sources;
+	}
+
 	public Map<Integer, Code> getCodes() {
 		return m_codes;
 	}
@@ -135,7 +141,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	public Map<String, AjaxDataDetail> getComparisonAjaxDetails() {
 		return m_comparisonAjaxDetails;
 	}
-	
+
 	@Override
 	public Action getDefaultAction() {
 		return Action.VIEW;
@@ -300,6 +306,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_cities = cities;
 	}
 
+	public void setSources(Map<Integer, Item> sources) {
+		m_sources = sources;
+	}
+
 	public void setCodes(Map<Integer, Code> codes) {
 		m_codes = codes;
 	}
@@ -315,7 +325,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	public void setCompareStart(Date compareStart) {
 		m_compareStart = compareStart;
 	}
-	
+
 	public void setComparisonAjaxDetails(Map<String, AjaxDataDetail> comparisonAjaxDetail) {
 		m_comparisonAjaxDetails = comparisonAjaxDetail;
 	}

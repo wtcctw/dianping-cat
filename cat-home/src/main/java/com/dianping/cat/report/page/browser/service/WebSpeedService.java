@@ -231,13 +231,14 @@ public class WebSpeedService extends ContainerHolder {
 			int operator = entity.getOperator();
 			int network = entity.getNetwork();
 			int platform = entity.getPlatfrom();
+			int source = entity.getSource();
 
 			try {
 				WebSpeedDataEntity webSpeedDataEntity = (WebSpeedDataEntity) Class.forName(
 				      "com.dianping.cat.web.WebSpeedDataEntity").newInstance();
 				Field field = webSpeedDataEntity.getClass().getDeclaredField("READSET_AVG_DATA" + stepId);
 				Readset<WebSpeedData> readset = (Readset<WebSpeedData>) field.get(webSpeedDataEntity);
-				datas = m_dao.findDataByMinute(pageId, period, city, operator, network, platform, readset);
+				datas = m_dao.findDataByMinute(pageId, period, city, operator, network, platform, source, readset);
 
 				for (WebSpeedData webSpeedData : datas) {
 					Method getResponseSumTimeSum = webSpeedData.getClass().getMethod("getResponseSumTimeSum" + stepId);

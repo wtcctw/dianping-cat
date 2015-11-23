@@ -27,6 +27,8 @@ public class SpeedQueryEntity {
 	private int m_pageId = DEFAULT_VALUE;
 
 	private int m_stepId = DEFAULT_VALUE;
+	
+	private int m_source = DEFAULT_VALUE;
 
 	public SpeedQueryEntity() {
 		Calendar cal = Calendar.getInstance();
@@ -50,6 +52,7 @@ public class SpeedQueryEntity {
 			m_platfrom = parseValue(strs.get(4));
 			m_city = parseValue(strs.get(5));
 			m_operator = parseValue(strs.get(6));
+			m_source = parseValue(strs.get(7));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -69,6 +72,10 @@ public class SpeedQueryEntity {
 
 	public int getOperator() {
 		return m_operator;
+	}
+	
+	public int getSource() {
+		return m_source;
 	}
 
 	public int getPlatfrom() {

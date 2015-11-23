@@ -747,6 +747,7 @@
         <param name="operator" />
         <param name="network" />
         <param name="platform" />
+        <param name="source" />
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
@@ -761,6 +762,9 @@
 		</IF>
 		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
 		</IF>
         group by  <FIELD name='minute-order'/>  ]]></statement>
       </query>
