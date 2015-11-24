@@ -5,22 +5,18 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<jsp:useBean id="ctx" type="com.dianping.cat.system.page.web.Context" scope="request" />
-<jsp:useBean id="payload" type="com.dianping.cat.system.page.web.Payload" scope="request" />
-<jsp:useBean id="model" type="com.dianping.cat.system.page.web.Model" scope="request" />
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.browser.Context" scope="request" />
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.browser.Payload" scope="request" />
+<jsp:useBean id="model" type="com.dianping.cat.report.page.browser.Model" scope="request" />
 
 <a:web_body>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#Web_config').addClass('active open');
-			$('#speed').addClass('active');
+			$('#Web_report').addClass('active open');
+			$('#web_speed').addClass('active');
 			
-			var page = '${payload.webPage}';
-			if(page != null && page.length != 0) {
-				$("#speeds").val(page);
-			}
 		//custom autocomplete (category selection)
-		$.widget( "custom.catcomplete", $.ui.autocomplete, {
+			$.widget( "custom.catcomplete", $.ui.autocomplete, {
 			_renderMenu: function( ul, items ) {
 				var that = this,
 				currentCategory = "";
@@ -34,10 +30,10 @@
 			}
 		});
 		
-		var data = [];
+ 	var data = [];
 		<c:forEach var="speed" items="${model.speeds}">
 			var item = {};
-			item['label'] = '${speed}';
+			item['label'] = '${speed.value.id}:${speed.key}';
 			item['category'] ="pages";
 			data.push(item);
 		</c:forEach>
@@ -45,14 +41,34 @@
 		$("#speeds").catcomplete({
 			delay: 0,
 			source: data
-		});
+		}); 
 		
 	});	
-	function query() {
-		var speeds = $("#speeds").val();
-		var href = "?op=speed&page=" + speeds;
-		window.location.href = href;
+		
+	function getDate() {
+			var myDate = new Date();
+			var myMonth = new Number(myDate.getMonth());
+			var month = myMonth + 1;
+			var day = myDate.getDate();
+
+			if (month < 10) {
+				month = '0' + month;
+			}
+			if (day < 10) {
+				day = '0' + day;
+			}
+
+			return myDate.getFullYear() + "-" + month + "-" + day;
 	}
+	
+ 	function query() {
+		var speeds = $("#speeds").val();
+		var pageId = speeds.split(":")[0];
+		var query1 = getDate() + ";" + pageId + ";1;;;;;"  ;
+		
+		var href = "?op=speed&query1=" + query1;
+		window.location.href = href;
+	} 
 	</script>
 	<table align="center">
 	<tr><th>
@@ -66,35 +82,7 @@
 	 <input class="btn btn-primary btn-sm"
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
 					type="submit" />		
-	<a href="?op=speedUpdate" class="btn btn-primary btn-sm"> <i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a>
 	</th>
 			</tr>
 	</table>
-	<br/>
-	<c:if test="${null != model.speed}">
-	<table class="table table-striped table-condensed table-bordered table-hover">
-	<tr><td>页面ID </td><td>页面名称</td><td>操作</td>
-	</tr>
-	<tr>
-			<td>${model.speed.id }</td>
-			<td>${model.speed.page }</td>
-			<td>
-			<a href="?op=speedUpdate&page=${model.speed.page}" class="btn btn-primary btn-xs"> <i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
-			<a href="?op=speedDelete&page=${model.speed.page}" class="btn btn-danger btn-xs delete"> <i class="ace-icon fa fa-trash-o bigger-120"></i></a>
-			</td> </tr>
-	</table>
-	<table class="table table-striped table-condensed table-bordered table-hover">
-		<thead>
-			<tr>
-				<th width="30%">测速点编号</th>
-				<th width="32%">名称</th>
-			</tr>
-		</thead>
-		<c:forEach var="step" items="${model.speed.steps}">
-			<tr>
-				<td>${step.key}</td>
-				<td>${step.value.title}</td>
-			</tr>
-		</c:forEach>
-	</table> </c:if>
 </a:web_body>

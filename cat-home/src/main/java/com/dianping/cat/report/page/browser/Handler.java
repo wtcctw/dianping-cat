@@ -59,14 +59,6 @@ import com.dianping.cat.config.web.js.Level;
 import com.site.lookup.util.StringUtils;
 
 public class Handler implements PageHandler<Context> {
-	public class CallableTask<T> implements Callable<T> {
-
-		@Override
-		public T call() throws Exception {
-			return null;
-		}
-
-	}
 
 	private final int LIMIT = 10000;
 
@@ -212,12 +204,11 @@ public class Handler implements PageHandler<Context> {
 	private void buildSpeedInfo(Payload payload, Model model) {
 		try {
 			Map<String, Speed> speeds = m_webSpeedConfigManager.getSpeeds();
-			model.setSpeeds(speeds);
-			model.setPage2StepsJson(m_webSpeedConfigManager.getPage2StepsJson());
-
 			SpeedQueryEntity queryEntity1 = normalizeSpeedQueryEntity(payload, speeds);
 			WebSpeedDisplayInfo info = m_webSpeedService.buildSpeedDisplayInfo(queryEntity1,
 			      payload.getSpeedQueryEntity2());
+			
+			model.setSpeed(m_webSpeedConfigManager.getSpeed(queryEntity1.getPageId()));
 			model.setWebSpeedDisplayInfo(info);
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -277,6 +268,9 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case SPEED:
 			buildSpeedInfo(payload, model);
+			break;
+		case SPEED_LIST:
+			model.setSpeeds(m_webSpeedConfigManager.getSpeeds());
 			break;
 		}
 
@@ -450,4 +444,14 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 		}
 	}
+	
+	public class CallableTask<T> implements Callable<T> {
+
+		@Override
+		public T call() throws Exception {
+			return null;
+		}
+
+	}
+
 }

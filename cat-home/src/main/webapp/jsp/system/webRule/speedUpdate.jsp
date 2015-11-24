@@ -31,6 +31,7 @@
 			  			<input type="text" class="input-xlarge" name="step.page" value="${model.step.page}" readonly/>
 					</c:otherwise>
 					</c:choose>
+					<input class='btn btn-primary btn-sm' type="submit" name="submit" value="提交" />
 					</td>
 				</tr>
 				<tr>
@@ -38,6 +39,43 @@
 					<td>
 						<table class="table table-striped table-condensed table-bordered ">
 							<tr><th>测速点编号</th><th>测速点名称</th></tr>
+							<tr><td>20</td><td><input type="text" class="input-xlarge" name="step.step20" value="${model.step.step20}"/>
+							<tr><td>21</td><td><input type="text" class="input-xlarge" name="step.step21" value="${model.step.step21}"/>
+							<tr><td>22</td><td><input type="text" class="input-xlarge" name="step.step22" value="${model.step.step22}"/>
+							<tr><td>23</td><td><input type="text" class="input-xlarge" name="step.step23" value="${model.step.step23}"/>
+							<tr><td>24</td><td><input type="text" class="input-xlarge" name="step.step24" value="${model.step.step24}"/>
+							<tr><td>25</td><td><input type="text" class="input-xlarge" name="step.step25" value="${model.step.step25}"/>
+							<tr><td>26</td><td><input type="text" class="input-xlarge" name="step.step26" value="${model.step.step26}"/>
+							<tr><td>27</td><td><input type="text" class="input-xlarge" name="step.step27" value="${model.step.step27}"/>
+							<tr><td>28</td><td><input type="text" class="input-xlarge" name="step.step28" value="${model.step.step28}"/>
+							<tr><td>29</td><td><input type="text" class="input-xlarge" name="step.step29" value="${model.step.step29}" />
+							<tr><td>30</td><td><input type="text" class="input-xlarge" name="step.step30" value="${model.step.step30}"/>
+							<tr><td>31</td><td><input type="text" class="input-xlarge" name="step.step31" value="${model.step.step31}"/>
+							<tr><td>32</td><td><input type="text" class="input-xlarge" name="step.step32" value="${model.step.step32}"/>
+							</td></tr>
+							<c:choose>
+							<c:when test="${model.step.pageid eq 0}">
+							<tr><td>1</td><td><input type="text" class="input-xlarge" name="step.step1" value="unloadEventStart"/>
+							<tr><td>2</td><td><input type="text" class="input-xlarge" name="step.step2" value="unloadEventEnd"/>
+							<tr><td>3</td><td><input type="text" class="input-xlarge" name="step.step3" value="redirectStart"/>
+							<tr><td>4</td><td><input type="text" class="input-xlarge" name="step.step4" value="redirectEnd"/>
+							<tr><td>5</td><td><input type="text" class="input-xlarge" name="step.step5" value="fetchStart"/>
+							<tr><td>6</td><td><input type="text" class="input-xlarge" name="step.step6" value="domainLookupStart"/>
+							<tr><td>7</td><td><input type="text" class="input-xlarge" name="step.step7" value="domainLookupEnd"/>
+							<tr><td>8</td><td><input type="text" class="input-xlarge" name="step.step8" value="connectStart"/>
+							<tr><td>9</td><td><input type="text" class="input-xlarge" name="step.step9" value="connectEnd"/>
+							<tr><td>10</td><td><input type="text" class="input-xlarge" name="step.step10" value="requestStart"/>
+							<tr><td>11</td><td><input type="text" class="input-xlarge" name="step.step11" value="responseStart"/>
+							<tr><td>12</td><td><input type="text" class="input-xlarge" name="step.step12" value="responseEnd"/>
+							<tr><td>13</td><td><input type="text" class="input-xlarge" name="step.step13" value="domLoading"/>
+							<tr><td>14</td><td><input type="text" class="input-xlarge" name="step.step14" value="domInteractive"/>
+							<tr><td>15</td><td><input type="text" class="input-xlarge" name="step.step15" value="domContentLoadedEventStart"/>
+							<tr><td>16</td><td><input type="text" class="input-xlarge" name="step.step16" value="domContentLoadedEventEnd"/>
+							<tr><td>17</td><td><input type="text" class="input-xlarge" name="step.step17" value="domComplete"/>
+							<tr><td>18</td><td><input type="text" class="input-xlarge" name="step.step18" value="loadEventStart"/>
+							<tr><td>19</td><td><input type="text" class="input-xlarge" name="step.step19" value="loadEventEnd"/>
+							</c:when>
+							<c:otherwise>
 							<tr><td>1</td><td><input type="text" class="input-xlarge" name="step.step1" value="${model.step.step1}"/>
 							<tr><td>2</td><td><input type="text" class="input-xlarge" name="step.step2" value="${model.step.step2}"/>
 							<tr><td>3</td><td><input type="text" class="input-xlarge" name="step.step3" value="${model.step.step3}"/>
@@ -57,26 +95,12 @@
 							<tr><td>17</td><td><input type="text" class="input-xlarge" name="step.step17" value="${model.step.step17}"/>
 							<tr><td>18</td><td><input type="text" class="input-xlarge" name="step.step18" value="${model.step.step18}"/>
 							<tr><td>19</td><td><input type="text" class="input-xlarge" name="step.step19" value="${model.step.step19}"/>
-							<tr><td>20</td><td><input type="text" class="input-xlarge" name="step.step20" value="${model.step.step20}"/>
-							<tr><td>21</td><td><input type="text" class="input-xlarge" name="step.step21" value="${model.step.step21}"/>
-							<tr><td>22</td><td><input type="text" class="input-xlarge" name="step.step22" value="${model.step.step22}"/>
-							<tr><td>23</td><td><input type="text" class="input-xlarge" name="step.step23" value="${model.step.step23}"/>
-							<tr><td>24</td><td><input type="text" class="input-xlarge" name="step.step24" value="${model.step.step24}"/>
-							<tr><td>25</td><td><input type="text" class="input-xlarge" name="step.step25" value="${model.step.step25}"/>
-							<tr><td>26</td><td><input type="text" class="input-xlarge" name="step.step26" value="${model.step.step26}"/>
-							<tr><td>27</td><td><input type="text" class="input-xlarge" name="step.step27" value="${model.step.step27}"/>
-							<tr><td>28</td><td><input type="text" class="input-xlarge" name="step.step28" value="${model.step.step28}"/>
-							<tr><td>29</td><td><input type="text" class="input-xlarge" name="step.step29" value="${model.step.step29}" />
-							<tr><td>30</td><td><input type="text" class="input-xlarge" name="step.step30" value="${model.step.step30}"/>
-							<tr><td>31</td><td><input type="text" class="input-xlarge" name="step.step31" value="${model.step.step31}"/>
-							<tr><td>32</td><td><input type="text" class="input-xlarge" name="step.step32" value="${model.step.step32}"/>
-							</td></tr>
+							</c:otherwise>
+							</c:choose>
+							
 						</table>
 					</td>
 				</tr>
-				<tr>
-					<td style='text-align:center' colspan='2'><input class='btn btn-primary btn-sm' type="submit" name="submit" value="提交" /></td>
-				</tr> 
 			</table>
 		</form>
 </a:web_body>
