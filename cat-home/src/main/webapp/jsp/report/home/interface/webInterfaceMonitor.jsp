@@ -107,9 +107,10 @@
 		<tr><td>v</td><td>version</td><td>API版本号</td><td>暂定为1</td></tr>
 		<tr><td>t</td><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
 		<tr><td>n</td><td>network</td><td>网络类型</td><td>整型, 2G,3G,4G,WIFI(iOS只有3G和WIFI)，1=wifi, 2=2G, 3=3G, 4=4G, 0=Unknown</td></tr>
-		<tr><td>p</td><td>platform</td><td>平台类型</td><td>整型，</td></tr>
-		<tr><td>w</td><td>page</td><td>web页面</td><td>String</td></tr>
-		<tr><td>s</td><td>测速点</td><td>详细测速信息</td><td>以测速点编号-时间为一个单元，每个测速点之间以\t分隔， step1-responseTime1<span class="text-danger">TAB</span>step2-responseTime2...,例如1-1\t2-10\t3-100表明编号为1的测速点加载时间1毫秒，编号为2的测速点，加载时间10毫秒...</td></tr>
+		<tr><td>p</td><td>platform</td><td>平台类型</td><td>整型</td></tr>
+		<tr><td>source</td><td>source</td><td>来源</td><td>整型</td></tr>
+		<tr><td>w</td><td>page</td><td>web页面id，可于配置页面查询</td><td>整型</td></tr>
+		<tr><td>speedparams</td><td>测速点</td><td>详细测速信息</td><td>以测速点编号-时间为一个单元，每个测速点之间以\t分隔， step1-responseTime1<span class="text-danger">TAB</span>step2-responseTime2...,例如1-1\t2-10\t3-100表明编号为1的测速点加载时间1毫秒，编号为2的测速点，加载时间10毫秒...</td></tr>
 </table>
 <br/>
 	

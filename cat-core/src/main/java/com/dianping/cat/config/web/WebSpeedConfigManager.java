@@ -19,6 +19,7 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
+import com.dianping.cat.configuration.web.speed.entity.Mapper;
 import com.dianping.cat.configuration.web.speed.entity.WebSpeedConfig;
 import com.dianping.cat.configuration.web.speed.transform.DefaultSaxParser;
 import com.dianping.cat.configuration.web.speed.entity.Speed;
@@ -131,6 +132,20 @@ public class WebSpeedConfigManager implements Initializable {
 		if (speed != null) {
 			value = speed.getId();
 		}
+		return value;
+	}
+
+	public int querySpeedId(String flag1, String flag2, String flag3) {
+		int value = -1;
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(flag1).append("-").append(flag2).append("-").append(flag3);
+		Mapper mapper = m_config.getMappers().get(sb.toString());
+
+		if (mapper != null) {
+			value = mapper.getId();
+		}
+
 		return value;
 	}
 
