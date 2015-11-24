@@ -25,7 +25,9 @@ public enum JspFile {
 
 	URL_PATTERN_CONFIG_UPDATE("/jsp/system/urlPattern/urlPatternConfig.jsp"),
 
-	URL_PATTERN_UPATE("/jsp/system/urlPattern/urlPatternUpdate.jsp");
+	URL_PATTERN_UPATE("/jsp/system/urlPattern/urlPatternUpdate.jsp"),
+	
+	WEB_CONFIG_UPDATE("/jsp/system/webRule/webConfig.jsp");
 
 	private String m_path;
 
