@@ -292,6 +292,7 @@ public class Handler implements PageHandler<Context> {
 		model.setOperators(m_webConfigManager.queryConfigItem(WebConfigManager.OPERATOR));
 		model.setNetworks(m_webConfigManager.queryConfigItem(WebConfigManager.NETWORK));
 		model.setPlatforms(m_webConfigManager.queryConfigItem(WebConfigManager.PLATFORM));
+		model.setSources(m_webConfigManager.queryConfigItem(WebConfigManager.SOURCE));
 		model.setCodes(m_patternManager.queryCodes());
 
 		PatternItem first = m_patternManager.queryUrlPatternRules().iterator().next();
