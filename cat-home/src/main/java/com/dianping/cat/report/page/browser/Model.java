@@ -49,20 +49,22 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private Date m_compareEnd;
 
 	private String m_json;
+	
+	private Speed m_speed;
 
 	private Map<Integer, Item> m_cities;
 
 	private Map<Integer, Item> m_platforms;
 
 	private Map<Integer, Item> m_operators;
-
+	
 	private Map<Integer, Code> m_codes;
 
 	private Map<Integer, Item> m_networks;
 
-	private Map<String, Speed> m_speeds;
-
 	private Map<Integer, Item> m_sources;
+	
+	private Map<String, Speed> m_speeds;
 
 	private String m_defaultApi;
 
@@ -90,8 +92,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private WebSpeedDisplayInfo m_webSpeedDisplayInfo;
 
-	private String m_page2StepsJson;
-
 	private Map<String, AjaxDataDetail> m_comparisonAjaxDetails;
 
 	private List<AjaxDataDetail> m_ajaxDataDetailInfos;
@@ -104,6 +104,14 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public String getAgent() {
 		return m_agent;
+	}
+
+	public Map<String, Speed> getSpeeds() {
+		return m_speeds;
+	}
+
+	public void setSpeeds(Map<String, Speed> speeds) {
+		m_speeds = speeds;
 	}
 
 	public List<AjaxDataDetail> getAjaxDataDetailInfos() {
@@ -124,6 +132,14 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public Map<Integer, Code> getCodes() {
 		return m_codes;
+	}
+
+	public Speed getSpeed() {
+		return m_speed;
+	}
+
+	public void setSpeed(Speed speed) {
+		m_speed = speed;
 	}
 
 	public int getCommandId() {
@@ -217,10 +233,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_operators;
 	}
 
-	public String getPage2StepsJson() {
-		return m_page2StepsJson;
-	}
-
 	public Map<String, PatternItem> getPattermItems() {
 		return m_pattermItems;
 	}
@@ -239,10 +251,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public Map<Integer, Item> getPlatforms() {
 		return m_platforms;
-	}
-
-	public Map<String, Speed> getSpeeds() {
-		return m_speeds;
 	}
 
 	public Date getStart() {
@@ -390,10 +398,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_operators = operators;
 	}
 
-	public void setPage2StepsJson(String page2StepsJson) {
-		m_page2StepsJson = page2StepsJson;
-	}
-
 	public void setPattermItems(Map<String, PatternItem> pattermItems) {
 		m_pattermItems = pattermItems;
 	}
@@ -408,10 +412,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setPlatforms(Map<Integer, Item> platforms) {
 		m_platforms = platforms;
-	}
-
-	public void setSpeeds(Map<String, Speed> speeds) {
-		m_speeds = speeds;
 	}
 
 	public void setStart(Date start) {
