@@ -130,6 +130,7 @@ public class Handler implements PageHandler<Context> {
 			normalizeGraphInfo(payload, model);
 
 			Graph graph = m_graphService.queryByGraphId(payload.getGraphId());
+			graph = convertGraphType(graph, payload.getType());
 
 			if (graph != null) {
 				List<LineChart> lineCharts = buildLineCharts(start, end, payload.getInterval(), payload.getView(), graph);
@@ -145,7 +146,7 @@ public class Handler implements PageHandler<Context> {
 
 			for (MetricScreenInfo info : graphs.values()) {
 				Graph g = info.getGraph();
-				List<LineChart> lines = buildLineCharts(start, end, payload.getInterval(), payload.getView(), g);
+				List<LineChart> lines = buildLineCharts(start, end, payload.getInterval(), "", g);
 
 				lineCharts.addAll(lines);
 			}
@@ -231,12 +232,22 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
+	private Graph convertGraphType(Graph graph, String type) {
+		for (Entry<String, Item> entry : graph.getItems().entrySet()) {
+			for (Entry<String, Segment> e : entry.getValue().getSegments().entrySet()) {
+				Segment segment = e.getValue();
+
+				segment.setType(type);
+			}
+		}
+		return graph;
+	}
+
 	private Graph buildGraph(Payload payload) {
 		List<String> endPoints = payload.getEndPoints();
 		List<String> measurements = payload.getMeasurements();
 
-		return m_graphBuilder
-		      .buildGraph(endPoints, measurements, String.valueOf(payload.getGraphId()), payload.getView());
+		return m_graphBuilder.buildGraph(endPoints, measurements, String.valueOf(payload.getGraphId()), "");
 	}
 
 	private void normalize(Payload payload, Model model) {
@@ -268,6 +279,10 @@ public class Handler implements PageHandler<Context> {
 			int gap = m_dataExtractor.calculateInterval(length);
 
 			payload.setInterval(gap + "m");
+		}
+
+		if (payload.getGraphId() == 0) {
+			payload.setGraphId(m_graphService.getLast().getGraphId());
 		}
 	}
 

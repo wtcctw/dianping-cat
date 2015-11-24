@@ -2,6 +2,8 @@ package com.dianping.cat.report.page.server.service;
 
 import java.util.Date;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
@@ -13,10 +15,12 @@ import com.dianping.cat.home.dal.report.MetricGraphEntity;
 import com.dianping.cat.home.graph.entity.Graph;
 import com.dianping.cat.home.graph.transform.DefaultSaxParser;
 
-public class GraphService {
+public class GraphService implements Initializable {
 
 	@Inject
 	private MetricGraphDao m_dao;
+
+	private volatile MetricGraph m_last = new MetricGraph();
 
 	public boolean deleteBeforeDate(Date date) {
 
@@ -48,6 +52,8 @@ public class GraphService {
 
 		try {
 			m_dao.insert(entity);
+
+			m_last = entity;
 		} catch (DalException e) {
 			ret = false;
 
@@ -71,5 +77,18 @@ public class GraphService {
 		}
 
 		return null;
+	}
+
+	public MetricGraph getLast() {
+		return m_last;
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		try {
+			m_last = m_dao.findLast(1, MetricGraphEntity.READSET_FULL);
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
 	}
 }

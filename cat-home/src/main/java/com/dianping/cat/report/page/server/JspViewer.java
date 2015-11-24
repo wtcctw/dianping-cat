@@ -10,7 +10,7 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 
 		switch (action) {
 		case GRAPH:
-			return JspFile.VIEW.getPath();
+			return JspFile.GRAPH.getPath();
 		case SCREEN:
 			return JspFile.SCREEN.getPath();
 		case AGGREGATE:

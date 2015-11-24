@@ -6,6 +6,10 @@ public enum MetricType {
 
 	SUM("sum"),
 
+	MAX("max"),
+
+	MIN("min"),
+
 	COUNT("count");
 
 	private String m_name;

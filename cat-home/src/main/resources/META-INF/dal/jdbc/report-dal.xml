@@ -201,6 +201,7 @@
 		</query-defs>
 	</entity>
 	<entity name="metric-graph" table="metric_graph" alias="mg">
+		<var name="number" value-type="int" />
 		<member name="creation-date" insert-expr="NOW()" />
 		<member name="updatetime" insert-expr="NOW()" update-expr="NOW()" />
 		<query-defs>
@@ -210,6 +211,14 @@
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
 					WHERE <FIELD name='graph-id'/> = ${graph-id}
+					]]></statement>
+			</query>
+			<query name="find-last" type="SELECT" >
+				<param name="number"/>
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					ORDER BY <FIELD name='creation-date'/> DESC LIMIT ${number} 
 					]]></statement>
 			</query>
 		</query-defs>

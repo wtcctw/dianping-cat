@@ -31,7 +31,7 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private String m_content;
 
 	@FieldMeta("graphId")
-	private long m_graphId = System.currentTimeMillis();
+	private long m_graphId;
 
 	@FieldMeta("interval")
 	private String m_interval;
@@ -46,13 +46,16 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private List<String> m_measurements;
 
 	@FieldMeta("view")
-	private String m_view;
+	private String m_view = "endPoint";
 
 	@FieldMeta("tag")
 	private String m_tag = "endPoint";
 
 	@FieldMeta("category")
 	private String m_category;
+
+	@FieldMeta("type")
+	private String m_type = "mean";
 
 	private ReportPage m_page;
 
@@ -158,6 +161,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_timeRange;
 	}
 
+	public String getType() {
+		return m_type;
+	}
+
 	public String getView() {
 		return m_view;
 	}
@@ -215,6 +222,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public void setTimeRange(int timeRange) {
 		m_timeRange = timeRange;
+	}
+
+	public void setType(String type) {
+		m_type = type;
 	}
 
 	public void setView(String view) {
