@@ -1,5 +1,7 @@
 package com.dianping.cat.message.spi.codec;
 
+import com.dianping.cat.message.*;
+import com.dianping.cat.message.internal.*;
 import io.netty.buffer.ByteBuf;
 
 import java.io.UnsupportedEncodingException;
@@ -18,17 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
-import com.dianping.cat.message.Event;
-import com.dianping.cat.message.Heartbeat;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.Metric;
-import com.dianping.cat.message.Trace;
-import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.internal.DefaultEvent;
-import com.dianping.cat.message.internal.DefaultHeartbeat;
-import com.dianping.cat.message.internal.DefaultMetric;
-import com.dianping.cat.message.internal.DefaultTrace;
-import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
@@ -91,7 +82,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		String sessionToken = helper.read(ctx, LF);
 
 		if (VERSION.equals(id)) {
-			tree.setDomain(domain);
+			tree.setDomain(domain.intern());
 			tree.setHostName(hostName);
 			tree.setIpAddress(ipAddress);
 			tree.setThreadGroupName(threadGroupName);
@@ -106,16 +97,19 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		}
 	}
 
-	protected Message decodeLine(Context ctx, DefaultTransaction parent, Stack<DefaultTransaction> stack) {
+	protected Message decodeLine(Context ctx, DefaultTransaction parent, Stack<DefaultTransaction> stack,
+	      MessageTree tree) {
 		BufferHelper helper = m_bufferHelper;
 		byte identifier = ctx.getBuffer().readByte();
 		String timestamp = helper.read(ctx, TAB);
-		String type = helper.read(ctx, TAB);
+		String type = helper.read(ctx, TAB).intern();
 		String name = helper.read(ctx, TAB);
 
 		switch (identifier) {
 		case 't':
 			DefaultTransaction transaction = new DefaultTransaction(type, name, null);
+
+			tree.getTransactions().add(transaction);
 
 			helper.read(ctx, LF); // get rid of line feed
 			transaction.setTimestamp(m_dateHelper.parse(timestamp));
@@ -128,7 +122,10 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			return transaction;
 		case 'A':
 			DefaultTransaction tran = new DefaultTransaction(type, name, null);
-			String status = helper.read(ctx, TAB);
+
+			tree.getTransactions().add(tran);
+
+			String status = helper.read(ctx, TAB).intern();
 			String duration = helper.read(ctx, TAB);
 			String data = helper.read(ctx, TAB);
 
@@ -147,7 +144,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				return tran;
 			}
 		case 'T':
-			String transactionStatus = helper.read(ctx, TAB);
+			String transactionStatus = helper.read(ctx, TAB).intern();
 			String transactionDuration = helper.read(ctx, TAB);
 			String transactionData = helper.read(ctx, TAB);
 
@@ -162,13 +159,15 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			return stack.pop();
 		case 'E':
 			DefaultEvent event = new DefaultEvent(type, name);
-			String eventStatus = helper.read(ctx, TAB);
+			String eventStatus = helper.read(ctx, TAB).intern();
 			String eventData = helper.read(ctx, TAB);
 
 			helper.read(ctx, LF); // get rid of line feed
 			event.setTimestamp(m_dateHelper.parse(timestamp));
 			event.setStatus(eventStatus);
 			event.addData(eventData);
+
+			tree.getEvents().add(event);
 
 			if (parent != null) {
 				parent.addChild(event);
@@ -178,7 +177,10 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 		case 'M':
 			DefaultMetric metric = new DefaultMetric(type, name);
-			String metricStatus = helper.read(ctx, TAB);
+
+			tree.getMetrics().add(metric);
+
+			String metricStatus = helper.read(ctx, TAB).intern();
 			String metricData = helper.read(ctx, TAB);
 
 			helper.read(ctx, LF); // get rid of line feed
@@ -194,7 +196,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 		case 'L':
 			DefaultTrace trace = new DefaultTrace(type, name);
-			String traceStatus = helper.read(ctx, TAB);
+			String traceStatus = helper.read(ctx, TAB).intern();
 			String traceData = helper.read(ctx, TAB);
 
 			helper.read(ctx, LF); // get rid of line feed
@@ -210,7 +212,10 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 		case 'H':
 			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
-			String heartbeatStatus = helper.read(ctx, TAB);
+
+			tree.getHeartbeats().add(heartbeat);
+
+			String heartbeatStatus = helper.read(ctx, TAB).intern();
 			String heartbeatData = helper.read(ctx, TAB);
 
 			helper.read(ctx, LF); // get rid of line feed
@@ -233,12 +238,12 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 	protected void decodeMessage(Context ctx, MessageTree tree) {
 		Stack<DefaultTransaction> stack = new Stack<DefaultTransaction>();
-		Message parent = decodeLine(ctx, null, stack);
+		Message parent = decodeLine(ctx, null, stack, tree);
 
 		tree.setMessage(parent);
 
 		while (ctx.getBuffer().readableBytes() > 0) {
-			Message message = decodeLine(ctx, (DefaultTransaction) parent, stack);
+			Message message = decodeLine(ctx, (DefaultTransaction) parent, stack, tree);
 
 			if (message instanceof DefaultTransaction) {
 				parent = message;

@@ -15,8 +15,6 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportManager;
@@ -94,13 +92,11 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 		if (m_serverFilterConfigManager.validateDomain(domain)) {
 			EventReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
-			Message message = tree.getMessage();
 			String ip = tree.getIpAddress();
+			List<Event> events = tree.getEvents();
 
-			if (message instanceof Transaction) {
-				processTransaction(report, tree, (Transaction) message, ip);
-			} else if (message instanceof Event) {
-				processEvent(report, tree, (Event) message, ip);
+			for (Event e : events) {
+				processEvent(report, tree, e, ip);
 			}
 		}
 	}
@@ -152,20 +148,17 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		}
 	}
 
-	private void processTransaction(EventReport report, MessageTree tree, Transaction t, String ip) {
-		List<Message> children = t.getChildren();
-
-		for (Message child : children) {
-			if (child instanceof Transaction) {
-				processTransaction(report, tree, (Transaction) child, ip);
-			} else if (child instanceof Event) {
-				processEvent(report, tree, (Event) child, ip);
-			}
-		}
-	}
-
 	public void setReportManager(ReportManager<EventReport> reportManager) {
 		m_reportManager = reportManager;
+	}
+
+	@Override
+	public boolean isEiligible(MessageTree tree) {
+		if (tree.getEvents().size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

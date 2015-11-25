@@ -115,6 +115,11 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 		}
 	}
 
+	@Override
+   public boolean isEiligible(MessageTree tree) {
+	   return true;
+   }
+
 	protected boolean isLocalMode() {
 		return m_serverConfigManager.isLocalMode();
 	}
@@ -130,14 +135,14 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 
 	protected abstract void process(MessageTree tree);
 
+	public void setIndex(int index) {
+		m_index = index;
+	}
+
 	public void shutdown() {
 		synchronized (this) {
 			m_active = false;
 		}
-	}
-
-	public void setIndex(int index) {
-		m_index = index;
 	}
 
 }

@@ -1,13 +1,17 @@
 package com.dianping.cat.message.spi.internal;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.dianping.cat.message.Message;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
+import io.netty.util.ReferenceCountUtil;
 
 public class DefaultMessageTree implements MessageTree {
 
@@ -36,6 +40,14 @@ public class DefaultMessageTree implements MessageTree {
 	private String m_threadName;
 
 	private boolean m_sample = true;
+
+	private List<Event> events = new ArrayList<Event>();
+
+	private List<Transaction> transactions = new ArrayList<Transaction>();
+
+	private List<Heartbeat> heartbeats = new ArrayList<Heartbeat>();
+
+	private List<Metric> metrics = new ArrayList<Metric>();
 
 	@Override
 	public MessageTree copy() {
@@ -66,6 +78,14 @@ public class DefaultMessageTree implements MessageTree {
 		return m_domain;
 	}
 
+	public List<Event> getEvents() {
+		return events;
+	}
+
+	public List<Heartbeat> getHeartbeats() {
+		return heartbeats;
+	}
+
 	@Override
 	public String getHostName() {
 		return m_hostName;
@@ -84,6 +104,10 @@ public class DefaultMessageTree implements MessageTree {
 	@Override
 	public String getMessageId() {
 		return m_messageId;
+	}
+
+	public List<Metric> getMetrics() {
+		return metrics;
 	}
 
 	@Override
@@ -114,6 +138,10 @@ public class DefaultMessageTree implements MessageTree {
 	@Override
 	public String getThreadName() {
 		return m_threadName;
+	}
+
+	public List<Transaction> getTransactions() {
+		return transactions;
 	}
 
 	@Override
@@ -193,13 +221,23 @@ public class DefaultMessageTree implements MessageTree {
 
 	@Override
 	public String toString() {
-		PlainTextMessageCodec codec = new PlainTextMessageCodec();
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer();
+		ByteBuf buf = null;
+		String result = "";
+		try {
+			PlainTextMessageCodec codec = new PlainTextMessageCodec();
+			buf = ByteBufAllocator.DEFAULT.buffer();
 
-		codec.encode(this, buf);
-		buf.readInt(); // get rid of length
-		codec.reset();
-		return buf.toString(Charset.forName("utf-8"));
+			codec.encode(this, buf);
+			buf.readInt(); // get rid of length
+			result = buf.toString(Charset.forName("utf-8"));
+		} catch (Exception ex) {
+			Cat.logError(ex);
+		}
+
+		if (null != buf) {
+			ReferenceCountUtil.release(buf);
+		}
+		return result;
 	}
 
 }
