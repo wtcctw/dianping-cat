@@ -9,7 +9,7 @@ public class MetricScreenInfo {
 
 	private String m_graphName;
 
-	private String m_category;
+	private String m_view;
 
 	private List<String> m_endPoints;
 
@@ -17,20 +17,16 @@ public class MetricScreenInfo {
 
 	private Graph m_graph;
 
-	public String getCategory() {
-		return m_category;
-	}
-
 	public List<String> getEndPoints() {
 		return m_endPoints;
 	}
 
-	public String getGraphName() {
-		return m_graphName;
-	}
-
 	public Graph getGraph() {
 		return m_graph;
+	}
+
+	public String getGraphName() {
+		return m_graphName;
 	}
 
 	public List<String> getMeasures() {
@@ -41,9 +37,8 @@ public class MetricScreenInfo {
 		return m_name;
 	}
 
-	public MetricScreenInfo setCategory(String category) {
-		m_category = category;
-		return this;
+	public String getView() {
+		return m_view;
 	}
 
 	public MetricScreenInfo setEndPoints(List<String> endPoints) {
@@ -51,13 +46,13 @@ public class MetricScreenInfo {
 		return this;
 	}
 
-	public MetricScreenInfo setGraphName(String graphName) {
-		m_graphName = graphName;
+	public MetricScreenInfo setGraph(Graph graph) {
+		m_graph = graph;
 		return this;
 	}
 
-	public MetricScreenInfo setGraph(Graph graph) {
-		m_graph = graph;
+	public MetricScreenInfo setGraphName(String graphName) {
+		m_graphName = graphName;
 		return this;
 	}
 
@@ -68,6 +63,11 @@ public class MetricScreenInfo {
 
 	public MetricScreenInfo setName(String name) {
 		m_name = name;
+		return this;
+	}
+
+	public MetricScreenInfo setView(String view) {
+		m_view = view;
 		return this;
 	}
 

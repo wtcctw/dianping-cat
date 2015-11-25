@@ -23,8 +23,8 @@ public class ScreenServiceTest extends ComponentTestCase {
 		Graph graph = DefaultSaxParser.parse(xml);
 		Graph graph2 = DefaultSaxParser.parse(xml2);
 
-		screenService.insert("screen1", "system", graph);
-		screenService.insert("screen1", "system", graph2);
+//		screenService.insert("screen1"," graph);
+//		screenService.insert("screen1", "system", graph2);
 
 		MetricScreenInfo graph3 = screenService.queryByNameGraph("screen1", graph.getId());
 		MetricScreenInfo graph4 = screenService.queryByNameGraph("screen1", graph2.getId());

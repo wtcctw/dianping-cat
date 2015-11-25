@@ -9,6 +9,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.influxdb.config.InfluxDBConfigManager;
 import com.dianping.cat.metric.MetricService;
+import com.dianping.cat.report.page.server.display.MetricConstants;
 
 public class EndPointService {
 
@@ -18,35 +19,23 @@ public class EndPointService {
 	@Inject
 	private InfluxDBConfigManager m_configManager;
 
-	private Set<String> m_endPoints = new HashSet<String>();
+	private String cleanRedundancyTag(String measure) {
+		return measure.replaceAll("(domain=[^,]*(,|$))|(endPoint=[^,]*(,|$))", "").replaceAll(",$", "")
+		      .replaceAll(",", ";");
+	}
 
-	public final static String TAG_KEY = "endPoint";
-
-	public void refresh() {
+	public Set<String> queryEndPoints(String search, List<String> keywords) {
 		Set<String> endPoints = new HashSet<String>();
-		Set<String> categories = m_configManager.getConfig().getInfluxdbs().keySet();
+		Set<String> keySet = m_configManager.getConfig().getInfluxdbs().keySet();
 
-		for (String category : categories) {
-			List<String> measurements = m_metricService.queryMeasurements(category);
-
-			for (String measurement : measurements) {
-				List<String> results = m_metricService.queryTagValues(category, measurement, TAG_KEY);
-
-				endPoints.addAll(results);
+		if (MetricConstants.END_POINT.equals(search)) {
+			for (String key : keySet) {
+				endPoints.addAll(m_metricService.queryEndPoints(key, search, keywords));
 			}
-		}
-		m_endPoints = endPoints;
-	}
-
-	public Set<String> getEndPoints() {
-		return m_endPoints;
-	}
-
-	public Set<String> queryEndPoints(String tag, List<String> keywords) {
-		Set<String> endPoints = new HashSet<String>();
-
-		for (String key : m_configManager.getConfig().getInfluxdbs().keySet()) {
-			endPoints.addAll(m_metricService.queryEndPoints(key, tag, keywords));
+		} else {
+			for (String key : keySet) {
+				endPoints.addAll(m_metricService.queryEndPointsByTag(key, keywords));
+			}
 		}
 
 		return endPoints;
@@ -60,17 +49,12 @@ public class EndPointService {
 			List<String> results = new ArrayList<String>();
 
 			for (String measure : measures) {
-				results.add(convert(measure));
+				results.add(cleanRedundancyTag(measure));
 			}
 
 			measurements.addAll(results);
 		}
 
 		return measurements;
-	}
-
-	private String convert(String measure) {
-		return measure.replaceAll("(domain=[^,]*(,|$))|(endPoint=[^,]*(,|$))", "").replaceAll(",$", "")
-		      .replaceAll(",", ";");
 	}
 }

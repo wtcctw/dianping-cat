@@ -15,6 +15,8 @@ public interface MetricService {
 
 	public List<String> queryEndPoints(String category, String tag, List<String> keywords);
 
+	public List<String> queryEndPointsByTag(String category, List<String> tags);
+
 	public List<String> queryMeasurements(String category, List<String> endPoints);
 
 }

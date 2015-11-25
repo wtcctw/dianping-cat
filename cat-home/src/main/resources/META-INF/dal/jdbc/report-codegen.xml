@@ -129,14 +129,14 @@
   <entity name="baseline" table="baseline" alias="b">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="report-name" field="report_name" value-type="String" length="100" />
-    <member name="index-key" field="index_key" value-type="String" length="100" />
+    <member name="index-key" field="index_key" value-type="String" length="256" nullable="false" />
     <member name="report-period" field="report_period" value-type="Date" />
     <member name="data" field="data" value-type="byte[]" length="65535" />
     <member name="creation-date" field="creation_date" value-type="Date" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
     <index name="ix_indexkey_reportperiod" members="index_key ASC, report_period ASC" />
-    <index name="ix_reportperiod" members="report_period ASC" /> 
+    <index name="ix_reportperiod" members="report_period ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>
@@ -250,7 +250,7 @@
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="name" field="name" value-type="String" length="50" nullable="false" />
     <member name="graph-name" field="graph_name" value-type="String" length="50" nullable="false" />
-    <member name="category" field="category" value-type="String" length="50" nullable="false" />
+    <member name="view" field="view" value-type="String" length="50" nullable="false" />
     <member name="end-points" field="endPoints" value-type="String" length="65535" nullable="false" />
     <member name="measurements" field="measurements" value-type="String" length="65535" nullable="false" />
     <member name="content" field="content" value-type="String" length="65535" nullable="false" />

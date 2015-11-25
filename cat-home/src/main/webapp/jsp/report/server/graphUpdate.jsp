@@ -11,35 +11,37 @@
 <a:serverBody>
 	<script src="${model.webapp}/assets/js/bootstrap-tag.min.js"></script>
 	<h3 class="text-center text-success">编辑Screen[${model.metricScreenInfo.name}]配置</h3>
+	<form name="graphSubmit" id="graphForm" method="post" action="${model.pageUri}?op=graphSubmit">
 	<table class="table table-striped table-condensed " id="content">
-		<input type="hidden" name="op" value="screenConfigSubmit" />
+		<input type="hidden" name="op" value="graphSubmit" />
+		<input type="hidden" name="graphParam.name" value="${payload.screen}" />
 		<tr>
 			<th width="10%">名字</th>
 			<c:choose>
 			<c:when test="${not empty model.metricScreenInfo.graphName}">
-				<th><input type="text" id="domain" value="${model.metricScreenInfo.graphName}" size="50" readonly/></th>
+				<th><input type="text" id="domain" name="graphParam.graphName" value="${model.metricScreenInfo.graphName}" size="50" readonly/></th>
 			</c:when>
 			<c:otherwise>
-				<th><input type="text" id="domain" value="${model.metricScreenInfo.graphName}" size="50"/></th>
+				<th><input type="text" id="domain" name="graphParam.graphName" size="50"/></th>
 			</c:otherwise>
 			</c:choose>
 		</tr>
 		<tr>
 			<td width="10%">endPoints</td>
 			<td>
-				<input type="text" name="pars" class="tag" id="tag_endPoints" placeholder="Enter endPoints ..." />
+				<input type="text" name="graphParam.endPoints" class="tag" id="tag_endPoints" placeholder="Enter endPoints ..." />
             </td>
 		</tr>
 		<tr>
 			<td width="10%">measurements</td>
 			<td>
-				<input type="text" name="pars" class="tag" id="tag_measurements" placeholder="Enter measurements ..." />
+				<input type="text" name="graphParam.measurements" class="tag" id="tag_measurements" placeholder="Enter measurements ..." />
             </td>
 		</tr>
 		<tr>
 			<td width="10%">视角</td>
 			<td>
-				<select id="viewGroup" style="width: 200px">
+				<select id="viewGroup" name="graphParam.view" style="width: 200px">
 				  <option value="endPoint">endPoint</option>
 				  <option value="measurement">measurement</option>
 				  <option value="">组合视角</option>
@@ -47,20 +49,18 @@
 			</td>
 		</tr>
 	</table>
-	<input class='btn btn-primary btn-sm' style="MARGIN-LEFT:45%" type="button" value="提交" onclick="submit();"/>
+	<input class='btn btn-primary btn-sm' style="MARGIN-LEFT:45%" value="提交" type="submit" name="submit" />
+	</form>
 </a:serverBody>
 
 <script type="text/javascript">
-function submit(){
-	var endPoints = $('#tag_endPoints').val();
-	var measurements = $('#tag_measurements').val();
-	var view = $('#viewGroup').val();
-	window.location.href = "?op=graphSubmit&endPoints="+endPoints+"&measurements="+measurements+"&screen=${payload.screen}&graph=${payload.graph}&category=${payload.category}&view="+view;
-}
-
 $(document).ready(function() {
 	$('#serverChart').addClass('active open');
 	$('#serverScreens').addClass('active');
+	
+	if('${model.metricScreenInfo.view}'!=''){
+		$('#viewGroup').val('${model.metricScreenInfo.view}');
+	}
 	
 	var tag_input = $('#tag_endPoints');
 	try{

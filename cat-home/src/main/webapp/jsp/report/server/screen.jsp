@@ -51,7 +51,7 @@
 	<div>
 		<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 			<div style="float: left;">
-				<div id="${item.id}" class="metricGraph"></div>
+				<div id="${item.id}" class="metricGraph" style="width:450px;height:350px;"></div>
 			</div>
 		</c:forEach>
 	</div></div></div></div></div></div>

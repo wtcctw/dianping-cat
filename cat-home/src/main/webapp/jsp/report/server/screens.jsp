@@ -26,7 +26,7 @@
 						<td>${entry.key}</td>
 						<td>
 						<c:forEach var="e" items="${entry.value}">
-							[<a href="?op=graphUpdate&screen=${entry.key}&graph=${e.key}&category=${e.value.category}">${e.key}</a>]&nbsp;
+							[<a href="?op=graphUpdate&screen=${entry.key}&graph=${e.key}">${e.key}</a>]&nbsp;
 						</c:forEach>
 						</td>
 						<td><a href="?op=screenUpdate&screen=${entry.key}" class="btn btn-primary btn-xs">

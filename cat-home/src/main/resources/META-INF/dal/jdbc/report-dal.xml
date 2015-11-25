@@ -234,7 +234,6 @@
 				<member name="id" />
 				<member name="name" />
 				<member name="graph-name" />
-				<member name="category" />
 			</readset>
 		 </readsets>
 		<query-defs>
@@ -262,10 +261,26 @@
 					WHERE <FIELD name='name'/> = ${name}
 					]]></statement>
 			</query>
+			<query name="insert-or-update-by-name-graph" type="INSERT">
+	        	<statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+			        VALUES(<VALUES/>) ON DUPLICATE KEY UPDATE 
+			        <FIELD name='view'/> = ${view},
+			        <FIELD name='end-points'/> = ${end-points},
+			        <FIELD name='measurements'/> = ${measurements},
+			        <FIELD name='content'/> = ${content}
+			         ]]></statement>
+	      	</query>
 			<query name="delete-by-name" type="DELETE">
 				<param name="name"/>
 				<statement><![CDATA[DELETE FROM <TABLE/>
         			WHERE <FIELD name='name'/> = ${name}]]></statement>
+			</query>
+			<query name="delete-by-name-graph" type="DELETE">
+				<param name="name"/>
+				<param name="graph-name"/>
+				<statement><![CDATA[DELETE FROM <TABLE/>
+        			WHERE <FIELD name='name'/> = ${name}
+        			AND <FIELD name='graph-name'/> = ${graph-name}]]></statement>
 			</query>
 		</query-defs>
 	</entity>

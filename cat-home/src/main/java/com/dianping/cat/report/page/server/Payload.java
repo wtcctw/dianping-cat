@@ -8,18 +8,19 @@ import java.util.List;
 
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
+import org.unidal.web.mvc.payload.annotation.ObjectMeta;
 
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.metric.MetricType;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.server.display.MetricConstants;
+import com.dianping.cat.report.page.server.service.GraphParam;
 
 public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	@FieldMeta("op")
 	private Action m_action;
-
-	@FieldMeta("timeRange")
-	private int m_timeRange = 24;
 
 	@FieldMeta("screen")
 	private String m_screen;
@@ -46,16 +47,16 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private List<String> m_measurements;
 
 	@FieldMeta("view")
-	private String m_view = "endPoint";
+	private String m_view = MetricConstants.END_POINT;
 
-	@FieldMeta("tag")
-	private String m_tag = "endPoint";
-
-	@FieldMeta("category")
-	private String m_category;
+	@FieldMeta("search")
+	private String m_search = MetricConstants.END_POINT;
 
 	@FieldMeta("type")
-	private String m_type = "mean";
+	private String m_type = MetricType.AVG.getName();
+
+	@ObjectMeta("graphParam")
+	private GraphParam m_graphParam = new GraphParam();
 
 	private ReportPage m_page;
 
@@ -68,10 +69,6 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@Override
 	public Action getAction() {
 		return m_action;
-	}
-
-	public String getCategory() {
-		return m_category;
 	}
 
 	public String getContent() {
@@ -88,6 +85,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public long getGraphId() {
 		return m_graphId;
+	}
+
+	public GraphParam getGraphParam() {
+		return m_graphParam;
 	}
 
 	public List<String> getGraphs() {
@@ -153,12 +154,8 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_screen;
 	}
 
-	public String getTag() {
-		return m_tag;
-	}
-
-	public int getTimeRange() {
-		return m_timeRange;
+	public String getSearch() {
+		return m_search;
 	}
 
 	public String getType() {
@@ -171,10 +168,6 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.SCREEN);
-	}
-
-	public void setCategory(String category) {
-		m_category = category;
 	}
 
 	public void setContent(String content) {
@@ -192,6 +185,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public void setGraphId(long graphId) {
 		m_graphId = graphId;
+	}
+
+	public void setGraphParam(GraphParam graphParam) {
+		m_graphParam = graphParam;
 	}
 
 	public void setInterval(String interval) {
@@ -216,12 +213,8 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		m_screen = screen;
 	}
 
-	public void setTag(String tag) {
-		m_tag = tag;
-	}
-
-	public void setTimeRange(int timeRange) {
-		m_timeRange = timeRange;
+	public void setSearch(String search) {
+		m_search = search;
 	}
 
 	public void setType(String type) {

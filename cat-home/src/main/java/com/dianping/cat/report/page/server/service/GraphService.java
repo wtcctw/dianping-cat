@@ -23,7 +23,7 @@ public class GraphService implements Initializable {
 	private volatile MetricGraph m_last = new MetricGraph();
 
 	public boolean deleteBeforeDate(Date date) {
-
+		// TODO
 		return true;
 	}
 
@@ -41,6 +41,19 @@ public class GraphService implements Initializable {
 			Cat.logError(e);
 		}
 		return ret;
+	}
+
+	public MetricGraph getLast() {
+		return m_last;
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		try {
+			m_last = m_dao.findLast(1, MetricGraphEntity.READSET_FULL);
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
 	}
 
 	public boolean insert(Graph graph) {
@@ -77,18 +90,5 @@ public class GraphService implements Initializable {
 		}
 
 		return null;
-	}
-
-	public MetricGraph getLast() {
-		return m_last;
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		try {
-			m_last = m_dao.findLast(1, MetricGraphEntity.READSET_FULL);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
 	}
 }

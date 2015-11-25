@@ -35,7 +35,6 @@ import com.dianping.cat.report.page.server.service.EndPointService;
 import com.dianping.cat.report.page.server.service.GraphBuilder;
 import com.dianping.cat.report.page.server.service.GraphService;
 import com.dianping.cat.report.page.server.service.ScreenService;
-import com.dianping.cat.report.page.server.service.UpdateGraphParam;
 import com.dianping.cat.system.page.config.ConfigHtmlParser;
 
 public class Handler implements PageHandler<Context> {
@@ -146,9 +145,12 @@ public class Handler implements PageHandler<Context> {
 
 			for (MetricScreenInfo info : graphs.values()) {
 				Graph g = info.getGraph();
-				List<LineChart> lines = buildLineCharts(start, end, payload.getInterval(), "", g);
 
-				lineCharts.addAll(lines);
+				if (g != null) {
+					List<LineChart> lines = buildLineCharts(start, end, payload.getInterval(), "", g);
+
+					lineCharts.addAll(lines);
+				}
 			}
 			model.setLineCharts(lineCharts);
 			model.setMetricScreenInfos(m_screenService.queryScreens());
@@ -172,7 +174,7 @@ public class Handler implements PageHandler<Context> {
 			model.setMetricScreenInfos(m_screenService.queryScreens());
 			break;
 		case SCREEN_SUBMIT:
-			m_screenService.insert(payload.getScreen(), payload.getGraphs());
+			m_screenService.updateScreen(payload.getScreen(), payload.getGraphs());
 			model.setMetricScreenInfos(m_screenService.queryScreens());
 			break;
 		case GRAPH_UPDATE:
@@ -181,12 +183,7 @@ public class Handler implements PageHandler<Context> {
 			model.setMetricScreenInfo(screenInfo);
 			break;
 		case GRAPH_SUBMIT:
-			UpdateGraphParam param = new UpdateGraphParam();
-
-			param.setName(payload.getScreen()).setGraphName(payload.getGraph()).setCategory(payload.getCategory())
-			      .setEndPoints(payload.getEndPoints()).setMeasurements(payload.getMeasurements())
-			      .setView(payload.getView());
-			m_screenService.updateGraph(param);
+			m_screenService.insertOrUpdateGraph(payload.getGraphParam());
 			model.setMetricScreenInfos(m_screenService.queryScreens());
 			break;
 		case AGGREGATE:
@@ -196,7 +193,7 @@ public class Handler implements PageHandler<Context> {
 			List<String> keywords = payload.getKeywordsList();
 
 			if (!keywords.isEmpty()) {
-				Set<String> endPoints = m_endPointService.queryEndPoints(payload.getTag(), keywords);
+				Set<String> endPoints = m_endPointService.queryEndPoints(payload.getSearch(), keywords);
 				Map<String, Object> jsons = new HashMap<String, Object>();
 
 				jsons.put("endPoints", endPoints);
@@ -254,21 +251,6 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.SERVER);
 		m_normalizePayload.normalize(model, payload);
-		//
-		// int timeRange = payload.getTimeRange();
-		// Date startTime = new Date(payload.getDate() - (timeRange - 1) * TimeHelper.ONE_HOUR);
-		// Date endTime = new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1);
-		//
-		// model.setStartTime(startTime);
-		// model.setEndTime(endTime);
-
-		String screen = payload.getScreen();
-
-		if (StringUtils.isEmpty(screen)) {
-			// TODO
-
-			payload.setScreen(screen);
-		}
 	}
 
 	private void normalizeGraphInfo(Payload payload, Model model) {

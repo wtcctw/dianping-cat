@@ -16,8 +16,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.report.MetricScreen;
 import com.dianping.cat.home.dal.report.MetricScreenDao;
 import com.dianping.cat.home.dal.report.MetricScreenEntity;
-import com.dianping.cat.home.graph.entity.Graph;
-import com.dianping.cat.home.graph.transform.DefaultSaxParser;
 import com.dianping.cat.report.page.server.display.MetricScreenInfo;
 import com.dianping.cat.report.page.server.display.MetricScreenTransformer;
 
@@ -34,16 +32,17 @@ public class ScreenService implements Initializable {
 
 	private Map<String, Map<String, MetricScreenInfo>> m_cachedScreens = new ConcurrentHashMap<String, Map<String, MetricScreenInfo>>();
 
-	private Graph buildGraph(MetricScreen screen) {
-		try {
-			String xml = screen.getContent();
-			Graph graph = DefaultSaxParser.parse(xml);
+	private MetricScreenInfo buildMetricScreenInfo(GraphParam param) {
+		MetricScreenInfo screenInfo = new MetricScreenInfo();
 
-			return graph;
-		} catch (Exception e) {
-			Cat.logError(e);
-			return null;
-		}
+		screenInfo.setName(param.getName());
+		screenInfo.setGraphName(param.getGraphName());
+		screenInfo.setView(param.getView());
+		screenInfo.setEndPoints(param.getEndPoints());
+		screenInfo.setMeasures(param.getMeasurements());
+		screenInfo.setGraph(m_graphBuilder.buildGraph(param.getEndPoints(), param.getMeasurements(), param.getName()
+		      + "-" + param.getGraphName(), param.getView()));
+		return screenInfo;
 	}
 
 	public void deleteByScreen(String screen) {
@@ -64,53 +63,59 @@ public class ScreenService implements Initializable {
 		refresh();
 	}
 
-	public void insert(String name, List<String> graphNames) {
+	public void updateScreen(String screen, List<String> graphNames) {
+		Map<String, MetricScreenInfo> screens = m_cachedScreens.get(screen);
+
+		if (screens == null) {
+			screens = new LinkedHashMap<String, MetricScreenInfo>();
+
+			m_cachedScreens.put(screen, screens);
+		}
+		insertScreen(screen, graphNames, screens);
+		deleteScreen(screen, graphNames, screens);
+	}
+
+	private void insertScreen(String screen, List<String> graphNames, Map<String, MetricScreenInfo> screens) {
 		for (String graphName : graphNames) {
-			Map<String, MetricScreenInfo> screens = m_cachedScreens.get(name);
+			MetricScreenInfo metricInfo = screens.get(graphName);
 
-			if (screens == null) {
-				screens = new LinkedHashMap<String, MetricScreenInfo>();
+			if (metricInfo == null) {
+				metricInfo = new MetricScreenInfo();
 
-				m_cachedScreens.put(name, screens);
+				metricInfo.setName(screen).setGraphName(graphName);
+				screens.put(graphName, metricInfo);
 			}
-			MetricScreenInfo metricInfo = new MetricScreenInfo();
-
-			metricInfo.setName(name).setGraphName(graphName);
-			screens.put(graphName, metricInfo);
 		}
 	}
 
-	public boolean insert(String name, String category, Graph graph) {
-		boolean ret = true;
-		MetricScreen screen = m_dao.createLocal();
+	private void deleteScreen(String screen, List<String> graphNames, Map<String, MetricScreenInfo> screens) {
+		for (String key : screens.keySet()) {
+			if (!graphNames.contains(key)) {
+				MetricScreen metricScreen = new MetricScreen();
 
-		screen.setCategory(category);
-		screen.setName(name);
-		screen.setGraphName(graph.getId());
-		screen.setContent(graph.toString());
-
-		try {
-			m_dao.insert(screen);
-		} catch (DalException e) {
-			ret = false;
-
-			Cat.logError(e);
+				metricScreen.setName(screen).setGraphName(key);
+				try {
+					m_dao.deleteByNameGraph(metricScreen);
+					screens.remove(key);
+				} catch (DalException e) {
+					Cat.logError(e);
+				}
+			}
 		}
-
-		return ret;
 	}
 
-	public Graph queryById(int id) {
-		try {
-			MetricScreen entity = m_dao.findByPK(id, MetricScreenEntity.READSET_CONTENT);
+	public void insertOrUpdateGraph(GraphParam param) {
+		MetricScreenInfo screenInfo = buildMetricScreenInfo(param);
+		MetricScreen entity = m_transformer.transformToMetricScreen(screenInfo);
 
-			return buildGraph(entity);
-		} catch (DalNotFoundException e) {
-			// ignore
-		} catch (DalException e) {
+		try {
+			m_dao.insertOrUpdateByNameGraph(entity);
+
+			Map<String, MetricScreenInfo> screens = m_cachedScreens.get(param.getName());
+			screens.put(param.getGraphName(), screenInfo);
+		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return null;
 	}
 
 	public Map<String, MetricScreenInfo> queryByName(String name) {
@@ -128,22 +133,7 @@ public class ScreenService implements Initializable {
 		if (screens != null) {
 			MetricScreenInfo metricScreenInfo = screens.get(graphName);
 
-			if (metricScreenInfo != null) {
-				return metricScreenInfo;
-			}
-		}
-		return queryByNameGraphFromDB(name, graphName);
-	}
-
-	public MetricScreenInfo queryByNameGraphFromDB(String name, String graphName) {
-		try {
-			MetricScreen entity = m_dao.findByNameGraph(name, graphName, MetricScreenEntity.READSET_CONTENT);
-
-			return refreshByMetricScreen(name, entity);
-		} catch (DalNotFoundException e) {
-			// ignore
-		} catch (DalException e) {
-			Cat.logError(e);
+			return metricScreenInfo;
 		}
 		return null;
 	}
@@ -166,8 +156,7 @@ public class ScreenService implements Initializable {
 
 					cachedScreens.put(screenName, screens);
 				}
-
-				screens.put(entity.getGraphName(), m_transformer.transform2ScreenInfo(entity));
+				screens.put(entity.getGraphName(), m_transformer.transformToScreenInfo(entity));
 			}
 
 			m_cachedScreens = cachedScreens;
@@ -177,56 +166,4 @@ public class ScreenService implements Initializable {
 			Cat.logError(e);
 		}
 	}
-
-	private MetricScreenInfo refreshByMetricScreen(String screen, MetricScreen entity) {
-		MetricScreenInfo screenInfo = m_transformer.transform2ScreenInfo(entity);
-		Map<String, MetricScreenInfo> map = m_cachedScreens.get(screen);
-
-		if (map == null) {
-			map = new LinkedHashMap<String, MetricScreenInfo>();
-
-			m_cachedScreens.put(entity.getName(), map);
-		}
-		map.put(entity.getGraphName(), screenInfo);
-
-		return screenInfo;
-	}
-
-	public void updateGraph(UpdateGraphParam param) {
-		Map<String, MetricScreenInfo> screens = m_cachedScreens.get(param.getName());
-		MetricScreenInfo screen = screens.get(param.getGraphName());
-
-		if (screen != null) {
-			screen.setName(param.getName());
-			screen.setGraphName(param.getGraphName());
-			screen.setEndPoints(param.getEndPoints());
-			screen.setMeasures(param.getMeasurements());
-			screen.setCategory(param.getCategory());
-			screen.setGraph(m_graphBuilder.buildGraph(param.getEndPoints(), param.getMeasurements(), param.getName() + "-"
-			      + param.getGraphName(), param.getView()));
-		}
-
-		MetricScreen metricScreen = m_transformer.transform2MetricScreen(screen);
-
-		updateOrInsert(metricScreen);
-	}
-
-	private void updateOrInsert(MetricScreen metricScreen) {
-		try {
-			MetricScreen entity = m_dao.findByNameGraph(metricScreen.getName(), metricScreen.getGraphName(),
-			      MetricScreenEntity.READSET_METAINFO);
-
-			metricScreen.setId(entity.getId()).setKeyId(entity.getKeyId());
-			m_dao.updateByPK(metricScreen, MetricScreenEntity.UPDATESET_FULL);
-		} catch (DalNotFoundException e) {
-			try {
-				m_dao.insert(metricScreen);
-			} catch (DalException e1) {
-				Cat.logError(e);
-			}
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-	}
-
 }

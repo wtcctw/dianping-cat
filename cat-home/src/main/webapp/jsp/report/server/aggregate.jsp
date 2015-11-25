@@ -20,12 +20,12 @@
 			<div class="widget-body">
 				<div class="widget-main">
 					<div>
-						<label for="wrap_search">EndPoint</label>
-						<form id="wrap_search" style="margin-bottom:0px;">
+						<label for="wrap_search_endPoint">EndPoint</label>
+						<form id="wrap_search_endPoint" style="margin-bottom:0px;">
 							<div class="input-group">
-							<input id="keywords" type="text" class="search-input form-control ui-autocomplete-input" placeholder="可以用空格分隔多个搜索关键字" autocomplete="off"/>
+							<input id="endPoint_keywords" type="text" class="search-input form-control ui-autocomplete-input" placeholder="空格分隔多个搜索关键字" autocomplete="off"/>
 							<span class="input-group-btn">
-								<button class="btn btn-sm btn-primary" type="button" id="search_go">
+								<button class="btn btn-sm btn-primary" type="button" id="search_endPoint_go">
 									Go
 								</button> 
 							</span>
@@ -34,8 +34,19 @@
 					</div>
 					<hr>
 					<div>
-						<label for="form-field-9">With Character Limit</label>
-						<textarea class="form-control limited" id="form-field-9" maxlength="50"></textarea>
+						<div>
+						<label for="wrap_search_tag">标签&nbsp;<strong class="text-danger">(eg: domain='cat'，单引号！！！)</strong></label>
+						<form id="wrap_search_tag" style="margin-bottom:0px;">
+							<div class="input-group">
+							<input id="tag_keywords" type="text" class="search-input form-control ui-autocomplete-input" placeholder="空格分隔多个键值对" autocomplete="off"/>
+							<span class="input-group-btn">
+								<button class="btn btn-sm btn-primary" type="button" id="search_tag_go">
+									Go
+								</button> 
+							</span>
+							</div>
+							</form>
+					</div>
 					</div>
 					<hr>
 					<div>
@@ -117,10 +128,10 @@
 	</style>
 	
 	<script type="text/javascript">
-		function queryEndPoints(){
-			var keywords = $("#keywords").val();
+		function queryEndPoints(type){
+			var keywords = $("#"+type+"_keywords").val();
 			
-			$.getJSON( "?op=endPoint&keywords="+keywords, function( data ) {
+			$.getJSON( "?op=endPoint&keywords="+keywords+"&search="+type, function( data ) {
 				$("#endPointBody").empty();
    			  	$.each( data, function( key, val ) {
    			  	 $.each(val, function (index, data) {
@@ -168,6 +179,7 @@
 				$("#measurementBody").find('tr').remove();
 				var t = $("#measurement").DataTable();
 				
+				t.clear();
    			  	$.each( data, function( key, val ) {
    			  		$.each(val, function (index, data) {
    			  			var tr = "<tr> <td class=\"center\">" +
@@ -217,12 +229,21 @@
 					});
 				});
 				
-				$("#search_go").bind("click",function(e){
-					queryEndPoints();
+				$("#search_endPoint_go").bind("click",function(e){
+					queryEndPoints('endPoint');
 				});
-				$('#wrap_search').submit(
+				$('#wrap_search_endPoint').submit(
 					function(){
-						queryEndPoints();
+						queryEndPoints('endPoint');
+						return false;
+					}		
+				);
+				$("#search_tag_go").bind("click",function(e){
+					queryEndPoints('endPoint');
+				});
+				$('#wrap_search_tag').submit(
+					function(){
+						queryEndPoints('tag');
 						return false;
 					}		
 				);

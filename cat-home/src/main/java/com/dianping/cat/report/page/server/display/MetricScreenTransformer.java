@@ -12,25 +12,27 @@ import com.dianping.cat.home.graph.transform.DefaultSaxParser;
 
 public class MetricScreenTransformer {
 
-	public MetricScreen transform2MetricScreen(MetricScreenInfo screenInfo) {
+	public final static String SEPARATOR = ",";
+
+	public MetricScreen transformToMetricScreen(MetricScreenInfo screenInfo) {
 		MetricScreen metricScreen = new MetricScreen();
 
 		metricScreen.setName(screenInfo.getName());
 		metricScreen.setGraphName(screenInfo.getGraphName());
-		metricScreen.setCategory(screenInfo.getCategory());
-		metricScreen.setEndPoints(StringUtils.join(screenInfo.getEndPoints(), ","));
-		metricScreen.setMeasurements(StringUtils.join(screenInfo.getMeasures(), ","));
+		metricScreen.setView(screenInfo.getView());
+		metricScreen.setEndPoints(StringUtils.join(screenInfo.getEndPoints(), SEPARATOR));
+		metricScreen.setMeasurements(StringUtils.join(screenInfo.getMeasures(), SEPARATOR));
 		metricScreen.setContent(screenInfo.getGraph().toString());
 
 		return metricScreen;
 	}
 
-	public MetricScreenInfo transform2ScreenInfo(MetricScreen entity) {
+	public MetricScreenInfo transformToScreenInfo(MetricScreen entity) {
 		MetricScreenInfo metricScreenInfo = new MetricScreenInfo();
-		List<String> endPoints = Splitters.by(",").noEmptyItem().split(entity.getEndPoints());
-		List<String> measures = Splitters.by(",").noEmptyItem().split(entity.getMeasurements());
+		List<String> endPoints = Splitters.by(SEPARATOR).noEmptyItem().split(entity.getEndPoints());
+		List<String> measures = Splitters.by(SEPARATOR).noEmptyItem().split(entity.getMeasurements());
 
-		metricScreenInfo.setName(entity.getName()).setCategory(entity.getCategory()).setGraphName(entity.getGraphName())
+		metricScreenInfo.setName(entity.getName()).setGraphName(entity.getGraphName()).setView(entity.getView())
 		      .setMeasures(measures).setEndPoints(endPoints);
 
 		try {
@@ -40,7 +42,6 @@ public class MetricScreenTransformer {
 			return metricScreenInfo;
 		} catch (Exception e) {
 			Cat.logError(e);
-			e.printStackTrace();
 		}
 		return null;
 	}
