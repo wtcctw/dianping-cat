@@ -3,6 +3,7 @@
 	enable-base-visitor="false"  enable-xml-parser="false"  enable-xml-builder="false">
   <entity name="web-speed-config" root="true">
     <entity-ref name="speed" type="map" names="speeds" method-find-or-create="true"/>
+    <entity-ref name="mapper" type="map" names="mappers" method-find-or-create="true"/>
   </entity>
   <entity name="speed">
     <attribute name="id" value-type="int" key="true" primitive="true"/>
@@ -12,6 +13,10 @@
   <entity name="step">
     <attribute name="id" value-type="int" key="true" primitive="true"/>
 	<attribute name="title" value-type="String" />
+  </entity>
+  <entity name="mapper">
+    <attribute name="flag" value-type="String" key="true"/>
+    <attribute name="id" value-type="int" />
   </entity>
 </model>
 

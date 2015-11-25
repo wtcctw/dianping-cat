@@ -10,4 +10,6 @@
 		<step id="2" title="测速点2"></step>
 		<step id="3" title="测速点3"></step>
 	</speed>
+	<mapper flag="1479-1-1" id="4"></mapper>
+	<mapper flag="1479-1-2" id="5"></mapper>
 </web-speed-config>

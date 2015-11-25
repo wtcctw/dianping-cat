@@ -7,16 +7,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	PROJECT_DELETE("projectDelete"),
 
-	URL_PATTERN_ALL("urlPatterns"),
-
-	URL_PATTERN_CONFIG_UPDATE("urlPatternConfigUpdate"),
-
-	URL_PATTERN_UPDATE("urlPatternUpdate"),
-
-	URL_PATTERN_UPDATE_SUBMIT("urlPatternUpdateSubmit"),
-
-	URL_PATTERN_DELETE("urlPatternDelete"),
-
 	TOPOLOGY_GRAPH_NODE_CONFIG_LIST("topologyGraphNodeConfigList"),
 
 	TOPOLOGY_GRAPH_NODE_CONFIG_ADD_OR_UPDATE("topologyGraphNodeConfigAdd"),
@@ -115,16 +105,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	NET_GRAPH_CONFIG_UPDATE("netGraphConfigUpdate"),
 
-	WEB_RULE("webRule"),
-
-	WEB_RULE_ADD_OR_UPDATE("webRuleUpdate"),
-
-	WEB_RULE_ADD_OR_UPDATE_SUBMIT("webRuleSubmit"),
-
-	WEB_RULE_DELETE("webRuleDelete"),
-
-	WEB_CONSTANTS("webConstants"),
-
 	APP_NAME_CHECK("appNameCheck"),
 
 	APP_LIST("appList"),
@@ -221,15 +201,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	SERVER_FILTER_CONFIG_UPDATE("serverFilterConfigUpdate"),
 
-	ALL_REPORT_CONFIG("allReportConfig"),
-
-	JS_RULE_LIST("jsRuleList"),
-
-	JS_RULE_UPDATE("jsRuleUpdate"),
-
-	JS_RULE_DELETE("jsRuleDelete"),
-
-	JS_RULE_UPDATE_SUBMIT("jsRuleUpdateSubmit");
+	ALL_REPORT_CONFIG("allReportConfig");
 
 	private String m_name;
 

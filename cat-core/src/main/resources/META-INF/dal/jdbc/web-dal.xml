@@ -28,6 +28,7 @@
 			<param name="module" />
 			<param name="level" />
 			<param name="browser" />
+			<param name="dpid" />
 			<param name="offset" />
 			<param name="limit" />
 			<statement><![CDATA[SELECT <FIELDS/>
@@ -42,6 +43,9 @@
 		</IF>
 		<IF type='NOT_NULL' field='browser'>
 			AND  <FIELD name='browser'/> = ${browser}
+		</IF>
+		<IF type='NOT_NULL' field='dpid'>
+			AND  <FIELD name='dpid'/> = ${dpid}
 		</IF>
 		LIMIT ${offset}, ${limit}
          ]]></statement>
@@ -113,18 +117,44 @@
 				<member name="code" />
 				<member name="access-number-sum" />
 				<member name="response-sum-time-sum" />
+				<member name="request-sum-byte-sum" />
+				<member name="response-sum-byte-sum" />
 			</readset>
 			<readset name="OPERATOR-DATA">
 				<member name="operator" />
 				<member name="access-number-sum" />
 			</readset>
+				<readset name="OPERATOR-CODE-DATA">
+				<member name="code" />
+				<member name="operator" />
+				<member name="access-number-sum" />
+				<member name="response-sum-time-sum" />
+				<member name="request-sum-byte-sum" />
+				<member name="response-sum-byte-sum" />
+			</readset>
 			<readset name="CITY-DATA">
 				<member name="city" />
 				<member name="access-number-sum" />
 			</readset>
+			<readset name="CITY-CODE-DATA">
+				<member name="code" />
+				<member name="city" />
+				<member name="access-number-sum" />
+				<member name="response-sum-time-sum" />
+				<member name="request-sum-byte-sum" />
+				<member name="response-sum-byte-sum" />
+			</readset>
 			<readset name="NETWORK-DATA">
 				<member name="network" />
 				<member name="access-number-sum" />
+			</readset>
+			<readset name="NETWORK-CODE-DATA">
+				<member name="code" />
+				<member name="network" />
+				<member name="access-number-sum" />
+				<member name="response-sum-time-sum" />
+				<member name="request-sum-byte-sum" />
+				<member name="response-sum-byte-sum" />
 			</readset>
 		</readsets>
 		<query-defs>
@@ -330,10 +360,312 @@
 		</IF>	
         group by  <FIELD name='network'/>  ]]></statement>
 			</query>
+	<query name="find-data-by-operator-code" type="SELECT" multiple="true">
+        <param name="api-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="code" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+        group by <FIELD name='operator'/>, <FIELD name='code'/>]]></statement>
+      </query>
+      <query name="find-data-by-network-code" type="SELECT" multiple="true">
+        <param name="api-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="code" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+        group by <FIELD name='network'/>, <FIELD name='code'/>]]></statement>
+      </query>
+      <query name="find-data-by-city-code" type="SELECT" multiple="true">
+        <param name="api-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="code" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+        group by <FIELD name='city'/>, <FIELD name='code'/>]]></statement>
+      </query>
 		</query-defs>
 	</entity>
   	<entity name="web-speed-data" table="web_speed_data" alias="wsd">
+  		<member name="access-number-sum1" value-type="long" all="false" select-expr="sum(access_number1)" length="19" nullable="false" />
+   		<member name="access-number-sum2" value-type="long" all="false" select-expr="sum(access_number2)" length="19" nullable="false" />
+   		<member name="access-number-sum3" value-type="long" all="false" select-expr="sum(access_number3)" length="19" nullable="false" />
+   		<member name="access-number-sum4" value-type="long" all="false" select-expr="sum(access_number4)" length="19" nullable="false" />
+   		<member name="access-number-sum5" value-type="long" all="false" select-expr="sum(access_number5)" length="19" nullable="false" />
+   		<member name="access-number-sum6" value-type="long" all="false" select-expr="sum(access_number6)" length="19" nullable="false" />
+   		<member name="access-number-sum7" value-type="long" all="false" select-expr="sum(access_number7)" length="19" nullable="false" />
+   		<member name="access-number-sum8" value-type="long" all="false" select-expr="sum(access_number8)" length="19" nullable="false" />
+   		<member name="access-number-sum9" value-type="long" all="false" select-expr="sum(access_number9)" length="19" nullable="false" />
+   		<member name="access-number-sum10" value-type="long" all="false" select-expr="sum(access_number10)" length="19" nullable="false" />
+   		<member name="access-number-sum11" value-type="long" all="false" select-expr="sum(access_number11)" length="19" nullable="false" />
+   		<member name="access-number-sum12" value-type="long" all="false" select-expr="sum(access_number12)" length="19" nullable="false" />
+   		<member name="access-number-sum13" value-type="long" all="false" select-expr="sum(access_number13)" length="19" nullable="false" />
+   		<member name="access-number-sum14" value-type="long" all="false" select-expr="sum(access_number14)" length="19" nullable="false" />
+   		<member name="access-number-sum15" value-type="long" all="false" select-expr="sum(access_number15)" length="19" nullable="false" />
+   		<member name="access-number-sum16" value-type="long" all="false" select-expr="sum(access_number16)" length="19" nullable="false" />
+   		<member name="access-number-sum17" value-type="long" all="false" select-expr="sum(access_number17)" length="19" nullable="false" />
+   		<member name="access-number-sum18" value-type="long" all="false" select-expr="sum(access_number18)" length="19" nullable="false" />
+   		<member name="access-number-sum19" value-type="long" all="false" select-expr="sum(access_number19)" length="19" nullable="false" />
+   		<member name="access-number-sum20" value-type="long" all="false" select-expr="sum(access_number20)" length="19" nullable="false" />
+   		<member name="access-number-sum21" value-type="long" all="false" select-expr="sum(access_number21)" length="19" nullable="false" />
+   		<member name="access-number-sum22" value-type="long" all="false" select-expr="sum(access_number22)" length="19" nullable="false" />
+   		<member name="access-number-sum23" value-type="long" all="false" select-expr="sum(access_number23)" length="19" nullable="false" />
+   		<member name="access-number-sum24" value-type="long" all="false" select-expr="sum(access_number24)" length="19" nullable="false" />
+   		<member name="access-number-sum25" value-type="long" all="false" select-expr="sum(access_number25)" length="19" nullable="false" />
+   		<member name="access-number-sum26" value-type="long" all="false" select-expr="sum(access_number26)" length="19" nullable="false" />
+   		<member name="access-number-sum27" value-type="long" all="false" select-expr="sum(access_number27)" length="19" nullable="false" />
+   		<member name="access-number-sum28" value-type="long" all="false" select-expr="sum(access_number28)" length="19" nullable="false" />
+   		<member name="access-number-sum29" value-type="long" all="false" select-expr="sum(access_number29)" length="19" nullable="false" />
+   		<member name="access-number-sum30" value-type="long" all="false" select-expr="sum(access_number30)" length="19" nullable="false" />
+   		<member name="access-number-sum31" value-type="long" all="false" select-expr="sum(access_number31)" length="19" nullable="false" />
+   		<member name="access-number-sum32" value-type="long" all="false" select-expr="sum(access_number32)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum1" value-type="long" all="false" select-expr="sum(response_sum_time1)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum2" value-type="long" all="false" select-expr="sum(response_sum_time2)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum3" value-type="long" all="false" select-expr="sum(response_sum_time3)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum4" value-type="long" all="false" select-expr="sum(response_sum_time4)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum5" value-type="long" all="false" select-expr="sum(response_sum_time5)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum6" value-type="long" all="false" select-expr="sum(response_sum_time6)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum7" value-type="long" all="false" select-expr="sum(response_sum_time7)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum8" value-type="long" all="false" select-expr="sum(response_sum_time8)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum9" value-type="long" all="false" select-expr="sum(response_sum_time9)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum10" value-type="long" all="false" select-expr="sum(response_sum_time10)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum11" value-type="long" all="false" select-expr="sum(response_sum_time11)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum12" value-type="long" all="false" select-expr="sum(response_sum_time12)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum13" value-type="long" all="false" select-expr="sum(response_sum_time13)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum14" value-type="long" all="false" select-expr="sum(response_sum_time14)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum15" value-type="long" all="false" select-expr="sum(response_sum_time15)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum16" value-type="long" all="false" select-expr="sum(response_sum_time16)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum17" value-type="long" all="false" select-expr="sum(response_sum_time17)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum18" value-type="long" all="false" select-expr="sum(response_sum_time18)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum19" value-type="long" all="false" select-expr="sum(response_sum_time19)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum20" value-type="long" all="false" select-expr="sum(response_sum_time20)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum21" value-type="long" all="false" select-expr="sum(response_sum_time21)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum22" value-type="long" all="false" select-expr="sum(response_sum_time22)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum23" value-type="long" all="false" select-expr="sum(response_sum_time23)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum24" value-type="long" all="false" select-expr="sum(response_sum_time24)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum25" value-type="long" all="false" select-expr="sum(response_sum_time25)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum26" value-type="long" all="false" select-expr="sum(response_sum_time26)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum27" value-type="long" all="false" select-expr="sum(response_sum_time27)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum28" value-type="long" all="false" select-expr="sum(response_sum_time28)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum29" value-type="long" all="false" select-expr="sum(response_sum_time29)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum30" value-type="long" all="false" select-expr="sum(response_sum_time30)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum31" value-type="long" all="false" select-expr="sum(response_sum_time31)" length="19" nullable="false" />
+  		<member name="response-sum-time-sum32" value-type="long" all="false" select-expr="sum(response_sum_time32)" length="19" nullable="false" />
+		<member name="response-sum-time-sum" value-type="long" length="19"/>
+		<member name="access-number-sum" value-type="long" length="19"/>
+		
 		<var name="speed-id" value-type="int" />
+		<member name="response-sum-time-sum" value-type="long" length="19"/>
+		<readsets>
+		<readset name="AVG-DATA1">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum1"/>
+      		<member name="response-sum-time-sum1"/>
+      	</readset>
+      	<readset name="AVG-DATA2">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum2"/>
+      		<member name="response-sum-time-sum2"/>
+      	</readset>
+      	<readset name="AVG-DATA3">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum3"/>
+      		<member name="response-sum-time-sum3"/>
+      	</readset>
+      	<readset name="AVG-DATA4">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum4"/>
+      		<member name="response-sum-time-sum4"/>
+      	</readset>
+      	<readset name="AVG-DATA5">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum5"/>
+      		<member name="response-sum-time-sum5"/>
+      	</readset>
+      	<readset name="AVG-DATA6">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum6"/>
+      		<member name="response-sum-time-sum6"/>
+      	</readset>
+      	<readset name="AVG-DATA7">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum7"/>
+      		<member name="response-sum-time-sum7"/>
+      	</readset>
+      	<readset name="AVG-DATA8">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum8"/>
+      		<member name="response-sum-time-sum8"/>
+      	</readset>
+      	<readset name="AVG-DATA9">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum9"/>
+      		<member name="response-sum-time-sum9"/>
+      	</readset>
+      	<readset name="AVG-DATA10">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum10"/>
+      		<member name="response-sum-time-sum10"/>
+      	</readset>
+      	<readset name="AVG-DATA11">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum11"/>
+      		<member name="response-sum-time-sum11"/>
+      	</readset>
+      	<readset name="AVG-DATA12">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum12"/>
+      		<member name="response-sum-time-sum12"/>
+      	</readset>
+      	<readset name="AVG-DATA13">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum13"/>
+      		<member name="response-sum-time-sum13"/>
+      	</readset>
+      	<readset name="AVG-DATA14">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum14"/>
+      		<member name="response-sum-time-sum14"/>
+      	</readset>
+      	<readset name="AVG-DATA15">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum15"/>
+      		<member name="response-sum-time-sum15"/>
+      	</readset>
+      	<readset name="AVG-DATA16">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum16"/>
+      		<member name="response-sum-time-sum16"/>
+      	</readset>
+      	<readset name="AVG-DATA17">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum17"/>
+      		<member name="response-sum-time-sum17"/>
+      	</readset>
+      	<readset name="AVG-DATA18">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum18"/>
+      		<member name="response-sum-time-sum18"/>
+      	</readset>
+      	<readset name="AVG-DATA19">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum19"/>
+      		<member name="response-sum-time-sum19"/>
+      	</readset>
+      	<readset name="AVG-DATA20">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum20"/>
+      		<member name="response-sum-time-sum20"/>
+      	</readset>
+      	<readset name="AVG-DATA21">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum21"/>
+      		<member name="response-sum-time-sum21"/>
+      	</readset>
+      	<readset name="AVG-DATA22">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum22"/>
+      		<member name="response-sum-time-sum22"/>
+      	</readset>
+      	<readset name="AVG-DATA23">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum23"/>
+      		<member name="response-sum-time-sum23"/>
+      	</readset>
+      	<readset name="AVG-DATA24">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum24"/>
+      		<member name="response-sum-time-sum24"/>
+      	</readset>
+      	<readset name="AVG-DATA25">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum25"/>
+      		<member name="response-sum-time-sum25"/>
+      	</readset>
+      	<readset name="AVG-DATA26">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum26"/>
+      		<member name="response-sum-time-sum26"/>
+      	</readset>
+      	<readset name="AVG-DATA27">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum27"/>
+      		<member name="response-sum-time-sum27"/>
+      	</readset>
+      	<readset name="AVG-DATA28">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum28"/>
+      		<member name="response-sum-time-sum28"/>
+      	</readset>
+      	<readset name="AVG-DATA29">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum29"/>
+      		<member name="response-sum-time-sum29"/>
+      	</readset>
+      	<readset name="AVG-DATA30">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum30"/>
+      		<member name="response-sum-time-sum30"/>
+      	</readset>
+      	<readset name="AVG-DATA31">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum31"/>
+      		<member name="response-sum-time-sum31"/>
+      	</readset>
+      	<readset name="AVG-DATA32">
+      		<member name="minute-order"/>
+      		<member name="access-number-sum32"/>
+      		<member name="response-sum-time-sum32"/>
+      	</readset>
+		</readsets>
 		<query-defs>
 		<query name="insert" type="INSERT" batch="true">
 			<statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
@@ -408,6 +740,34 @@
         response_sum_time32 = response_sum_time32 + ${response-sum-time32}
          ]]></statement>
       </query>  
+      <query name="find-data-by-minute" type="SELECT" multiple="true">
+        <param name="speed-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="platform" />
+        <param name="source" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
+		</IF>
+        group by  <FIELD name='minute-order'/>  ]]></statement>
+      </query>
 		</query-defs>
 	</entity>
 </entities>

@@ -3,12 +3,15 @@ package com.dianping.cat.report.page.browser;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 
 import com.dianping.cat.configuration.web.entity.Item;
+import com.dianping.cat.configuration.web.speed.entity.Speed;
 import com.dianping.cat.configuration.web.url.entity.Code;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.helper.JsonBuilder;
@@ -16,7 +19,10 @@ import com.dianping.cat.mvc.AbstractReportModel;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
-import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
+import com.dianping.cat.report.graph.PieChartDetailInfo;
+import com.dianping.cat.report.page.browser.display.AjaxDataDetail;
+import com.dianping.cat.report.page.browser.display.WebSpeedDetail;
+import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
 import com.dianping.cat.report.page.problem.transform.ProblemStatistics;
 
 public class Model extends AbstractReportModel<Action, ReportPage, Context> {
@@ -43,14 +49,22 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private Date m_compareEnd;
 
 	private String m_json;
+	
+	private Speed m_speed;
 
 	private Map<Integer, Item> m_cities;
 
-	private Map<Integer, Item> m_operators;
+	private Map<Integer, Item> m_platforms;
 
+	private Map<Integer, Item> m_operators;
+	
 	private Map<Integer, Code> m_codes;
 
 	private Map<Integer, Item> m_networks;
+
+	private Map<Integer, Item> m_sources;
+	
+	private Map<String, Speed> m_speeds;
 
 	private String m_defaultApi;
 
@@ -71,8 +85,18 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private String m_module;
 
 	private String m_distributionChart;
-	
+
 	private String m_agent;
+
+	private String m_dpid;
+
+	private WebSpeedDisplayInfo m_webSpeedDisplayInfo;
+
+	private Map<String, AjaxDataDetail> m_comparisonAjaxDetails;
+
+	private List<AjaxDataDetail> m_ajaxDataDetailInfos;
+
+	private int m_commandId;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -80,6 +104,18 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public String getAgent() {
 		return m_agent;
+	}
+
+	public Map<String, Speed> getSpeeds() {
+		return m_speeds;
+	}
+
+	public void setSpeeds(Map<String, Speed> speeds) {
+		m_speeds = speeds;
+	}
+
+	public List<AjaxDataDetail> getAjaxDataDetailInfos() {
+		return m_ajaxDataDetailInfos;
 	}
 
 	public ProblemStatistics getAllStatistics() {
@@ -90,8 +126,24 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_cities;
 	}
 
+	public Map<Integer, Item> getSources() {
+		return m_sources;
+	}
+
 	public Map<Integer, Code> getCodes() {
 		return m_codes;
+	}
+
+	public Speed getSpeed() {
+		return m_speed;
+	}
+
+	public void setSpeed(Speed speed) {
+		m_speed = speed;
+	}
+
+	public int getCommandId() {
+		return m_commandId;
 	}
 
 	public Date getCompareEnd() {
@@ -100,6 +152,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public Date getCompareStart() {
 		return m_compareStart;
+	}
+
+	public Map<String, AjaxDataDetail> getComparisonAjaxDetails() {
+		return m_comparisonAjaxDetails;
 	}
 
 	@Override
@@ -115,6 +171,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_detail;
 	}
 
+	public String getDistributionChart() {
+		return m_distributionChart;
+	}
+
 	@Override
 	public String getDomain() {
 		return getDisplayDomain();
@@ -123,6 +183,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	@Override
 	public Collection<String> getDomains() {
 		return new ArrayList<String>();
+	}
+
+	public String getDpid() {
+		return m_dpid;
 	}
 
 	public Date getEnd() {
@@ -145,12 +209,20 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_level;
 	}
 
+	public List<String> getLevels() {
+		return m_levels;
+	}
+
 	public LineChart getLineChart() {
 		return m_lineChart;
 	}
 
 	public String getModule() {
 		return m_module;
+	}
+
+	public List<String> getModules() {
+		return m_modules;
 	}
 
 	public Map<Integer, Item> getNetworks() {
@@ -177,6 +249,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_pieChartDetailInfos;
 	}
 
+	public Map<Integer, Item> getPlatforms() {
+		return m_platforms;
+	}
+
 	public Date getStart() {
 		return m_start;
 	}
@@ -185,8 +261,49 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_totalCount;
 	}
 
+	public Map<String, Map<Integer, WebSpeedDetail>> getWebSpeedDetails() {
+		Map<String, Map<Integer, WebSpeedDetail>> map = new LinkedHashMap<String, Map<Integer, WebSpeedDetail>>();
+		Map<String, List<WebSpeedDetail>> details = m_webSpeedDisplayInfo.getWebSpeedDetails();
+
+		if (details != null && !details.isEmpty()) {
+			for (Entry<String, List<WebSpeedDetail>> entry : details.entrySet()) {
+				Map<Integer, WebSpeedDetail> m = new LinkedHashMap<Integer, WebSpeedDetail>();
+
+				for (WebSpeedDetail detail : entry.getValue()) {
+					m.put(detail.getMinuteOrder(), detail);
+				}
+				map.put(entry.getKey(), m);
+			}
+		}
+		return map;
+	}
+
+	public WebSpeedDisplayInfo getWebSpeedDisplayInfo() {
+		return m_webSpeedDisplayInfo;
+	}
+
+	public Map<String, Map<Integer, WebSpeedDetail>> getWebSpeedSummarys() {
+		Map<String, Map<Integer, WebSpeedDetail>> map = new LinkedHashMap<String, Map<Integer, WebSpeedDetail>>();
+		Map<String, WebSpeedDetail> details = m_webSpeedDisplayInfo.getWebSpeedSummarys();
+
+		if (details != null && !details.isEmpty()) {
+			for (Entry<String, WebSpeedDetail> entry : details.entrySet()) {
+				Map<Integer, WebSpeedDetail> m = new LinkedHashMap<Integer, WebSpeedDetail>();
+				WebSpeedDetail d = entry.getValue();
+
+				m.put(d.getMinuteOrder(), d);
+				map.put(entry.getKey(), m);
+			}
+		}
+		return map;
+	}
+
 	public void setAgent(String agent) {
 		m_agent = agent;
+	}
+
+	public void setAjaxDataDetailInfos(List<AjaxDataDetail> ajaxDataDetailInfos) {
+		m_ajaxDataDetailInfos = ajaxDataDetailInfos;
 	}
 
 	public void setAllStatistics(ProblemStatistics allStatistics) {
@@ -197,8 +314,16 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_cities = cities;
 	}
 
+	public void setSources(Map<Integer, Item> sources) {
+		m_sources = sources;
+	}
+
 	public void setCodes(Map<Integer, Code> codes) {
 		m_codes = codes;
+	}
+
+	public void setCommandId(int commandId) {
+		m_commandId = commandId;
 	}
 
 	public void setCompareEnd(Date compareEnd) {
@@ -209,12 +334,24 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_compareStart = compareStart;
 	}
 
+	public void setComparisonAjaxDetails(Map<String, AjaxDataDetail> comparisonAjaxDetail) {
+		m_comparisonAjaxDetails = comparisonAjaxDetail;
+	}
+
 	public void setDefaultApi(String defaultApi) {
 		m_defaultApi = defaultApi;
 	}
 
 	public void setDetail(String detail) {
 		m_detail = detail;
+	}
+
+	public void setDistributionChart(String distributionChart) {
+		m_distributionChart = distributionChart;
+	}
+
+	public void setDpid(String dpid) {
+		m_dpid = dpid;
 	}
 
 	public void setEnd(Date end) {
@@ -237,12 +374,20 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_level = level;
 	}
 
+	public void setLevels(List<String> levels) {
+		m_levels = levels;
+	}
+
 	public void setLineChart(LineChart lineChart) {
 		m_lineChart = lineChart;
 	}
 
 	public void setModule(String module) {
 		m_module = module;
+	}
+
+	public void setModules(List<String> modules) {
+		m_modules = modules;
 	}
 
 	public void setNetworks(Map<Integer, Item> networks) {
@@ -265,6 +410,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_pieChartDetailInfos = pieChartDetailInfos;
 	}
 
+	public void setPlatforms(Map<Integer, Item> platforms) {
+		m_platforms = platforms;
+	}
+
 	public void setStart(Date start) {
 		m_start = start;
 	}
@@ -273,28 +422,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_totalCount = totalCount;
 	}
 
-	public List<String> getModules() {
-		return m_modules;
-	}
-
-	public void setModules(List<String> modules) {
-		m_modules = modules;
-	}
-
-	public List<String> getLevels() {
-		return m_levels;
-	}
-
-	public void setLevels(List<String> levels) {
-		m_levels = levels;
-	}
-	
-	public String getDistributionChart() {
-		return m_distributionChart;
-	}
-
-	public void setDistributionChart(String distributionChart) {
-		m_distributionChart = distributionChart;
+	public void setWebSpeedDisplayInfo(WebSpeedDisplayInfo webSpeedDisplayInfo) {
+		m_webSpeedDisplayInfo = webSpeedDisplayInfo;
 	}
 
 }

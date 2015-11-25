@@ -19,13 +19,14 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.configuration.web.speed.entity.Step;
+import com.dianping.cat.configuration.web.speed.entity.Mapper;
 import com.dianping.cat.configuration.web.speed.entity.WebSpeedConfig;
 import com.dianping.cat.configuration.web.speed.transform.DefaultSaxParser;
 import com.dianping.cat.configuration.web.speed.entity.Speed;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.helper.JsonBuilder;
 
 public class WebSpeedConfigManager implements Initializable {
 
@@ -45,21 +46,12 @@ public class WebSpeedConfigManager implements Initializable {
 
 	private volatile Map<String, Speed> m_speeds = new ConcurrentHashMap<String, Speed>();
 
-	public boolean deleteSpeed(int id) {
-		m_config.removeSpeed(id);
-		return storeConfig();
+	public String getPage2StepsJson() {
+		return new JsonBuilder().toJson(m_config.getSpeeds());
 	}
 
-	public boolean deleteStep(int pageId, int stepId) {
-		Speed speed = m_config.getSpeeds().get(pageId);
-
-		if (speed != null) {
-			speed.removeStep(stepId);
-		}
-
-		if (speed.getSteps().size() == 0) {
-			m_config.removeSpeed(pageId);
-		}
+	public boolean deleteSpeed(int id) {
+		m_config.removeSpeed(id);
 		return storeConfig();
 	}
 
@@ -91,20 +83,12 @@ public class WebSpeedConfigManager implements Initializable {
 		return generateId(ids);
 	}
 
-	public int generateStepId(String page) {
-		List<Integer> ids = new ArrayList<Integer>();
-		Speed speed = m_speeds.get(page);
-
-		if (speed != null) {
-			for (Step step : speed.getSteps().values()) {
-				ids.add(step.getId());
-			}
-		}
-		return generateId(ids);
-	}
-
 	public Map<String, Speed> getSpeeds() {
 		return m_speeds;
+	}
+
+	public Speed getSpeed(int id) {
+		return m_config.getSpeeds().get(id);
 	}
 
 	@Override
@@ -152,6 +136,20 @@ public class WebSpeedConfigManager implements Initializable {
 		if (speed != null) {
 			value = speed.getId();
 		}
+		return value;
+	}
+
+	public int querySpeedId(String flag1, String flag2, String flag3) {
+		int value = -1;
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(flag1).append("-").append(flag2).append("-").append(flag3);
+		Mapper mapper = m_config.getMappers().get(sb.toString());
+
+		if (mapper != null) {
+			value = mapper.getId();
+		}
+
 		return value;
 	}
 

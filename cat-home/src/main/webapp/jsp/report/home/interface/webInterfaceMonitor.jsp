@@ -56,6 +56,7 @@
 		<tr><td>n</td><td>appName</td><td>错误的发生的应用模块</td><td>String</td></tr>
 		<tr><td>l</td><td>level</td><td>错误等级</td><td>String</td></tr>
 		<tr><td>a</td><td>agent</td><td>浏览器信息</td><td>String</td></tr>
+		<tr><td>id</td><td>dpid</td><td>用户ID，用于搜索错误日志</td><td>String</td></tr>
 		<tr><td>data</td><td>data</td><td>详细出错信息</td><td>String，如果没有的话，传空串</td></tr>
 	</table>
 	<br/>
@@ -97,6 +98,22 @@
 	</table>
 <br/>
 	
+<h4 class="text-danger">Web测速上报接口</h4>
+<pre>	http://{ip}/web-broker-service/api/speed</pre>
+	
+<p>参数说明</p>
+<table style="width:90%" class="table table-bordered table-striped table-condensed  ">
+		<tr><th style="width:10%">query名</th><th style="width:15%">实际名称</th><th style="width:15%">描述</th><th style="width:60%">类型</th></tr>	
+		<tr><td>v</td><td>version</td><td>API版本号</td><td>暂定为1</td></tr>
+		<tr><td>t</td><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
+		<tr><td>n</td><td>network</td><td>网络类型</td><td>整型, 2G,3G,4G,WIFI(iOS只有3G和WIFI)，1=wifi, 2=2G, 3=3G, 4=4G, 0=Unknown</td></tr>
+		<tr><td>p</td><td>platform</td><td>平台类型</td><td>整型</td></tr>
+		<tr><td>source</td><td>source</td><td>来源</td><td>整型</td></tr>
+		<tr><td>w</td><td>page</td><td>web页面id，可于配置页面查询</td><td>整型</td></tr>
+		<tr><td>speedparams</td><td>测速点</td><td>详细测速信息</td><td>以测速点编号-时间为一个单元，每个测速点之间以\t分隔， step1-responseTime1<span class="text-danger">TAB</span>step2-responseTime2...,例如1-1\t2-10\t3-100表明编号为1的测速点加载时间1毫秒，编号为2的测速点，加载时间10毫秒...</td></tr>
+</table>
+<br/>
+	
 <h4 class="text-danger">CDN监控接口</h4>
 	<pre>	http://{ip}/broker-service/api/cdn</pre>
 	
@@ -133,7 +150,7 @@
 		<tr><td>response</td><td>接受时间</td><td>int</td></tr>
 	</table>
 <br/>
-<h4 class="text-success">URL规则配置&nbsp;  <a target="_blank" href="/cat/s/config?op=urlPatternUpdate">链接</a></h4>
+<!-- <h4 class="text-success">URL规则配置&nbsp;  <a target="_blank" href="/cat/s/config?op=urlPatternUpdate">链接</a></h4>
 
 <table style="width:70%" class="table table-bordered table-striped table-condensed  ">
 	<tr><th>ID</th><th>描述</th></tr>
@@ -162,7 +179,7 @@
 	则获取报表的URL为：
 	http://cat.dianpingoa.com/cat/r/web?<span class="text-danger">op=json&</span>url=s1-small-dnsLookup&group=cdn-s1&city=上海市-&type=info&channel=&startDate=2014-10-28%2016:00&endDate=2014-10-28%2019:00
 </pre>
-
+ -->
 
 
 	

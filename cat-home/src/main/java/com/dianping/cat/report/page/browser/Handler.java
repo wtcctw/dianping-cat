@@ -6,25 +6,40 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.web.WebConfigManager;
+import com.dianping.cat.config.web.WebSpeedConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
+import com.dianping.cat.configuration.web.speed.entity.Speed;
+import com.dianping.cat.configuration.web.speed.entity.Step;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
-import com.dianping.cat.report.page.app.display.ChartSorter;
-import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
+import com.dianping.cat.report.graph.PieChartDetailInfo;
+import com.dianping.cat.report.page.browser.display.AjaxDataDetail;
+import com.dianping.cat.report.page.browser.display.ChartSorter;
+import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
 import com.dianping.cat.report.page.browser.graph.WebGraphCreator;
+import com.dianping.cat.report.page.browser.service.AjaxDataField;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
+import com.dianping.cat.report.page.browser.service.AjaxDataService;
+import com.dianping.cat.report.page.browser.service.SpeedQueryEntity;
+import com.dianping.cat.report.page.browser.service.WebSpeedService;
 import com.dianping.cat.web.JsErrorLog;
 import com.dianping.cat.web.JsErrorLogContent;
 import com.dianping.cat.web.JsErrorLogContentDao;
@@ -41,9 +56,14 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.config.web.js.Level;
+import com.site.lookup.util.StringUtils;
 
 public class Handler implements PageHandler<Context> {
+
 	private final int LIMIT = 10000;
+
+	@Inject
+	private AjaxDataService m_ajaxDataService;
 
 	@Inject
 	private WebGraphCreator m_graphCreator;
@@ -69,6 +89,12 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private WebConfigManager m_webConfigManager;
 
+	@Inject
+	private WebSpeedConfigManager m_webSpeedConfigManager;
+
+	@Inject
+	private WebSpeedService m_webSpeedService;
+
 	public void addBrowserCount(String browser, Map<String, Integer> distributions) {
 		Integer count = distributions.get(browser);
 
@@ -77,8 +103,74 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			count++;
 		}
-		
+
 		distributions.put(browser, count);
+	}
+
+	private List<AjaxDataDetail> buildAjaxDataDetails(Payload payload) {
+		List<AjaxDataDetail> ajaxDetails = new ArrayList<AjaxDataDetail>();
+
+		try {
+			ajaxDetails = m_ajaxDataService.buildAjaxDataDetailInfos(payload.getQueryEntity1(), payload.getGroupByField());
+			Collections.sort(ajaxDetails, new ChartSorter(payload.getSort()).buildLineChartInfoComparator());
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return ajaxDetails;
+	}
+
+	private AjaxDataDetail buildComparisonInfo(AjaxDataQueryEntity entity) {
+		AjaxDataDetail appDetail = null;
+
+		try {
+			List<AjaxDataDetail> appDetails = m_ajaxDataService.buildAjaxDataDetailInfos(entity, AjaxDataField.CODE);
+
+			if (appDetails.size() >= 1) {
+				appDetail = appDetails.iterator().next();
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return appDetail;
+	}
+
+	protected Map<String, AjaxDataDetail> buildComparisonInfo(Payload payload) {
+		AjaxDataQueryEntity currentEntity = payload.getQueryEntity1();
+		AjaxDataQueryEntity comparisonEntity = payload.getQueryEntity2();
+		Map<String, AjaxDataDetail> result = new HashMap<String, AjaxDataDetail>();
+
+		if (currentEntity != null) {
+			AjaxDataDetail detail = buildComparisonInfo(currentEntity);
+
+			if (detail != null) {
+				result.put("当前值", detail);
+			}
+		}
+
+		if (comparisonEntity != null) {
+			AjaxDataDetail detail = buildComparisonInfo(comparisonEntity);
+
+			if (detail != null) {
+				result.put("对比值", detail);
+			}
+		}
+
+		return result;
+	}
+
+	public String buildDistributionChart(Map<String, Integer> distributions) {
+		PieChart chart = new PieChart();
+		List<Item> items = new ArrayList<Item>();
+
+		for (Entry<String, Integer> entry : distributions.entrySet()) {
+			Item item = new Item();
+
+			item.setNumber(entry.getValue()).setTitle(entry.getKey());
+			items.add(item);
+		}
+		chart.addItems(items);
+
+		return chart.getJsonString();
 	}
 
 	private LineChart buildLineChart(Payload payload) {
@@ -109,19 +201,32 @@ public class Handler implements PageHandler<Context> {
 		return null;
 	}
 
-	public String buildDistributionChart(Map<String, Integer> distributions) {
-		PieChart chart = new PieChart();
-		List<Item> items = new ArrayList<Item>();
-
-		for (Entry<String, Integer> entry : distributions.entrySet()) {
-			Item item = new Item();
-
-			item.setNumber(entry.getValue()).setTitle(entry.getKey());
-			items.add(item);
+	private void buildSpeedInfo(Payload payload, Model model) {
+		try {
+			Map<String, Speed> speeds = m_webSpeedConfigManager.getSpeeds();
+			SpeedQueryEntity queryEntity1 = normalizeSpeedQueryEntity(payload, speeds);
+			WebSpeedDisplayInfo info = m_webSpeedService.buildSpeedDisplayInfo(queryEntity1,
+			      payload.getSpeedQueryEntity2());
+			
+			model.setSpeed(m_webSpeedConfigManager.getSpeed(queryEntity1.getPageId()));
+			model.setWebSpeedDisplayInfo(info);
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
-		chart.addItems(items);
+	}
 
-		return chart.getJsonString();
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private <T> T fetchTaskResult(List<FutureTask> tasks, int i) {
+		T data = null;
+		FutureTask task = tasks.get(i);
+
+		try {
+			data = (T) task.get(10L, TimeUnit.SECONDS);
+		} catch (Exception e) {
+			task.cancel(true);
+			Cat.logError(e);
+		}
+		return data;
 	}
 
 	@Override
@@ -142,8 +247,7 @@ public class Handler implements PageHandler<Context> {
 
 		switch (action) {
 		case VIEW:
-			LineChart lineChart = buildLineChart(payload);
-			model.setLineChart(lineChart);
+			parallelBuildLineChart(model, payload);
 			break;
 		case PIECHART:
 			Pair<PieChart, List<PieChartDetailInfo>> pieChartPair = buildPieChart(payload);
@@ -152,12 +256,21 @@ public class Handler implements PageHandler<Context> {
 				model.setPieChart(pieChartPair.getKey());
 				model.setPieChartDetailInfos(pieChartPair.getValue());
 			}
+
+			int commandId = payload.getQueryEntity1().getId();
+			model.setCommandId(commandId);
 			break;
 		case JS_ERROR:
 			viewJsError(payload, model);
 			break;
 		case JS_ERROR_DETAIL:
 			viewJsErrorDetail(payload, model);
+			break;
+		case SPEED:
+			buildSpeedInfo(payload, model);
+			break;
+		case SPEED_LIST:
+			model.setSpeeds(m_webSpeedConfigManager.getSpeeds());
 			break;
 		}
 
@@ -172,6 +285,8 @@ public class Handler implements PageHandler<Context> {
 		model.setCities(m_webConfigManager.queryConfigItem(WebConfigManager.CITY));
 		model.setOperators(m_webConfigManager.queryConfigItem(WebConfigManager.OPERATOR));
 		model.setNetworks(m_webConfigManager.queryConfigItem(WebConfigManager.NETWORK));
+		model.setPlatforms(m_webConfigManager.queryConfigItem(WebConfigManager.PLATFORM));
+		model.setSources(m_webConfigManager.queryConfigItem(WebConfigManager.SOURCE));
 		model.setCodes(m_patternManager.queryCodes());
 
 		PatternItem first = m_patternManager.queryUrlPatternRules().iterator().next();
@@ -179,6 +294,68 @@ public class Handler implements PageHandler<Context> {
 		model.setDefaultApi(first.getName() + "|" + first.getPattern());
 		model.setPattermItems(m_patternManager.queryUrlPatterns());
 		m_normalizePayload.normalize(model, payload);
+	}
+
+	private SpeedQueryEntity normalizeSpeedQueryEntity(Payload payload, Map<String, Speed> speeds) {
+		SpeedQueryEntity query1 = payload.getSpeedQueryEntity1();
+
+		if (StringUtils.isEmpty(payload.getQuery1())) {
+			if (!speeds.isEmpty()) {
+				Speed first = speeds.get(speeds.keySet().toArray()[0]);
+				Map<Integer, Step> steps = first.getSteps();
+
+				if (first != null && !steps.isEmpty()) {
+					query1.setPageId(first.getId());
+					query1.setStepId(steps.get(steps.keySet().toArray()[0]).getId());
+				}
+			}
+		}
+
+		return query1;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void parallelBuildLineChart(Model model, final Payload payload) {
+		ExecutorService executor = Executors.newFixedThreadPool(3);
+		List<FutureTask> tasks = new LinkedList<FutureTask>();
+
+		FutureTask lineChartTask = new FutureTask(new CallableTask<LineChart>() {
+			@Override
+			public LineChart call() throws Exception {
+				return buildLineChart(payload);
+			}
+		});
+
+		tasks.add(lineChartTask);
+		executor.execute(lineChartTask);
+
+		FutureTask ajaxDetailTask = new FutureTask(new CallableTask<List<AjaxDataDetail>>() {
+			@Override
+			public List<AjaxDataDetail> call() throws Exception {
+				return buildAjaxDataDetails(payload);
+			}
+
+		});
+		tasks.add(ajaxDetailTask);
+		executor.execute(ajaxDetailTask);
+
+		FutureTask comparisonTask = new FutureTask(new CallableTask<Map<String, AjaxDataDetail>>() {
+			@Override
+			public Map<String, AjaxDataDetail> call() throws Exception {
+				return buildComparisonInfo(payload);
+			}
+		});
+		tasks.add(comparisonTask);
+		executor.execute(comparisonTask);
+
+		LineChart lineChart = fetchTaskResult(tasks, 0);
+		List<AjaxDataDetail> ajaxDataDetails = fetchTaskResult(tasks, 1);
+		Map<String, AjaxDataDetail> comparisonDetails = fetchTaskResult(tasks, 2);
+
+		executor.shutdown();
+		model.setLineChart(lineChart);
+		model.setAjaxDataDetailInfos(ajaxDataDetails);
+		model.setComparisonAjaxDetails(comparisonDetails);
 	}
 
 	private void processLog(Map<String, ErrorMsg> errorMsgs, JsErrorLog log, Map<String, Integer> distributions) {
@@ -215,6 +392,7 @@ public class Handler implements PageHandler<Context> {
 			Date endTime = payload.buildEndTime();
 			int levelCode = payload.buildLevel();
 			String module = payload.getModule();
+			String dpid = payload.getDpid();
 			Map<String, ErrorMsg> errorMsgs = new HashMap<String, ErrorMsg>();
 			int offset = 0;
 			int totalCount = 0;
@@ -222,7 +400,7 @@ public class Handler implements PageHandler<Context> {
 
 			while (true) {
 				List<JsErrorLog> result = m_jsErrorLogDao.findDataByTimeModuleLevelBrowser(startTime, endTime, module,
-				      levelCode, null, offset, LIMIT, JsErrorLogEntity.READSET_FULL);
+				      levelCode, null, dpid, offset, LIMIT, JsErrorLogEntity.READSET_FULL);
 
 				for (JsErrorLog log : result) {
 					processLog(errorMsgs, log, distributions);
@@ -261,9 +439,19 @@ public class Handler implements PageHandler<Context> {
 			model.setModule(jsErrorLog.getModule());
 			model.setDetail(new String(detail.getContent(), "UTF-8"));
 			model.setAgent(jsErrorLog.getBrowser());
+			model.setDpid(jsErrorLog.getDpid());
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
+	}
+	
+	public class CallableTask<T> implements Callable<T> {
+
+		@Override
+		public T call() throws Exception {
+			return null;
+		}
+
 	}
 
 }

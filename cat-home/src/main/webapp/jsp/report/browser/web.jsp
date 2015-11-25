@@ -44,12 +44,13 @@
 			return myDate.getFullYear() + "-" + month + "-" + day;
 		}
 		
-		function query() {
+		function query(field,networkCode,cityCode,operatorCode,sort) {
 			var time = $("#time").val();
 			var command = $("#command").val().split('|')[0];
-			var code = $("#code").val();
+			var code = $("#codeStatus").val();
 			var city = "";
 			var operator = "";
+			var network = "";
 			if(typeof(cityCode) == "undefined"){
 				city = $("#city").val();
 			}else{
@@ -61,7 +62,11 @@
 				operator = operatorCode;
 			}
 			
-			var network = $("#network").val();
+			if(typeof(networkCode) == "undefined"){
+				network = $("#network").val();
+			}else{
+				network = networkCode;
+			}
 			var split = ";";
 			var commandId = ${model.pattern2Items}[command].id;
 			var query1 = time + split + commandId + split + code + split
@@ -74,7 +79,7 @@
 				var time2 = $("#time2").val();
 				var command2 = $("#command2").val().split('|')[0];
 				var commandId2 = ${model.pattern2Items}[command2].id;
-				var code2 = $("#code2").val();
+				var code2 = $("#codeStatus2").val();
 				var city2 = $("#city2").val();
 				var operator2 = $("#operator2").val();
 				var network2 = $("#network2").val();
@@ -92,16 +97,32 @@
 					break;
 				}
 			}
+			
+			if(typeof(field) == "undefined"){
+				field = "";
+			}
+			if(typeof(sort) == "undefined"){
+				sort = "";
+			}
+			
 			var commandId = $('#command').val();
 			var commandId2 = $('#command2').val();
 			var href = "?query1=" + query1 + "&query2=" + query2 + "&type="
-					+ type +"&api1="+commandId+"&api2="+commandId2;
+					+ type + "&groupByField=" + field + "&sort=" + sort 
+					+"&api1="+commandId+"&api2="+commandId2;
 			window.location.href = href;
 		}
 		
+		function queryGroupBy(sort){
+			var str = document.URL;
+			var result = str.split("&groupByField=");
+			var field = result[1].split("&")[0];
+			query(field,undefined,undefined,undefined,sort);
+		}
 		
 		$(document).ready(
 				function() {
+					$('#Web_report').addClass('active open');
 					$('#web_trend').addClass('active');
 					$('#Web_report').addClass('active open');
 					$('#time').datetimepicker({
@@ -133,7 +154,7 @@
 						$("#time").val(words[0]);
 					}
 
-					$("#code").val(words[2]);
+					$("#codeStatus").val(words[2]);
 					$("#city").val(words[3]);
 					$("#operator").val(words[4]);
 					$("#network").val(words[7]);
@@ -159,7 +180,7 @@
 						}else{
 							$("#command2").val('${model.defaultApi}');
 						}
-						$("#code2").val(words[2]);
+						$("#codeStatus2").val(words[2]);
 						$("#city2").val(words[3]);
 						$("#operator2").val(words[4]);
 						$("#network2").val(words[7]);

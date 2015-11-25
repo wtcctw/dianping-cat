@@ -12,15 +12,12 @@ import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.config.web.WebConfigManager;
-import com.dianping.cat.config.web.js.Level;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.ConfigItem;
 import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.configuration.web.js.entity.AggregationRule;
-import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
@@ -49,16 +46,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private AggregationRule m_aggregationRule;
 
 	private List<AggregationRule> m_aggregationRules;
-
-	private List<String> m_modules;
-
-	private List<com.dianping.cat.home.js.entity.ExceptionLimit> m_jsRules;
-
-	private com.dianping.cat.home.js.entity.ExceptionLimit m_jsRule;
-
-	private PatternItem m_patternItem;
-
-	private Map<Integer, PatternItem> m_patternItems;
 
 	private ExceptionLimit m_exceptionLimit;
 
@@ -122,12 +109,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private Map<Integer, Item> m_platforms;
 
-	private Map<Integer, com.dianping.cat.configuration.web.entity.Item> m_webCities;
-
-	private Map<Integer, com.dianping.cat.configuration.web.entity.Item> m_webOperators;
-
-	private Map<Integer, com.dianping.cat.configuration.web.entity.Item> m_webNetworks;
-
 	private List<Command> m_commands;
 
 	private String m_duplicateDomains;
@@ -139,8 +120,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private Command m_updateCommand;
 
 	private Map<Integer, Code> m_codes;
-
-	private Map<Integer, com.dianping.cat.configuration.web.url.entity.Code> m_webCodes;
 
 	private Code m_code;
 
@@ -170,15 +149,12 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private AppConfigManager m_appConfigManager;
 
-	private WebConfigManager m_webConfigManager;
-
 	private Item m_appItem;
 
 	public Model(Context ctx) {
 		super(ctx);
 		try {
 			m_appConfigManager = ContainerLoader.getDefaultContainer().lookup(AppConfigManager.class);
-			m_webConfigManager = ContainerLoader.getDefaultContainer().lookup(WebConfigManager.class);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -250,10 +226,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public Map<String, ConfigItem> getConfigItems() {
 		return m_appConfigManager.getConfig().getConfigItems();
-	}
-
-	public Map<String, com.dianping.cat.configuration.web.entity.ConfigItem> getWebConfigItems() {
-		return m_webConfigManager.getConfig().getConfigItems();
 	}
 
 	public Map<Integer, Item> getConnectionTypes() {
@@ -373,28 +345,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_operators;
 	}
 
-	public Map<Integer, com.dianping.cat.configuration.web.entity.Item> getWebOperators() {
-		return m_webOperators;
-	}
-
-	public Map<Integer, com.dianping.cat.configuration.web.entity.Item> getWebCities() {
-		return m_webCities;
-	}
-
-	public Map<Integer, com.dianping.cat.configuration.web.entity.Item> getWebNetworks() {
-		return m_webNetworks;
-	}
-
 	public String getOpState() {
 		return m_opState;
-	}
-
-	public PatternItem getPatternItem() {
-		return m_patternItem;
-	}
-
-	public Map<Integer, PatternItem> getPatternItems() {
-		return m_patternItems;
 	}
 
 	public Map<Integer, Item> getPlatforms() {
@@ -471,42 +423,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public Map<Integer, Item> getVersions() {
 		return m_versions;
-	}
-
-	public Map<Integer, com.dianping.cat.configuration.web.url.entity.Code> getWebCodes() {
-		return m_webCodes;
-	}
-
-	public String getWebCodesJson() {
-		return new JsonBuilder().toJson(m_webCodes);
-	}
-
-	public List<com.dianping.cat.home.js.entity.ExceptionLimit> getJsRules() {
-		return m_jsRules;
-	}
-
-	public com.dianping.cat.home.js.entity.ExceptionLimit getJsRule() {
-		return m_jsRule;
-	}
-
-	public List<String> getLevels() {
-		return Level.getLevels();
-	}
-
-	public List<String> getModules() {
-		return m_modules;
-	}
-
-	public void setModules(List<String> modules) {
-		m_modules = modules;
-	}
-
-	public void setJsRules(List<com.dianping.cat.home.js.entity.ExceptionLimit> jsRules) {
-		m_jsRules = jsRules;
-	}
-
-	public void setJsRule(com.dianping.cat.home.js.entity.ExceptionLimit jsRule) {
-		m_jsRule = jsRule;
 	}
 
 	public void setAggregationRule(AggregationRule aggregationRule) {
@@ -645,32 +561,12 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_operators = operators;
 	}
 
-	public void setWebOperators(Map<Integer, com.dianping.cat.configuration.web.entity.Item> webOperators) {
-		m_webOperators = webOperators;
-	}
-
-	public void setWebCities(Map<Integer, com.dianping.cat.configuration.web.entity.Item> webCities) {
-		m_webCities = webCities;
-	}
-
-	public void setWebNetworks(Map<Integer, com.dianping.cat.configuration.web.entity.Item> webNetworks) {
-		m_webNetworks = webNetworks;
-	}
-
 	public void setOpState(boolean result) {
 		if (result) {
 			m_opState = SUCCESS;
 		} else {
 			m_opState = FAIL;
 		}
-	}
-
-	public void setPatternItem(PatternItem patternItem) {
-		m_patternItem = patternItem;
-	}
-
-	public void setPatternItems(Map<Integer, PatternItem> patternItems) {
-		m_patternItems = patternItems;
 	}
 
 	public void setPlatforms(Map<Integer, Item> platforms) {
@@ -743,10 +639,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setVersions(Map<Integer, Item> versions) {
 		m_versions = versions;
-	}
-
-	public void setWebCodes(Map<Integer, com.dianping.cat.configuration.web.url.entity.Code> webCodes) {
-		m_webCodes = webCodes;
 	}
 
 	public static class Edge {

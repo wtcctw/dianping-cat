@@ -251,6 +251,11 @@ public class UrlPatternConfigManager implements Initializable {
 		m_urlPattern.getCodes().put(code.getId(), code);
 		return storeConfig();
 	}
+	
+	public boolean removeCode(int id) {
+		m_urlPattern.getCodes().remove(id);
+		return storeConfig();
+	}
 
 	public class ConfigReloadTask implements Task {
 

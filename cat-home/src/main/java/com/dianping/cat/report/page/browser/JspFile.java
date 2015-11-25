@@ -7,7 +7,11 @@ public enum JspFile {
 
 	JS_ERROR("/jsp/report/browser/jsError.jsp"),
 	
-	JS_ERROR_DETAIL("/jsp/report/browser/jsErrorDetail.jsp")
+	JS_ERROR_DETAIL("/jsp/report/browser/jsErrorDetail.jsp"),
+	
+	SPEED("/jsp/report/browser/speed.jsp"),
+	
+	SPEED_LIST("/jsp/report/browser/speedList.jsp")
 	;
 
 	private String m_path;

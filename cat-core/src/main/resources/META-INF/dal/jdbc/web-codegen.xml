@@ -53,6 +53,7 @@
     <member name="browser" field="browser" value-type="String" length="20" />
     <member name="level" field="level" value-type="int" length="3" nullable="false" />
     <member name="msg" field="msg" value-type="String" length="200" nullable="false" />
+    <member name="dpid" field="dpid" value-type="String" length="200"/>
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <member name="error-time" field="error_time" value-type="Date" nullable="false" />
     <member name="updatetime" field="updatetime" value-type="Date" nullable="false" />
@@ -133,9 +134,10 @@
     <member name="period" field="period" value-type="Date" nullable="false" />
     <member name="minute-order" field="minute_order" value-type="int" length="5" nullable="false" />
     <member name="city" field="city" value-type="int" length="5" nullable="false" />
-    <member name="platform" field="platform" value-type="int" length="3" nullable="false" />
-    <member name="operator" field="operator" value-type="int" length="3" nullable="false" />
-    <member name="network" field="network" value-type="int" length="3" nullable="false" />
+    <member name="platform" field="platform" value-type="int" length="5" nullable="false" />
+    <member name="operator" field="operator" value-type="int" length="5" nullable="false" />
+    <member name="network" field="network" value-type="int" length="5" nullable="false" />
+    <member name="source" field="source" value-type="int" length="5" nullable="false" />
     <member name="access-number1" field="access_number1" value-type="long" length="19" />
     <member name="access-number2" field="access_number2" value-type="long" length="19" />
     <member name="access-number3" field="access_number3" value-type="long" length="19" />
@@ -204,7 +206,7 @@
     <member name="updatetime" field="updatetime" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
-    <index name="IX_condition" unique="true" members="period ASC, minute_order ASC, city ASC, operator ASC, network ASC, platform ASC" />
+    <index name="IX_condition" unique="true" members="period ASC, minute_order ASC, city ASC, operator ASC, network ASC, platform ASC, os ASC" />
     <index name="updatetime" members="updatetime ASC" />
     <readsets>
       <readset name="FULL" all="true" />

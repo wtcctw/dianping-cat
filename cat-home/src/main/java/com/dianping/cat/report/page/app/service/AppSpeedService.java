@@ -16,7 +16,7 @@ import com.dianping.cat.app.AppSpeedData;
 import com.dianping.cat.app.AppSpeedDataDao;
 import com.dianping.cat.app.AppSpeedDataEntity;
 import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.page.app.display.AppDataSequence;
+import com.dianping.cat.report.page.DataSequence;
 import com.dianping.cat.report.page.app.display.AppSpeedDetail;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 
@@ -284,7 +284,7 @@ public class AppSpeedService {
 		return datas;
 	}
 
-	public class AppSpeedSequence extends AppDataSequence<AppSpeedData> {
+	public class AppSpeedSequence extends DataSequence<AppSpeedData> {
 
 		private Date m_period;
 
