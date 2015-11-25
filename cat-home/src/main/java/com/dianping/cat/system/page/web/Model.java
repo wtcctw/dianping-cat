@@ -3,6 +3,7 @@ package com.dianping.cat.system.page.web;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.web.WebConfigManager;
@@ -22,7 +23,9 @@ import org.unidal.web.mvc.ViewModel;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
 
-	private Map<String, Speed> m_speeds;
+	private Set<String> m_speeds;
+
+	private Speed m_speed;
 
 	private Step m_step;
 
@@ -140,8 +143,12 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_rules;
 	}
 
-	public Map<String, Speed> getSpeeds() {
+	public Set<String> getSpeeds() {
 		return m_speeds;
+	}
+
+	public Speed getSpeed() {
+		return m_speed;
 	}
 
 	public Step getStep() {
@@ -216,8 +223,12 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_rules = rules;
 	}
 
-	public void setSpeeds(Map<String, Speed> speeds) {
+	public void setSpeeds(Set<String> speeds) {
 		m_speeds = speeds;
+	}
+
+	public void setSpeed(Speed speed) {
+		m_speed = speed;
 	}
 
 	public void setStep(Step step) {

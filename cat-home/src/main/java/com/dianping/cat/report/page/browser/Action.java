@@ -10,7 +10,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 	
 	JS_ERROR_DETAIL("jsErrorDetail"),
 	
-	SPEED("speed");
+	SPEED("speed"),
+	
+	SPEED_LIST("speedList");
 
 	private String m_name;
 

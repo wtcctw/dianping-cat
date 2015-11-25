@@ -87,6 +87,10 @@ public class WebSpeedConfigManager implements Initializable {
 		return m_speeds;
 	}
 
+	public Speed getSpeed(int id) {
+		return m_config.getSpeeds().get(id);
+	}
+
 	@Override
 	public void initialize() throws InitializationException {
 		try {

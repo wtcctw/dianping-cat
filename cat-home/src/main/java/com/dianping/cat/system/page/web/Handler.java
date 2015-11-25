@@ -142,39 +142,19 @@ public class Handler implements PageHandler<Context> {
 			String webpage = payload.getWebPage();
 			int pageId = m_webSpeedConfigManager.querySpeedId(webpage);
 			m_webSpeedConfigManager.deleteSpeed(pageId);
-			model.setSpeeds(m_webSpeedConfigManager.getSpeeds());
+			model.setSpeeds(m_webSpeedConfigManager.getSpeeds().keySet());
 			break;
 		case SPEED_LIST:
-			model.setSpeeds(m_webSpeedConfigManager.getSpeeds());
+			String name = payload.getWebPage();
+			
+			if (StringUtils.isNotEmpty(name)) {
+				Speed speed = m_webSpeedConfigManager.querySpeed(name);
+				model.setSpeed(speed);
+			}
+			model.setSpeeds(m_webSpeedConfigManager.getSpeeds().keySet());
 			break;
 		case SPEED_SUBMIT:
-			Step step = payload.getStep();
-			String page = step.getPage();
-			Speed speed = m_webSpeedConfigManager.querySpeed(page);
-
-			if (speed == null) {
-				int id = m_webSpeedConfigManager.generateSpeedId();
-				speed = new Speed();
-				speed.setId(id);
-				speed.setPage(page);
-			}
-
-			for (int i = 1; i <= Constants.MAX_SPEED_POINT; i++) {
-				String title = step.getStep(i);
-
-				if (StringUtils.isNotEmpty(title)) {
-					com.dianping.cat.configuration.web.speed.entity.Step internalStep = new com.dianping.cat.configuration.web.speed.entity.Step();
-					internalStep.setId(i);
-					internalStep.setTitle(title);
-
-					speed.addStep(internalStep);
-				} else {
-					speed.removeStep(i);
-				}
-			}
-			
-			m_webSpeedConfigManager.updateConfig(speed);
-			model.setSpeeds(m_webSpeedConfigManager.getSpeeds());
+			speedConfigSubmit(model, payload);
 			break;
 		case SPEED_UPDATE:
 			queryStep(model, payload);
@@ -272,6 +252,37 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		m_jspViewer.view(ctx, model);
+	}
+
+	private void speedConfigSubmit(Model model, Payload payload) {
+		Step step = payload.getStep();
+		String page = step.getPage();
+		Speed speed = m_webSpeedConfigManager.querySpeed(page);
+
+		if (speed == null) {
+			int id = m_webSpeedConfigManager.generateSpeedId();
+			speed = new Speed();
+			speed.setId(id);
+			speed.setPage(page);
+		}
+
+		for (int i = 1; i <= Constants.MAX_SPEED_POINT; i++) {
+			String title = step.getStep(i);
+
+			if (StringUtils.isNotEmpty(title)) {
+				com.dianping.cat.configuration.web.speed.entity.Step internalStep = new com.dianping.cat.configuration.web.speed.entity.Step();
+				internalStep.setId(i);
+				internalStep.setTitle(title);
+
+				speed.addStep(internalStep);
+			} else {
+				speed.removeStep(i);
+			}
+		}
+
+		m_webSpeedConfigManager.updateConfig(speed);
+		model.setSpeed(speed);
+		model.setSpeeds(m_webSpeedConfigManager.getSpeeds().keySet());
 	}
 
 	private void codeSubmit(Model model, Payload payload) {

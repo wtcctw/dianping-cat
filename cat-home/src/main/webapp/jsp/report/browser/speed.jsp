@@ -20,7 +20,6 @@
 			if (value == true) {
 				$('#history').slideDown();
 				$("#page2").val($("#page").val());
-				$("#page2").change();
 				$("#step2").val($("#step").val());
 				$("#network2").val($("#network").val());
 				$("#platform2").val($("#platform").val());
@@ -31,32 +30,6 @@
 			} else {
 				$('#history').slideUp();
 			}
-		}
-		var page2Steps = ${model.page2StepsJson};
-		
-		function changeStepByPage(){
-			var page = "";
-			var stepSelect;
-			
-			if($(this).attr("id")=="page") {
-				page = $("#page").val();
-				stepSelect = $("#step");
-			}else {
-				page = $("#page2").val();
-				stepSelect = $("#step2");
-			}
-			
- 			var steps = page2Steps[page]['steps'];
-			stepSelect.empty();
-			
-			for(var s in steps){
-				var step = steps[s];
-				if(step['title'] != undefined && step['title'].length > 0){
-					stepSelect.append($("<option value='"+step['id']+"'>"+step['title']+"</option>"));
-				}else{
-					stepSelect.append($("<option value='"+step['id']+"'>"+step['id']+"</option>"));
-				}
-			} 
 		}
 		
 		function getDate() {
@@ -128,19 +101,13 @@
 				var query2 = '${payload.query2}';
 				var words = query1.split(";");
 
-				$("#page").on('change', changeStepByPage);
-				$("#page2").on('change', changeStepByPage);
-
 				if (typeof (words[0]) != "undefined"
 						&& words[0].length == 0) {
 					$("#time").val(getDate());
 				} else {
 					$("#time").val(words[0]);
 				}
-				if(typeof words[1] != "undefined"  && words[1].length > 0) {
-					$("#page").val(words[1]);
-				}
-				$("#page").change();
+				
 				if(typeof words[2] != "undefined"  && words[2].length > 0) {
 					$("#step").val(words[2]);
 				}
@@ -166,10 +133,6 @@
 					}
 					
 					datePair["对比值"]=$("#time2").val();
-					if(typeof words[1] != "undefined"  && words[1].length > 0) {
-						$("#page2").val(words[1]);
-					}
-					$("#page2").change();
 					if(typeof words[2] != "undefined" && words[2].length > 0) {
 						$("#step2").val(words[2]);
 					}
@@ -181,7 +144,6 @@
 				} else {
 					$("#time2").val(getDate());
 				}
-
 				var data = ${model.webSpeedDisplayInfo.lineChart.jsonString};
 				
 				graphMetricChartForDay(document.getElementById('${model.webSpeedDisplayInfo.lineChart.id}'),
