@@ -5766,13 +5766,13 @@
 			<implementation>com.dianping.cat.report.page.browser.service.WebSpeedService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.browser.service.WebSpeedDataManager</role>
+					<role>com.dianping.cat.report.page.browser.service.WebSpeedDataBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.browser.service.WebSpeedDataManager</role>
-			<implementation>com.dianping.cat.report.page.browser.service.WebSpeedDataManager</implementation>
+			<role>com.dianping.cat.report.page.browser.service.WebSpeedDataBuilder</role>
+			<implementation>com.dianping.cat.report.page.browser.service.WebSpeedDataBuilder</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.web.WebSpeedDataDao</role>
