@@ -140,6 +140,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		if (m_routerConfig == null) {
 			m_routerConfig = new RouterConfig();
 		}
+		refreshNetInfo();
 	}
 
 	public boolean insert(String xml) {
@@ -285,7 +286,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		for (Entry<String, NetworkPolicy> netPolicy : m_routerConfig.getNetworkPolicies().entrySet()) {
 			ArrayList<SubnetInfo> infos = new ArrayList<SubnetInfo>();
 
-			if (DEFAULT.equals(netPolicy.getKey())) {
+			if (!DEFAULT.equals(netPolicy.getKey())) {
 				for (Entry<String, Network> network : netPolicy.getValue().getNetworks().entrySet()) {
 					try {
 						SubnetUtils subnetUtils = new SubnetUtils(network.getValue().getId());
