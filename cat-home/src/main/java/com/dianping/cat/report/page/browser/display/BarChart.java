@@ -1,9 +1,6 @@
-package com.dianping.cat.report.graph;
+package com.dianping.cat.report.page.browser.display;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import com.dianping.cat.helper.JsonBuilder;
 
@@ -18,22 +15,11 @@ public class BarChart {
 	private List<String> m_xAxis;
 
 	private List<Double> m_values;
+	
+	private List<WebSpeedDetail> m_details;
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 	
-	public void addValues(Map<String, Double> data) {
-		List<String> xAxis = new ArrayList<String>();
-		List<Double> values = new ArrayList<Double>();
-
-		for (Entry<String, Double> value : data.entrySet()) {
-			xAxis.add(value.getKey());
-			values.add(value.getValue());
-		}
-
-		m_xAxis = xAxis;
-		m_values = values;
-	}
-
 	public String getTitle() {
 		return m_title;
 	}
@@ -41,6 +27,22 @@ public class BarChart {
 	public BarChart setTitle(String title) {
 		m_title = title;
 		return this;
+	}
+
+	public List<WebSpeedDetail> getDetails() {
+		return m_details;
+	}
+
+	public void setDetails(List<WebSpeedDetail> details) {
+		m_details = details;
+	}
+
+	public void setxAxis(List<String> xAxis) {
+		m_xAxis = xAxis;
+	}
+
+	public void setValues(List<Double> values) {
+		m_values = values;
 	}
 
 	public String getSerieName() {

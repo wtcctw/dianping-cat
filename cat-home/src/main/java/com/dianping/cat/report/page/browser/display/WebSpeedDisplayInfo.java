@@ -3,7 +3,6 @@ package com.dianping.cat.report.page.browser.display;
 import java.util.List;
 import java.util.Map;
 
-import com.dianping.cat.report.graph.BarChart;
 import com.dianping.cat.report.graph.LineChart;
 
 public class WebSpeedDisplayInfo {

@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.browser;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -57,7 +56,6 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.config.web.js.Level;
-import com.dianping.cat.helper.TimeHelper;
 import com.site.lookup.util.StringUtils;
 
 public class Handler implements PageHandler<Context> {
@@ -327,10 +325,9 @@ public class Handler implements PageHandler<Context> {
 					query1.setStepId(stepId);
 
 					String split = ";";
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 					StringBuilder sb = new StringBuilder();
 
-					sb.append(sdf.format(TimeHelper.getCurrentDay())).append(split).append(pageId).append(split)
+					sb.append(split).append(pageId).append(split)
 					      .append(stepId).append(split).append(split).append(split).append(split).append(split);
 					
 					payload.setQuery1(sb.toString());

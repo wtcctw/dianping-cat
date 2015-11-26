@@ -2,8 +2,8 @@ package com.dianping.cat.report.page.browser.service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,10 +14,9 @@ import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.web.WebConfigManager;
-import com.dianping.cat.configuration.web.entity.Item;
-import com.dianping.cat.report.graph.BarChart;
 import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.page.browser.display.BarChart;
+import com.dianping.cat.report.page.browser.display.ChartSorter;
 import com.dianping.cat.report.page.browser.display.WebSpeedDetail;
 import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
 import com.dianping.cat.web.WebSpeedData;
@@ -26,9 +25,6 @@ public class WebSpeedService extends ContainerHolder {
 
 	@Inject
 	private WebSpeedDataManager m_dataManager;
-
-	@Inject
-	private WebConfigManager m_configManager;
 
 	private final static String CURRENT = "当前值";
 
@@ -142,7 +138,7 @@ public class WebSpeedService extends ContainerHolder {
 		info.setSourceChart(buildSourceChart(queryEntity));
 		info.setPlatformChart(buildPlatformChart(queryEntity));
 		info.setNetworkChart(buildNetworkChart(queryEntity));
-		
+
 		return info;
 	}
 
@@ -152,21 +148,25 @@ public class WebSpeedService extends ContainerHolder {
 		barChart.setyAxis("加载时间(ms)");
 		barChart.setSerieName("省份列表");
 
-		List<WebSpeedData> datas = m_dataManager.queryValueByCity(entity);
-		Map<String, Double> values = new HashMap<String, Double>();
-
-		for (WebSpeedData data : datas) {
-			Item item = m_configManager.queryItem(WebConfigManager.CITY, data.getCity());
-			double avg = 0.0;
-
-			if (data.getAccessNumberSum() > 0) {
-				avg = data.getResponseSumTimeSum() / data.getAccessNumberSum();
-			}
-			values.put(item.getName(), avg);
-		}
-		barChart.addValues(values);
+		List<WebSpeedDetail> datas = m_dataManager.queryValueByCity(entity);
+		buildBarChartDatas(barChart, datas);
 
 		return barChart;
+	}
+
+	private void buildBarChartDatas(BarChart barChart, List<WebSpeedDetail> datas) {
+		Collections.sort(datas, new ChartSorter().buildBarChartComparator());
+		List<String> itemList = new ArrayList<String>();
+		List<Double> dataList = new ArrayList<Double>();
+
+		for (WebSpeedDetail data : datas) {
+			itemList.add(data.getItemName());
+			dataList.add(data.getResponseTimeAvg());
+		}
+
+		barChart.setDetails(datas);
+		barChart.setxAxis(itemList);
+		barChart.setValues(dataList);
 	}
 
 	public BarChart buildPlatformChart(SpeedQueryEntity entity) {
@@ -175,19 +175,8 @@ public class WebSpeedService extends ContainerHolder {
 		barChart.setyAxis("加载时间(ms)");
 		barChart.setSerieName("平台列表");
 
-		List<WebSpeedData> datas = m_dataManager.queryValueByPlatform(entity);
-		Map<String, Double> values = new HashMap<String, Double>();
-
-		for (WebSpeedData data : datas) {
-			Item item = m_configManager.queryItem(WebConfigManager.PLATFORM, data.getPlatform());
-			double avg = 0.0;
-
-			if (data.getAccessNumberSum() > 0) {
-				avg = data.getResponseSumTimeSum() / data.getAccessNumberSum();
-			}
-			values.put(item.getName(), avg);
-		}
-		barChart.addValues(values);
+		List<WebSpeedDetail> datas = m_dataManager.queryValueByPlatform(entity);
+		buildBarChartDatas(barChart, datas);
 
 		return barChart;
 	}
@@ -198,19 +187,8 @@ public class WebSpeedService extends ContainerHolder {
 		barChart.setyAxis("加载时间(ms)");
 		barChart.setSerieName("来源列表");
 
-		List<WebSpeedData> datas = m_dataManager.queryValueBySource(entity);
-		Map<String, Double> values = new HashMap<String, Double>();
-
-		for (WebSpeedData data : datas) {
-			Item item = m_configManager.queryItem(WebConfigManager.SOURCE, data.getSource());
-			double avg = 0.0;
-
-			if (data.getAccessNumberSum() > 0) {
-				avg = data.getResponseSumTimeSum() / data.getAccessNumberSum();
-			}
-			values.put(item.getName(), avg);
-		}
-		barChart.addValues(values);
+		List<WebSpeedDetail> datas = m_dataManager.queryValueBySource(entity);
+		buildBarChartDatas(barChart, datas);
 
 		return barChart;
 	}
@@ -221,42 +199,20 @@ public class WebSpeedService extends ContainerHolder {
 		barChart.setyAxis("加载时间(ms)");
 		barChart.setSerieName("运营商列表");
 
-		List<WebSpeedData> datas = m_dataManager.queryValueByOperator(entity);
-		Map<String, Double> values = new HashMap<String, Double>();
-
-		for (WebSpeedData data : datas) {
-			Item item = m_configManager.queryItem(WebConfigManager.OPERATOR, data.getOperator());
-			double avg = 0.0;
-
-			if (data.getAccessNumberSum() > 0) {
-				avg = data.getResponseSumTimeSum() / data.getAccessNumberSum();
-			}
-			values.put(item.getName(), avg);
-		}
-		barChart.addValues(values);
+		List<WebSpeedDetail> datas = m_dataManager.queryValueByOperator(entity);
+		buildBarChartDatas(barChart, datas);
 
 		return barChart;
 	}
-	
+
 	public BarChart buildNetworkChart(SpeedQueryEntity entity) {
 		BarChart barChart = new BarChart();
 		barChart.setTitle("请求平均时间(网络类型)");
 		barChart.setyAxis("加载时间(ms)");
 		barChart.setSerieName("网络类型列表");
 
-		List<WebSpeedData> datas = m_dataManager.queryValueByNetwork(entity);
-		Map<String, Double> values = new HashMap<String, Double>();
-
-		for (WebSpeedData data : datas) {
-			Item item = m_configManager.queryItem(WebConfigManager.NETWORK, data.getNetwork());
-			double avg = 0.0;
-
-			if (data.getAccessNumberSum() > 0) {
-				avg = data.getResponseSumTimeSum() / data.getAccessNumberSum();
-			}
-			values.put(item.getName(), avg);
-		}
-		barChart.addValues(values);
+		List<WebSpeedDetail> datas = m_dataManager.queryValueByNetwork(entity);
+		buildBarChartDatas(barChart, datas);
 
 		return barChart;
 	}

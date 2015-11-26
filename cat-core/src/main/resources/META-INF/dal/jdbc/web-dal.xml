@@ -501,9 +501,12 @@
   		<member name="response-sum-time-sum32" value-type="long" all="false" select-expr="sum(response_sum_time32)" length="19" nullable="false" />
 		<member name="response-sum-time-sum" value-type="long" length="19"/>
 		<member name="access-number-sum" value-type="long" length="19"/>
-		
-		<var name="speed-id" value-type="int" />
 		<member name="response-sum-time-sum" value-type="long" length="19"/>
+		
+		<var name="start-minute-order" value-type="int" />
+		<var name="end-minute-order" value-type="int" />
+		<var name="speed-id" value-type="int" />
+		
 		<readsets>
 		<readset name="AVG-DATA1">
       		<member name="minute-order"/>
@@ -1576,9 +1579,17 @@
         <param name="network" />
         <param name="platform" />
         <param name="source" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF> 
         <IF type='NE' field='city' value='-1'>
 			AND  <FIELD name='city'/> = ${city}
 		</IF>
@@ -1604,12 +1615,20 @@
         <param name="network" />
         <param name="platform" />
         <param name="source" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
         <IF type='NE' field='city' value='-1'>
 			AND  <FIELD name='city'/> = ${city}
 		</IF>
+		<IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF> 
         <IF type='NE' field='operator' value='-1'>
 			AND  <FIELD name='operator'/> = ${operator}
 		</IF>
@@ -1632,9 +1651,17 @@
         <param name="network" />
         <param name="platform" />
         <param name="source" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF> 
         <IF type='NE' field='city' value='-1'>
 			AND  <FIELD name='city'/> = ${city}
 		</IF>
@@ -1660,9 +1687,17 @@
         <param name="network" />
         <param name="platform" />
         <param name="source" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF> 
         <IF type='NE' field='city' value='-1'>
 			AND  <FIELD name='city'/> = ${city}
 		</IF>
@@ -1688,9 +1723,17 @@
         <param name="network" />
         <param name="platform" />
         <param name="source" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF> 
         <IF type='NE' field='city' value='-1'>
 			AND  <FIELD name='city'/> = ${city}
 		</IF>

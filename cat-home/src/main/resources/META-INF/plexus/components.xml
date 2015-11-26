@@ -5768,9 +5768,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.browser.service.WebSpeedDataManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.web.WebConfigManager</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5782,6 +5779,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.web.WebSpeedConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.WebConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

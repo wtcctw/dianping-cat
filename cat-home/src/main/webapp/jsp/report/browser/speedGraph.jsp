@@ -16,9 +16,12 @@
 		<tr>
 			<th align=left>
 					<div class="input-group" style="float:left;">
-						<span class="input-group-addon">日期</span>
+						<span class="input-group-addon">开始</span>
 					<input type="text" id="time" style="width:110px;"/>
 					</div>
+					<div class="input-group" style="float:left;width:60px">
+	              		<span class="input-group-addon">结束</span>
+        	      	<input type="text" id="time2" style="width:60px;"/></div>
 					<div class="input-group" style="float:left;">
 					<span class="input-group-addon">页面</span>
 						<span class="input-icon" style="width:250px;">
@@ -87,10 +90,65 @@
 		<td><div id="platformChart" style="height: 400px"></div></td>
 		<td><div id="networkChart" style="height: 400px"></div></td>
 	</tr>
+</table>
+<table class="table table-striped table-condensed table-bordered table-hover"> 
+	<tr>
+		<th class="text-success">城市</th>
+		<th class="text-success">访问量</th>
+		<th class="text-success">平均响应时间</th>
+	</tr>
+	<c:forEach var="item" items="${model.webSpeedDisplayInfo.cityChart.details}">
+		<tr><td>${item.itemName}</td><td>${item.accessNumberSum}</td><td>${item.responseTimeAvg}</td></tr>
+	</c:forEach>
 </table>	
+<table class="table table-striped table-condensed table-bordered table-hover"> 
+	<tr>
+		<th class="text-success">运营商</th>
+		<th class="text-success">访问量</th>
+		<th class="text-success">平均响应时间</th>
+	</tr>
+	<c:forEach var="item" items="${model.webSpeedDisplayInfo.operatorChart.details}">
+		<tr><td>${item.itemName}</td><td>${item.accessNumberSum}</td><td>${item.responseTimeAvg}</td></tr>
+	</c:forEach>
+</table>
+<table class="table table-striped table-condensed table-bordered table-hover"> 
+	<tr>
+		<th class="text-success">来源</th>
+		<th class="text-success">访问量</th>
+		<th class="text-success">平均响应时间</th>
+	</tr>
+	<c:forEach var="item" items="${model.webSpeedDisplayInfo.sourceChart.details}">
+		<tr><td>${item.itemName}</td><td>${item.accessNumberSum}</td><td>${item.responseTimeAvg}</td></tr>
+	</c:forEach>
+</table>
+<table class="table table-striped table-condensed table-bordered table-hover"> 
+	<tr>
+		<th class="text-success">平台</th>
+		<th class="text-success">访问量</th>
+		<th class="text-success">平均响应时间</th>
+	</tr>
+	<c:forEach var="item" items="${model.webSpeedDisplayInfo.platformChart.details}">
+		<tr><td>${item.itemName}</td><td>${item.accessNumberSum}</td><td>${item.responseTimeAvg}</td></tr>
+	</c:forEach>
+</table>
+<table class="table table-striped table-condensed table-bordered table-hover"> 
+	<tr>
+		<th class="text-success">网络类型</th>
+		<th class="text-success">访问量</th>
+		<th class="text-success">平均响应时间</th>
+	</tr>
+	<c:forEach var="item" items="${model.webSpeedDisplayInfo.networkChart.details}">
+		<tr><td>${item.itemName}</td><td>${item.accessNumberSum}</td><td>${item.responseTimeAvg}</td></tr>
+	</c:forEach>
+</table>
 	<script>
 	function query() {
 		var time = $("#time").val();
+		var times = time.split(" ");
+		var period = times[0];
+		var start = converTimeFormat(times[1]);
+		var end = converTimeFormat($("#time2").val());
+
 		var page = $("#page").val();
 		var step = $("#step").val();
 		var network = $("#network").val();
@@ -99,9 +157,9 @@
 		var operator = $("#operator").val();
 		var source = $("#source").val();
 		var split = ";";
-		var query1 = time + split + page + split + step + split + network
+		var query1 = period + split + page + split + step + split + network
 				 + split + platform + split + city + split
-				+ operator + split + source;
+				+ operator + split + source + split +  start + split + end ;
 	
 		window.location.href = "?op=speedGraph&query1=" + query1;
 	}
@@ -119,7 +177,34 @@
 			day = '0' + day;
 		}
 
-		return myDate.getFullYear() + "-" + month + "-" + day;
+		return myDate.getFullYear() + "-" + month + "-" + day + " 00:00";
+	}
+	function getTime(){
+		var myDate = new Date();
+		var myHour = new Number(myDate.getHours());
+		var myMinute = new Number(myDate.getMinutes());
+		
+		if(myHour < 10){
+			myHour = '0' + myHour;
+		}
+		if(myMinute < 10){
+			myMinute = '0' + myMinute;
+		}
+		return myHour + ":" + myMinute;
+	}
+	
+	function converTimeFormat(time){
+		var times = time.split(":");
+		var hour = times[0];
+		var minute = times[1];
+		
+		if(hour.length == 1){
+			hour = "0" + hour;
+		}
+		if(minute.length == 1) {
+			minute = "0" + minute;
+		}
+		return hour + ":" + minute;
 	}
 	
 	$(document).ready(
@@ -127,8 +212,14 @@
 			$('#Web_report').addClass('active open');
 			$('#web_speedGraph').addClass('active');
 			$('#time').datetimepicker({
-				format:'Y-m-d',
-				timepicker:false,
+				format:'Y-m-d H:i',
+				step:30,
+				maxDate:0
+			});
+			$('#time2').datetimepicker({
+				datepicker:false,
+				format:'H:i',
+				step:30,
 				maxDate:0
 			});
 			//custom autocomplete (category selection)
@@ -164,8 +255,15 @@
 			if (typeof (words[0]) != "undefined" && words[0].length == 0) {
 				$("#time").val(getDate());
 			} else {
-				$("#time").val(words[0]);
+				$("#time").val(words[0] + " " + words[8]);
 			}
+			
+			if(words[9] == null || words.length == 1){
+				$("#time2").val(getTime());
+			}else{
+				$("#time2").val(words[9]);
+			}
+			
 			if(typeof words[1] != "undefined"  && words[1].length > 0) {
 				
 				$("#page").val(words[1]);
