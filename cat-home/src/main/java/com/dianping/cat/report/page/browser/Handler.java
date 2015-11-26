@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.browser;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -56,6 +57,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.config.web.js.Level;
+import com.dianping.cat.helper.TimeHelper;
 import com.site.lookup.util.StringUtils;
 
 public class Handler implements PageHandler<Context> {
@@ -207,8 +209,21 @@ public class Handler implements PageHandler<Context> {
 			SpeedQueryEntity queryEntity1 = normalizeSpeedQueryEntity(payload, speeds);
 			WebSpeedDisplayInfo info = m_webSpeedService.buildSpeedDisplayInfo(queryEntity1,
 			      payload.getSpeedQueryEntity2());
+
+			model.setSpeeds(m_webSpeedConfigManager.getSpeeds());
+			model.setWebSpeedDisplayInfo(info);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
+
+	private void buildBarCharts(Payload payload, Model model) {
+		try {
+			Map<String, Speed> speeds = m_webSpeedConfigManager.getSpeeds();
+			SpeedQueryEntity queryEntity1 = normalizeSpeedQueryEntity(payload, speeds);
+			WebSpeedDisplayInfo info = m_webSpeedService.buildBarCharts(queryEntity1);
 			
-			model.setSpeed(m_webSpeedConfigManager.getSpeed(queryEntity1.getPageId()));
+			model.setSpeeds(m_webSpeedConfigManager.getSpeeds());
 			model.setWebSpeedDisplayInfo(info);
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -269,8 +284,8 @@ public class Handler implements PageHandler<Context> {
 		case SPEED:
 			buildSpeedInfo(payload, model);
 			break;
-		case SPEED_LIST:
-			model.setSpeeds(m_webSpeedConfigManager.getSpeeds());
+		case SPEED_GRAPH:
+			buildBarCharts(payload, model);
 			break;
 		}
 
@@ -305,8 +320,20 @@ public class Handler implements PageHandler<Context> {
 				Map<Integer, Step> steps = first.getSteps();
 
 				if (first != null && !steps.isEmpty()) {
-					query1.setPageId(first.getId());
-					query1.setStepId(steps.get(steps.keySet().toArray()[0]).getId());
+					String pageId = first.getPage();
+					int stepId = steps.get(steps.keySet().toArray()[0]).getId();
+
+					query1.setPageId(pageId);
+					query1.setStepId(stepId);
+
+					String split = ";";
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					StringBuilder sb = new StringBuilder();
+
+					sb.append(sdf.format(TimeHelper.getCurrentDay())).append(split).append(pageId).append(split)
+					      .append(stepId).append(split).append(split).append(split).append(split).append(split);
+					
+					payload.setQuery1(sb.toString());
 				}
 			}
 		}
@@ -444,7 +471,7 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 		}
 	}
-	
+
 	public class CallableTask<T> implements Callable<T> {
 
 		@Override

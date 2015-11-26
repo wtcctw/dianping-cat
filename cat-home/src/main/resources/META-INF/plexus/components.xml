@@ -5766,7 +5766,22 @@
 			<implementation>com.dianping.cat.report.page.browser.service.WebSpeedService</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.page.browser.service.WebSpeedDataManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.WebConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.browser.service.WebSpeedDataManager</role>
+			<implementation>com.dianping.cat.report.page.browser.service.WebSpeedDataManager</implementation>
+			<requirements>
+				<requirement>
 					<role>com.dianping.cat.web.WebSpeedDataDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.WebSpeedConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

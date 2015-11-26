@@ -26,8 +26,11 @@
 						<li id="web_piechart"><a href="/cat/r/browser?op=piechart">
 							<i class="menu-icon fa fa-caret-right"></i>URL访问分布</a>
 							<b class="arrow"></b></li>
-						<li id="web_speed"><a href="/cat/r/browser?op=speedList">
+						<li id="web_speed"><a href="/cat/r/browser?op=speed">
 							<i class="menu-icon fa fa-caret-right"></i>Web页面测速</a>
+							<b class="arrow"></b></li>
+						<li id="web_speedGraph"><a href="/cat/r/browser?op=speedGraph">
+							<i class="menu-icon fa fa-caret-right"></i>Web测速分布</a>
 							<b class="arrow"></b></li>
 						<li id="web_problem"><a href="/cat/r/browser?op=jsError">
 							<i class="menu-icon fa fa-caret-right"></i>JS错误日志</a>

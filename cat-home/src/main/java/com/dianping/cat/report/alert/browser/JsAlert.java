@@ -39,7 +39,7 @@ public class JsAlert implements Task {
 
 		while (active) {
 			long current = System.currentTimeMillis();
-			Transaction t = Cat.newTransaction("JsAlert", TimeHelper.getMinuteStr());
+			Transaction t = Cat.newTransaction("AlertJs", TimeHelper.getMinuteStr());
 
 			try {
 				Date startTime = new Date(current - TimeHelper.ONE_MINUTE * 2);

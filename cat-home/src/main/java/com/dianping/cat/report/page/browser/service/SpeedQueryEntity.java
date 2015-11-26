@@ -18,13 +18,13 @@ public class SpeedQueryEntity {
 
 	private int m_network = DEFAULT_VALUE;
 
-	private int m_platfrom = DEFAULT_VALUE;
+	private int m_platform = DEFAULT_VALUE;
 
 	private int m_city = DEFAULT_VALUE;
 
 	private int m_operator = DEFAULT_VALUE;
 
-	private int m_pageId = DEFAULT_VALUE;
+	private String m_pageId;
 
 	private int m_stepId = DEFAULT_VALUE;
 	
@@ -46,10 +46,10 @@ public class SpeedQueryEntity {
 
 		try {
 			m_date = parseDate(strs.get(0));
-			m_pageId = parseValue(strs.get(1));
+			m_pageId = strs.get(1);
 			m_stepId = parseValue(strs.get(2));
 			m_network = parseValue(strs.get(3));
-			m_platfrom = parseValue(strs.get(4));
+			m_platform = parseValue(strs.get(4));
 			m_city = parseValue(strs.get(5));
 			m_operator = parseValue(strs.get(6));
 			m_source = parseValue(strs.get(7));
@@ -78,11 +78,11 @@ public class SpeedQueryEntity {
 		return m_source;
 	}
 
-	public int getPlatfrom() {
-		return m_platfrom;
+	public int getPlatform() {
+		return m_platform;
 	}
 
-	public int getPageId() {
+	public String getPageId() {
 		return m_pageId;
 	}
 
@@ -115,12 +115,12 @@ public class SpeedQueryEntity {
 		}
 	}
 
-	public void setPageId(int pageId) {
+	public void setPageId(String pageId) {
 		m_pageId = pageId;
 	}
 
 	public void setStepId(int stepId) {
 		m_stepId = stepId;
 	}
-
+	
 }

@@ -4,9 +4,10 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.browser.Model" scope="request"/>
 <a:web_body>
 <table class="table table-striped table-condensed table-bordered table-hover">
+
 	<tr>
-		<td>Error Time </td>
-		<td>${model.errorTime}</td>
+		<td width="15%">Error Time </td>
+		<td width="85%">${model.errorTime}</td>
 	</tr>
 	<tr>
 		<td>Level </td>
