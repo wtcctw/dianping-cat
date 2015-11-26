@@ -239,5 +239,22 @@ public class DefaultMessageTree implements MessageTree {
 		}
 		return result;
 	}
+	
+	public MessageTree copyForTest() {
+		ByteBuf buf = null;
+		try {
+			PlainTextMessageCodec codec = new PlainTextMessageCodec();
+			buf = ByteBufAllocator.DEFAULT.buffer();
+
+			codec.encode(this, buf);
+			buf.readInt(); // get rid of length
+			
+			return codec.decode(buf);
+		} catch (Exception ex) {
+			Cat.logError(ex);
+		}
+
+		return null;
+	}
 
 }
