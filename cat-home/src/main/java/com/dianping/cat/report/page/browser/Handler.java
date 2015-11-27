@@ -208,7 +208,7 @@ public class Handler implements PageHandler<Context> {
 			WebSpeedDisplayInfo info = m_webSpeedService.buildSpeedDisplayInfo(queryEntity1,
 			      payload.getSpeedQueryEntity2());
 
-			model.setSpeeds(m_webSpeedConfigManager.getSpeeds());
+			model.setSpeeds(speeds);
 			model.setWebSpeedDisplayInfo(info);
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -221,7 +221,7 @@ public class Handler implements PageHandler<Context> {
 			SpeedQueryEntity queryEntity1 = normalizeSpeedQueryEntity(payload, speeds);
 			WebSpeedDisplayInfo info = m_webSpeedService.buildBarCharts(queryEntity1);
 			
-			model.setSpeeds(m_webSpeedConfigManager.getSpeeds());
+			model.setSpeeds(speeds);
 			model.setWebSpeedDisplayInfo(info);
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -327,7 +327,7 @@ public class Handler implements PageHandler<Context> {
 					String split = ";";
 					StringBuilder sb = new StringBuilder();
 
-					sb.append(split).append(pageId).append(split)
+					sb.append(split).append(first.getId()).append("|").append(pageId).append(split)
 					      .append(stepId).append(split).append(split).append(split).append(split).append(split);
 					
 					payload.setQuery1(sb.toString());
