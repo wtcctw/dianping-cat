@@ -77,7 +77,7 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 	@Test
 	public void testProcess() throws Exception {
 		for (int i = 1; i <= 60; i++) {
-			MessageTree tree = generateMessageTree(i);
+			MessageTree tree = ((DefaultMessageTree) generateMessageTree(i)).copyForTest();
 
 			m_analyzer.process(tree);
 		}

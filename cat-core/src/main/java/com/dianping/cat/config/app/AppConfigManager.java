@@ -58,6 +58,8 @@ public class AppConfigManager implements Initializable {
 
 	private long m_modifyTime;
 
+	private int m_maxCommandId;
+
 	private static final String CONFIG_NAME = "app-config";
 
 	public static final String NETWORK = "网络类型";
@@ -72,16 +74,12 @@ public class AppConfigManager implements Initializable {
 
 	public static final String CONNECT_TYPE = "连接类型";
 
-	public static final int TOO_LONG_COMMAND_ID = 23;
-
 	public static final int ALL_COMMAND_ID = 0;
-
-	public static final int COMMAND_ID = 1200;
 
 	public Pair<Boolean, Integer> addCommand(Command command) throws Exception {
 		int commandId = 0;
 
-		commandId = findAvailableId(1, COMMAND_ID);
+		commandId = findAvailableId(1, m_maxCommandId);
 		command.setId(commandId);
 		m_config.addCommand(command);
 
@@ -426,6 +424,8 @@ public class AppConfigManager implements Initializable {
 	}
 
 	private void refreshData() {
+		m_maxCommandId = m_config.getMaxCommandId();
+		
 		Map<Integer, String> excludedCommands = new ConcurrentHashMap<Integer, String>();
 		Collection<Command> commands = m_config.getCommands().values();
 		Map<String, Command> commandMap = new ConcurrentHashMap<String, Command>();

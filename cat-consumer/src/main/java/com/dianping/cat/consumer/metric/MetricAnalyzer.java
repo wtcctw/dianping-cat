@@ -164,12 +164,10 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			report = findOrCreateReport(group);
 		}
 
-		Message message = tree.getMessage();
+		List<Metric> metrics = tree.getMetrics();
 
-		if (message instanceof Transaction) {
-			processTransaction(report, tree, (Transaction) message);
-		} else if (message instanceof Metric) {
-			processMetric(report, tree, (Metric) message);
+		for (Metric m : metrics) {
+			processMetric(report, tree, (Metric) m);
 		}
 	}
 
@@ -214,21 +212,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			}
 		}
 		return 0;
-	}
-
-	private int processTransaction(MetricReport report, MessageTree tree, Transaction t) {
-		int count = 0;
-		List<Message> children = t.getChildren();
-
-		for (Message child : children) {
-			if (child instanceof Transaction) {
-				count += processTransaction(report, tree, (Transaction) child);
-			} else if (child instanceof Metric) {
-				count += processMetric(report, tree, (Metric) child);
-			}
-		}
-
-		return count;
 	}
 
 	public void setBucketManager(ReportBucketManager bucketManager) {
@@ -317,6 +300,15 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		seg.setCount(seg.getCount() + count);
 		seg.setSum(seg.getSum() + sum);
 		seg.setAvg(seg.getSum() / seg.getCount());
+	}
+
+	@Override
+	public boolean isEiligible(MessageTree tree) {
+		if (tree.getMetrics().size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public static class ConfigItem {

@@ -71,8 +71,12 @@ public class PeriodTaskTest extends ComponentTestCase {
 
 		@Override
       public ReportManager<?> getReportManager() {
-	      // TODO Auto-generated method stub
 	      return null;
+      }
+
+		@Override
+      public boolean isEiligible(MessageTree tree) {
+	      return true;
       }
 	}
 	

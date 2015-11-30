@@ -2,6 +2,7 @@
 <model model-package="com.dianping.cat.configuration.app" root="true"   enable-merger="false"  enable-sax-parser="true"
 	enable-base-visitor="false"  enable-xml-parser="false"  enable-xml-builder="false">
   <entity name="app-config">
+    <attribute name="max-command-id" value-type="int" primitive="true"/>
     <entity-ref name="config-item" type="map" names="config-items" method-find-or-create="true"/>
     <entity-ref name="code" type="map" names="codes" method-find-or-create="true"/>
     <entity-ref name="command" type="map" names="commands" method-find-or-create="true"/>

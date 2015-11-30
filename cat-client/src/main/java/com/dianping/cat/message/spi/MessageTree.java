@@ -1,6 +1,12 @@
 package com.dianping.cat.message.spi;
 
+import java.util.List;
+
+import com.dianping.cat.message.Event;
+import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Metric;
+import com.dianping.cat.message.Transaction;
 
 public interface MessageTree extends Cloneable {
 	public MessageTree copy();
@@ -52,4 +58,13 @@ public interface MessageTree extends Cloneable {
 	public void setThreadName(String id);
 
 	public void setSample(boolean sample);
+
+	public List<Event> getEvents();
+
+	public List<Transaction> getTransactions();
+
+	public List<Heartbeat> getHeartbeats();
+
+	public List<Metric> getMetrics();
+
 }
