@@ -247,7 +247,12 @@ public class Handler implements PageHandler<Context> {
 			model.setCode(code);
 			model.setWebCodes(codes);
 			break;
-		default:
+		case WEB_CONFIG_UPDATE:
+			String appConfig = payload.getContent();
+			if (!StringUtils.isEmpty(appConfig)) {
+				model.setOpState(m_appConfigManager.insert(appConfig));
+			}
+			model.setContent(m_configHtmlParser.parse(m_appConfigManager.getConfig().toString()));
 			break;
 		}
 

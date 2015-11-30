@@ -18,17 +18,21 @@ public class SpeedQueryEntity {
 
 	private int m_network = DEFAULT_VALUE;
 
-	private int m_platfrom = DEFAULT_VALUE;
+	private int m_platform = DEFAULT_VALUE;
 
 	private int m_city = DEFAULT_VALUE;
 
 	private int m_operator = DEFAULT_VALUE;
 
-	private int m_pageId = DEFAULT_VALUE;
+	private String m_pageId;
 
 	private int m_stepId = DEFAULT_VALUE;
-	
+
 	private int m_source = DEFAULT_VALUE;
+
+	private int m_startMinuteOrder = DEFAULT_VALUE;
+
+	private int m_endMinuteOrder = DEFAULT_VALUE;
 
 	public SpeedQueryEntity() {
 		Calendar cal = Calendar.getInstance();
@@ -46,16 +50,38 @@ public class SpeedQueryEntity {
 
 		try {
 			m_date = parseDate(strs.get(0));
-			m_pageId = parseValue(strs.get(1));
+			m_pageId = strs.get(1);
 			m_stepId = parseValue(strs.get(2));
 			m_network = parseValue(strs.get(3));
-			m_platfrom = parseValue(strs.get(4));
+			m_platform = parseValue(strs.get(4));
 			m_city = parseValue(strs.get(5));
 			m_operator = parseValue(strs.get(6));
 			m_source = parseValue(strs.get(7));
+
+			if (strs.size() > 8) {
+				m_startMinuteOrder = convert2MinuteOrder(strs.get(8));
+				m_endMinuteOrder = convert2MinuteOrder(strs.get(9));
+			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
+	}
+
+	protected int convert2MinuteOrder(String time) {
+		int current = DEFAULT_VALUE;
+
+		if (StringUtils.isNotEmpty(time)) {
+			try {
+				current = Integer.parseInt(time);
+			} catch (NumberFormatException e) {
+				String[] pair = time.split(":");
+				int hour = Integer.parseInt(pair[0]);
+				int minute = Integer.parseInt(pair[1]);
+				current = hour * 60 + minute;
+				current = current - current % 5;
+			}
+		}
+		return current;
 	}
 
 	public int getCity() {
@@ -73,21 +99,29 @@ public class SpeedQueryEntity {
 	public int getOperator() {
 		return m_operator;
 	}
-	
+
 	public int getSource() {
 		return m_source;
 	}
 
-	public int getPlatfrom() {
-		return m_platfrom;
+	public int getPlatform() {
+		return m_platform;
 	}
 
-	public int getPageId() {
+	public String getPageId() {
 		return m_pageId;
 	}
 
 	public int getStepId() {
 		return m_stepId;
+	}
+
+	public int getStartMinuteOrder() {
+		return m_startMinuteOrder;
+	}
+
+	public int getEndMinuteOrder() {
+		return m_endMinuteOrder;
 	}
 
 	private Date parseDate(String dateStr) throws Exception {
@@ -115,7 +149,7 @@ public class SpeedQueryEntity {
 		}
 	}
 
-	public void setPageId(int pageId) {
+	public void setPageId(String pageId) {
 		m_pageId = pageId;
 	}
 

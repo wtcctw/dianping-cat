@@ -14,6 +14,8 @@ public class WebSpeedDetail {
 	private long m_accessNumberSum;
 
 	private double m_responseTimeAvg;
+	
+	private String m_itemName;
 
 	public long getAccessNumberSum() {
 		return m_accessNumberSum;
@@ -23,6 +25,14 @@ public class WebSpeedDetail {
 		long time = m_period.getTime() + m_minuteOrder * TimeHelper.ONE_MINUTE;
 
 		return new SimpleDateFormat("HH:mm").format(new Date(time));
+	}
+
+	public String getItemName() {
+		return m_itemName;
+	}
+
+	public void setItemName(String itemName) {
+		m_itemName = itemName;
 	}
 
 	public String getDayTime() {

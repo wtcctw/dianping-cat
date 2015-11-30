@@ -20,8 +20,8 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.PIECHART.getPath();
 		case SPEED:
 			return JspFile.SPEED.getPath();
-		case SPEED_LIST:
-			return JspFile.SPEED_LIST.getPath();
+		case SPEED_GRAPH:
+			return JspFile.SPEED_GRAPH.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);
