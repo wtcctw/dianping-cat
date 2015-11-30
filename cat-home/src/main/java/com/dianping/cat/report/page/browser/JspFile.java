@@ -11,7 +11,9 @@ public enum JspFile {
 	
 	SPEED("/jsp/report/browser/speed.jsp"),
 	
-	SPEED_GRAPH("/jsp/report/browser/speedGraph.jsp")
+	SPEED_GRAPH("/jsp/report/browser/speedGraph.jsp"),
+	
+	FETCH_DATA("/jsp/report/browser/fetchData.jsp"),
 	;
 
 	private String m_path;

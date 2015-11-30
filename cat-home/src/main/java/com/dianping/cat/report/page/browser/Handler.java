@@ -56,6 +56,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.config.web.js.Level;
+import com.dianping.cat.helper.JsonBuilder;
 import com.site.lookup.util.StringUtils;
 
 public class Handler implements PageHandler<Context> {
@@ -94,6 +95,8 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private WebSpeedService m_webSpeedService;
+
+	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
 	public void addBrowserCount(String browser, Map<String, Integer> distributions) {
 		Integer count = distributions.get(browser);
@@ -208,8 +211,25 @@ public class Handler implements PageHandler<Context> {
 			WebSpeedDisplayInfo info = m_webSpeedService.buildSpeedDisplayInfo(queryEntity1,
 			      payload.getSpeedQueryEntity2());
 
-			model.setSpeeds(m_webSpeedConfigManager.getSpeeds());
+			model.setSpeeds(speeds);
 			model.setWebSpeedDisplayInfo(info);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
+
+	private void buildSpeedInfoJson(Payload payload, Model model) {
+		try {
+			Map<String, Speed> speeds = m_webSpeedConfigManager.getSpeeds();
+			SpeedQueryEntity queryEntity1 = normalizeSpeedQueryEntity(payload, speeds);
+			WebSpeedDisplayInfo info = m_webSpeedService.buildSpeedDisplayInfo(queryEntity1,
+			      payload.getSpeedQueryEntity2());
+			Map<String, Object> jsonObjs = new HashMap<String, Object>();
+			
+			jsonObjs.put("webSpeedDetails", info.getWebSpeedDetails());
+			jsonObjs.put("webSpeedSummarys", info.getWebSpeedSummarys());
+			
+			model.setFetchData(m_jsonBuilder.toJson(jsonObjs));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -220,8 +240,8 @@ public class Handler implements PageHandler<Context> {
 			Map<String, Speed> speeds = m_webSpeedConfigManager.getSpeeds();
 			SpeedQueryEntity queryEntity1 = normalizeSpeedQueryEntity(payload, speeds);
 			WebSpeedDisplayInfo info = m_webSpeedService.buildBarCharts(queryEntity1);
-			
-			model.setSpeeds(m_webSpeedConfigManager.getSpeeds());
+
+			model.setSpeeds(speeds);
 			model.setWebSpeedDisplayInfo(info);
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -282,8 +302,23 @@ public class Handler implements PageHandler<Context> {
 		case SPEED:
 			buildSpeedInfo(payload, model);
 			break;
+		case SPEED_JSON:
+			buildSpeedInfoJson(payload, model);
+			break;
 		case SPEED_GRAPH:
 			buildBarCharts(payload, model);
+			break;
+		case SPEED_CONFIG_FETCH:
+			String type = payload.getType();
+			try {
+				if ("xml".equalsIgnoreCase(type)) {
+					model.setFetchData(m_webSpeedConfigManager.getConfig().toString());
+				} else if (StringUtils.isEmpty(type) || "json".equalsIgnoreCase(type)) {
+					model.setFetchData(m_jsonBuilder.toJson(m_webSpeedConfigManager.getConfig()));
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 			break;
 		}
 
@@ -327,9 +362,9 @@ public class Handler implements PageHandler<Context> {
 					String split = ";";
 					StringBuilder sb = new StringBuilder();
 
-					sb.append(split).append(pageId).append(split)
-					      .append(stepId).append(split).append(split).append(split).append(split).append(split);
-					
+					sb.append(split).append(first.getId()).append("|").append(pageId).append(split).append(stepId)
+					      .append(split).append(split).append(split).append(split).append(split);
+
 					payload.setQuery1(sb.toString());
 				}
 			}

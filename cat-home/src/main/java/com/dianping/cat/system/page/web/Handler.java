@@ -142,16 +142,16 @@ public class Handler implements PageHandler<Context> {
 			String webpage = payload.getWebPage();
 			int pageId = m_webSpeedConfigManager.querySpeedId(webpage);
 			m_webSpeedConfigManager.deleteSpeed(pageId);
-			model.setSpeeds(m_webSpeedConfigManager.getSpeeds().keySet());
+			model.setSpeeds(m_webSpeedConfigManager.getSpeeds());
 			break;
 		case SPEED_LIST:
 			String name = payload.getWebPage();
 			
 			if (StringUtils.isNotEmpty(name)) {
-				Speed speed = m_webSpeedConfigManager.querySpeed(name);
+				Speed speed = m_webSpeedConfigManager.querySpeed(name.split("\\|")[1]);
 				model.setSpeed(speed);
 			}
-			model.setSpeeds(m_webSpeedConfigManager.getSpeeds().keySet());
+			model.setSpeeds(m_webSpeedConfigManager.getSpeeds());
 			break;
 		case SPEED_SUBMIT:
 			speedConfigSubmit(model, payload);
@@ -254,8 +254,15 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setContent(m_configHtmlParser.parse(m_appConfigManager.getConfig().toString()));
 			break;
+		case WEB_SPEED_CONFIG_UPDATE:
+			String speedConfig = payload.getContent();
+			if (!StringUtils.isEmpty(speedConfig)) {
+				model.setOpState(m_webSpeedConfigManager.insert(speedConfig));
+			}
+			model.setContent(m_configHtmlParser.parse(m_webSpeedConfigManager.getConfig().toString()));
+			break;
 		}
-
+	
 		m_jspViewer.view(ctx, model);
 	}
 
@@ -287,7 +294,7 @@ public class Handler implements PageHandler<Context> {
 
 		m_webSpeedConfigManager.updateConfig(speed);
 		model.setSpeed(speed);
-		model.setSpeeds(m_webSpeedConfigManager.getSpeeds().keySet());
+		model.setSpeeds(m_webSpeedConfigManager.getSpeeds());
 	}
 
 	private void codeSubmit(Model model, Payload payload) {

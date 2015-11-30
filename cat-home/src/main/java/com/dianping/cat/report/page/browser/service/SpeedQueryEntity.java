@@ -50,7 +50,8 @@ public class SpeedQueryEntity {
 
 		try {
 			m_date = parseDate(strs.get(0));
-			m_pageId = strs.get(1);
+			String[] pageIdPair = strs.get(1).split("\\|");
+			m_pageId = pageIdPair[1];
 			m_stepId = parseValue(strs.get(2));
 			m_network = parseValue(strs.get(3));
 			m_platform = parseValue(strs.get(4));
