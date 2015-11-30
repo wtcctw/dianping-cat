@@ -44,7 +44,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	URL_PATTERN_UPDATE_SUBMIT("urlPatternUpdateSubmit"),
 
-	URL_PATTERN_DELETE("urlPatternDelete"), ;
+	URL_PATTERN_DELETE("urlPatternDelete"), 
+	
+	WEB_CONFIG_UPDATE("webConfigUpdate");
 
 	private String m_name;
 

@@ -37,7 +37,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	@EntityMeta
 	private PieChart m_pieChart;
-
+	
 	private List<PieChartDetailInfo> m_pieChartDetailInfos;
 
 	private Date m_start;
@@ -49,7 +49,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private Date m_compareEnd;
 
 	private String m_json;
-	
+
 	private Speed m_speed;
 
 	private Map<Integer, Item> m_cities;
@@ -57,13 +57,13 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private Map<Integer, Item> m_platforms;
 
 	private Map<Integer, Item> m_operators;
-	
+
 	private Map<Integer, Code> m_codes;
 
 	private Map<Integer, Item> m_networks;
 
 	private Map<Integer, Item> m_sources;
-	
+
 	private Map<String, Speed> m_speeds;
 
 	private String m_defaultApi;
@@ -98,20 +98,20 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private int m_commandId;
 
+	private String m_cityGraph;
+
+	private String m_operatorGraph;
+
+	private String m_platformGraph;
+
+	private String m_sourceGraph;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
 
 	public String getAgent() {
 		return m_agent;
-	}
-
-	public Map<String, Speed> getSpeeds() {
-		return m_speeds;
-	}
-
-	public void setSpeeds(Map<String, Speed> speeds) {
-		m_speeds = speeds;
 	}
 
 	public List<AjaxDataDetail> getAjaxDataDetailInfos() {
@@ -126,20 +126,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_cities;
 	}
 
-	public Map<Integer, Item> getSources() {
-		return m_sources;
+	public String getCityGraph() {
+		return m_cityGraph;
 	}
 
 	public Map<Integer, Code> getCodes() {
 		return m_codes;
-	}
-
-	public Speed getSpeed() {
-		return m_speed;
-	}
-
-	public void setSpeed(Speed speed) {
-		m_speed = speed;
 	}
 
 	public int getCommandId() {
@@ -229,6 +221,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_networks;
 	}
 
+	public String getOperatorGraph() {
+		return m_operatorGraph;
+	}
+
 	public Map<Integer, Item> getOperators() {
 		return m_operators;
 	}
@@ -249,12 +245,36 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_pieChartDetailInfos;
 	}
 
+	public String getPlatformGraph() {
+		return m_platformGraph;
+	}
+
 	public Map<Integer, Item> getPlatforms() {
 		return m_platforms;
 	}
 
+	public String getSourceGraph() {
+		return m_sourceGraph;
+	}
+
+	public Map<Integer, Item> getSources() {
+		return m_sources;
+	}
+
+	public Speed getSpeed() {
+		return m_speed;
+	}
+
+	public Map<String, Speed> getSpeeds() {
+		return m_speeds;
+	}
+
 	public Date getStart() {
 		return m_start;
+	}
+	
+	public String getPage2StepsJson() {
+		return new JsonBuilder().toJson(m_speeds);
 	}
 
 	public int getTotalCount() {
@@ -314,8 +334,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_cities = cities;
 	}
 
-	public void setSources(Map<Integer, Item> sources) {
-		m_sources = sources;
+	public void setCityGraph(String cityGraph) {
+		m_cityGraph = cityGraph;
 	}
 
 	public void setCodes(Map<Integer, Code> codes) {
@@ -394,6 +414,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_networks = networks;
 	}
 
+	public void setOperatorGraph(String operatorGraph) {
+		m_operatorGraph = operatorGraph;
+	}
+
 	public void setOperators(Map<Integer, Item> operators) {
 		m_operators = operators;
 	}
@@ -410,8 +434,28 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_pieChartDetailInfos = pieChartDetailInfos;
 	}
 
+	public void setPlatformGraph(String platformGraph) {
+		m_platformGraph = platformGraph;
+	}
+
 	public void setPlatforms(Map<Integer, Item> platforms) {
 		m_platforms = platforms;
+	}
+
+	public void setSourceGraph(String sourceGraph) {
+		m_sourceGraph = sourceGraph;
+	}
+
+	public void setSources(Map<Integer, Item> sources) {
+		m_sources = sources;
+	}
+
+	public void setSpeed(Speed speed) {
+		m_speed = speed;
+	}
+
+	public void setSpeeds(Map<String, Speed> speeds) {
+		m_speeds = speeds;
 	}
 
 	public void setStart(Date start) {

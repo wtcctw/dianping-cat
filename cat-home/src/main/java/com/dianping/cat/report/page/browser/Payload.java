@@ -244,6 +244,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	public String getQuery1() {
 		return m_query1;
 	}
+	
+	public void setQuery1(String query1) {
+		m_query1 = query1;
+	}
 
 	public String getQuery2() {
 		return m_query2;

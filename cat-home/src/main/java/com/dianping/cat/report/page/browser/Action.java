@@ -12,7 +12,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	
 	SPEED("speed"),
 	
-	SPEED_LIST("speedList");
+	SPEED_GRAPH("speedGraph");
 
 	private String m_name;
 

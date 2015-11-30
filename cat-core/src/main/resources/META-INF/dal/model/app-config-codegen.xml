@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
   <entity name="app-config" root="true">
+    <attribute name="max-command-id" value-type="int" />
     <entity-ref name="config-item" type="list" names="config-items" />
   </entity>
   <entity name="config-item">

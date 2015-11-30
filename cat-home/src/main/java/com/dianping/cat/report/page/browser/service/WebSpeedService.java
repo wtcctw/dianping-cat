@@ -1,7 +1,5 @@
 package com.dianping.cat.report.page.browser.service;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,22 +9,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.unidal.dal.jdbc.Readset;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.browser.display.WebSpeedDetail;
 import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
 import com.dianping.cat.web.WebSpeedData;
-import com.dianping.cat.web.WebSpeedDataDao;
-import com.dianping.cat.web.WebSpeedDataEntity;
 
 public class WebSpeedService extends ContainerHolder {
 
 	@Inject
-	private WebSpeedDataDao m_dao;
+	private WebSpeedDataBuilder m_dataBuilder;
 
 	private final static String CURRENT = "当前值";
 
@@ -132,6 +128,19 @@ public class WebSpeedService extends ContainerHolder {
 		return appSpeedDisplayInfo;
 	}
 
+	public WebSpeedDisplayInfo buildBarCharts(SpeedQueryEntity queryEntity) {
+		WebSpeedDisplayInfo info = new WebSpeedDisplayInfo();
+
+		info.setCityChart(m_dataBuilder.buildChart(queryEntity, WebConfigManager.CITY));
+		info.setOperatorChart(m_dataBuilder.buildChart(queryEntity, WebConfigManager.OPERATOR));
+		info.setSourceChart(m_dataBuilder.buildChart(queryEntity, WebConfigManager.SOURCE));
+		info.setPlatformChart(m_dataBuilder.buildChart(queryEntity, WebConfigManager.PLATFORM));
+		info.setNetworkChart(m_dataBuilder.buildChart(queryEntity, WebConfigManager.NETWORK));
+
+		return info;
+	}
+
+
 	private WebSpeedSequence buildWebSequence(List<WebSpeedData> fromDatas, Date period) {
 		Map<Integer, List<WebSpeedData>> dataMap = new LinkedHashMap<Integer, List<WebSpeedData>>();
 		int max = -5;
@@ -180,7 +189,7 @@ public class WebSpeedService extends ContainerHolder {
 				if (count > 0) {
 					avg = sum / count;
 				}
-				
+
 				int index = data.getMinuteOrder() / 5;
 
 				if (index < n) {
@@ -192,7 +201,7 @@ public class WebSpeedService extends ContainerHolder {
 	}
 
 	private WebSpeedSequence queryData(SpeedQueryEntity queryEntity) {
-		List<WebSpeedData> datas = queryValue(queryEntity);
+		List<WebSpeedData> datas = m_dataBuilder.queryValueByTime(queryEntity);
 		WebSpeedSequence sequence = buildWebSequence(datas, queryEntity.getDate());
 
 		return sequence;
@@ -214,44 +223,6 @@ public class WebSpeedService extends ContainerHolder {
 
 			if (data2.getDuration() > 0) {
 				datas.put(COMPARISION, data2);
-			}
-		}
-		return datas;
-	}
-
-	@SuppressWarnings("unchecked")
-	private List<WebSpeedData> queryValue(SpeedQueryEntity entity) {
-		int pageId = entity.getPageId();
-		int stepId = entity.getStepId();
-		List<WebSpeedData> datas = new ArrayList<WebSpeedData>();
-
-		if (pageId >= 0 && stepId > 0) {
-			Date period = entity.getDate();
-			int city = entity.getCity();
-			int operator = entity.getOperator();
-			int network = entity.getNetwork();
-			int platform = entity.getPlatfrom();
-			int source = entity.getSource();
-
-			try {
-				WebSpeedDataEntity webSpeedDataEntity = (WebSpeedDataEntity) Class.forName(
-				      "com.dianping.cat.web.WebSpeedDataEntity").newInstance();
-				Field field = webSpeedDataEntity.getClass().getDeclaredField("READSET_AVG_DATA" + stepId);
-				Readset<WebSpeedData> readset = (Readset<WebSpeedData>) field.get(webSpeedDataEntity);
-				datas = m_dao.findDataByMinute(pageId, period, city, operator, network, platform, source, readset);
-
-				for (WebSpeedData webSpeedData : datas) {
-					Method getResponseSumTimeSum = webSpeedData.getClass().getMethod("getResponseSumTimeSum" + stepId);
-					long responseSumTimeSum = (Long) getResponseSumTimeSum.invoke(webSpeedData);
-
-					Method getAccessNumberSum = webSpeedData.getClass().getMethod("getAccessNumberSum" + stepId);
-					long accessNumberSum = (Long) getAccessNumberSum.invoke(webSpeedData);
-
-					webSpeedData.setAccessNumberSum(accessNumberSum);
-					webSpeedData.setResponseSumTimeSum(responseSumTimeSum);
-				}
-			} catch (Exception e) {
-				Cat.logError(e);
 			}
 		}
 		return datas;

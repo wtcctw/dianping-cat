@@ -27,6 +27,10 @@ public class ChartSorter {
 
 		return new PieChartDetailInfoComparator();
 	}
+	
+	public Comparator<WebSpeedDetail> buildBarChartComparator() {
+		return new BarChartComparator();
+	}
 
 	public class LineChartDetailInfoComparator implements Comparator<AjaxDataDetail> {
 
@@ -54,6 +58,14 @@ public class ChartSorter {
 		public int compare(PieChartDetailInfo o1, PieChartDetailInfo o2) {
 			return (int) (o2.getRequestSum() - o1.getRequestSum());
 		}
+	}
+
+	public class BarChartComparator implements Comparator<WebSpeedDetail> {
+		@Override
+		public int compare(WebSpeedDetail o1, WebSpeedDetail o2) {
+			return (int) (o2.getResponseTimeAvg() - o1.getResponseTimeAvg());
+		}
+
 	}
 
 }

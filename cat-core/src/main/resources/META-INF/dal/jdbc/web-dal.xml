@@ -501,9 +501,12 @@
   		<member name="response-sum-time-sum32" value-type="long" all="false" select-expr="sum(response_sum_time32)" length="19" nullable="false" />
 		<member name="response-sum-time-sum" value-type="long" length="19"/>
 		<member name="access-number-sum" value-type="long" length="19"/>
-		
-		<var name="speed-id" value-type="int" />
 		<member name="response-sum-time-sum" value-type="long" length="19"/>
+		
+		<var name="start-minute-order" value-type="int" />
+		<var name="end-minute-order" value-type="int" />
+		<var name="speed-id" value-type="int" />
+		
 		<readsets>
 		<readset name="AVG-DATA1">
       		<member name="minute-order"/>
@@ -665,6 +668,806 @@
       		<member name="access-number-sum32"/>
       		<member name="response-sum-time-sum32"/>
       	</readset>
+      	<readset name="CITY-DATA1">
+      		<member name="city"/>
+      		<member name="access-number-sum1"/>
+      		<member name="response-sum-time-sum1"/>
+      	</readset>
+      	<readset name="CITY-DATA2">
+      		<member name="city"/>
+      		<member name="access-number-sum2"/>
+      		<member name="response-sum-time-sum2"/>
+      	</readset>
+      	<readset name="CITY-DATA3">
+      		<member name="city"/>
+      		<member name="access-number-sum3"/>
+      		<member name="response-sum-time-sum3"/>
+      	</readset>
+      	<readset name="CITY-DATA4">
+      		<member name="city"/>
+      		<member name="access-number-sum4"/>
+      		<member name="response-sum-time-sum4"/>
+      	</readset>
+      	<readset name="CITY-DATA5">
+      		<member name="city"/>
+      		<member name="access-number-sum5"/>
+      		<member name="response-sum-time-sum5"/>
+      	</readset>
+      	<readset name="CITY-DATA6">
+      		<member name="city"/>
+      		<member name="access-number-sum6"/>
+      		<member name="response-sum-time-sum6"/>
+      	</readset>
+      	<readset name="CITY-DATA7">
+      		<member name="city"/>
+      		<member name="access-number-sum7"/>
+      		<member name="response-sum-time-sum7"/>
+      	</readset>
+      	<readset name="CITY-DATA8">
+      		<member name="city"/>
+      		<member name="access-number-sum8"/>
+      		<member name="response-sum-time-sum8"/>
+      	</readset>
+      	<readset name="CITY-DATA9">
+      		<member name="city"/>
+      		<member name="access-number-sum9"/>
+      		<member name="response-sum-time-sum9"/>
+      	</readset>
+      	<readset name="CITY-DATA10">
+      		<member name="city"/>
+      		<member name="access-number-sum10"/>
+      		<member name="response-sum-time-sum10"/>
+      	</readset>
+      	<readset name="CITY-DATA11">
+      		<member name="city"/>
+      		<member name="access-number-sum11"/>
+      		<member name="response-sum-time-sum11"/>
+      	</readset>
+      	<readset name="CITY-DATA12">
+      		<member name="city"/>
+      		<member name="access-number-sum12"/>
+      		<member name="response-sum-time-sum12"/>
+      	</readset>
+      	<readset name="CITY-DATA13">
+      		<member name="city"/>
+      		<member name="access-number-sum13"/>
+      		<member name="response-sum-time-sum13"/>
+      	</readset>
+      	<readset name="CITY-DATA14">
+      		<member name="city"/>
+      		<member name="access-number-sum14"/>
+      		<member name="response-sum-time-sum14"/>
+      	</readset>
+      	<readset name="CITY-DATA15">
+      		<member name="city"/>
+      		<member name="access-number-sum15"/>
+      		<member name="response-sum-time-sum15"/>
+      	</readset>
+      	<readset name="CITY-DATA16">
+      		<member name="city"/>
+      		<member name="access-number-sum16"/>
+      		<member name="response-sum-time-sum16"/>
+      	</readset>
+      	<readset name="CITY-DATA17">
+      		<member name="city"/>
+      		<member name="access-number-sum17"/>
+      		<member name="response-sum-time-sum17"/>
+      	</readset>
+      	<readset name="CITY-DATA18">
+      		<member name="city"/>
+      		<member name="access-number-sum18"/>
+      		<member name="response-sum-time-sum18"/>
+      	</readset>
+      	<readset name="CITY-DATA19">
+      		<member name="city"/>
+      		<member name="access-number-sum19"/>
+      		<member name="response-sum-time-sum19"/>
+      	</readset>
+      	<readset name="CITY-DATA20">
+      		<member name="city"/>
+      		<member name="access-number-sum20"/>
+      		<member name="response-sum-time-sum20"/>
+      	</readset>
+      	<readset name="CITY-DATA21">
+      		<member name="city"/>
+      		<member name="access-number-sum21"/>
+      		<member name="response-sum-time-sum21"/>
+      	</readset>
+      	<readset name="CITY-DATA22">
+      		<member name="city"/>
+      		<member name="access-number-sum22"/>
+      		<member name="response-sum-time-sum22"/>
+      	</readset>
+      	<readset name="CITY-DATA23">
+      		<member name="city"/>
+      		<member name="access-number-sum23"/>
+      		<member name="response-sum-time-sum23"/>
+      	</readset>
+      	<readset name="CITY-DATA24">
+      		<member name="city"/>
+      		<member name="access-number-sum24"/>
+      		<member name="response-sum-time-sum24"/>
+      	</readset>
+      	<readset name="CITY-DATA25">
+      		<member name="city"/>
+      		<member name="access-number-sum25"/>
+      		<member name="response-sum-time-sum25"/>
+      	</readset>
+      	<readset name="CITY-DATA26">
+      		<member name="city"/>
+      		<member name="access-number-sum26"/>
+      		<member name="response-sum-time-sum26"/>
+      	</readset>
+      	<readset name="CITY-DATA27">
+      		<member name="city"/>
+      		<member name="access-number-sum27"/>
+      		<member name="response-sum-time-sum27"/>
+      	</readset>
+      	<readset name="CITY-DATA28">
+      		<member name="city"/>
+      		<member name="access-number-sum28"/>
+      		<member name="response-sum-time-sum28"/>
+      	</readset>
+      	<readset name="CITY-DATA29">
+      		<member name="city"/>
+      		<member name="access-number-sum29"/>
+      		<member name="response-sum-time-sum29"/>
+      	</readset>
+      	<readset name="CITY-DATA30">
+      		<member name="city"/>
+      		<member name="access-number-sum30"/>
+      		<member name="response-sum-time-sum30"/>
+      	</readset>
+      	<readset name="CITY-DATA31">
+      		<member name="city"/>
+      		<member name="access-number-sum31"/>
+      		<member name="response-sum-time-sum31"/>
+      	</readset>
+      	<readset name="CITY-DATA32">
+      		<member name="city"/>
+      		<member name="access-number-sum32"/>
+      		<member name="response-sum-time-sum32"/>
+      	</readset>
+      		<readset name="PLATFORM-DATA1">
+      		<member name="platform"/>
+      		<member name="access-number-sum1"/>
+      		<member name="response-sum-time-sum1"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA2">
+      		<member name="platform"/>
+      		<member name="access-number-sum2"/>
+      		<member name="response-sum-time-sum2"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA3">
+      		<member name="platform"/>
+      		<member name="access-number-sum3"/>
+      		<member name="response-sum-time-sum3"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA4">
+      		<member name="platform"/>
+      		<member name="access-number-sum4"/>
+      		<member name="response-sum-time-sum4"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA5">
+      		<member name="platform"/>
+      		<member name="access-number-sum5"/>
+      		<member name="response-sum-time-sum5"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA6">
+      		<member name="platform"/>
+      		<member name="access-number-sum6"/>
+      		<member name="response-sum-time-sum6"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA7">
+      		<member name="platform"/>
+      		<member name="access-number-sum7"/>
+      		<member name="response-sum-time-sum7"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA8">
+      		<member name="platform"/>
+      		<member name="access-number-sum8"/>
+      		<member name="response-sum-time-sum8"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA9">
+      		<member name="platform"/>
+      		<member name="access-number-sum9"/>
+      		<member name="response-sum-time-sum9"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA10">
+      		<member name="platform"/>
+      		<member name="access-number-sum10"/>
+      		<member name="response-sum-time-sum10"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA11">
+      		<member name="platform"/>
+      		<member name="access-number-sum11"/>
+      		<member name="response-sum-time-sum11"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA12">
+      		<member name="platform"/>
+      		<member name="access-number-sum12"/>
+      		<member name="response-sum-time-sum12"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA13">
+      		<member name="platform"/>
+      		<member name="access-number-sum13"/>
+      		<member name="response-sum-time-sum13"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA14">
+      		<member name="platform"/>
+      		<member name="access-number-sum14"/>
+      		<member name="response-sum-time-sum14"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA15">
+      		<member name="platform"/>
+      		<member name="access-number-sum15"/>
+      		<member name="response-sum-time-sum15"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA16">
+      		<member name="platform"/>
+      		<member name="access-number-sum16"/>
+      		<member name="response-sum-time-sum16"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA17">
+      		<member name="platform"/>
+      		<member name="access-number-sum17"/>
+      		<member name="response-sum-time-sum17"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA18">
+      		<member name="platform"/>
+      		<member name="access-number-sum18"/>
+      		<member name="response-sum-time-sum18"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA19">
+      		<member name="platform"/>
+      		<member name="access-number-sum19"/>
+      		<member name="response-sum-time-sum19"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA20">
+      		<member name="platform"/>
+      		<member name="access-number-sum20"/>
+      		<member name="response-sum-time-sum20"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA21">
+      		<member name="platform"/>
+      		<member name="access-number-sum21"/>
+      		<member name="response-sum-time-sum21"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA22">
+      		<member name="platform"/>
+      		<member name="access-number-sum22"/>
+      		<member name="response-sum-time-sum22"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA23">
+      		<member name="platform"/>
+      		<member name="access-number-sum23"/>
+      		<member name="response-sum-time-sum23"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA24">
+      		<member name="platform"/>
+      		<member name="access-number-sum24"/>
+      		<member name="response-sum-time-sum24"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA25">
+      		<member name="platform"/>
+      		<member name="access-number-sum25"/>
+      		<member name="response-sum-time-sum25"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA26">
+      		<member name="platform"/>
+      		<member name="access-number-sum26"/>
+      		<member name="response-sum-time-sum26"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA27">
+      		<member name="platform"/>
+      		<member name="access-number-sum27"/>
+      		<member name="response-sum-time-sum27"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA28">
+      		<member name="platform"/>
+      		<member name="access-number-sum28"/>
+      		<member name="response-sum-time-sum28"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA29">
+      		<member name="platform"/>
+      		<member name="access-number-sum29"/>
+      		<member name="response-sum-time-sum29"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA30">
+      		<member name="platform"/>
+      		<member name="access-number-sum30"/>
+      		<member name="response-sum-time-sum30"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA31">
+      		<member name="platform"/>
+      		<member name="access-number-sum31"/>
+      		<member name="response-sum-time-sum31"/>
+      	</readset>
+      	<readset name="PLATFORM-DATA32">
+      		<member name="platform"/>
+      		<member name="access-number-sum32"/>
+      		<member name="response-sum-time-sum32"/>
+      	</readset>
+      		<readset name="SOURCE-DATA1">
+      		<member name="source"/>
+      		<member name="access-number-sum1"/>
+      		<member name="response-sum-time-sum1"/>
+      	</readset>
+      	<readset name="SOURCE-DATA2">
+      		<member name="source"/>
+      		<member name="access-number-sum2"/>
+      		<member name="response-sum-time-sum2"/>
+      	</readset>
+      	<readset name="SOURCE-DATA3">
+      		<member name="source"/>
+      		<member name="access-number-sum3"/>
+      		<member name="response-sum-time-sum3"/>
+      	</readset>
+      	<readset name="SOURCE-DATA4">
+      		<member name="source"/>
+      		<member name="access-number-sum4"/>
+      		<member name="response-sum-time-sum4"/>
+      	</readset>
+      	<readset name="SOURCE-DATA5">
+      		<member name="source"/>
+      		<member name="access-number-sum5"/>
+      		<member name="response-sum-time-sum5"/>
+      	</readset>
+      	<readset name="SOURCE-DATA6">
+      		<member name="source"/>
+      		<member name="access-number-sum6"/>
+      		<member name="response-sum-time-sum6"/>
+      	</readset>
+      	<readset name="SOURCE-DATA7">
+      		<member name="source"/>
+      		<member name="access-number-sum7"/>
+      		<member name="response-sum-time-sum7"/>
+      	</readset>
+      	<readset name="SOURCE-DATA8">
+      		<member name="source"/>
+      		<member name="access-number-sum8"/>
+      		<member name="response-sum-time-sum8"/>
+      	</readset>
+      	<readset name="SOURCE-DATA9">
+      		<member name="source"/>
+      		<member name="access-number-sum9"/>
+      		<member name="response-sum-time-sum9"/>
+      	</readset>
+      	<readset name="SOURCE-DATA10">
+      		<member name="source"/>
+      		<member name="access-number-sum10"/>
+      		<member name="response-sum-time-sum10"/>
+      	</readset>
+      	<readset name="SOURCE-DATA11">
+      		<member name="source"/>
+      		<member name="access-number-sum11"/>
+      		<member name="response-sum-time-sum11"/>
+      	</readset>
+      	<readset name="SOURCE-DATA12">
+      		<member name="source"/>
+      		<member name="access-number-sum12"/>
+      		<member name="response-sum-time-sum12"/>
+      	</readset>
+      	<readset name="SOURCE-DATA13">
+      		<member name="source"/>
+      		<member name="access-number-sum13"/>
+      		<member name="response-sum-time-sum13"/>
+      	</readset>
+      	<readset name="SOURCE-DATA14">
+      		<member name="source"/>
+      		<member name="access-number-sum14"/>
+      		<member name="response-sum-time-sum14"/>
+      	</readset>
+      	<readset name="SOURCE-DATA15">
+      		<member name="source"/>
+      		<member name="access-number-sum15"/>
+      		<member name="response-sum-time-sum15"/>
+      	</readset>
+      	<readset name="SOURCE-DATA16">
+      		<member name="source"/>
+      		<member name="access-number-sum16"/>
+      		<member name="response-sum-time-sum16"/>
+      	</readset>
+      	<readset name="SOURCE-DATA17">
+      		<member name="source"/>
+      		<member name="access-number-sum17"/>
+      		<member name="response-sum-time-sum17"/>
+      	</readset>
+      	<readset name="SOURCE-DATA18">
+      		<member name="source"/>
+      		<member name="access-number-sum18"/>
+      		<member name="response-sum-time-sum18"/>
+      	</readset>
+      	<readset name="SOURCE-DATA19">
+      		<member name="source"/>
+      		<member name="access-number-sum19"/>
+      		<member name="response-sum-time-sum19"/>
+      	</readset>
+      	<readset name="SOURCE-DATA20">
+      		<member name="source"/>
+      		<member name="access-number-sum20"/>
+      		<member name="response-sum-time-sum20"/>
+      	</readset>
+      	<readset name="SOURCE-DATA21">
+      		<member name="source"/>
+      		<member name="access-number-sum21"/>
+      		<member name="response-sum-time-sum21"/>
+      	</readset>
+      	<readset name="SOURCE-DATA22">
+      		<member name="source"/>
+      		<member name="access-number-sum22"/>
+      		<member name="response-sum-time-sum22"/>
+      	</readset>
+      	<readset name="SOURCE-DATA23">
+      		<member name="source"/>
+      		<member name="access-number-sum23"/>
+      		<member name="response-sum-time-sum23"/>
+      	</readset>
+      	<readset name="SOURCE-DATA24">
+      		<member name="source"/>
+      		<member name="access-number-sum24"/>
+      		<member name="response-sum-time-sum24"/>
+      	</readset>
+      	<readset name="SOURCE-DATA25">
+      		<member name="source"/>
+      		<member name="access-number-sum25"/>
+      		<member name="response-sum-time-sum25"/>
+      	</readset>
+      	<readset name="SOURCE-DATA26">
+      		<member name="source"/>
+      		<member name="access-number-sum26"/>
+      		<member name="response-sum-time-sum26"/>
+      	</readset>
+      	<readset name="SOURCE-DATA27">
+      		<member name="source"/>
+      		<member name="access-number-sum27"/>
+      		<member name="response-sum-time-sum27"/>
+      	</readset>
+      	<readset name="SOURCE-DATA28">
+      		<member name="source"/>
+      		<member name="access-number-sum28"/>
+      		<member name="response-sum-time-sum28"/>
+      	</readset>
+      	<readset name="SOURCE-DATA29">
+      		<member name="source"/>
+      		<member name="access-number-sum29"/>
+      		<member name="response-sum-time-sum29"/>
+      	</readset>
+      	<readset name="SOURCE-DATA30">
+      		<member name="source"/>
+      		<member name="access-number-sum30"/>
+      		<member name="response-sum-time-sum30"/>
+      	</readset>
+      	<readset name="SOURCE-DATA31">
+      		<member name="source"/>
+      		<member name="access-number-sum31"/>
+      		<member name="response-sum-time-sum31"/>
+      	</readset>
+      	<readset name="SOURCE-DATA32">
+      		<member name="source"/>
+      		<member name="access-number-sum32"/>
+      		<member name="response-sum-time-sum32"/>
+      	</readset>
+      		<readset name="OPERATOR-DATA1">
+      		<member name="operator"/>
+      		<member name="access-number-sum1"/>
+      		<member name="response-sum-time-sum1"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA2">
+      		<member name="operator"/>
+      		<member name="access-number-sum2"/>
+      		<member name="response-sum-time-sum2"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA3">
+      		<member name="operator"/>
+      		<member name="access-number-sum3"/>
+      		<member name="response-sum-time-sum3"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA4">
+      		<member name="operator"/>
+      		<member name="access-number-sum4"/>
+      		<member name="response-sum-time-sum4"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA5">
+      		<member name="operator"/>
+      		<member name="access-number-sum5"/>
+      		<member name="response-sum-time-sum5"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA6">
+      		<member name="operator"/>
+      		<member name="access-number-sum6"/>
+      		<member name="response-sum-time-sum6"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA7">
+      		<member name="operator"/>
+      		<member name="access-number-sum7"/>
+      		<member name="response-sum-time-sum7"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA8">
+      		<member name="operator"/>
+      		<member name="access-number-sum8"/>
+      		<member name="response-sum-time-sum8"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA9">
+      		<member name="operator"/>
+      		<member name="access-number-sum9"/>
+      		<member name="response-sum-time-sum9"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA10">
+      		<member name="operator"/>
+      		<member name="access-number-sum10"/>
+      		<member name="response-sum-time-sum10"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA11">
+      		<member name="operator"/>
+      		<member name="access-number-sum11"/>
+      		<member name="response-sum-time-sum11"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA12">
+      		<member name="operator"/>
+      		<member name="access-number-sum12"/>
+      		<member name="response-sum-time-sum12"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA13">
+      		<member name="operator"/>
+      		<member name="access-number-sum13"/>
+      		<member name="response-sum-time-sum13"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA14">
+      		<member name="operator"/>
+      		<member name="access-number-sum14"/>
+      		<member name="response-sum-time-sum14"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA15">
+      		<member name="operator"/>
+      		<member name="access-number-sum15"/>
+      		<member name="response-sum-time-sum15"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA16">
+      		<member name="operator"/>
+      		<member name="access-number-sum16"/>
+      		<member name="response-sum-time-sum16"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA17">
+      		<member name="operator"/>
+      		<member name="access-number-sum17"/>
+      		<member name="response-sum-time-sum17"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA18">
+      		<member name="operator"/>
+      		<member name="access-number-sum18"/>
+      		<member name="response-sum-time-sum18"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA19">
+      		<member name="operator"/>
+      		<member name="access-number-sum19"/>
+      		<member name="response-sum-time-sum19"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA20">
+      		<member name="operator"/>
+      		<member name="access-number-sum20"/>
+      		<member name="response-sum-time-sum20"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA21">
+      		<member name="operator"/>
+      		<member name="access-number-sum21"/>
+      		<member name="response-sum-time-sum21"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA22">
+      		<member name="operator"/>
+      		<member name="access-number-sum22"/>
+      		<member name="response-sum-time-sum22"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA23">
+      		<member name="operator"/>
+      		<member name="access-number-sum23"/>
+      		<member name="response-sum-time-sum23"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA24">
+      		<member name="operator"/>
+      		<member name="access-number-sum24"/>
+      		<member name="response-sum-time-sum24"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA25">
+      		<member name="operator"/>
+      		<member name="access-number-sum25"/>
+      		<member name="response-sum-time-sum25"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA26">
+      		<member name="operator"/>
+      		<member name="access-number-sum26"/>
+      		<member name="response-sum-time-sum26"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA27">
+      		<member name="operator"/>
+      		<member name="access-number-sum27"/>
+      		<member name="response-sum-time-sum27"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA28">
+      		<member name="operator"/>
+      		<member name="access-number-sum28"/>
+      		<member name="response-sum-time-sum28"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA29">
+      		<member name="operator"/>
+      		<member name="access-number-sum29"/>
+      		<member name="response-sum-time-sum29"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA30">
+      		<member name="operator"/>
+      		<member name="access-number-sum30"/>
+      		<member name="response-sum-time-sum30"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA31">
+      		<member name="operator"/>
+      		<member name="access-number-sum31"/>
+      		<member name="response-sum-time-sum31"/>
+      	</readset>
+      	<readset name="OPERATOR-DATA32">
+      		<member name="operator"/>
+      		<member name="access-number-sum32"/>
+      		<member name="response-sum-time-sum32"/>
+      	</readset>
+      	<readset name="NETWORK-DATA1">
+      		<member name="network"/>
+      		<member name="access-number-sum1"/>
+      		<member name="response-sum-time-sum1"/>
+      	</readset>
+      	<readset name="NETWORK-DATA2">
+      		<member name="network"/>
+      		<member name="access-number-sum2"/>
+      		<member name="response-sum-time-sum2"/>
+      	</readset>
+      	<readset name="NETWORK-DATA3">
+      		<member name="network"/>
+      		<member name="access-number-sum3"/>
+      		<member name="response-sum-time-sum3"/>
+      	</readset>
+      	<readset name="NETWORK-DATA4">
+      		<member name="network"/>
+      		<member name="access-number-sum4"/>
+      		<member name="response-sum-time-sum4"/>
+      	</readset>
+      	<readset name="NETWORK-DATA5">
+      		<member name="network"/>
+      		<member name="access-number-sum5"/>
+      		<member name="response-sum-time-sum5"/>
+      	</readset>
+      	<readset name="NETWORK-DATA6">
+      		<member name="network"/>
+      		<member name="access-number-sum6"/>
+      		<member name="response-sum-time-sum6"/>
+      	</readset>
+      	<readset name="NETWORK-DATA7">
+      		<member name="network"/>
+      		<member name="access-number-sum7"/>
+      		<member name="response-sum-time-sum7"/>
+      	</readset>
+      	<readset name="NETWORK-DATA8">
+      		<member name="network"/>
+      		<member name="access-number-sum8"/>
+      		<member name="response-sum-time-sum8"/>
+      	</readset>
+      	<readset name="NETWORK-DATA9">
+      		<member name="network"/>
+      		<member name="access-number-sum9"/>
+      		<member name="response-sum-time-sum9"/>
+      	</readset>
+      	<readset name="NETWORK-DATA10">
+      		<member name="network"/>
+      		<member name="access-number-sum10"/>
+      		<member name="response-sum-time-sum10"/>
+      	</readset>
+      	<readset name="NETWORK-DATA11">
+      		<member name="network"/>
+      		<member name="access-number-sum11"/>
+      		<member name="response-sum-time-sum11"/>
+      	</readset>
+      	<readset name="NETWORK-DATA12">
+      		<member name="network"/>
+      		<member name="access-number-sum12"/>
+      		<member name="response-sum-time-sum12"/>
+      	</readset>
+      	<readset name="NETWORK-DATA13">
+      		<member name="network"/>
+      		<member name="access-number-sum13"/>
+      		<member name="response-sum-time-sum13"/>
+      	</readset>
+      	<readset name="NETWORK-DATA14">
+      		<member name="network"/>
+      		<member name="access-number-sum14"/>
+      		<member name="response-sum-time-sum14"/>
+      	</readset>
+      	<readset name="NETWORK-DATA15">
+      		<member name="network"/>
+      		<member name="access-number-sum15"/>
+      		<member name="response-sum-time-sum15"/>
+      	</readset>
+      	<readset name="NETWORK-DATA16">
+      		<member name="network"/>
+      		<member name="access-number-sum16"/>
+      		<member name="response-sum-time-sum16"/>
+      	</readset>
+      	<readset name="NETWORK-DATA17">
+      		<member name="network"/>
+      		<member name="access-number-sum17"/>
+      		<member name="response-sum-time-sum17"/>
+      	</readset>
+      	<readset name="NETWORK-DATA18">
+      		<member name="network"/>
+      		<member name="access-number-sum18"/>
+      		<member name="response-sum-time-sum18"/>
+      	</readset>
+      	<readset name="NETWORK-DATA19">
+      		<member name="network"/>
+      		<member name="access-number-sum19"/>
+      		<member name="response-sum-time-sum19"/>
+      	</readset>
+      	<readset name="NETWORK-DATA20">
+      		<member name="network"/>
+      		<member name="access-number-sum20"/>
+      		<member name="response-sum-time-sum20"/>
+      	</readset>
+      	<readset name="NETWORK-DATA21">
+      		<member name="network"/>
+      		<member name="access-number-sum21"/>
+      		<member name="response-sum-time-sum21"/>
+      	</readset>
+      	<readset name="NETWORK-DATA22">
+      		<member name="network"/>
+      		<member name="access-number-sum22"/>
+      		<member name="response-sum-time-sum22"/>
+      	</readset>
+      	<readset name="NETWORK-DATA23">
+      		<member name="network"/>
+      		<member name="access-number-sum23"/>
+      		<member name="response-sum-time-sum23"/>
+      	</readset>
+      	<readset name="NETWORK-DATA24">
+      		<member name="network"/>
+      		<member name="access-number-sum24"/>
+      		<member name="response-sum-time-sum24"/>
+      	</readset>
+      	<readset name="NETWORK-DATA25">
+      		<member name="network"/>
+      		<member name="access-number-sum25"/>
+      		<member name="response-sum-time-sum25"/>
+      	</readset>
+      	<readset name="NETWORK-DATA26">
+      		<member name="network"/>
+      		<member name="access-number-sum26"/>
+      		<member name="response-sum-time-sum26"/>
+      	</readset>
+      	<readset name="NETWORK-DATA27">
+      		<member name="network"/>
+      		<member name="access-number-sum27"/>
+      		<member name="response-sum-time-sum27"/>
+      	</readset>
+      	<readset name="NETWORK-DATA28">
+      		<member name="network"/>
+      		<member name="access-number-sum28"/>
+      		<member name="response-sum-time-sum28"/>
+      	</readset>
+      	<readset name="NETWORK-DATA29">
+      		<member name="network"/>
+      		<member name="access-number-sum29"/>
+      		<member name="response-sum-time-sum29"/>
+      	</readset>
+      	<readset name="NETWORK-DATA30">
+      		<member name="network"/>
+      		<member name="access-number-sum30"/>
+      		<member name="response-sum-time-sum30"/>
+      	</readset>
+      	<readset name="NETWORK-DATA31">
+      		<member name="network"/>
+      		<member name="access-number-sum31"/>
+      		<member name="response-sum-time-sum31"/>
+      	</readset>
+      	<readset name="NETWORK-DATA32">
+      		<member name="network"/>
+      		<member name="access-number-sum32"/>
+      		<member name="response-sum-time-sum32"/>
+      	</readset>
 		</readsets>
 		<query-defs>
 		<query name="insert" type="INSERT" batch="true">
@@ -767,6 +1570,186 @@
 			AND  <FIELD name='source'/> = ${source}
 		</IF>
         group by  <FIELD name='minute-order'/>  ]]></statement>
+      </query>
+      <query name="find-data-by-city" type="SELECT" multiple="true">
+        <param name="speed-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="platform" />
+        <param name="source" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF> 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
+		</IF>
+        group by  <FIELD name='city'/>  ]]></statement>
+      </query>
+      <query name="find-data-by-platform" type="SELECT" multiple="true">
+        <param name="speed-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="platform" />
+        <param name="source" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+		<IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF> 
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
+		</IF>
+        group by  <FIELD name='platform'/>  ]]></statement>
+      </query>
+       <query name="find-data-by-operator" type="SELECT" multiple="true">
+        <param name="speed-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="platform" />
+        <param name="source" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF> 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
+		</IF>
+        group by  <FIELD name='operator'/>  ]]></statement>
+      </query>
+      <query name="find-data-by-source" type="SELECT" multiple="true">
+        <param name="speed-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="platform" />
+        <param name="source" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF> 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
+		</IF>
+        group by  <FIELD name='source'/>  ]]></statement>
+      </query>
+     <query name="find-data-by-network" type="SELECT" multiple="true">
+        <param name="speed-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="platform" />
+        <param name="source" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF> 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
+		</IF>
+        group by  <FIELD name='network'/> ]]></statement>
       </query>
 		</query-defs>
 	</entity>

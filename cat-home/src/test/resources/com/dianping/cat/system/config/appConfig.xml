@@ -1,4 +1,4 @@
-<app-config>
+<app-config max-command-id="3000">
 	<config-item id="网络类型">
 		<item id="1" name="2G" des="2G网络"></item>
 		<item id="2" name="3G" des="3G网络"></item>

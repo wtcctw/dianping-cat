@@ -140,6 +140,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		if (m_routerConfig == null) {
 			m_routerConfig = new RouterConfig();
 		}
+		refreshNetInfo();
 	}
 
 	public boolean insert(String xml) {

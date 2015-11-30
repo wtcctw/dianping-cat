@@ -7,14 +7,13 @@
 						<span class="input-group-addon">日期</span>
 					<input type="text" id="time" style="width:110px;"/>
 					</div>
-				<input type="hidden" class="input-xlarge" id="page" value="${model.speed.id}" />
-			<%-- 		<div class="input-group" style="float:left;">
+			 		<div class="input-group" style="float:left;">
 					<span class="input-group-addon">页面</span>
-					<select id="page" style="width: 240px;">
-				 	<c:forEach var="item" items="${model.speeds}" varStatus="status">
-							<option value='${item.value.id}'>${item.key}</option>
-					</c:forEach> 
-					</select></div> --%>
+						<span class="input-icon" style="width:250px;">
+							<input type="text" placeholder=""  class="search-input search-input form-control ui-autocomplete-input" id="page" autocomplete="on" data=""/>
+							<i class="ace-icon fa fa-search nav-search-icon"></i>
+						</span>
+					</div> 
 					<div class="input-group" style="float:left;">
 					<span class="input-group-addon">阶段</span>
 					 <select id="step" style="width: 240px;">
@@ -28,7 +27,13 @@
 						<option value='${item.value.id}'>${item.value.name}</option>
 					</c:forEach>
 			</select>
-				<span class="input-group-addon">平台</span><select id="platform" style="width: 100px;">
+			</div>
+			</th>
+		</tr>
+		<tr>
+			<th align=left>
+			 <div class="input-group" style="float:left;">
+			 <span class="input-group-addon">平台</span><select id="platform" style="width: 100px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.platforms}"
 						varStatus="status">
@@ -40,12 +45,7 @@
 					<c:forEach var="item" items="${model.cities}" varStatus="status">
 						<option value='${item.value.id}'>${item.value.name}</option>
 					</c:forEach>
-			</select> </div>
-			</th>
-		</tr>
-		<tr>
-			<th align=left>
-			 <div class="input-group" style="float:left;">
+			</select> 
 			  <span class="input-group-addon">运营商</span><select id="operator" style="width: 100px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.operators}"
@@ -71,14 +71,17 @@
 		<tr>
 			<th align=left>
 				<div class="input-group" style="float:left;">
-						<span class="input-group-addon">开始</span>
+						<span class="input-group-addon">日期</span>
 					<input type="text" id="time2" style="width:110px;"/>
-					<input type="hidden" class="input-xlarge" id="page2" value="${model.speed.id}" />
-			<%-- 	 <span class="input-group-addon">页面</span> <select id="page2" style="width: 240px;">
-					<c:forEach var="item" items="${model.speeds}" varStatus="status">
-							<option value='${item.value.id}'>${item.key}</option>
-					</c:forEach> 
-					</select>  --%>
+				</div>
+			 	<div class="input-group" style="float:left;">
+					<span class="input-group-addon">页面</span>
+						<span class="input-icon" style="width:250px;">
+							<input type="text" placeholder=""  class="search-input search-input form-control ui-autocomplete-input" id="page2" autocomplete="on" data=""/>
+							<i class="ace-icon fa fa-search nav-search-icon"></i>
+						</span>
+				</div> 
+					<div class="input-group" style="float:left;">
 					 <span class="input-group-addon">阶段</span><select id="step2" style="width: 240px;">
 					 <c:forEach var="item" items="${model.speed.steps}" varStatus="status">
 							<option value='${item.key}'>${item.value.title}</option>
@@ -89,8 +92,14 @@
 					<c:forEach var="item" items="${model.networks}" varStatus="status">
 						<option value='${item.value.id}'>${item.value.name}</option>
 					</c:forEach>
-			</select>
-			<span class="input-group-addon">平台</span> <select id="platform2" style="width: 100px;">
+				</select>
+				</div>
+			</th>
+		</tr>
+		<tr>
+			<th align=left>
+				<div class="input-group" style="float:left;">
+					<span class="input-group-addon">平台</span> <select id="platform2" style="width: 100px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.platforms}"
 						varStatus="status">
@@ -103,12 +112,6 @@
 						<option value='${item.value.id}'>${item.value.name}</option>
 					</c:forEach>
 			</select>
-			</div>
-			</th>
-		</tr>
-		<tr>
-			<th align=left>
-				<div class="input-group" style="float:left;">
 					 <span class="input-group-addon">运营商</span> <select id="operator2" style="width: 100px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.operators}"
