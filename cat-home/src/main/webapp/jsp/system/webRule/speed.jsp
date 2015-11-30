@@ -21,24 +21,19 @@
 			}
 		//custom autocomplete (category selection)
 		$.widget( "custom.catcomplete", $.ui.autocomplete, {
-			_renderMenu: function( ul, items ) {
-				var that = this,
-				currentCategory = "";
-				$.each( items, function( index, item ) {
-					if ( item.category != currentCategory ) {
-						ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
-						currentCategory = item.category;
-					}
-					that._renderItemData( ul, item );
-				});
-			}
-		});
+		_renderMenu: function( ul, items ) {
+			var that = this,
+			currentCategory = "";
+			$.each( items, function( index, item ) {
+				that._renderItemData( ul, item );
+			});
+		}
+	});
 		
 		var data = [];
 		<c:forEach var="speed" items="${model.speeds}">
 			var item = {};
-			item['label'] = '${speed}';
-			item['category'] ="pages";
+			item['label'] = '${speed.value.id}|${speed.key}';
 			data.push(item);
 		</c:forEach>
 		

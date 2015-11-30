@@ -169,10 +169,9 @@ function buildPage() {
 			currentCategory = "";
 			$.each( items, function( index, item ) {
 				that._renderItemData( ul, item );
-			
-				ul.bind("click",function(){
-					onPageChange();
-				});
+			});
+			ul.bind("click",function(){
+				onPageChange();
 			});
 		}
 	});
@@ -180,7 +179,7 @@ function buildPage() {
  	var data = [];
 	<c:forEach var="speed" items="${model.speeds}">
 		var item = {};
-		item['label'] = '${speed.key}';
+		item['label'] = '${speed.value.id}|${speed.key}';
 		data.push(item);
 	</c:forEach>
 		
@@ -198,9 +197,9 @@ function buildPage2() {
 			currentCategory = "";
 			$.each( items, function( index, item ) {
 				that._renderItemData( ul, item );
-				ul.bind("click",function(){
-					onPageChange2();
-				});
+			});
+			ul.bind("click",function(){
+				onPageChange2();
 			});
 		}
 	});
@@ -208,7 +207,7 @@ function buildPage2() {
  	var data = [];
 	<c:forEach var="speed" items="${model.speeds}">
 		var item = {};
-		item['label'] = '${speed.key}';
+		item['label'] = '${speed.value.id}|${speed.key}';
 		data.push(item);
 	</c:forEach>
 		
@@ -223,7 +222,7 @@ var page2Steps = ${model.page2StepsJson};
 function onPageChange() {
     var	page = $("#page").val();
 	var stepSelect = $("#step");
-	var steps = page2Steps[page]['steps'];
+	var steps = page2Steps[page.split("|")[1]]['steps'];
 	stepSelect.empty();
 	
 	for(var s in steps){
@@ -241,7 +240,7 @@ function onPageChange2() {
 	var	stepSelect2 = $("#step2");
 	
 	if(page2 != "" && page2 != 'undefined') {
-		var steps2 = page2Steps[page2]['steps'];
+		var steps2 = page2Steps[page2.split("|")[1]]['steps'];
 		stepSelect2.empty();
 	
 		for(var s in steps2){

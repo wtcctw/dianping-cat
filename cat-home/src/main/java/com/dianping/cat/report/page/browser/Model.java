@@ -97,14 +97,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private List<AjaxDataDetail> m_ajaxDataDetailInfos;
 
 	private int m_commandId;
-
-	private String m_cityGraph;
-
-	private String m_operatorGraph;
-
-	private String m_platformGraph;
-
-	private String m_sourceGraph;
+	
+	private String m_fetchData;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -124,10 +118,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public Map<Integer, Item> getCities() {
 		return m_cities;
-	}
-
-	public String getCityGraph() {
-		return m_cityGraph;
 	}
 
 	public Map<Integer, Code> getCodes() {
@@ -193,6 +183,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_errorTime;
 	}
 
+	public String getFetchData() {
+		return m_fetchData;
+	}
+
 	public String getJson() {
 		return m_json;
 	}
@@ -221,12 +215,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_networks;
 	}
 
-	public String getOperatorGraph() {
-		return m_operatorGraph;
-	}
-
 	public Map<Integer, Item> getOperators() {
 		return m_operators;
+	}
+
+	public String getPage2StepsJson() {
+		return new JsonBuilder().toJson(m_speeds);
 	}
 
 	public Map<String, PatternItem> getPattermItems() {
@@ -245,16 +239,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_pieChartDetailInfos;
 	}
 
-	public String getPlatformGraph() {
-		return m_platformGraph;
-	}
-
 	public Map<Integer, Item> getPlatforms() {
 		return m_platforms;
-	}
-
-	public String getSourceGraph() {
-		return m_sourceGraph;
 	}
 
 	public Map<Integer, Item> getSources() {
@@ -273,10 +259,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_start;
 	}
 	
-	public String getPage2StepsJson() {
-		return new JsonBuilder().toJson(m_speeds);
-	}
-
 	public int getTotalCount() {
 		return m_totalCount;
 	}
@@ -334,10 +316,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_cities = cities;
 	}
 
-	public void setCityGraph(String cityGraph) {
-		m_cityGraph = cityGraph;
-	}
-
 	public void setCodes(Map<Integer, Code> codes) {
 		m_codes = codes;
 	}
@@ -386,6 +364,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_errorTime = errorTime;
 	}
 
+	public void setFetchData(String fetchData) {
+		m_fetchData = fetchData;
+	}
+
 	public void setJson(String json) {
 		m_json = json;
 	}
@@ -414,10 +396,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_networks = networks;
 	}
 
-	public void setOperatorGraph(String operatorGraph) {
-		m_operatorGraph = operatorGraph;
-	}
-
 	public void setOperators(Map<Integer, Item> operators) {
 		m_operators = operators;
 	}
@@ -434,16 +412,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_pieChartDetailInfos = pieChartDetailInfos;
 	}
 
-	public void setPlatformGraph(String platformGraph) {
-		m_platformGraph = platformGraph;
-	}
-
 	public void setPlatforms(Map<Integer, Item> platforms) {
 		m_platforms = platforms;
-	}
-
-	public void setSourceGraph(String sourceGraph) {
-		m_sourceGraph = sourceGraph;
 	}
 
 	public void setSources(Map<Integer, Item> sources) {

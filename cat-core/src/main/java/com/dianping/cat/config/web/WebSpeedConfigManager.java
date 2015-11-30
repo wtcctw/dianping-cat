@@ -82,6 +82,10 @@ public class WebSpeedConfigManager implements Initializable {
 
 		return generateId(ids);
 	}
+	
+	public WebSpeedConfig getConfig() {
+		return m_config;
+	}
 
 	public Map<String, Speed> getSpeeds() {
 		return m_speeds;
@@ -123,6 +127,17 @@ public class WebSpeedConfigManager implements Initializable {
 
 		updateData();
 		Threads.forGroup("cat").start(new ConfigReloadTask());
+	}
+	
+	public boolean insert(String xml) {
+		try {
+			m_config = DefaultSaxParser.parse(xml);
+
+			return storeConfig();
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
 	}
 
 	public Speed querySpeed(String page) {
