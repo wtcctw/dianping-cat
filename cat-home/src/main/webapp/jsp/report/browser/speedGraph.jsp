@@ -229,10 +229,9 @@
 					currentCategory = "";
 					$.each( items, function( index, item ) {
 						that._renderItemData( ul, item );
-					
-						ul.bind("click",function(){
-							onPageChange();
-						});
+					});
+					ul.bind("click",function(){
+						onPageChange();
 					});
 				}
 			});
@@ -240,7 +239,7 @@
 		 	var data = [];
 			<c:forEach var="speed" items="${model.speeds}">
 				var item = {};
-				item['label'] = '${speed.key}';
+				item['label'] = '${speed.value.id}|${speed.key}';
 				data.push(item);
 			</c:forEach>
 				
@@ -265,7 +264,6 @@
 			}
 			
 			if(typeof words[1] != "undefined"  && words[1].length > 0) {
-				
 				$("#page").val(words[1]);
 			}
 			onPageChange();
@@ -332,7 +330,7 @@
 	function onPageChange() {
 	    var	page = $("#page").val();
 		var stepSelect = $("#step");
-		var steps = page2Steps[page]['steps'];
+		var steps = page2Steps[page.split("|")[1]]['steps'];
 		stepSelect.empty();
 		
 		for(var s in steps){

@@ -113,7 +113,95 @@
 		<tr><td>speedparams</td><td>测速点</td><td>详细测速信息</td><td>以测速点编号-时间为一个单元，每个测速点之间以\t分隔， step1-responseTime1<span class="text-danger">TAB</span>step2-responseTime2...,例如1-1\t2-10\t3-100表明编号为1的测速点加载时间1毫秒，编号为2的测速点，加载时间10毫秒...</td></tr>
 </table>
 <br/>
-	
+
+<h4 class="text-danger">Web测速 日报表数据获取接口</h4>
+  1.测速点获取
+	<pre> http://cat.dp/cat/r/browser?op=speedConfigFetch&type={type}</pre>
+	type可为xml或json,分别返回相应格式的数据。<br/>
+	json数据示例：
+	<pre>
+{
+    "speeds": {
+        "1": {
+            "id": 1,
+            "page": "testpage",
+            "steps": {
+                "1": {
+                    "id": 1,
+                    "title": "unloadEventStart"
+                },
+                "2": {
+                    "id": 2,
+                    "title": "unloadEventEnd"
+                }
+            }
+        },
+        "2": {
+            "id": 2,
+            "page": "homepage",
+            "steps": {
+                "1": {
+                    "id": 1,
+                    "title": "unloadEventStart"
+                },
+                "2": {
+                    "id": 2,
+                    "title": "unloadEventEnd"
+                }   
+            }
+        }
+    }
+}
+</pre>
+  2.数据获取
+ 	<pre> http://cat.dp/cat/r/browser?op=speedJson&query1={query}</pre>
+ 
+query条件如下：
+<pre>
+{date};{page};{stepId};{network};{platform};{city};{operator};{source}
+
+date格式为'YYYY-MM-DD'
+page由pageId和pageName组成，中间用竖线"|"分隔
+stepId为测速点ID
+network、platform、city、operator、source均为整型，具体数值含义见 http://cat.dp/cat/s/web?op=webConstants,不传默认为查询全部数据
+</pre>
+示例：
+<pre>
+http://cat.dp/cat/r/browser?op=speedJson&query1=2015-11-25;1|testpage;1;;;;;
+该示例表明查询2015年11月25日,pageId为1，pageName为testpage，测速点编号为1的测速点数据。
+
+返回数据示例如下：
+{
+    "webSpeedSummarys": {
+        "当前值": {
+            "period": "2015-11-25 00:00:00",
+            "minuteOrder": 0,
+            "accessNumberSum": 781,
+            "responseTimeAvg": 2.381562099871959
+        }
+    },
+    "webSpeedDetails": {
+        "当前值": [
+            {
+                "period": "2015-11-25 00:00:00",
+                "minuteOrder": 0,
+                "accessNumberSum": 30,
+                "responseTimeAvg": 1.6
+            },
+            {
+                "period": "2015-11-25 00:00:00",
+                "minuteOrder": 5,
+                "accessNumberSum": 39,
+                "responseTimeAvg": 3.3076923076923075
+            }
+          ...
+        ]
+    }
+}
+</pre>
+webSpeedSummarys中为当天数据的聚合值，webSpeedDetails中存放一天中每五分钟的速度均值。
+<br/>
+<br/>
 <h4 class="text-danger">CDN监控接口</h4>
 	<pre>	http://{ip}/broker-service/api/cdn</pre>
 	
@@ -150,6 +238,7 @@
 		<tr><td>response</td><td>接受时间</td><td>int</td></tr>
 	</table>
 <br/>
+
 <!-- <h4 class="text-success">URL规则配置&nbsp;  <a target="_blank" href="/cat/s/config?op=urlPatternUpdate">链接</a></h4>
 
 <table style="width:70%" class="table table-bordered table-striped table-condensed  ">
