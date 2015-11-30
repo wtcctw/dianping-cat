@@ -254,8 +254,15 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setContent(m_configHtmlParser.parse(m_appConfigManager.getConfig().toString()));
 			break;
+		case WEB_SPEED_CONFIG_UPDATE:
+			String speedConfig = payload.getContent();
+			if (!StringUtils.isEmpty(speedConfig)) {
+				model.setOpState(m_webSpeedConfigManager.insert(speedConfig));
+			}
+			model.setContent(m_configHtmlParser.parse(m_webSpeedConfigManager.getConfig().toString()));
+			break;
 		}
-
+	
 		m_jspViewer.view(ctx, model);
 	}
 
