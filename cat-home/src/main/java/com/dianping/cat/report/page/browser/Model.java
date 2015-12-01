@@ -19,8 +19,8 @@ import com.dianping.cat.mvc.AbstractReportModel;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
-import com.dianping.cat.report.graph.PieChartDetailInfo;
 import com.dianping.cat.report.page.browser.display.AjaxDataDetail;
+import com.dianping.cat.report.page.browser.display.PieChartDetailInfos;
 import com.dianping.cat.report.page.browser.display.WebSpeedDetail;
 import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
 import com.dianping.cat.report.page.problem.transform.ProblemStatistics;
@@ -38,7 +38,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	@EntityMeta
 	private PieChart m_pieChart;
 	
-	private List<PieChartDetailInfo> m_pieChartDetailInfos;
+	private PieChartDetailInfos m_pieChartDetailInfos;
 
 	private Date m_start;
 
@@ -235,7 +235,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_pieChart;
 	}
 
-	public List<PieChartDetailInfo> getPieChartDetailInfos() {
+	public PieChartDetailInfos getPieChartDetailInfos() {
 		return m_pieChartDetailInfos;
 	}
 
@@ -408,7 +408,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_pieChart = pieChart;
 	}
 
-	public void setPieChartDetailInfos(List<PieChartDetailInfo> pieChartDetailInfos) {
+	public void setPieChartDetailInfos(PieChartDetailInfos pieChartDetailInfos) {
 		m_pieChartDetailInfos = pieChartDetailInfos;
 	}
 

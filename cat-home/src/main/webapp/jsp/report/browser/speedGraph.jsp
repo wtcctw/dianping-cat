@@ -91,56 +91,18 @@
 		<td><div id="networkChart" style="height: 400px"></div></td>
 	</tr>
 </table>
+<c:forEach var="entry" items="${model.webSpeedDisplayInfo.webSpeedDetails}" >
 <table class="table table-striped table-condensed table-bordered table-hover"> 
 	<tr>
-		<th class="text-success">城市</th>
+		<th class="text-success">${entry.key}</th>
 		<th class="text-success">访问量</th>
 		<th class="text-success">平均响应时间</th>
 	</tr>
-	<c:forEach var="item" items="${model.webSpeedDisplayInfo.cityChart.details}">
-		<tr><td>${item.itemName}</td><td>${item.accessNumberSum}</td><td>${item.responseTimeAvg}</td></tr>
-	</c:forEach>
-</table>	
-<table class="table table-striped table-condensed table-bordered table-hover"> 
-	<tr>
-		<th class="text-success">运营商</th>
-		<th class="text-success">访问量</th>
-		<th class="text-success">平均响应时间</th>
-	</tr>
-	<c:forEach var="item" items="${model.webSpeedDisplayInfo.operatorChart.details}">
+	<c:forEach var="item" items="${entry.value}">
 		<tr><td>${item.itemName}</td><td>${item.accessNumberSum}</td><td>${item.responseTimeAvg}</td></tr>
 	</c:forEach>
 </table>
-<table class="table table-striped table-condensed table-bordered table-hover"> 
-	<tr>
-		<th class="text-success">来源</th>
-		<th class="text-success">访问量</th>
-		<th class="text-success">平均响应时间</th>
-	</tr>
-	<c:forEach var="item" items="${model.webSpeedDisplayInfo.sourceChart.details}">
-		<tr><td>${item.itemName}</td><td>${item.accessNumberSum}</td><td>${item.responseTimeAvg}</td></tr>
-	</c:forEach>
-</table>
-<table class="table table-striped table-condensed table-bordered table-hover"> 
-	<tr>
-		<th class="text-success">平台</th>
-		<th class="text-success">访问量</th>
-		<th class="text-success">平均响应时间</th>
-	</tr>
-	<c:forEach var="item" items="${model.webSpeedDisplayInfo.platformChart.details}">
-		<tr><td>${item.itemName}</td><td>${item.accessNumberSum}</td><td>${item.responseTimeAvg}</td></tr>
-	</c:forEach>
-</table>
-<table class="table table-striped table-condensed table-bordered table-hover"> 
-	<tr>
-		<th class="text-success">网络类型</th>
-		<th class="text-success">访问量</th>
-		<th class="text-success">平均响应时间</th>
-	</tr>
-	<c:forEach var="item" items="${model.webSpeedDisplayInfo.networkChart.details}">
-		<tr><td>${item.itemName}</td><td>${item.accessNumberSum}</td><td>${item.responseTimeAvg}</td></tr>
-	</c:forEach>
-</table>
+</c:forEach>	
 	<script>
 	function query() {
 		var time = $("#time").val();

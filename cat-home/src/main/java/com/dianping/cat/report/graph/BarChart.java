@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.browser.display;
+package com.dianping.cat.report.graph;
 
 import java.util.List;
 
@@ -16,8 +16,6 @@ public class BarChart {
 
 	private List<Double> m_values;
 	
-	private List<WebSpeedDetail> m_details;
-
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 	
 	public String getTitle() {
@@ -27,14 +25,6 @@ public class BarChart {
 	public BarChart setTitle(String title) {
 		m_title = title;
 		return this;
-	}
-
-	public List<WebSpeedDetail> getDetails() {
-		return m_details;
-	}
-
-	public void setDetails(List<WebSpeedDetail> details) {
-		m_details = details;
 	}
 
 	public void setxAxis(List<String> xAxis) {
