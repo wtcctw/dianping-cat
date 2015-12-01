@@ -28,6 +28,8 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.SCREEN_UPDATE.getPath();
 		case GRAPH_UPDATE:
 			return JspFile.SCREEN_CONFIG_UPDATE.getPath();
+		case INFLUX_CONFIG_UPDATE:
+			return JspFile.INFLUX_CONFIG_UPDATE.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

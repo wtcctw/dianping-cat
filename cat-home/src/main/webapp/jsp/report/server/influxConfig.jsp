@@ -12,7 +12,7 @@
 	<res:useJs value="${res.js.local['editor.js']}" target="head-js" />
 	<script src='${model.webapp}/assets/js/editor/ace.js'></script>
 
-	<form name="configUpdate" id="form" method="post" action="${model.pageUri}?op=configUpdate">
+	<form name="configUpdate" id="form" method="post" action="${model.pageUri}?op=influxConfigUpdate">
 		<table class="table table-striped table-condensed table-hover">
 			<tr>
 				<td>
@@ -31,7 +31,7 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#serverConfig').addClass('active open');
-			$('#screen').addClass('active');
+			$('#influx').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){
 				$('#state').html('操作成功');

@@ -6,4 +6,6 @@ public interface DataSourceService<T> extends Initializable {
 
 	public T getConnection(String category);
 
+	public void refresh();
+
 }

@@ -458,6 +458,13 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.metric.DataSourceService</role>
+					<role-hint>influxDB</role-hint>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5909,7 +5916,7 @@
 					<role>com.dianping.cat.report.page.server.service.GraphBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.helper.JsonBuilder</role>
+					<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

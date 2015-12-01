@@ -3,8 +3,6 @@ package com.dianping.cat.influxdb.config;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -12,7 +10,6 @@ import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.influxdb.config.entity.InfluxdbConfig;
 import com.dianping.cat.influxdb.config.transform.DefaultSaxParser;
 
@@ -45,7 +42,6 @@ public class InfluxDBConfigManager implements Initializable {
 			m_configId = config.getId();
 			m_config = DefaultSaxParser.parse(content);
 			m_modifyTime = config.getModifyDate().getTime();
-			refreshData();
 		} catch (DalNotFoundException e) {
 			try {
 				String content = m_fetcher.getConfigContent(CONFIG_NAME);
@@ -55,7 +51,6 @@ public class InfluxDBConfigManager implements Initializable {
 				config.setContent(content);
 				m_configDao.insert(config);
 				m_configId = config.getId();
-				refreshData();
 			} catch (Exception ex) {
 				Cat.logError(ex);
 			}
@@ -65,10 +60,9 @@ public class InfluxDBConfigManager implements Initializable {
 		if (m_config == null) {
 			m_config = new InfluxdbConfig();
 		}
-		Threads.forGroup("cat").start(new ConfigReloadTask());
 	}
 
-	private void refreshData() throws Exception {
+	public void refreshConfig() throws Exception {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 
@@ -99,32 +93,14 @@ public class InfluxDBConfigManager implements Initializable {
 		return true;
 	}
 
-	public class ConfigReloadTask implements Task {
+	public boolean insert(String xml) {
+		try {
+			m_config = DefaultSaxParser.parse(xml);
 
-		@Override
-		public String getName() {
-			return "Influxdb-Config-Reload";
-		}
-
-		@Override
-		public void run() {
-			boolean active = true;
-			while (active) {
-				try {
-					refreshData();
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-				try {
-					Thread.sleep(TimeHelper.ONE_MINUTE);
-				} catch (InterruptedException e) {
-					active = false;
-				}
-			}
-		}
-
-		@Override
-		public void shutdown() {
+			return storeConfig();
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
 		}
 	}
 }

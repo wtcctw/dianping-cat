@@ -14,6 +14,8 @@ public enum JspFile {
 	SCREEN_UPDATE("/jsp/report/server/screenUpdate.jsp"),
 
 	SCREEN_CONFIG_UPDATE("/jsp/report/server/graphUpdate.jsp"),
+	
+	INFLUX_CONFIG_UPDATE("/jsp/report/server/influxConfig.jsp"),
 
 	;
 

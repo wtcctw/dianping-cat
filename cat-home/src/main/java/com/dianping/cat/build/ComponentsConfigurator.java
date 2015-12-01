@@ -40,6 +40,7 @@ import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.UserDefineRuleDao;
 import com.dianping.cat.influxdb.InfluxDB;
 import com.dianping.cat.influxdb.config.InfluxDBConfigManager;
+import com.dianping.cat.metric.DataSourceService;
 import com.dianping.cat.metric.MetricService;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.alert.AlertInfo;
@@ -222,7 +223,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(EsServerConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      RouterConfigManager.class, AllReportConfigManager.class));
+		      RouterConfigManager.class, AllReportConfigManager.class, InfluxDBConfigManager.class).req(
+		      DataSourceService.class, InfluxDB.ID));
 
 		return all;
 	}

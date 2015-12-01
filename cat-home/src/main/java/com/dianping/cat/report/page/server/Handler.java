@@ -23,6 +23,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.graph.entity.Graph;
 import com.dianping.cat.home.graph.entity.Item;
 import com.dianping.cat.home.graph.entity.Segment;
+import com.dianping.cat.influxdb.config.InfluxDBConfigManager;
 import com.dianping.cat.metric.MetricService;
 import com.dianping.cat.metric.MetricType;
 import com.dianping.cat.metric.QueryParameter;
@@ -67,6 +68,8 @@ public class Handler implements PageHandler<Context> {
 	private GraphBuilder m_graphBuilder;
 
 	@Inject
+	private InfluxDBConfigManager m_influxDBConfigManager;
+
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
 	private List<LineChart> buildLineCharts(Date start, Date end, String interval, String view, Graph graph) {
@@ -221,6 +224,14 @@ public class Handler implements PageHandler<Context> {
 				jsons.put("id", payload.getGraphId());
 				model.setJson(m_jsonBuilder.toJson(jsons));
 			}
+			break;
+		case INFLUX_CONFIG_UPDATE:
+			String content = payload.getContent();
+
+			if (!StringUtils.isEmpty(content)) {
+				model.setOpState(m_influxDBConfigManager.insert(content));
+			}
+			model.setConfig(m_configHtmlParser.parse(m_influxDBConfigManager.getConfig().toString()));
 			break;
 		}
 
