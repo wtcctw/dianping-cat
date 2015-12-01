@@ -19,6 +19,7 @@ import com.dianping.cat.report.page.browser.display.PieChartDetailInfos.PieChart
 import com.dianping.cat.report.page.browser.service.AjaxDataField;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
 import com.dianping.cat.report.page.browser.service.AjaxDataService;
+import com.dianping.cat.report.page.browser.service.QueryType;
 import com.dianping.cat.web.AjaxData;
 
 public class WebGraphCreator {
@@ -32,13 +33,13 @@ public class WebGraphCreator {
 	@Inject
 	private UrlPatternConfigManager m_patternManager;
 
-	public LineChart buildChartData(final List<Double[]> datas, String type) {
+	public LineChart buildChartData(final List<Double[]> datas, QueryType type) {
 		LineChart lineChart = new LineChart();
 		lineChart.setId("app");
 		lineChart.setUnit("");
-		lineChart.setHtmlTitle(queryType(type));
+		lineChart.setHtmlTitle(type.getTitle());
 
-		if (AjaxDataService.SUCCESS.equals(type)) {
+		if (QueryType.SUCCESS.getType().equals(type)) {
 			lineChart.setMinYlable(lineChart.queryMinYlable(datas));
 			lineChart.setMaxYlabel(100D);
 		}
@@ -55,7 +56,7 @@ public class WebGraphCreator {
 		return lineChart;
 	}
 
-	public LineChart buildLineChart(AjaxDataQueryEntity queryEntity1, AjaxDataQueryEntity queryEntity2, String type) {
+	public LineChart buildLineChart(AjaxDataQueryEntity queryEntity1, AjaxDataQueryEntity queryEntity2, QueryType type) {
 		List<Double[]> datas = new LinkedList<Double[]>();
 
 		if (queryEntity1 != null) {
@@ -151,24 +152,8 @@ public class WebGraphCreator {
 		item.setTitle(pair.getValue());
 		item.setId(pair.getKey());
 		item.setNumber(data.getAccessNumberSum());
-		
-		return item;
-	}
 
-	private String queryType(String type) {
-		if (AjaxDataService.SUCCESS.equals(type)) {
-			return "成功率（%/5分钟）";
-		} else if (AjaxDataService.REQUEST.equals(type)) {
-			return "请求数（个/5分钟）";
-		} else if (AjaxDataService.DELAY.equals(type)) {
-			return "延时平均值（毫秒/5分钟）";
-		} else if (AjaxDataService.REQUEST_PACKAGE.equals(type)) {
-			return "平均发包大小(byte)";
-		} else if (AjaxDataService.RESPONSE_PACKAGE.equals(type)) {
-			return "平均回包大小(byte)";
-		} else {
-			throw new RuntimeException("unexpected query type, type:" + type);
-		}
+		return item;
 	}
 
 	private PieChartDetailInfos buildPieChartDetailInfo(List<Item> items) {

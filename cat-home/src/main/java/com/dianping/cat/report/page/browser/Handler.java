@@ -40,6 +40,7 @@ import com.dianping.cat.report.page.browser.graph.WebGraphCreator;
 import com.dianping.cat.report.page.browser.service.AjaxDataField;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
 import com.dianping.cat.report.page.browser.service.AjaxDataService;
+import com.dianping.cat.report.page.browser.service.QueryType;
 import com.dianping.cat.report.page.browser.service.SpeedQueryEntity;
 import com.dianping.cat.report.page.browser.service.WebSpeedService;
 import com.dianping.cat.web.JsErrorLog;
@@ -117,7 +118,8 @@ public class Handler implements PageHandler<Context> {
 
 		try {
 			ajaxDetails = m_ajaxDataService.buildAjaxDataDetailInfos(payload.getQueryEntity1(), payload.getGroupByField());
-			Collections.sort(ajaxDetails, new AjaxDataDetailSorter(payload.getSort()));
+			QueryType type = QueryType.findByType(payload.getSort());
+			Collections.sort(ajaxDetails, new AjaxDataDetailSorter(type));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -181,7 +183,7 @@ public class Handler implements PageHandler<Context> {
 	private LineChart buildLineChart(Payload payload) {
 		AjaxDataQueryEntity entity1 = payload.getQueryEntity1();
 		AjaxDataQueryEntity entity2 = payload.getQueryEntity2();
-		String type = payload.getType();
+		QueryType type = QueryType.findByType(payload.getType());
 		LineChart lineChart = new LineChart();
 
 		try {
