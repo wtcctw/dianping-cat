@@ -1,27 +1,33 @@
 package com.dianping.cat.report.page.browser.display;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dianping.cat.report.graph.BarChart;
 import com.dianping.cat.report.graph.LineChart;
 
 public class WebSpeedDisplayInfo {
 
 	private LineChart m_lineChart;
-	
+
 	private BarChart m_cityChart;
-	
+
 	private BarChart m_operatorChart;
-	
+
 	private BarChart m_sourceChart;
-	
+
 	private BarChart m_platformChart;
 
 	private BarChart m_networkChart;
-	
+
 	private Map<String, WebSpeedDetail> m_webSpeedSummarys;
 
-	private Map<String, List<WebSpeedDetail>> m_webSpeedDetails;
+	private Map<String, List<WebSpeedDetail>> m_webSpeedDetails = new HashMap<String, List<WebSpeedDetail>>();
+
+	public void addDetail(String key, List<WebSpeedDetail> details) {
+		m_webSpeedDetails.put(key, details);
+	}
 
 	public BarChart getCityChart() {
 		return m_cityChart;

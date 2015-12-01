@@ -29,16 +29,6 @@ public class AjaxDataService {
 	@Inject
 	private UrlPatternConfigManager m_urlConfigManager;
 
-	public static final String SUCCESS = "success";
-
-	public static final String REQUEST = "request";
-
-	public static final String DELAY = "delay";
-
-	public static final String REQUEST_PACKAGE = "requestByte";
-
-	public static final String RESPONSE_PACKAGE = "responseByte";
-
 	public List<AjaxDataDetail> buildAjaxDataDetailInfos(AjaxDataQueryEntity entity, AjaxDataField groupByField) {
 		List<AjaxDataDetail> infos = new LinkedList<AjaxDataDetail>();
 		List<AjaxData> datas = queryByFieldCode(entity, groupByField);
@@ -97,18 +87,20 @@ public class AjaxDataService {
 		return field2Datas;
 	}
 
-	private long buildSumData(AjaxData data, String type) {
-		if (DELAY.equals(type)) {
+	private long buildSumData(AjaxData data, QueryType type) {
+		switch (type) {
+		case DELAY:
 			return data.getResponseSumTimeSum();
-		} else if (REQUEST_PACKAGE.equals(type)) {
+		case REQUEST_PACKAGE:
 			return data.getRequestSumByteSum();
-		} else if (RESPONSE_PACKAGE.equals(type)) {
+		case RESPONSE_PACKAGE:
 			return data.getResponseSumByteSum();
+		default:
+			throw new RuntimeException("unexpected query type, type:" + type);
 		}
-		throw new RuntimeException("unexpected query type, type:" + type);
 	}
 
-	public Double[] computeAvg(DataSequence<AjaxData> convertedData, String type) {
+	public Double[] computeAvg(DataSequence<AjaxData> convertedData, QueryType type) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
@@ -287,7 +279,7 @@ public class AjaxDataService {
 	}
 
 	public double queryOneDayDelayAvg(AjaxDataQueryEntity entity) {
-		Double[] values = queryValue(entity, AjaxDataService.DELAY);
+		Double[] values = queryValue(entity, QueryType.DELAY);
 		double delaySum = 0;
 		int size = 0;
 
@@ -300,7 +292,7 @@ public class AjaxDataService {
 		return size > 0 ? delaySum / size : -1;
 	}
 
-	public Double[] queryValue(AjaxDataQueryEntity entity, String type) {
+	public Double[] queryValue(AjaxDataQueryEntity entity, QueryType type) {
 		int apiId = entity.getId();
 		Date period = entity.getDate();
 		int city = entity.getCity();
@@ -308,41 +300,42 @@ public class AjaxDataService {
 		int code = entity.getCode();
 		int network = entity.getNetwork();
 		List<AjaxData> datas = new ArrayList<AjaxData>();
-
+		DataSequence<AjaxData> s = null;
 		try {
-			if (SUCCESS.equals(type)) {
+			switch (type) {
+			case SUCCESS:
 				datas = m_dao.findDataByMinuteCode(apiId, period, city, operator, code, network,
 				      AjaxDataEntity.READSET_SUCCESS_DATA);
-				DataSequence<AjaxData> s = buildAppSequence(datas, entity.getDate());
+				s = buildAppSequence(datas, entity.getDate());
 
 				return computeSuccessRatio(apiId, s);
-			} else if (REQUEST.equals(type)) {
+			case REQUEST:
 				datas = m_dao.findDataByMinute(apiId, period, city, operator, code, network,
 				      AjaxDataEntity.READSET_COUNT_DATA);
-				DataSequence<AjaxData> s = buildAppSequence(datas, entity.getDate());
+				s = buildAppSequence(datas, entity.getDate());
 
 				return computeRequestCount(s);
-			} else if (DELAY.equals(type)) {
+			case DELAY:
 				datas = m_dao.findDataByMinute(apiId, period, city, operator, code, network,
 				      AjaxDataEntity.READSET_AVG_DATA);
-				DataSequence<AjaxData> s = buildAppSequence(datas, entity.getDate());
+				s = buildAppSequence(datas, entity.getDate());
 
 				return computeAvg(s, type);
-			} else if (REQUEST_PACKAGE.equals(type)) {
+			case REQUEST_PACKAGE:
 				datas = m_dao.findDataByMinute(apiId, period, city, operator, code, network,
 				      AjaxDataEntity.READSET_REQUEST_BYTE_AVG_DATA);
-				DataSequence<AjaxData> s = buildAppSequence(datas, entity.getDate());
+				s = buildAppSequence(datas, entity.getDate());
 
 				return computeAvg(s, type);
-			} else if (RESPONSE_PACKAGE.equals(type)) {
+			case RESPONSE_PACKAGE:
 				datas = m_dao.findDataByMinute(apiId, period, city, operator, code, network,
 				      AjaxDataEntity.READSET_RESPONSE_BYTE_AVG_DATA);
-				DataSequence<AjaxData> s = buildAppSequence(datas, entity.getDate());
+				s = buildAppSequence(datas, entity.getDate());
 
 				return computeAvg(s, type);
-			} else {
-				throw new RuntimeException("unexpected query type, type:" + type);
+
 			}
+
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

@@ -13,7 +13,6 @@ import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.browser.display.WebSpeedDetail;
 import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
@@ -129,15 +128,7 @@ public class WebSpeedService extends ContainerHolder {
 	}
 
 	public WebSpeedDisplayInfo buildBarCharts(SpeedQueryEntity queryEntity) {
-		WebSpeedDisplayInfo info = new WebSpeedDisplayInfo();
-
-		info.setCityChart(m_dataBuilder.buildChart(queryEntity, WebConfigManager.CITY));
-		info.setOperatorChart(m_dataBuilder.buildChart(queryEntity, WebConfigManager.OPERATOR));
-		info.setSourceChart(m_dataBuilder.buildChart(queryEntity, WebConfigManager.SOURCE));
-		info.setPlatformChart(m_dataBuilder.buildChart(queryEntity, WebConfigManager.PLATFORM));
-		info.setNetworkChart(m_dataBuilder.buildChart(queryEntity, WebConfigManager.NETWORK));
-
-		return info;
+		return m_dataBuilder.buildChart(queryEntity);
 	}
 
 

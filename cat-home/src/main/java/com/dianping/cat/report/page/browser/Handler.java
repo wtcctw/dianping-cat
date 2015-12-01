@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.browser;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -30,14 +31,16 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
-import com.dianping.cat.report.graph.PieChartDetailInfo;
 import com.dianping.cat.report.page.browser.display.AjaxDataDetail;
-import com.dianping.cat.report.page.browser.display.ChartSorter;
+import com.dianping.cat.report.page.browser.display.AjaxDataDetailSorter;
+import com.dianping.cat.report.page.browser.display.PieChartDetailInfos;
+import com.dianping.cat.report.page.browser.display.PieChartDetailInfos.PieChartDetailInfo;
 import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
 import com.dianping.cat.report.page.browser.graph.WebGraphCreator;
 import com.dianping.cat.report.page.browser.service.AjaxDataField;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
 import com.dianping.cat.report.page.browser.service.AjaxDataService;
+import com.dianping.cat.report.page.browser.service.QueryType;
 import com.dianping.cat.report.page.browser.service.SpeedQueryEntity;
 import com.dianping.cat.report.page.browser.service.WebSpeedService;
 import com.dianping.cat.web.JsErrorLog;
@@ -115,7 +118,8 @@ public class Handler implements PageHandler<Context> {
 
 		try {
 			ajaxDetails = m_ajaxDataService.buildAjaxDataDetailInfos(payload.getQueryEntity1(), payload.getGroupByField());
-			Collections.sort(ajaxDetails, new ChartSorter(payload.getSort()).buildLineChartInfoComparator());
+			QueryType type = QueryType.findByType(payload.getSort());
+			Collections.sort(ajaxDetails, new AjaxDataDetailSorter(type));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -179,7 +183,7 @@ public class Handler implements PageHandler<Context> {
 	private LineChart buildLineChart(Payload payload) {
 		AjaxDataQueryEntity entity1 = payload.getQueryEntity1();
 		AjaxDataQueryEntity entity2 = payload.getQueryEntity2();
-		String type = payload.getType();
+		QueryType type = QueryType.findByType(payload.getType());
 		LineChart lineChart = new LineChart();
 
 		try {
@@ -190,12 +194,18 @@ public class Handler implements PageHandler<Context> {
 		return lineChart;
 	}
 
-	private Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(Payload payload) {
+	private Pair<PieChart, PieChartDetailInfos> buildPieChart(Payload payload) {
 		try {
-			Pair<PieChart, List<PieChartDetailInfo>> pair = m_graphCreator.buildPieChart(payload.getQueryEntity1(),
+			Pair<PieChart, PieChartDetailInfos> pair = m_graphCreator.buildPieChart(payload.getQueryEntity1(),
 			      payload.getGroupByField());
-			List<PieChartDetailInfo> infos = pair.getValue();
-			Collections.sort(infos, new ChartSorter().buildPieChartInfoComparator());
+			PieChartDetailInfos infos = pair.getValue();
+
+			Collections.sort(infos.getDetails(), new Comparator<PieChartDetailInfo>() {
+				@Override
+				public int compare(PieChartDetailInfo o1, PieChartDetailInfo o2) {
+					return (int) (o2.getRequestSum() - o1.getRequestSum());
+				}
+			});
 
 			return pair;
 		} catch (Exception e) {
@@ -225,10 +235,10 @@ public class Handler implements PageHandler<Context> {
 			WebSpeedDisplayInfo info = m_webSpeedService.buildSpeedDisplayInfo(queryEntity1,
 			      payload.getSpeedQueryEntity2());
 			Map<String, Object> jsonObjs = new HashMap<String, Object>();
-			
+
 			jsonObjs.put("webSpeedDetails", info.getWebSpeedDetails());
 			jsonObjs.put("webSpeedSummarys", info.getWebSpeedSummarys());
-			
+
 			model.setFetchData(m_jsonBuilder.toJson(jsonObjs));
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -283,7 +293,7 @@ public class Handler implements PageHandler<Context> {
 			parallelBuildLineChart(model, payload);
 			break;
 		case PIECHART:
-			Pair<PieChart, List<PieChartDetailInfo>> pieChartPair = buildPieChart(payload);
+			Pair<PieChart, PieChartDetailInfos> pieChartPair = buildPieChart(payload);
 
 			if (pieChartPair != null) {
 				model.setPieChart(pieChartPair.getKey());

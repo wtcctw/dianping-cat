@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -16,9 +17,9 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.config.web.WebSpeedConfigManager;
 import com.dianping.cat.configuration.web.entity.Item;
-import com.dianping.cat.report.page.browser.display.BarChart;
-import com.dianping.cat.report.page.browser.display.ChartSorter;
+import com.dianping.cat.report.graph.BarChart;
 import com.dianping.cat.report.page.browser.display.WebSpeedDetail;
+import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
 import com.dianping.cat.web.WebSpeedData;
 import com.dianping.cat.web.WebSpeedDataDao;
 import com.dianping.cat.web.WebSpeedDataEntity;
@@ -35,7 +36,13 @@ public class WebSpeedDataBuilder {
 	private WebConfigManager m_webConfig;
 
 	private void buildBarChartDatas(BarChart barChart, List<WebSpeedDetail> datas) {
-		Collections.sort(datas, new ChartSorter().buildBarChartComparator());
+		Collections.sort(datas, new Comparator<WebSpeedDetail>() {
+			@Override
+			public int compare(WebSpeedDetail o1, WebSpeedDetail o2) {
+				return (int) (o2.getResponseTimeAvg() - o1.getResponseTimeAvg());
+			}
+		});
+		
 		List<String> itemList = new ArrayList<String>();
 		List<Double> dataList = new ArrayList<Double>();
 
@@ -44,14 +51,23 @@ public class WebSpeedDataBuilder {
 			dataList.add(data.getResponseTimeAvg());
 		}
 
-		barChart.setDetails(datas);
 		barChart.setxAxis(itemList);
 		barChart.setValues(dataList);
 	}
 
-	public BarChart buildChart(SpeedQueryEntity entity, String type) {
-		BarChartDataBuilder builder = getDataBuilder(type);
+	public WebSpeedDisplayInfo buildChart(SpeedQueryEntity entity) {
+		WebSpeedDisplayInfo info = new WebSpeedDisplayInfo();
 
+		buildChart(entity, new CityDataBuilder(), info);
+		buildChart(entity, new NetworkDataBuilder(), info);
+		buildChart(entity, new PlatformDataBuilder(), info);
+		buildChart(entity, new OperatorDataBuilder(), info);
+		buildChart(entity, new SourceDataBuilder(), info);
+
+		return info;
+	}
+
+	private void buildChart(SpeedQueryEntity entity, BarChartDataBuilder builder, WebSpeedDisplayInfo info) {
 		BarChart barChart = new BarChart();
 		barChart.setTitle(builder.getChartTitle());
 		barChart.setyAxis("加载时间(ms)");
@@ -60,7 +76,8 @@ public class WebSpeedDataBuilder {
 		List<WebSpeedDetail> datas = queryValues(entity, builder);
 		buildBarChartDatas(barChart, datas);
 
-		return barChart;
+		builder.enrichWebSpeedDisplayInfo(info, barChart, datas);
+
 	}
 
 	private WebSpeedDetail buildWebSpeedDetail(WebSpeedData data) {
@@ -110,22 +127,6 @@ public class WebSpeedDataBuilder {
 		}
 	}
 
-	private BarChartDataBuilder getDataBuilder(String type) {
-		if (WebConfigManager.CITY.equals(type)) {
-			return new CityDataBuilder();
-		} else if (WebConfigManager.NETWORK.equals(type)) {
-			return new NetworkDataBuilder();
-		} else if (WebConfigManager.PLATFORM.equals(type)) {
-			return new PlatformDataBuilder();
-		} else if (WebConfigManager.OPERATOR.equals(type)) {
-			return new OperatorDataBuilder();
-		} else if (WebConfigManager.SOURCE.equals(type)) {
-			return new SourceDataBuilder();
-		}
-
-		return null;
-	}
-
 	@SuppressWarnings("unchecked")
 	public List<WebSpeedData> queryValueByTime(SpeedQueryEntity entity) {
 		int pageId = m_speedConfig.querySpeedId(entity.getPageId());
@@ -158,7 +159,6 @@ public class WebSpeedDataBuilder {
 
 	@SuppressWarnings("unchecked")
 	public List<WebSpeedDetail> queryValues(SpeedQueryEntity entity, BarChartDataBuilder builder) {
-
 		int pageId = m_speedConfig.querySpeedId(entity.getPageId());
 		int stepId = entity.getStepId();
 
@@ -192,6 +192,8 @@ public class WebSpeedDataBuilder {
 
 		abstract List<WebSpeedData> queryRawData(int pageId, SpeedQueryEntity entity, Readset<WebSpeedData> readset)
 		      throws DalException;
+
+		abstract void enrichWebSpeedDisplayInfo(WebSpeedDisplayInfo info, BarChart barChart, List<WebSpeedDetail> details);
 	}
 
 	class CityDataBuilder extends BarChartDataBuilder {
@@ -222,6 +224,12 @@ public class WebSpeedDataBuilder {
 			return m_dao.findDataByCity(pageId, entity.getDate(), entity.getCity(), entity.getOperator(),
 			      entity.getNetwork(), entity.getPlatform(), entity.getSource(), entity.getStartMinuteOrder(),
 			      entity.getEndMinuteOrder(), readset);
+		}
+
+		@Override
+		void enrichWebSpeedDisplayInfo(WebSpeedDisplayInfo info, BarChart barChart, List<WebSpeedDetail> details) {
+			info.setCityChart(barChart);
+			info.addDetail("省份", details);
 		}
 	}
 
@@ -254,6 +262,12 @@ public class WebSpeedDataBuilder {
 			      entity.getNetwork(), entity.getPlatform(), entity.getSource(), entity.getStartMinuteOrder(),
 			      entity.getEndMinuteOrder(), readset);
 		}
+
+		@Override
+		void enrichWebSpeedDisplayInfo(WebSpeedDisplayInfo info, BarChart barChart, List<WebSpeedDetail> details) {
+			info.setNetworkChart(barChart);
+			info.addDetail("网络类型", details);
+		}
 	}
 
 	class OperatorDataBuilder extends BarChartDataBuilder {
@@ -284,6 +298,12 @@ public class WebSpeedDataBuilder {
 			return m_dao.findDataByOperator(pageId, entity.getDate(), entity.getCity(), entity.getOperator(),
 			      entity.getNetwork(), entity.getPlatform(), entity.getSource(), entity.getStartMinuteOrder(),
 			      entity.getEndMinuteOrder(), readset);
+		}
+
+		@Override
+		void enrichWebSpeedDisplayInfo(WebSpeedDisplayInfo info, BarChart barChart, List<WebSpeedDetail> details) {
+			info.setOperatorChart(barChart);
+			info.addDetail("运营商", details);
 		}
 	}
 
@@ -316,6 +336,12 @@ public class WebSpeedDataBuilder {
 			      entity.getNetwork(), entity.getPlatform(), entity.getSource(), entity.getStartMinuteOrder(),
 			      entity.getEndMinuteOrder(), readset);
 		}
+
+		@Override
+		void enrichWebSpeedDisplayInfo(WebSpeedDisplayInfo info, BarChart barChart, List<WebSpeedDetail> details) {
+			info.setPlatformChart(barChart);
+			info.addDetail("平台", details);
+		}
 	}
 
 	class SourceDataBuilder extends BarChartDataBuilder {
@@ -346,6 +372,12 @@ public class WebSpeedDataBuilder {
 			return m_dao.findDataBySource(pageId, entity.getDate(), entity.getCity(), entity.getOperator(),
 			      entity.getNetwork(), entity.getPlatform(), entity.getSource(), entity.getStartMinuteOrder(),
 			      entity.getEndMinuteOrder(), readset);
+		}
+
+		@Override
+		void enrichWebSpeedDisplayInfo(WebSpeedDisplayInfo info, BarChart barChart, List<WebSpeedDetail> details) {
+			info.setSourceChart(barChart);
+			info.addDetail("来源", details);
 		}
 	}
 }

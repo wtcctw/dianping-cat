@@ -13,11 +13,13 @@ import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.web.url.entity.Code;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
-import com.dianping.cat.report.graph.PieChartDetailInfo;
 import com.dianping.cat.report.graph.PieChart.Item;
+import com.dianping.cat.report.page.browser.display.PieChartDetailInfos;
+import com.dianping.cat.report.page.browser.display.PieChartDetailInfos.PieChartDetailInfo;
 import com.dianping.cat.report.page.browser.service.AjaxDataField;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
 import com.dianping.cat.report.page.browser.service.AjaxDataService;
+import com.dianping.cat.report.page.browser.service.QueryType;
 import com.dianping.cat.web.AjaxData;
 
 public class WebGraphCreator {
@@ -27,17 +29,17 @@ public class WebGraphCreator {
 
 	@Inject
 	private WebConfigManager m_webConfigManager;
-	
+
 	@Inject
 	private UrlPatternConfigManager m_patternManager;
 
-	public LineChart buildChartData(final List<Double[]> datas, String type) {
+	public LineChart buildChartData(final List<Double[]> datas, QueryType type) {
 		LineChart lineChart = new LineChart();
 		lineChart.setId("app");
 		lineChart.setUnit("");
-		lineChart.setHtmlTitle(queryType(type));
+		lineChart.setHtmlTitle(type.getTitle());
 
-		if (AjaxDataService.SUCCESS.equals(type)) {
+		if (QueryType.SUCCESS.getType().equals(type)) {
 			lineChart.setMinYlable(lineChart.queryMinYlable(datas));
 			lineChart.setMaxYlabel(100D);
 		}
@@ -54,7 +56,7 @@ public class WebGraphCreator {
 		return lineChart;
 	}
 
-	public LineChart buildLineChart(AjaxDataQueryEntity queryEntity1, AjaxDataQueryEntity queryEntity2, String type) {
+	public LineChart buildLineChart(AjaxDataQueryEntity queryEntity1, AjaxDataQueryEntity queryEntity2, QueryType type) {
 		List<Double[]> datas = new LinkedList<Double[]>();
 
 		if (queryEntity1 != null) {
@@ -70,26 +72,20 @@ public class WebGraphCreator {
 		return buildChartData(datas, type);
 	}
 
-	public Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(AjaxDataQueryEntity entity, AjaxDataField field) {
-		List<PieChartDetailInfo> infos = new LinkedList<PieChartDetailInfo>();
+	public Pair<PieChart, PieChartDetailInfos> buildPieChart(AjaxDataQueryEntity entity, AjaxDataField field) {
 		PieChart pieChart = new PieChart().setMaxSize(Integer.MAX_VALUE);
 		List<Item> items = new ArrayList<Item>();
 		List<AjaxData> datas = m_WebApiService.queryByField(entity, field);
 
 		for (AjaxData data : datas) {
-			Pair<Integer, Item> pair = buildPieChartItem(entity.getId(), data, field);
-			Item item = pair.getValue();
-			PieChartDetailInfo info = new PieChartDetailInfo();
-
-			info.setId(pair.getKey()).setTitle(item.getTitle()).setRequestSum(item.getNumber());
-			infos.add(info);
-			items.add(item);
+			items.add(buildPieChartItem(entity.getId(), data, field));
 		}
 		pieChart.setTitle(field.getName() + "访问情况");
 		pieChart.addItems(items);
-		updatePieChartDetailInfo(infos);
 
-		return new Pair<PieChart, List<PieChartDetailInfo>>(pieChart, infos);
+		PieChartDetailInfos infos = buildPieChartDetailInfo(items);
+
+		return new Pair<PieChart, PieChartDetailInfos>(pieChart, infos);
 	}
 
 	private Pair<Integer, String> buildPieChartFieldTitlePair(int command, AjaxData data, AjaxDataField field) {
@@ -149,43 +145,35 @@ public class WebGraphCreator {
 		return new Pair<Integer, String>(keyValue, title);
 	}
 
-	private Pair<Integer, Item> buildPieChartItem(int command, AjaxData data, AjaxDataField field) {
-		Item item = new Item();
+	private Item buildPieChartItem(int command, AjaxData data, AjaxDataField field) {
 		Pair<Integer, String> pair = buildPieChartFieldTitlePair(command, data, field);
+		Item item = new Item();
 
 		item.setTitle(pair.getValue());
 		item.setId(pair.getKey());
 		item.setNumber(data.getAccessNumberSum());
-		return new Pair<Integer, Item>(pair.getKey(), item);
+
+		return item;
 	}
 
-	private String queryType(String type) {
-		if (AjaxDataService.SUCCESS.equals(type)) {
-			return "成功率（%/5分钟）";
-		} else if (AjaxDataService.REQUEST.equals(type)) {
-			return "请求数（个/5分钟）";
-		} else if (AjaxDataService.DELAY.equals(type)) {
-			return "延时平均值（毫秒/5分钟）";
-		} else if (AjaxDataService.REQUEST_PACKAGE.equals(type)) {
-			return "平均发包大小(byte)";
-		} else if (AjaxDataService.RESPONSE_PACKAGE.equals(type)) {
-			return "平均回包大小(byte)";
-		} else {
-			throw new RuntimeException("unexpected query type, type:" + type);
-		}
-	}
-
-	private void updatePieChartDetailInfo(List<PieChartDetailInfo> items) {
+	private PieChartDetailInfos buildPieChartDetailInfo(List<Item> items) {
+		PieChartDetailInfos infos = new PieChartDetailInfos();
 		double sum = 0;
 
-		for (PieChartDetailInfo item : items) {
-			sum += item.getRequestSum();
+		for (Item item : items) {
+			sum += item.getNumber();
 		}
 
 		if (sum > 0) {
-			for (PieChartDetailInfo item : items) {
-				item.setSuccessRatio(item.getRequestSum() / sum);
+			for (Item item : items) {
+				PieChartDetailInfo info = new PieChartDetailInfo();
+
+				info.setId(item.getId()).setTitle(item.getTitle()).setRequestSum(item.getNumber());
+				info.setSuccessRatio(item.getNumber() / sum);
+
+				infos.addPieChartDetailInfo(info);
 			}
 		}
+		return infos;
 	}
 }
