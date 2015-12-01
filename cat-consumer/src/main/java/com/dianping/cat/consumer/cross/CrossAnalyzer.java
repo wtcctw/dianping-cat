@@ -169,11 +169,12 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		String domain = tree.getDomain();
 		CrossReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
 
-		Message message = tree.getMessage();
 		report.addIp(tree.getIpAddress());
 
-		if (message instanceof Transaction) {
-			processTransaction(report, tree, (Transaction) message);
+		List<Transaction> transactions = tree.getTransactions();
+
+		for (Transaction t : transactions) {
+			processTransaction(report, tree, (Transaction) t);
 		}
 	}
 
@@ -195,13 +196,6 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 				}
 			} else {
 				m_errorAppName++;
-			}
-		}
-		List<Message> children = t.getChildren();
-
-		for (Message child : children) {
-			if (child instanceof Transaction) {
-				processTransaction(report, tree, (Transaction) child);
 			}
 		}
 	}

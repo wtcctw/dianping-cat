@@ -37,8 +37,8 @@
 						<b class="arrow fa fa-angle-down"></b>
 				</a> <b class="arrow"></b>
 					<ul class="submenu">
-						<li id="screen"><a href="/cat/r/server?op=configUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>Screen配置</a>
+						<li id="influx"><a href="/cat/r/server?op=influxConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>influxDB配置</a>
 								<b class="arrow"></b>
 						</li>
 					</ul>

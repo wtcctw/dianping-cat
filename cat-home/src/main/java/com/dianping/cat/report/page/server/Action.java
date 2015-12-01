@@ -25,6 +25,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	GRAPH_SUBMIT("graphSubmit"),
 
+	INFLUX_CONFIG_UPDATE("influxConfigUpdate"),
+
 	;
 
 	private String m_name;

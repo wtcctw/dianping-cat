@@ -15,11 +15,9 @@ import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.top.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.report.ReportManager;
 
 public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements LogEnabled {
 	public static final String ID = "top";
@@ -70,12 +68,11 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 		if (m_serverFilterConfigManager.validateDomain(domain)) {
 			TopReport report = m_reportManager.getHourlyReport(getStartTime(), Constants.CAT, true);
-			Message message = tree.getMessage();
 
-			if (message instanceof Transaction) {
-				processTransaction(report, tree, (Transaction) message);
-			} else if (message instanceof Event) {
-				processEvent(report, tree, (Event) message);
+			List<Event> events = tree.getEvents();
+
+			for (Event e : events) {
+				processEvent(report, tree, e);
 			}
 		}
 	}
@@ -93,18 +90,6 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 			segment.findOrCreateError(exception).incCount();
 			segment.findOrCreateMachine(ip).incCount();
-		}
-	}
-
-	private void processTransaction(TopReport report, MessageTree tree, Transaction t) {
-		List<Message> children = t.getChildren();
-
-		for (Message child : children) {
-			if (child instanceof Transaction) {
-				processTransaction(report, tree, (Transaction) child);
-			} else if (child instanceof Event) {
-				processEvent(report, tree, (Event) child);
-			}
 		}
 	}
 

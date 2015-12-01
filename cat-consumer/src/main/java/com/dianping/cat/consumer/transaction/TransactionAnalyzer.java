@@ -106,12 +106,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		return m_reportManager.getDomains(getStartTime());
 	}
 
-	public TransactionReport getRawReport(String domain) {
-		TransactionReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
-
-		return report;
-	}
-
 	@Override
 	public TransactionReport getReport(String domain) {
 		if (!Constants.ALL.equals(domain)) {
@@ -147,14 +141,14 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 		TransactionReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
-		Message message = tree.getMessage();
 
 		report.addIp(tree.getIpAddress());
 
-		if (message instanceof Transaction) {
-			Transaction root = (Transaction) message;
+		List<Transaction> transactions = tree.getTransactions();
 
-			processTransaction(report, tree, root);
+		for (Transaction t : transactions) {
+
+			processTransaction(report, tree, t);
 		}
 	}
 
@@ -201,14 +195,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				String messageId = tree.getMessageId();
 
 				processTypeAndName(t, transactionType, transactionName, messageId, pair.getValue().doubleValue() / 1000d);
-			}
-
-			List<Message> children = t.getChildren();
-
-			for (Message child : children) {
-				if (child instanceof Transaction) {
-					processTransaction(report, tree, (Transaction) child);
-				}
 			}
 		}
 	}
@@ -289,6 +275,15 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 
 		return report;
+	}
+
+	@Override
+	public boolean isEiligible(MessageTree tree) {
+		if (tree.getTransactions().size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

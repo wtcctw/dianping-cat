@@ -27,6 +27,7 @@ import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.core.dal.WeeklyReportContentDao;
 import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.home.dal.report.BaselineDao;
+import com.dianping.cat.home.dal.report.MetricGraphDao;
 import com.dianping.cat.home.dal.report.OverloadDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.report.page.app.service.AppReportService;
@@ -70,6 +71,7 @@ import com.dianping.cat.report.page.problem.service.ProblemReportService;
 import com.dianping.cat.report.page.problem.task.ProblemGraphCreator;
 import com.dianping.cat.report.page.problem.task.ProblemMerger;
 import com.dianping.cat.report.page.problem.task.ProblemReportBuilder;
+import com.dianping.cat.report.page.server.task.MetricGraphPruner;
 import com.dianping.cat.report.page.state.service.StateReportService;
 import com.dianping.cat.report.page.state.task.StateReportBuilder;
 import com.dianping.cat.report.page.statistics.service.ClientReportService;
@@ -212,6 +214,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TaskBuilder.class, AppDatabasePruner.ID, AppDatabasePruner.class).req(AppCommandDataDao.class,
 		      AppSpeedDataDao.class, AppSpeedConfigManager.class, AppConfigManager.class));
+
+		all.add(C(TaskBuilder.class, MetricGraphPruner.ID, MetricGraphPruner.class).req(MetricGraphDao.class));
 
 		all.add(C(CommandAutoCompleter.class).req(TransactionReportService.class, AppConfigManager.class));
 

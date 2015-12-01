@@ -79,12 +79,10 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 
 	@Override
 	protected void process(MessageTree tree) {
-		Message message = tree.getMessage();
+		List<Transaction> transactions = tree.getTransactions();
 
-		if (message instanceof Transaction) {
-			Transaction root = (Transaction) message;
-
-			processTransaction(tree, root);
+		for (Transaction t : transactions) {
+			processTransaction(tree, t);
 		}
 	}
 
@@ -198,14 +196,6 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 			processSQLTransaction(tree, t);
 		} else if (m_serverConfigManager.isRpcClient(type)) {
 			processRPCTransaction(tree, t);
-		}
-
-		List<Message> children = t.getChildren();
-
-		for (Message child : children) {
-			if (child instanceof Transaction) {
-				processTransaction(tree, (Transaction) child);
-			}
 		}
 	}
 

@@ -221,6 +221,11 @@
 					ORDER BY <FIELD name='creation-date'/> DESC LIMIT ${number} 
 					]]></statement>
 			</query>
+			<query name="delete-before-date" type="DELETE" >
+				<param name="creation-date"/>
+				<statement><![CDATA[DELETE FROM <TABLE/>
+        			WHERE <FIELD name='creation-date'/> < ${creation-date}]]></statement>
+			</query>
 		</query-defs>
 	</entity>
 	<entity name="metric-screen" table="metric_screen" alias="ms">

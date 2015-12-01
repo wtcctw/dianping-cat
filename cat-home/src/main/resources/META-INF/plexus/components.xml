@@ -458,6 +458,13 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.metric.DataSourceService</role>
+					<role-hint>influxDB</role-hint>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1633,6 +1640,16 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role-hint>metricGraphPruner</role-hint>
+			<implementation>com.dianping.cat.report.page.server.task.MetricGraphPruner</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MetricGraphDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5909,7 +5926,7 @@
 					<role>com.dianping.cat.report.page.server.service.GraphBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.helper.JsonBuilder</role>
+					<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

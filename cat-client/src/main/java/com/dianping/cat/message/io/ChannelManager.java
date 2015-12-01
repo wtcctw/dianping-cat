@@ -266,7 +266,7 @@ public class ChannelManager implements Task {
 		boolean stalled = activeFuture != null && size >= TcpSocketSender.SIZE - 10;
 
 		if (stalled) {
-			if (m_retriedTimes >= 5) {
+			if (m_retriedTimes >= 50) {
 				m_retriedTimes = 0;
 				return true;
 			} else {
