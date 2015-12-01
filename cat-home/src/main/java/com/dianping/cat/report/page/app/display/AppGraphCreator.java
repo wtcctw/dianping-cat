@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.app.display;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Map;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.app.AppCommandData;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
@@ -15,6 +17,7 @@ import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChartDetailInfo;
 import com.dianping.cat.report.graph.PieChart.Item;
+import com.dianping.cat.report.page.app.QueryType;
 import com.dianping.cat.report.page.app.service.AppDataField;
 import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
@@ -27,11 +30,11 @@ public class AppGraphCreator {
 	@Inject
 	private AppConfigManager m_appConfigManager;
 
-	public LineChart buildChartData(final List<Double[]> datas, String type) {
+	public LineChart buildChartData(final Map<String, Double[]> datas, QueryType type) {
 		LineChart lineChart = new LineChart();
 		lineChart.setId("app");
 		lineChart.setUnit("");
-		lineChart.setHtmlTitle(queryType(type));
+		lineChart.setHtmlTitle(type.getTitle());
 
 		if (AppDataService.SUCCESS.equals(type)) {
 			lineChart.setMinYlable(lineChart.queryMinYlable(datas));
@@ -50,18 +53,19 @@ public class AppGraphCreator {
 		return lineChart;
 	}
 
-	public LineChart buildLineChart(CommandQueryEntity queryEntity1, CommandQueryEntity queryEntity2, String type) {
-		List<Double[]> datas = new LinkedList<Double[]>();
+	public LineChart buildLineChart(CommandQueryEntity queryEntity1, CommandQueryEntity queryEntity2, QueryType type) {
+		Map<String, Double[]> datas = new LinkedHashMap<String, Double[]>();
 
 		if (queryEntity1 != null) {
-			Double[] data1 = m_AppDataService.queryValue(queryEntity1, type);
+			Double[] data = m_AppDataService.queryValue(queryEntity1, type);
 
-			datas.add(data1);
+			datas.put(Constants.CURRENT_STR, data);
 		}
 
 		if (queryEntity2 != null) {
-			Double[] values2 = m_AppDataService.queryValue(queryEntity2, type);
-			datas.add(values2);
+			Double[] data = m_AppDataService.queryValue(queryEntity2, type);
+
+			datas.put(Constants.COMPARISION_STR, data);
 		}
 		return buildChartData(datas, type);
 	}
@@ -185,18 +189,6 @@ public class AppGraphCreator {
 		item.setId(pair.getKey());
 		item.setNumber(data.getAccessNumberSum());
 		return new Pair<Integer, Item>(pair.getKey(), item);
-	}
-
-	private String queryType(String type) {
-		if (AppDataService.SUCCESS.equals(type)) {
-			return "成功率（%/5分钟）";
-		} else if (AppDataService.REQUEST.equals(type)) {
-			return "请求数（个/5分钟）";
-		} else if (AppDataService.DELAY.equals(type)) {
-			return "延时平均值（毫秒/5分钟）";
-		} else {
-			throw new RuntimeException("unexpected query type, type:" + type);
-		}
 	}
 
 	private void updatePieChartDetailInfo(List<PieChartDetailInfo> items) {

@@ -230,20 +230,6 @@ public class AppSpeedService {
 		return sequence;
 	}
 
-	public double queryOneDayDelayAvg(AppSpeedSequence sequence) {
-		Double[] values = computeDelayAvg(sequence);
-		double delaySum = 0;
-		int size = 0;
-
-		for (int i = 0; i < values.length; i++) {
-			if (values[i] != null) {
-				delaySum += values[i];
-				size++;
-			}
-		}
-		return size > 0 ? delaySum / size : -1;
-	}
-
 	private Map<String, AppSpeedSequence> queryRawData(SpeedQueryEntity queryEntity1, SpeedQueryEntity queryEntity2) {
 		Map<String, AppSpeedSequence> datas = new LinkedHashMap<String, AppSpeedSequence>();
 
