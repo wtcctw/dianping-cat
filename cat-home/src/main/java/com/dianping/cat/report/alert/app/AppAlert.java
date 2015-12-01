@@ -23,6 +23,7 @@ import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.page.app.QueryType;
 import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 import com.dianping.cat.report.alert.AlertResultEntity;
@@ -63,7 +64,7 @@ public class AppAlert implements Task {
 		return result;
 	}
 
-	private double[] fetchDatas(String conditions, String type, int minute) {
+	private double[] fetchDatas(String conditions, QueryType type, int minute) {
 		long time = (System.currentTimeMillis()) / 1000 / 60;
 		int endMinute = (int) (time % (60)) - DATA_AREADY_MINUTE;
 		int startMinute = endMinute - minute;
@@ -142,10 +143,11 @@ public class AppAlert implements Task {
 		int index2 = id.indexOf(":", index1 + 1);
 		String conditions = id.substring(0, index1);
 		String type = id.substring(index1 + 1, index2);
+		QueryType queryType = QueryType.findByName(type);
 		String name = id.substring(index2 + 1);
 		int command = Integer.valueOf(conditions.split(";")[0]);
 		Pair<Integer, List<Condition>> pair = queryCheckMinuteAndConditions(rule.getConfigs());
-		double[] datas = fetchDatas(conditions, type, pair.getKey());
+		double[] datas = fetchDatas(conditions, queryType, pair.getKey());
 
 		if (datas != null && datas.length > 0) {
 			List<Condition> checkedConditions = pair.getValue();

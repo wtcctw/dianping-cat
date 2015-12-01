@@ -1,13 +1,15 @@
 package com.dianping.cat.report.page.browser.graph;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.web.url.entity.Code;
@@ -33,7 +35,7 @@ public class WebGraphCreator {
 	@Inject
 	private UrlPatternConfigManager m_patternManager;
 
-	public LineChart buildChartData(final List<Double[]> datas, QueryType type) {
+	public LineChart buildChartData(final Map<String, Double[]> datas, QueryType type) {
 		LineChart lineChart = new LineChart();
 		lineChart.setId("app");
 		lineChart.setUnit("");
@@ -43,31 +45,28 @@ public class WebGraphCreator {
 			lineChart.setMinYlable(lineChart.queryMinYlable(datas));
 			lineChart.setMaxYlabel(100D);
 		}
+		
+		for (Entry<String, Double[]> entry : datas.entrySet()) {
+			Double[] data = entry.getValue();
 
-		for (int i = 0; i < datas.size(); i++) {
-			Double[] data = datas.get(i);
-
-			if (i == 0) {
-				lineChart.add("当前值", data);
-			} else if (i == 1) {
-				lineChart.add("对比值", data);
-			}
+			lineChart.add(entry.getKey(), data);
 		}
 		return lineChart;
 	}
 
 	public LineChart buildLineChart(AjaxDataQueryEntity queryEntity1, AjaxDataQueryEntity queryEntity2, QueryType type) {
-		List<Double[]> datas = new LinkedList<Double[]>();
+		Map<String, Double[]> datas = new LinkedHashMap<String, Double[]>();
 
 		if (queryEntity1 != null) {
-			Double[] data1 = m_WebApiService.queryValue(queryEntity1, type);
+			Double[] data = m_WebApiService.queryValue(queryEntity1, type);
 
-			datas.add(data1);
+			datas.put(Constants.CURRENT_STR, data);
 		}
 
 		if (queryEntity2 != null) {
-			Double[] values2 = m_WebApiService.queryValue(queryEntity2, type);
-			datas.add(values2);
+			Double[] data = m_WebApiService.queryValue(queryEntity2, type);
+
+			datas.put(Constants.COMPARISION_STR, data);
 		}
 		return buildChartData(datas, type);
 	}

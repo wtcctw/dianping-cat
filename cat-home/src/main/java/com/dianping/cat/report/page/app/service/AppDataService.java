@@ -18,6 +18,7 @@ import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppCommandDataEntity;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.report.page.DataSequence;
+import com.dianping.cat.report.page.app.QueryType;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
 
 public class AppDataService {
@@ -310,7 +311,7 @@ public class AppDataService {
 	}
 
 	public double queryOneDayDelayAvg(CommandQueryEntity entity) {
-		Double[] values = queryValue(entity, AppDataService.DELAY);
+		Double[] values = queryValue(entity, QueryType.DELAY);
 		double delaySum = 0;
 		int size = 0;
 
@@ -323,7 +324,7 @@ public class AppDataService {
 		return size > 0 ? delaySum / size : -1;
 	}
 
-	public Double[] queryValue(CommandQueryEntity entity, String type) {
+	public Double[] queryValue(CommandQueryEntity entity, QueryType type) {
 		int commandId = entity.getId();
 		Date period = entity.getDate();
 		int city = entity.getCity();

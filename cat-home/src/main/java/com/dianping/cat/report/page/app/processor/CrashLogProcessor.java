@@ -98,14 +98,12 @@ public class CrashLogProcessor {
 
 	private ProblemReport getHourlyReport(Payload payload, String domain) {
 		ModelRequest request = new ModelRequest(domain, payload.getDate()).//
-		      setProperty("queryType", "view");
+		      setProperty("queryType", "view").setProperty("type", "error");
 
-		if (!StringUtils.isEmpty(payload.getType())) {
-			request.setProperty("type", "error");
-		}
 		if (!StringUtils.isEmpty(payload.getStatus())) {
 			request.setProperty("name", payload.getStatus());
 		}
+		
 		if (m_service.isEligable(request)) {
 			ModelResponse<ProblemReport> response = m_service.invoke(request);
 			ProblemReport report = response.getModel();

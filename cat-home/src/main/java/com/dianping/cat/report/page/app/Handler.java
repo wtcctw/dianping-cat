@@ -170,7 +170,7 @@ public class Handler implements PageHandler<Context> {
 	private Pair<LineChart, List<AppDataDetail>> buildConnLineChart(Model model, Payload payload) {
 		CommandQueryEntity entity1 = payload.getQueryEntity1();
 		CommandQueryEntity entity2 = payload.getQueryEntity2();
-		String type = payload.getType();
+		QueryType type = payload.getQueryType();
 		LineChart lineChart = new LineChart();
 		List<AppDataDetail> appDetails = new ArrayList<AppDataDetail>();
 
@@ -213,7 +213,7 @@ public class Handler implements PageHandler<Context> {
 	private LineChart buildLineChart(Payload payload) {
 		CommandQueryEntity entity1 = payload.getQueryEntity1();
 		CommandQueryEntity entity2 = payload.getQueryEntity2();
-		String type = payload.getType();
+		QueryType type = payload.getQueryType();
 		LineChart lineChart = new LineChart();
 
 		try {

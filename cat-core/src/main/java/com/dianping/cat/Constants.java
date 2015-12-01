@@ -78,4 +78,8 @@ public class Constants {
 
 	public static final String APP = "app";
 
+	public static final String CURRENT_STR = "当前值";
+
+	public static final String COMPARISION_STR = "当前值";
+
 }

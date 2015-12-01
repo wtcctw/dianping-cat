@@ -211,10 +211,10 @@ public class LineChart {
 		return this;
 	}
 
-	public double queryMinYlable(final List<Double[]> datas) {
+	public double queryMinYlable(final Map<String, Double[]> datas) {
 		double min = Double.MAX_VALUE;
 
-		for (Double[] data : datas) {
+		for (Double[] data : datas.values()) {
 			if (data.length > 0) {
 				List<Double> dataList = Arrays.asList(data);
 				double tmp = Collections.min(dataList);
@@ -237,8 +237,8 @@ public class LineChart {
 		}
 		return min;
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return new JsonBuilder().toJson(this);
 	}
 }
