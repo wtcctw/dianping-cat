@@ -24,7 +24,7 @@ public class PeriodTask implements Task, LogEnabled {
 	private Logger m_logger;
 
 	private int m_index;
-	
+
 	public void setIndex(int index) {
 		m_index = index;
 	}

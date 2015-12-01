@@ -134,13 +134,9 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isMessageEnabled()) {
-			DefaultEvent event = new DefaultEvent(type, name, m_manager);
+		DefaultEvent event = new DefaultEvent(type, name, m_manager);
 
-			return event;
-		} else {
-			return NullMessage.EVENT;
-		}
+		return event;
 	}
 
 	public Event newEvent(Transaction parent, String type, String name) {
@@ -148,14 +144,10 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isMessageEnabled() && parent != null) {
-			DefaultEvent event = new DefaultEvent(type, name);
+		DefaultEvent event = new DefaultEvent(type, name);
 
-			parent.addChild(event);
-			return event;
-		} else {
-			return NullMessage.EVENT;
-		}
+		parent.addChild(event);
+		return event;
 	}
 
 	@Override
@@ -165,23 +157,19 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isMessageEnabled()) {
-			MessageTree tree = m_manager.getThreadLocalMessageTree();
+		MessageTree tree = m_manager.getThreadLocalMessageTree();
 
-			if (tree.getMessageId() == null) {
-				tree.setMessageId(createMessageId());
-			}
-
-			DefaultForkedTransaction transaction = new DefaultForkedTransaction(type, name, m_manager);
-
-			if (m_manager instanceof DefaultMessageManager) {
-				((DefaultMessageManager) m_manager).linkAsRunAway(transaction);
-			}
-			m_manager.start(transaction, true);
-			return transaction;
-		} else {
-			return NullMessage.TRANSACTION;
+		if (tree.getMessageId() == null) {
+			tree.setMessageId(createMessageId());
 		}
+
+		DefaultForkedTransaction transaction = new DefaultForkedTransaction(type, name, m_manager);
+
+		if (m_manager instanceof DefaultMessageManager) {
+			((DefaultMessageManager) m_manager).linkAsRunAway(transaction);
+		}
+		m_manager.start(transaction, true);
+		return transaction;
 	}
 
 	@Override
@@ -190,14 +178,10 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isMessageEnabled()) {
-			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name, m_manager);
+		DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name, m_manager);
 
-			m_manager.getThreadLocalMessageTree().setSample(false);
-			return heartbeat;
-		} else {
-			return NullMessage.HEARTBEAT;
-		}
+		m_manager.getThreadLocalMessageTree().setSample(false);
+		return heartbeat;
 	}
 
 	@Override
@@ -206,14 +190,10 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isMessageEnabled()) {
-			DefaultMetric metric = new DefaultMetric(type == null ? "" : type, name, m_manager);
+		DefaultMetric metric = new DefaultMetric(type == null ? "" : type, name, m_manager);
 
-			m_manager.getThreadLocalMessageTree().setSample(false);
-			return metric;
-		} else {
-			return NullMessage.METRIC;
-		}
+		m_manager.getThreadLocalMessageTree().setSample(false);
+		return metric;
 	}
 
 	@Override
@@ -223,19 +203,15 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isMessageEnabled()) {
-			MessageTree tree = m_manager.getThreadLocalMessageTree();
+		MessageTree tree = m_manager.getThreadLocalMessageTree();
 
-			if (tree.getMessageId() == null) {
-				tree.setMessageId(createMessageId());
-			}
-			DefaultTaggedTransaction transaction = new DefaultTaggedTransaction(type, name, tag, m_manager);
-
-			m_manager.start(transaction, true);
-			return transaction;
-		} else {
-			return NullMessage.TRANSACTION;
+		if (tree.getMessageId() == null) {
+			tree.setMessageId(createMessageId());
 		}
+		DefaultTaggedTransaction transaction = new DefaultTaggedTransaction(type, name, tag, m_manager);
+
+		m_manager.start(transaction, true);
+		return transaction;
 	}
 
 	@Override
@@ -244,13 +220,9 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isMessageEnabled()) {
-			DefaultTrace trace = new DefaultTrace(type, name, m_manager);
+		DefaultTrace trace = new DefaultTrace(type, name, m_manager);
 
-			return trace;
-		} else {
-			return NullMessage.TRACE;
-		}
+		return trace;
 	}
 
 	@Override
@@ -260,14 +232,10 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isMessageEnabled()) {
-			DefaultTransaction transaction = new DefaultTransaction(type, name, m_manager);
+		DefaultTransaction transaction = new DefaultTransaction(type, name, m_manager);
 
-			m_manager.start(transaction, false);
-			return transaction;
-		} else {
-			return NullMessage.TRANSACTION;
-		}
+		m_manager.start(transaction, false);
+		return transaction;
 	}
 
 	public Transaction newTransaction(Transaction parent, String type, String name) {
@@ -276,15 +244,11 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		if (m_manager.isMessageEnabled() && parent != null) {
-			DefaultTransaction transaction = new DefaultTransaction(type, name, m_manager);
+		DefaultTransaction transaction = new DefaultTransaction(type, name, m_manager);
 
-			parent.addChild(transaction);
-			transaction.setStandalone(false);
-			return transaction;
-		} else {
-			return NullMessage.TRANSACTION;
-		}
+		parent.addChild(transaction);
+		transaction.setStandalone(false);
+		return transaction;
 	}
 
 	private boolean shouldLog(Throwable e) {
