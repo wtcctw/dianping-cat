@@ -116,7 +116,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 	}
 
 	@Override
-   public boolean isEiligible(MessageTree tree) {
+   public boolean isEligable(MessageTree tree) {
 	   return true;
    }
 

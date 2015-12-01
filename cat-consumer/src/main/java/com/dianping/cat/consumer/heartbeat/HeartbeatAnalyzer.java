@@ -205,7 +205,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	}
 
 	@Override
-	public boolean isEiligible(MessageTree tree) {
+	public boolean isEligable(MessageTree tree) {
 		if (tree.getHeartbeats().size() > 0) {
 			return true;
 		} else {

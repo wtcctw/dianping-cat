@@ -6,7 +6,7 @@ import com.dianping.cat.report.ReportManager;
 
 public interface MessageAnalyzer {
 
-	public boolean isEiligible(MessageTree tree);
+	public boolean isEligable(MessageTree tree);
 	
 	public void analyze(MessageQueue queue);
 
