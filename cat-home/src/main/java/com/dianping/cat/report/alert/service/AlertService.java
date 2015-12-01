@@ -25,7 +25,7 @@ public class AlertService {
 
 		alert.setDomain(alertEntity.getDomain());
 		alert.setAlertTime(alertEntity.getDate());
-		alert.setCategory(alertEntity.getType());
+		alert.setCategory(alertEntity.getType().getName());
 		alert.setType(alertEntity.getLevel());
 		alert.setContent(message.getTitle() + "<br/>" + message.getContent());
 		alert.setMetric(alertEntity.getMetric());

@@ -8,6 +8,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.tuple.Pair;
 
+import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.sender.AlertEntity;
 
 public class DecoratorManager extends ContainerHolder implements Initializable {
@@ -15,8 +16,8 @@ public class DecoratorManager extends ContainerHolder implements Initializable {
 	private Map<String, Decorator> m_decorators = new HashMap<String, Decorator>();
 
 	public Pair<String, String> generateTitleAndContent(AlertEntity alert) {
-		String alertType = alert.getType();
-		Decorator decorator = m_decorators.get(alertType);
+		AlertType alertType = alert.getType();
+		Decorator decorator = m_decorators.get(alertType.getName());
 
 		if (decorator != null) {
 			String title = decorator.generateTitle(alert);

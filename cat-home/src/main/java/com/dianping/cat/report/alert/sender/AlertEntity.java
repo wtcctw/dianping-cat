@@ -66,8 +66,8 @@ public class AlertEntity {
 		return m_paras;
 	}
 
-	public String getType() {
-		return m_type;
+	public AlertType getType() {
+		return AlertType.getTypeByName(m_type);
 	}
 
 	public AlertEntity setContent(String content) {
