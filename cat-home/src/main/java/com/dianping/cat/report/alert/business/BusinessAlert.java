@@ -186,9 +186,8 @@ public class BusinessAlert extends BaseAlert {
 
 			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
 			      .setLevel(alertResult.getAlertLevel());
-			entity.setMetric(metricName).setType(getName()).setGroup(productlineName);
-			entity.getParas().put("domain", domain);
-
+			entity.setMetric(metricName).setType(getName()).setDomain(domain);
+			entity.setContactGroup(domain);
 			m_sendManager.addAlert(entity);
 		}
 	}
