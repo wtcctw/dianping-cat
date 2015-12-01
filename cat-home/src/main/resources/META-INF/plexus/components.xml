@@ -1644,6 +1644,16 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role-hint>metricGraphPruner</role-hint>
+			<implementation>com.dianping.cat.report.page.server.task.MetricGraphPruner</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MetricGraphDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.app.task.CommandAutoCompleter</role>
 			<implementation>com.dianping.cat.report.page.app.task.CommandAutoCompleter</implementation>
 			<requirements>
