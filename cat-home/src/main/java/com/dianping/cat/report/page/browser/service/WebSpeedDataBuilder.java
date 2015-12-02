@@ -30,7 +30,7 @@ public class WebSpeedDataBuilder {
 	private WebSpeedDataDao m_dao;
 
 	@Inject
-	WebSpeedConfigManager m_speedConfig;
+	private WebSpeedConfigManager m_speedConfig;
 
 	@Inject
 	private WebConfigManager m_webConfig;

@@ -2,9 +2,9 @@ package com.dianping.cat.report.page.app.display;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
@@ -15,8 +15,8 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
-import com.dianping.cat.report.graph.PieChartDetailInfo;
 import com.dianping.cat.report.graph.PieChart.Item;
+import com.dianping.cat.report.graph.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.QueryType;
 import com.dianping.cat.report.page.app.service.AppDataField;
 import com.dianping.cat.report.page.app.service.AppDataService;
@@ -41,14 +41,10 @@ public class AppGraphCreator {
 			lineChart.setMaxYlabel(100D);
 		}
 
-		for (int i = 0; i < datas.size(); i++) {
-			Double[] data = datas.get(i);
+		for (Entry<String, Double[]> entry : datas.entrySet()) {
+			Double[] data = entry.getValue();
 
-			if (i == 0) {
-				lineChart.add("当前值", data);
-			} else if (i == 1) {
-				lineChart.add("对比值", data);
-			}
+			lineChart.add(entry.getKey(), data);
 		}
 		return lineChart;
 	}
@@ -70,8 +66,8 @@ public class AppGraphCreator {
 		return buildChartData(datas, type);
 	}
 
-	public Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(CommandQueryEntity entity, AppDataField field) {
-		List<PieChartDetailInfo> infos = new LinkedList<PieChartDetailInfo>();
+	public Pair<PieChart, PieChartDetailInfo> buildPieChart(CommandQueryEntity entity, AppDataField field) {
+		PieChartDetailInfo info = new PieChartDetailInfo();
 		PieChart pieChart = new PieChart().setMaxSize(Integer.MAX_VALUE);
 		List<Item> items = new ArrayList<Item>();
 		List<AppCommandData> datas = m_AppDataService.queryByField(entity, field);
@@ -79,17 +75,17 @@ public class AppGraphCreator {
 		for (AppCommandData data : datas) {
 			Pair<Integer, Item> pair = buildPieChartItem(entity.getId(), data, field);
 			Item item = pair.getValue();
-			PieChartDetailInfo info = new PieChartDetailInfo();
+			com.dianping.cat.report.graph.PieChartDetailInfo.Item infoItem = new com.dianping.cat.report.graph.PieChartDetailInfo.Item();
 
-			info.setId(pair.getKey()).setTitle(item.getTitle()).setRequestSum(item.getNumber());
-			infos.add(info);
+			infoItem.setId(pair.getKey()).setTitle(item.getTitle()).setRequestSum(item.getNumber());
+			info.add(infoItem);
 			items.add(item);
 		}
 		pieChart.setTitle(field.getName() + "访问情况");
 		pieChart.addItems(items);
-		updatePieChartDetailInfo(infos);
+		updatePieChartDetailInfo(info);
 
-		return new Pair<PieChart, List<PieChartDetailInfo>>(pieChart, infos);
+		return new Pair<PieChart, PieChartDetailInfo>(pieChart, info);
 	}
 
 	private Pair<Integer, String> buildPieChartFieldTitlePair(int command, AppCommandData data, AppDataField field) {
@@ -191,15 +187,15 @@ public class AppGraphCreator {
 		return new Pair<Integer, Item>(pair.getKey(), item);
 	}
 
-	private void updatePieChartDetailInfo(List<PieChartDetailInfo> items) {
+	private void updatePieChartDetailInfo(PieChartDetailInfo items) {
 		double sum = 0;
 
-		for (PieChartDetailInfo item : items) {
+		for (com.dianping.cat.report.graph.PieChartDetailInfo.Item item : items.getItems()) {
 			sum += item.getRequestSum();
 		}
 
 		if (sum > 0) {
-			for (PieChartDetailInfo item : items) {
+			for (com.dianping.cat.report.graph.PieChartDetailInfo.Item item : items.getItems()) {
 				item.setSuccessRatio(item.getRequestSum() / sum);
 			}
 		}
