@@ -326,7 +326,6 @@ public class AppDataService {
 		int platform = entity.getPlatfrom();
 
 		try {
-
 			switch (type) {
 			case SUCCESS:
 				List<AppCommandData> datas = m_dao.findDataByMinuteCode(commandId, period, city, operator, network,

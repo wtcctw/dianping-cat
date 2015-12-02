@@ -12,7 +12,7 @@ public class AjaxDataDisplayInfo {
 
 	private PieChart m_pieChart;
 
-	private PieChartDetailInfos m_pieChartDetailInfos;
+	private AjaxPieChartDetailInfos m_pieChartDetailInfos;
 
 	private Map<String, AjaxDataDetail> m_comparisonAjaxDetails;
 
@@ -34,7 +34,7 @@ public class AjaxDataDisplayInfo {
 		return m_pieChart;
 	}
 
-	public PieChartDetailInfos getPieChartDetailInfos() {
+	public AjaxPieChartDetailInfos getPieChartDetailInfos() {
 		return m_pieChartDetailInfos;
 	}
 
@@ -54,7 +54,7 @@ public class AjaxDataDisplayInfo {
 		m_pieChart = pieChart;
 	}
 
-	public void setPieChartDetailInfos(PieChartDetailInfos pieChartDetailInfos) {
+	public void setPieChartDetailInfos(AjaxPieChartDetailInfos pieChartDetailInfos) {
 		m_pieChartDetailInfos = pieChartDetailInfos;
 	}
 

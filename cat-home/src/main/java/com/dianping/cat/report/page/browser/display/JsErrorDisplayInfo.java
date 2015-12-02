@@ -10,7 +10,7 @@ public class JsErrorDisplayInfo {
 
 	private int m_totalCount;
 
-	private List<ErrorMsg> m_errors;
+	private List<JsErrorMsg> m_errors;
 
 	private String m_distributionChart;
 
@@ -18,7 +18,7 @@ public class JsErrorDisplayInfo {
 		return m_distributionChart;
 	}
 
-	public List<ErrorMsg> getErrors() {
+	public List<JsErrorMsg> getErrors() {
 		return m_errors;
 	}
 
@@ -38,7 +38,7 @@ public class JsErrorDisplayInfo {
 		m_distributionChart = distributionChart;
 	}
 
-	public void setErrors(List<ErrorMsg> errors) {
+	public void setErrors(List<JsErrorMsg> errors) {
 		m_errors = errors;
 	}
 

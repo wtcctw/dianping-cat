@@ -34,18 +34,18 @@ import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.page.browser.display.AjaxDataDetail;
 import com.dianping.cat.report.page.browser.display.AjaxDataDetailSorter;
 import com.dianping.cat.report.page.browser.display.AjaxDataDisplayInfo;
-import com.dianping.cat.report.page.browser.display.ErrorMsg;
+import com.dianping.cat.report.page.browser.display.JsErrorMsg;
 import com.dianping.cat.report.page.browser.display.JsErrorDisplayInfo;
 import com.dianping.cat.report.page.browser.display.JsErrorDetailInfo;
-import com.dianping.cat.report.page.browser.display.PieChartDetailInfos;
-import com.dianping.cat.report.page.browser.display.PieChartDetailInfos.PieChartDetailInfo;
+import com.dianping.cat.report.page.browser.display.AjaxPieChartDetailInfos;
+import com.dianping.cat.report.page.browser.display.AjaxPieChartDetailInfos.PieChartDetailInfo;
 import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
-import com.dianping.cat.report.page.browser.graph.WebGraphCreator;
 import com.dianping.cat.report.page.browser.service.AjaxDataField;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
 import com.dianping.cat.report.page.browser.service.AjaxDataService;
+import com.dianping.cat.report.page.browser.service.AjaxGraphCreator;
 import com.dianping.cat.report.page.browser.service.JsErrorLogService;
-import com.dianping.cat.report.page.browser.service.QueryType;
+import com.dianping.cat.report.page.browser.service.AjaxQueryType;
 import com.dianping.cat.report.page.browser.service.SpeedQueryEntity;
 import com.dianping.cat.report.page.browser.service.WebSpeedService;
 import com.dianping.cat.web.JsErrorLog;
@@ -70,7 +70,7 @@ public class Handler implements PageHandler<Context> {
 	private AjaxDataService m_ajaxDataService;
 
 	@Inject
-	private WebGraphCreator m_graphCreator;
+	private AjaxGraphCreator m_graphCreator;
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -114,7 +114,7 @@ public class Handler implements PageHandler<Context> {
 
 		try {
 			ajaxDetails = m_ajaxDataService.buildAjaxDataDetailInfos(payload.getQueryEntity1(), payload.getGroupByField());
-			QueryType type = QueryType.findByType(payload.getSort());
+			AjaxQueryType type = AjaxQueryType.findByType(payload.getSort());
 			Collections.sort(ajaxDetails, new AjaxDataDetailSorter(type));
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -137,7 +137,7 @@ public class Handler implements PageHandler<Context> {
 		return appDetail;
 	}
 
-	protected Map<String, AjaxDataDetail> buildComparisonInfo(Payload payload) {
+	protected Map<String, AjaxDataDetail> buildAjaxComparisonInfo(Payload payload) {
 		AjaxDataQueryEntity currentEntity = payload.getQueryEntity1();
 		AjaxDataQueryEntity comparisonEntity = payload.getQueryEntity2();
 		Map<String, AjaxDataDetail> result = new HashMap<String, AjaxDataDetail>();
@@ -176,10 +176,10 @@ public class Handler implements PageHandler<Context> {
 		return chart.getJsonString();
 	}
 
-	private LineChart buildLineChart(Payload payload) {
+	private LineChart buildAjaxLineChart(Payload payload) {
 		AjaxDataQueryEntity entity1 = payload.getQueryEntity1();
 		AjaxDataQueryEntity entity2 = payload.getQueryEntity2();
-		QueryType type = QueryType.findByType(payload.getType());
+		AjaxQueryType type = AjaxQueryType.findByType(payload.getType());
 		LineChart lineChart = new LineChart();
 
 		try {
@@ -190,11 +190,11 @@ public class Handler implements PageHandler<Context> {
 		return lineChart;
 	}
 
-	private Pair<PieChart, PieChartDetailInfos> buildPieChart(Payload payload) {
+	private Pair<PieChart, AjaxPieChartDetailInfos> buildAjaxPieChart(Payload payload) {
 		try {
-			Pair<PieChart, PieChartDetailInfos> pair = m_graphCreator.buildPieChart(payload.getQueryEntity1(),
+			Pair<PieChart, AjaxPieChartDetailInfos> pair = m_graphCreator.buildPieChart(payload.getQueryEntity1(),
 			      payload.getGroupByField());
-			PieChartDetailInfos infos = pair.getValue();
+			AjaxPieChartDetailInfos infos = pair.getValue();
 
 			Collections.sort(infos.getDetails(), new Comparator<PieChartDetailInfo>() {
 				@Override
@@ -241,7 +241,7 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private void buildBarCharts(Payload payload, Model model) {
+	private void buildSpeedBarCharts(Payload payload, Model model) {
 		try {
 			Map<String, Speed> speeds = m_webSpeedConfigManager.getSpeeds();
 			SpeedQueryEntity queryEntity1 = normalizeSpeedQueryEntity(payload, speeds);
@@ -286,10 +286,10 @@ public class Handler implements PageHandler<Context> {
 
 		switch (action) {
 		case AJAX_LINECHART:
-			parallelBuildLineChart(model, payload);
+			parallelBuildAjaxLineChart(model, payload);
 			break;
 		case AJAX_PIECHART:
-			Pair<PieChart, PieChartDetailInfos> pieChartPair = buildPieChart(payload);
+			Pair<PieChart, AjaxPieChartDetailInfos> pieChartPair = buildAjaxPieChart(payload);
 			AjaxDataDisplayInfo info = new AjaxDataDisplayInfo();
 
 			if (pieChartPair != null) {
@@ -312,7 +312,7 @@ public class Handler implements PageHandler<Context> {
 			buildSpeedInfoJson(payload, model);
 			break;
 		case SPEED_GRAPH:
-			buildBarCharts(payload, model);
+			buildSpeedBarCharts(payload, model);
 			break;
 		case SPEED_CONFIG_FETCH:
 			String type = payload.getType();
@@ -380,14 +380,14 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void parallelBuildLineChart(Model model, final Payload payload) {
+	private void parallelBuildAjaxLineChart(Model model, final Payload payload) {
 		ExecutorService executor = Executors.newFixedThreadPool(3);
 		List<FutureTask> tasks = new LinkedList<FutureTask>();
 
 		FutureTask lineChartTask = new FutureTask(new CallableTask<LineChart>() {
 			@Override
 			public LineChart call() throws Exception {
-				return buildLineChart(payload);
+				return buildAjaxLineChart(payload);
 			}
 		});
 
@@ -407,7 +407,7 @@ public class Handler implements PageHandler<Context> {
 		FutureTask comparisonTask = new FutureTask(new CallableTask<Map<String, AjaxDataDetail>>() {
 			@Override
 			public Map<String, AjaxDataDetail> call() throws Exception {
-				return buildComparisonInfo(payload);
+				return buildAjaxComparisonInfo(payload);
 			}
 		});
 		tasks.add(comparisonTask);
@@ -427,12 +427,12 @@ public class Handler implements PageHandler<Context> {
 		model.setAjaxDataDisplayInfo(info);
 	}
 
-	private void processLog(Map<String, ErrorMsg> errorMsgs, JsErrorLog log, Map<String, AtomicInteger> distributions) {
+	private void processLog(Map<String, JsErrorMsg> errorMsgs, JsErrorLog log, Map<String, AtomicInteger> distributions) {
 		String msg = log.getMsg();
-		ErrorMsg errorMsg = errorMsgs.get(msg);
+		JsErrorMsg errorMsg = errorMsgs.get(msg);
 
 		if (errorMsg == null) {
-			errorMsg = new ErrorMsg();
+			errorMsg = new JsErrorMsg();
 			errorMsg.setMsg(msg);
 			errorMsgs.put(msg, errorMsg);
 		}
@@ -443,9 +443,9 @@ public class Handler implements PageHandler<Context> {
 		addBrowserCount(log.getBrowser(), distributions);
 	}
 
-	private List<ErrorMsg> sort(Map<String, ErrorMsg> errorMsgs) {
-		List<ErrorMsg> errorMsgList = new ArrayList<ErrorMsg>();
-		Iterator<Entry<String, ErrorMsg>> iter = errorMsgs.entrySet().iterator();
+	private List<JsErrorMsg> sort(Map<String, JsErrorMsg> errorMsgs) {
+		List<JsErrorMsg> errorMsgList = new ArrayList<JsErrorMsg>();
+		Iterator<Entry<String, JsErrorMsg>> iter = errorMsgs.entrySet().iterator();
 
 		while (iter.hasNext()) {
 			errorMsgList.add(iter.next().getValue());
@@ -457,7 +457,7 @@ public class Handler implements PageHandler<Context> {
 
 	private void viewJsError(Payload payload, Model model) {
 		try {
-			Map<String, ErrorMsg> errorMsgs = new HashMap<String, ErrorMsg>();
+			Map<String, JsErrorMsg> errorMsgs = new HashMap<String, JsErrorMsg>();
 			int offset = 0;
 			int totalCount = 0;
 			Map<String, AtomicInteger> distributions = new HashMap<String, AtomicInteger>();
@@ -478,7 +478,7 @@ public class Handler implements PageHandler<Context> {
 				}
 			}
 
-			List<ErrorMsg> errorMsgList = sort(errorMsgs);
+			List<JsErrorMsg> errorMsgList = sort(errorMsgs);
 			JsErrorDisplayInfo info = new JsErrorDisplayInfo();
 
 			info.setErrors(errorMsgList);

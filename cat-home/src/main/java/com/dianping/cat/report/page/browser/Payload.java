@@ -10,7 +10,7 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.browser.service.AjaxDataField;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
 import com.dianping.cat.report.page.browser.service.JsErrorQueryEntity;
-import com.dianping.cat.report.page.browser.service.QueryType;
+import com.dianping.cat.report.page.browser.service.AjaxQueryType;
 import com.dianping.cat.report.page.browser.service.SpeedQueryEntity;
 
 import org.unidal.tuple.Pair;
@@ -31,7 +31,7 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private String m_type;
 
 	@FieldMeta("sort")
-	private String m_sort = QueryType.SUCCESS.getType();
+	private String m_sort = AjaxQueryType.SUCCESS.getType();
 
 	@FieldMeta("query1")
 	private String m_query1;

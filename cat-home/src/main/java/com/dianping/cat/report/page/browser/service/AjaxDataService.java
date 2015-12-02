@@ -18,26 +18,24 @@ import com.dianping.cat.report.page.DataSequence;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 import com.dianping.cat.report.page.browser.display.AjaxDataDetail;
 import com.dianping.cat.web.AjaxData;
-import com.dianping.cat.web.AjaxDataDao;
-import com.dianping.cat.web.AjaxDataEntity;
 
 public class AjaxDataService {
 
 	@Inject
-	private AjaxDataDao m_dao;
+	private AjaxDataBuilder m_dataBuilder;
 
 	@Inject
 	private UrlPatternConfigManager m_urlConfigManager;
 
 	public List<AjaxDataDetail> buildAjaxDataDetailInfos(AjaxDataQueryEntity entity, AjaxDataField groupByField) {
 		List<AjaxDataDetail> infos = new LinkedList<AjaxDataDetail>();
-		List<AjaxData> datas = queryByFieldCode(entity, groupByField);
+		List<AjaxData> datas = m_dataBuilder.queryByFieldCode(entity, groupByField);
 		Map<Integer, List<AjaxData>> field2Datas = buildFields2Datas(datas, groupByField);
 
 		for (Entry<Integer, List<AjaxData>> entry : field2Datas.entrySet()) {
 			List<AjaxData> datalst = entry.getValue();
 			AjaxDataDetail info = new AjaxDataDetail();
-			double ratio = computeSuccessRatio(entity.getId(), datalst);
+			double ratio = computeSuccessRatio(datalst);
 
 			info.setSuccessRatio(ratio);
 			updateAjaxDataDetailInfo(info, entry, groupByField, entity);
@@ -46,7 +44,7 @@ public class AjaxDataService {
 		return infos;
 	}
 
-	private DataSequence<AjaxData> buildAppSequence(List<AjaxData> fromDatas, Date period) {
+	private DataSequence<AjaxData> buildAjaxDataSequence(List<AjaxData> fromDatas, Date period) {
 		Map<Integer, List<AjaxData>> dataMap = new LinkedHashMap<Integer, List<AjaxData>>();
 		int max = -5;
 
@@ -87,27 +85,14 @@ public class AjaxDataService {
 		return field2Datas;
 	}
 
-	private long buildSumData(AjaxData data, QueryType type) {
-		switch (type) {
-		case DELAY:
-			return data.getResponseSumTimeSum();
-		case REQUEST_PACKAGE:
-			return data.getRequestSumByteSum();
-		case RESPONSE_PACKAGE:
-			return data.getResponseSumByteSum();
-		default:
-			throw new RuntimeException("unexpected query type, type:" + type);
-		}
-	}
-
-	public Double[] computeAvg(DataSequence<AjaxData> convertedData, QueryType type) {
+	public Double[] computeDelayAvg(DataSequence<AjaxData> convertedData) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
 		for (Entry<Integer, List<AjaxData>> entry : convertedData.getRecords().entrySet()) {
 			for (AjaxData data : entry.getValue()) {
 				long count = data.getAccessNumberSum();
-				long sum = buildSumData(data, type);
+				long sum = data.getResponseSumTimeSum();
 				double avg = sum / count;
 				int index = data.getMinuteOrder() / 5;
 
@@ -136,7 +121,7 @@ public class AjaxDataService {
 		return value;
 	}
 
-	public Double[] computeSuccessRatio(int commandId, DataSequence<AjaxData> convertedData) {
+	public Double[] computeSuccessRatio(DataSequence<AjaxData> convertedData) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
@@ -150,7 +135,7 @@ public class AjaxDataService {
 				int index = key / 5;
 
 				if (index < n) {
-					value[index] = computeSuccessRatio(commandId, entry.getValue());
+					value[index] = computeSuccessRatio(entry.getValue());
 				}
 			}
 		} catch (Exception e) {
@@ -159,7 +144,7 @@ public class AjaxDataService {
 		return value;
 	}
 
-	private double computeSuccessRatio(int commandId, List<AjaxData> datas) {
+	private double computeSuccessRatio(List<AjaxData> datas) {
 		long success = 0;
 		long sum = 0;
 
@@ -192,78 +177,6 @@ public class AjaxDataService {
 		return defaultValue;
 	}
 
-	public List<AjaxData> queryByField(AjaxDataQueryEntity entity, AjaxDataField groupByField) {
-		List<AjaxData> datas = new ArrayList<AjaxData>();
-		int apiId = entity.getId();
-		Date period = entity.getDate();
-		int city = entity.getCity();
-		int operator = entity.getOperator();
-		int code = entity.getCode();
-		int startMinuteOrder = entity.getStartMinuteOrder();
-		int endMinuteOrder = entity.getEndMinuteOrder();
-		int network = entity.getNetwork();
-
-		try {
-			switch (groupByField) {
-			case OPERATOR:
-				datas = m_dao.findDataByOperator(apiId, period, city, operator, code, network, startMinuteOrder,
-				      endMinuteOrder, AjaxDataEntity.READSET_OPERATOR_DATA);
-				break;
-			case CITY:
-				datas = m_dao.findDataByCity(apiId, period, city, operator, code, network, startMinuteOrder,
-				      endMinuteOrder, AjaxDataEntity.READSET_CITY_DATA);
-				break;
-			case CODE:
-				datas = m_dao.findDataByCode(apiId, period, city, operator, code, network, startMinuteOrder,
-				      endMinuteOrder, AjaxDataEntity.READSET_CODE_DATA);
-				break;
-			case NETWORK:
-				datas = m_dao.findDataByNetwork(apiId, period, city, operator, code, network, startMinuteOrder,
-				      endMinuteOrder, AjaxDataEntity.READSET_NETWORK_DATA);
-				break;
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return datas;
-	}
-
-	private List<AjaxData> queryByFieldCode(AjaxDataQueryEntity entity, AjaxDataField groupByField) {
-		List<AjaxData> datas = new ArrayList<AjaxData>();
-		int commandId = entity.getId();
-		Date period = entity.getDate();
-		int city = entity.getCity();
-		int operator = entity.getOperator();
-		int network = entity.getNetwork();
-		int code = entity.getCode();
-		int startMinuteOrder = entity.getStartMinuteOrder();
-		int endMinuteOrder = entity.getEndMinuteOrder();
-
-		try {
-			switch (groupByField) {
-			case OPERATOR:
-				datas = m_dao.findDataByOperatorCode(commandId, period, city, operator, network, code,
-				      AjaxDataEntity.READSET_OPERATOR_CODE_DATA);
-				break;
-			case NETWORK:
-				datas = m_dao.findDataByNetworkCode(commandId, period, city, operator, network, code,
-				      AjaxDataEntity.READSET_NETWORK_CODE_DATA);
-				break;
-			case CITY:
-				datas = m_dao.findDataByCityCode(commandId, period, city, operator, network, code,
-				      AjaxDataEntity.READSET_CITY_CODE_DATA);
-				break;
-			case CODE:
-				datas = m_dao.findDataByCode(commandId, period, city, operator, code, network, startMinuteOrder,
-				      endMinuteOrder, AjaxDataEntity.READSET_CODE_DATA);
-				break;
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return datas;
-	}
-
 	private int queryFieldValue(AjaxData data, AjaxDataField field) {
 		switch (field) {
 		case OPERATOR:
@@ -279,7 +192,7 @@ public class AjaxDataService {
 	}
 
 	public double queryOneDayDelayAvg(AjaxDataQueryEntity entity) {
-		Double[] values = queryValue(entity, QueryType.DELAY);
+		Double[] values = queryValue(entity, AjaxQueryType.DELAY);
 		double delaySum = 0;
 		int size = 0;
 
@@ -292,53 +205,19 @@ public class AjaxDataService {
 		return size > 0 ? delaySum / size : -1;
 	}
 
-	public Double[] queryValue(AjaxDataQueryEntity entity, QueryType type) {
-		int apiId = entity.getId();
-		Date period = entity.getDate();
-		int city = entity.getCity();
-		int operator = entity.getOperator();
-		int code = entity.getCode();
-		int network = entity.getNetwork();
-		List<AjaxData> datas = new ArrayList<AjaxData>();
-		DataSequence<AjaxData> s = null;
-		try {
-			switch (type) {
-			case SUCCESS:
-				datas = m_dao.findDataByMinuteCode(apiId, period, city, operator, code, network,
-				      AjaxDataEntity.READSET_SUCCESS_DATA);
-				s = buildAppSequence(datas, entity.getDate());
-
-				return computeSuccessRatio(apiId, s);
-			case REQUEST:
-				datas = m_dao.findDataByMinute(apiId, period, city, operator, code, network,
-				      AjaxDataEntity.READSET_COUNT_DATA);
-				s = buildAppSequence(datas, entity.getDate());
-
-				return computeRequestCount(s);
-			case DELAY:
-				datas = m_dao.findDataByMinute(apiId, period, city, operator, code, network,
-				      AjaxDataEntity.READSET_AVG_DATA);
-				s = buildAppSequence(datas, entity.getDate());
-
-				return computeAvg(s, type);
-			case REQUEST_PACKAGE:
-				datas = m_dao.findDataByMinute(apiId, period, city, operator, code, network,
-				      AjaxDataEntity.READSET_REQUEST_BYTE_AVG_DATA);
-				s = buildAppSequence(datas, entity.getDate());
-
-				return computeAvg(s, type);
-			case RESPONSE_PACKAGE:
-				datas = m_dao.findDataByMinute(apiId, period, city, operator, code, network,
-				      AjaxDataEntity.READSET_RESPONSE_BYTE_AVG_DATA);
-				s = buildAppSequence(datas, entity.getDate());
-
-				return computeAvg(s, type);
-
-			}
-
-		} catch (Exception e) {
-			Cat.logError(e);
+	public Double[] queryValue(AjaxDataQueryEntity entity, AjaxQueryType type) {
+		List<AjaxData> datas = m_dataBuilder.queryByMinute(entity, type);
+		DataSequence<AjaxData> ajaxDataSequence = buildAjaxDataSequence(datas, entity.getDate());
+		
+		switch (type) {
+		case SUCCESS:
+			return computeSuccessRatio(ajaxDataSequence);
+		case REQUEST:
+			return computeRequestCount(ajaxDataSequence);
+		case DELAY:
+			return computeDelayAvg(ajaxDataSequence);
 		}
+
 		return null;
 	}
 
@@ -373,6 +252,7 @@ public class AjaxDataService {
 			responsePackageSum += data.getResponseSumByteSum();
 			requestPackageSum += data.getRequestSumByteSum();
 		}
+
 		double responseTimeAvg = accessNumberSum == 0 ? 0 : (double) responseTimeSum / accessNumberSum;
 		double responsePackageAvg = accessNumberSum == 0 ? 0 : (double) responsePackageSum / accessNumberSum;
 		double requestPackageAvg = accessNumberSum == 0 ? 0 : (double) requestPackageSum / accessNumberSum;

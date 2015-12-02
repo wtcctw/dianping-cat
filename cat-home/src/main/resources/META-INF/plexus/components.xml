@@ -5719,7 +5719,7 @@
 					<role>com.dianping.cat.report.page.browser.service.AjaxDataService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.browser.graph.WebGraphCreator</role>
+					<role>com.dianping.cat.report.page.browser.service.AjaxGraphCreator</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.browser.JspViewer</role>
@@ -5752,10 +5752,19 @@
 			<implementation>com.dianping.cat.report.page.browser.service.AjaxDataService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.web.AjaxDataDao</role>
+					<role>com.dianping.cat.report.page.browser.service.AjaxDataBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.browser.service.AjaxDataBuilder</role>
+			<implementation>com.dianping.cat.report.page.browser.service.AjaxDataBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.web.AjaxDataDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5784,9 +5793,12 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.browser.graph.WebGraphCreator</role>
-			<implementation>com.dianping.cat.report.page.browser.graph.WebGraphCreator</implementation>
+			<role>com.dianping.cat.report.page.browser.service.AjaxGraphCreator</role>
+			<implementation>com.dianping.cat.report.page.browser.service.AjaxGraphCreator</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.browser.service.AjaxDataBuilder</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.browser.service.AjaxDataService</role>
 				</requirement>
