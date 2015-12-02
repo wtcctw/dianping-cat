@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -13,6 +12,7 @@ import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.browser.display.WebSpeedDetail;
 import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
@@ -23,18 +23,10 @@ public class WebSpeedService extends ContainerHolder {
 	@Inject
 	private WebSpeedDataBuilder m_dataBuilder;
 
-	private final static String CURRENT = "当前值";
-
-	private final static String COMPARISION = "对比值";
-
-	private WebSpeedDetail build5MinuteData(int minute, List<WebSpeedData> datas, Date period) {
-		long accessSum = 0;
-		double responseSum = 0, responseAvg = 0;
-
-		for (WebSpeedData data : datas) {
-			accessSum += data.getAccessNumberSum();
-			responseSum += data.getResponseSumTimeSum();
-		}
+	private WebSpeedDetail build5MinuteData(int minute, WebSpeedData data, Date period) {
+		double responseAvg = 0.0;
+		long accessSum = data.getAccessNumberSum();
+		double responseSum = data.getResponseSumTimeSum();
 
 		if (accessSum > 0) {
 			responseAvg = responseSum / accessSum;
@@ -63,27 +55,27 @@ public class WebSpeedService extends ContainerHolder {
 		return lineChart;
 	}
 
-	private Map<String, WebSpeedDetail> buildOneDayData(Map<String, WebSpeedSequence> datas) {
+	private Map<String, WebSpeedDetail> buildSpeedSummary(Map<String, WebSpeedSequence> datas) {
 		Map<String, WebSpeedDetail> summarys = new LinkedHashMap<String, WebSpeedDetail>();
 
 		for (Entry<String, WebSpeedSequence> entry : datas.entrySet()) {
 			try {
-				Map<Integer, List<WebSpeedData>> appSpeedData = entry.getValue().getRecords();
+				Map<Integer, WebSpeedData> appSpeedData = entry.getValue().getRecords();
 				Date period = entry.getValue().getPeriod();
 
 				if (!appSpeedData.isEmpty()) {
 					long accessSum = 0;
 					double responseSum = 0, responseAvg = 0;
 
-					for (Entry<Integer, List<WebSpeedData>> e : appSpeedData.entrySet()) {
-						for (WebSpeedData data : e.getValue()) {
-							accessSum += data.getAccessNumberSum();
-							responseSum += data.getResponseSumTimeSum();
-						}
+					for (Entry<Integer, WebSpeedData> e : appSpeedData.entrySet()) {
+						accessSum += e.getValue().getAccessNumberSum();
+						responseSum += e.getValue().getResponseSumTimeSum();
 					}
+
 					if (accessSum > 0) {
 						responseAvg = responseSum / accessSum;
 					}
+
 					WebSpeedDetail d = new WebSpeedDetail();
 
 					d.setPeriod(period);
@@ -102,15 +94,15 @@ public class WebSpeedService extends ContainerHolder {
 		Map<String, List<WebSpeedDetail>> details = new LinkedHashMap<String, List<WebSpeedDetail>>();
 
 		for (Entry<String, WebSpeedSequence> entry : datas.entrySet()) {
-			Map<Integer, List<WebSpeedData>> appSpeedDataMap = entry.getValue().getRecords();
+			Map<Integer, WebSpeedData> appSpeedDataMap = entry.getValue().getRecords();
 			Date period = entry.getValue().getPeriod();
 			List<WebSpeedDetail> detail = new ArrayList<WebSpeedDetail>();
 
-			for (Entry<Integer, List<WebSpeedData>> e : appSpeedDataMap.entrySet()) {
+			for (Entry<Integer, WebSpeedData> e : appSpeedDataMap.entrySet()) {
 				int minute = e.getKey();
-				List<WebSpeedData> data = e.getValue();
-
-				if (!data.isEmpty()) {
+				WebSpeedData data = e.getValue();
+				
+				if (data != null) {
 					detail.add(build5MinuteData(minute, data, period));
 				}
 			}
@@ -131,26 +123,20 @@ public class WebSpeedService extends ContainerHolder {
 		return m_dataBuilder.buildChart(queryEntity);
 	}
 
-
 	private WebSpeedSequence buildWebSequence(List<WebSpeedData> fromDatas, Date period) {
-		Map<Integer, List<WebSpeedData>> dataMap = new LinkedHashMap<Integer, List<WebSpeedData>>();
+		Map<Integer, WebSpeedData> dataMap = new LinkedHashMap<Integer, WebSpeedData>();
 		int max = -5;
 
-		for (WebSpeedData from : fromDatas) {
-			int minute = from.getMinuteOrder();
+		for (WebSpeedData data : fromDatas) {
+			int minute = data.getMinuteOrder();
 
 			if (max < 0 || max < minute) {
 				max = minute;
 			}
-			List<WebSpeedData> datas = dataMap.get(minute);
 
-			if (datas == null) {
-				datas = new LinkedList<WebSpeedData>();
-
-				dataMap.put(minute, datas);
-			}
-			datas.add(from);
+			dataMap.put(minute, data);
 		}
+
 		int n = max / 5 + 1;
 		int length = queryWebDataDuration(period, n);
 
@@ -162,7 +148,7 @@ public class WebSpeedService extends ContainerHolder {
 
 		info.setLineChart(buildLineChart(datas));
 		info.setWebSpeedDetails(buildSpeedDetail(datas));
-		info.setWebSpeedSummarys(buildOneDayData(datas));
+		info.setWebSpeedSummarys(buildSpeedSummary(datas));
 
 		return info;
 	}
@@ -171,21 +157,20 @@ public class WebSpeedService extends ContainerHolder {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
-		for (Entry<Integer, List<WebSpeedData>> entry : convertedData.getRecords().entrySet()) {
-			for (WebSpeedData data : entry.getValue()) {
-				long count = data.getAccessNumberSum();
-				long sum = data.getResponseSumTimeSum();
-				double avg = 0;
+		for (Entry<Integer, WebSpeedData> entry : convertedData.getRecords().entrySet()) {
+			WebSpeedData data = entry.getValue();
+			long count = data.getAccessNumberSum();
+			long sum = data.getResponseSumTimeSum();
+			double avg = 0;
 
-				if (count > 0) {
-					avg = sum / count;
-				}
+			if (count > 0) {
+				avg = sum / count;
+			}
 
-				int index = data.getMinuteOrder() / 5;
+			int index = data.getMinuteOrder() / 5;
 
-				if (index < n) {
-					value[index] = avg;
-				}
+			if (index < n) {
+				value[index] = avg;
 			}
 		}
 		return value;
@@ -193,9 +178,8 @@ public class WebSpeedService extends ContainerHolder {
 
 	private WebSpeedSequence queryData(SpeedQueryEntity queryEntity) {
 		List<WebSpeedData> datas = m_dataBuilder.queryValueByTime(queryEntity);
-		WebSpeedSequence sequence = buildWebSequence(datas, queryEntity.getDate());
 
-		return sequence;
+		return buildWebSequence(datas, queryEntity.getDate());
 	}
 
 	private Map<String, WebSpeedSequence> queryRawData(SpeedQueryEntity queryEntity1, SpeedQueryEntity queryEntity2) {
@@ -205,7 +189,7 @@ public class WebSpeedService extends ContainerHolder {
 			WebSpeedSequence data1 = queryData(queryEntity1);
 
 			if (data1.getDuration() > 0) {
-				datas.put(CURRENT, data1);
+				datas.put(Constants.CURRENT_STR, data1);
 			}
 		}
 
@@ -213,7 +197,7 @@ public class WebSpeedService extends ContainerHolder {
 			WebSpeedSequence data2 = queryData(queryEntity2);
 
 			if (data2.getDuration() > 0) {
-				datas.put(COMPARISION, data2);
+				datas.put(Constants.COMPARISION_STR, data2);
 			}
 		}
 		return datas;
@@ -237,14 +221,15 @@ public class WebSpeedService extends ContainerHolder {
 		return defaultValue;
 	}
 
-	public class WebSpeedSequence {
+	protected class WebSpeedSequence {
+
 		private Date m_period;
 
 		protected int m_duration;
 
-		protected Map<Integer, List<WebSpeedData>> m_records;
+		protected Map<Integer, WebSpeedData> m_records;
 
-		public WebSpeedSequence(Date period, int duration, Map<Integer, List<WebSpeedData>> records) {
+		public WebSpeedSequence(Date period, int duration, Map<Integer, WebSpeedData> records) {
 			m_period = period;
 			m_duration = duration;
 			m_records = records;
@@ -258,7 +243,7 @@ public class WebSpeedService extends ContainerHolder {
 			return m_period;
 		}
 
-		public Map<Integer, List<WebSpeedData>> getRecords() {
+		public Map<Integer, WebSpeedData> getRecords() {
 			return m_records;
 		}
 	}

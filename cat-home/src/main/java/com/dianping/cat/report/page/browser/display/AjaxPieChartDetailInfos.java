@@ -3,7 +3,7 @@ package com.dianping.cat.report.page.browser.display;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PieChartDetailInfos {
+public class AjaxPieChartDetailInfos {
 
 	private List<PieChartDetailInfo> m_details = new LinkedList<PieChartDetailInfo>();
 

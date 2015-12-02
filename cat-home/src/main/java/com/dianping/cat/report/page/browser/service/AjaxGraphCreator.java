@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.browser.graph;
+package com.dianping.cat.report.page.browser.service;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -16,15 +16,13 @@ import com.dianping.cat.configuration.web.url.entity.Code;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
-import com.dianping.cat.report.page.browser.display.PieChartDetailInfos;
-import com.dianping.cat.report.page.browser.display.PieChartDetailInfos.PieChartDetailInfo;
-import com.dianping.cat.report.page.browser.service.AjaxDataField;
-import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
-import com.dianping.cat.report.page.browser.service.AjaxDataService;
-import com.dianping.cat.report.page.browser.service.QueryType;
+import com.dianping.cat.report.page.browser.display.AjaxPieChartDetailInfos;
+import com.dianping.cat.report.page.browser.display.AjaxPieChartDetailInfos.PieChartDetailInfo;
 import com.dianping.cat.web.AjaxData;
 
-public class WebGraphCreator {
+public class AjaxGraphCreator {
+	@Inject
+	private AjaxDataBuilder m_dataBuilder;
 
 	@Inject
 	private AjaxDataService m_WebApiService;
@@ -35,17 +33,17 @@ public class WebGraphCreator {
 	@Inject
 	private UrlPatternConfigManager m_patternManager;
 
-	public LineChart buildChartData(final Map<String, Double[]> datas, QueryType type) {
+	public LineChart buildChartData(final Map<String, Double[]> datas, AjaxQueryType type) {
 		LineChart lineChart = new LineChart();
 		lineChart.setId("app");
 		lineChart.setUnit("");
 		lineChart.setHtmlTitle(type.getTitle());
 
-		if (QueryType.SUCCESS.getType().equals(type)) {
+		if (AjaxQueryType.SUCCESS.getType().equals(type)) {
 			lineChart.setMinYlable(lineChart.queryMinYlable(datas));
 			lineChart.setMaxYlabel(100D);
 		}
-		
+
 		for (Entry<String, Double[]> entry : datas.entrySet()) {
 			Double[] data = entry.getValue();
 
@@ -54,7 +52,7 @@ public class WebGraphCreator {
 		return lineChart;
 	}
 
-	public LineChart buildLineChart(AjaxDataQueryEntity queryEntity1, AjaxDataQueryEntity queryEntity2, QueryType type) {
+	public LineChart buildLineChart(AjaxDataQueryEntity queryEntity1, AjaxDataQueryEntity queryEntity2, AjaxQueryType type) {
 		Map<String, Double[]> datas = new LinkedHashMap<String, Double[]>();
 
 		if (queryEntity1 != null) {
@@ -71,10 +69,10 @@ public class WebGraphCreator {
 		return buildChartData(datas, type);
 	}
 
-	public Pair<PieChart, PieChartDetailInfos> buildPieChart(AjaxDataQueryEntity entity, AjaxDataField field) {
+	public Pair<PieChart, AjaxPieChartDetailInfos> buildPieChart(AjaxDataQueryEntity entity, AjaxDataField field) {
 		PieChart pieChart = new PieChart().setMaxSize(Integer.MAX_VALUE);
 		List<Item> items = new ArrayList<Item>();
-		List<AjaxData> datas = m_WebApiService.queryByField(entity, field);
+		List<AjaxData> datas = m_dataBuilder.queryByField(entity, field);
 
 		for (AjaxData data : datas) {
 			items.add(buildPieChartItem(entity.getId(), data, field));
@@ -82,9 +80,9 @@ public class WebGraphCreator {
 		pieChart.setTitle(field.getName() + "访问情况");
 		pieChart.addItems(items);
 
-		PieChartDetailInfos infos = buildPieChartDetailInfo(items);
+		AjaxPieChartDetailInfos infos = buildPieChartDetailInfo(items);
 
-		return new Pair<PieChart, PieChartDetailInfos>(pieChart, infos);
+		return new Pair<PieChart, AjaxPieChartDetailInfos>(pieChart, infos);
 	}
 
 	private Pair<Integer, String> buildPieChartFieldTitlePair(int command, AjaxData data, AjaxDataField field) {
@@ -155,8 +153,8 @@ public class WebGraphCreator {
 		return item;
 	}
 
-	private PieChartDetailInfos buildPieChartDetailInfo(List<Item> items) {
-		PieChartDetailInfos infos = new PieChartDetailInfos();
+	private AjaxPieChartDetailInfos buildPieChartDetailInfo(List<Item> items) {
+		AjaxPieChartDetailInfos infos = new AjaxPieChartDetailInfos();
 		double sum = 0;
 
 		for (Item item : items) {

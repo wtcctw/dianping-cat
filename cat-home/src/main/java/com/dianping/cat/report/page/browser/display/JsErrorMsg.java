@@ -3,7 +3,7 @@ package com.dianping.cat.report.page.browser.display;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ErrorMsg implements Comparable<ErrorMsg> {
+public class JsErrorMsg implements Comparable<JsErrorMsg> {
 
 	private String m_msg;
 
@@ -24,7 +24,7 @@ public class ErrorMsg implements Comparable<ErrorMsg> {
 	}
 
 	@Override
-	public int compareTo(ErrorMsg o) {
+	public int compareTo(JsErrorMsg o) {
 		return o.getCount() - this.m_count;
 	}
 
