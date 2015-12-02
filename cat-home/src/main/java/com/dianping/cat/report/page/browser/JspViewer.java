@@ -14,10 +14,10 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.JS_ERROR.getPath();
 		case JS_ERROR_DETAIL:
 			return JspFile.JS_ERROR_DETAIL.getPath();
-		case VIEW:
-			return JspFile.VIEW.getPath();
-		case PIECHART:
-			return JspFile.PIECHART.getPath();
+		case AJAX_LINECHART:
+			return JspFile.AJAX_LINECHART.getPath();
+		case AJAX_PIECHART:
+			return JspFile.AJAX_PIECHART.getPath();
 		case SPEED:
 			return JspFile.SPEED.getPath();
 		case SPEED_GRAPH:

@@ -3,11 +3,11 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx" type="com.dianping.cat.report.page.web.Context" scope="request" />
-<jsp:useBean id="payload" type="com.dianping.cat.report.page.web.Payload" scope="request" />
-<jsp:useBean id="model" type="com.dianping.cat.report.page.web.Model" scope="request" />
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.browser.Context" scope="request" />
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.browser.Payload" scope="request" />
+<jsp:useBean id="model" type="com.dianping.cat.report.page.browser.Model" scope="request" />
 
-<a:application>
+<a:web_body>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
@@ -63,12 +63,13 @@
 			var end = converTimeFormat($("#time2").val());
 			var command = $("#command").val().split('|')[0];
 			var commandId = ${model.pattern2Items}[command].id;
-			var code = $("#code").val();
+			var code = $("#codeStatus").val();
 			var city = $("#city").val();
 			var operator = $("#operator").val();
+			var network = $("#network").val();
 			var split = ";";
 			var query1 = period + split + commandId + split + code + split
-					+ city + split + operator + split + start + split + end;
+					+ city + split + operator + split + start + split + end + split + network;
 			
 			var field = $("#piechartSelect").val();
 			var href = "?op=piechart&query1=" + query1 + "&groupByField=" + field+"&api1="+$("#command").val();
@@ -79,12 +80,15 @@
 			document.getElementById("code").disabled = false;
 			document.getElementById("city").disabled = false;
 			document.getElementById("operator").disabled = false;
+			document.getElementById("network").disabled = false;
 			document.getElementById($("#piechartSelect").val()).disabled = true;
 		}
 
 		$(document).ready(
 				function() {
+					$('#Web_report').addClass('active open');
 					$('#web_piechart').addClass('active');
+					$('#Web_report').addClass('active open');
 					$('#time').datetimepicker({
 						format:'Y-m-d H:i',
 						step:30,
@@ -119,9 +123,10 @@
 					}else{
 						$("#command").val('${model.defaultApi}');
 					}
-					$("#code").val(words[2]);
+					$("#codeStatus").val(words[2]);
 					$("#city").val(words[3]);
 					$("#operator").val(words[4]);
+					$("#network").val(words[7]);
 					$("#piechartSelect").val('${payload.groupByField.name}');
 					refreshDisabled();
 					
@@ -163,12 +168,12 @@
 								return false;
 							}		
 						);
-					graphPieChart(document.getElementById('piechart'), ${model.pieChart.jsonString});
+					graphPieChart(document.getElementById('piechart'), ${model.ajaxDataDisplayInfo.pieChart.jsonString});
 				});
 	</script>
 	
-		<%@include file="piechartDetail.jsp"%>
-</a:application>
+		<%@include file="ajaxPieChartDetail.jsp"%>
+</a:web_body>
 
 <style type="text/css">
 	.row-fluid .span2{
