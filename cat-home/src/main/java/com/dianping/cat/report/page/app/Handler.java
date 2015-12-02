@@ -42,12 +42,12 @@ import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChartDetailInfo;
+import com.dianping.cat.report.graph.PieChartDetailInfo.Item;
 import com.dianping.cat.report.page.app.display.AppCommandsSorter;
 import com.dianping.cat.report.page.app.display.AppConnectionGraphCreator;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
 import com.dianping.cat.report.page.app.display.AppGraphCreator;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
-import com.dianping.cat.report.page.app.display.ChartSorter;
 import com.dianping.cat.report.page.app.display.CodeDisplayVisitor;
 import com.dianping.cat.report.page.app.display.DisplayCommands;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor;
@@ -108,7 +108,7 @@ public class Handler implements PageHandler<Context> {
 
 		try {
 			appDetails = m_appDataService.buildAppDataDetailInfos(payload.getQueryEntity1(), payload.getGroupByField());
-			Collections.sort(appDetails, new ChartSorter(payload.getSort()).buildLineChartInfoComparator());
+			Collections.sort(appDetails, new LineChartDetailInfoComparator(payload.getSort()));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -177,7 +177,7 @@ public class Handler implements PageHandler<Context> {
 		try {
 			lineChart = m_appConnectionGraphCreator.buildLineChart(entity1, entity2, type);
 			appDetails = m_appConnectionService.buildAppDataDetailInfos(entity1, payload.getGroupByField());
-			Collections.sort(appDetails, new ChartSorter(payload.getSort()).buildLineChartInfoComparator());
+			Collections.sort(appDetails, new LineChartDetailInfoComparator(payload.getSort()));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -185,13 +185,13 @@ public class Handler implements PageHandler<Context> {
 
 	}
 
-	private Pair<PieChart, List<PieChartDetailInfo>> buildConnPieChart(Payload payload) {
+	private Pair<PieChart, PieChartDetailInfo> buildConnPieChart(Payload payload) {
 		try {
-			Pair<PieChart, List<PieChartDetailInfo>> pair = m_appConnectionGraphCreator.buildPieChart(
-			      payload.getQueryEntity1(), payload.getGroupByField());
-			List<PieChartDetailInfo> infos = pair.getValue();
+			Pair<PieChart, PieChartDetailInfo> pair = m_appConnectionGraphCreator.buildPieChart(payload.getQueryEntity1(),
+			      payload.getGroupByField());
+			PieChartDetailInfo info = pair.getValue();
 
-			Collections.sort(infos, new ChartSorter().buildPieChartInfoComparator());
+			Collections.sort(info.getItems(), new PieChartDetailInfoComparator());
 			return pair;
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -252,12 +252,12 @@ public class Handler implements PageHandler<Context> {
 		return page2Steps;
 	}
 
-	private Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(Payload payload) {
+	private Pair<PieChart, PieChartDetailInfo> buildPieChart(Payload payload) {
 		try {
-			Pair<PieChart, List<PieChartDetailInfo>> pair = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(),
+			Pair<PieChart, PieChartDetailInfo> pair = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(),
 			      payload.getGroupByField());
-			List<PieChartDetailInfo> infos = pair.getValue();
-			Collections.sort(infos, new ChartSorter().buildPieChartInfoComparator());
+			PieChartDetailInfo info = pair.getValue();
+			Collections.sort(info.getItems(), new PieChartDetailInfoComparator());
 
 			return pair;
 		} catch (Exception e) {
@@ -302,11 +302,11 @@ public class Handler implements PageHandler<Context> {
 			parallelBuildLineChart(model, payload);
 			break;
 		case PIECHART:
-			Pair<PieChart, List<PieChartDetailInfo>> pieChartPair = buildPieChart(payload);
+			Pair<PieChart, PieChartDetailInfo> pieChartPair = buildPieChart(payload);
 
 			if (pieChartPair != null) {
 				model.setPieChart(pieChartPair.getKey());
-				model.setPieChartDetailInfos(pieChartPair.getValue());
+				model.setPieChartDetailInfo(pieChartPair.getValue());
 			}
 			int commandId = payload.getQueryEntity1().getId();
 
@@ -323,7 +323,7 @@ public class Handler implements PageHandler<Context> {
 			model.setFetchData(m_jsonBuilder.toJson(lineChartObjs));
 			break;
 		case PIECHART_JSON:
-			Pair<PieChart, List<PieChartDetailInfo>> pieChartJsonPair = buildPieChart(payload);
+			Pair<PieChart, PieChartDetailInfo> pieChartJsonPair = buildPieChart(payload);
 
 			if (pieChartJsonPair != null) {
 				Map<String, Object> pieChartObjs = new HashMap<String, Object>();
@@ -447,7 +447,7 @@ public class Handler implements PageHandler<Context> {
 
 			if (pieChartPair != null) {
 				model.setPieChart(pieChartPair.getKey());
-				model.setPieChartDetailInfos(pieChartPair.getValue());
+				model.setPieChartDetailInfo(pieChartPair.getValue());
 			}
 			commandId = payload.getQueryEntity1().getId();
 
@@ -595,6 +595,52 @@ public class Handler implements PageHandler<Context> {
 
 			return id2 - id1;
 		}
+	}
 
+	public static class PieChartDetailInfoComparator implements Comparator<Item> {
+
+		@Override
+		public int compare(Item o1, Item o2) {
+			double sum2 = o2.getRequestSum();
+			double sum1 = o1.getRequestSum();
+
+			if (sum2 > sum1) {
+				return 1;
+			} else if (sum2 < sum1) {
+				return -1;
+			} else {
+				return 0;
+			}
+		}
+	}
+
+	public static class LineChartDetailInfoComparator implements Comparator<AppDataDetail> {
+
+		private String m_sortBy;
+
+		public LineChartDetailInfoComparator() {
+			this(AppDataService.REQUEST);
+		}
+
+		public LineChartDetailInfoComparator(String sortBy) {
+			m_sortBy = sortBy;
+		}
+
+		@Override
+		public int compare(AppDataDetail o1, AppDataDetail o2) {
+			if (AppDataService.SUCCESS.equals(m_sortBy)) {
+				return (int) ((o2.getSuccessRatio() - o1.getSuccessRatio()) * 1000);
+			} else if (AppDataService.REQUEST.equals(m_sortBy)) {
+				return (int) (o2.getAccessNumberSum() - o1.getAccessNumberSum());
+			} else if (AppDataService.DELAY.equals(m_sortBy)) {
+				return (int) ((o2.getResponseTimeAvg() - o1.getResponseTimeAvg()) * 1000);
+			} else if (AppDataService.REQUEST_PACKAGE.equals(m_sortBy)) {
+				return (int) ((o2.getRequestPackageAvg() - o1.getRequestPackageAvg()) * 1000);
+			} else if (AppDataService.RESPONSE_PACKAGE.equals(m_sortBy)) {
+				return (int) ((o2.getResponsePackageAvg() - o1.getResponsePackageAvg()) * 1000);
+			} else {
+				return 0;
+			}
+		}
 	}
 }

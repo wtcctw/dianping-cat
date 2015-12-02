@@ -5722,12 +5722,6 @@
 					<role>com.dianping.cat.report.page.browser.graph.WebGraphCreator</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.web.JsErrorLogContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.web.JsErrorLogDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.browser.JspViewer</role>
 				</requirement>
 				<requirement>
@@ -5747,6 +5741,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.browser.service.WebSpeedService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.browser.service.JsErrorLogService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5814,24 +5811,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.web.JsErrorLogContentDao</role>
-			<implementation>com.dianping.cat.web.JsErrorLogContentDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.web.JsErrorLogDao</role>
-			<implementation>com.dianping.cat.web.JsErrorLogDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.browser.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.browser.JspViewer</implementation>
 			<requirements>
@@ -5846,6 +5825,15 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.web.JsErrorLogDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.web.JsErrorLogDao</role>
+			<implementation>com.dianping.cat.web.JsErrorLogDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5888,6 +5876,27 @@
 		<component>
 			<role>com.dianping.cat.web.WebSpeedDataDao</role>
 			<implementation>com.dianping.cat.web.WebSpeedDataDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.browser.service.JsErrorLogService</role>
+			<implementation>com.dianping.cat.report.page.browser.service.JsErrorLogService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.web.JsErrorLogContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.web.JsErrorLogDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.web.JsErrorLogContentDao</role>
+			<implementation>com.dianping.cat.web.JsErrorLogContentDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>

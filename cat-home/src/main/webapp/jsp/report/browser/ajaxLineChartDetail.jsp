@@ -145,7 +145,7 @@
 		</div>
 
 		<div style="float: left; width: 100%;">
-			<div id="${model.lineChart.id}"></div>
+			<div id="${model.ajaxDataDisplayInfo.lineChart.id}"></div>
 		</div>
 		<br/>
  <table id="web_content" class="table table-striped table-condensed table-bordered table-hover">
@@ -159,7 +159,7 @@
 		<th class="right text-success">平均回包(B)</th>
 	</tr></thead>
 	<tbody>
-		<c:forEach var="item" items="${model.comparisonAjaxDetails}">
+		<c:forEach var="item" items="${model.ajaxDataDisplayInfo.comparisonAjaxDetails}">
 		<tr class="right">
 			<td>${item.key}</td>
 			<td>${w:format(item.value.successRatio,'#0.000')}%</td>
@@ -186,7 +186,7 @@
 		<th class="right"><a href="javascript:queryGroupBy('responsePackage');">平均回包</a>(B)</th>
 	</tr></thead>
 	<tbody>
-	<c:forEach var="item" items="${model.ajaxDataDetailInfos}" varStatus="status">
+	<c:forEach var="item" items="${model.ajaxDataDisplayInfo.ajaxDataDetailInfos}" varStatus="status">
 		<tr class="right">
 		<c:set var="networkCode" value="${item.network eq '-1' ? '' : item.network}"/>
 		<c:set var="cityCode" value="${item.city eq '-1' ? '' : item.city}"/>

@@ -41,7 +41,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	@EntityMeta
 	private PieChart m_pieChart;
 
-	private List<PieChartDetailInfo> m_pieChartDetailInfos;
+	private PieChartDetailInfo m_pieChartDetailInfo;
 
 	private Map<Integer, Item> m_cities;
 
@@ -256,8 +256,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_pieChart;
 	}
 
-	public List<PieChartDetailInfo> getPieChartDetailInfos() {
-		return m_pieChartDetailInfos;
+	public PieChartDetailInfo getPieChartDetailInfo() {
+		return m_pieChartDetailInfo;
 	}
 
 	public Map<Integer, Item> getPlatforms() {
@@ -372,8 +372,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_pieChart = pieChart;
 	}
 
-	public void setPieChartDetailInfos(List<PieChartDetailInfo> pieChartDetailInfos) {
-		m_pieChartDetailInfos = pieChartDetailInfos;
+	public void setPieChartDetailInfo(PieChartDetailInfo pieChartDetailInfo) {
+		m_pieChartDetailInfo = pieChartDetailInfo;
 	}
 
 	public void setPlatforms(Map<Integer, Item> platforms) {

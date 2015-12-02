@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.browser;
+package com.dianping.cat.report.page.browser.display;
 
 import java.util.ArrayList;
 import java.util.List;
