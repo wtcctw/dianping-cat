@@ -20,6 +20,7 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.page.browser.display.AjaxDataDetail;
+import com.dianping.cat.report.page.browser.display.JsErrorInfo;
 import com.dianping.cat.report.page.browser.display.PieChartDetailInfos;
 import com.dianping.cat.report.page.browser.display.WebSpeedDetail;
 import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
@@ -37,6 +38,9 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	@EntityMeta
 	private PieChart m_pieChart;
+	
+	@EntityMeta
+	private JsErrorInfo m_jsErrorInfo;
 	
 	private PieChartDetailInfos m_pieChartDetailInfos;
 
@@ -76,19 +80,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private List<ErrorMsg> m_errors;
 
-	private String m_detail;
-
-	private Date m_errorTime;
-
-	private String m_level;
-
-	private String m_module;
-
 	private String m_distributionChart;
-
-	private String m_agent;
-
-	private String m_dpid;
 
 	private WebSpeedDisplayInfo m_webSpeedDisplayInfo;
 
@@ -102,10 +94,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public Model(Context ctx) {
 		super(ctx);
-	}
-
-	public String getAgent() {
-		return m_agent;
 	}
 
 	public List<AjaxDataDetail> getAjaxDataDetailInfos() {
@@ -149,10 +137,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_defaultApi;
 	}
 
-	public String getDetail() {
-		return m_detail;
-	}
-
 	public String getDistributionChart() {
 		return m_distributionChart;
 	}
@@ -167,10 +151,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return new ArrayList<String>();
 	}
 
-	public String getDpid() {
-		return m_dpid;
-	}
-
 	public Date getEnd() {
 		return m_end;
 	}
@@ -179,20 +159,16 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_errors;
 	}
 
-	public Date getErrorTime() {
-		return m_errorTime;
-	}
-
 	public String getFetchData() {
 		return m_fetchData;
 	}
 
-	public String getJson() {
-		return m_json;
+	public JsErrorInfo getJsErrorInfo() {
+		return m_jsErrorInfo;
 	}
 
-	public String getLevel() {
-		return m_level;
+	public String getJson() {
+		return m_json;
 	}
 
 	public List<String> getLevels() {
@@ -201,10 +177,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public LineChart getLineChart() {
 		return m_lineChart;
-	}
-
-	public String getModule() {
-		return m_module;
 	}
 
 	public List<String> getModules() {
@@ -254,11 +226,11 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	public Map<String, Speed> getSpeeds() {
 		return m_speeds;
 	}
-
+	
 	public Date getStart() {
 		return m_start;
 	}
-	
+
 	public int getTotalCount() {
 		return m_totalCount;
 	}
@@ -300,10 +272,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return map;
 	}
 
-	public void setAgent(String agent) {
-		m_agent = agent;
-	}
-
 	public void setAjaxDataDetailInfos(List<AjaxDataDetail> ajaxDataDetailInfos) {
 		m_ajaxDataDetailInfos = ajaxDataDetailInfos;
 	}
@@ -340,40 +308,29 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_defaultApi = defaultApi;
 	}
 
-	public void setDetail(String detail) {
-		m_detail = detail;
-	}
-
 	public void setDistributionChart(String distributionChart) {
 		m_distributionChart = distributionChart;
-	}
-
-	public void setDpid(String dpid) {
-		m_dpid = dpid;
 	}
 
 	public void setEnd(Date end) {
 		m_end = end;
 	}
 
+
 	public void setErrors(List<ErrorMsg> errors) {
 		m_errors = errors;
-	}
-
-	public void setErrorTime(Date errorTime) {
-		m_errorTime = errorTime;
 	}
 
 	public void setFetchData(String fetchData) {
 		m_fetchData = fetchData;
 	}
 
-	public void setJson(String json) {
-		m_json = json;
+	public void setJsErrorInfo(JsErrorInfo jsErrorInfo) {
+		m_jsErrorInfo = jsErrorInfo;
 	}
 
-	public void setLevel(String level) {
-		m_level = level;
+	public void setJson(String json) {
+		m_json = json;
 	}
 
 	public void setLevels(List<String> levels) {
@@ -382,10 +339,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setLineChart(LineChart lineChart) {
 		m_lineChart = lineChart;
-	}
-
-	public void setModule(String module) {
-		m_module = module;
 	}
 
 	public void setModules(List<String> modules) {

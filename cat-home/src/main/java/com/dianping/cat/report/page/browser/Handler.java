@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -33,6 +32,7 @@ import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.page.browser.display.AjaxDataDetail;
 import com.dianping.cat.report.page.browser.display.AjaxDataDetailSorter;
+import com.dianping.cat.report.page.browser.display.JsErrorInfo;
 import com.dianping.cat.report.page.browser.display.PieChartDetailInfos;
 import com.dianping.cat.report.page.browser.display.PieChartDetailInfos.PieChartDetailInfo;
 import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
@@ -40,15 +40,11 @@ import com.dianping.cat.report.page.browser.graph.WebGraphCreator;
 import com.dianping.cat.report.page.browser.service.AjaxDataField;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
 import com.dianping.cat.report.page.browser.service.AjaxDataService;
+import com.dianping.cat.report.page.browser.service.JsErrorLogService;
 import com.dianping.cat.report.page.browser.service.QueryType;
 import com.dianping.cat.report.page.browser.service.SpeedQueryEntity;
 import com.dianping.cat.report.page.browser.service.WebSpeedService;
 import com.dianping.cat.web.JsErrorLog;
-import com.dianping.cat.web.JsErrorLogContent;
-import com.dianping.cat.web.JsErrorLogContentDao;
-import com.dianping.cat.web.JsErrorLogContentEntity;
-import com.dianping.cat.web.JsErrorLogDao;
-import com.dianping.cat.web.JsErrorLogEntity;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
@@ -73,12 +69,6 @@ public class Handler implements PageHandler<Context> {
 	private WebGraphCreator m_graphCreator;
 
 	@Inject
-	private JsErrorLogContentDao m_jsErrorLogContentlDao;
-
-	@Inject
-	private JsErrorLogDao m_jsErrorLogDao;
-
-	@Inject
 	private JspViewer m_jspViewer;
 
 	@Inject
@@ -98,6 +88,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private WebSpeedService m_webSpeedService;
+
+	@Inject
+	private JsErrorLogService m_jsErrorLogService;
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
@@ -457,19 +450,13 @@ public class Handler implements PageHandler<Context> {
 
 	private void viewJsError(Payload payload, Model model) {
 		try {
-			Date startTime = payload.buildStartTime();
-			Date endTime = payload.buildEndTime();
-			int levelCode = payload.buildLevel();
-			String module = payload.getModule();
-			String dpid = payload.getDpid();
 			Map<String, ErrorMsg> errorMsgs = new HashMap<String, ErrorMsg>();
 			int offset = 0;
 			int totalCount = 0;
 			Map<String, Integer> distributions = new HashMap<String, Integer>();
 
 			while (true) {
-				List<JsErrorLog> result = m_jsErrorLogDao.findDataByTimeModuleLevelBrowser(startTime, endTime, module,
-				      levelCode, null, dpid, offset, LIMIT, JsErrorLogEntity.READSET_FULL);
+				List<JsErrorLog> result = m_jsErrorLogService.queryJsErrorInfo(payload.getJsErrorQuery(), offset, LIMIT);
 
 				for (JsErrorLog log : result) {
 					processLog(errorMsgs, log, distributions);
@@ -497,21 +484,8 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void viewJsErrorDetail(Payload payload, Model model) {
-		try {
-			int id = payload.getId();
-
-			JsErrorLogContent detail = m_jsErrorLogContentlDao.findByPK(id, JsErrorLogContentEntity.READSET_FULL);
-			JsErrorLog jsErrorLog = m_jsErrorLogDao.findByPK(id, JsErrorLogEntity.READSET_FULL);
-
-			model.setErrorTime(jsErrorLog.getErrorTime());
-			model.setLevel(Level.getNameByCode(jsErrorLog.getLevel()));
-			model.setModule(jsErrorLog.getModule());
-			model.setDetail(new String(detail.getContent(), "UTF-8"));
-			model.setAgent(jsErrorLog.getBrowser());
-			model.setDpid(jsErrorLog.getDpid());
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
+		JsErrorInfo info = m_jsErrorLogService.queryJsErrorInfo(payload.getId());
+		model.setJsErrorInfo(info);
 	}
 
 	public class CallableTask<T> implements Callable<T> {
@@ -520,7 +494,6 @@ public class Handler implements PageHandler<Context> {
 		public T call() throws Exception {
 			return null;
 		}
-
 	}
 
 }

@@ -1,23 +1,22 @@
 package com.dianping.cat.report.page.browser;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.web.js.Level;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.browser.service.AjaxDataField;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
+import com.dianping.cat.report.page.browser.service.JsErrorQueryEntity;
 import com.dianping.cat.report.page.browser.service.QueryType;
 import com.dianping.cat.report.page.browser.service.SpeedQueryEntity;
 
-import org.codehaus.plexus.util.StringUtils;
 import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
+import org.unidal.web.mvc.payload.annotation.ObjectMeta;
 
 public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private ReportPage m_page;
@@ -49,66 +48,16 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@FieldMeta("groupByField")
 	private AjaxDataField m_groupByField = AjaxDataField.CODE;
 
-	@FieldMeta("day")
-	private String m_day;
-
-	@FieldMeta("start")
-	private String m_startTime;
-
-	@FieldMeta("end")
-	private String m_endTime;
-
-	@FieldMeta("level")
-	private String m_level;
-
-	@FieldMeta("module")
-	private String m_module;
-
-	@FieldMeta("msg")
-	private String m_msg;
-	
-	@FieldMeta("dpid")
-	private String m_dpid;
-
 	@FieldMeta("id")
 	private int m_id;
 
-	private SimpleDateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	@ObjectMeta("jsErrorQuery")
+	private JsErrorQueryEntity m_jsErrorQuery = new JsErrorQueryEntity();
 
-	private static final String ALL = "ALL";
+	private SimpleDateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	public Payload() {
 		super(ReportPage.BROWSER);
-	}
-
-	public Date buildEndTime() {
-		if (StringUtils.isNotBlank(m_day) && StringUtils.isNotBlank(m_endTime)) {
-			try {
-				Date date = m_format.parse(m_day + " " + m_endTime);
-				return date;
-			} catch (ParseException e) {
-			}
-		}
-		return TimeHelper.getCurrentDay(1);
-	}
-
-	public int buildLevel() {
-		if (StringUtils.isEmpty(m_level) || ALL.equals(m_level)) {
-			return -1;
-		} else {
-			return Level.getCodeByName(m_level);
-		}
-	}
-
-	public Date buildStartTime() {
-		if (StringUtils.isNotBlank(m_day) && StringUtils.isNotBlank(m_startTime)) {
-			try {
-				Date date = m_format.parse(m_day + " " + m_startTime);
-				return date;
-			} catch (ParseException e) {
-			}
-		}
-		return TimeHelper.getCurrentHour();
 	}
 
 	private Date generateDate(String time, long start) {
@@ -151,22 +100,6 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public String getApi2() {
 		return m_api2;
-	}
-
-	public String getDay() {
-		return m_day;
-	}
-
-	public String getDpid() {
-		if (StringUtils.isEmpty(m_dpid)) {
-			return null;
-		} else {
-			return m_dpid;
-		}
-	}
-
-	public String getEndTime() {
-		return m_endTime;
 	}
 
 	public AjaxDataField getGroupByField() {
@@ -220,20 +153,8 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_id;
 	}
 
-	public String getLevel() {
-		return m_level;
-	}
-
-	public String getModule() {
-		if (StringUtils.isEmpty(m_module)) {
-			return null;
-		} else {
-			return m_module;
-		}
-	}
-
-	public String getMsg() {
-		return m_msg;
+	public JsErrorQueryEntity getJsErrorQuery() {
+		return m_jsErrorQuery;
 	}
 
 	@Override
@@ -243,10 +164,6 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public String getQuery1() {
 		return m_query1;
-	}
-	
-	public void setQuery1(String query1) {
-		m_query1 = query1;
 	}
 
 	public String getQuery2() {
@@ -289,10 +206,6 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		}
 	}
 
-	public String getStartTime() {
-		return m_startTime;
-	}
-
 	public String getType() {
 		return m_type;
 	}
@@ -305,18 +218,6 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
 
-	public void setDay(String day) {
-		m_day = day;
-	}
-
-	public void setDpid(String dpid) {
-		m_dpid = dpid;
-	}
-
-	public void setEndTime(String endTime) {
-		m_endTime = endTime;
-	}
-
 	public void setGroupByField(String groupByField) {
 		m_groupByField = AjaxDataField.getByName(groupByField, AjaxDataField.CODE);
 	}
@@ -325,16 +226,8 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		m_id = id;
 	}
 
-	public void setLevel(String level) {
-		m_level = level;
-	}
-
-	public void setModule(String module) {
-		m_module = module;
-	}
-
-	public void setMsg(String msg) {
-		m_msg = msg;
+	public void setJsErrorQuery(JsErrorQueryEntity jsErrorQuery) {
+		m_jsErrorQuery = jsErrorQuery;
 	}
 
 	@Override
@@ -342,12 +235,12 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		m_page = ReportPage.getByName(page, ReportPage.BROWSER);
 	}
 
-	public void setSort(String sort) {
-		m_sort = sort;
+	public void setQuery1(String query1) {
+		m_query1 = query1;
 	}
 
-	public void setStartTime(String startTime) {
-		m_startTime = startTime;
+	public void setSort(String sort) {
+		m_sort = sort;
 	}
 
 	public void setType(String type) {

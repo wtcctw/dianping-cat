@@ -7,27 +7,27 @@
 
 	<tr>
 		<td width="15%">Error Time </td>
-		<td width="85%">${model.errorTime}</td>
+		<td width="85%">${model.jsErrorInfo.errorTime}</td>
 	</tr>
 	<tr>
 		<td>Level </td>
-		<td>${model.level}</td>
+		<td>${model.jsErrorInfo.level}</td>
 	</tr>
 	<tr>
 		<td>Module </td>
-		<td>${model.module}</td>
+		<td>${model.jsErrorInfo.module}</td>
 	</tr>
 	<tr>
 		<td>Dpid </td>
-		<td>${model.dpid}</td>
+		<td>${model.jsErrorInfo.dpid}</td>
 	</tr>
 	<tr>
 		<td>Agent </td>
-		<td>${model.agent}</td>
+		<td>${model.jsErrorInfo.agent}</td>
 	</tr>
 	<tr>
 		<td>Detail </td>
-		<td>${model.detail}</td>
+		<td>${model.jsErrorInfo.detail}</td>
 	</tr>
 </table>
 <script type="text/javascript">

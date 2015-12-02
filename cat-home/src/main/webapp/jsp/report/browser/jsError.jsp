@@ -111,31 +111,31 @@ $(document).ready(
 			maxDate:0
 		});
 		
-		var startTime = '${payload.startTime}';
+		var startTime = '${payload.jsErrorQuery.startTime}';
 		if (startTime == null || startTime.length == 0) {
 			$("#time").val(getDate());
 		} else {
-			$("#time").val('${payload.day} ' + startTime);
+			$("#time").val('${payload.jsErrorQuery.day} ' + startTime);
 		}
 		
-		var endTime = '${payload.endTime}';
+		var endTime = '${payload.jsErrorQuery.endTime}';
 		if(endTime == null || endTime.length == 0){
 			$("#time2").val(getTime());
 		}else{
 			$("#time2").val(endTime);
 		}
 		
-		var level = '${payload.level}';
+		var level = '${payload.jsErrorQuery.level}';
 		if(level != null && level.length != 0) {
 			$("#level").val(level);
 		}
 		
-		var module = '${payload.module}';
+		var module = '${payload.jsErrorQuery.module}';
 		if(module != null && module.length != 0) {
 			$("#module").val(module);
 		}
 		
-		var dpid = '${payload.dpid}';
+		var dpid = '${payload.jsErrorQuery.dpid}';
 		if(dpid != null && dpid.length != 0) {
 			$("#dpid").val(dpid);
 		}
@@ -185,8 +185,8 @@ function query() {
 	var module = $("#module").val();
 	var dpid = $("#dpid").val();
 	
-	var href = "?op=jsError&day=" + period + "&start=" +start + "&end=" + end +
-			"&level=" + level + "&module=" + module + "&dpid=" + dpid;
+	var href = "?op=jsError&jsErrorQuery.day=" + period + "&jsErrorQuery.startTime=" +start + "&jsErrorQuery.endTime=" + end +
+			"&jsErrorQuery.level=" + level + "&jsErrorQuery.module=" + module + "&jsErrorQuery.dpid=" + dpid;
 	window.location.href = href;
 }
 
