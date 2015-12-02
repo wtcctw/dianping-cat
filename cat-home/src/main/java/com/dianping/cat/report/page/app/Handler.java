@@ -152,7 +152,7 @@ public class Handler implements PageHandler<Context> {
 			AppDataDetail detail = buildComparisonInfo(currentEntity);
 
 			if (detail != null) {
-				result.put("当前值", detail);
+				result.put(Constants.CURRENT_STR, detail);
 			}
 		}
 
@@ -160,7 +160,7 @@ public class Handler implements PageHandler<Context> {
 			AppDataDetail detail = buildComparisonInfo(comparisonEntity);
 
 			if (detail != null) {
-				result.put("对比值", detail);
+				result.put(Constants.COMPARISION_STR, detail);
 			}
 		}
 
@@ -516,7 +516,7 @@ public class Handler implements PageHandler<Context> {
 	private void parallelBuildLineChart(Model model, final Payload payload) {
 		ExecutorService executor = Executors.newFixedThreadPool(3);
 		List<FutureTask> tasks = new LinkedList<FutureTask>();
-		FutureTask lineChartTask = new FutureTask(new CallableTask<LineChart>() {
+		FutureTask lineChartTask = new FutureTask(new Callable<LineChart>() {
 			@Override
 			public LineChart call() throws Exception {
 				return buildLineChart(payload);
@@ -525,7 +525,7 @@ public class Handler implements PageHandler<Context> {
 		tasks.add(lineChartTask);
 		executor.execute(lineChartTask);
 
-		FutureTask appDetailTask = new FutureTask(new CallableTask<List<AppDataDetail>>() {
+		FutureTask appDetailTask = new FutureTask(new Callable<List<AppDataDetail>>() {
 			@Override
 			public List<AppDataDetail> call() throws Exception {
 				return buildAppDataDetails(payload);
@@ -534,7 +534,7 @@ public class Handler implements PageHandler<Context> {
 		tasks.add(appDetailTask);
 		executor.execute(appDetailTask);
 
-		FutureTask comparisonTask = new FutureTask(new CallableTask<Map<String, AppDataDetail>>() {
+		FutureTask comparisonTask = new FutureTask(new Callable<Map<String, AppDataDetail>>() {
 			@Override
 			public Map<String, AppDataDetail> call() throws Exception {
 				return buildComparisonInfo(payload);
@@ -575,15 +575,6 @@ public class Handler implements PageHandler<Context> {
 			model.setContent("{\"status\":500, \"info\":\"name is duplicated.\"}");
 			break;
 		}
-	}
-
-	public class CallableTask<T> implements Callable<T> {
-
-		@Override
-		public T call() throws Exception {
-			return null;
-		}
-
 	}
 
 	public class CodeDistributionComparator implements Comparator<String> {
@@ -628,19 +619,19 @@ public class Handler implements PageHandler<Context> {
 
 		@Override
 		public int compare(AppDataDetail o1, AppDataDetail o2) {
-			if (QueryType.SUCCESS.equals(m_sortBy)) {
-				return (int) ((o2.getSuccessRatio() - o1.getSuccessRatio()) * 1000);
-			} else if (QueryType.REQUEST.equals(m_sortBy)) {
-				return (int) (o2.getAccessNumberSum() - o1.getAccessNumberSum());
-			} else if (QueryType.DELAY.equals(m_sortBy)) {
+			switch (m_sortBy) {
+			case DELAY:
 				return (int) ((o2.getResponseTimeAvg() - o1.getResponseTimeAvg()) * 1000);
-			} else if (QueryType.REQUEST_PACKAGE.equals(m_sortBy)) {
+			case REQUEST:
+				return (int) (o2.getAccessNumberSum() - o1.getAccessNumberSum());
+			case REQUEST_PACKAGE:
 				return (int) ((o2.getRequestPackageAvg() - o1.getRequestPackageAvg()) * 1000);
-			} else if (QueryType.RESPONSE_PACKAGE.equals(m_sortBy)) {
+			case RESPONSE_PACKAGE:
 				return (int) ((o2.getResponsePackageAvg() - o1.getResponsePackageAvg()) * 1000);
-			} else {
-				return 0;
+			case SUCCESS:
+				return (int) ((o2.getSuccessRatio() - o1.getSuccessRatio()) * 1000);
 			}
+			return 0;
 		}
 	}
 }
