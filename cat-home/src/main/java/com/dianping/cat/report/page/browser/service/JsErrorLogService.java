@@ -8,7 +8,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.web.js.Level;
-import com.dianping.cat.report.page.browser.display.JsErrorInfo;
+import com.dianping.cat.report.page.browser.display.JsErrorDetailInfo;
 import com.dianping.cat.web.JsErrorLog;
 import com.dianping.cat.web.JsErrorLogContent;
 import com.dianping.cat.web.JsErrorLogContentDao;
@@ -24,8 +24,8 @@ public class JsErrorLogService {
 	@Inject
 	private JsErrorLogDao m_jsErrorLogDao;
 
-	public JsErrorInfo queryJsErrorInfo(int id) {
-		JsErrorInfo info = new JsErrorInfo();
+	public JsErrorDetailInfo queryJsErrorInfo(int id) {
+		JsErrorDetailInfo info = new JsErrorDetailInfo();
 
 		try {
 			JsErrorLog jsErrorLog = m_jsErrorLogDao.findByPK(id, JsErrorLogEntity.READSET_FULL);

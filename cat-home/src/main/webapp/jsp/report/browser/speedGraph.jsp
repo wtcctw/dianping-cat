@@ -31,11 +31,8 @@
 					</div> 
 				<div class="input-group" style="float:left;">
 					<span class="input-group-addon">阶段</span>
-					 <select id="step" style="width: 240px;">
-					  <c:forEach var="item" items="${model.speed.steps}" varStatus="status">
-							<option value='${item.key}'>${item.value.title}</option>
-					</c:forEach> 
-					</select> <span class="input-group-addon">网络类型</span>
+					 <select id="step" style="width: 240px;"></select> 
+					 <span class="input-group-addon">网络类型</span>
 					 <select id="network" style="width: 80px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.networks}" varStatus="status">

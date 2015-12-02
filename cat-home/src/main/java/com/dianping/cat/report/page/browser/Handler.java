@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.ServletException;
 
@@ -32,7 +33,10 @@ import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.page.browser.display.AjaxDataDetail;
 import com.dianping.cat.report.page.browser.display.AjaxDataDetailSorter;
-import com.dianping.cat.report.page.browser.display.JsErrorInfo;
+import com.dianping.cat.report.page.browser.display.AjaxDataDisplayInfo;
+import com.dianping.cat.report.page.browser.display.ErrorMsg;
+import com.dianping.cat.report.page.browser.display.JsErrorDisplayInfo;
+import com.dianping.cat.report.page.browser.display.JsErrorDetailInfo;
 import com.dianping.cat.report.page.browser.display.PieChartDetailInfos;
 import com.dianping.cat.report.page.browser.display.PieChartDetailInfos.PieChartDetailInfo;
 import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
@@ -94,16 +98,15 @@ public class Handler implements PageHandler<Context> {
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
-	public void addBrowserCount(String browser, Map<String, Integer> distributions) {
-		Integer count = distributions.get(browser);
+	public void addBrowserCount(String browser, Map<String, AtomicInteger> distributions) {
+		AtomicInteger count = distributions.get(browser);
 
 		if (count == null) {
-			count = 1;
+			count = new AtomicInteger(1);
+			distributions.put(browser, count);
 		} else {
-			count++;
+			count.incrementAndGet();
 		}
-
-		distributions.put(browser, count);
 	}
 
 	private List<AjaxDataDetail> buildAjaxDataDetails(Payload payload) {
@@ -158,14 +161,14 @@ public class Handler implements PageHandler<Context> {
 		return result;
 	}
 
-	public String buildDistributionChart(Map<String, Integer> distributions) {
+	public String buildDistributionChart(Map<String, AtomicInteger> distributions) {
 		PieChart chart = new PieChart();
 		List<Item> items = new ArrayList<Item>();
 
-		for (Entry<String, Integer> entry : distributions.entrySet()) {
+		for (Entry<String, AtomicInteger> entry : distributions.entrySet()) {
 			Item item = new Item();
 
-			item.setNumber(entry.getValue()).setTitle(entry.getKey());
+			item.setNumber(entry.getValue().get()).setTitle(entry.getKey());
 			items.add(item);
 		}
 		chart.addItems(items);
@@ -282,19 +285,19 @@ public class Handler implements PageHandler<Context> {
 		normalize(model, payload);
 
 		switch (action) {
-		case VIEW:
+		case AJAX_LINECHART:
 			parallelBuildLineChart(model, payload);
 			break;
-		case PIECHART:
+		case AJAX_PIECHART:
 			Pair<PieChart, PieChartDetailInfos> pieChartPair = buildPieChart(payload);
+			AjaxDataDisplayInfo info = new AjaxDataDisplayInfo();
 
 			if (pieChartPair != null) {
-				model.setPieChart(pieChartPair.getKey());
-				model.setPieChartDetailInfos(pieChartPair.getValue());
+				info.setPieChart(pieChartPair.getKey());
+				info.setPieChartDetailInfos(pieChartPair.getValue());
 			}
 
-			int commandId = payload.getQueryEntity1().getId();
-			model.setCommandId(commandId);
+			model.setAjaxDataDisplayInfo(info);
 			break;
 		case JS_ERROR:
 			viewJsError(payload, model);
@@ -415,12 +418,16 @@ public class Handler implements PageHandler<Context> {
 		Map<String, AjaxDataDetail> comparisonDetails = fetchTaskResult(tasks, 2);
 
 		executor.shutdown();
-		model.setLineChart(lineChart);
-		model.setAjaxDataDetailInfos(ajaxDataDetails);
-		model.setComparisonAjaxDetails(comparisonDetails);
+
+		AjaxDataDisplayInfo info = new AjaxDataDisplayInfo();
+
+		info.setLineChart(lineChart);
+		info.setAjaxDataDetailInfos(ajaxDataDetails);
+		info.setComparisonAjaxDetails(comparisonDetails);
+		model.setAjaxDataDisplayInfo(info);
 	}
 
-	private void processLog(Map<String, ErrorMsg> errorMsgs, JsErrorLog log, Map<String, Integer> distributions) {
+	private void processLog(Map<String, ErrorMsg> errorMsgs, JsErrorLog log, Map<String, AtomicInteger> distributions) {
 		String msg = log.getMsg();
 		ErrorMsg errorMsg = errorMsgs.get(msg);
 
@@ -453,7 +460,7 @@ public class Handler implements PageHandler<Context> {
 			Map<String, ErrorMsg> errorMsgs = new HashMap<String, ErrorMsg>();
 			int offset = 0;
 			int totalCount = 0;
-			Map<String, Integer> distributions = new HashMap<String, Integer>();
+			Map<String, AtomicInteger> distributions = new HashMap<String, AtomicInteger>();
 
 			while (true) {
 				List<JsErrorLog> result = m_jsErrorLogService.queryJsErrorInfo(payload.getJsErrorQuery(), offset, LIMIT);
@@ -472,20 +479,23 @@ public class Handler implements PageHandler<Context> {
 			}
 
 			List<ErrorMsg> errorMsgList = sort(errorMsgs);
+			JsErrorDisplayInfo info = new JsErrorDisplayInfo();
 
-			model.setErrors(errorMsgList);
-			model.setTotalCount(totalCount);
-			model.setLevels(Level.getLevels());
-			model.setModules(m_moduleManager.getModules());
-			model.setDistributionChart(buildDistributionChart(distributions));
+			info.setErrors(errorMsgList);
+			info.setTotalCount(totalCount);
+			info.setLevels(Level.getLevels());
+			info.setModules(m_moduleManager.getModules());
+			info.setDistributionChart(buildDistributionChart(distributions));
+
+			model.setJsErrorDisplayInfo(info);
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
 	}
 
 	private void viewJsErrorDetail(Payload payload, Model model) {
-		JsErrorInfo info = m_jsErrorLogService.queryJsErrorInfo(payload.getId());
-		model.setJsErrorInfo(info);
+		JsErrorDetailInfo info = m_jsErrorLogService.queryJsErrorInfo(payload.getId());
+		model.setJsErrorDetailInfo(info);
 	}
 
 	public class CallableTask<T> implements Callable<T> {

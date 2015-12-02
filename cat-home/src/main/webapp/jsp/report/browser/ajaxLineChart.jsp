@@ -243,11 +243,11 @@
 								return false;
 							}		
 						);
-					var data = ${model.lineChart.jsonString};
+					var data = ${model.ajaxDataDisplayInfo.lineChart.jsonString};
 					graphMetricChartForDay(document
-							.getElementById('${model.lineChart.id}'), data, datePair);
+							.getElementById('${model.ajaxDataDisplayInfo.lineChart.id}'), data, datePair);
 				});
 	</script>
 	
-		<%@include file="webDetail.jsp"%>
+		<%@include file="ajaxLineChartDetail.jsp"%>
 </a:web_body>

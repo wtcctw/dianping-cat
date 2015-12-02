@@ -33,7 +33,7 @@
 	              	<span class="input-group-addon">level</span>
 					<select id="level" style="width:100px">
 						<option value=''>ALL</option>
-						<c:forEach var="level" items="${model.levels}">
+						<c:forEach var="level" items="${model.jsErrorDisplayInfo.levels}">
 							<option value="${level}">${level}</option>
 						</c:forEach>
 					</select>
@@ -69,10 +69,10 @@
 	</tr>
 	<tr>
 		<td><strong>Total</strong></td>
-		<td class="right">${w:format(model.totalCount,'#,###,###,###,##0')}&nbsp;</td>
+		<td class="right">${w:format(model.jsErrorDisplayInfo.totalCount,'#,###,###,###,##0')}&nbsp;</td>
 		<td></td>
 	</tr>
-	<c:forEach var="error" items="${model.errors}" varStatus="index">
+	<c:forEach var="error" items="${model.jsErrorDisplayInfo.errors}" varStatus="index">
 	<tr>
 		<td>${error.msg}</td>
 		<td  class="right">${w:format(error.count,'#,###,###,###,##0')}&nbsp;</td>
@@ -90,7 +90,7 @@
 		<div id="distributionChart" class="graph"></div></td>
 	</tr>
 	<tr><td  style="display:none">
-		<div id ="distributionChartMeta">${model.distributionChart}</div>
+		<div id ="distributionChartMeta">${model.jsErrorDisplayInfo.distributionChart}</div>
 		</td>
 	</tr>
 </table> 
@@ -146,20 +146,15 @@ $(document).ready(
 				var that = this,
 				currentCategory = "";
 				$.each( items, function( index, item ) {
-					if ( item.category != currentCategory ) {
-						ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
-						currentCategory = item.category;
-					}
 					that._renderItemData( ul, item );
 				});
 			}
 		});
 		
 		var data = [];
-		<c:forEach var="module" items="${model.modules}">
+		<c:forEach var="module" items="${model.jsErrorDisplayInfo.modules}">
 			var item = {};
 			item['label'] = '${module}';
-			item['category'] ="modules";
 			data.push(item);
 		</c:forEach>
 		
@@ -168,7 +163,7 @@ $(document).ready(
 			source: data
 		});
 		
-		var distributionChart = ${model.distributionChart};
+		var distributionChart = ${model.jsErrorDisplayInfo.distributionChart};
 
 		if(distributionChart!=null){
 			graphPieChart(document.getElementById('distributionChart'), distributionChart);

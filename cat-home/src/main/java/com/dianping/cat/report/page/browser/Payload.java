@@ -215,7 +215,7 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	}
 
 	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
+		m_action = Action.getByName(action, Action.AJAX_LINECHART);
 	}
 
 	public void setGroupByField(String groupByField) {
@@ -254,7 +254,7 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
-			m_action = Action.VIEW;
+			m_action = Action.AJAX_LINECHART;
 		}
 	}
 }

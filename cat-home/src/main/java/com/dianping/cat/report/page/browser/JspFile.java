@@ -1,9 +1,9 @@
 package com.dianping.cat.report.page.browser;
 
 public enum JspFile {
-	VIEW("/jsp/report/browser/web.jsp"),
+	AJAX_LINECHART("/jsp/report/browser/ajaxLineChart.jsp"),
 
-	PIECHART("/jsp/report/browser/piechart.jsp"),
+	AJAX_PIECHART("/jsp/report/browser/ajaxPieChart.jsp"),
 
 	JS_ERROR("/jsp/report/browser/jsError.jsp"),
 	
