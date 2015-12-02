@@ -2,13 +2,13 @@ package com.dianping.cat.report.page.browser.display;
 
 import java.util.Comparator;
 
-import com.dianping.cat.report.page.browser.service.QueryType;
+import com.dianping.cat.report.page.browser.service.AjaxQueryType;
 
 public class AjaxDataDetailSorter implements Comparator<AjaxDataDetail> {
 
-	private QueryType m_sortBy;
+	private AjaxQueryType m_sortBy;
 
-	public AjaxDataDetailSorter(QueryType sortBy) {
+	public AjaxDataDetailSorter(AjaxQueryType sortBy) {
 		m_sortBy = sortBy;
 	}
 
@@ -21,10 +21,6 @@ public class AjaxDataDetailSorter implements Comparator<AjaxDataDetail> {
 			return (int) (o2.getAccessNumberSum() - o1.getAccessNumberSum());
 		case DELAY:
 			return (int) ((o2.getResponseTimeAvg() - o1.getResponseTimeAvg()) * 1000);
-		case REQUEST_PACKAGE:
-			return (int) ((o2.getRequestPackageAvg() - o1.getRequestPackageAvg()) * 1000);
-		case RESPONSE_PACKAGE:
-			return (int) ((o2.getResponsePackageAvg() - o1.getResponsePackageAvg()) * 1000);
 		}
 		return 0;
 	}

@@ -132,15 +132,11 @@
 		<p/>
 		<div>&nbsp;
 			<label class="btn btn-info btn-sm"><input type="radio"
-				name="typeCheckbox" value="request">请求数
+				name="typeCheckbox" value="request" checked>请求数
 			</label><label class="btn btn-info btn-sm"> <input type="radio"
 				name="typeCheckbox" value="success">成功率
 			</label><label class="btn btn-info btn-sm">  <input type="radio"
 				name="typeCheckbox" value="delay">成功延时
-			</label><label class="btn btn-info btn-sm">  <input type="radio"
-				name="typeCheckbox" value="requestByte">平均发包
-			</label><label class="btn btn-info btn-sm">  <input type="radio"
-				name="typeCheckbox" value="responseByte">平均回包
 			</label>
 		</div>
 
