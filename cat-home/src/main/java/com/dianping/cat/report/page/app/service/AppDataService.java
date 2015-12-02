@@ -29,16 +29,6 @@ public class AppDataService {
 	@Inject
 	private AppConfigManager m_appConfigManager;
 
-	public static final String SUCCESS = "success";
-
-	public static final String REQUEST = "request";
-
-	public static final String DELAY = "delay";
-
-	public static final String REQUEST_PACKAGE = "requestPackage";
-
-	public static final String RESPONSE_PACKAGE = "responsePackage";
-
 	public List<AppDataDetail> buildAppDataDetailInfos(CommandQueryEntity entity, AppDataField groupByField) {
 		List<AppDataDetail> infos = new LinkedList<AppDataDetail>();
 		List<AppCommandData> datas = queryByFieldCode(entity, groupByField);
@@ -337,19 +327,19 @@ public class AppDataService {
 		List<AppCommandData> datas = new ArrayList<AppCommandData>();
 
 		try {
-			if (SUCCESS.equals(type)) {
+			if (QueryType.SUCCESS.equals(type)) {
 				datas = m_dao.findDataByMinuteCode(commandId, period, city, operator, network, appVersion, connnectType,
 				      code, platform, AppCommandDataEntity.READSET_SUCCESS_DATA);
 				DataSequence<AppCommandData> s = buildAppSequence(datas, entity.getDate());
 
 				return computeSuccessRatio(commandId, s);
-			} else if (REQUEST.equals(type)) {
+			} else if (QueryType.REQUEST.equals(type)) {
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, AppCommandDataEntity.READSET_COUNT_DATA);
 				DataSequence<AppCommandData> s = buildAppSequence(datas, entity.getDate());
 
 				return computeRequestCount(s);
-			} else if (DELAY.equals(type)) {
+			} else if (QueryType.DELAY.equals(type)) {
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, AppCommandDataEntity.READSET_AVG_DATA);
 				DataSequence<AppCommandData> s = buildAppSequence(datas, entity.getDate());

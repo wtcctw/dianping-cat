@@ -36,7 +36,7 @@ public class AppGraphCreator {
 		lineChart.setUnit("");
 		lineChart.setHtmlTitle(type.getTitle());
 
-		if (AppDataService.SUCCESS.equals(type)) {
+		if (QueryType.SUCCESS.equals(type)) {
 			lineChart.setMinYlable(lineChart.queryMinYlable(datas));
 			lineChart.setMaxYlabel(100D);
 		}
