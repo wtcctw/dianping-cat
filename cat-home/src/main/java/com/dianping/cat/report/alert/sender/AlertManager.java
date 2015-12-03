@@ -92,8 +92,8 @@ public class AlertManager implements Initializable {
 			return "前端告警";
 		case App:
 			return "手机端告警";
-		case Web:
-			return "web告警";
+		case Ajax:
+			return "Ajax告警";
 		case HeartBeat:
 			return "心跳告警";
 		case Transaction:

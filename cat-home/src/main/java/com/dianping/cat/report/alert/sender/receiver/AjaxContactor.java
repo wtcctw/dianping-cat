@@ -8,12 +8,12 @@ import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.report.alert.AlertType;
 
-public class WebContactor extends ProjectContactor {
+public class AjaxContactor extends ProjectContactor {
 
 	@Inject
 	protected UrlPatternConfigManager m_urlPatternConfigManager;
 
-	public static final String ID = AlertType.Web.getName();
+	public static final String ID = AlertType.Ajax.getName();
 
 	@Override
 	public String getId() {

@@ -2671,8 +2671,8 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
-			<role-hint>Web</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.receiver.WebContactor</implementation>
+			<role-hint>Ajax</role-hint>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.AjaxContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.alert.sender.config.AlertConfigManager</role>
@@ -2816,8 +2816,8 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
-			<role-hint>Web</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.decorator.WebDecorator</implementation>
+			<role-hint>Ajax</role-hint>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.AjaxDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
@@ -6595,7 +6595,7 @@
 					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.web.WebRuleConfigManager</role>
+					<role>com.dianping.cat.report.alert.browser.AjaxRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
@@ -6627,8 +6627,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.web.WebRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.web.WebRuleConfigManager</implementation>
+			<role>com.dianping.cat.report.alert.browser.AjaxRuleConfigManager</role>
+			<implementation>com.dianping.cat.report.alert.browser.AjaxRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>

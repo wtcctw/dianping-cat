@@ -66,7 +66,7 @@ import com.dianping.cat.report.alert.sender.decorator.StorageSQLDecorator;
 import com.dianping.cat.report.alert.sender.decorator.SystemDecorator;
 import com.dianping.cat.report.alert.sender.decorator.ThirdpartyDecorator;
 import com.dianping.cat.report.alert.sender.decorator.TransactionDecorator;
-import com.dianping.cat.report.alert.sender.decorator.WebDecorator;
+import com.dianping.cat.report.alert.sender.decorator.AjaxDecorator;
 import com.dianping.cat.report.alert.sender.receiver.AppContactor;
 import com.dianping.cat.report.alert.sender.receiver.BusinessContactor;
 import com.dianping.cat.report.alert.sender.receiver.Contactor;
@@ -83,7 +83,7 @@ import com.dianping.cat.report.alert.sender.receiver.StorageSQLContactor;
 import com.dianping.cat.report.alert.sender.receiver.SystemContactor;
 import com.dianping.cat.report.alert.sender.receiver.ThirdpartyContactor;
 import com.dianping.cat.report.alert.sender.receiver.TransactionContactor;
-import com.dianping.cat.report.alert.sender.receiver.WebContactor;
+import com.dianping.cat.report.alert.sender.receiver.AjaxContactor;
 import com.dianping.cat.report.alert.sender.sender.MailSender;
 import com.dianping.cat.report.alert.sender.sender.Sender;
 import com.dianping.cat.report.alert.sender.sender.SenderManager;
@@ -156,7 +156,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      AlertConfigManager.class));
 		all.add(C(Contactor.class, AppContactor.ID, AppContactor.class).req(AlertConfigManager.class,
 		      AppConfigManager.class, ProjectService.class));
-		all.add(C(Contactor.class, WebContactor.ID, WebContactor.class).req(AlertConfigManager.class,
+		all.add(C(Contactor.class, AjaxContactor.ID, AjaxContactor.class).req(AlertConfigManager.class,
 		      ProjectService.class, UrlPatternConfigManager.class));
 		all.add(C(Contactor.class, TransactionContactor.ID, TransactionContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
@@ -178,7 +178,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Decorator.class, ThirdpartyDecorator.ID, ThirdpartyDecorator.class).req(ProjectService.class));
 		all.add(C(Decorator.class, FrontEndExceptionDecorator.ID, FrontEndExceptionDecorator.class));
 		all.add(C(Decorator.class, AppDecorator.ID, AppDecorator.class));
-		all.add(C(Decorator.class, WebDecorator.ID, WebDecorator.class));
+		all.add(C(Decorator.class, AjaxDecorator.ID, AjaxDecorator.class));
 		all.add(C(Decorator.class, JsDecorator.ID, JsDecorator.class));
 		all.add(C(Decorator.class, TransactionDecorator.ID, TransactionDecorator.class));
 		all.add(C(Decorator.class, EventDecorator.ID, EventDecorator.class));

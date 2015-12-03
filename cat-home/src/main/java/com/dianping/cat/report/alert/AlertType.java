@@ -22,7 +22,7 @@ public enum AlertType {
 
 	App("App"),
 
-	Web("Web"),
+	Ajax("Ajax"),
 
 	Transaction("Transaction"),
 
