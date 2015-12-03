@@ -63,55 +63,14 @@ public class AlertManager implements Initializable {
 	private Map<String, AlertEntity> m_sendedAlerts = new ConcurrentHashMap<String, AlertEntity>(1000);
 
 	public boolean addAlert(AlertEntity alert) {
-		String type = alert.getType();
 		String group = alert.getGroup();
-		Cat.logEvent("Alert:" + type, group, Event.SUCCESS, alert.toString());
+		Cat.logEvent("Alert:" + alert.getType().getName(), group, Event.SUCCESS, alert.toString());
 
 		if (m_configManager.isAlertMachine()) {
 			return m_alerts.offer(alert);
 		} else {
 			return true;
 		}
-	}
-
-	private String generateTypeStr(String type) {
-		AlertType typeByName = AlertType.getTypeByName(type);
-
-		switch (typeByName) {
-		case Business:
-			return "业务告警";
-		case Network:
-			return "网络告警";
-		case System:
-			return "系统告警";
-		case Exception:
-			return "异常告警";
-		case ThirdParty:
-			return "第三方告警";
-		case FrontEndException:
-			return "前端告警";
-		case App:
-			return "手机端告警";
-		case Web:
-			return "web告警";
-		case HeartBeat:
-			return "心跳告警";
-		case Transaction:
-			return "Transaction告警";
-		case Event:
-			return "Event告警";
-		case DataBase:
-			return "数据库系统告警";
-		case STORAGE_SQL:
-			return "数据库访问告警";
-		case STORAGE_CACHE:
-			return "缓存访问告警";
-		case STORAGE_RPC:
-			return "服务访问告警";
-		case JS:
-			return "JS异常告警";
-		}
-		return type;
 	}
 
 	@Override
@@ -136,7 +95,7 @@ public class AlertManager implements Initializable {
 
 	private boolean send(AlertEntity alert) {
 		boolean result = false;
-		String type = alert.getType();
+		String type = alert.getType().getName();
 		String group = alert.getGroup();
 		String level = alert.getLevel();
 		String alertKey = alert.getKey();
@@ -183,13 +142,14 @@ public class AlertManager implements Initializable {
 	}
 
 	private boolean sendRecoveryMessage(AlertEntity alert, String currentMinute) {
-		String type = alert.getType();
+		AlertType alterType = alert.getType();
+		String type = alterType.getName();
 		String group = alert.getGroup();
 		String level = alert.getLevel();
 		List<AlertChannel> channels = m_policyManager.queryChannels(type, group, level);
 
 		for (AlertChannel channel : channels) {
-			String title = "[告警恢复] [告警类型 " + generateTypeStr(type) + "][" + group + " " + alert.getMetric() + "]";
+			String title = "[告警恢复] [告警类型 " + alterType.getTitle() + "][" + group + " " + alert.getMetric() + "]";
 			String content = "[告警已恢复][恢复时间]" + currentMinute;
 			List<String> receivers = m_contactorManager.queryReceivers(alert.getContactGroup(), channel, type);
 			AlertMessageEntity message = new AlertMessageEntity(group, title, type, content, receivers);
@@ -212,7 +172,7 @@ public class AlertManager implements Initializable {
 		}
 
 		private int queryRecoverMinute(AlertEntity alert) {
-			String type = alert.getType();
+			String type = alert.getType().getName();
 			String group = alert.getGroup();
 			String level = alert.getLevel();
 

@@ -20,11 +20,15 @@ public class AlertEntity {
 
 	private String m_content;
 
+	private String m_domain;
+
+	private String m_contactGroup;
+
 	private Map<String, Object> m_paras = new HashMap<String, Object>();
 
 	public String getContactGroup() {
-		if (AlertType.Business.getName().equals(m_type)) {
-			return String.valueOf(m_paras.get("domain"));
+		if (m_contactGroup != null) {
+			return m_contactGroup;
 		} else {
 			return m_group;
 		}
@@ -39,8 +43,8 @@ public class AlertEntity {
 	}
 
 	public String getDomain() {
-		if (AlertType.Business.getName().equals(m_type)) {
-			return String.valueOf(m_paras.get("domain"));
+		if (m_domain != null) {
+			return m_domain;
 		} else {
 			return m_group;
 		}
@@ -66,8 +70,12 @@ public class AlertEntity {
 		return m_paras;
 	}
 
-	public String getType() {
-		return m_type;
+	public AlertType getType() {
+		return AlertType.getTypeByName(m_type);
+	}
+
+	public void setContactGroup(String contactGroup) {
+		m_contactGroup = contactGroup;
 	}
 
 	public AlertEntity setContent(String content) {
@@ -77,6 +85,11 @@ public class AlertEntity {
 
 	public AlertEntity setDate(Date alertDate) {
 		m_date = alertDate;
+		return this;
+	}
+
+	public AlertEntity setDomain(String domain) {
+		m_domain = domain;
 		return this;
 	}
 

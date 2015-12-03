@@ -278,7 +278,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	@Override
-	public boolean isEiligible(MessageTree tree) {
+	public boolean isEligable(MessageTree tree) {
 		if (tree.getTransactions().size() > 0) {
 			return true;
 		} else {
