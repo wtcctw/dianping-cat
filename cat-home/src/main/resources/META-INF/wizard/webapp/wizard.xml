@@ -23,9 +23,6 @@
          <page name="model" title="Model" path="model" standalone="false">
             <description>Service Model</description>
          </page>
-         <page name="dashboard" title="Dashboard" path="dashboard" standalone="false">
-            <description>Dashboard</description>
-         </page>
          <page name="matrix" title="Matrix" path="matrix" view="/jsp/report/matrix/matrix.jsp" standalone="false">
             <description>Matrix</description>
          </page>
