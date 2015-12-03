@@ -324,28 +324,28 @@ public class AppConnectionService {
 		int connnectType = entity.getConnectType();
 		int code = entity.getCode();
 		int platform = entity.getPlatfrom();
-		List<AppConnectionData> datas = new ArrayList<AppConnectionData>();
 
 		try {
-			if (QueryType.SUCCESS.equals(type)) {
-				datas = m_dao.findDataByMinuteCode(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, AppConnectionDataEntity.READSET_SUCCESS_DATA);
+			switch (type) {
+			case SUCCESS:
+				List<AppConnectionData> datas = m_dao.findDataByMinuteCode(commandId, period, city, operator, network,
+				      appVersion, connnectType, code, platform, AppConnectionDataEntity.READSET_SUCCESS_DATA);
 				DataSequence<AppConnectionData> s = buildAppSequence(datas, entity.getDate());
 
 				return computeSuccessRatio(commandId, s);
-			} else if (QueryType.REQUEST.equals(type)) {
+			case REQUEST:
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, AppConnectionDataEntity.READSET_COUNT_DATA);
-				DataSequence<AppConnectionData> s = buildAppSequence(datas, entity.getDate());
+				s = buildAppSequence(datas, entity.getDate());
 
 				return computeRequestCount(s);
-			} else if (QueryType.DELAY.equals(type)) {
+			case DELAY:
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, AppConnectionDataEntity.READSET_AVG_DATA);
-				DataSequence<AppConnectionData> s = buildAppSequence(datas, entity.getDate());
+				s = buildAppSequence(datas, entity.getDate());
 
 				return computeDelayAvg(s);
-			} else {
+			default:
 				throw new RuntimeException("unexpected query type, type:" + type);
 			}
 		} catch (Exception e) {
