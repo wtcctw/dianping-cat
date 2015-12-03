@@ -220,7 +220,7 @@ public class HeartbeatAlert extends BaseAlert {
 	private void processDomain(String domain) {
 		int minute = calAlreadyMinute();
 		Map<String, List<Config>> configsMap = m_ruleConfigManager.queryConfigsByDomain(domain);
-		int domainMaxMinute = calMaxMinute(configsMap);
+		int domainMaxMinute = calMaxMinute(configsMap) + 1;
 		HeartbeatReport currentReport = null;
 		HeartbeatReport lastReport = null;
 		boolean isDataReady = false;
