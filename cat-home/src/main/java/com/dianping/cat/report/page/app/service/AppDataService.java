@@ -18,6 +18,7 @@ import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppCommandDataEntity;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.report.page.DataSequence;
+import com.dianping.cat.report.page.app.QueryType;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
 
 public class AppDataService {
@@ -27,16 +28,6 @@ public class AppDataService {
 
 	@Inject
 	private AppConfigManager m_appConfigManager;
-
-	public static final String SUCCESS = "success";
-
-	public static final String REQUEST = "request";
-
-	public static final String DELAY = "delay";
-
-	public static final String REQUEST_PACKAGE = "requestPackage";
-
-	public static final String RESPONSE_PACKAGE = "responsePackage";
 
 	public List<AppDataDetail> buildAppDataDetailInfos(CommandQueryEntity entity, AppDataField groupByField) {
 		List<AppDataDetail> infos = new LinkedList<AppDataDetail>();
@@ -310,7 +301,7 @@ public class AppDataService {
 	}
 
 	public double queryOneDayDelayAvg(CommandQueryEntity entity) {
-		Double[] values = queryValue(entity, AppDataService.DELAY);
+		Double[] values = queryValue(entity, QueryType.DELAY);
 		double delaySum = 0;
 		int size = 0;
 
@@ -323,7 +314,7 @@ public class AppDataService {
 		return size > 0 ? delaySum / size : -1;
 	}
 
-	public Double[] queryValue(CommandQueryEntity entity, String type) {
+	public Double[] queryValue(CommandQueryEntity entity, QueryType type) {
 		int commandId = entity.getId();
 		Date period = entity.getDate();
 		int city = entity.getCity();
@@ -333,28 +324,28 @@ public class AppDataService {
 		int connnectType = entity.getConnectType();
 		int code = entity.getCode();
 		int platform = entity.getPlatfrom();
-		List<AppCommandData> datas = new ArrayList<AppCommandData>();
 
 		try {
-			if (SUCCESS.equals(type)) {
-				datas = m_dao.findDataByMinuteCode(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, AppCommandDataEntity.READSET_SUCCESS_DATA);
+			switch (type) {
+			case SUCCESS:
+				List<AppCommandData> datas = m_dao.findDataByMinuteCode(commandId, period, city, operator, network,
+				      appVersion, connnectType, code, platform, AppCommandDataEntity.READSET_SUCCESS_DATA);
 				DataSequence<AppCommandData> s = buildAppSequence(datas, entity.getDate());
 
 				return computeSuccessRatio(commandId, s);
-			} else if (REQUEST.equals(type)) {
+			case REQUEST:
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, AppCommandDataEntity.READSET_COUNT_DATA);
-				DataSequence<AppCommandData> s = buildAppSequence(datas, entity.getDate());
+				s = buildAppSequence(datas, entity.getDate());
 
 				return computeRequestCount(s);
-			} else if (DELAY.equals(type)) {
+			case DELAY:
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, AppCommandDataEntity.READSET_AVG_DATA);
-				DataSequence<AppCommandData> s = buildAppSequence(datas, entity.getDate());
+				s = buildAppSequence(datas, entity.getDate());
 
 				return computeDelayAvg(s);
-			} else {
+			default:
 				throw new RuntimeException("unexpected query type, type:" + type);
 			}
 		} catch (Exception e) {

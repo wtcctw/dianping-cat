@@ -2671,8 +2671,8 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
-			<role-hint>Web</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.receiver.WebContactor</implementation>
+			<role-hint>Ajax</role-hint>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.AjaxContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.alert.sender.config.AlertConfigManager</role>
@@ -2816,8 +2816,8 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
-			<role-hint>Web</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.decorator.WebDecorator</implementation>
+			<role-hint>Ajax</role-hint>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.AjaxDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
@@ -5619,13 +5619,7 @@
 					<role>com.dianping.cat.report.page.browser.service.AjaxDataService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.browser.graph.WebGraphCreator</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.web.JsErrorLogContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.web.JsErrorLogDao</role>
+					<role>com.dianping.cat.report.page.browser.service.AjaxGraphCreator</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.browser.JspViewer</role>
@@ -5648,6 +5642,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.browser.service.WebSpeedService</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.browser.service.JsErrorLogService</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5655,10 +5652,19 @@
 			<implementation>com.dianping.cat.report.page.browser.service.AjaxDataService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.web.AjaxDataDao</role>
+					<role>com.dianping.cat.report.page.browser.service.AjaxDataBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.browser.service.AjaxDataBuilder</role>
+			<implementation>com.dianping.cat.report.page.browser.service.AjaxDataBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.web.AjaxDataDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5687,9 +5693,12 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.browser.graph.WebGraphCreator</role>
-			<implementation>com.dianping.cat.report.page.browser.graph.WebGraphCreator</implementation>
+			<role>com.dianping.cat.report.page.browser.service.AjaxGraphCreator</role>
+			<implementation>com.dianping.cat.report.page.browser.service.AjaxGraphCreator</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.browser.service.AjaxDataBuilder</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.browser.service.AjaxDataService</role>
 				</requirement>
@@ -5714,24 +5723,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.web.JsErrorLogContentDao</role>
-			<implementation>com.dianping.cat.web.JsErrorLogContentDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.web.JsErrorLogDao</role>
-			<implementation>com.dianping.cat.web.JsErrorLogDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.browser.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.browser.JspViewer</implementation>
 			<requirements>
@@ -5746,6 +5737,15 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.web.JsErrorLogDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.web.JsErrorLogDao</role>
+			<implementation>com.dianping.cat.web.JsErrorLogDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5788,6 +5788,27 @@
 		<component>
 			<role>com.dianping.cat.web.WebSpeedDataDao</role>
 			<implementation>com.dianping.cat.web.WebSpeedDataDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.browser.service.JsErrorLogService</role>
+			<implementation>com.dianping.cat.report.page.browser.service.JsErrorLogService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.web.JsErrorLogContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.web.JsErrorLogDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.web.JsErrorLogContentDao</role>
+			<implementation>com.dianping.cat.web.JsErrorLogContentDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -6574,7 +6595,7 @@
 					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.web.WebRuleConfigManager</role>
+					<role>com.dianping.cat.report.alert.browser.AjaxRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
@@ -6606,8 +6627,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.web.WebRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.web.WebRuleConfigManager</implementation>
+			<role>com.dianping.cat.report.alert.browser.AjaxRuleConfigManager</role>
+			<implementation>com.dianping.cat.report.alert.browser.AjaxRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>

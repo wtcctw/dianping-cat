@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.app;
+package com.dianping.cat.report.alert.browser;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,8 +15,8 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.configuration.app.entity.Command;
+import com.dianping.cat.config.web.url.UrlPatternConfigManager;
+import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
@@ -28,26 +28,26 @@ import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.DataChecker;
 import com.dianping.cat.report.alert.sender.AlertEntity;
 import com.dianping.cat.report.alert.sender.AlertManager;
-import com.dianping.cat.report.page.app.QueryType;
-import com.dianping.cat.report.page.app.service.AppDataService;
-import com.dianping.cat.report.page.app.service.CommandQueryEntity;
+import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
+import com.dianping.cat.report.page.browser.service.AjaxDataService;
+import com.dianping.cat.report.page.browser.service.AjaxQueryType;
 
-public class AppAlert implements Task {
+public class AjaxAlert implements Task {
 
 	@Inject
-	private AppDataService m_appDataService;
+	private AjaxDataService m_webApiService;
 
 	@Inject
 	private AlertManager m_sendManager;
 
 	@Inject
-	private AppRuleConfigManager m_appRuleConfigManager;
+	private AjaxRuleConfigManager m_ajaxRuleConfigManager;
 
 	@Inject
 	private DataChecker m_dataChecker;
 
 	@Inject
-	private AppConfigManager m_appConfigManager;
+	private UrlPatternConfigManager m_urlPatternConfigManager;
 
 	private static final long DURATION = TimeHelper.ONE_MINUTE * 5;
 
@@ -64,7 +64,7 @@ public class AppAlert implements Task {
 		return result;
 	}
 
-	private double[] fetchDatas(String conditions, QueryType type, int minute) {
+	private double[] fetchDatas(String conditions, AjaxQueryType type, int minute) {
 		long time = (System.currentTimeMillis()) / 1000 / 60;
 		int endMinute = (int) (time % (60)) - DATA_AREADY_MINUTE;
 		int startMinute = endMinute - minute;
@@ -72,30 +72,30 @@ public class AppAlert implements Task {
 
 		if (startMinute < 0 && endMinute < 0) {
 			String period = m_sdf.format(queryDayPeriod(-1).getTime());
-			CommandQueryEntity queryEntity = new CommandQueryEntity(period + ";" + conditions + ";;");
+			AjaxDataQueryEntity queryEntity = new AjaxDataQueryEntity(period + ";" + conditions + ";;");
 
-			datas = ArrayUtils.toPrimitive(m_appDataService.queryValue(queryEntity, type), 0);
+			datas = ArrayUtils.toPrimitive(m_webApiService.queryValue(queryEntity, type), 0);
 		} else if (startMinute < 0 && endMinute >= 0) {
 			String last = m_sdf.format(queryDayPeriod(-1).getTime());
 			String current = m_sdf.format(queryDayPeriod(0).getTime());
-			CommandQueryEntity lastQueryEntity = new CommandQueryEntity(last + ";" + conditions + ";;");
-			CommandQueryEntity currentQueryEntity = new CommandQueryEntity(current + ";" + conditions + ";;");
-			double[] lastDatas = ArrayUtils.toPrimitive(m_appDataService.queryValue(lastQueryEntity, type), 0);
-			double[] currentDatas = ArrayUtils.toPrimitive(m_appDataService.queryValue(currentQueryEntity, type), 0);
+			AjaxDataQueryEntity lastQueryEntity = new AjaxDataQueryEntity(last + ";" + conditions + ";;");
+			AjaxDataQueryEntity currentQueryEntity = new AjaxDataQueryEntity(current + ";" + conditions + ";;");
+			double[] lastDatas = ArrayUtils.toPrimitive(m_webApiService.queryValue(lastQueryEntity, type), 0);
+			double[] currentDatas = ArrayUtils.toPrimitive(m_webApiService.queryValue(currentQueryEntity, type), 0);
 
 			datas = mergerArray(lastDatas, currentDatas);
 		} else if (startMinute >= 0) {
 			String period = m_sdf.format(queryDayPeriod(0).getTime());
-			CommandQueryEntity queryEntity = new CommandQueryEntity(period + ";" + conditions + ";;");
+			AjaxDataQueryEntity queryEntity = new AjaxDataQueryEntity(period + ";" + conditions + ";;");
 
-			datas = ArrayUtils.toPrimitive(m_appDataService.queryValue(queryEntity, type), 0);
+			datas = ArrayUtils.toPrimitive(m_webApiService.queryValue(queryEntity, type), 0);
 		}
 		return datas;
 	}
 
 	@Override
 	public String getName() {
-		return AlertType.App.getName();
+		return AlertType.Ajax.getName();
 	}
 
 	private boolean judgeCurrentInConfigRange(Config config) {
@@ -142,17 +142,16 @@ public class AppAlert implements Task {
 		int index1 = id.indexOf(":");
 		int index2 = id.indexOf(":", index1 + 1);
 		String conditions = id.substring(0, index1);
-		String type = id.substring(index1 + 1, index2);
-		QueryType queryType = QueryType.findByName(type);
+		AjaxQueryType type = AjaxQueryType.findByType(id.substring(index1 + 1, index2));
 		String name = id.substring(index2 + 1);
-		int command = Integer.valueOf(conditions.split(";")[0]);
+		int api = Integer.valueOf(conditions.split(";")[0]);
 		Pair<Integer, List<Condition>> pair = queryCheckMinuteAndConditions(rule.getConfigs());
-		double[] datas = fetchDatas(conditions, queryType, pair.getKey());
+		double[] datas = fetchDatas(conditions, type, pair.getKey());
 
 		if (datas != null && datas.length > 0) {
 			List<Condition> checkedConditions = pair.getValue();
 			List<AlertResultEntity> alertResults = m_dataChecker.checkDataForApp(datas, checkedConditions);
-			String commandName = queryCommand(command);
+			String apiName = queryPattern(api);
 
 			for (AlertResultEntity alertResult : alertResults) {
 				Map<String, Object> par = new HashMap<String, Object>();
@@ -161,7 +160,7 @@ public class AppAlert implements Task {
 
 				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
 				      .setLevel(alertResult.getAlertLevel());
-				entity.setMetric(queryType.getTitle()).setType(getName()).setGroup(commandName).setParas(par);
+				entity.setMetric(type.getTitle()).setType(getName()).setGroup(apiName).setParas(par);
 				m_sendManager.addAlert(entity);
 			}
 		}
@@ -191,17 +190,6 @@ public class AppAlert implements Task {
 		return new Pair<Integer, List<Condition>>(maxMinute, conditions);
 	}
 
-	private String queryCommand(int command) {
-		Map<Integer, Command> commands = m_appConfigManager.getRawCommands();
-		Command value = commands.get(command);
-
-		if (value != null) {
-			return value.getName();
-		} else {
-			throw new RuntimeException("Error config in command code: " + command);
-		}
-	}
-
 	private Calendar queryDayPeriod(int day) {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, day);
@@ -212,16 +200,26 @@ public class AppAlert implements Task {
 		return cal;
 	}
 
+	private String queryPattern(int command) {
+		PatternItem item = m_urlPatternConfigManager.queryPatternById(command);
+
+		if (item != null) {
+			return item.getName();
+		} else {
+			throw new RuntimeException("Error config in web api code: " + command);
+		}
+	}
+
 	@Override
 	public void run() {
 		boolean active = TimeHelper.sleepToNextMinute();
 
 		while (active) {
-			Transaction t = Cat.newTransaction("AlertApp", TimeHelper.getMinuteStr());
+			Transaction t = Cat.newTransaction("AlertAjax", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();
 
 			try {
-				MonitorRules monitorRules = m_appRuleConfigManager.getMonitorRules();
+				MonitorRules monitorRules = m_ajaxRuleConfigManager.getMonitorRules();
 				Map<String, Rule> rules = monitorRules.getRules();
 
 				for (Entry<String, Rule> entry : rules.entrySet()) {

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.web;
+package com.dianping.cat.report.alert.browser;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -17,7 +17,7 @@ import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 import com.dianping.cat.report.alert.AlertLevel;
 import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
 
-public class WebRuleConfigManager extends BaseRuleConfigManager implements Initializable {
+public class AjaxRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 
 	@Inject
 	private ContentFetcher m_fetcher;

@@ -21,6 +21,8 @@ public enum AlertType {
 	JS("Js", "JS错误告警"),
 
 	App("App", "APP接口告警"),
+	
+	Ajax("Ajax", "Ajax访问告警"),
 
 	Web("Web", "WEB接口告警"),
 

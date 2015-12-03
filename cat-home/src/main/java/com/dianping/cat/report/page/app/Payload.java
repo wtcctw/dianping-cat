@@ -10,11 +10,10 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.app.service.AppDataField;
-import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 import com.dianping.cat.report.page.app.service.SpeedQueryEntity;
 
-public class Payload extends AbstractReportPayload<Action,ReportPage> {
+public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private ReportPage m_page;
 
 	@FieldMeta("op")
@@ -27,13 +26,13 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	private String m_query2;
 
 	@FieldMeta("type")
-	private String m_type = AppDataService.REQUEST;
+	private String m_type = QueryType.REQUEST.getName();
 
 	@FieldMeta("groupByField")
 	private AppDataField m_groupByField = AppDataField.CODE;
 
 	@FieldMeta("sort")
-	private String m_sort = AppDataService.SUCCESS;
+	private String m_sort = QueryType.SUCCESS.getName();
 
 	@FieldMeta("codeId")
 	private int m_codeId;
@@ -176,6 +175,10 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 
 	public String getType() {
 		return m_type;
+	}
+
+	public QueryType getQueryType() {
+		return QueryType.findByName(m_type);
 	}
 
 	public void setAction(String action) {

@@ -1,20 +1,23 @@
 package com.dianping.cat.report.page.app.display;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.app.AppCommandData;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
-import com.dianping.cat.report.graph.PieChartDetailInfo;
 import com.dianping.cat.report.graph.PieChart.Item;
+import com.dianping.cat.report.graph.PieChartDetailInfo;
+import com.dianping.cat.report.page.app.QueryType;
 import com.dianping.cat.report.page.app.service.AppDataField;
 import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
@@ -27,47 +30,44 @@ public class AppGraphCreator {
 	@Inject
 	private AppConfigManager m_appConfigManager;
 
-	public LineChart buildChartData(final List<Double[]> datas, String type) {
+	public LineChart buildChartData(final Map<String, Double[]> datas, QueryType type) {
 		LineChart lineChart = new LineChart();
 		lineChart.setId("app");
 		lineChart.setUnit("");
-		lineChart.setHtmlTitle(queryType(type));
+		lineChart.setHtmlTitle(type.getTitle());
 
-		if (AppDataService.SUCCESS.equals(type)) {
+		if (QueryType.SUCCESS.equals(type)) {
 			lineChart.setMinYlable(lineChart.queryMinYlable(datas));
 			lineChart.setMaxYlabel(100D);
 		}
 
-		for (int i = 0; i < datas.size(); i++) {
-			Double[] data = datas.get(i);
+		for (Entry<String, Double[]> entry : datas.entrySet()) {
+			Double[] data = entry.getValue();
 
-			if (i == 0) {
-				lineChart.add("当前值", data);
-			} else if (i == 1) {
-				lineChart.add("对比值", data);
-			}
+			lineChart.add(entry.getKey(), data);
 		}
 		return lineChart;
 	}
 
-	public LineChart buildLineChart(CommandQueryEntity queryEntity1, CommandQueryEntity queryEntity2, String type) {
-		List<Double[]> datas = new LinkedList<Double[]>();
+	public LineChart buildLineChart(CommandQueryEntity queryEntity1, CommandQueryEntity queryEntity2, QueryType type) {
+		Map<String, Double[]> datas = new LinkedHashMap<String, Double[]>();
 
 		if (queryEntity1 != null) {
-			Double[] data1 = m_AppDataService.queryValue(queryEntity1, type);
+			Double[] data = m_AppDataService.queryValue(queryEntity1, type);
 
-			datas.add(data1);
+			datas.put(Constants.CURRENT_STR, data);
 		}
 
 		if (queryEntity2 != null) {
-			Double[] values2 = m_AppDataService.queryValue(queryEntity2, type);
-			datas.add(values2);
+			Double[] data = m_AppDataService.queryValue(queryEntity2, type);
+
+			datas.put(Constants.COMPARISION_STR, data);
 		}
 		return buildChartData(datas, type);
 	}
 
-	public Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(CommandQueryEntity entity, AppDataField field) {
-		List<PieChartDetailInfo> infos = new LinkedList<PieChartDetailInfo>();
+	public Pair<PieChart, PieChartDetailInfo> buildPieChart(CommandQueryEntity entity, AppDataField field) {
+		PieChartDetailInfo info = new PieChartDetailInfo();
 		PieChart pieChart = new PieChart().setMaxSize(Integer.MAX_VALUE);
 		List<Item> items = new ArrayList<Item>();
 		List<AppCommandData> datas = m_AppDataService.queryByField(entity, field);
@@ -75,17 +75,17 @@ public class AppGraphCreator {
 		for (AppCommandData data : datas) {
 			Pair<Integer, Item> pair = buildPieChartItem(entity.getId(), data, field);
 			Item item = pair.getValue();
-			PieChartDetailInfo info = new PieChartDetailInfo();
+			com.dianping.cat.report.graph.PieChartDetailInfo.Item infoItem = new com.dianping.cat.report.graph.PieChartDetailInfo.Item();
 
-			info.setId(pair.getKey()).setTitle(item.getTitle()).setRequestSum(item.getNumber());
-			infos.add(info);
+			infoItem.setId(pair.getKey()).setTitle(item.getTitle()).setRequestSum(item.getNumber());
+			info.add(infoItem);
 			items.add(item);
 		}
 		pieChart.setTitle(field.getName() + "访问情况");
 		pieChart.addItems(items);
-		updatePieChartDetailInfo(infos);
+		updatePieChartDetailInfo(info);
 
-		return new Pair<PieChart, List<PieChartDetailInfo>>(pieChart, infos);
+		return new Pair<PieChart, PieChartDetailInfo>(pieChart, info);
 	}
 
 	private Pair<Integer, String> buildPieChartFieldTitlePair(int command, AppCommandData data, AppDataField field) {
@@ -187,27 +187,15 @@ public class AppGraphCreator {
 		return new Pair<Integer, Item>(pair.getKey(), item);
 	}
 
-	private String queryType(String type) {
-		if (AppDataService.SUCCESS.equals(type)) {
-			return "成功率（%/5分钟）";
-		} else if (AppDataService.REQUEST.equals(type)) {
-			return "请求数（个/5分钟）";
-		} else if (AppDataService.DELAY.equals(type)) {
-			return "延时平均值（毫秒/5分钟）";
-		} else {
-			throw new RuntimeException("unexpected query type, type:" + type);
-		}
-	}
-
-	private void updatePieChartDetailInfo(List<PieChartDetailInfo> items) {
+	private void updatePieChartDetailInfo(PieChartDetailInfo items) {
 		double sum = 0;
 
-		for (PieChartDetailInfo item : items) {
+		for (com.dianping.cat.report.graph.PieChartDetailInfo.Item item : items.getItems()) {
 			sum += item.getRequestSum();
 		}
 
 		if (sum > 0) {
-			for (PieChartDetailInfo item : items) {
+			for (com.dianping.cat.report.graph.PieChartDetailInfo.Item item : items.getItems()) {
 				item.setSuccessRatio(item.getRequestSum() / sum);
 			}
 		}

@@ -14,9 +14,9 @@ import com.dianping.cat.report.alert.sender.AlertEntity;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-public class WebDecorator extends Decorator implements Initializable {
+public class AjaxDecorator extends Decorator implements Initializable {
 
-	public static final String ID = AlertType.Web.getName();
+	public static final String ID = AlertType.Ajax.getName();
 
 	public Configuration m_configuration;
 

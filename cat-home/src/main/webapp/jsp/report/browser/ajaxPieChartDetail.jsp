@@ -95,7 +95,7 @@
 		
 	</tr></thead>
 	<tbody>
-	<c:forEach var="item" items="${model.pieChartDetailInfos}" varStatus="status">
+	<c:forEach var="item" items="${model.ajaxDataDisplayInfo.pieChartDetailInfos.details}" varStatus="status">
 		<tr>
 		<c:if test="${payload.groupByField.name eq 'code'}">
 				<td colspan="2">${item.id}</td>  
