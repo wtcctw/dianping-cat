@@ -15,7 +15,7 @@ import com.dianping.cat.home.dal.report.MetricGraphEntity;
 import com.dianping.cat.home.graph.entity.Graph;
 import com.dianping.cat.home.graph.transform.DefaultSaxParser;
 
-public class GraphService implements Initializable {
+public class MetricGraphService implements Initializable {
 
 	@Inject
 	private MetricGraphDao m_dao;
@@ -23,8 +23,16 @@ public class GraphService implements Initializable {
 	private volatile MetricGraph m_last = new MetricGraph();
 
 	public boolean deleteBeforeDate(Date date) {
-		// TODO
-		return true;
+		MetricGraph graph = m_dao.createLocal();
+
+		graph.setCreationDate(date);
+
+		try {
+			m_dao.deleteBeforeDate(graph);
+			return true;
+		} catch (DalException e) {
+			return false;
+		}
 	}
 
 	public boolean deleteById(int id) {

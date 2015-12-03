@@ -10,11 +10,11 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import org.unidal.web.mvc.payload.annotation.ObjectMeta;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.metric.MetricType;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.server.display.MetricConstants;
 import com.dianping.cat.report.page.server.service.GraphParam;
 
 public class Payload extends AbstractReportPayload<Action, ReportPage> {
@@ -47,10 +47,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private List<String> m_measurements;
 
 	@FieldMeta("view")
-	private String m_view = MetricConstants.END_POINT;
+	private String m_view = Constants.END_POINT;
 
 	@FieldMeta("search")
-	private String m_search = MetricConstants.END_POINT;
+	private String m_search = Constants.END_POINT;
 
 	@FieldMeta("type")
 	private String m_type = MetricType.AVG.getName();

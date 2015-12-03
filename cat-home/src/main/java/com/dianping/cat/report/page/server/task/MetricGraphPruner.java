@@ -9,8 +9,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.home.dal.report.MetricGraph;
-import com.dianping.cat.home.dal.report.MetricGraphDao;
+import com.dianping.cat.report.page.server.service.MetricGraphService;
 import com.dianping.cat.report.task.TaskBuilder;
 
 public class MetricGraphPruner implements TaskBuilder {
@@ -18,7 +17,7 @@ public class MetricGraphPruner implements TaskBuilder {
 	public static final String ID = Constants.METRIC_GRAPH_PRUNER;
 
 	@Inject
-	private MetricGraphDao m_metricGraphDao;
+	private MetricGraphService m_graphService;
 
 	private static final int DURATION = -2;
 
@@ -65,10 +64,8 @@ public class MetricGraphPruner implements TaskBuilder {
 		public void run() {
 			try {
 				Date period = queryPeriod(DURATION);
-				MetricGraph graph = m_metricGraphDao.createLocal();
 
-				graph.setCreationDate(period);
-				m_metricGraphDao.deleteBeforeDate(graph);
+				m_graphService.deleteBeforeDate(period);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}

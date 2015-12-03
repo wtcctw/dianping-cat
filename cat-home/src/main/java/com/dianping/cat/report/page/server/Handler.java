@@ -1,8 +1,10 @@
 package com.dianping.cat.report.page.server;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.graph.entity.Graph;
@@ -32,10 +35,9 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.metric.DataExtractor;
 import com.dianping.cat.report.page.server.display.MetricScreenInfo;
-import com.dianping.cat.report.page.server.service.EndPointService;
-import com.dianping.cat.report.page.server.service.GraphBuilder;
-import com.dianping.cat.report.page.server.service.GraphService;
-import com.dianping.cat.report.page.server.service.ScreenService;
+import com.dianping.cat.report.page.server.service.MetricGraphBuilder;
+import com.dianping.cat.report.page.server.service.MetricGraphService;
+import com.dianping.cat.report.page.server.service.MetricScreenService;
 import com.dianping.cat.system.page.config.ConfigHtmlParser;
 
 public class Handler implements PageHandler<Context> {
@@ -44,10 +46,10 @@ public class Handler implements PageHandler<Context> {
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private ScreenService m_screenService;
+	private MetricScreenService m_screenService;
 
 	@Inject
-	private GraphService m_graphService;
+	private MetricGraphService m_graphService;
 
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
@@ -62,15 +64,19 @@ public class Handler implements PageHandler<Context> {
 	private DataExtractor m_dataExtractor;
 
 	@Inject
-	private EndPointService m_endPointService;
-
-	@Inject
-	private GraphBuilder m_graphBuilder;
+	private MetricGraphBuilder m_graphBuilder;
 
 	@Inject
 	private InfluxDBConfigManager m_influxDBConfigManager;
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
+
+	private Graph buildGraph(Payload payload) {
+		List<String> endPoints = payload.getEndPoints();
+		List<String> measurements = payload.getMeasurements();
+
+		return m_graphBuilder.buildGraph(endPoints, measurements, String.valueOf(payload.getGraphId()), "");
+	}
 
 	private List<LineChart> buildLineCharts(Date start, Date end, String interval, String view, Graph graph) {
 		List<LineChart> lineCharts = new LinkedList<LineChart>();
@@ -95,6 +101,17 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		return lineCharts;
+	}
+
+	private Graph convertGraphType(Graph graph, String type) {
+		for (Entry<String, Item> entry : graph.getItems().entrySet()) {
+			for (Entry<String, Segment> e : entry.getValue().getSegments().entrySet()) {
+				Segment segment = e.getValue();
+
+				segment.setType(type);
+			}
+		}
+		return graph;
 	}
 
 	private Map<Long, Double> fetchData(Date start, Date end, Segment segment, String interval) {
@@ -196,7 +213,7 @@ public class Handler implements PageHandler<Context> {
 			List<String> keywords = payload.getKeywordsList();
 
 			if (!keywords.isEmpty()) {
-				Set<String> endPoints = m_endPointService.queryEndPoints(payload.getSearch(), keywords);
+				Set<String> endPoints = queryEndPoints(payload.getSearch(), keywords);
 				Map<String, Object> jsons = new HashMap<String, Object>();
 
 				jsons.put("endPoints", endPoints);
@@ -207,7 +224,7 @@ public class Handler implements PageHandler<Context> {
 			List<String> endPoints = payload.getEndPoints();
 
 			if (!endPoints.isEmpty()) {
-				Set<String> measurements = m_endPointService.queryMeasurements(endPoints);
+				Set<String> measurements = queryMeasurements(endPoints);
 				Map<String, Object> jsons = new HashMap<String, Object>();
 
 				jsons.put("endPoints", measurements);
@@ -238,24 +255,6 @@ public class Handler implements PageHandler<Context> {
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
-	}
-
-	private Graph convertGraphType(Graph graph, String type) {
-		for (Entry<String, Item> entry : graph.getItems().entrySet()) {
-			for (Entry<String, Segment> e : entry.getValue().getSegments().entrySet()) {
-				Segment segment = e.getValue();
-
-				segment.setType(type);
-			}
-		}
-		return graph;
-	}
-
-	private Graph buildGraph(Payload payload) {
-		List<String> endPoints = payload.getEndPoints();
-		List<String> measurements = payload.getMeasurements();
-
-		return m_graphBuilder.buildGraph(endPoints, measurements, String.valueOf(payload.getGraphId()), "");
 	}
 
 	private void normalize(Payload payload, Model model) {
@@ -293,5 +292,41 @@ public class Handler implements PageHandler<Context> {
 				payload.setScreen("");
 			}
 		}
+	}
+
+	public Set<String> queryEndPoints(String search, List<String> keywords) {
+		Set<String> endPoints = new HashSet<String>();
+		Set<String> keySet = m_influxDBConfigManager.getConfig().getInfluxdbs().keySet();
+
+		if (Constants.END_POINT.equals(search)) {
+			for (String key : keySet) {
+				endPoints.addAll(m_metricService.queryEndPoints(key, search, keywords));
+			}
+		} else {
+			for (String key : keySet) {
+				endPoints.addAll(m_metricService.queryEndPointsByTag(key, keywords));
+			}
+		}
+
+		return endPoints;
+	}
+
+	private Set<String> queryMeasurements(List<String> endPoints) {
+		Set<String> measurements = new HashSet<String>();
+
+		for (String key : m_influxDBConfigManager.getConfig().getInfluxdbs().keySet()) {
+			List<String> measures = m_metricService.queryMeasurements(key, endPoints);
+			List<String> results = new ArrayList<String>();
+
+			for (String measure : measures) {
+				measure = measure.replaceAll("(domain=[^,]*(,|$))|(endPoint=[^,]*(,|$))", "").replaceAll(",$", "")
+				      .replaceAll(",", ";");
+
+				results.add(measure);
+			}
+			measurements.addAll(results);
+		}
+
+		return measurements;
 	}
 }

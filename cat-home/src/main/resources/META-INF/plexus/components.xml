@@ -542,27 +542,14 @@
 			<implementation>com.dianping.cat.report.page.server.display.MetricScreenTransformer</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.server.service.EndPointService</role>
-			<implementation>com.dianping.cat.report.page.server.service.EndPointService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.metric.MetricService</role>
-					<role-hint>influxDB</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.server.service.ScreenService</role>
-			<implementation>com.dianping.cat.report.page.server.service.ScreenService</implementation>
+			<role>com.dianping.cat.report.page.server.service.MetricScreenService</role>
+			<implementation>com.dianping.cat.report.page.server.service.MetricScreenService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.MetricScreenDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.server.service.GraphBuilder</role>
+					<role>com.dianping.cat.report.page.server.service.MetricGraphBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.server.display.MetricScreenTransformer</role>
@@ -570,8 +557,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.server.service.GraphService</role>
-			<implementation>com.dianping.cat.report.page.server.service.GraphService</implementation>
+			<role>com.dianping.cat.report.page.server.service.MetricGraphService</role>
+			<implementation>com.dianping.cat.report.page.server.service.MetricGraphService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.MetricGraphDao</role>
@@ -5923,10 +5910,10 @@
 					<role>com.dianping.cat.report.page.server.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.server.service.ScreenService</role>
+					<role>com.dianping.cat.report.page.server.service.MetricScreenService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.server.service.GraphService</role>
+					<role>com.dianping.cat.report.page.server.service.MetricGraphService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
@@ -5941,10 +5928,7 @@
 					<role>com.dianping.cat.report.graph.metric.DataExtractor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.server.service.EndPointService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.server.service.GraphBuilder</role>
+					<role>com.dianping.cat.report.page.server.service.MetricGraphBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>
@@ -5961,14 +5945,14 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.server.service.ScreenService</role>
-			<implementation>com.dianping.cat.report.page.server.service.ScreenService</implementation>
+			<role>com.dianping.cat.report.page.server.service.MetricScreenService</role>
+			<implementation>com.dianping.cat.report.page.server.service.MetricScreenService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.MetricScreenDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.server.service.GraphBuilder</role>
+					<role>com.dianping.cat.report.page.server.service.MetricGraphBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.server.display.MetricScreenTransformer</role>
@@ -5985,16 +5969,16 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.server.service.GraphBuilder</role>
-			<implementation>com.dianping.cat.report.page.server.service.GraphBuilder</implementation>
+			<role>com.dianping.cat.report.page.server.service.MetricGraphBuilder</role>
+			<implementation>com.dianping.cat.report.page.server.service.MetricGraphBuilder</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.server.display.MetricScreenTransformer</role>
 			<implementation>com.dianping.cat.report.page.server.display.MetricScreenTransformer</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.server.service.GraphService</role>
-			<implementation>com.dianping.cat.report.page.server.service.GraphService</implementation>
+			<role>com.dianping.cat.report.page.server.service.MetricGraphService</role>
+			<implementation>com.dianping.cat.report.page.server.service.MetricGraphService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.MetricGraphDao</role>
@@ -6013,18 +5997,6 @@
 		<component>
 			<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
 			<implementation>com.dianping.cat.system.page.config.ConfigHtmlParser</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.server.service.EndPointService</role>
-			<implementation>com.dianping.cat.report.page.server.service.EndPointService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.metric.MetricService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>

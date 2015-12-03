@@ -10,13 +10,13 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.home.graph.entity.Graph;
 import com.dianping.cat.home.graph.transform.DefaultSaxParser;
-import com.dianping.cat.report.page.server.service.GraphService;
+import com.dianping.cat.report.page.server.service.MetricGraphService;
 
 public class GraphServiceTest extends ComponentTestCase {
 
 	@Test
 	public void test() throws IOException, SAXException {
-		GraphService graphService = lookup(GraphService.class);
+		MetricGraphService graphService = lookup(MetricGraphService.class);
 
 		String xml = Files.forIO().readFrom(getClass().getResourceAsStream("graph.xml"), "utf-8");
 		Graph graph = DefaultSaxParser.parse(xml);

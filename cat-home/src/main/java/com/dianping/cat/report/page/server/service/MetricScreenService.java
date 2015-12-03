@@ -19,13 +19,13 @@ import com.dianping.cat.home.dal.report.MetricScreenEntity;
 import com.dianping.cat.report.page.server.display.MetricScreenInfo;
 import com.dianping.cat.report.page.server.display.MetricScreenTransformer;
 
-public class ScreenService implements Initializable {
+public class MetricScreenService implements Initializable {
 
 	@Inject
 	private MetricScreenDao m_dao;
 
 	@Inject
-	private GraphBuilder m_graphBuilder;
+	private MetricGraphBuilder m_graphBuilder;
 
 	@Inject
 	private MetricScreenTransformer m_transformer;

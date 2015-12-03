@@ -84,4 +84,8 @@ public class Constants {
 
 	public static final String COMPARISION_STR = "对比值";
 
+	public final static String END_POINT = "endPoint";
+
+	public final static String MEASUREMENT = "measurement";
+
 }

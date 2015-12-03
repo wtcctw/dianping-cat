@@ -8,13 +8,15 @@ import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.home.graph.entity.Graph;
 import com.dianping.cat.home.graph.entity.Item;
 import com.dianping.cat.home.graph.entity.Segment;
 import com.dianping.cat.metric.MetricType;
-import com.dianping.cat.report.page.server.display.MetricConstants;
 
-public class GraphBuilder {
+public class MetricGraphBuilder {
+
+	public final static String TAG_SEPARATOR = ";";
 
 	private List<Item> buildEndPointView(List<String> measurements, List<String> endPoints) {
 		List<Item> items = new ArrayList<Item>();
@@ -53,9 +55,9 @@ public class GraphBuilder {
 		if (StringUtils.isEmpty(view)) {
 			results.addAll(buildMeasureView(measurements, endPoints));
 			results.addAll(buildEndPointView(measurements, endPoints));
-		} else if ("endPoint".equals(view)) {
+		} else if (Constants.END_POINT.equals(view)) {
 			results.addAll(buildEndPointView(measurements, endPoints));
-		} else if ("measurement".equals(view)) {
+		} else if (Constants.MEASUREMENT.equals(view)) {
 			results.addAll(buildMeasureView(measurements, endPoints));
 		}
 
@@ -97,18 +99,17 @@ public class GraphBuilder {
 
 	private String buildTag(String measure, String endPoint) {
 		StringBuilder sb = new StringBuilder("endPoint='" + endPoint + "'");
-		String separator = MetricConstants.TAG_SEPARATOR;
-		int index = measure.indexOf(separator);
+		int index = measure.indexOf(TAG_SEPARATOR);
 
 		if (index > -1) {
 			String tags = measure.substring(index + 1);
-			List<String> subTags = Splitters.by(separator).noEmptyItem().split(tags);
+			List<String> subTags = Splitters.by(TAG_SEPARATOR).noEmptyItem().split(tags);
 
 			for (String s : subTags) {
 				try {
 					String[] fields = s.split("=");
 
-					sb.append(separator).append(fields[0]).append("='").append(fields[1]).append("'");
+					sb.append(TAG_SEPARATOR).append(fields[0]).append("='").append(fields[1]).append("'");
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
@@ -128,7 +129,7 @@ public class GraphBuilder {
 			Cat.logError(new RuntimeException("Error metirc format: " + measurement));
 		}
 
-		index = measurement.indexOf(MetricConstants.TAG_SEPARATOR);
+		index = measurement.indexOf(TAG_SEPARATOR);
 
 		if (index > 0) {
 			measure = measure.substring(0, index);
