@@ -109,34 +109,6 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private List<AjaxDataDetail> buildAjaxDataDetails(Payload payload) {
-		List<AjaxDataDetail> ajaxDetails = new ArrayList<AjaxDataDetail>();
-
-		try {
-			ajaxDetails = m_ajaxDataService.buildAjaxDataDetailInfos(payload.getQueryEntity1(), payload.getGroupByField());
-			AjaxQueryType type = AjaxQueryType.findByType(payload.getSort());
-			Collections.sort(ajaxDetails, new AjaxDataDetailSorter(type));
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return ajaxDetails;
-	}
-
-	private AjaxDataDetail buildComparisonInfo(AjaxDataQueryEntity entity) {
-		AjaxDataDetail appDetail = null;
-
-		try {
-			List<AjaxDataDetail> appDetails = m_ajaxDataService.buildAjaxDataDetailInfos(entity, AjaxDataField.CODE);
-
-			if (appDetails.size() >= 1) {
-				appDetail = appDetails.iterator().next();
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return appDetail;
-	}
-
 	protected Map<String, AjaxDataDetail> buildAjaxComparisonInfo(Payload payload) {
 		AjaxDataQueryEntity currentEntity = payload.getQueryEntity1();
 		AjaxDataQueryEntity comparisonEntity = payload.getQueryEntity2();
@@ -161,19 +133,17 @@ public class Handler implements PageHandler<Context> {
 		return result;
 	}
 
-	public String buildDistributionChart(Map<String, AtomicInteger> distributions) {
-		PieChart chart = new PieChart();
-		List<Item> items = new ArrayList<Item>();
+	private List<AjaxDataDetail> buildAjaxDataDetails(Payload payload) {
+		List<AjaxDataDetail> ajaxDetails = new ArrayList<AjaxDataDetail>();
 
-		for (Entry<String, AtomicInteger> entry : distributions.entrySet()) {
-			Item item = new Item();
-
-			item.setNumber(entry.getValue().get()).setTitle(entry.getKey());
-			items.add(item);
+		try {
+			ajaxDetails = m_ajaxDataService.buildAjaxDataDetailInfos(payload.getQueryEntity1(), payload.getGroupByField());
+			AjaxQueryType type = AjaxQueryType.findByType(payload.getSort());
+			Collections.sort(ajaxDetails, new AjaxDataDetailSorter(type));
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
-		chart.addItems(items);
-
-		return chart.getJsonString();
+		return ajaxDetails;
 	}
 
 	private LineChart buildAjaxLineChart(Payload payload) {
@@ -210,6 +180,49 @@ public class Handler implements PageHandler<Context> {
 		return null;
 	}
 
+	private AjaxDataDetail buildComparisonInfo(AjaxDataQueryEntity entity) {
+		AjaxDataDetail appDetail = null;
+
+		try {
+			List<AjaxDataDetail> appDetails = m_ajaxDataService.buildAjaxDataDetailInfos(entity, AjaxDataField.CODE);
+
+			if (appDetails.size() >= 1) {
+				appDetail = appDetails.iterator().next();
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return appDetail;
+	}
+
+	public String buildDistributionChart(Map<String, AtomicInteger> distributions) {
+		PieChart chart = new PieChart();
+		List<Item> items = new ArrayList<Item>();
+
+		for (Entry<String, AtomicInteger> entry : distributions.entrySet()) {
+			Item item = new Item();
+
+			item.setNumber(entry.getValue().get()).setTitle(entry.getKey());
+			items.add(item);
+		}
+		chart.addItems(items);
+
+		return chart.getJsonString();
+	}
+
+	private void buildSpeedBarCharts(Payload payload, Model model) {
+		try {
+			Map<String, Speed> speeds = m_webSpeedConfigManager.getSpeeds();
+			SpeedQueryEntity queryEntity1 = normalizeSpeedQueryEntity(payload, speeds);
+			WebSpeedDisplayInfo info = m_webSpeedService.buildBarCharts(queryEntity1);
+
+			model.setSpeeds(speeds);
+			model.setWebSpeedDisplayInfo(info);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
+
 	private void buildSpeedInfo(Payload payload, Model model) {
 		try {
 			Map<String, Speed> speeds = m_webSpeedConfigManager.getSpeeds();
@@ -236,19 +249,6 @@ public class Handler implements PageHandler<Context> {
 			jsonObjs.put("webSpeedSummarys", info.getWebSpeedSummarys());
 
 			model.setFetchData(m_jsonBuilder.toJson(jsonObjs));
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
-
-	private void buildSpeedBarCharts(Payload payload, Model model) {
-		try {
-			Map<String, Speed> speeds = m_webSpeedConfigManager.getSpeeds();
-			SpeedQueryEntity queryEntity1 = normalizeSpeedQueryEntity(payload, speeds);
-			WebSpeedDisplayInfo info = m_webSpeedService.buildBarCharts(queryEntity1);
-
-			model.setSpeeds(speeds);
-			model.setWebSpeedDisplayInfo(info);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -384,7 +384,7 @@ public class Handler implements PageHandler<Context> {
 		ExecutorService executor = Executors.newFixedThreadPool(3);
 		List<FutureTask> tasks = new LinkedList<FutureTask>();
 
-		FutureTask lineChartTask = new FutureTask(new CallableTask<LineChart>() {
+		FutureTask lineChartTask = new FutureTask(new Callable<LineChart>() {
 			@Override
 			public LineChart call() throws Exception {
 				return buildAjaxLineChart(payload);
@@ -394,7 +394,7 @@ public class Handler implements PageHandler<Context> {
 		tasks.add(lineChartTask);
 		executor.execute(lineChartTask);
 
-		FutureTask ajaxDetailTask = new FutureTask(new CallableTask<List<AjaxDataDetail>>() {
+		FutureTask ajaxDetailTask = new FutureTask(new Callable<List<AjaxDataDetail>>() {
 			@Override
 			public List<AjaxDataDetail> call() throws Exception {
 				return buildAjaxDataDetails(payload);
@@ -404,7 +404,7 @@ public class Handler implements PageHandler<Context> {
 		tasks.add(ajaxDetailTask);
 		executor.execute(ajaxDetailTask);
 
-		FutureTask comparisonTask = new FutureTask(new CallableTask<Map<String, AjaxDataDetail>>() {
+		FutureTask comparisonTask = new FutureTask(new Callable<Map<String, AjaxDataDetail>>() {
 			@Override
 			public Map<String, AjaxDataDetail> call() throws Exception {
 				return buildAjaxComparisonInfo(payload);
@@ -496,14 +496,6 @@ public class Handler implements PageHandler<Context> {
 	private void viewJsErrorDetail(Payload payload, Model model) {
 		JsErrorDetailInfo info = m_jsErrorLogService.queryJsErrorInfo(payload.getId());
 		model.setJsErrorDetailInfo(info);
-	}
-
-	public class CallableTask<T> implements Callable<T> {
-
-		@Override
-		public T call() throws Exception {
-			return null;
-		}
 	}
 
 }

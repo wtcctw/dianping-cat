@@ -3999,48 +3999,6 @@
 			<implementation>com.dianping.cat.report.page.model.Handler</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.dashboard.Handler</role>
-			<implementation>com.dianping.cat.report.page.dashboard.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.dashboard.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.event.transform.EventMergeHelper</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>event</role-hint>
-					<field-name>m_eventService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>transaction</role-hint>
-					<field-name>m_transactionService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>problem</role-hint>
-					<field-name>m_problemService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.helper.JsonBuilder</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.dashboard.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.dashboard.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.matrix.Handler</role>
 			<implementation>com.dianping.cat.report.page.matrix.Handler</implementation>
 			<requirements>
