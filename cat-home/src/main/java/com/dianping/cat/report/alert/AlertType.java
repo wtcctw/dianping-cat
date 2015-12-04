@@ -24,8 +24,6 @@ public enum AlertType {
 	
 	Ajax("Ajax", "Ajax访问告警"),
 
-	Web("Web", "WEB接口告警"),
-
 	Transaction("Transaction", "Transacation告警"),
 
 	Event("Event", "Event告警"),

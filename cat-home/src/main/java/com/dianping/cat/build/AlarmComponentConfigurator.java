@@ -30,6 +30,8 @@ import com.dianping.cat.report.alert.DefaultDataChecker;
 import com.dianping.cat.report.alert.MetricReportGroupService;
 import com.dianping.cat.report.alert.app.AppAlert;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
+import com.dianping.cat.report.alert.browser.AjaxAlert;
+import com.dianping.cat.report.alert.browser.AjaxRuleConfigManager;
 import com.dianping.cat.report.alert.browser.JsAlert;
 import com.dianping.cat.report.alert.browser.JsRuleConfigManager;
 import com.dianping.cat.report.alert.business.BusinessAlert;
@@ -117,6 +119,7 @@ import com.dianping.cat.report.alert.thirdParty.ThirdPartyConfigManager;
 import com.dianping.cat.report.alert.transaction.TransactionAlert;
 import com.dianping.cat.report.alert.transaction.TransactionRuleConfigManager;
 import com.dianping.cat.report.page.app.service.AppDataService;
+import com.dianping.cat.report.page.browser.service.AjaxDataService;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.event.transform.EventMergeHelper;
 import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager;
@@ -231,6 +234,9 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AppAlert.class).req(AppDataService.class, AlertManager.class, AppRuleConfigManager.class,
 		      DataChecker.class, AppConfigManager.class));
+	
+		all.add(C(AjaxAlert.class).req(AjaxDataService.class, AlertManager.class, AjaxRuleConfigManager.class,
+		      DataChecker.class, UrlPatternConfigManager.class));
 
 		all.add(C(TransactionAlert.class).req(TransactionMergeHelper.class, DataChecker.class, AlertManager.class)
 		      .req(ModelService.class, TransactionAnalyzer.ID).req(TransactionRuleConfigManager.class));

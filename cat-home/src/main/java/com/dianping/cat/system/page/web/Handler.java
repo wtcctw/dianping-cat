@@ -84,7 +84,7 @@ public class Handler implements PageHandler<Context> {
 		model.setWebCities(m_appConfigManager.queryConfigItem(WebConfigManager.CITY));
 		model.setWebOperators(m_appConfigManager.queryConfigItem(WebConfigManager.OPERATOR));
 		model.setPatternItems(patterns);
-		model.setWebCodes(m_urlPatternConfigManager.getUrlPattern().getCodes());
+		model.setWebCodes(m_urlPatternConfigManager.queryCodes());
 		model.setWebNetworks(m_appConfigManager.queryConfigItem(WebConfigManager.NETWORK));
 	}
 

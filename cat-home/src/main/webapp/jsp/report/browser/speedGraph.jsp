@@ -91,9 +91,9 @@
 <c:forEach var="entry" items="${model.webSpeedDisplayInfo.webSpeedDetails}" >
 <table class="table table-striped table-condensed table-bordered table-hover"> 
 	<tr>
-		<th class="text-success">${entry.key}</th>
-		<th class="text-success">访问量</th>
-		<th class="text-success">平均响应时间</th>
+		<th class="text-success" width="40%">${entry.key}</th>
+		<th class="text-success" width="30%">访问量</th>
+		<th class="text-success" width="30%">平均响应时间</th>
 	</tr>
 	<c:forEach var="item" items="${entry.value}">
 		<tr><td>${item.itemName}</td><td>${item.accessNumberSum}</td><td>${item.responseTimeAvg}</td></tr>

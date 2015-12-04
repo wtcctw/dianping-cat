@@ -12,6 +12,7 @@ import com.dianping.cat.analysis.TcpSocketReceiver;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.report.alert.app.AppAlert;
+import com.dianping.cat.report.alert.browser.AjaxAlert;
 import com.dianping.cat.report.alert.browser.JsAlert;
 import com.dianping.cat.report.alert.business.BusinessAlert;
 import com.dianping.cat.report.alert.database.DatabaseAlert;
@@ -63,6 +64,7 @@ public class CatHomeModule extends AbstractModule {
 			StorageCacheAlert storageCacheAlert = ctx.lookup(StorageCacheAlert.class);
 			StorageRPCAlert storageRpcAlert = ctx.lookup(StorageRPCAlert.class);
 			JsAlert jsAlert = ctx.lookup(JsAlert.class);
+			AjaxAlert ajaxAlert = ctx.lookup(AjaxAlert.class);
 
 			Threads.forGroup("cat").start(networkAlert);
 			Threads.forGroup("cat").start(databaseAlert);
@@ -79,6 +81,7 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("cat").start(storageCacheAlert);
 			Threads.forGroup("cat").start(storageRpcAlert);
 			Threads.forGroup("cat").start(jsAlert);
+			Threads.forGroup("cat").start(ajaxAlert);
 		}
 
 		final MessageConsumer consumer = ctx.lookup(MessageConsumer.class);
