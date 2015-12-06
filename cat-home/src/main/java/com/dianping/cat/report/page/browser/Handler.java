@@ -37,8 +37,8 @@ import com.dianping.cat.report.page.browser.display.AjaxDataDisplayInfo;
 import com.dianping.cat.report.page.browser.display.JsErrorMsg;
 import com.dianping.cat.report.page.browser.display.JsErrorDisplayInfo;
 import com.dianping.cat.report.page.browser.display.JsErrorDetailInfo;
-import com.dianping.cat.report.page.browser.display.AjaxPieChartDetailInfos;
-import com.dianping.cat.report.page.browser.display.AjaxPieChartDetailInfos.PieChartDetailInfo;
+import com.dianping.cat.report.page.browser.display.AjaxDistributeDetails;
+import com.dianping.cat.report.page.browser.display.AjaxDistributeDetails.DistributeDetail;
 import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
 import com.dianping.cat.report.page.browser.service.AjaxDataField;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
@@ -52,7 +52,6 @@ import com.dianping.cat.web.JsErrorLog;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -160,24 +159,24 @@ public class Handler implements PageHandler<Context> {
 		return lineChart;
 	}
 
-	private Pair<PieChart, AjaxPieChartDetailInfos> buildAjaxPieChart(Payload payload) {
+	private AjaxDataDisplayInfo buildAjaxPieChart(Payload payload) {
 		try {
-			Pair<PieChart, AjaxPieChartDetailInfos> pair = m_graphCreator.buildPieChart(payload.getQueryEntity1(),
+			AjaxDataDisplayInfo displayInfo = m_graphCreator.buildAjaxDistributeChart(payload.getQueryEntity1(),
 			      payload.getGroupByField());
-			AjaxPieChartDetailInfos infos = pair.getValue();
+			AjaxDistributeDetails detailInfos = displayInfo.getDistributeDetailInfos();
 
-			Collections.sort(infos.getDetails(), new Comparator<PieChartDetailInfo>() {
+			Collections.sort(detailInfos.getDetails(), new Comparator<DistributeDetail>() {
 				@Override
-				public int compare(PieChartDetailInfo o1, PieChartDetailInfo o2) {
+				public int compare(DistributeDetail o1, DistributeDetail o2) {
 					return (int) (o2.getRequestSum() - o1.getRequestSum());
 				}
 			});
 
-			return pair;
+			return displayInfo;
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return null;
+		return new AjaxDataDisplayInfo();
 	}
 
 	private AjaxDataDetail buildComparisonInfo(AjaxDataQueryEntity entity) {
@@ -195,7 +194,7 @@ public class Handler implements PageHandler<Context> {
 		return appDetail;
 	}
 
-	public String buildDistributionChart(Map<String, AtomicInteger> distributions) {
+	public String buildJsErrorDistributionChart(Map<String, AtomicInteger> distributions) {
 		PieChart chart = new PieChart();
 		List<Item> items = new ArrayList<Item>();
 
@@ -289,14 +288,7 @@ public class Handler implements PageHandler<Context> {
 			parallelBuildAjaxLineChart(model, payload);
 			break;
 		case AJAX_PIECHART:
-			Pair<PieChart, AjaxPieChartDetailInfos> pieChartPair = buildAjaxPieChart(payload);
-			AjaxDataDisplayInfo info = new AjaxDataDisplayInfo();
-
-			if (pieChartPair != null) {
-				info.setPieChart(pieChartPair.getKey());
-				info.setPieChartDetailInfos(pieChartPair.getValue());
-			}
-
+			AjaxDataDisplayInfo info = buildAjaxPieChart(payload);
 			model.setAjaxDataDisplayInfo(info);
 			break;
 		case JS_ERROR:
@@ -485,7 +477,7 @@ public class Handler implements PageHandler<Context> {
 			info.setTotalCount(totalCount);
 			info.setLevels(Level.getLevels());
 			info.setModules(m_moduleManager.getModules());
-			info.setDistributionChart(buildDistributionChart(distributions));
+			info.setDistributionChart(buildJsErrorDistributionChart(distributions));
 
 			model.setJsErrorDisplayInfo(info);
 		} catch (DalException e) {

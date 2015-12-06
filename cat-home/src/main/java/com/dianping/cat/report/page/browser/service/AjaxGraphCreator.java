@@ -1,6 +1,8 @@
 package com.dianping.cat.report.page.browser.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,11 +15,13 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.web.url.entity.Code;
+import com.dianping.cat.report.graph.BarChart;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
-import com.dianping.cat.report.page.browser.display.AjaxPieChartDetailInfos;
-import com.dianping.cat.report.page.browser.display.AjaxPieChartDetailInfos.PieChartDetailInfo;
+import com.dianping.cat.report.page.browser.display.AjaxDataDisplayInfo;
+import com.dianping.cat.report.page.browser.display.AjaxDistributeDetails;
+import com.dianping.cat.report.page.browser.display.AjaxDistributeDetails.DistributeDetail;
 import com.dianping.cat.web.AjaxData;
 
 public class AjaxGraphCreator {
@@ -52,7 +56,8 @@ public class AjaxGraphCreator {
 		return lineChart;
 	}
 
-	public LineChart buildLineChart(AjaxDataQueryEntity queryEntity1, AjaxDataQueryEntity queryEntity2, AjaxQueryType type) {
+	public LineChart buildLineChart(AjaxDataQueryEntity queryEntity1, AjaxDataQueryEntity queryEntity2,
+	      AjaxQueryType type) {
 		Map<String, Double[]> datas = new LinkedHashMap<String, Double[]>();
 
 		if (queryEntity1 != null) {
@@ -69,23 +74,95 @@ public class AjaxGraphCreator {
 		return buildChartData(datas, type);
 	}
 
-	public Pair<PieChart, AjaxPieChartDetailInfos> buildPieChart(AjaxDataQueryEntity entity, AjaxDataField field) {
-		PieChart pieChart = new PieChart().setMaxSize(Integer.MAX_VALUE);
-		List<Item> items = new ArrayList<Item>();
+	public AjaxDataDisplayInfo buildAjaxDistributeChart(AjaxDataQueryEntity entity, AjaxDataField field) {
 		List<AjaxData> datas = m_dataBuilder.queryByField(entity, field);
+		AjaxDistributeDetails detailInfos = buildAjaxDistributeDetails(field, datas);
+		AjaxDataDisplayInfo info = new AjaxDataDisplayInfo();
 
-		for (AjaxData data : datas) {
-			items.add(buildPieChartItem(entity.getId(), data, field));
-		}
-		pieChart.setTitle(field.getName() + "访问情况");
-		pieChart.addItems(items);
-
-		AjaxPieChartDetailInfos infos = buildPieChartDetailInfo(items);
-
-		return new Pair<PieChart, AjaxPieChartDetailInfos>(pieChart, infos);
+		info.setDistributeDetailInfos(detailInfos);
+		info.setPieChart(buildPieChart(detailInfos));
+		info.setBarChart(buildBarChart(detailInfos, field));
+		return info;
 	}
 
-	private Pair<Integer, String> buildPieChartFieldTitlePair(int command, AjaxData data, AjaxDataField field) {
+	private BarChart buildBarChart(AjaxDistributeDetails detailInfos, AjaxDataField field) {
+		BarChart barChart = new BarChart();
+		barChart.setTitle("加载时间分布");
+		barChart.setyAxis("加载时间(ms)");
+		barChart.setSerieName(field.getName());
+		List<DistributeDetail> datas = detailInfos.getDetails();
+
+		Collections.sort(datas, new Comparator<DistributeDetail>() {
+			@Override
+			public int compare(DistributeDetail o1, DistributeDetail o2) {
+				return (int) (o2.getDelayAvg() - o1.getDelayAvg());
+			}
+		});
+
+		List<String> itemList = new ArrayList<String>();
+		List<Double> dataList = new ArrayList<Double>();
+
+		for (DistributeDetail data : datas) {
+			itemList.add(data.getTitle());
+			dataList.add(data.getDelayAvg());
+		}
+
+		barChart.setxAxis(itemList);
+		barChart.setValues(dataList);
+		return barChart;
+	}
+
+	private PieChart buildPieChart(AjaxDistributeDetails detailInfos) {
+		PieChart pieChart = new PieChart().setMaxSize(Integer.MAX_VALUE);
+		List<Item> items = new ArrayList<Item>();
+
+		for (DistributeDetail detail : detailInfos.getDetails()) {
+			Item item = new Item();
+
+			item.setTitle(detail.getTitle());
+			item.setId(detail.getId());
+			item.setNumber(detail.getRequestSum());
+			items.add(item);
+		}
+		pieChart.setTitle("请求量分布");
+		pieChart.addItems(items);
+		return pieChart;
+	}
+
+	private AjaxDistributeDetails buildAjaxDistributeDetails(AjaxDataField field, List<AjaxData> datas) {
+		AjaxDistributeDetails detailInfos = new AjaxDistributeDetails();
+
+		for (AjaxData data : datas) {
+			DistributeDetail info = new DistributeDetail();
+
+			Pair<Integer, String> pair = buildPieChartFieldTitlePair(data, field);
+			info.setId(pair.getKey()).setTitle(pair.getValue());
+			long requestSum = data.getAccessNumberSum();
+			info.setRequestSum(requestSum);
+
+			if (requestSum > 0) {
+				info.setDelayAvg(data.getResponseSumTimeSum() / requestSum);
+			}
+
+			detailInfos.addPieChartDetailInfo(info);
+		}
+
+		double sum = 0;
+
+		for (DistributeDetail detail : detailInfos.getDetails()) {
+			sum += detail.getRequestSum();
+		}
+
+		if (sum > 0) {
+			for (DistributeDetail detail : detailInfos.getDetails()) {
+				detail.setRatio(detail.getRequestSum() / sum);
+			}
+		}
+
+		return detailInfos;
+	}
+
+	private Pair<Integer, String> buildPieChartFieldTitlePair(AjaxData data, AjaxDataField field) {
 		String title = "Unknown";
 		int keyValue = -1;
 
@@ -142,35 +219,4 @@ public class AjaxGraphCreator {
 		return new Pair<Integer, String>(keyValue, title);
 	}
 
-	private Item buildPieChartItem(int command, AjaxData data, AjaxDataField field) {
-		Pair<Integer, String> pair = buildPieChartFieldTitlePair(command, data, field);
-		Item item = new Item();
-
-		item.setTitle(pair.getValue());
-		item.setId(pair.getKey());
-		item.setNumber(data.getAccessNumberSum());
-
-		return item;
-	}
-
-	private AjaxPieChartDetailInfos buildPieChartDetailInfo(List<Item> items) {
-		AjaxPieChartDetailInfos infos = new AjaxPieChartDetailInfos();
-		double sum = 0;
-
-		for (Item item : items) {
-			sum += item.getNumber();
-		}
-
-		if (sum > 0) {
-			for (Item item : items) {
-				PieChartDetailInfo info = new PieChartDetailInfo();
-
-				info.setId(item.getId()).setTitle(item.getTitle()).setRequestSum(item.getNumber());
-				info.setSuccessRatio(item.getNumber() / sum);
-
-				infos.addPieChartDetailInfo(info);
-			}
-		}
-		return infos;
-	}
 }

@@ -33,11 +33,7 @@
 						</c:forEach>
 					</select>
 	            </div>
-			</th>
-			</tr>
-			<tr>
-				<th align=left>
-	            <div class="input-group" style="float:left;width:120px">
+	              <div class="input-group" style="float:left;width:120px">
 	              	<span class="input-group-addon">地区</span>
 					<select id="city" style="width: 100px;">
 						<option value=''>All</option>
@@ -46,6 +42,10 @@
 						</c:forEach>
 					</select>
 	            </div>
+			</th>
+			</tr>
+			<tr>
+				<th align=left>
 	            <div class="input-group" style="float:left;width:120px">
 	              	<span class="input-group-addon">运营商</span>
 					<select id="operator" style="width: 100px;">
@@ -81,8 +81,11 @@
 				</th>
 			</tr>
 		</table>
-		<h5 class="text-center">请求量分布</h5>
-		<div id="piechart"></div>
+		<table><tr>
+		<td width="40%"><div>
+		<div id="piechart" ></div></div></td>
+		<td width="40%">
+		<div id="barchart"></div></td></tr></table>
 		<br/>
  <table id="web_content" class="table table-striped table-condensed">
 		<thead><tr class="text-success">
@@ -91,18 +94,20 @@
 		</c:if>
 		<th>类别</th>
 		<th>请求总数</th>
-		<th>百分比</th>
+		<th>平均延时(毫秒)</th>
+		<th>请求量百分比</th>
 		
 	</tr></thead>
 	<tbody>
-	<c:forEach var="item" items="${model.ajaxDataDisplayInfo.pieChartDetailInfos.details}" varStatus="status">
+	<c:forEach var="item" items="${model.ajaxDataDisplayInfo.distributeDetailInfos.details}" varStatus="status">
 		<tr>
 		<c:if test="${payload.groupByField.name eq 'code'}">
 				<td colspan="2">${item.id}</td>  
 		</c:if>
 		<td>${item.title}</td>
 		<td>${w:format(item.requestSum,'#,###,###,###,##0')}</td>
-		<td>${w:format(item.successRatio,'#0.000%')}</td>
+		<td>${w:format(item.delayAvg,'#,###,###,###,##0')}</td>
+		<td>${w:format(item.ratio,'#0.000%')}</td>
 		</tr>
 	</c:forEach>
 	</tbody>

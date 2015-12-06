@@ -123,6 +123,7 @@
 			<readset name="OPERATOR-DATA">
 				<member name="operator" />
 				<member name="access-number-sum" />
+				<member name="response-sum-time-sum" />
 			</readset>
 				<readset name="OPERATOR-CODE-DATA">
 				<member name="code" />
@@ -135,6 +136,7 @@
 			<readset name="CITY-DATA">
 				<member name="city" />
 				<member name="access-number-sum" />
+				<member name="response-sum-time-sum" />
 			</readset>
 			<readset name="CITY-CODE-DATA">
 				<member name="code" />
@@ -147,6 +149,7 @@
 			<readset name="NETWORK-DATA">
 				<member name="network" />
 				<member name="access-number-sum" />
+				<member name="response-sum-time-sum" />
 			</readset>
 			<readset name="NETWORK-CODE-DATA">
 				<member name="code" />
