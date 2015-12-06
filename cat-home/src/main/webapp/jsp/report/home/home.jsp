@@ -45,6 +45,9 @@
 	   	<c:when test="${payload.docName == 'plugin'}">
 	   		<%@ include file="plugin.jsp"%>
 	   	</c:when>
+	   	<c:when test="${payload.docName == 'browserMonitor'}">
+	   		<%@ include file="browser.jsp"%>
+	   	</c:when>
 	   	<c:otherwise>
 	   		<%@ include file="index.jsp"%>
 	   	</c:otherwise>
@@ -59,5 +62,6 @@
 		liElement = $('#indexButton');
 	}
 	liElement.addClass('active');
+	if('${payload.docName}')
 </script>
 </a:home>
