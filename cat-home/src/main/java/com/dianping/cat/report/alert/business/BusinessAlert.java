@@ -23,8 +23,8 @@ import com.dianping.cat.report.alert.spi.AlarmRule;
 import com.dianping.cat.report.alert.spi.AlertEntity;
 import com.dianping.cat.report.alert.spi.AlertType;
 import com.dianping.cat.report.alert.spi.BaseAlert;
-import com.dianping.cat.report.alert.spi.metric.MetricReportGroup;
-import com.dianping.cat.report.alert.spi.metric.MetricType;
+import com.dianping.cat.report.alert.spi.data.MetricReportGroup;
+import com.dianping.cat.report.alert.spi.data.MetricType;
 import com.dianping.cat.report.alert.spi.rule.DataCheckEntity;
 
 public class BusinessAlert extends BaseAlert {

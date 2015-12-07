@@ -2527,8 +2527,8 @@
 			<implementation>com.dianping.cat.report.alert.spi.rule.DefaultDataChecker</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.spi.metric.MetricReportGroupService</role>
-			<implementation>com.dianping.cat.report.alert.spi.metric.MetricReportGroupService</implementation>
+			<role>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</role>
+			<implementation>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
@@ -2943,7 +2943,7 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.spi.metric.MetricReportGroupService</role>
+					<role>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.business.BusinessRuleConfigManager</role>
@@ -2967,7 +2967,7 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.spi.metric.MetricReportGroupService</role>
+					<role>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.network.NetworkRuleConfigManager</role>
@@ -2988,7 +2988,7 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.spi.metric.MetricReportGroupService</role>
+					<role>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.database.DatabaseRuleConfigManager</role>
@@ -3040,7 +3040,7 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.spi.metric.MetricReportGroupService</role>
+					<role>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.system.SystemRuleConfigManager</role>

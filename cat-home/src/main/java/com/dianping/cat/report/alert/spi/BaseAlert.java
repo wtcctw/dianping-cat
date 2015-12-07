@@ -20,9 +20,9 @@ import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
-import com.dianping.cat.report.alert.spi.metric.MetricReportGroup;
-import com.dianping.cat.report.alert.spi.metric.MetricReportGroupService;
-import com.dianping.cat.report.alert.spi.metric.MetricType;
+import com.dianping.cat.report.alert.spi.data.MetricReportGroup;
+import com.dianping.cat.report.alert.spi.data.MetricReportGroupService;
+import com.dianping.cat.report.alert.spi.data.MetricType;
 import com.dianping.cat.report.alert.spi.rule.DataCheckEntity;
 import com.dianping.cat.report.alert.spi.rule.DataChecker;
 

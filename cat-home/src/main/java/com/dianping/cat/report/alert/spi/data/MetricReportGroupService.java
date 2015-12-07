@@ -1,9 +1,9 @@
-package com.dianping.cat.report.alert.spi.metric;
+package com.dianping.cat.report.alert.spi.data;
 
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.report.alert.spi.metric.MetricReportGroup.State;
+import com.dianping.cat.report.alert.spi.data.MetricReportGroup.State;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
