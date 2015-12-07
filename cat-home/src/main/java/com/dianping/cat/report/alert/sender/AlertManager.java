@@ -65,14 +65,14 @@ public class AlertManager implements Initializable {
 
 	private ConcurrentHashMap<AlertEntity, Long> m_alertMap = new ConcurrentHashMap<AlertEntity, Long>();
 	
-	public boolean addAlert(AlertEntity alert) {
-		m_alertMap.put(alert, alert.getDate().getTime());
+	public boolean addAlert(AlertEntity entity) {
+		m_alertMap.put(entity, entity.getDate().getTime());
 		
-		String group = alert.getGroup();
-		Cat.logEvent("Alert:" + alert.getType().getName(), group, Event.SUCCESS, alert.toString());
+		String group = entity.getGroup();
+		Cat.logEvent("Alert:" + entity.getType().getName(), group, Event.SUCCESS, entity.toString());
 
 		if (m_configManager.isAlertMachine()) {
-			return m_alerts.offer(alert);
+			return m_alerts.offer(entity);
 		} else {
 			return true;
 		}
