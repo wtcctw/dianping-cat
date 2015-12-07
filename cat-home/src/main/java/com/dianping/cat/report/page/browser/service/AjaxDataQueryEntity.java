@@ -61,6 +61,11 @@ public class AjaxDataQueryEntity {
 		}
 	}
 
+	public AjaxDataQueryEntity(Date date) {
+		m_date = date;
+		m_id = DEFAULT_COMMAND;
+	}
+
 	protected int convert2MinuteOrder(String time) {
 		int current = DEFAULT_VALUE;
 
@@ -135,35 +140,43 @@ public class AjaxDataQueryEntity {
 		}
 	}
 
-	public void setCity(int city) {
-		m_city = city;
+	public AjaxDataQueryEntity setCity(String city) {
+		m_city = parseValue(city);
+		return this;
 	}
 
-	public void setCode(int code) {
-		m_code = code;
+	public AjaxDataQueryEntity setCode(String code) {
+		m_code = parseValue(code);
+		return this;
 	}
 
-	public void setDate(Date date) {
+	public AjaxDataQueryEntity setDate(Date date) {
 		m_date = date;
+		return this;
 	}
 
-	public void setEndMinuteOrder(int endMinuteOrder) {
+	public AjaxDataQueryEntity setEndMinuteOrder(int endMinuteOrder) {
 		m_endMinuteOrder = endMinuteOrder;
+		return this;
 	}
 
-	public void setId(int id) {
-		m_id = id;
+	public AjaxDataQueryEntity setId(String id) {
+		m_id = parseValue(id);
+		return this;
 	}
 
-	public void setNetwork(int network) {
-		m_network = network;
+	public AjaxDataQueryEntity setNetwork(String network) {
+		m_network = parseValue(network);
+		return this;
 	}
 
-	public void setOperator(int operator) {
-		m_operator = operator;
+	public AjaxDataQueryEntity setOperator(String operator) {
+		m_operator = parseValue(operator);
+		return this;
 	}
 
-	public void setStartMinuteOrder(int startMinuteOrder) {
+	public AjaxDataQueryEntity setStartMinuteOrder(int startMinuteOrder) {
 		m_startMinuteOrder = startMinuteOrder;
+		return this;
 	}
 }

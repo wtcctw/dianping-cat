@@ -1,6 +1,5 @@
 package com.dianping.cat.report.alert;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,9 +24,6 @@ import com.dianping.cat.report.alert.sender.AlertEntity;
 import com.dianping.cat.report.alert.sender.AlertManager;
 
 public abstract class BaseAlert implements Task, LogEnabled {
-
-	@Inject
-	protected AlertInfo m_alertInfo;
 
 	@Inject
 	protected DataChecker m_dataChecker;
@@ -126,7 +122,6 @@ public abstract class BaseAlert implements Task, LogEnabled {
 									List<AlertResultEntity> results = m_dataChecker.checkData(value, conditions);
 
 									if (results.size() > 0) {
-										updateAlertStatus(product, metricKey);
 										sendAlerts(product, metricName, results);
 									}
 								}
@@ -200,7 +195,4 @@ public abstract class BaseAlert implements Task, LogEnabled {
 	public void shutdown() {
 	}
 
-	protected void updateAlertStatus(String productlineName, String metricKey) {
-		m_alertInfo.addAlertInfo(productlineName, metricKey, new Date().getTime());
-	}
 }

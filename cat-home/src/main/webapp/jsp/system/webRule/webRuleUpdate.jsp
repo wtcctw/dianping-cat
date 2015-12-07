@@ -23,7 +23,7 @@
 							<option value='${item.value.id}'>${item.value.name}|${item.value.pattern}</option>
 						</c:forEach>
 					</select>
-				返回码 	<select id="code" style="width: 120px;">
+				返回码 	<select id="webCode" style="width: 120px;">
 						<option value="-1">ALL</option>
 							<c:forEach var="item" items="${model.webCodes}" varStatus="status">
 								<option value='${item.value.id}'>${item.value.name}</option>
@@ -43,7 +43,15 @@
 							varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>
-				</select>告警指标 <select id="metric" style="width: 100px;">
+				</select>
+					 网络类型 <select style="width: 120px;" name="network" id="network">
+						<option value="-1">ALL</option>
+						<c:forEach var="item" items="${model.webNetworks}"
+							varStatus="status">
+							<option value='${item.value.id}'>${item.value.name}</option>
+						</c:forEach>
+				</select>
+				告警指标 <select id="metric" style="width: 100px;">
 						<option value='request'>请求数</option>
 						<option value='success'>成功率</option>
 						<option value='delay'>响应时间</option>
@@ -63,12 +71,13 @@ function update() {
     var configStr = generateConfigsJsonString();
     var name = $("#name").val();
     var command = $("#url").val();
-    var code = $("#code").val();
+    var code = $("#webCode").val();
     var city = $("#city").val();
     var operator = $("#operator").val();
+    var network = $("#network").val();
     var metric = $("#metric").val();
     var split = ";";
-    var id = command + split + code + split + city + split + operator + ":" + metric + ":" + name;
+    var id = command + split + code + split + city + split + operator +split + network+ ":" + metric + ":" + name;
     window.location.href = "?op=webRuleSubmit&configs=" + configStr + "&ruleId=" + id;
 }
 
@@ -77,22 +86,25 @@ function update() {
 		if(ruleId.length > 0){
 			document.getElementById("name").disabled = true;
 			document.getElementById("url").disabled = true;
-			document.getElementById("code").disabled = true;
+			document.getElementById("webCode").disabled = true;
 			document.getElementById("city").disabled = true;
 			document.getElementById("operator").disabled = true;
+			document.getElementById("network").disabled = true;
 			document.getElementById("metric").disabled = true;
 		}
 		var words = ruleId.split(":")[0].split(";");
-		if(typeof words != "undefined" && words.length == 4){
+		if(typeof words != "undefined" && words.length == 5){
 			var metric = ruleId.split(":")[1];
 			var command = words[0];
 			var code = words[1];
 			var city = words[2];
 			var operator = words[3];
+			var network = words[4];
 			$("#url").val(command);
-			$("#code").val(code);
+			$("#webCode").val(code);
 			$("#city").val(city);
 			$("#operator").val(operator);
+			$("#network").val(network);
 			$("#metric").val(metric);
 		}
 		$('#Web_config').addClass('active open');

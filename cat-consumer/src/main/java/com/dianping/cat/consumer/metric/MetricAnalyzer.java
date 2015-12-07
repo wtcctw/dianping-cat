@@ -303,7 +303,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	}
 
 	@Override
-	public boolean isEiligible(MessageTree tree) {
+	public boolean isEligable(MessageTree tree) {
 		if (tree.getMetrics().size() > 0) {
 			return true;
 		} else {

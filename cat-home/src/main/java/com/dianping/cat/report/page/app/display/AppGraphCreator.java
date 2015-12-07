@@ -53,13 +53,13 @@ public class AppGraphCreator {
 		Map<String, Double[]> datas = new LinkedHashMap<String, Double[]>();
 
 		if (queryEntity1 != null) {
-			Double[] data = m_AppDataService.queryValue(queryEntity1, type);
+			Double[] data = m_AppDataService.queryGraphValue(queryEntity1, type);
 
 			datas.put(Constants.CURRENT_STR, data);
 		}
 
 		if (queryEntity2 != null) {
-			Double[] data = m_AppDataService.queryValue(queryEntity2, type);
+			Double[] data = m_AppDataService.queryGraphValue(queryEntity2, type);
 
 			datas.put(Constants.COMPARISION_STR, data);
 		}

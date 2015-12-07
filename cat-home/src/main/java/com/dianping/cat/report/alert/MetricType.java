@@ -1,7 +1,11 @@
 package com.dianping.cat.report.alert;
 
 public enum MetricType {
-	COUNT("COUNT"), AVG("AVG"), SUM("SUM");
+	COUNT("COUNT"),
+
+	AVG("AVG"),
+
+	SUM("SUM");
 
 	private String m_name;
 

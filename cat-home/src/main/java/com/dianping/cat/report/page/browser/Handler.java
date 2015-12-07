@@ -37,8 +37,8 @@ import com.dianping.cat.report.page.browser.display.AjaxDataDisplayInfo;
 import com.dianping.cat.report.page.browser.display.JsErrorMsg;
 import com.dianping.cat.report.page.browser.display.JsErrorDisplayInfo;
 import com.dianping.cat.report.page.browser.display.JsErrorDetailInfo;
-import com.dianping.cat.report.page.browser.display.AjaxPieChartDetailInfos;
-import com.dianping.cat.report.page.browser.display.AjaxPieChartDetailInfos.PieChartDetailInfo;
+import com.dianping.cat.report.page.browser.display.AjaxDistributeDetails;
+import com.dianping.cat.report.page.browser.display.AjaxDistributeDetails.DistributeDetail;
 import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
 import com.dianping.cat.report.page.browser.service.AjaxDataField;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
@@ -52,7 +52,6 @@ import com.dianping.cat.web.JsErrorLog;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -109,34 +108,6 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private List<AjaxDataDetail> buildAjaxDataDetails(Payload payload) {
-		List<AjaxDataDetail> ajaxDetails = new ArrayList<AjaxDataDetail>();
-
-		try {
-			ajaxDetails = m_ajaxDataService.buildAjaxDataDetailInfos(payload.getQueryEntity1(), payload.getGroupByField());
-			AjaxQueryType type = AjaxQueryType.findByType(payload.getSort());
-			Collections.sort(ajaxDetails, new AjaxDataDetailSorter(type));
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return ajaxDetails;
-	}
-
-	private AjaxDataDetail buildComparisonInfo(AjaxDataQueryEntity entity) {
-		AjaxDataDetail appDetail = null;
-
-		try {
-			List<AjaxDataDetail> appDetails = m_ajaxDataService.buildAjaxDataDetailInfos(entity, AjaxDataField.CODE);
-
-			if (appDetails.size() >= 1) {
-				appDetail = appDetails.iterator().next();
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return appDetail;
-	}
-
 	protected Map<String, AjaxDataDetail> buildAjaxComparisonInfo(Payload payload) {
 		AjaxDataQueryEntity currentEntity = payload.getQueryEntity1();
 		AjaxDataQueryEntity comparisonEntity = payload.getQueryEntity2();
@@ -161,19 +132,17 @@ public class Handler implements PageHandler<Context> {
 		return result;
 	}
 
-	public String buildDistributionChart(Map<String, AtomicInteger> distributions) {
-		PieChart chart = new PieChart();
-		List<Item> items = new ArrayList<Item>();
+	private List<AjaxDataDetail> buildAjaxDataDetails(Payload payload) {
+		List<AjaxDataDetail> ajaxDetails = new ArrayList<AjaxDataDetail>();
 
-		for (Entry<String, AtomicInteger> entry : distributions.entrySet()) {
-			Item item = new Item();
-
-			item.setNumber(entry.getValue().get()).setTitle(entry.getKey());
-			items.add(item);
+		try {
+			ajaxDetails = m_ajaxDataService.buildAjaxDataDetailInfos(payload.getQueryEntity1(), payload.getGroupByField());
+			AjaxQueryType type = AjaxQueryType.findByType(payload.getSort());
+			Collections.sort(ajaxDetails, new AjaxDataDetailSorter(type));
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
-		chart.addItems(items);
-
-		return chart.getJsonString();
+		return ajaxDetails;
 	}
 
 	private LineChart buildAjaxLineChart(Payload payload) {
@@ -190,24 +159,67 @@ public class Handler implements PageHandler<Context> {
 		return lineChart;
 	}
 
-	private Pair<PieChart, AjaxPieChartDetailInfos> buildAjaxPieChart(Payload payload) {
+	private AjaxDataDisplayInfo buildAjaxPieChart(Payload payload) {
 		try {
-			Pair<PieChart, AjaxPieChartDetailInfos> pair = m_graphCreator.buildPieChart(payload.getQueryEntity1(),
+			AjaxDataDisplayInfo displayInfo = m_graphCreator.buildAjaxDistributeChart(payload.getQueryEntity1(),
 			      payload.getGroupByField());
-			AjaxPieChartDetailInfos infos = pair.getValue();
+			AjaxDistributeDetails detailInfos = displayInfo.getDistributeDetailInfos();
 
-			Collections.sort(infos.getDetails(), new Comparator<PieChartDetailInfo>() {
+			Collections.sort(detailInfos.getDetails(), new Comparator<DistributeDetail>() {
 				@Override
-				public int compare(PieChartDetailInfo o1, PieChartDetailInfo o2) {
+				public int compare(DistributeDetail o1, DistributeDetail o2) {
 					return (int) (o2.getRequestSum() - o1.getRequestSum());
 				}
 			});
 
-			return pair;
+			return displayInfo;
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return null;
+		return new AjaxDataDisplayInfo();
+	}
+
+	private AjaxDataDetail buildComparisonInfo(AjaxDataQueryEntity entity) {
+		AjaxDataDetail appDetail = null;
+
+		try {
+			List<AjaxDataDetail> appDetails = m_ajaxDataService.buildAjaxDataDetailInfos(entity, AjaxDataField.CODE);
+
+			if (appDetails.size() >= 1) {
+				appDetail = appDetails.iterator().next();
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return appDetail;
+	}
+
+	public String buildJsErrorDistributionChart(Map<String, AtomicInteger> distributions) {
+		PieChart chart = new PieChart();
+		List<Item> items = new ArrayList<Item>();
+
+		for (Entry<String, AtomicInteger> entry : distributions.entrySet()) {
+			Item item = new Item();
+
+			item.setNumber(entry.getValue().get()).setTitle(entry.getKey());
+			items.add(item);
+		}
+		chart.addItems(items);
+
+		return chart.getJsonString();
+	}
+
+	private void buildSpeedBarCharts(Payload payload, Model model) {
+		try {
+			Map<String, Speed> speeds = m_webSpeedConfigManager.getSpeeds();
+			SpeedQueryEntity queryEntity1 = normalizeSpeedQueryEntity(payload, speeds);
+			WebSpeedDisplayInfo info = m_webSpeedService.buildBarCharts(queryEntity1);
+
+			model.setSpeeds(speeds);
+			model.setWebSpeedDisplayInfo(info);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
 	}
 
 	private void buildSpeedInfo(Payload payload, Model model) {
@@ -236,19 +248,6 @@ public class Handler implements PageHandler<Context> {
 			jsonObjs.put("webSpeedSummarys", info.getWebSpeedSummarys());
 
 			model.setFetchData(m_jsonBuilder.toJson(jsonObjs));
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
-
-	private void buildSpeedBarCharts(Payload payload, Model model) {
-		try {
-			Map<String, Speed> speeds = m_webSpeedConfigManager.getSpeeds();
-			SpeedQueryEntity queryEntity1 = normalizeSpeedQueryEntity(payload, speeds);
-			WebSpeedDisplayInfo info = m_webSpeedService.buildBarCharts(queryEntity1);
-
-			model.setSpeeds(speeds);
-			model.setWebSpeedDisplayInfo(info);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -289,14 +288,7 @@ public class Handler implements PageHandler<Context> {
 			parallelBuildAjaxLineChart(model, payload);
 			break;
 		case AJAX_PIECHART:
-			Pair<PieChart, AjaxPieChartDetailInfos> pieChartPair = buildAjaxPieChart(payload);
-			AjaxDataDisplayInfo info = new AjaxDataDisplayInfo();
-
-			if (pieChartPair != null) {
-				info.setPieChart(pieChartPair.getKey());
-				info.setPieChartDetailInfos(pieChartPair.getValue());
-			}
-
+			AjaxDataDisplayInfo info = buildAjaxPieChart(payload);
 			model.setAjaxDataDisplayInfo(info);
 			break;
 		case JS_ERROR:
@@ -384,7 +376,7 @@ public class Handler implements PageHandler<Context> {
 		ExecutorService executor = Executors.newFixedThreadPool(3);
 		List<FutureTask> tasks = new LinkedList<FutureTask>();
 
-		FutureTask lineChartTask = new FutureTask(new CallableTask<LineChart>() {
+		FutureTask lineChartTask = new FutureTask(new Callable<LineChart>() {
 			@Override
 			public LineChart call() throws Exception {
 				return buildAjaxLineChart(payload);
@@ -394,7 +386,7 @@ public class Handler implements PageHandler<Context> {
 		tasks.add(lineChartTask);
 		executor.execute(lineChartTask);
 
-		FutureTask ajaxDetailTask = new FutureTask(new CallableTask<List<AjaxDataDetail>>() {
+		FutureTask ajaxDetailTask = new FutureTask(new Callable<List<AjaxDataDetail>>() {
 			@Override
 			public List<AjaxDataDetail> call() throws Exception {
 				return buildAjaxDataDetails(payload);
@@ -404,7 +396,7 @@ public class Handler implements PageHandler<Context> {
 		tasks.add(ajaxDetailTask);
 		executor.execute(ajaxDetailTask);
 
-		FutureTask comparisonTask = new FutureTask(new CallableTask<Map<String, AjaxDataDetail>>() {
+		FutureTask comparisonTask = new FutureTask(new Callable<Map<String, AjaxDataDetail>>() {
 			@Override
 			public Map<String, AjaxDataDetail> call() throws Exception {
 				return buildAjaxComparisonInfo(payload);
@@ -485,7 +477,7 @@ public class Handler implements PageHandler<Context> {
 			info.setTotalCount(totalCount);
 			info.setLevels(Level.getLevels());
 			info.setModules(m_moduleManager.getModules());
-			info.setDistributionChart(buildDistributionChart(distributions));
+			info.setDistributionChart(buildJsErrorDistributionChart(distributions));
 
 			model.setJsErrorDisplayInfo(info);
 		} catch (DalException e) {
@@ -496,14 +488,6 @@ public class Handler implements PageHandler<Context> {
 	private void viewJsErrorDetail(Payload payload, Model model) {
 		JsErrorDetailInfo info = m_jsErrorLogService.queryJsErrorInfo(payload.getId());
 		model.setJsErrorDetailInfo(info);
-	}
-
-	public class CallableTask<T> implements Callable<T> {
-
-		@Override
-		public T call() throws Exception {
-			return null;
-		}
 	}
 
 }

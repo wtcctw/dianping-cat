@@ -1,10 +1,11 @@
 package com.dianping.cat.report.graph;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class PieChartDetailInfo {
 
-	private List<Item> m_items;
+	private List<Item> m_items = new LinkedList<Item>();
 
 	public void add(Item item) {
 		m_items.add(item);

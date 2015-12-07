@@ -22,6 +22,7 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.sender.config.AlertPolicyManager;
@@ -62,56 +63,19 @@ public class AlertManager implements Initializable {
 
 	private Map<String, AlertEntity> m_sendedAlerts = new ConcurrentHashMap<String, AlertEntity>(1000);
 
-	public boolean addAlert(AlertEntity alert) {
-		String type = alert.getType();
-		String group = alert.getGroup();
-		Cat.logEvent("Alert:" + type, group, Event.SUCCESS, alert.toString());
+	private ConcurrentHashMap<AlertEntity, Long> m_alertMap = new ConcurrentHashMap<AlertEntity, Long>();
+	
+	public boolean addAlert(AlertEntity entity) {
+		m_alertMap.put(entity, entity.getDate().getTime());
+		
+		String group = entity.getGroup();
+		Cat.logEvent("Alert:" + entity.getType().getName(), group, Event.SUCCESS, entity.toString());
 
 		if (m_configManager.isAlertMachine()) {
-			return m_alerts.offer(alert);
+			return m_alerts.offer(entity);
 		} else {
 			return true;
 		}
-	}
-
-	private String generateTypeStr(String type) {
-		AlertType typeByName = AlertType.getTypeByName(type);
-
-		switch (typeByName) {
-		case Business:
-			return "业务告警";
-		case Network:
-			return "网络告警";
-		case System:
-			return "系统告警";
-		case Exception:
-			return "异常告警";
-		case ThirdParty:
-			return "第三方告警";
-		case FrontEndException:
-			return "前端告警";
-		case App:
-			return "手机端告警";
-		case Web:
-			return "web告警";
-		case HeartBeat:
-			return "心跳告警";
-		case Transaction:
-			return "Transaction告警";
-		case Event:
-			return "Event告警";
-		case DataBase:
-			return "数据库系统告警";
-		case STORAGE_SQL:
-			return "数据库访问告警";
-		case STORAGE_CACHE:
-			return "缓存访问告警";
-		case STORAGE_RPC:
-			return "服务访问告警";
-		case JS:
-			return "JS异常告警";
-		}
-		return type;
 	}
 
 	@Override
@@ -134,11 +98,26 @@ public class AlertManager implements Initializable {
 		return false;
 	}
 
+	public List<AlertEntity> queryLastestAlarmKey(int minute) {
+		List<AlertEntity> keys = new ArrayList<AlertEntity>();
+		long currentTimeMillis = System.currentTimeMillis();
+
+		for (Entry<AlertEntity, Long> entry : m_alertMap.entrySet()) {
+			Long value = entry.getValue();
+
+			if (currentTimeMillis - value < TimeHelper.ONE_MINUTE * minute) {
+				keys.add(entry.getKey());
+			}
+		}
+
+		return keys;
+	}
+
 	private boolean send(AlertEntity alert) {
 		boolean result = false;
-		String type = alert.getType();
+		String type = alert.getType().getName();
 		String group = alert.getGroup();
-		String level = alert.getLevel();
+		String level = alert.getLevel().getLevel();
 		String alertKey = alert.getKey();
 		List<AlertChannel> channels = m_policyManager.queryChannels(type, group, level);
 		int suspendMinute = m_policyManager.querySuspendMinute(type, group, level);
@@ -181,15 +160,16 @@ public class AlertManager implements Initializable {
 		m_alertService.insert(alert, message);
 		return result;
 	}
-
+	
 	private boolean sendRecoveryMessage(AlertEntity alert, String currentMinute) {
-		String type = alert.getType();
+		AlertType alterType = alert.getType();
+		String type = alterType.getName();
 		String group = alert.getGroup();
-		String level = alert.getLevel();
+		String level = alert.getLevel().getLevel();
 		List<AlertChannel> channels = m_policyManager.queryChannels(type, group, level);
 
 		for (AlertChannel channel : channels) {
-			String title = "[告警恢复] [告警类型 " + generateTypeStr(type) + "][" + group + " " + alert.getMetric() + "]";
+			String title = "[告警恢复] [告警类型 " + alterType.getTitle() + "][" + group + " " + alert.getMetric() + "]";
 			String content = "[告警已恢复][恢复时间]" + currentMinute;
 			List<String> receivers = m_contactorManager.queryReceivers(alert.getContactGroup(), channel, type);
 			AlertMessageEntity message = new AlertMessageEntity(group, title, type, content, receivers);
@@ -212,9 +192,9 @@ public class AlertManager implements Initializable {
 		}
 
 		private int queryRecoverMinute(AlertEntity alert) {
-			String type = alert.getType();
+			String type = alert.getType().getName();
 			String group = alert.getGroup();
-			String level = alert.getLevel();
+			String level = alert.getLevel().getLevel();
 
 			return m_policyManager.queryRecoverMinute(type, group, level);
 		}

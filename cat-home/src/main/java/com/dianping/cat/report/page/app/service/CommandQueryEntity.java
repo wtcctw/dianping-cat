@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.app.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.unidal.helper.Splitters;
@@ -43,6 +44,27 @@ public class CommandQueryEntity extends BaseQueryEntity {
 		}
 	}
 
+	public CommandQueryEntity(Date date, String conditions, int start, int end) {
+		m_date = date;
+		m_startMinuteOrder = start;
+		m_endMinuteOrder = end;
+
+		List<String> strs = Splitters.by(";").split(conditions);
+
+		try {
+			m_id = parseValue(strs.get(0));
+			m_code = parseValue(strs.get(1));
+			m_network = parseValue(strs.get(2));
+			m_version = parseValue(strs.get(3));
+			m_connectType = parseValue(strs.get(4));
+			m_platfrom = parseValue(strs.get(5));
+			m_city = parseValue(strs.get(6));
+			m_operator = parseValue(strs.get(7));
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
+
 	public int getCode() {
 		return m_code;
 	}
@@ -62,4 +84,5 @@ public class CommandQueryEntity extends BaseQueryEntity {
 	public int getStartMinuteOrder() {
 		return m_startMinuteOrder;
 	}
+
 }

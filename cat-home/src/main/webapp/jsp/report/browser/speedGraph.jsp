@@ -12,6 +12,7 @@
 <a:web_body>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
+	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 <table>
 		<tr>
 			<th align=left>
@@ -91,9 +92,9 @@
 <c:forEach var="entry" items="${model.webSpeedDisplayInfo.webSpeedDetails}" >
 <table class="table table-striped table-condensed table-bordered table-hover"> 
 	<tr>
-		<th class="text-success">${entry.key}</th>
-		<th class="text-success">访问量</th>
-		<th class="text-success">平均响应时间</th>
+		<th class="text-success" width="40%">${entry.key}</th>
+		<th class="text-success" width="30%">访问量</th>
+		<th class="text-success" width="30%">平均响应时间</th>
 	</tr>
 	<c:forEach var="item" items="${entry.value}">
 		<tr><td>${item.itemName}</td><td>${item.accessNumberSum}</td><td>${item.responseTimeAvg}</td></tr>
@@ -235,54 +236,27 @@
 			$("#operator").val(words[6]);
 			$("#source").val(words[7]);
 			
-			drawPic('#cityChart', '${model.webSpeedDisplayInfo.cityChart.title}', '',
+			graphBarChart('#cityChart', '${model.webSpeedDisplayInfo.cityChart.title}', '',
 					${model.webSpeedDisplayInfo.cityChart.xAxisJson}, '${model.webSpeedDisplayInfo.cityChart.yAxis}',
 					${model.webSpeedDisplayInfo.cityChart.valuesJson}, '${model.webSpeedDisplayInfo.cityChart.serieName}');
 			
-			drawPic('#operatorChart', '${model.webSpeedDisplayInfo.operatorChart.title}', '',
+			graphBarChart('#operatorChart', '${model.webSpeedDisplayInfo.operatorChart.title}', '',
 					${model.webSpeedDisplayInfo.operatorChart.xAxisJson}, '${model.webSpeedDisplayInfo.operatorChart.yAxis}',
 					${model.webSpeedDisplayInfo.operatorChart.valuesJson}, '${model.webSpeedDisplayInfo.operatorChart.serieName}');
 
-			drawPic('#sourceChart', '${model.webSpeedDisplayInfo.sourceChart.title}', '',
+			graphBarChart('#sourceChart', '${model.webSpeedDisplayInfo.sourceChart.title}', '',
 					${model.webSpeedDisplayInfo.sourceChart.xAxisJson}, '${model.webSpeedDisplayInfo.sourceChart.yAxis}',
 					${model.webSpeedDisplayInfo.sourceChart.valuesJson}, '${model.webSpeedDisplayInfo.sourceChart.serieName}');
 
-			drawPic('#platformChart', '${model.webSpeedDisplayInfo.platformChart.title}', '',
+			graphBarChart('#platformChart', '${model.webSpeedDisplayInfo.platformChart.title}', '',
 					${model.webSpeedDisplayInfo.platformChart.xAxisJson}, '${model.webSpeedDisplayInfo.platformChart.yAxis}',
 					${model.webSpeedDisplayInfo.platformChart.valuesJson}, '${model.webSpeedDisplayInfo.platformChart.serieName}');
 
-			drawPic('#networkChart', '${model.webSpeedDisplayInfo.networkChart.title}', '',
+			graphBarChart('#networkChart', '${model.webSpeedDisplayInfo.networkChart.title}', '',
 					${model.webSpeedDisplayInfo.networkChart.xAxisJson}, '${model.webSpeedDisplayInfo.networkChart.yAxis}',
 					${model.webSpeedDisplayInfo.networkChart.valuesJson}, '${model.webSpeedDisplayInfo.networkChart.serieName}');
 
 	});
-	
-	function drawPic(id, picTitle, subTitle, xData, yTitle, dataList, serieName) {
-		  $(id).highcharts({
-		        chart: { type: 'column'},
-		        title: {text: picTitle},
-		        subtitle: {text: subTitle},
-		        xAxis: {
-		            categories: xData
-		        },
-		        yAxis: {
-		            min: 0,
-		            title: {text: yTitle}
-		        },
-		        plotOptions: {
-		            column: {
-		                pointPadding: 0,
-		                borderWidth: 0
-		            }
-		        },
-		        series: [{
-		        	name : serieName,
-		        	data : dataList
-		        }],
-		        colors: ['#8085e8', '#91e8e1','#8d4653','#e4d354', '#f7a35c',
-		                 '#7cb5ec','#90ed7d', '#434348', '#8085e9', '#f15c80'] 
-		   });
-	}
 	
 	var page2Steps = ${model.page2StepsJson};
 

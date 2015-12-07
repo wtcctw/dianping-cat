@@ -23,8 +23,8 @@ import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.alert.RuleFTLDecorator;
 import com.dianping.cat.report.alert.browser.JsRuleConfigManager;
+import com.dianping.cat.report.alert.browser.AjaxRuleConfigManager;
 import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
-import com.dianping.cat.report.alert.web.WebRuleConfigManager;
 import com.dianping.cat.report.page.browser.ModuleManager;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.ConfigHtmlParser;
@@ -59,7 +59,7 @@ public class Handler implements PageHandler<Context> {
 	private UrlPatternConfigManager m_urlPatternConfigManager;
 
 	@Inject
-	private WebRuleConfigManager m_webRuleConfigManager;
+	private AjaxRuleConfigManager m_webRuleConfigManager;
 
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
@@ -84,7 +84,7 @@ public class Handler implements PageHandler<Context> {
 		model.setWebCities(m_appConfigManager.queryConfigItem(WebConfigManager.CITY));
 		model.setWebOperators(m_appConfigManager.queryConfigItem(WebConfigManager.OPERATOR));
 		model.setPatternItems(patterns);
-		model.setWebCodes(m_urlPatternConfigManager.getUrlPattern().getCodes());
+		model.setWebCodes(m_urlPatternConfigManager.queryCodes());
 		model.setWebNetworks(m_appConfigManager.queryConfigItem(WebConfigManager.NETWORK));
 	}
 

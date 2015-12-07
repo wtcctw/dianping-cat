@@ -204,7 +204,8 @@
 								return false;
 							}		
 						);
-					graphPieChart(document.getElementById('piechart'), ${model.pieChart.jsonString});
+					var data = ${model.pieChart.jsonString};
+					graphPieChart(document.getElementById('piechart'), data);
 				});
 	</script>
 	

@@ -51,7 +51,13 @@
 							<span class="menu-text">用户侧监控</span>
 						</a>
 						<b class="arrow"></b>
-					</li><li id="alertButton" >
+					</li>
+					<li id="browserMonitorButton">
+						<a href="/cat/r/home?op=view&docName=browserMonitor">
+							<i class="menu-icon fa fa-desktop"></i>
+							<span class="menu-text">浏览器监控</span></a>
+							<b class="arrow"></b></li>
+					<li id="alertButton" >
 						<a href="/cat/r/home?op=view&docName=alert">
 							<i class="menu-icon fa fa-bell"></i>
 							<span class="menu-text">告警文档</span>

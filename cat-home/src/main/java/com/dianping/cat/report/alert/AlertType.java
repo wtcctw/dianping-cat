@@ -2,39 +2,41 @@ package com.dianping.cat.report.alert;
 
 public enum AlertType {
 
-	Business("Business"),
+	Business("Business", "业务告警"),
 
-	Network("Network"),
+	Network("Network", "网络告警"),
 
-	DataBase("Database"),
+	DataBase("Database", "数据库告警"),
 
-	System("System"),
+	System("System", "系统告警"),
 
-	Exception("Exception"),
+	Exception("Exception", "异常告警"),
 
-	HeartBeat("Heartbeat"),
+	HeartBeat("Heartbeat", "心跳告警"),
 
-	ThirdParty("ThirdParty"),
+	ThirdParty("ThirdParty", "第三方告警"),
 
-	FrontEndException("FrontEnd"),
+	FrontEndException("FrontEnd", "前端告警"),
+
+	JS("Js", "JS错误告警"),
+
+	App("App", "APP接口告警"),
 	
-	JS("Js"),
+	Ajax("Ajax", "Ajax访问告警"),
 
-	App("App"),
+	Transaction("Transaction", "Transacation告警"),
 
-	Web("Web"),
+	Event("Event", "Event告警"),
 
-	Transaction("Transaction"),
+	STORAGE_SQL("SQL", "数据库大盘告警"),
 
-	Event("Event"),
+	STORAGE_CACHE("Cache", "缓存大盘告警"),
 
-	STORAGE_SQL("SQL"),
-
-	STORAGE_CACHE("Cache"),
-
-	STORAGE_RPC("RPC");
+	STORAGE_RPC("RPC", "服务大盘告警");
 
 	private String m_name;
+
+	private String m_title;
 
 	public static AlertType getTypeByName(String name) {
 		for (AlertType type : AlertType.values()) {
@@ -45,8 +47,17 @@ public enum AlertType {
 		return null;
 	}
 
-	private AlertType(String name) {
+	public String getTitle() {
+		return m_title;
+	}
+
+	public void setTitle(String title) {
+		m_title = title;
+	}
+
+	private AlertType(String name, String title) {
 		m_name = name;
+		m_title = title;
 	}
 
 	public String getName() {

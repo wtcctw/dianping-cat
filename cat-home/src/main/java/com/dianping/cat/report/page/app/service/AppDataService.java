@@ -46,8 +46,25 @@ public class AppDataService {
 		return infos;
 	}
 
-	private DataSequence<AppCommandData> buildAppSequence(List<AppCommandData> fromDatas, Date period) {
+	private Map<Integer, List<AppCommandData>> buildDataMap(List<AppCommandData> datas) {
 		Map<Integer, List<AppCommandData>> dataMap = new LinkedHashMap<Integer, List<AppCommandData>>();
+
+		for (AppCommandData data : datas) {
+			int minute = data.getMinuteOrder();
+			List<AppCommandData> list = dataMap.get(minute);
+
+			if (list == null) {
+				list = new LinkedList<AppCommandData>();
+
+				dataMap.put(minute, list);
+			}
+			list.add(data);
+		}
+		return dataMap;
+	}
+
+	private DataSequence<AppCommandData> buildAppSequence(List<AppCommandData> fromDatas, Date period) {
+		Map<Integer, List<AppCommandData>> dataMap = buildDataMap(fromDatas);
 		int max = -5;
 
 		for (AppCommandData from : fromDatas) {
@@ -56,14 +73,6 @@ public class AppDataService {
 			if (max < 0 || max < minute) {
 				max = minute;
 			}
-			List<AppCommandData> data = dataMap.get(minute);
-
-			if (data == null) {
-				data = new LinkedList<AppCommandData>();
-
-				dataMap.put(minute, data);
-			}
-			data.add(from);
 		}
 		int n = max / 5 + 1;
 		int length = queryAppDataDuration(period, n);
@@ -301,7 +310,7 @@ public class AppDataService {
 	}
 
 	public double queryOneDayDelayAvg(CommandQueryEntity entity) {
-		Double[] values = queryValue(entity, QueryType.DELAY);
+		Double[] values = queryGraphValue(entity, QueryType.DELAY);
 		double delaySum = 0;
 		int size = 0;
 
@@ -314,7 +323,7 @@ public class AppDataService {
 		return size > 0 ? delaySum / size : -1;
 	}
 
-	public Double[] queryValue(CommandQueryEntity entity, QueryType type) {
+	private List<AppCommandData> queryByMinute(CommandQueryEntity entity, QueryType type) {
 		int commandId = entity.getId();
 		Date period = entity.getDate();
 		int city = entity.getCity();
@@ -324,34 +333,88 @@ public class AppDataService {
 		int connnectType = entity.getConnectType();
 		int code = entity.getCode();
 		int platform = entity.getPlatfrom();
+		int start = entity.getStartMinuteOrder();
+		int end = entity.getEndMinuteOrder();
+		List<AppCommandData> datas = new ArrayList<AppCommandData>();
 
 		try {
 			switch (type) {
 			case SUCCESS:
-				List<AppCommandData> datas = m_dao.findDataByMinuteCode(commandId, period, city, operator, network,
-				      appVersion, connnectType, code, platform, AppCommandDataEntity.READSET_SUCCESS_DATA);
-				DataSequence<AppCommandData> s = buildAppSequence(datas, entity.getDate());
-
-				return computeSuccessRatio(commandId, s);
+				datas = m_dao.findDataByMinuteCode(commandId, period, city, operator, network, appVersion, connnectType,
+				      code, platform, start, end, AppCommandDataEntity.READSET_SUCCESS_DATA);
+				break;
 			case REQUEST:
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
-				      platform, AppCommandDataEntity.READSET_COUNT_DATA);
-				s = buildAppSequence(datas, entity.getDate());
-
-				return computeRequestCount(s);
+				      platform, start, end, AppCommandDataEntity.READSET_COUNT_DATA);
+				break;
 			case DELAY:
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
-				      platform, AppCommandDataEntity.READSET_AVG_DATA);
-				s = buildAppSequence(datas, entity.getDate());
-
-				return computeDelayAvg(s);
+				      platform, start, end, AppCommandDataEntity.READSET_AVG_DATA);
+				break;
 			default:
 				throw new RuntimeException("unexpected query type, type:" + type);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return null;
+		return datas;
+	}
+
+	public Double[] queryGraphValue(CommandQueryEntity entity, QueryType type) {
+		List<AppCommandData> datas = queryByMinute(entity, type);
+		DataSequence<AppCommandData> s = buildAppSequence(datas, entity.getDate());
+
+		switch (type) {
+		case SUCCESS:
+			return computeSuccessRatio(entity.getId(), s);
+		case REQUEST:
+			return computeRequestCount(s);
+		case DELAY:
+			return computeDelayAvg(s);
+		default:
+			throw new RuntimeException("unexpected query type, type:" + type);
+		}
+	}
+
+	public double[] queryAlertValue(CommandQueryEntity entity, QueryType type) {
+		List<AppCommandData> datas = queryByMinute(entity, type);
+		int i = 0;
+
+		switch (type) {
+		case SUCCESS:
+			Map<Integer, List<AppCommandData>> dataMap = buildDataMap(datas);
+			double[] successRatios = new double[dataMap.size()];
+
+			for (Entry<Integer, List<AppCommandData>> entry : dataMap.entrySet()) {
+				successRatios[i] = computeSuccessRatio(entity.getId(), entry.getValue());
+				i++;
+			}
+			return successRatios;
+		case REQUEST:
+			double[] requestSum = new double[datas.size()];
+
+			for (AppCommandData data : datas) {
+				requestSum[i] = data.getAccessNumberSum();
+				i++;
+			}
+			return requestSum;
+		case DELAY:
+			double[] delay = new double[datas.size()];
+
+			for (AppCommandData data : datas) {
+				long accessSumNum = data.getAccessNumberSum();
+
+				if (accessSumNum > 0) {
+					delay[i] = data.getResponseSumTimeSum() / accessSumNum;
+				} else {
+					delay[i] = 0.0;
+				}
+				i++;
+			}
+			return delay;
+		default:
+			throw new RuntimeException("unexpected query type, type:" + type);
+		}
 	}
 
 	private void setFieldValue(AppDataDetail info, AppDataField field, int value) {

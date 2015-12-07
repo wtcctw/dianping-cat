@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dianping.cat.report.alert.AlertLevel;
 import com.dianping.cat.report.alert.AlertType;
 
 public class AlertEntity {
@@ -14,21 +15,37 @@ public class AlertEntity {
 
 	private String m_group;
 
-	private String m_level;
+	private AlertLevel m_level;
 
 	private String m_metric;
 
 	private String m_content;
 
+	private String m_domain;
+
+	private String m_contactGroup;
+
 	private Map<String, Object> m_paras = new HashMap<String, Object>();
+	
+	@Override
+	public boolean equals(Object obj) {
+		AlertEntity other = (AlertEntity) obj;
+
+		if (m_group.equals(other.getGroup()) && m_metric.equals(other.getMetric())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	public String getContactGroup() {
-		if (AlertType.Business.getName().equals(m_type)) {
-			return String.valueOf(m_paras.get("domain"));
+		if (m_contactGroup != null) {
+			return m_contactGroup;
 		} else {
 			return m_group;
 		}
 	}
+
 
 	public String getContent() {
 		return m_content;
@@ -39,8 +56,8 @@ public class AlertEntity {
 	}
 
 	public String getDomain() {
-		if (AlertType.Business.getName().equals(m_type)) {
-			return String.valueOf(m_paras.get("domain"));
+		if (m_domain != null) {
+			return m_domain;
 		} else {
 			return m_group;
 		}
@@ -54,7 +71,7 @@ public class AlertEntity {
 		return m_level + ":" + m_type + ":" + m_group + ":" + m_metric;
 	}
 
-	public String getLevel() {
+	public AlertLevel getLevel() {
 		return m_level;
 	}
 
@@ -66,8 +83,21 @@ public class AlertEntity {
 		return m_paras;
 	}
 
-	public String getType() {
-		return m_type;
+	public AlertType getType() {
+		return AlertType.getTypeByName(m_type);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((m_group == null) ? 0 : m_group.hashCode());
+		result = prime * result + ((m_metric == null) ? 0 : m_metric.hashCode());
+		return result;
+	}
+
+	public void setContactGroup(String contactGroup) {
+		m_contactGroup = contactGroup;
 	}
 
 	public AlertEntity setContent(String content) {
@@ -80,13 +110,23 @@ public class AlertEntity {
 		return this;
 	}
 
+	public AlertEntity setDomain(String domain) {
+		m_domain = domain;
+		return this;
+	}
+
 	public AlertEntity setGroup(String group) {
 		m_group = group;
 		return this;
 	}
 
-	public AlertEntity setLevel(String level) {
+	public AlertEntity setLevel(AlertLevel level) {
 		m_level = level;
+		return this;
+	}
+	
+	public AlertEntity setLevel(String level) {
+		m_level = AlertLevel.findByName(level);
 		return this;
 	}
 

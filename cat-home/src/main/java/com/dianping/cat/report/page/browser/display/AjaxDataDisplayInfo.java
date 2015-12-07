@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.browser.display;
 import java.util.List;
 import java.util.Map;
 
+import com.dianping.cat.report.graph.BarChart;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 
@@ -12,7 +13,9 @@ public class AjaxDataDisplayInfo {
 
 	private PieChart m_pieChart;
 
-	private AjaxPieChartDetailInfos m_pieChartDetailInfos;
+	private BarChart m_barChart;
+
+	private AjaxDistributeDetails m_distributeDetailInfos;
 
 	private Map<String, AjaxDataDetail> m_comparisonAjaxDetails;
 
@@ -34,8 +37,12 @@ public class AjaxDataDisplayInfo {
 		return m_pieChart;
 	}
 
-	public AjaxPieChartDetailInfos getPieChartDetailInfos() {
-		return m_pieChartDetailInfos;
+	public BarChart getBarChart() {
+		return m_barChart;
+	}
+
+	public AjaxDistributeDetails getDistributeDetailInfos() {
+		return m_distributeDetailInfos;
 	}
 
 	public void setAjaxDataDetailInfos(List<AjaxDataDetail> ajaxDataDetailInfos) {
@@ -54,8 +61,12 @@ public class AjaxDataDisplayInfo {
 		m_pieChart = pieChart;
 	}
 
-	public void setPieChartDetailInfos(AjaxPieChartDetailInfos pieChartDetailInfos) {
-		m_pieChartDetailInfos = pieChartDetailInfos;
+	public void setBarChart(BarChart barChart) {
+		m_barChart = barChart;
+	}
+
+	public void setDistributeDetailInfos(AjaxDistributeDetails distributeDetailInfos) {
+		m_distributeDetailInfos = distributeDetailInfos;
 	}
 
 }
