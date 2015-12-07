@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert;
+package com.dianping.cat.report.alert.sender.decorator;
 
 import java.io.StringWriter;
 import java.util.HashMap;

@@ -2,7 +2,7 @@ package com.dianping.cat.report.alert;
 
 import java.util.Date;
 
-public class AlertResultEntity {
+public class DataCheckEntity {
 	private boolean m_isTriggered;
 
 	private String m_content;
@@ -11,11 +11,11 @@ public class AlertResultEntity {
 
 	private Date m_alertTime;
 
-	public AlertResultEntity(boolean result, String content, String alertLevel) {
-		this.m_isTriggered = result;
-		this.m_content = content;
-		this.m_alertLevel = alertLevel;
-		this.m_alertTime = new Date();
+	public DataCheckEntity(boolean result, String content, String alertLevel) {
+		m_isTriggered = result;
+		m_content = content;
+		m_alertLevel = alertLevel;
+		m_alertTime = new Date();
 	}
 
 	public String getAlertLevel() {
@@ -35,7 +35,7 @@ public class AlertResultEntity {
 	}
 
 	public void setContent(String content) {
-		this.m_content = content;
+		m_content = content;
 	}
 
 }

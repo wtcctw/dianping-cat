@@ -19,7 +19,7 @@ import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.page.metric.service.BaselineService;
 import com.dianping.cat.report.alert.AlarmRule;
-import com.dianping.cat.report.alert.AlertResultEntity;
+import com.dianping.cat.report.alert.DataCheckEntity;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.BaseAlert;
 import com.dianping.cat.report.alert.MetricReportGroup;
@@ -103,22 +103,22 @@ public class BusinessAlert extends BaseAlert {
 			String domain = config.getDomain();
 			String metric = config.getMetricKey();
 			String metricKey = m_metricConfigManager.buildMetricKey(domain, config.getType(), metric);
-			List<AlertResultEntity> results = new ArrayList<AlertResultEntity>();
+			List<DataCheckEntity> results = new ArrayList<DataCheckEntity>();
 
 			if (config.isShowAvg()) {
-				List<AlertResultEntity> tmpResults = processMetricType(minute, monitorConfigs.get(MetricType.AVG),
+				List<DataCheckEntity> tmpResults = processMetricType(minute, monitorConfigs.get(MetricType.AVG),
 				      reportGroup, metricKey, MetricType.AVG);
 
 				results.addAll(tmpResults);
 			}
 			if (config.isShowCount()) {
-				List<AlertResultEntity> tmpResults = processMetricType(minute, monitorConfigs.get(MetricType.COUNT),
+				List<DataCheckEntity> tmpResults = processMetricType(minute, monitorConfigs.get(MetricType.COUNT),
 				      reportGroup, metricKey, MetricType.COUNT);
 
 				results.addAll(tmpResults);
 			}
 			if (config.isShowSum()) {
-				List<AlertResultEntity> tmpResults = processMetricType(minute, monitorConfigs.get(MetricType.SUM),
+				List<DataCheckEntity> tmpResults = processMetricType(minute, monitorConfigs.get(MetricType.SUM),
 				      reportGroup, metricKey, MetricType.SUM);
 
 				results.addAll(tmpResults);
@@ -130,7 +130,7 @@ public class BusinessAlert extends BaseAlert {
 		}
 	}
 
-	protected List<AlertResultEntity> processMetricType(int minute, List<Config> configs, MetricReportGroup reportGroup,
+	protected List<DataCheckEntity> processMetricType(int minute, List<Config> configs, MetricReportGroup reportGroup,
 	      String metricKey, MetricType type) {
 		Pair<Integer, List<Condition>> conditionPair = m_ruleConfigManager.convertConditions(configs);
 
@@ -144,7 +144,7 @@ public class BusinessAlert extends BaseAlert {
 
 			return m_dataChecker.checkData(value, baseline, conditions);
 		} else {
-			return new ArrayList<AlertResultEntity>();
+			return new ArrayList<DataCheckEntity>();
 		}
 	}
 
@@ -179,8 +179,8 @@ public class BusinessAlert extends BaseAlert {
 	}
 
 	private void sendBusinessAlerts(String productlineName, String domain, String metricName,
-	      List<AlertResultEntity> alertResults) {
-		for (AlertResultEntity alertResult : alertResults) {
+	      List<DataCheckEntity> alertResults) {
+		for (DataCheckEntity alertResult : alertResults) {
 			AlertEntity entity = new AlertEntity();
 
 			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())

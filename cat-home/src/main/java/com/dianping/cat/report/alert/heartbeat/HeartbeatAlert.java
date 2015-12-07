@@ -28,7 +28,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.alert.AlertResultEntity;
+import com.dianping.cat.report.alert.DataCheckEntity;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.DataChecker;
 import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
@@ -327,9 +327,9 @@ public class HeartbeatAlert implements Task {
 		try {
 			if (values != null) {
 				double[] baseline = new double[maxMinute];
-				List<AlertResultEntity> alerts = m_dataChecker.checkData(values, baseline, conditions);
+				List<DataCheckEntity> alerts = m_dataChecker.checkData(values, baseline, conditions);
 
-				for (AlertResultEntity alertResult : alerts) {
+				for (DataCheckEntity alertResult : alerts) {
 					AlertEntity entity = new AlertEntity();
 
 					entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())

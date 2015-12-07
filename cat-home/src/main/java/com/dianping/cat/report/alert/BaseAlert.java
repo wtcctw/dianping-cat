@@ -119,7 +119,7 @@ public abstract class BaseAlert implements Task, LogEnabled {
 									double[] value = reports.extractData(minute, ruleMinute, metricKey, dateType);
 
 									List<Condition> conditions = conditionPair.getValue();
-									List<AlertResultEntity> results = m_dataChecker.checkData(value, conditions);
+									List<DataCheckEntity> results = m_dataChecker.checkData(value, conditions);
 
 									if (results.size() > 0) {
 										sendAlerts(product, metricName, results);
@@ -179,8 +179,8 @@ public abstract class BaseAlert implements Task, LogEnabled {
 		}
 	}
 
-	protected void sendAlerts(String productlineName, String metricName, List<AlertResultEntity> alertResults) {
-		for (AlertResultEntity alertResult : alertResults) {
+	protected void sendAlerts(String productlineName, String metricName, List<DataCheckEntity> alertResults) {
+		for (DataCheckEntity alertResult : alertResults) {
 			AlertEntity entity = new AlertEntity();
 
 			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())

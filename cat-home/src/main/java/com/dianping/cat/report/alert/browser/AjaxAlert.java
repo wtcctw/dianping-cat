@@ -23,7 +23,7 @@ import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.alert.AlertResultEntity;
+import com.dianping.cat.report.alert.DataCheckEntity;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.DataChecker;
 import com.dianping.cat.report.alert.sender.AlertEntity;
@@ -166,10 +166,10 @@ public class AjaxAlert implements Task {
 
 		if (datas != null && datas.length > 0) {
 			List<Condition> checkedConditions = pair.getValue();
-			List<AlertResultEntity> alertResults = m_dataChecker.checkDataForApp(datas, checkedConditions);
+			List<DataCheckEntity> alertResults = m_dataChecker.checkDataForApp(datas, checkedConditions);
 			String apiName = queryPattern(api);
 
-			for (AlertResultEntity alertResult : alertResults) {
+			for (DataCheckEntity alertResult : alertResults) {
 				Map<String, Object> par = new HashMap<String, Object>();
 				par.put("name", name);
 				AlertEntity entity = new AlertEntity();

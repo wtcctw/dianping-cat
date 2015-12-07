@@ -27,7 +27,7 @@ import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.alert.AlertResultEntity;
+import com.dianping.cat.report.alert.DataCheckEntity;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.DataChecker;
 import com.dianping.cat.report.alert.sender.AlertEntity;
@@ -109,9 +109,9 @@ public class TransactionAlert implements Task, LogEnabled {
 		return minute;
 	}
 
-	private List<AlertResultEntity> computeAlertForRule(String domain, String type, String name, String monitor,
+	private List<DataCheckEntity> computeAlertForRule(String domain, String type, String name, String monitor,
 	      List<Config> configs) {
-		List<AlertResultEntity> results = new ArrayList<AlertResultEntity>();
+		List<DataCheckEntity> results = new ArrayList<DataCheckEntity>();
 		Pair<Integer, List<Condition>> conditionPair = m_ruleConfigManager.convertConditions(configs);
 		int minute = calAlreadyMinute();
 		Map<String, String> pars = new HashMap<String, String>();
@@ -232,8 +232,8 @@ public class TransactionAlert implements Task, LogEnabled {
 		String name = fields.get(2);
 		String monitor = fields.get(3);
 
-		List<AlertResultEntity> alertResults = computeAlertForRule(domain, type, name, monitor, rule.getConfigs());
-		for (AlertResultEntity alertResult : alertResults) {
+		List<DataCheckEntity> alertResults = computeAlertForRule(domain, type, name, monitor, rule.getConfigs());
+		for (DataCheckEntity alertResult : alertResults) {
 			AlertEntity entity = new AlertEntity();
 
 			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())

@@ -16,7 +16,7 @@ import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
-import com.dianping.cat.report.alert.AlertResultEntity;
+import com.dianping.cat.report.alert.DataCheckEntity;
 import com.dianping.cat.report.alert.DataChecker;
 import com.dianping.cat.report.alert.DefaultDataChecker;
 
@@ -69,7 +69,7 @@ public class RuleConfigTest {
 	@Test
 	public void testCondition() {
 		Map<String, List<Condition>> conditionsMap = buildConfigMap(buildMonitorRuleFromFile("/config/demo-rule-monitor.xml"));
-		AlertResultEntity result;
+		DataCheckEntity result;
 
 		Assert.assertNotNull(conditionsMap);
 
@@ -92,7 +92,7 @@ public class RuleConfigTest {
 
 		double baseline[] = { 50, 200, 200 };
 		double value[] = { 50, 100, 100 };
-		AlertResultEntity result = extractError(m_check.checkData(value, baseline, configMap.get("two-minute")));
+		DataCheckEntity result = extractError(m_check.checkData(value, baseline, configMap.get("two-minute")));
 		Assert.assertEquals(result.isTriggered(), true);
 	}
 
@@ -104,17 +104,17 @@ public class RuleConfigTest {
 
 		double baseline[] = { 200, 350 };
 		double value[] = { 100, 50 };
-		AlertResultEntity result = extractError(m_check.checkData(value, baseline, configMap.get("demo1")));
+		DataCheckEntity result = extractError(m_check.checkData(value, baseline, configMap.get("demo1")));
 		Assert.assertEquals(result.isTriggered(), true);
 	}
 
-	private AlertResultEntity extractError(List<AlertResultEntity> alertResults) {
+	private DataCheckEntity extractError(List<DataCheckEntity> alertResults) {
 		int length = alertResults.size();
 		if (length == 0) {
 			return null;
 		}
 
-		for (AlertResultEntity alertResult : alertResults) {
+		for (DataCheckEntity alertResult : alertResults) {
 			if (alertResult.getAlertLevel().equals("error")) {
 				return alertResult;
 			}

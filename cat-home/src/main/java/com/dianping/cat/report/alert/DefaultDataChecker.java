@@ -26,8 +26,8 @@ public class DefaultDataChecker implements DataChecker {
 		return result;
 	}
 
-	public List<AlertResultEntity> checkData(double[] value, double[] baseline, List<Condition> conditions) {
-		List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
+	public List<DataCheckEntity> checkData(double[] value, double[] baseline, List<Condition> conditions) {
+		List<DataCheckEntity> alertResults = new ArrayList<DataCheckEntity>();
 
 		for (Condition condition : conditions) {
 			int conditionMinute = condition.getMinute();
@@ -38,15 +38,15 @@ public class DefaultDataChecker implements DataChecker {
 
 			if (condResult.getKey() == true) {
 				String alertType = condition.getAlertType();
-				alertResults.add(new AlertResultEntity(condResult.getKey(), condResult.getValue(), alertType));
+				alertResults.add(new DataCheckEntity(condResult.getKey(), condResult.getValue(), alertType));
 			}
 		}
 
 		return alertResults;
 	}
 
-	public List<AlertResultEntity> checkData(double[] value, List<Condition> conditions) {
-		List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
+	public List<DataCheckEntity> checkData(double[] value, List<Condition> conditions) {
+		List<DataCheckEntity> alertResults = new ArrayList<DataCheckEntity>();
 
 		for (Condition condition : conditions) {
 			int conditionMinute = condition.getMinute();
@@ -56,7 +56,7 @@ public class DefaultDataChecker implements DataChecker {
 			if (condResult.getKey() == true) {
 				String alertType = condition.getAlertType();
 
-				alertResults.add(new AlertResultEntity(condResult.getKey(), condResult.getValue(), alertType));
+				alertResults.add(new DataCheckEntity(condResult.getKey(), condResult.getValue(), alertType));
 			}
 		}
 
@@ -85,15 +85,15 @@ public class DefaultDataChecker implements DataChecker {
 		return new Pair<Boolean, String>(true, builder.toString());
 	}
 
-	public List<AlertResultEntity> checkDataForApp(double[] value, List<Condition> conditions) {
-		List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
+	public List<DataCheckEntity> checkDataForApp(double[] value, List<Condition> conditions) {
+		List<DataCheckEntity> alertResults = new ArrayList<DataCheckEntity>();
 
 		for (Condition condition : conditions) {
 			Pair<Boolean, String> condResult = checkDataByCondition(value, null, condition);
 
 			if (condResult.getKey() == true) {
 				String alertType = condition.getAlertType();
-				alertResults.add(new AlertResultEntity(condResult.getKey(), condResult.getValue(), alertType));
+				alertResults.add(new DataCheckEntity(condResult.getKey(), condResult.getValue(), alertType));
 			}
 		}
 
