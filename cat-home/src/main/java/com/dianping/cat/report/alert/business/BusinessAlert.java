@@ -125,7 +125,6 @@ public class BusinessAlert extends BaseAlert {
 			}
 
 			if (results.size() > 0) {
-				updateAlertStatus(product, metricKey);
 				sendBusinessAlerts(product, domain, metric, results);
 			}
 		}

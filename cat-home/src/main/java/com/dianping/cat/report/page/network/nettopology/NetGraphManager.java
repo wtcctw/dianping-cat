@@ -30,8 +30,8 @@ import com.dianping.cat.home.network.entity.NetGraph;
 import com.dianping.cat.home.network.entity.NetGraphSet;
 import com.dianping.cat.home.network.entity.NetTopology;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.alert.sender.AlertEntity;
 import com.dianping.cat.report.alert.sender.AlertManager;
-import com.dianping.cat.report.alert.sender.AlertManager.AlertMetric;
 import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
 import com.dianping.cat.report.page.network.service.NetTopologyReportService;
 import com.dianping.cat.report.service.ModelPeriod;
@@ -158,7 +158,7 @@ public class NetGraphManager implements Initializable, LogEnabled {
 						NetGraph netGraphTemplate = m_netGraphConfigManager.getConfig().getNetGraphs().get(0);
 						Set<String> groups = queryAllGroups(netGraphTemplate);
 						Map<String, MetricReport> currentMetricReports = queryMetricReports(groups, ModelPeriod.CURRENT);
-						List<AlertMetric> alertKeys = m_alertManager.queryLastestAlarmKey(5);
+						List<AlertEntity> alertKeys = m_alertManager.queryLastestAlarmKey(5);
 
 						m_currentNetGraphSet = m_netGraphBuilder.buildGraphSet(netGraphTemplate, currentMetricReports,
 						      alertKeys);
@@ -166,7 +166,7 @@ public class NetGraphManager implements Initializable, LogEnabled {
 						Map<String, MetricReport> lastHourReports = queryMetricReports(groups, ModelPeriod.LAST);
 
 						m_lastNetGraphSet = m_netGraphBuilder.buildGraphSet(netGraphTemplate, lastHourReports,
-						      new ArrayList<AlertMetric>());
+						      new ArrayList<AlertEntity>());
 						t.setStatus(Transaction.SUCCESS);
 					} catch (Exception e) {
 						t.setStatus(e);

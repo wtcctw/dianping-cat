@@ -63,9 +63,11 @@ public class AlertManager implements Initializable {
 
 	private Map<String, AlertEntity> m_sendedAlerts = new ConcurrentHashMap<String, AlertEntity>(1000);
 
-	private ConcurrentHashMap<AlertMetric, Long> m_alertInfos = new ConcurrentHashMap<AlertMetric, Long>();
-
+	private ConcurrentHashMap<AlertEntity, Long> m_alertMap = new ConcurrentHashMap<AlertEntity, Long>();
+	
 	public boolean addAlert(AlertEntity alert) {
+		m_alertMap.put(alert, alert.getDate().getTime());
+		
 		String group = alert.getGroup();
 		Cat.logEvent("Alert:" + alert.getType().getName(), group, Event.SUCCESS, alert.toString());
 
@@ -74,10 +76,6 @@ public class AlertManager implements Initializable {
 		} else {
 			return true;
 		}
-	}
-
-	public void addAlertInfo(String group, String metricId, long value) {
-		m_alertInfos.put(new AlertMetric(group, metricId), value);
 	}
 
 	@Override
@@ -100,11 +98,11 @@ public class AlertManager implements Initializable {
 		return false;
 	}
 
-	public List<AlertMetric> queryLastestAlarmKey(int minute) {
-		List<AlertMetric> keys = new ArrayList<AlertMetric>();
+	public List<AlertEntity> queryLastestAlarmKey(int minute) {
+		List<AlertEntity> keys = new ArrayList<AlertEntity>();
 		long currentTimeMillis = System.currentTimeMillis();
 
-		for (Entry<AlertMetric, Long> entry : m_alertInfos.entrySet()) {
+		for (Entry<AlertEntity, Long> entry : m_alertMap.entrySet()) {
 			Long value = entry.getValue();
 
 			if (currentTimeMillis - value < TimeHelper.ONE_MINUTE * minute) {
@@ -182,46 +180,6 @@ public class AlertManager implements Initializable {
 		}
 
 		return false;
-	}
-
-	public class AlertMetric {
-
-		private String m_group;
-
-		private String m_metricId;
-
-		public AlertMetric(String group, String metricId) {
-			m_group = group;
-			m_metricId = metricId;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			AlertMetric other = (AlertMetric) obj;
-
-			if (m_group.equals(other.getGroup()) && m_metricId.equals(other.getMetricId())) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-
-		public String getGroup() {
-			return m_group;
-		}
-
-		public String getMetricId() {
-			return m_metricId;
-		}
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((m_group == null) ? 0 : m_group.hashCode());
-			result = prime * result + ((m_metricId == null) ? 0 : m_metricId.hashCode());
-			return result;
-		}
 	}
 
 	private class RecoveryAnnouncer implements Task {

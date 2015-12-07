@@ -22,7 +22,7 @@ import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.alert.MetricType;
-import com.dianping.cat.report.alert.sender.AlertManager.AlertMetric;
+import com.dianping.cat.report.alert.sender.AlertEntity;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.metric.AbstractGraphCreator;
 import com.dianping.cat.service.ProjectService;
@@ -35,7 +35,7 @@ public class GraphCreator extends AbstractGraphCreator {
 	private Map<String, LineChart> buildChartData(String productLine, final Map<String, double[]> datas, Date startDate,
 	      Date endDate, final Map<String, double[]> dataWithOutFutures) {
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
-		List<AlertMetric> alertKeys = m_alertManager.queryLastestAlarmKey(5);
+		List<AlertEntity> alertKeys = m_alertManager.queryLastestAlarmKey(5);
 		int step = m_dataExtractor.getStep();
 
 		for (Entry<String, double[]> entry : dataWithOutFutures.entrySet()) {
@@ -144,7 +144,7 @@ public class GraphCreator extends AbstractGraphCreator {
 		return values;
 	}
 
-	private void buildLineChartTitle(List<AlertMetric> alertKeys, LineChart chart, String key) {
+	private void buildLineChartTitle(List<AlertEntity> alertKeys, LineChart chart, String key) {
 		int index = key.lastIndexOf(":");
 		String metricId = key.substring(0, index);
 		String type = key.substring(index + 1);
@@ -167,9 +167,9 @@ public class GraphCreator extends AbstractGraphCreator {
 		}
 	}
 
-	private boolean containMetric(List<AlertMetric> alertKeys, String metricId) {
-		for (AlertMetric alertMetric : alertKeys) {
-			if (alertMetric.getMetricId().equals(metricId)) {
+	private boolean containMetric(List<AlertEntity> alertKeys, String metricId) {
+		for (AlertEntity alertMetric : alertKeys) {
+			if (alertMetric.getMetric().equals(metricId)) {
 				return true;
 			}
 		}

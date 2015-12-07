@@ -26,6 +26,17 @@ public class AlertEntity {
 	private String m_contactGroup;
 
 	private Map<String, Object> m_paras = new HashMap<String, Object>();
+	
+	@Override
+	public boolean equals(Object obj) {
+		AlertEntity other = (AlertEntity) obj;
+
+		if (m_group.equals(other.getGroup()) && m_metric.equals(other.getMetric())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	public String getContactGroup() {
 		if (m_contactGroup != null) {
@@ -34,6 +45,7 @@ public class AlertEntity {
 			return m_group;
 		}
 	}
+
 
 	public String getContent() {
 		return m_content;
@@ -75,6 +87,15 @@ public class AlertEntity {
 		return AlertType.getTypeByName(m_type);
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((m_group == null) ? 0 : m_group.hashCode());
+		result = prime * result + ((m_metric == null) ? 0 : m_metric.hashCode());
+		return result;
+	}
+
 	public void setContactGroup(String contactGroup) {
 		m_contactGroup = contactGroup;
 	}
@@ -99,13 +120,13 @@ public class AlertEntity {
 		return this;
 	}
 
-	public AlertEntity setLevel(String level) {
-		m_level = AlertLevel.findByName(level);
+	public AlertEntity setLevel(AlertLevel level) {
+		m_level = level;
 		return this;
 	}
 	
-	public AlertEntity setLevel(AlertLevel level) {
-		m_level = level;
+	public AlertEntity setLevel(String level) {
+		m_level = AlertLevel.findByName(level);
 		return this;
 	}
 
