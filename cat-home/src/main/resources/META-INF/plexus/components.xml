@@ -3028,13 +3028,7 @@
 			<implementation>com.dianping.cat.report.alert.heartbeat.HeartbeatAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.heartbeat.HeartbeatRuleConfigManager</role>
@@ -3047,9 +3041,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>

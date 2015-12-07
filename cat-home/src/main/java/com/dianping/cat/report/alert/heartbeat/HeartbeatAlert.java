@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
@@ -15,7 +16,6 @@ import org.unidal.tuple.Pair;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
-import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.Detail;
 import com.dianping.cat.consumer.heartbeat.model.entity.Extension;
@@ -30,15 +30,16 @@ import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.alert.AlertResultEntity;
 import com.dianping.cat.report.alert.AlertType;
-import com.dianping.cat.report.alert.BaseAlert;
+import com.dianping.cat.report.alert.DataChecker;
 import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
 import com.dianping.cat.report.alert.sender.AlertEntity;
+import com.dianping.cat.report.alert.sender.AlertManager;
 import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
 
-public class HeartbeatAlert extends BaseAlert {
+public class HeartbeatAlert implements Task {
 
 	@Inject(type = ModelService.class, value = HeartbeatAnalyzer.ID)
 	private ModelService<HeartbeatReport> m_heartbeatService;
@@ -54,6 +55,16 @@ public class HeartbeatAlert extends BaseAlert {
 
 	@Inject
 	protected HeartbeatRuleConfigManager m_ruleConfigManager;
+	
+	@Inject
+	protected DataChecker m_dataChecker;
+
+	@Inject
+	protected AlertManager m_sendManager;
+
+	private static final int DATA_AREADY_MINUTE = 1;
+
+	protected static final long DURATION = TimeHelper.ONE_MINUTE;
 
 	private Map<String, double[]> buildArrayForExtensions(List<Period> periods) {
 		Map<String, double[]> map = new LinkedHashMap<String, double[]>();
@@ -83,6 +94,39 @@ public class HeartbeatAlert extends BaseAlert {
 			}
 		}
 		return map;
+	}
+
+	private Map<String, double[]> buildBaseValue(Machine machine) {
+		Map<String, double[]> map = buildArrayForExtensions(machine.getPeriods());
+
+		for (String id : map.keySet()) {
+			String[] str = id.split(":");
+
+			if (m_displayManager.isDelta(str[0], str[1])) {
+				double[] sources = map.get(id);
+				double[] targets = new double[60];
+
+				for (int i = 1; i < 60; i++) {
+					if (sources[i - 1] > 0) {
+						double delta = sources[i] - sources[i - 1];
+
+						if (delta >= 0) {
+							targets[i] = delta;
+						}
+					}
+				}
+				map.put(id, targets);
+			}
+		}
+
+		return map;
+	}
+
+	protected int calAlreadyMinute() {
+		long current = (System.currentTimeMillis()) / 1000 / 60;
+		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+
+		return minute;
 	}
 
 	private int calMaxMinute(Map<String, List<Config>> configs) {
@@ -145,32 +189,6 @@ public class HeartbeatAlert extends BaseAlert {
 		return metrics;
 	}
 
-	private Map<String, double[]> buildBaseValue(Machine machine) {
-		Map<String, double[]> map = buildArrayForExtensions(machine.getPeriods());
-
-		for (String id : map.keySet()) {
-			String[] str = id.split(":");
-
-			if (m_displayManager.isDelta(str[0], str[1])) {
-				double[] sources = map.get(id);
-				double[] targets = new double[60];
-
-				for (int i = 1; i < 60; i++) {
-					if (sources[i - 1] > 0) {
-						double delta = sources[i] - sources[i - 1];
-
-						if (delta >= 0) {
-							targets[i] = delta;
-						}
-					}
-				}
-				map.put(id, targets);
-			}
-		}
-
-		return map;
-	}
-
 	private HeartbeatReport generateCurrentReport(String domain, int start, int end) {
 		long currentMill = System.currentTimeMillis();
 		long currentHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR;
@@ -207,12 +225,6 @@ public class HeartbeatAlert extends BaseAlert {
 		return AlertType.HeartBeat.getName();
 	}
 
-	@Override
-	protected Map<String, ProductLine> getProductlines() {
-		throw new RuntimeException("get productline is not support by heartbeat alert");
-	}
-
-	@Override
 	protected BaseRuleConfigManager getRuleConfigManager() {
 		return m_ruleConfigManager;
 	}
@@ -309,7 +321,7 @@ public class HeartbeatAlert extends BaseAlert {
 			}
 		}
 	}
-
+	
 	private void processMeitrc(String domain, String ip, String metric, List<Condition> conditions, int maxMinute,
 	      double[] values) {
 		try {
@@ -381,5 +393,10 @@ public class HeartbeatAlert extends BaseAlert {
 			}
 		}
 	}
+
+	@Override
+   public void shutdown() {
+	   
+   }
 
 }
