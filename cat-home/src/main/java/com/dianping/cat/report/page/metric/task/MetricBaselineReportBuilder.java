@@ -19,7 +19,7 @@ import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.Baseline;
-import com.dianping.cat.report.alert.spi.MetricType;
+import com.dianping.cat.report.alert.spi.metric.MetricType;
 import com.dianping.cat.report.page.metric.service.BaselineService;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
 import com.dianping.cat.report.task.TaskBuilder;

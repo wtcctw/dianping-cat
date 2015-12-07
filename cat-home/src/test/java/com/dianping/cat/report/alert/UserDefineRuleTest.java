@@ -5,7 +5,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.tuple.Pair;
 
-import com.dianping.cat.report.alert.spi.RuleType;
+import com.dianping.cat.report.alert.spi.rule.RuleType;
 
 public class UserDefineRuleTest {
 	@Test

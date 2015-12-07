@@ -22,7 +22,7 @@ import com.dianping.cat.home.rule.entity.SubCondition;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
-import com.dianping.cat.report.alert.spi.MetricType;
+import com.dianping.cat.report.alert.spi.metric.MetricType;
 
 public class BusinessRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 

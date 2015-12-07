@@ -16,9 +16,9 @@ import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
-import com.dianping.cat.report.alert.spi.DataCheckEntity;
-import com.dianping.cat.report.alert.spi.DataChecker;
-import com.dianping.cat.report.alert.spi.DefaultDataChecker;
+import com.dianping.cat.report.alert.spi.rule.DataCheckEntity;
+import com.dianping.cat.report.alert.spi.rule.DataChecker;
+import com.dianping.cat.report.alert.spi.rule.DefaultDataChecker;
 
 public class RuleConfigTest {
 

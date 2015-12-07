@@ -20,7 +20,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMetric;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.alert.spi.MetricType;
+import com.dianping.cat.report.alert.spi.metric.MetricType;
 
 public class Handler implements PageHandler<Context> {
 

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.spi;
+package com.dianping.cat.report.alert.spi.metric;
 
 public enum MetricType {
 	COUNT("COUNT"),

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.spi;
+package com.dianping.cat.report.alert.spi.rule;
 
 import java.util.ArrayList;
 import java.util.List;
