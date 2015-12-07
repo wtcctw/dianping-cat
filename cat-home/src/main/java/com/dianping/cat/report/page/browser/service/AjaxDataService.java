@@ -44,8 +44,24 @@ public class AjaxDataService {
 		return infos;
 	}
 
-	private DataSequence<AjaxData> buildAjaxDataSequence(List<AjaxData> fromDatas, Date period) {
+	private Map<Integer, List<AjaxData>> buildDataMap(List<AjaxData> datas) {
 		Map<Integer, List<AjaxData>> dataMap = new LinkedHashMap<Integer, List<AjaxData>>();
+
+		for (AjaxData data : datas) {
+			int minute = data.getMinuteOrder();
+			List<AjaxData> list = dataMap.get(minute);
+
+			if (list == null) {
+				list = new LinkedList<AjaxData>();
+				dataMap.put(minute, list);
+			}
+			list.add(data);
+		}
+		return dataMap;
+	}
+
+	private DataSequence<AjaxData> buildAjaxDataSequence(List<AjaxData> fromDatas, Date period) {
+		Map<Integer, List<AjaxData>> dataMap = buildDataMap(fromDatas);
 		int max = -5;
 
 		for (AjaxData from : fromDatas) {
@@ -54,14 +70,6 @@ public class AjaxDataService {
 			if (max < 0 || max < minute) {
 				max = minute;
 			}
-			List<AjaxData> data = dataMap.get(minute);
-
-			if (data == null) {
-				data = new LinkedList<AjaxData>();
-
-				dataMap.put(minute, data);
-			}
-			data.add(from);
 		}
 		int n = max / 5 + 1;
 		int length = queryAjaxDataDuration(period, n);
@@ -192,7 +200,7 @@ public class AjaxDataService {
 	}
 
 	public double queryOneDayDelayAvg(AjaxDataQueryEntity entity) {
-		Double[] values = queryValue(entity, AjaxQueryType.DELAY);
+		Double[] values = queryGraphValue(entity, AjaxQueryType.DELAY);
 		double delaySum = 0;
 		int size = 0;
 
@@ -205,10 +213,10 @@ public class AjaxDataService {
 		return size > 0 ? delaySum / size : -1;
 	}
 
-	public Double[] queryValue(AjaxDataQueryEntity entity, AjaxQueryType type) {
+	public Double[] queryGraphValue(AjaxDataQueryEntity entity, AjaxQueryType type) {
 		List<AjaxData> datas = m_dataBuilder.queryByMinute(entity, type);
 		DataSequence<AjaxData> ajaxDataSequence = buildAjaxDataSequence(datas, entity.getDate());
-		
+
 		switch (type) {
 		case SUCCESS:
 			return computeSuccessRatio(ajaxDataSequence);
@@ -216,6 +224,47 @@ public class AjaxDataService {
 			return computeRequestCount(ajaxDataSequence);
 		case DELAY:
 			return computeDelayAvg(ajaxDataSequence);
+		}
+
+		return null;
+	}
+
+	public double[] queryAlertValue(AjaxDataQueryEntity entity, AjaxQueryType type) {
+		List<AjaxData> datas = m_dataBuilder.queryByMinute(entity, type);
+		int i = 0;
+
+		switch (type) {
+		case SUCCESS:
+			Map<Integer, List<AjaxData>> dataMap = buildDataMap(datas);
+			double[] successRatios = new double[dataMap.size()];
+
+			for (Entry<Integer, List<AjaxData>> entry : dataMap.entrySet()) {
+				successRatios[i] = computeSuccessRatio(entry.getValue());
+				i++;
+			}
+			return successRatios;
+		case REQUEST:
+			double[] requestSum = new double[datas.size()];
+
+			for (AjaxData data : datas) {
+				requestSum[i] = data.getAccessNumberSum();
+				i++;
+			}
+			return requestSum;
+		case DELAY:
+			double[] delay = new double[datas.size()];
+
+			for (AjaxData data : datas) {
+				long accessSumNum = data.getAccessNumberSum();
+
+				if (accessSumNum > 0) {
+					delay[i] = data.getResponseSumTimeSum() / accessSumNum;
+				} else {
+					delay[i] = 0.0;
+				}
+				i++;
+			}
+			return delay;
 		}
 
 		return null;

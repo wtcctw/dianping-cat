@@ -1,15 +1,15 @@
 package com.dianping.cat.report.alert.browser;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.unidal.helper.Splitters;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
@@ -53,8 +53,6 @@ public class AjaxAlert implements Task {
 
 	private static final int DATA_AREADY_MINUTE = 10;
 
-	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
-
 	private Long buildMillsByString(String time) throws Exception {
 		String[] times = time.split(":");
 		int hour = Integer.parseInt(times[0]);
@@ -64,32 +62,50 @@ public class AjaxAlert implements Task {
 		return result;
 	}
 
+	private Pair<Date, Integer> buildTimePair(long time) {
+		Pair<Date, Integer> dayAndMinute = new Pair<Date, Integer>();
+		Date day = TimeHelper.getCurrentDay(time);
+		int minute = (int) ((time - day.getTime()) / TimeHelper.ONE_MINUTE);
+		
+		dayAndMinute.setKey(day);
+		dayAndMinute.setValue(minute);
+		return dayAndMinute;
+	}
+
+	private AjaxDataQueryEntity buildAjaxDataQueryEntity(Date date, String conditions, int start, int end) {
+		AjaxDataQueryEntity entity = new AjaxDataQueryEntity(date);
+		List<String> strs = Splitters.by(";").split(conditions);
+
+		entity.setStartMinuteOrder(start).setEndMinuteOrder(end).setId(strs.get(0)).setCode(strs.get(1))
+		      .setCity(strs.get(2)).setOperator(strs.get(3)).setNetwork(strs.get(4));
+
+		return entity;
+	}
+
 	private double[] fetchDatas(String conditions, AjaxQueryType type, int minute) {
-		long time = (System.currentTimeMillis()) / 1000 / 60;
-		int endMinute = (int) (time % (60)) - DATA_AREADY_MINUTE;
-		int startMinute = endMinute - minute;
+		long currentTime = System.currentTimeMillis();
+		long endTime = currentTime - DATA_AREADY_MINUTE * TimeHelper.ONE_MINUTE;
+		long startTime = endTime - minute * TimeHelper.ONE_MINUTE;
 		double[] datas = null;
 
-		if (startMinute < 0 && endMinute < 0) {
-			String period = m_sdf.format(queryDayPeriod(-1).getTime());
-			AjaxDataQueryEntity queryEntity = new AjaxDataQueryEntity(period + ";" + conditions + ";;");
+		Pair<Date, Integer> end = buildTimePair(endTime);
+		Pair<Date, Integer> start = buildTimePair(startTime);
 
-			datas = ArrayUtils.toPrimitive(m_webApiService.queryValue(queryEntity, type), 0);
-		} else if (startMinute < 0 && endMinute >= 0) {
-			String last = m_sdf.format(queryDayPeriod(-1).getTime());
-			String current = m_sdf.format(queryDayPeriod(0).getTime());
-			AjaxDataQueryEntity lastQueryEntity = new AjaxDataQueryEntity(last + ";" + conditions + ";;");
-			AjaxDataQueryEntity currentQueryEntity = new AjaxDataQueryEntity(current + ";" + conditions + ";;");
-			double[] lastDatas = ArrayUtils.toPrimitive(m_webApiService.queryValue(lastQueryEntity, type), 0);
-			double[] currentDatas = ArrayUtils.toPrimitive(m_webApiService.queryValue(currentQueryEntity, type), 0);
+		if (end.getKey().getTime() == start.getKey().getTime()) {
+			AjaxDataQueryEntity queryEntity = buildAjaxDataQueryEntity(end.getKey(), conditions, start.getValue(),
+			      end.getValue());
+			datas = m_webApiService.queryAlertValue(queryEntity, type);
+		} else {
+			AjaxDataQueryEntity endQueryEntity = buildAjaxDataQueryEntity(end.getKey(), conditions,
+			      AjaxDataQueryEntity.DEFAULT_VALUE, end.getValue());
+			AjaxDataQueryEntity startQueryEntity = buildAjaxDataQueryEntity(start.getKey(), conditions, start.getValue(),
+			      AjaxDataQueryEntity.DEFAULT_VALUE);
+			double[] endDatas = m_webApiService.queryAlertValue(endQueryEntity, type);
+			double[] startDatas = m_webApiService.queryAlertValue(startQueryEntity, type);
 
-			datas = mergerArray(lastDatas, currentDatas);
-		} else if (startMinute >= 0) {
-			String period = m_sdf.format(queryDayPeriod(0).getTime());
-			AjaxDataQueryEntity queryEntity = new AjaxDataQueryEntity(period + ";" + conditions + ";;");
-
-			datas = ArrayUtils.toPrimitive(m_webApiService.queryValue(queryEntity, type), 0);
+			datas = mergerArray(endDatas, startDatas);
 		}
+
 		return datas;
 	}
 
@@ -188,16 +204,6 @@ public class AjaxAlert implements Task {
 			}
 		}
 		return new Pair<Integer, List<Condition>>(maxMinute, conditions);
-	}
-
-	private Calendar queryDayPeriod(int day) {
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.DATE, day);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		return cal;
 	}
 
 	private String queryPattern(int command) {

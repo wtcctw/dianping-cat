@@ -1,5 +1,5 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
-<h4 class="text-danger">1、Web端到端使用说明&nbsp;&nbsp;&nbsp;&nbsp; <a href="/cat/r/web?domain=cat&ip=All&reportType=&op=view">访问链接</a></h4>
+<h4 class="text-danger">1、Web端到端使用说明&nbsp;&nbsp;&nbsp;&nbsp; <a href="/cat/r/browser">访问链接</a></h4>
 <p>监控点评Web页面的ajax的接口调用情况，这个是从用户Web浏览器采集的数据，从用户角度看点评接口的访问速度。</p>
 <p>分析的维度有地区、运营商等。</p>
 <p>此部分需要前端框架cortext配合，进行前端打点。</p>
@@ -9,10 +9,10 @@
 <img  class="img-polaroid"  width='80%'  src="${model.webapp}/images/userMonitor/userMonitor02.png"/>
 
 </br></br>
-<h4 class="text-danger">2、Web端到端配置&nbsp;&nbsp;&nbsp;&nbsp; <a href="/cat/s/config?op=urlPatterns">访问链接</a> </h4>
+<h4 class="text-danger">2、Web端到端配置&nbsp;&nbsp;&nbsp;&nbsp; <a href="/cat/s/web?op=urlPatterns">访问链接</a> </h4>
 <img  class="img-polaroid"  width='80%'  src="${model.webapp}/images/userMonitor/userMonitor04.png"/>
 </br></br>
-<h4 class="text-danger">3、Web端到端告警&nbsp;&nbsp;&nbsp;&nbsp; <a href="/cat/s/config?op=webRule">访问链接</a> </h4>
+<h4 class="text-danger">3、Web端到端告警&nbsp;&nbsp;&nbsp;&nbsp; <a href="/cat/s/web?op=webRule">访问链接</a> </h4>
 <h5 class="text-success">A) 配置一览表</h5>
 <img  class="img-polaroid"  width='80%'  src="${model.webapp}/images/userMonitor/userMonitor08.png"/>
 <h5 class="text-success">B) 配置告警规则</h5>

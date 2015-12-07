@@ -3,8 +3,6 @@ package com.dianping.cat.report.page.home;
 public enum JspFile {
 	VIEW("/jsp/report/home/home.jsp"),
 	
-	WEBVIEW("/jsp/report/home/webhome.jsp"),
-
 	;
 
 	private String m_path;

@@ -3109,6 +3109,27 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.alert.browser.AjaxAlert</role>
+			<implementation>com.dianping.cat.report.alert.browser.AjaxAlert</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.browser.service.AjaxDataService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.browser.AjaxRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.DataChecker</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.alert.transaction.TransactionAlert</role>
 			<implementation>com.dianping.cat.report.alert.transaction.TransactionAlert</implementation>
 			<requirements>

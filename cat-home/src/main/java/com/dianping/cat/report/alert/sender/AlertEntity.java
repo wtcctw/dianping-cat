@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dianping.cat.report.alert.AlertLevel;
 import com.dianping.cat.report.alert.AlertType;
 
 public class AlertEntity {
@@ -14,7 +15,7 @@ public class AlertEntity {
 
 	private String m_group;
 
-	private String m_level;
+	private AlertLevel m_level;
 
 	private String m_metric;
 
@@ -58,7 +59,7 @@ public class AlertEntity {
 		return m_level + ":" + m_type + ":" + m_group + ":" + m_metric;
 	}
 
-	public String getLevel() {
+	public AlertLevel getLevel() {
 		return m_level;
 	}
 
@@ -99,6 +100,11 @@ public class AlertEntity {
 	}
 
 	public AlertEntity setLevel(String level) {
+		m_level = AlertLevel.findByName(level);
+		return this;
+	}
+	
+	public AlertEntity setLevel(AlertLevel level) {
 		m_level = level;
 		return this;
 	}

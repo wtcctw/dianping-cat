@@ -97,7 +97,7 @@ public class AlertManager implements Initializable {
 		boolean result = false;
 		String type = alert.getType().getName();
 		String group = alert.getGroup();
-		String level = alert.getLevel();
+		String level = alert.getLevel().getLevel();
 		String alertKey = alert.getKey();
 		List<AlertChannel> channels = m_policyManager.queryChannels(type, group, level);
 		int suspendMinute = m_policyManager.querySuspendMinute(type, group, level);
@@ -145,7 +145,7 @@ public class AlertManager implements Initializable {
 		AlertType alterType = alert.getType();
 		String type = alterType.getName();
 		String group = alert.getGroup();
-		String level = alert.getLevel();
+		String level = alert.getLevel().getLevel();
 		List<AlertChannel> channels = m_policyManager.queryChannels(type, group, level);
 
 		for (AlertChannel channel : channels) {
@@ -174,7 +174,7 @@ public class AlertManager implements Initializable {
 		private int queryRecoverMinute(AlertEntity alert) {
 			String type = alert.getType().getName();
 			String group = alert.getGroup();
-			String level = alert.getLevel();
+			String level = alert.getLevel().getLevel();
 
 			return m_policyManager.queryRecoverMinute(type, group, level);
 		}

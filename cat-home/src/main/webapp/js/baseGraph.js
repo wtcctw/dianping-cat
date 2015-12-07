@@ -13,6 +13,10 @@ var pieChartParse = function(data) {
 }
 
 function graphPieChart(container, data) {
+	graphPieChartWithName(container, data, '');
+}
+
+function graphPieChartWithName(container, data, title) {
 	$(container).highcharts({
 		chart : {
 			plotBackgroundColor : null,
@@ -20,7 +24,7 @@ function graphPieChart(container, data) {
 			plotShadow : false
 		},
 		title : {
-			text : ''
+			text : title
 		},
 		credits : {
 			enabled : false
@@ -49,12 +53,50 @@ function graphPieChart(container, data) {
 	});
 }
 
+function graphBarChart(id, picTitle, subTitle, xData, yTitle, dataList,
+		serieName) {
+	$(id).highcharts(
+			{
+				chart : {
+					type : 'column'
+				},
+				title : {
+					text : picTitle
+				},
+				subtitle : {
+					text : subTitle
+				},
+				xAxis : {
+					categories : xData
+				},
+				yAxis : {
+					min : 0,
+					title : {
+						text : yTitle
+					}
+				},
+				plotOptions : {
+					column : {
+						pointPadding : 0,
+						borderWidth : 0
+					}
+				},
+				series : [ {
+					name : serieName,
+					data : dataList
+				} ],
+				colors : [ '#8085e8', '#91e8e1', '#8d4653', '#e4d354',
+						'#f7a35c', '#7cb5ec', '#90ed7d', '#434348', '#8085e9',
+						'#f15c80' ]
+			});
+}
+
 function parseLineData(data) {
 	var res = [];
 	var values = [];
-	if(data.values.length > 0) {
+	if (data.values.length > 0) {
 		values = data.values;
-	}else if(data.valueObjects.length > 0) {
+	} else if (data.valueObjects.length > 0) {
 		values = data.valueObjects;
 	}
 	data.subTitles.forEach(function(title, i) {
@@ -63,7 +105,7 @@ function parseLineData(data) {
 		series.data = [];
 		var start = new Date(Date.parse(data.start));
 		var startLong = start.getTime();
-		
+
 		values[i].forEach(function(value, j) {
 			var time = start.getTime() + j * data.step;
 			var item = [];
@@ -191,71 +233,87 @@ function graphMetricChartForDay(container, data, datePair) {
 	var ylabelMin = data.minYlabel;
 	var ylabelMax = data.maxYlabel;
 	var _data = parseMetricLineDataForDay(data);
-	$(container).highcharts(
-			{
-				chart : {
-					type : 'spline'
-				},
-				title : {
-					text : data.htmlTitle,
-					useHTML : true
-				},
-				xAxis : {
-					type : "category",
-					labels : {
-						step : 12,
-						maxStaggerLines : 1,
-						formatter : function() {
-							return this.value / 12;
-						}
-					},
-					max : 288
-				},
-				yAxis : {
-					min : ylabelMin,
-					max : ylabelMax,
-					title : {
-						text : data.unit,
-					}
-				},
-				credits : {
-					enabled : false
-				},
-				plotOptions : {
-					spline : {
-						lineWidth : 2,
-						states : {
-							hover : {
-								lineWidth : 2
+	$(container)
+			.highcharts(
+					{
+						chart : {
+							type : 'spline'
+						},
+						title : {
+							text : data.htmlTitle,
+							useHTML : true
+						},
+						xAxis : {
+							type : "category",
+							labels : {
+								step : 12,
+								maxStaggerLines : 1,
+								formatter : function() {
+									return this.value / 12;
+								}
+							},
+							max : 288
+						},
+						yAxis : {
+							min : ylabelMin,
+							max : ylabelMax,
+							title : {
+								text : data.unit,
 							}
 						},
-						marker : {
+						credits : {
 							enabled : false
-						}
-					}
-				},
-				legend : {
-					maxHeight : 82
-				},
-				tooltip : {
-					allowPointSelect : false,
-					formatter : function() {
-						var number0 = Number(this.y).toFixed(0);
-						var number1 = Number(this.y).toFixed(2);
-						var number = number1;
+						},
+						plotOptions : {
+							spline : {
+								lineWidth : 2,
+								states : {
+									hover : {
+										lineWidth : 2
+									}
+								},
+								marker : {
+									enabled : false
+								}
+							}
+						},
+						legend : {
+							maxHeight : 82
+						},
+						tooltip : {
+							allowPointSelect : false,
+							formatter : function() {
+								var number0 = Number(this.y).toFixed(0);
+								var number1 = Number(this.y).toFixed(2);
+								var number = number1;
 
-						if (Number(number1) == Number(number0)) {
-							number = number0;
-						}
-						
-						return Highcharts.dateFormat('%Y-%m-%d %H:%M',  this.x*300000 + Date.parse(datePair[this.series.name]))
-								+ '~' + Highcharts.dateFormat('%H:%M',  (this.x+1)*300000 + Date.parse(datePair[this.series.name]))
-								+ '<br/>[' + this.series.name + '] ' + '<b>'
-								+ number + '</b>';
-					}
-				},
-				series : _data
-			});
+								if (Number(number1) == Number(number0)) {
+									number = number0;
+								}
+
+								return Highcharts
+										.dateFormat(
+												'%Y-%m-%d %H:%M',
+												this.x
+														* 300000
+														+ Date
+																.parse(datePair[this.series.name]))
+										+ '~'
+										+ Highcharts
+												.dateFormat(
+														'%H:%M',
+														(this.x + 1)
+																* 300000
+																+ Date
+																		.parse(datePair[this.series.name]))
+										+ '<br/>['
+										+ this.series.name
+										+ '] '
+										+ '<b>' + number + '</b>';
+							}
+						},
+						series : _data
+					});
 }
 
 function graphLineChart(container, data) {

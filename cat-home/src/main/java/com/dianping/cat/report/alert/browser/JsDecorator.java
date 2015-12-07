@@ -56,7 +56,7 @@ public class JsDecorator extends Decorator implements Initializable {
 
 	private Map<Object, Object> generateExceptionMap(AlertEntity alert) {
 		Map<Object, Object> map = new HashMap<Object, Object>();
-		map.put("level", alert.getLevel().toUpperCase());
+		map.put("level", alert.getLevel().getLevel().toUpperCase());
 		map.put("module", alert.getGroup());
 		
 		Date startTime = alert.getDate();

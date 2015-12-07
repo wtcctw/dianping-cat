@@ -95,20 +95,22 @@ public class AjaxDataBuilder {
 		int operator = entity.getOperator();
 		int code = entity.getCode();
 		int network = entity.getNetwork();
+		int start = entity.getStartMinuteOrder();
+		int end = entity.getEndMinuteOrder();
 		List<AjaxData> datas = new ArrayList<AjaxData>();
 
 		try {
 			switch (type) {
 			case SUCCESS:
-				datas = m_dao.findDataByMinuteCode(apiId, period, city, operator, code, network,
+				datas = m_dao.findDataByMinuteCode(apiId, period, city, operator, code, network, start, end,
 				      AjaxDataEntity.READSET_SUCCESS_DATA);
 				break;
 			case REQUEST:
-				datas = m_dao.findDataByMinute(apiId, period, city, operator, code, network,
+				datas = m_dao.findDataByMinute(apiId, period, city, operator, code, network, start, end,
 				      AjaxDataEntity.READSET_COUNT_DATA);
 				break;
 			case DELAY:
-				datas = m_dao.findDataByMinute(apiId, period, city, operator, code, network,
+				datas = m_dao.findDataByMinute(apiId, period, city, operator, code, network, start, end,
 				      AjaxDataEntity.READSET_AVG_DATA);
 				break;
 			}

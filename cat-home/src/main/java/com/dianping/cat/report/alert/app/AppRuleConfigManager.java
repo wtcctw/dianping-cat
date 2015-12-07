@@ -46,7 +46,7 @@ public class AppRuleConfigManager extends BaseRuleConfigManager implements Initi
 		config.setEndtime("24:00");
 
 		Condition condition = new Condition();
-		condition.setAlertType(AlertLevel.WARNING);
+		condition.setAlertType(AlertLevel.WARNING.getLevel());
 		condition.setMinute(3);
 		SubCondition minSuccessSubCondition = new SubCondition();
 
