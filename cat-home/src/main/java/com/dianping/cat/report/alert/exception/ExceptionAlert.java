@@ -24,8 +24,8 @@ import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.exception.AlertExceptionBuilder.AlertException;
-import com.dianping.cat.report.alert.sender.AlertEntity;
-import com.dianping.cat.report.alert.sender.AlertManager;
+import com.dianping.cat.report.alert.spi.AlertEntity;
+import com.dianping.cat.report.alert.spi.AlertManager;
 
 public class ExceptionAlert implements Task {
 

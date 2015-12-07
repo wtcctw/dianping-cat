@@ -25,7 +25,7 @@ import com.dianping.cat.report.alert.BaseAlert;
 import com.dianping.cat.report.alert.MetricReportGroup;
 import com.dianping.cat.report.alert.MetricType;
 import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
-import com.dianping.cat.report.alert.sender.AlertEntity;
+import com.dianping.cat.report.alert.spi.AlertEntity;
 
 public class BusinessAlert extends BaseAlert {
 

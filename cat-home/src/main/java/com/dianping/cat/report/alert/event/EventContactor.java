@@ -1,7 +1,7 @@
 package com.dianping.cat.report.alert.event;
 
 import com.dianping.cat.report.alert.AlertType;
-import com.dianping.cat.report.alert.sender.receiver.ProjectContactor;
+import com.dianping.cat.report.alert.spi.receiver.ProjectContactor;
 
 public class EventContactor extends ProjectContactor {
 

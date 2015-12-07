@@ -6,9 +6,9 @@ import java.util.List;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.home.alert.config.entity.Receiver;
-import com.dianping.cat.report.alert.sender.config.AlertConfigManager;
-import com.dianping.cat.report.alert.sender.receiver.Contactor;
-import com.dianping.cat.report.alert.sender.receiver.DefaultContactor;
+import com.dianping.cat.report.alert.spi.config.AlertConfigManager;
+import com.dianping.cat.report.alert.spi.receiver.Contactor;
+import com.dianping.cat.report.alert.spi.receiver.DefaultContactor;
 
 public abstract class AbstractStorageContactor extends DefaultContactor implements Contactor {
 

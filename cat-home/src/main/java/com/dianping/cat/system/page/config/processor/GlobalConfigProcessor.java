@@ -15,7 +15,7 @@ import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.group.entity.Domain;
-import com.dianping.cat.report.alert.sender.config.SenderConfigManager;
+import com.dianping.cat.report.alert.spi.config.SenderConfigManager;
 import com.dianping.cat.report.page.DomainGroupConfigManager;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
 import com.dianping.cat.service.ProjectService;

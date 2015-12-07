@@ -24,7 +24,7 @@ import com.dianping.cat.home.rule.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.alert.browser.JsRuleConfigManager;
 import com.dianping.cat.report.alert.browser.AjaxRuleConfigManager;
 import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
-import com.dianping.cat.report.alert.sender.decorator.RuleFTLDecorator;
+import com.dianping.cat.report.alert.spi.decorator.RuleFTLDecorator;
 import com.dianping.cat.report.page.browser.ModuleManager;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.ConfigHtmlParser;

@@ -1,8 +1,8 @@
 package com.dianping.cat.report.alert.database;
 
 import com.dianping.cat.report.alert.AlertType;
-import com.dianping.cat.report.alert.sender.AlertEntity;
-import com.dianping.cat.report.alert.sender.decorator.Decorator;
+import com.dianping.cat.report.alert.spi.AlertEntity;
+import com.dianping.cat.report.alert.spi.decorator.Decorator;
 
 public class DatabaseDecorator extends Decorator {
 

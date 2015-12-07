@@ -7,7 +7,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.report.alert.AlertType;
-import com.dianping.cat.report.alert.sender.receiver.ProjectContactor;
+import com.dianping.cat.report.alert.spi.receiver.ProjectContactor;
 
 public class AjaxContactor extends ProjectContactor {
 

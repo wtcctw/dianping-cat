@@ -8,9 +8,9 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.home.alert.config.entity.Receiver;
 import com.dianping.cat.home.js.entity.ExceptionLimit;
 import com.dianping.cat.report.alert.AlertType;
-import com.dianping.cat.report.alert.sender.config.AlertConfigManager;
-import com.dianping.cat.report.alert.sender.receiver.Contactor;
-import com.dianping.cat.report.alert.sender.receiver.DefaultContactor;
+import com.dianping.cat.report.alert.spi.config.AlertConfigManager;
+import com.dianping.cat.report.alert.spi.receiver.Contactor;
+import com.dianping.cat.report.alert.spi.receiver.DefaultContactor;
 
 public class JsContactor extends DefaultContactor implements Contactor {
 
