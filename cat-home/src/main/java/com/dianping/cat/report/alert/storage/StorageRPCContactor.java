@@ -1,6 +1,6 @@
 package com.dianping.cat.report.alert.storage;
 
-import com.dianping.cat.report.alert.AlertType;
+import com.dianping.cat.report.alert.spi.AlertType;
 
 public class StorageRPCContactor extends AbstractStorageContactor {
 

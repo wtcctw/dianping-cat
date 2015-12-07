@@ -2523,12 +2523,12 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.DataChecker</role>
-			<implementation>com.dianping.cat.report.alert.DefaultDataChecker</implementation>
+			<role>com.dianping.cat.report.alert.spi.DataChecker</role>
+			<implementation>com.dianping.cat.report.alert.spi.DefaultDataChecker</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
-			<implementation>com.dianping.cat.report.alert.MetricReportGroupService</implementation>
+			<role>com.dianping.cat.report.alert.spi.MetricReportGroupService</role>
+			<implementation>com.dianping.cat.report.alert.spi.MetricReportGroupService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
@@ -2943,13 +2943,13 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
+					<role>com.dianping.cat.report.alert.spi.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.business.BusinessRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.spi.DataChecker</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.spi.AlertManager</role>
@@ -2967,13 +2967,13 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
+					<role>com.dianping.cat.report.alert.spi.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.network.NetworkRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.spi.DataChecker</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.spi.AlertManager</role>
@@ -2988,13 +2988,13 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
+					<role>com.dianping.cat.report.alert.spi.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.database.DatabaseRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.spi.DataChecker</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.spi.AlertManager</role>
@@ -3012,7 +3012,7 @@
 					<role>com.dianping.cat.report.alert.heartbeat.HeartbeatRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.spi.DataChecker</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
@@ -3040,13 +3040,13 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
+					<role>com.dianping.cat.report.alert.spi.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.system.SystemRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.spi.DataChecker</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.spi.AlertManager</role>
@@ -3067,7 +3067,7 @@
 					<role>com.dianping.cat.report.alert.app.AppRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.spi.DataChecker</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
@@ -3088,7 +3088,7 @@
 					<role>com.dianping.cat.report.alert.browser.AjaxRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.spi.DataChecker</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
@@ -3103,7 +3103,7 @@
 					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.spi.DataChecker</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.spi.AlertManager</role>
@@ -3125,7 +3125,7 @@
 					<role>com.dianping.cat.report.page.event.transform.EventMergeHelper</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.spi.DataChecker</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.spi.AlertManager</role>
@@ -3147,7 +3147,7 @@
 					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.spi.DataChecker</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.spi.AlertManager</role>
@@ -3172,7 +3172,7 @@
 					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.spi.DataChecker</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.spi.AlertManager</role>
@@ -3197,7 +3197,7 @@
 					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.spi.DataChecker</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.spi.AlertManager</role>

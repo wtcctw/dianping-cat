@@ -1,6 +1,6 @@
 package com.dianping.cat.report.alert.thirdParty;
 
-import com.dianping.cat.report.alert.AlertType;
+import com.dianping.cat.report.alert.spi.AlertType;
 import com.dianping.cat.report.alert.spi.receiver.ProjectContactor;
 
 public class ThirdpartyContactor extends ProjectContactor {

@@ -18,14 +18,14 @@ import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.page.metric.service.BaselineService;
-import com.dianping.cat.report.alert.AlarmRule;
-import com.dianping.cat.report.alert.DataCheckEntity;
-import com.dianping.cat.report.alert.AlertType;
-import com.dianping.cat.report.alert.BaseAlert;
-import com.dianping.cat.report.alert.MetricReportGroup;
-import com.dianping.cat.report.alert.MetricType;
 import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
+import com.dianping.cat.report.alert.spi.AlarmRule;
 import com.dianping.cat.report.alert.spi.AlertEntity;
+import com.dianping.cat.report.alert.spi.AlertType;
+import com.dianping.cat.report.alert.spi.BaseAlert;
+import com.dianping.cat.report.alert.spi.DataCheckEntity;
+import com.dianping.cat.report.alert.spi.MetricReportGroup;
+import com.dianping.cat.report.alert.spi.MetricType;
 
 public class BusinessAlert extends BaseAlert {
 

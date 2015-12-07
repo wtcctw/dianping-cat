@@ -3,7 +3,7 @@ package com.dianping.cat.report.page.metric.service;
 import java.util.Date;
 
 import com.dianping.cat.home.dal.report.Baseline;
-import com.dianping.cat.report.alert.MetricType;
+import com.dianping.cat.report.alert.spi.MetricType;
 
 public interface BaselineService {
 

@@ -10,7 +10,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
-import com.dianping.cat.report.alert.AlertLevel;
+import com.dianping.cat.report.alert.spi.AlertLevel;
 import com.dianping.cat.report.page.dependency.TopMetric.Item;
 
 public class AlertExceptionBuilder {

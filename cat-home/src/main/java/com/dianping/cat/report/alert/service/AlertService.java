@@ -11,9 +11,9 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.report.Alert;
 import com.dianping.cat.home.dal.report.AlertDao;
-import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.spi.AlertEntity;
 import com.dianping.cat.report.alert.spi.AlertMessageEntity;
+import com.dianping.cat.report.alert.spi.AlertType;
 
 public class AlertService {
 

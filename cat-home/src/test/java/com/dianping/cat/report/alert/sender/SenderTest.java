@@ -8,8 +8,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.spi.AlertMessageEntity;
+import com.dianping.cat.report.alert.spi.AlertType;
 import com.dianping.cat.report.alert.spi.sender.MailSender;
 import com.dianping.cat.report.alert.spi.sender.Sender;
 import com.dianping.cat.report.alert.spi.sender.SmsSender;

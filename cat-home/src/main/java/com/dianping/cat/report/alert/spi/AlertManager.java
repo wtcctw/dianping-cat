@@ -24,7 +24,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.service.AlertService;
 import com.dianping.cat.report.alert.spi.config.AlertPolicyManager;
 import com.dianping.cat.report.alert.spi.decorator.DecoratorManager;

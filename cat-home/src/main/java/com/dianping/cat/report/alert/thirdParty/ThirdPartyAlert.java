@@ -16,10 +16,10 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.alert.AlertLevel;
-import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.spi.AlertEntity;
+import com.dianping.cat.report.alert.spi.AlertLevel;
 import com.dianping.cat.report.alert.spi.AlertManager;
+import com.dianping.cat.report.alert.spi.AlertType;
 
 public class ThirdPartyAlert implements Task {
 
