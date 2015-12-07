@@ -1,11 +1,12 @@
-package com.dianping.cat.report.alert.sender.decorator;
+package com.dianping.cat.report.alert.storage;
 
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.sender.AlertEntity;
+import com.dianping.cat.report.alert.sender.decorator.Decorator;
 
-public class HeartbeatDecorator extends Decorator {
+public class StorageSQLDecorator extends Decorator {
 
-	public static final String ID = AlertType.HeartBeat.getName();
+	public static final String ID = AlertType.STORAGE_SQL.getName();
 
 	@Override
 	public String generateContent(AlertEntity alert) {
@@ -15,8 +16,9 @@ public class HeartbeatDecorator extends Decorator {
 	@Override
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("[心跳告警] [项目: ").append(alert.getGroup()).append("][ip: ").append(alert.getParas().get("ip"))
-		      .append("][指标: ").append(alert.getMetric()).append("]");
+
+		sb.append("[CAT StorageSQL告警] [数据库: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric())
+		      .append("]");
 		return sb.toString();
 	}
 

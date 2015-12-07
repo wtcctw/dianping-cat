@@ -1,11 +1,12 @@
-package com.dianping.cat.report.alert.sender.decorator;
+package com.dianping.cat.report.alert.database;
 
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.sender.AlertEntity;
+import com.dianping.cat.report.alert.sender.decorator.Decorator;
 
-public class SystemDecorator extends Decorator {
+public class DatabaseDecorator extends Decorator {
 
-	public static final String ID = AlertType.System.getName();
+	public static final String ID = AlertType.DataBase.getName();
 
 	@Override
    public String generateContent(AlertEntity alert) {
@@ -15,9 +16,8 @@ public class SystemDecorator extends Decorator {
 	@Override
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("[系统告警] [产品线 ").append(alert.getGroup()).append("]");
-		sb.append("[系统指标 ").append(alert.getMetric()).append("]");
-		
+		sb.append("[数据库告警] [产品线 ").append(alert.getGroup()).append("]");
+		sb.append("[数据库指标 ").append(alert.getMetric()).append("]");
 		return sb.toString();
 	}
 
@@ -25,4 +25,5 @@ public class SystemDecorator extends Decorator {
 	public String getId() {
 		return ID;
 	}
+
 }

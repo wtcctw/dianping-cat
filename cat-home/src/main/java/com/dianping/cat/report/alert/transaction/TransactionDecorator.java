@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.sender.decorator;
+package com.dianping.cat.report.alert.transaction;
 
 import java.io.StringWriter;
 import java.text.DateFormat;
@@ -12,13 +12,14 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import com.dianping.cat.Cat;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.sender.AlertEntity;
+import com.dianping.cat.report.alert.sender.decorator.Decorator;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-public class EventDecorator extends Decorator implements Initializable {
+public class TransactionDecorator extends Decorator implements Initializable {
 
-	public static final String ID = AlertType.Event.getName();
+	public static final String ID = AlertType.Transaction.getName();
 
 	protected DateFormat m_linkFormat = new SimpleDateFormat("yyyyMMddHH");
 
@@ -39,7 +40,7 @@ public class EventDecorator extends Decorator implements Initializable {
 		StringWriter sw = new StringWriter(5000);
 
 		try {
-			Template t = m_configuration.getTemplate("eventAlert.ftl");
+			Template t = m_configuration.getTemplate("transactionAlert.ftl");
 			t.process(datas, sw);
 		} catch (Exception e) {
 			Cat.logError("build front end content error:" + alert.toString(), e);
@@ -52,7 +53,7 @@ public class EventDecorator extends Decorator implements Initializable {
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("[CAT Event告警] [项目: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric())
+		sb.append("[CAT Transaction告警] [项目: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric())
 		      .append("]");
 		return sb.toString();
 	}

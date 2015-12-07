@@ -1,6 +1,8 @@
-package com.dianping.cat.report.alert.sender.decorator;
+package com.dianping.cat.report.alert.event;
 
 import java.io.StringWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,24 +12,36 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import com.dianping.cat.Cat;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.sender.AlertEntity;
+import com.dianping.cat.report.alert.sender.decorator.Decorator;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-public class AppDecorator extends Decorator implements Initializable {
+public class EventDecorator extends Decorator implements Initializable {
 
-	public static final String ID = AlertType.App.getName();
+	public static final String ID = AlertType.Event.getName();
+
+	protected DateFormat m_linkFormat = new SimpleDateFormat("yyyyMMddHH");
 
 	public Configuration m_configuration;
 
 	@Override
 	public String generateContent(AlertEntity alert) {
-		Map<Object, Object> dataMap = generateExceptionMap(alert);
+		Map<Object, Object> datas = new HashMap<Object, Object>();
+		String[] fields = alert.getMetric().split("-");
+
+		datas.put("domain", alert.getGroup());
+		datas.put("type", fields[0]);
+		datas.put("name", fields[1]);
+		datas.put("content", alert.getContent());
+		datas.put("date", m_format.format(alert.getDate()));
+		datas.put("linkDate", m_linkFormat.format(alert.getDate()));
+
 		StringWriter sw = new StringWriter(5000);
 
 		try {
-			Template t = m_configuration.getTemplate("appAlert.ftl");
-			t.process(dataMap, sw);
+			Template t = m_configuration.getTemplate("eventAlert.ftl");
+			t.process(datas, sw);
 		} catch (Exception e) {
 			Cat.logError("build front end content error:" + alert.toString(), e);
 		}
@@ -35,21 +49,12 @@ public class AppDecorator extends Decorator implements Initializable {
 		return sw.toString();
 	}
 
-	protected Map<Object, Object> generateExceptionMap(AlertEntity alert) {
-		Map<Object, Object> map = new HashMap<Object, Object>();
-		map.put("name", alert.getParas().get("name"));
-		map.put("content", alert.getContent());
-		map.put("date", m_format.format(alert.getDate()));
-
-		return map;
-	}
-
 	@Override
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
-		String type = alert.getMetric();
 
-		sb.append("[CAT APP告警] [命令字: ").append(alert.getGroup()).append("] [监控项: ").append(type).append("]");
+		sb.append("[CAT Event告警] [项目: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric())
+		      .append("]");
 		return sb.toString();
 	}
 
@@ -68,5 +73,4 @@ public class AppDecorator extends Decorator implements Initializable {
 			Cat.logError(e);
 		}
 	}
-
 }

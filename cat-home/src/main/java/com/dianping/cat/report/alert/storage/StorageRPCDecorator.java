@@ -1,11 +1,12 @@
-package com.dianping.cat.report.alert.sender.decorator;
+package com.dianping.cat.report.alert.storage;
 
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.sender.AlertEntity;
+import com.dianping.cat.report.alert.sender.decorator.Decorator;
 
-public class StorageCacheDecorator extends Decorator {
+public class StorageRPCDecorator extends Decorator {
 
-	public static final String ID = AlertType.STORAGE_CACHE.getName();
+	public static final String ID = AlertType.STORAGE_RPC.getName();
 
 	@Override
 	public String generateContent(AlertEntity alert) {
@@ -16,7 +17,7 @@ public class StorageCacheDecorator extends Decorator {
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("[CAT 缓存访问告警] [缓存集群: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric())
+		sb.append("[CAT StorageRPC告警] [服务: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric())
 		      .append("]");
 		return sb.toString();
 	}

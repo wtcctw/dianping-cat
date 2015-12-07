@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.sender.decorator;
+package com.dianping.cat.report.alert.browser;
 
 import java.io.StringWriter;
 import java.text.DateFormat;
@@ -13,6 +13,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import com.dianping.cat.Cat;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.sender.AlertEntity;
+import com.dianping.cat.report.alert.sender.decorator.Decorator;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;

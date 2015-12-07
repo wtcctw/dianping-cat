@@ -1,7 +1,8 @@
-package com.dianping.cat.report.alert.sender.decorator;
+package com.dianping.cat.report.alert.network;
 
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.sender.AlertEntity;
+import com.dianping.cat.report.alert.sender.decorator.Decorator;
 
 public class NetworkDecorator extends Decorator {
 

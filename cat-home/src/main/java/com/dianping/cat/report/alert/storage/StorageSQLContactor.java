@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.sender.receiver;
+package com.dianping.cat.report.alert.storage;
 
 import com.dianping.cat.report.alert.AlertType;
 

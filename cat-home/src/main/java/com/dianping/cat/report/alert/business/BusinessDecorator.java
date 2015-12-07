@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.sender.decorator;
+package com.dianping.cat.report.alert.business;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -8,6 +8,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.sender.AlertEntity;
+import com.dianping.cat.report.alert.sender.decorator.ProjectDecorator;
 import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
 
 public class BusinessDecorator extends ProjectDecorator {

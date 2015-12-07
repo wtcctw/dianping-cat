@@ -2552,7 +2552,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>Business</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.receiver.BusinessContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.business.BusinessContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2565,7 +2565,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>Network</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.receiver.NetworkContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.network.NetworkContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2578,7 +2578,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>Database</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.receiver.DatabaseContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.database.DatabaseContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2591,7 +2591,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>System</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.receiver.SystemContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.system.SystemContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2604,7 +2604,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>Exception</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.receiver.ExceptionContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.exception.ExceptionContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2617,7 +2617,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>Heartbeat</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.receiver.HeartbeatContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.heartbeat.HeartbeatContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2630,7 +2630,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>ThirdParty</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.receiver.ThirdpartyContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.thirdParty.ThirdpartyContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2643,7 +2643,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>Js</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.receiver.JsContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.browser.JsContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.alert.browser.JsRuleConfigManager</role>
@@ -2656,7 +2656,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>App</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.receiver.AppContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.app.AppContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.alert.sender.config.AlertConfigManager</role>
@@ -2672,7 +2672,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>Ajax</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.receiver.AjaxContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.browser.AjaxContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.alert.sender.config.AlertConfigManager</role>
@@ -2688,7 +2688,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>Transaction</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.receiver.TransactionContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.transaction.TransactionContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2701,7 +2701,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>Event</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.receiver.EventContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.event.EventContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2714,7 +2714,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>SQL</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.receiver.StorageSQLContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.storage.StorageSQLContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.alert.sender.config.AlertConfigManager</role>
@@ -2724,7 +2724,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>Cache</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.receiver.StorageCacheContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.storage.StorageCacheContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.alert.sender.config.AlertConfigManager</role>
@@ -2734,7 +2734,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>RPC</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.receiver.StorageRPCContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.storage.StorageRPCContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.alert.sender.config.AlertConfigManager</role>
@@ -2748,7 +2748,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>Business</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.decorator.BusinessDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.business.BusinessDecorator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
@@ -2764,22 +2764,22 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>Network</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.decorator.NetworkDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.network.NetworkDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>Database</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.decorator.DatabaseDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.database.DatabaseDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>Heartbeat</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.decorator.HeartbeatDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.heartbeat.HeartbeatDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>Exception</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.decorator.ExceptionDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.exception.ExceptionDecorator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2792,12 +2792,12 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>System</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.decorator.SystemDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.system.SystemDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>ThirdParty</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.decorator.ThirdpartyDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.thirdParty.ThirdpartyDecorator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2806,48 +2806,43 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
-			<role-hint>FrontEnd</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.decorator.FrontEndExceptionDecorator</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>App</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.decorator.AppDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.app.AppDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>Ajax</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.decorator.AjaxDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.browser.AjaxDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>Js</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.decorator.JsDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.browser.JsDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>Transaction</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.decorator.TransactionDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.transaction.TransactionDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>Event</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.decorator.EventDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.event.EventDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>SQL</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.decorator.StorageSQLDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.storage.StorageSQLDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>Cache</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.decorator.StorageCacheDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.storage.StorageCacheDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>RPC</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.decorator.StorageRPCDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.storage.StorageRPCDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.DecoratorManager</role>
