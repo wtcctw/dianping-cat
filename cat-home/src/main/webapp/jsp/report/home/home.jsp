@@ -62,6 +62,5 @@
 		liElement = $('#indexButton');
 	}
 	liElement.addClass('active');
-	if('${payload.docName}')
 </script>
 </a:home>

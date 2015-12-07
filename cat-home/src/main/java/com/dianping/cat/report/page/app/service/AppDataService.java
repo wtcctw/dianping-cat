@@ -333,21 +333,23 @@ public class AppDataService {
 		int connnectType = entity.getConnectType();
 		int code = entity.getCode();
 		int platform = entity.getPlatfrom();
+		int start = entity.getStartMinuteOrder();
+		int end = entity.getEndMinuteOrder();
 		List<AppCommandData> datas = new ArrayList<AppCommandData>();
 
 		try {
 			switch (type) {
 			case SUCCESS:
 				datas = m_dao.findDataByMinuteCode(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, AppCommandDataEntity.READSET_SUCCESS_DATA);
+				      code, platform, start, end, AppCommandDataEntity.READSET_SUCCESS_DATA);
 				break;
 			case REQUEST:
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
-				      platform, AppCommandDataEntity.READSET_COUNT_DATA);
+				      platform, start, end, AppCommandDataEntity.READSET_COUNT_DATA);
 				break;
 			case DELAY:
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
-				      platform, AppCommandDataEntity.READSET_AVG_DATA);
+				      platform, start, end, AppCommandDataEntity.READSET_AVG_DATA);
 				break;
 			default:
 				throw new RuntimeException("unexpected query type, type:" + type);
