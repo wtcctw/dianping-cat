@@ -12,7 +12,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.alert.spi.AlertChannel;
-import com.dianping.cat.report.alert.spi.AlertMessageEntity;
 
 public class SenderManager extends ContainerHolder implements Initializable {
 
@@ -26,7 +25,7 @@ public class SenderManager extends ContainerHolder implements Initializable {
 		m_senders = lookupMap(Sender.class);
 	}
 
-	public boolean sendAlert(AlertChannel channel, AlertMessageEntity message) {
+	public boolean sendAlert(AlertChannel channel, SendMessageEntity message) {
 		String channelName = channel.getName();
 
 		try {

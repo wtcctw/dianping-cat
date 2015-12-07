@@ -29,7 +29,7 @@ import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.AlertEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.alert.spi.AlertChannel;
-import com.dianping.cat.report.alert.spi.AlertMessageEntity;
+import com.dianping.cat.report.alert.spi.sender.SendMessageEntity;
 import com.dianping.cat.report.alert.spi.sender.SenderManager;
 
 public class Handler implements PageHandler<Context> {
@@ -93,7 +93,7 @@ public class Handler implements PageHandler<Context> {
 			if (receivers == null || receivers.size() == 0) {
 				setAlertResult(model, 0);
 			} else {
-				AlertMessageEntity message = new AlertMessageEntity(payload.getGroup(), payload.getTitle(),
+				SendMessageEntity message = new SendMessageEntity(payload.getGroup(), payload.getTitle(),
 				      payload.getType(), payload.getContent(), receivers);
 
 				try {

@@ -1,8 +1,8 @@
-package com.dianping.cat.report.alert.spi;
+package com.dianping.cat.report.alert.spi.sender;
 
 import java.util.List;
 
-public class AlertMessageEntity {
+public class SendMessageEntity {
 	private String m_group;
 
 	private String m_title;
@@ -13,7 +13,7 @@ public class AlertMessageEntity {
 
 	private List<String> m_receivers;
 
-	public AlertMessageEntity(String group, String title, String type, String content, List<String> receivers) {
+	public SendMessageEntity(String group, String title, String type, String content, List<String> receivers) {
 		m_group = group;
 		m_title = title;
 		m_type = type;
