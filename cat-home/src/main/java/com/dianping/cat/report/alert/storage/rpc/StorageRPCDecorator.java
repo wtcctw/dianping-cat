@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.storage;
+package com.dianping.cat.report.alert.storage.rpc;
 
 import com.dianping.cat.report.alert.spi.AlertEntity;
 import com.dianping.cat.report.alert.spi.AlertType;

@@ -1,4 +1,6 @@
-package com.dianping.cat.report.alert.storage;
+package com.dianping.cat.report.alert.storage.sql;
+
+import com.dianping.cat.report.alert.storage.StorageRuleConfigManager;
 
 public class StorageSQLRuleConfigManager extends StorageRuleConfigManager {
 
