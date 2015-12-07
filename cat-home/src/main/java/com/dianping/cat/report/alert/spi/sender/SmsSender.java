@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.report.alert.spi.AlertChannel;
-import com.dianping.cat.report.alert.spi.AlertMessageEntity;
 
 public class SmsSender extends AbstractSender {
 
@@ -17,7 +16,7 @@ public class SmsSender extends AbstractSender {
 	}
 
 	@Override
-	public boolean send(AlertMessageEntity message) {
+	public boolean send(SendMessageEntity message) {
 		com.dianping.cat.home.sender.entity.Sender sender = querySender();
 		boolean batchSend = sender.getBatchSend();
 		boolean result = false;
@@ -37,7 +36,7 @@ public class SmsSender extends AbstractSender {
 		return result;
 	}
 
-	private boolean sendSms(AlertMessageEntity message, String receiver,
+	private boolean sendSms(SendMessageEntity message, String receiver,
 	      com.dianping.cat.home.sender.entity.Sender sender) {
 		String filterContent = message.getContent().replaceAll("(<a href.*(?=</a>)</a>)|(\n)", "");
 		String content = message.getTitle() + " " + filterContent;

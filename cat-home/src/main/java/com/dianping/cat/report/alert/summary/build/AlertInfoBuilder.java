@@ -20,7 +20,7 @@ import com.dianping.cat.home.dal.report.AlertEntity;
 import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
-import com.dianping.cat.report.alert.AlertType;
+import com.dianping.cat.report.alert.spi.AlertType;
 import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
 
 public class AlertInfoBuilder {

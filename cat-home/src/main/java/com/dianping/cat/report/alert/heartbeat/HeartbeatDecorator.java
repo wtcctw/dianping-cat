@@ -1,7 +1,7 @@
 package com.dianping.cat.report.alert.heartbeat;
 
-import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.spi.AlertEntity;
+import com.dianping.cat.report.alert.spi.AlertType;
 import com.dianping.cat.report.alert.spi.decorator.Decorator;
 
 public class HeartbeatDecorator extends Decorator {

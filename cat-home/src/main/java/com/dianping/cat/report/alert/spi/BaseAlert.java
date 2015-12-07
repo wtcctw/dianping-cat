@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert;
+package com.dianping.cat.report.alert.spi;
 
 import java.util.List;
 import java.util.Map;
@@ -20,8 +20,11 @@ import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
-import com.dianping.cat.report.alert.spi.AlertEntity;
-import com.dianping.cat.report.alert.spi.AlertManager;
+import com.dianping.cat.report.alert.spi.metric.MetricReportGroup;
+import com.dianping.cat.report.alert.spi.metric.MetricReportGroupService;
+import com.dianping.cat.report.alert.spi.metric.MetricType;
+import com.dianping.cat.report.alert.spi.rule.DataCheckEntity;
+import com.dianping.cat.report.alert.spi.rule.DataChecker;
 
 public abstract class BaseAlert implements Task, LogEnabled {
 

@@ -18,8 +18,8 @@ import com.dianping.cat.home.storage.alert.entity.Operation;
 import com.dianping.cat.home.storage.alert.entity.Storage;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.home.storage.alert.entity.Target;
-import com.dianping.cat.report.alert.AlertLevel;
 import com.dianping.cat.report.alert.service.AlertService;
+import com.dianping.cat.report.alert.spi.AlertLevel;
 import com.dianping.cat.report.page.storage.StorageConstants;
 import com.dianping.cat.report.page.storage.StorageType;
 

@@ -4,9 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.dianping.cat.report.alert.AlertLevel;
-import com.dianping.cat.report.alert.AlertType;
-
 public class AlertEntity {
 
 	private Date m_date;

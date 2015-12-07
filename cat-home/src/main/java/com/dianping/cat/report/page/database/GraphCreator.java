@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.alert.MetricType;
+import com.dianping.cat.report.alert.spi.metric.MetricType;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.metric.AbstractGraphCreator;
 

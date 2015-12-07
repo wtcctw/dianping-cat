@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert;
+package com.dianping.cat.report.alert.spi.metric;
 
 import java.util.Map;
 import java.util.Map.Entry;

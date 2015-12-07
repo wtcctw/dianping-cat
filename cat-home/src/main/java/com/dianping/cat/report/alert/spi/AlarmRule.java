@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert;
+package com.dianping.cat.report.alert.spi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
+import com.dianping.cat.report.alert.spi.metric.MetricType;
 
 public class AlarmRule {
 	private Map<String, Map<MetricType, List<Config>>> m_configs;

@@ -8,9 +8,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.report.alert.AlertType;
-import com.dianping.cat.report.alert.spi.AlertMessageEntity;
+import com.dianping.cat.report.alert.spi.AlertType;
 import com.dianping.cat.report.alert.spi.sender.MailSender;
+import com.dianping.cat.report.alert.spi.sender.SendMessageEntity;
 import com.dianping.cat.report.alert.spi.sender.Sender;
 import com.dianping.cat.report.alert.spi.sender.SmsSender;
 import com.dianping.cat.report.alert.spi.sender.WeixinSender;
@@ -21,9 +21,9 @@ public class SenderTest extends ComponentTestCase {
 	public void test() {
 		Map<String, Sender> mailSender = lookupMap(Sender.class);
 		String content = "[CAT 第三方告警] [项目: ] : [[type=get, details=HTTP URL[1234568888888888.com?] GET访问出现异常]][时间: 2015-01-15 18:20] \n<a href='http://cat/r/p?domain=&date=2015011518'>点击此处查看详情</a>";
-		AlertMessageEntity entity = new AlertMessageEntity("CAT", "[CAT第三方告警] [项目: ]", AlertType.ThirdParty.getName(),
+		SendMessageEntity entity = new SendMessageEntity("CAT", "[CAT第三方告警] [项目: ]", AlertType.ThirdParty.getName(),
 		      content, Arrays.asList("jialin.sun@dianping.com"));
-		AlertMessageEntity entity2 = new AlertMessageEntity("CAT", "[CAT第三方告警] [项目: ]", AlertType.ThirdParty.getName(),
+		SendMessageEntity entity2 = new SendMessageEntity("CAT", "[CAT第三方告警] [项目: ]", AlertType.ThirdParty.getName(),
 		      content, Arrays.asList("15201789489"));
 
 		Assert.assertEquals(true, mailSender.get(MailSender.ID).send(entity));

@@ -24,11 +24,11 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.service.AlertService;
 import com.dianping.cat.report.alert.spi.config.AlertPolicyManager;
 import com.dianping.cat.report.alert.spi.decorator.DecoratorManager;
 import com.dianping.cat.report.alert.spi.receiver.ContactorManager;
+import com.dianping.cat.report.alert.spi.sender.SendMessageEntity;
 import com.dianping.cat.report.alert.spi.sender.SenderManager;
 import com.dianping.cat.report.alert.spi.spliter.SpliterManager;
 
@@ -134,7 +134,7 @@ public class AlertManager implements Initializable {
 				m_sendedAlerts.put(alertKey, alert);
 			}
 		}
-		AlertMessageEntity message = null;
+		SendMessageEntity message = null;
 
 		for (AlertChannel channel : channels) {
 			String rawContent = pair.getValue();
@@ -143,7 +143,7 @@ public class AlertManager implements Initializable {
 			}
 			String content = m_splitterManager.process(rawContent, channel);
 			List<String> receivers = m_contactorManager.queryReceivers(alert.getContactGroup(), channel, type);
-			message = new AlertMessageEntity(group, title, type, content, receivers);
+			message = new SendMessageEntity(group, title, type, content, receivers);
 
 			if (m_senderManager.sendAlert(channel, message)) {
 				result = true;
@@ -154,7 +154,7 @@ public class AlertManager implements Initializable {
 		      .replaceAll("");
 
 		if (message == null) {
-			message = new AlertMessageEntity(group, title, type, "", null);
+			message = new SendMessageEntity(group, title, type, "", null);
 		}
 		message.setContent(dbContent);
 		m_alertService.insert(alert, message);
@@ -172,7 +172,7 @@ public class AlertManager implements Initializable {
 			String title = "[告警恢复] [告警类型 " + alterType.getTitle() + "][" + group + " " + alert.getMetric() + "]";
 			String content = "[告警已恢复][恢复时间]" + currentMinute;
 			List<String> receivers = m_contactorManager.queryReceivers(alert.getContactGroup(), channel, type);
-			AlertMessageEntity message = new AlertMessageEntity(group, title, type, content, receivers);
+			SendMessageEntity message = new SendMessageEntity(group, title, type, content, receivers);
 
 			if (m_senderManager.sendAlert(channel, message)) {
 				return true;

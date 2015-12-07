@@ -14,8 +14,8 @@ import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.entity.SubCondition;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
-import com.dianping.cat.report.alert.AlertLevel;
 import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
+import com.dianping.cat.report.alert.spi.AlertLevel;
 
 public class AjaxRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 

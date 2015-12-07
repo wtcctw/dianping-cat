@@ -1,6 +1,6 @@
 package com.dianping.cat.report.alert.heartbeat;
 
-import com.dianping.cat.report.alert.AlertType;
+import com.dianping.cat.report.alert.spi.AlertType;
 import com.dianping.cat.report.alert.spi.receiver.ProjectContactor;
 
 public class HeartbeatContactor extends ProjectContactor {

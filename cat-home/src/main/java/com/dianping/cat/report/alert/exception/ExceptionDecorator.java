@@ -11,8 +11,8 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.spi.AlertEntity;
+import com.dianping.cat.report.alert.spi.AlertType;
 import com.dianping.cat.report.alert.spi.decorator.ProjectDecorator;
 import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
 

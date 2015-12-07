@@ -2,7 +2,7 @@ package com.dianping.cat.report.alert.storage;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.report.alert.AlertType;
+import com.dianping.cat.report.alert.spi.AlertType;
 
 public class StorageCacheAlert extends AbstractStorageAlert {
 

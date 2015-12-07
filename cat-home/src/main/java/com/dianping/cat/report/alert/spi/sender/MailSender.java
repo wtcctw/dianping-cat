@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.report.alert.spi.AlertChannel;
-import com.dianping.cat.report.alert.spi.AlertMessageEntity;
 
 public class MailSender extends AbstractSender {
 
@@ -19,7 +18,7 @@ public class MailSender extends AbstractSender {
 	}
 
 	@Override
-	public boolean send(AlertMessageEntity message) {
+	public boolean send(SendMessageEntity message) {
 		com.dianping.cat.home.sender.entity.Sender sender = querySender();
 		boolean batchSend = sender.isBatchSend();
 		boolean result = false;
@@ -39,7 +38,7 @@ public class MailSender extends AbstractSender {
 		return result;
 	}
 
-	private boolean sendEmail(AlertMessageEntity message, String receiver,
+	private boolean sendEmail(SendMessageEntity message, String receiver,
 	      com.dianping.cat.home.sender.entity.Sender sender) {
 		String title = message.getTitle().replaceAll(",", " ");
 		String content = message.getContent().replaceAll(",", " ");
