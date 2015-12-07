@@ -37,7 +37,6 @@ import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.UserDefineRuleDao;
 import com.dianping.cat.mvc.PayloadNormalizer;
-import com.dianping.cat.report.alert.AlertInfo;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.alert.browser.JsRuleConfigManager;
 import com.dianping.cat.report.alert.business.BusinessRuleConfigManager;
@@ -225,7 +224,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ModelService.class, MetricAnalyzer.ID).req(MetricReportService.class).req(IpService.class));
 		all.add(C(DataExtractor.class, DataExtractorImpl.class));
 		all.add(C(MetricDataFetcher.class, MetricDataFetcherImpl.class));
-		all.add(C(AlertInfo.class).req(MetricConfigManager.class));
 
 		all.add(C(AppSpeedService.class).req(AppSpeedDataDao.class));
 		all.add(C(AppDataService.class).req(AppCommandDataDao.class, AppConfigManager.class));

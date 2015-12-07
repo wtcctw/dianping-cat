@@ -27,9 +27,6 @@ import com.dianping.cat.report.alert.sender.AlertManager;
 public abstract class BaseAlert implements Task, LogEnabled {
 
 	@Inject
-	protected AlertInfo m_alertInfo;
-
-	@Inject
 	protected DataChecker m_dataChecker;
 
 	@Inject
@@ -201,6 +198,7 @@ public abstract class BaseAlert implements Task, LogEnabled {
 	}
 
 	protected void updateAlertStatus(String productlineName, String metricKey) {
-		m_alertInfo.addAlertInfo(productlineName, metricKey, new Date().getTime());
+		m_sendManager.addAlertInfo(productlineName, metricKey, new Date().getTime());
 	}
+	
 }

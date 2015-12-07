@@ -24,7 +24,6 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.AlertSummaryDao;
 import com.dianping.cat.home.dal.report.AlterationDao;
-import com.dianping.cat.report.alert.AlertInfo;
 import com.dianping.cat.report.alert.DataChecker;
 import com.dianping.cat.report.alert.DefaultDataChecker;
 import com.dianping.cat.report.alert.MetricReportGroupService;
@@ -32,9 +31,9 @@ import com.dianping.cat.report.alert.app.AppAlert;
 import com.dianping.cat.report.alert.app.AppContactor;
 import com.dianping.cat.report.alert.app.AppDecorator;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
+import com.dianping.cat.report.alert.browser.AjaxAlert;
 import com.dianping.cat.report.alert.browser.AjaxContactor;
 import com.dianping.cat.report.alert.browser.AjaxDecorator;
-import com.dianping.cat.report.alert.browser.AjaxAlert;
 import com.dianping.cat.report.alert.browser.AjaxRuleConfigManager;
 import com.dianping.cat.report.alert.browser.JsAlert;
 import com.dianping.cat.report.alert.browser.JsContactor;
@@ -136,7 +135,6 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(AlertInfo.class));
 		all.add(C(DataChecker.class, DefaultDataChecker.class));
 		all.add(C(MetricReportGroupService.class).req(ModelService.class, MetricAnalyzer.ID));
 		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class).req(ProjectService.class,
@@ -210,14 +208,14 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AlertManager.class).req(AlertPolicyManager.class, DecoratorManager.class, ContactorManager.class,
 		      AlertService.class, SpliterManager.class, SenderManager.class, ServerConfigManager.class));
 
-		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class, AlertInfo.class)
+		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class)
 		      .req(MetricReportGroupService.class, BusinessRuleConfigManager.class, DataChecker.class,
 		            AlertManager.class, BaselineService.class));
 
-		all.add(C(NetworkAlert.class).req(ProductLineConfigManager.class, AlertInfo.class).req(
+		all.add(C(NetworkAlert.class).req(ProductLineConfigManager.class).req(
 		      MetricReportGroupService.class, NetworkRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
-		all.add(C(DatabaseAlert.class).req(ProductLineConfigManager.class, AlertInfo.class).req(
+		all.add(C(DatabaseAlert.class).req(ProductLineConfigManager.class).req(
 		      MetricReportGroupService.class, DatabaseRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
 		all.add(C(HeartbeatAlert.class)
@@ -226,7 +224,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		            AlertManager.class).req(ModelService.class, HeartbeatAnalyzer.ID, "m_heartbeatService")
 		      .req(ModelService.class, TransactionAnalyzer.ID, "m_transactionService"));
 
-		all.add(C(SystemAlert.class).req(ProductLineConfigManager.class, AlertInfo.class).req(
+		all.add(C(SystemAlert.class).req(ProductLineConfigManager.class).req(
 		      MetricReportGroupService.class, SystemRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
 		all.add(C(AppAlert.class).req(AppDataService.class, AlertManager.class, AppRuleConfigManager.class,

@@ -22,6 +22,7 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.sender.config.AlertPolicyManager;
@@ -62,6 +63,8 @@ public class AlertManager implements Initializable {
 
 	private Map<String, AlertEntity> m_sendedAlerts = new ConcurrentHashMap<String, AlertEntity>(1000);
 
+	private ConcurrentHashMap<AlertMetric, Long> m_alertInfos = new ConcurrentHashMap<AlertMetric, Long>();
+
 	public boolean addAlert(AlertEntity alert) {
 		String group = alert.getGroup();
 		Cat.logEvent("Alert:" + alert.getType().getName(), group, Event.SUCCESS, alert.toString());
@@ -71,6 +74,10 @@ public class AlertManager implements Initializable {
 		} else {
 			return true;
 		}
+	}
+
+	public void addAlertInfo(String group, String metricId, long value) {
+		m_alertInfos.put(new AlertMetric(group, metricId), value);
 	}
 
 	@Override
@@ -91,6 +98,21 @@ public class AlertManager implements Initializable {
 			}
 		}
 		return false;
+	}
+
+	public List<AlertMetric> queryLastestAlarmKey(int minute) {
+		List<AlertMetric> keys = new ArrayList<AlertMetric>();
+		long currentTimeMillis = System.currentTimeMillis();
+
+		for (Entry<AlertMetric, Long> entry : m_alertInfos.entrySet()) {
+			Long value = entry.getValue();
+
+			if (currentTimeMillis - value < TimeHelper.ONE_MINUTE * minute) {
+				keys.add(entry.getKey());
+			}
+		}
+
+		return keys;
 	}
 
 	private boolean send(AlertEntity alert) {
@@ -140,7 +162,7 @@ public class AlertManager implements Initializable {
 		m_alertService.insert(alert, message);
 		return result;
 	}
-
+	
 	private boolean sendRecoveryMessage(AlertEntity alert, String currentMinute) {
 		AlertType alterType = alert.getType();
 		String type = alterType.getName();
@@ -160,6 +182,46 @@ public class AlertManager implements Initializable {
 		}
 
 		return false;
+	}
+
+	public class AlertMetric {
+
+		private String m_group;
+
+		private String m_metricId;
+
+		public AlertMetric(String group, String metricId) {
+			m_group = group;
+			m_metricId = metricId;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			AlertMetric other = (AlertMetric) obj;
+
+			if (m_group.equals(other.getGroup()) && m_metricId.equals(other.getMetricId())) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		public String getGroup() {
+			return m_group;
+		}
+
+		public String getMetricId() {
+			return m_metricId;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((m_group == null) ? 0 : m_group.hashCode());
+			result = prime * result + ((m_metricId == null) ? 0 : m_metricId.hashCode());
+			return result;
+		}
 	}
 
 	private class RecoveryAnnouncer implements Task {

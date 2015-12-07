@@ -20,7 +20,7 @@ import com.dianping.cat.home.network.entity.NetGraph;
 import com.dianping.cat.home.network.entity.NetGraphSet;
 import com.dianping.cat.home.network.entity.NetTopology;
 import com.dianping.cat.home.network.transform.DefaultNativeBuilder;
-import com.dianping.cat.report.alert.AlertInfo.AlertMetric;
+import com.dianping.cat.report.alert.sender.AlertManager.AlertMetric;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
 import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
 import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;

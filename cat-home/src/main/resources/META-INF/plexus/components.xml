@@ -485,15 +485,6 @@
 			<implementation>com.dianping.cat.report.graph.metric.impl.MetricDataFetcherImpl</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.AlertInfo</role>
-			<implementation>com.dianping.cat.report.alert.AlertInfo</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.app.service.AppSpeedService</role>
 			<implementation>com.dianping.cat.report.page.app.service.AppSpeedService</implementation>
 			<requirements>
@@ -2532,10 +2523,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.AlertInfo</role>
-			<implementation>com.dianping.cat.report.alert.AlertInfo</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.alert.DataChecker</role>
 			<implementation>com.dianping.cat.report.alert.DefaultDataChecker</implementation>
 		</component>
@@ -2956,9 +2943,6 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.AlertInfo</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
@@ -2983,9 +2967,6 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.AlertInfo</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
@@ -3005,9 +2986,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
@@ -3060,9 +3038,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
@@ -4355,7 +4330,7 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.AlertInfo</role>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4396,11 +4371,80 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.AlertInfo</role>
-			<implementation>com.dianping.cat.report.alert.AlertInfo</implementation>
+			<role>com.dianping.cat.report.alert.sender.AlertManager</role>
+			<implementation>com.dianping.cat.report.alert.sender.AlertManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+					<role>com.dianping.cat.report.alert.sender.config.AlertPolicyManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.sender.decorator.DecoratorManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.sender.receiver.ContactorManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.sender.spliter.SpliterManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.service.AlertService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.sender.config.AlertPolicyManager</role>
+			<implementation>com.dianping.cat.report.alert.sender.config.AlertPolicyManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.sender.decorator.DecoratorManager</role>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.DecoratorManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.sender.receiver.ContactorManager</role>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.ContactorManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.sender.spliter.SpliterManager</role>
+			<implementation>com.dianping.cat.report.alert.sender.spliter.SpliterManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
+			<implementation>com.dianping.cat.report.alert.sender.sender.SenderManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.service.AlertService</role>
+			<implementation>com.dianping.cat.report.alert.service.AlertService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlertDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.AlertDao</role>
+			<implementation>com.dianping.cat.home.dal.report.AlertDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4756,15 +4800,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
-			<implementation>com.dianping.cat.report.alert.sender.sender.SenderManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.alteration.Handler</role>
 			<implementation>com.dianping.cat.report.page.alteration.Handler</implementation>
 			<requirements>
@@ -4856,7 +4891,7 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.AlertInfo</role>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4879,7 +4914,7 @@
 					<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.AlertInfo</role>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.network.config.NetGraphConfigManager</role>
@@ -4982,7 +5017,7 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.AlertInfo</role>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5256,15 +5291,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.home.dal.report.AlertDao</role>
-			<implementation>com.dianping.cat.home.dal.report.AlertDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.overload.Handler</role>
 			<implementation>com.dianping.cat.report.page.overload.Handler</implementation>
 			<requirements>
@@ -5365,7 +5391,7 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.AlertInfo</role>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5459,15 +5485,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.service.AlertService</role>
-			<implementation>com.dianping.cat.report.alert.service.AlertService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.AlertDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6345,18 +6362,6 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.config.AlertConfigManager</role>
 			<implementation>com.dianping.cat.report.alert.sender.config.AlertConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.sender.config.AlertPolicyManager</role>
-			<implementation>com.dianping.cat.report.alert.sender.config.AlertPolicyManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

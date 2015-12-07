@@ -12,8 +12,8 @@ import java.util.Set;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.alert.AlertInfo.AlertMetric;
 import com.dianping.cat.report.alert.MetricType;
+import com.dianping.cat.report.alert.sender.AlertManager.AlertMetric;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.metric.AbstractGraphCreator;
 
@@ -23,7 +23,7 @@ public class GraphCreator extends AbstractGraphCreator {
 	      Date endDate, final Map<String, double[]> dataWithOutFutures) {
 		Map<String, List<String>> aggregationKeys = buildLineChartKeys(dataWithOutFutures.keySet());
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
-		List<AlertMetric> alertKeys = m_alertInfo.queryLastestAlarmKey(5);
+		List<AlertMetric> alertKeys = m_alertManager.queryLastestAlarmKey(5);
 		int step = m_dataExtractor.getStep();
 
 		for (Entry<String, List<String>> keyMapEntry : aggregationKeys.entrySet()) {
