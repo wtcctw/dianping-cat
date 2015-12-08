@@ -112,7 +112,6 @@ public class GraphCreator extends AbstractGraphCreator {
 		String title = lineChart.getHtmlTitle();
 		String realKey = key.substring(0, key.lastIndexOf(":"));
 
-		// alertKeys格式 = [domain:Metric:key]
 		if (containsAlert(productLine, realKey, alertKeys) && !title.startsWith("<span style='color:red'>")) {
 			lineChart.setHtmlTitle("<span style='color:red'>" + title + "</span>");
 		} else {
@@ -125,8 +124,11 @@ public class GraphCreator extends AbstractGraphCreator {
 	}
 
 	private boolean containsAlert(String productLine, String key, List<AlertEntity> metrics) {
+		// alertKeys格式 = [domain:Metric:key]
+		String subKey = key.substring(key.lastIndexOf(':') + 1);
+
 		for (AlertEntity metric : metrics) {
-			if (metric.getGroup().equals(productLine) && metric.getRealMetricId().equals(key)) {
+			if (metric.getGroup().equals(productLine) && metric.getMetric().equals(subKey)) {
 				return true;
 			}
 		}
