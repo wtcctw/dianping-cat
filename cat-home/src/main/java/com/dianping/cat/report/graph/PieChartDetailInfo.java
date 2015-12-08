@@ -1,5 +1,7 @@
 package com.dianping.cat.report.graph;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,6 +14,12 @@ public class PieChartDetailInfo {
 	}
 
 	public List<Item> getItems() {
+		return m_items;
+	}
+
+	public List<Item> getSortedItems() {
+		Collections.sort(m_items, new DetailInfoComparator());
+
 		return m_items;
 	}
 
@@ -62,6 +70,23 @@ public class PieChartDetailInfo {
 		public Item setTitle(String title) {
 			m_title = title;
 			return this;
+		}
+	}
+
+	public static class DetailInfoComparator implements Comparator<Item> {
+
+		@Override
+		public int compare(Item o1, Item o2) {
+			double sum2 = o2.getRequestSum();
+			double sum1 = o1.getRequestSum();
+
+			if (sum2 > sum1) {
+				return 1;
+			} else if (sum2 < sum1) {
+				return -1;
+			} else {
+				return 0;
+			}
 		}
 	}
 }
