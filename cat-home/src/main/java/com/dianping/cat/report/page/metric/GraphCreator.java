@@ -22,7 +22,7 @@ import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.alert.spi.AlertEntity;
-import com.dianping.cat.report.alert.spi.metric.MetricType;
+import com.dianping.cat.report.alert.spi.data.MetricType;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.metric.AbstractGraphCreator;
 import com.dianping.cat.service.ProjectService;
@@ -169,7 +169,7 @@ public class GraphCreator extends AbstractGraphCreator {
 
 	private boolean containMetric(List<AlertEntity> alertKeys, String metricId) {
 		for (AlertEntity alertMetric : alertKeys) {
-			if (alertMetric.getMetric().equals(metricId)) {
+			if (alertMetric.getRealMetricId().equals(metricId)) {
 				return true;
 			}
 		}

@@ -151,7 +151,7 @@ public class ServerConfigManager implements LogEnabled {
 			return DEFAULT_HDFS_FILE_MAX_SIZE;
 		}
 	}
-	
+
 	public String getHdfsLocalBaseDir(String id) {
 		if (m_config != null) {
 			StorageConfig storage = m_config.getStorage();
@@ -309,7 +309,7 @@ public class ServerConfigManager implements LogEnabled {
 	}
 
 	public boolean isCacheTransaction(String type) {
-		return StringUtils.isNotEmpty(type) && type.startsWith("Cache.memcached");
+		return StringUtils.isNotEmpty(type) && (type.startsWith("Cache.memcached") || type.startsWith("Squirrel."));
 	}
 
 	public boolean isHarMode() {

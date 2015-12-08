@@ -47,14 +47,6 @@ public enum AlertType {
 		return null;
 	}
 
-	public String getTitle() {
-		return m_title;
-	}
-
-	public void setTitle(String title) {
-		m_title = title;
-	}
-
 	private AlertType(String name, String title) {
 		m_name = name;
 		m_title = title;
@@ -62,6 +54,14 @@ public enum AlertType {
 
 	public String getName() {
 		return m_name;
+	}
+
+	public String getTitle() {
+		return m_title;
+	}
+
+	public void setTitle(String title) {
+		m_title = title;
 	}
 
 }

@@ -133,7 +133,7 @@ public class NetGraphBuilder {
 		String actualKey = domain + ":Metric:" + prefix + suffix;
 
 		for (AlertEntity metric : alertKeys) {
-			if (metric.getGroup().equals(group) && metric.getMetric().equals(actualKey)) {
+			if (metric.getGroup().equals(group) && metric.getRealMetricId().equals(actualKey)) {
 				return true;
 			}
 		}
