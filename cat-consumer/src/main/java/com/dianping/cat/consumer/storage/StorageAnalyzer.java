@@ -87,10 +87,14 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	}
 
 	private void processCacheTransaction(MessageTree tree, Transaction t) {
-		String cachePrefix = "Cache.";
 		String ip = "Default";
 		String domain = tree.getDomain();
-		String cacheType = t.getType().substring(cachePrefix.length());
+		String cacheType = t.getType();
+		int index = cacheType.indexOf(".");
+
+		if (index > -1) {
+			cacheType = cacheType.substring(index + 1);
+		}
 		String name = t.getName();
 		String method = name.substring(name.lastIndexOf(":") + 1);
 		List<Message> messages = t.getChildren();
@@ -99,9 +103,9 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 			if (message instanceof Event) {
 				String type = message.getType();
 
-				if (type.equals("Cache.memcached.server")) {
+				if (type.equals("Cache.memcached.server") || type.equals("Squirrel.server")) {
 					ip = message.getName();
-					int index = ip.indexOf(":");
+					index = ip.indexOf(":");
 
 					if (index > -1) {
 						ip = ip.substring(0, index);
