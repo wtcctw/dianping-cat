@@ -169,7 +169,7 @@ public class GraphCreator extends AbstractGraphCreator {
 
 	private boolean containMetric(List<AlertEntity> alertKeys, String metricId) {
 		for (AlertEntity alertMetric : alertKeys) {
-			if (alertMetric.getMetric().equals(metricId)) {
+			if (alertMetric.getRealMetricId().equals(metricId)) {
 				return true;
 			}
 		}

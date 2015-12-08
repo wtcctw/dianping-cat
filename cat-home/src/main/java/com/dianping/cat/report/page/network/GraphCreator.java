@@ -126,7 +126,7 @@ public class GraphCreator extends AbstractGraphCreator {
 
 	private boolean containsAlert(String productLine, String key, List<AlertEntity> metrics) {
 		for (AlertEntity metric : metrics) {
-			if (metric.getGroup().equals(productLine) && metric.getMetric().equals(key)) {
+			if (metric.getGroup().equals(productLine) && metric.getRealMetricId().equals(key)) {
 				return true;
 			}
 		}
