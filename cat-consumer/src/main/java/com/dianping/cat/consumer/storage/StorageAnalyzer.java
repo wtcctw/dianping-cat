@@ -53,6 +53,11 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
+	
+	@Override
+   public int getAnanlyzerCount() {
+		return 2;
+   }
 
 	@Override
 	public StorageReport getReport(String id) {
