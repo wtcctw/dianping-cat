@@ -42,14 +42,15 @@ import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChartDetailInfo;
-import com.dianping.cat.report.graph.PieChartDetailInfo.Item;
 import com.dianping.cat.report.page.app.display.AppCommandsSorter;
 import com.dianping.cat.report.page.app.display.AppConnectionGraphCreator;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
+import com.dianping.cat.report.page.app.display.AppDetailComparator;
 import com.dianping.cat.report.page.app.display.AppGraphCreator;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 import com.dianping.cat.report.page.app.display.CodeDisplayVisitor;
 import com.dianping.cat.report.page.app.display.DisplayCommands;
+import com.dianping.cat.report.page.app.display.UpdateStatus;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor;
 import com.dianping.cat.report.page.app.service.AppConnectionService;
 import com.dianping.cat.report.page.app.service.AppDataField;
@@ -61,6 +62,17 @@ import com.dianping.cat.report.page.app.service.SpeedQueryEntity;
 import com.dianping.cat.service.ProjectService;
 
 public class Handler implements PageHandler<Context> {
+
+	public class CodeDistributionComparator implements Comparator<String> {
+
+		@Override
+		public int compare(String o1, String o2) {
+			int id1 = Integer.parseInt(o1.replaceAll("X", "0"));
+			int id2 = Integer.parseInt(o2.replaceAll("X", "0"));
+
+			return id2 - id1;
+		}
+	}
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -108,7 +120,8 @@ public class Handler implements PageHandler<Context> {
 
 		try {
 			appDetails = m_appDataService.buildAppDataDetailInfos(payload.getQueryEntity1(), payload.getGroupByField());
-			Collections.sort(appDetails, new LineChartDetailInfoComparator(payload.getSort()));
+
+			Collections.sort(appDetails, new AppDetailComparator(payload.getSort()));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -177,26 +190,12 @@ public class Handler implements PageHandler<Context> {
 		try {
 			lineChart = m_appConnectionGraphCreator.buildLineChart(entity1, entity2, type);
 			appDetails = m_appConnectionService.buildAppDataDetailInfos(entity1, payload.getGroupByField());
-			Collections.sort(appDetails, new LineChartDetailInfoComparator(payload.getSort()));
+			Collections.sort(appDetails, new AppDetailComparator(payload.getSort()));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
 		return new Pair<LineChart, List<AppDataDetail>>(lineChart, appDetails);
 
-	}
-
-	private Pair<PieChart, PieChartDetailInfo> buildConnPieChart(Payload payload) {
-		try {
-			Pair<PieChart, PieChartDetailInfo> pair = m_appConnectionGraphCreator.buildPieChart(payload.getQueryEntity1(),
-			      payload.getGroupByField());
-			PieChartDetailInfo info = pair.getValue();
-
-			Collections.sort(info.getItems(), new PieChartDetailInfoComparator());
-			return pair;
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return null;
 	}
 
 	private DisplayCommands buildDisplayCommands(AppReport report, String sort) throws IOException {
@@ -256,9 +255,6 @@ public class Handler implements PageHandler<Context> {
 		try {
 			Pair<PieChart, PieChartDetailInfo> pair = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(),
 			      payload.getGroupByField());
-			PieChartDetailInfo info = pair.getValue();
-			Collections.sort(info.getItems(), new PieChartDetailInfoComparator());
-
 			return pair;
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -266,10 +262,9 @@ public class Handler implements PageHandler<Context> {
 		return null;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private <T> T fetchTaskResult(List<FutureTask> tasks, int i) {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private <T> T fetchTaskResult(FutureTask task) {
 		T data = null;
-		FutureTask task = tasks.get(i);
 
 		try {
 			data = (T) task.get(10L, TimeUnit.SECONDS);
@@ -302,16 +297,21 @@ public class Handler implements PageHandler<Context> {
 			parallelBuildLineChart(model, payload);
 			break;
 		case PIECHART:
-			Pair<PieChart, PieChartDetailInfo> pieChartPair = buildPieChart(payload);
+			try {
+				Pair<PieChart, PieChartDetailInfo> pieChartPair = m_appGraphCreator.buildPieChart(
+				      payload.getQueryEntity1(), payload.getGroupByField());
 
-			if (pieChartPair != null) {
-				model.setPieChart(pieChartPair.getKey());
-				model.setPieChartDetailInfo(pieChartPair.getValue());
+				if (pieChartPair != null) {
+					model.setPieChart(pieChartPair.getKey());
+					model.setPieChartDetailInfo(pieChartPair.getValue());
+				}
+				int commandId = payload.getQueryEntity1().getId();
+
+				model.setCommandId(commandId);
+				model.setCodes(m_appConfigManager.queryInternalCodes(commandId));
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
-			int commandId = payload.getQueryEntity1().getId();
-
-			model.setCommandId(commandId);
-			model.setCodes(m_appConfigManager.queryInternalCodes(commandId));
 			break;
 		case LINECHART_JSON:
 			parallelBuildLineChart(model, payload);
@@ -339,10 +339,10 @@ public class Handler implements PageHandler<Context> {
 			String title = payload.getTitle();
 
 			if (StringUtils.isEmpty(name)) {
-				setUpdateResult(model, 0);
+				model.setContent(UpdateStatus.NO_NAME.getStatusJson());
 			} else {
 				if (m_appConfigManager.isNameDuplicate(name)) {
-					setUpdateResult(model, 3);
+					model.setContent(UpdateStatus.DUPLICATE_NAME.getStatusJson());
 				} else {
 					try {
 						Command command = new Command();
@@ -352,13 +352,13 @@ public class Handler implements PageHandler<Context> {
 						Pair<Boolean, Integer> addCommandResult = m_appConfigManager.addCommand(command);
 
 						if (addCommandResult.getKey()) {
-							setUpdateResult(model, 1);
 							m_appRuleConfigManager.addDefultRule(name, addCommandResult.getValue());
+							model.setContent(UpdateStatus.SUCCESS.getStatusJson());
 						} else {
-							setUpdateResult(model, 2);
+							model.setContent(UpdateStatus.INTERNAL_ERROR.getStatusJson());
 						}
 					} catch (Exception e) {
-						setUpdateResult(model, 2);
+						model.setContent(UpdateStatus.INTERNAL_ERROR.getStatusJson());
 					}
 				}
 			}
@@ -368,14 +368,15 @@ public class Handler implements PageHandler<Context> {
 			name = payload.getName();
 
 			if (StringUtils.isEmpty(name)) {
-				setUpdateResult(model, 0);
+				model.setContent(UpdateStatus.NO_NAME.getStatusJson());
+
 			} else {
 				Pair<Boolean, List<Integer>> deleteCommandResult = m_appConfigManager.deleteCommand(domain, name);
 				if (deleteCommandResult.getKey()) {
-					setUpdateResult(model, 1);
 					m_appRuleConfigManager.deleteDefaultRule(name, deleteCommandResult.getValue());
+					model.setContent(UpdateStatus.SUCCESS.getStatusJson());
 				} else {
-					setUpdateResult(model, 2);
+					model.setContent(UpdateStatus.INTERNAL_ERROR.getStatusJson());
 				}
 			}
 			break;
@@ -443,24 +444,35 @@ public class Handler implements PageHandler<Context> {
 			model.setFetchData(m_jsonBuilder.toJson(jsonObjs));
 			break;
 		case CONN_PIECHART:
-			pieChartPair = buildConnPieChart(payload);
+			Pair<PieChart, PieChartDetailInfo> pieChartPair;
+			try {
+				pieChartPair = m_appConnectionGraphCreator.buildPieChart(payload.getQueryEntity1(),
+				      payload.getGroupByField());
 
-			if (pieChartPair != null) {
-				model.setPieChart(pieChartPair.getKey());
-				model.setPieChartDetailInfo(pieChartPair.getValue());
+				if (pieChartPair != null) {
+					model.setPieChart(pieChartPair.getKey());
+					model.setPieChartDetailInfo(pieChartPair.getValue());
+				}
+				int commandId = payload.getQueryEntity1().getId();
+
+				model.setCommandId(commandId);
+				model.setCodes(m_appConfigManager.queryInternalCodes(commandId));
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
-			commandId = payload.getQueryEntity1().getId();
-
-			model.setCommandId(commandId);
-			model.setCodes(m_appConfigManager.queryInternalCodes(commandId));
 			break;
 		case CONN_PIECHART_JSON:
-			pieChartPair = buildConnPieChart(payload);
+			try {
+				pieChartPair = m_appConnectionGraphCreator.buildPieChart(payload.getQueryEntity1(),
+				      payload.getGroupByField());
 
-			if (pieChartPair != null) {
-				jsonObjs.put("pieChart", pieChartPair.getKey());
-				jsonObjs.put("detailInfos", pieChartPair.getValue());
-				model.setFetchData(m_jsonBuilder.toJson(jsonObjs));
+				if (pieChartPair != null) {
+					jsonObjs.put("pieChart", pieChartPair.getKey());
+					jsonObjs.put("detailInfos", pieChartPair.getValue());
+					model.setFetchData(m_jsonBuilder.toJson(jsonObjs));
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 			break;
 		case STATISTICS:
@@ -515,14 +527,12 @@ public class Handler implements PageHandler<Context> {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void parallelBuildLineChart(Model model, final Payload payload) {
 		ExecutorService executor = Executors.newFixedThreadPool(3);
-		List<FutureTask> tasks = new LinkedList<FutureTask>();
 		FutureTask lineChartTask = new FutureTask(new Callable<LineChart>() {
 			@Override
 			public LineChart call() throws Exception {
 				return buildLineChart(payload);
 			}
 		});
-		tasks.add(lineChartTask);
 		executor.execute(lineChartTask);
 
 		FutureTask appDetailTask = new FutureTask(new Callable<List<AppDataDetail>>() {
@@ -531,7 +541,6 @@ public class Handler implements PageHandler<Context> {
 				return buildAppDataDetails(payload);
 			}
 		});
-		tasks.add(appDetailTask);
 		executor.execute(appDetailTask);
 
 		FutureTask comparisonTask = new FutureTask(new Callable<Map<String, AppDataDetail>>() {
@@ -540,12 +549,11 @@ public class Handler implements PageHandler<Context> {
 				return buildComparisonInfo(payload);
 			}
 		});
-		tasks.add(comparisonTask);
 		executor.execute(comparisonTask);
 
-		LineChart lineChart = fetchTaskResult(tasks, 0);
-		List<AppDataDetail> appDataDetails = fetchTaskResult(tasks, 1);
-		Map<String, AppDataDetail> comparisonDetails = fetchTaskResult(tasks, 2);
+		LineChart lineChart = fetchTaskResult(lineChartTask);
+		List<AppDataDetail> appDataDetails = fetchTaskResult(appDetailTask);
+		Map<String, AppDataDetail> comparisonDetails = fetchTaskResult(comparisonTask);
 
 		executor.shutdown();
 		model.setLineChart(lineChart);
@@ -558,80 +566,5 @@ public class Handler implements PageHandler<Context> {
 		Date endDate = TimeHelper.addDays(startDate, 1);
 		AppReport report = m_appReportService.queryDailyReport(Constants.CAT, startDate, endDate);
 		return report;
-	}
-
-	private void setUpdateResult(Model model, int i) {
-		switch (i) {
-		case 0:
-			model.setContent("{\"status\":500, \"info\":\"name is required.\"}");
-			break;
-		case 1:
-			model.setContent("{\"status\":200}");
-			break;
-		case 2:
-			model.setContent("{\"status\":500}");
-			break;
-		case 3:
-			model.setContent("{\"status\":500, \"info\":\"name is duplicated.\"}");
-			break;
-		}
-	}
-
-	public class CodeDistributionComparator implements Comparator<String> {
-
-		@Override
-		public int compare(String o1, String o2) {
-			int id1 = Integer.parseInt(o1.replaceAll("X", "0"));
-			int id2 = Integer.parseInt(o2.replaceAll("X", "0"));
-
-			return id2 - id1;
-		}
-	}
-
-	public static class PieChartDetailInfoComparator implements Comparator<Item> {
-
-		@Override
-		public int compare(Item o1, Item o2) {
-			double sum2 = o2.getRequestSum();
-			double sum1 = o1.getRequestSum();
-
-			if (sum2 > sum1) {
-				return 1;
-			} else if (sum2 < sum1) {
-				return -1;
-			} else {
-				return 0;
-			}
-		}
-	}
-
-	public static class LineChartDetailInfoComparator implements Comparator<AppDataDetail> {
-
-		private QueryType m_sortBy;
-
-		public LineChartDetailInfoComparator() {
-			this(QueryType.REQUEST.getName());
-		}
-
-		public LineChartDetailInfoComparator(String sortBy) {
-			m_sortBy = QueryType.findByName(sortBy);
-		}
-
-		@Override
-		public int compare(AppDataDetail o1, AppDataDetail o2) {
-			switch (m_sortBy) {
-			case DELAY:
-				return (int) ((o2.getResponseTimeAvg() - o1.getResponseTimeAvg()) * 1000);
-			case REQUEST:
-				return (int) (o2.getAccessNumberSum() - o1.getAccessNumberSum());
-			case REQUEST_PACKAGE:
-				return (int) ((o2.getRequestPackageAvg() - o1.getRequestPackageAvg()) * 1000);
-			case RESPONSE_PACKAGE:
-				return (int) ((o2.getResponsePackageAvg() - o1.getResponsePackageAvg()) * 1000);
-			case SUCCESS:
-				return (int) ((o2.getSuccessRatio() - o1.getSuccessRatio()) * 1000);
-			}
-			return 0;
-		}
 	}
 }
