@@ -1627,7 +1627,7 @@
 			<implementation>com.dianping.cat.report.page.server.task.MetricGraphPruner</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.MetricGraphDao</role>
+					<role>com.dianping.cat.report.page.server.service.MetricGraphService</role>
 				</requirement>
 			</requirements>
 		</component>
