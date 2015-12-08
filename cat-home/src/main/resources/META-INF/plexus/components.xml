@@ -266,8 +266,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.storage.StorageSQLRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.storage.StorageSQLRuleConfigManager</implementation>
+			<role>com.dianping.cat.report.alert.storage.sql.StorageSQLRuleConfigManager</role>
+			<implementation>com.dianping.cat.report.alert.storage.sql.StorageSQLRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -293,8 +293,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.storage.StorageCacheRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.storage.StorageCacheRuleConfigManager</implementation>
+			<role>com.dianping.cat.report.alert.storage.cache.StorageCacheRuleConfigManager</role>
+			<implementation>com.dianping.cat.report.alert.storage.cache.StorageCacheRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -308,8 +308,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.storage.StorageRPCRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.storage.StorageRPCRuleConfigManager</implementation>
+			<role>com.dianping.cat.report.alert.storage.rpc.StorageRPCRuleConfigManager</role>
+			<implementation>com.dianping.cat.report.alert.storage.rpc.StorageRPCRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -2614,8 +2614,8 @@
 			<implementation>com.dianping.cat.report.alert.spi.rule.DefaultDataChecker</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.spi.metric.MetricReportGroupService</role>
-			<implementation>com.dianping.cat.report.alert.spi.metric.MetricReportGroupService</implementation>
+			<role>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</role>
+			<implementation>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
@@ -2788,7 +2788,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.spi.receiver.Contactor</role>
 			<role-hint>SQL</role-hint>
-			<implementation>com.dianping.cat.report.alert.storage.StorageSQLContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.storage.sql.StorageSQLContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.alert.spi.config.AlertConfigManager</role>
@@ -2798,7 +2798,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.spi.receiver.Contactor</role>
 			<role-hint>Cache</role-hint>
-			<implementation>com.dianping.cat.report.alert.storage.StorageCacheContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.storage.cache.StorageCacheContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.alert.spi.config.AlertConfigManager</role>
@@ -2808,7 +2808,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.spi.receiver.Contactor</role>
 			<role-hint>RPC</role-hint>
-			<implementation>com.dianping.cat.report.alert.storage.StorageRPCContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.storage.rpc.StorageRPCContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.alert.spi.config.AlertConfigManager</role>
@@ -2906,17 +2906,17 @@
 		<component>
 			<role>com.dianping.cat.report.alert.spi.decorator.Decorator</role>
 			<role-hint>SQL</role-hint>
-			<implementation>com.dianping.cat.report.alert.storage.StorageSQLDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.storage.sql.StorageSQLDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.spi.decorator.Decorator</role>
 			<role-hint>Cache</role-hint>
-			<implementation>com.dianping.cat.report.alert.storage.StorageCacheDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.storage.cache.StorageCacheDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.spi.decorator.Decorator</role>
 			<role-hint>RPC</role-hint>
-			<implementation>com.dianping.cat.report.alert.storage.StorageRPCDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.storage.rpc.StorageRPCDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.spi.decorator.DecoratorManager</role>
@@ -3030,7 +3030,7 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.spi.metric.MetricReportGroupService</role>
+					<role>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.business.BusinessRuleConfigManager</role>
@@ -3054,7 +3054,7 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.spi.metric.MetricReportGroupService</role>
+					<role>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.network.NetworkRuleConfigManager</role>
@@ -3075,7 +3075,7 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.spi.metric.MetricReportGroupService</role>
+					<role>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.database.DatabaseRuleConfigManager</role>
@@ -3127,7 +3127,7 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.spi.metric.MetricReportGroupService</role>
+					<role>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.system.SystemRuleConfigManager</role>
@@ -3227,8 +3227,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.storage.StorageSQLAlert</role>
-			<implementation>com.dianping.cat.report.alert.storage.StorageSQLAlert</implementation>
+			<role>com.dianping.cat.report.alert.storage.sql.StorageSQLAlert</role>
+			<implementation>com.dianping.cat.report.alert.storage.sql.StorageSQLAlert</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
@@ -3244,7 +3244,7 @@
 					<role-hint>storage</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.storage.StorageSQLRuleConfigManager</role>
+					<role>com.dianping.cat.report.alert.storage.sql.StorageSQLRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
@@ -3252,8 +3252,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.storage.StorageCacheAlert</role>
-			<implementation>com.dianping.cat.report.alert.storage.StorageCacheAlert</implementation>
+			<role>com.dianping.cat.report.alert.storage.cache.StorageCacheAlert</role>
+			<implementation>com.dianping.cat.report.alert.storage.cache.StorageCacheAlert</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
@@ -3269,7 +3269,7 @@
 					<role-hint>storage</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.storage.StorageCacheRuleConfigManager</role>
+					<role>com.dianping.cat.report.alert.storage.cache.StorageCacheRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
@@ -3277,8 +3277,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.storage.StorageRPCAlert</role>
-			<implementation>com.dianping.cat.report.alert.storage.StorageRPCAlert</implementation>
+			<role>com.dianping.cat.report.alert.storage.rpc.StorageRPCAlert</role>
+			<implementation>com.dianping.cat.report.alert.storage.rpc.StorageRPCAlert</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
@@ -3294,7 +3294,7 @@
 					<role-hint>storage</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.storage.StorageRPCRuleConfigManager</role>
+					<role>com.dianping.cat.report.alert.storage.rpc.StorageRPCRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
@@ -6621,13 +6621,13 @@
 			<implementation>com.dianping.cat.system.page.config.processor.StorageConfigProcessor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.alert.storage.StorageSQLRuleConfigManager</role>
+					<role>com.dianping.cat.report.alert.storage.sql.StorageSQLRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.storage.StorageRPCRuleConfigManager</role>
+					<role>com.dianping.cat.report.alert.storage.rpc.StorageRPCRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.storage.StorageCacheRuleConfigManager</role>
+					<role>com.dianping.cat.report.alert.storage.cache.StorageCacheRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.spi.decorator.RuleFTLDecorator</role>
@@ -6635,8 +6635,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.storage.StorageSQLRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.storage.StorageSQLRuleConfigManager</implementation>
+			<role>com.dianping.cat.report.alert.storage.sql.StorageSQLRuleConfigManager</role>
+			<implementation>com.dianping.cat.report.alert.storage.sql.StorageSQLRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
@@ -6650,8 +6650,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.storage.StorageRPCRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.storage.StorageRPCRuleConfigManager</implementation>
+			<role>com.dianping.cat.report.alert.storage.rpc.StorageRPCRuleConfigManager</role>
+			<implementation>com.dianping.cat.report.alert.storage.rpc.StorageRPCRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
@@ -6665,8 +6665,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.storage.StorageCacheRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.storage.StorageCacheRuleConfigManager</implementation>
+			<role>com.dianping.cat.report.alert.storage.cache.StorageCacheRuleConfigManager</role>
+			<implementation>com.dianping.cat.report.alert.storage.cache.StorageCacheRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>

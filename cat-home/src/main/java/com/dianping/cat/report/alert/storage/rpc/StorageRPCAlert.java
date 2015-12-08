@@ -1,8 +1,10 @@
-package com.dianping.cat.report.alert.storage;
+package com.dianping.cat.report.alert.storage.rpc;
 
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.report.alert.spi.AlertType;
+import com.dianping.cat.report.alert.storage.AbstractStorageAlert;
+import com.dianping.cat.report.alert.storage.StorageRuleConfigManager;
 
 public class StorageRPCAlert extends AbstractStorageAlert {
 

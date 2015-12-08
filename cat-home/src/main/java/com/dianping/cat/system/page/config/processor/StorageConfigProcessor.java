@@ -2,10 +2,10 @@ package com.dianping.cat.system.page.config.processor;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.report.alert.storage.StorageCacheRuleConfigManager;
-import com.dianping.cat.report.alert.storage.StorageRPCRuleConfigManager;
 import com.dianping.cat.report.alert.storage.StorageRuleConfigManager;
-import com.dianping.cat.report.alert.storage.StorageSQLRuleConfigManager;
+import com.dianping.cat.report.alert.storage.cache.StorageCacheRuleConfigManager;
+import com.dianping.cat.report.alert.storage.rpc.StorageRPCRuleConfigManager;
+import com.dianping.cat.report.alert.storage.sql.StorageSQLRuleConfigManager;
 import com.dianping.cat.report.page.storage.StorageType;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;

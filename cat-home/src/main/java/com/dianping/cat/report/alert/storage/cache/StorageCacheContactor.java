@@ -1,6 +1,7 @@
-package com.dianping.cat.report.alert.storage;
+package com.dianping.cat.report.alert.storage.cache;
 
 import com.dianping.cat.report.alert.spi.AlertType;
+import com.dianping.cat.report.alert.storage.AbstractStorageContactor;
 
 public class StorageCacheContactor extends AbstractStorageContactor {
 

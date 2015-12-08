@@ -109,7 +109,7 @@ public class AlertManager implements Initializable {
 				keys.add(entry.getKey());
 			}
 		}
-
+		
 		return keys;
 	}
 

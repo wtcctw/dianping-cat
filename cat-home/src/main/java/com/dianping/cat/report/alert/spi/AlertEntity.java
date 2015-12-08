@@ -34,7 +34,7 @@ public class AlertEntity {
 			return false;
 		}
 	}
-
+	
 	public String getContactGroup() {
 		if (m_contactGroup != null) {
 			return m_contactGroup;
@@ -43,10 +43,10 @@ public class AlertEntity {
 		}
 	}
 
-
 	public String getContent() {
 		return m_content;
 	}
+
 
 	public Date getDate() {
 		return m_date;
@@ -78,6 +78,14 @@ public class AlertEntity {
 
 	public Map<String, Object> getParas() {
 		return m_paras;
+	}
+
+	public String getRealMetricId(){
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(m_domain).append(":Metric:").append(m_metric);
+		
+		return sb.toString();
 	}
 
 	public AlertType getType() {
