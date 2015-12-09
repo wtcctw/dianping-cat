@@ -29,6 +29,8 @@ import com.dianping.cat.report.graph.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
 import com.dianping.cat.report.page.app.display.AppSpeedDetail;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
+import com.dianping.cat.report.page.app.display.CrashLogDetailInfo;
+import com.dianping.cat.report.page.app.display.CrashLogDisplayInfo;
 import com.dianping.cat.report.page.app.display.DisplayCommands;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
 
@@ -96,8 +98,28 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Collection<CrashLogDomain> m_crashLogDomains;
 
+	private CrashLogDetailInfo m_crashLogDetailInfo;
+
+	private CrashLogDisplayInfo m_crashLogDisplayInfo;
+
 	public Model(Context ctx) {
 		super(ctx);
+	}
+
+	public CrashLogDetailInfo getCrashLogDetailInfo() {
+		return m_crashLogDetailInfo;
+	}
+
+	public void setCrashLogDetailInfo(CrashLogDetailInfo crashLogDetailInfo) {
+		m_crashLogDetailInfo = crashLogDetailInfo;
+	}
+
+	public CrashLogDisplayInfo getCrashLogDisplayInfo() {
+		return m_crashLogDisplayInfo;
+	}
+
+	public void setCrashLogDisplayInfo(CrashLogDisplayInfo crashLogDisplayInfo) {
+		m_crashLogDisplayInfo = crashLogDisplayInfo;
 	}
 
 	public List<AppDataDetail> getAppDataDetailInfos() {

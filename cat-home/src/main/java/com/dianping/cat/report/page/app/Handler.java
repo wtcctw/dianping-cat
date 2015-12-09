@@ -49,6 +49,8 @@ import com.dianping.cat.report.page.app.display.AppDataDetail;
 import com.dianping.cat.report.page.app.display.AppGraphCreator;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 import com.dianping.cat.report.page.app.display.CodeDisplayVisitor;
+import com.dianping.cat.report.page.app.display.CrashLogDetailInfo;
+import com.dianping.cat.report.page.app.display.CrashLogDisplayInfo;
 import com.dianping.cat.report.page.app.display.DisplayCommands;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor;
 import com.dianping.cat.report.page.app.service.AppConnectionService;
@@ -57,6 +59,8 @@ import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.app.service.AppReportService;
 import com.dianping.cat.report.page.app.service.AppSpeedService;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
+import com.dianping.cat.report.page.app.service.CrashLogQueryEntity;
+import com.dianping.cat.report.page.app.service.CrashLogService;
 import com.dianping.cat.report.page.app.service.SpeedQueryEntity;
 import com.dianping.cat.service.ProjectService;
 
@@ -91,6 +95,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private CrashLogProcessor m_crashLogProcessor;
+
+	@Inject
+	private CrashLogService m_crashLogService;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
@@ -400,6 +407,12 @@ public class Handler implements PageHandler<Context> {
 				Cat.logError(e);
 			}
 			break;
+		case APP_CRASH_LOG:
+			buildAppCrashLog(payload, model);
+			break;
+		case APP_CRASH_LOG_DETAIL:
+			buildAppCrashLogDetail(payload, model);
+			break;
 		case SPEED:
 			try {
 				Map<String, List<Speed>> speeds = buildPageStepInfo();
@@ -476,6 +489,17 @@ public class Handler implements PageHandler<Context> {
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
+	}
+
+	private void buildAppCrashLog(Payload payload, Model model) {
+		CrashLogQueryEntity entity = new CrashLogQueryEntity();
+		CrashLogDisplayInfo info = m_crashLogService.buildCrashLogDisplayInfo(entity);
+		model.setCrashLogDisplayInfo(info);
+	}
+
+	private void buildAppCrashLogDetail(Payload payload, Model model) {
+		CrashLogDetailInfo info = m_crashLogService.queryCrashLogDetailIno(payload.getId());
+		model.setCrashLogDetailInfo(info);
 	}
 
 	private void normalize(Model model, Payload payload) {

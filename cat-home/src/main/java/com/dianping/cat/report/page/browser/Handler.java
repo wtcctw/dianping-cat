@@ -27,6 +27,7 @@ import com.dianping.cat.configuration.web.speed.entity.Speed;
 import com.dianping.cat.configuration.web.speed.entity.Step;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.mvc.PayloadNormalizer;
+import com.dianping.cat.report.ErrorMsg;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
@@ -34,7 +35,6 @@ import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.page.browser.display.AjaxDataDetail;
 import com.dianping.cat.report.page.browser.display.AjaxDataDetailSorter;
 import com.dianping.cat.report.page.browser.display.AjaxDataDisplayInfo;
-import com.dianping.cat.report.page.browser.display.JsErrorMsg;
 import com.dianping.cat.report.page.browser.display.JsErrorDisplayInfo;
 import com.dianping.cat.report.page.browser.display.JsErrorDetailInfo;
 import com.dianping.cat.report.page.browser.display.AjaxDistributeDetails;
@@ -419,12 +419,12 @@ public class Handler implements PageHandler<Context> {
 		model.setAjaxDataDisplayInfo(info);
 	}
 
-	private void processLog(Map<String, JsErrorMsg> errorMsgs, JsErrorLog log, Map<String, AtomicInteger> distributions) {
+	private void processLog(Map<String, ErrorMsg> errorMsgs, JsErrorLog log, Map<String, AtomicInteger> distributions) {
 		String msg = log.getMsg();
-		JsErrorMsg errorMsg = errorMsgs.get(msg);
+		ErrorMsg errorMsg = errorMsgs.get(msg);
 
 		if (errorMsg == null) {
-			errorMsg = new JsErrorMsg();
+			errorMsg = new ErrorMsg();
 			errorMsg.setMsg(msg);
 			errorMsgs.put(msg, errorMsg);
 		}
@@ -435,9 +435,9 @@ public class Handler implements PageHandler<Context> {
 		addBrowserCount(log.getBrowser(), distributions);
 	}
 
-	private List<JsErrorMsg> sort(Map<String, JsErrorMsg> errorMsgs) {
-		List<JsErrorMsg> errorMsgList = new ArrayList<JsErrorMsg>();
-		Iterator<Entry<String, JsErrorMsg>> iter = errorMsgs.entrySet().iterator();
+	private List<ErrorMsg> sort(Map<String, ErrorMsg> errorMsgs) {
+		List<ErrorMsg> errorMsgList = new ArrayList<ErrorMsg>();
+		Iterator<Entry<String, ErrorMsg>> iter = errorMsgs.entrySet().iterator();
 
 		while (iter.hasNext()) {
 			errorMsgList.add(iter.next().getValue());
@@ -449,7 +449,7 @@ public class Handler implements PageHandler<Context> {
 
 	private void viewJsError(Payload payload, Model model) {
 		try {
-			Map<String, JsErrorMsg> errorMsgs = new HashMap<String, JsErrorMsg>();
+			Map<String, ErrorMsg> errorMsgs = new HashMap<String, ErrorMsg>();
 			int offset = 0;
 			int totalCount = 0;
 			Map<String, AtomicInteger> distributions = new HashMap<String, AtomicInteger>();
@@ -470,7 +470,7 @@ public class Handler implements PageHandler<Context> {
 				}
 			}
 
-			List<JsErrorMsg> errorMsgList = sort(errorMsgs);
+			List<ErrorMsg> errorMsgList = sort(errorMsgs);
 			JsErrorDisplayInfo info = new JsErrorDisplayInfo();
 
 			info.setErrors(errorMsgList);

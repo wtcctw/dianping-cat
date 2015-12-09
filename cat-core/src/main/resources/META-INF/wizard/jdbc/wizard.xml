@@ -39,7 +39,8 @@
          <table name="app_command_data"/>
          <table name="app_speed_data"/>
          <table name="app_connection_data"/>
-         <table name="web_api_data"/>
+         <table name="crash_log"/>
+         <table name="crash_log_content"/>
       </group>
    </jdbc>
    <jdbc package="com.dianping.cat.web" name="web">

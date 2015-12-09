@@ -232,6 +232,7 @@ public class AppConfigManager implements Initializable {
 	public Map<String, Integer> getOperators() {
 		return m_operators;
 	}
+	
 
 	public Map<Integer, Command> getRawCommands() {
 		return m_config.getCommands();
@@ -458,6 +459,11 @@ public class AppConfigManager implements Initializable {
 			operatorMap.put(item.getName(), item.getId());
 		}
 		m_operators = operatorMap;
+	}
+	
+	public Item getPlatformStr(int platform) {
+		ConfigItem configItem = m_config.findConfigItem(PLATFORM);
+		return configItem.findItem(platform);
 	}
 
 	public boolean shouldAdd2AllCommands(int id) {
