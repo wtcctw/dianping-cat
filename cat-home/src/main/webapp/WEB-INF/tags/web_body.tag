@@ -21,10 +21,10 @@
 				</a> <b class="arrow"></b>
 					<ul class="submenu">
 						<li id="web_trend"><a href="/cat/r/browser">
-							<i class="menu-icon fa fa-caret-right"></i>URL访问趋势</a>
+							<i class="menu-icon fa fa-caret-right"></i>Ajax访问趋势</a>
 							<b class="arrow"></b></li>
 						<li id="web_piechart"><a href="/cat/r/browser?op=piechart">
-							<i class="menu-icon fa fa-caret-right"></i>URL访问分布</a>
+							<i class="menu-icon fa fa-caret-right"></i>Ajax访问分布</a>
 							<b class="arrow"></b></li>
 						<li id="web_speed"><a href="/cat/r/browser?op=speed">
 							<i class="menu-icon fa fa-caret-right"></i>Web页面测速</a>
@@ -36,7 +36,7 @@
 							<i class="menu-icon fa fa-caret-right"></i>JS错误日志</a>
 							<b class="arrow"></b></li>
 						<li id="hive_track"><a href="http://mobile-tracer-web01.nh/" target="_blank">
-							<i class="menu-icon fa fa-caret-right"></i>跟踪日志</a>
+							<i class="menu-icon fa fa-caret-right"></i>前端明细日志</a>
 							<b class="arrow"></b></li>
 					</ul>
 				</li>
@@ -45,25 +45,25 @@
 				</a> <b class="arrow"></b>
 					<ul class="submenu">
 						<li id="urlPatternConfigUpdate"><a href="/cat/s/web?op=urlPatternConfigUpdate" style="display:none">
-								<i class="menu-icon fa fa-caret-right"></i>Web全局配置</a>
+								<i class="menu-icon fa fa-caret-right"></i>全局配置</a>
 								<b class="arrow"></b></li>
 						<li id="code"><a href="/cat/s/web?op=codeList">
 								<i class="menu-icon fa fa-caret-right"></i>返回码配置</a>
 								<b class="arrow"></b></li>
 						<li id="urlPatterns"><a href="/cat/s/web?op=urlPatterns">
-								<i class="menu-icon fa fa-caret-right"></i>URL配置</a>
+								<i class="menu-icon fa fa-caret-right"></i>Ajax接口配置</a>
 								<b class="arrow"></b></li>
 						<li id="webRule"><a href="/cat/s/web?op=webRule">
-								<i class="menu-icon fa fa-caret-right"></i>Web告警</a>
+								<i class="menu-icon fa fa-caret-right"></i>Ajax接口告警</a>
 								<b class="arrow"></b></li>
 						<li id="jsRule"><a href="/cat/s/web?op=jsRuleList">
-								<i class="menu-icon fa fa-caret-right"></i>JS告警</a>
+								<i class="menu-icon fa fa-caret-right"></i>JS错误告警</a>
 								<b class="arrow"></b></li>
 						<li id="speed"><a href="/cat/s/web?op=speed">
-								<i class="menu-icon fa fa-caret-right"></i>测速配置</a>
+								<i class="menu-icon fa fa-caret-right"></i>Web测速配置</a>
 								<b class="arrow"></b></li>
 						<li id="webConstants"><a href="/cat/s/web?op=webConstants">
-								<i class="menu-icon fa fa-caret-right"></i>常量配置</a>
+								<i class="menu-icon fa fa-caret-right"></i>Web常量配置</a>
 								<b class="arrow"></b></li>
 					</ul>
 				</li>

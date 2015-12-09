@@ -248,7 +248,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
-	public String nextMessageId() {
+	private String nextMessageId() {
 		return m_factory.getNextId();
 	}
 
