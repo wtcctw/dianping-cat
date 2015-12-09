@@ -29,7 +29,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	private ReportManager<StorageReport> m_reportManager;
 
 	@Inject
-	private DatabaseParser m_databaseParser;
+	private StorageDBParser m_databaseParser;
 
 	@Inject
 	private StorageReportUpdater m_updater;

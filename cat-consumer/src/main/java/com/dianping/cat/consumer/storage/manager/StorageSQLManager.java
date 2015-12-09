@@ -2,8 +2,8 @@ package com.dianping.cat.consumer.storage.manager;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.consumer.storage.DatabaseParser;
-import com.dianping.cat.consumer.storage.DatabaseParser.Database;
+import com.dianping.cat.consumer.storage.StorageDBParser;
+import com.dianping.cat.consumer.storage.StorageDBParser.Database;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -11,7 +11,7 @@ import com.dianping.cat.message.Transaction;
 public class StorageSQLManager extends AbstractStorageManager {
 
 	@Inject
-	private DatabaseParser m_databaseParser;
+	private StorageDBParser m_databaseParser;
 
 	private static StorageType m_storage = StorageType.SQL;
 
