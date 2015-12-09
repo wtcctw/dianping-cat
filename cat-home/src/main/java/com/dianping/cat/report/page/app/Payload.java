@@ -67,7 +67,7 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private int m_id;
 	
 	@ObjectMeta("crashLogQuery")
-	private CrashLogQueryEntity m_crashLogQuery;
+	private CrashLogQueryEntity m_crashLogQuery = new CrashLogQueryEntity();
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
 

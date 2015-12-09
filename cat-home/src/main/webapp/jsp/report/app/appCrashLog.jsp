@@ -36,6 +36,10 @@
 							<option value="${appName.title}">${appName.title}</option>
 						</c:forEach>
 				</select></div>
+				    <div class="input-group" style="float:left;">
+					<span class="input-group-addon">Dpid</span>
+					<input type="text"  id="dpid" />
+	            </div>
 					&nbsp;&nbsp;&nbsp;<input class="btn btn-primary btn-sm "
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
 					type="submit" /></td></tr>
@@ -65,8 +69,8 @@
 						</td></tr>
 					<tr><td width="60px;">设备</td><td><div>
 						<label class="btn btn-info btn-sm">
-		    				<input type="checkbox" id="deviceAll" onclick="clickAll('${model.crashLogDisplayInfo.fieldsInfo.devices}', 'level')"  unchecked>All
-		  				</label><c:forEach var="item" items="${model.crashLogDisplayInfo.fieldsInfo.devices}" varStatus="status"><label class="btn btn-info btn-sm"><input type="checkbox" id="level_${item}" value="${item}" onclick="clickMe('${model.crashLogDisplayInfo.fieldsInfo.devices}', 'device')" unchecked>${item}</label></c:forEach>
+		    				<input type="checkbox" id="deviceAll" onclick="clickAll('${model.crashLogDisplayInfo.fieldsInfo.devices}', 'device')"  unchecked>All
+		  				</label><c:forEach var="item" items="${model.crashLogDisplayInfo.fieldsInfo.devices}" varStatus="status"><label class="btn btn-info btn-sm"><input type="checkbox" id="device_${item}" value="${item}" onclick="clickMe('${model.crashLogDisplayInfo.fieldsInfo.devices}', 'device')" unchecked>${item}</label></c:forEach>
 						</div>
 						</td></tr>
 	</table>
@@ -89,7 +93,7 @@
 		<td  class="right">${w:format(error.count,'#,###,###,###,##0')}&nbsp;</td>
 		<td >
 			<c:forEach var="id" items="${error.ids}" varStatus="linkIndex">
-				<a href="/cat/r/browser?op=jsErrorDetail&id=${id}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
+				<a href="/cat/r/app?op=appCrashLogDetail&id=${id}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
 			</c:forEach>
 		</td>
 	</tr>
@@ -100,16 +104,160 @@
 
 <script type="text/javascript">
 	function query(){
+		var time = $("#time").val();
+		var times = time.split(" ");
+		var period = times[0];
+		var start = converTimeFormat(times[1]);
+		var end = converTimeFormat($("#time2").val());
+		var dpid = $("#dpid").val();
 		var appName = $("#appName").val();
 		var platform = $("#platform").val();
-		var appVersion = queryField('${model.crashLogDisplayInfo.fieldsInfo.appVersions}','appVersion');
+		
+ 		var appVersion = queryField('${model.crashLogDisplayInfo.fieldsInfo.appVersions}','appVersion');
 		var platVersion = queryField('${model.crashLogDisplayInfo.fieldsInfo.platVersions}','platformVersion');
 		var module = queryField('${model.crashLogDisplayInfo.fieldsInfo.modules}','module');
 		var level = queryField('${model.crashLogDisplayInfo.fieldsInfo.levels}','level');
 		var device = queryField('${model.crashLogDisplayInfo.fieldsInfo.devices}','device');
 		var split = ";";
-		var query = plat + split + appVersion + split + platVersion + split + module + split + level;
-		window.location.href = "?op=${payload.action.name}&query1=" + query + "&step=${payload.step}";
+		var query = appVersion + split + platVersion + split + module + split + level + split + device;
+ 		
+ 		window.location.href = "?op=appCrashLog&crashLogQuery.day=" + period + "&crashLogQuery.startTime=" + start + "&crashLogQuery.endTime=" + end
+ 			 + "&crashLogQuery.appName=" + appName + "&crashLogQuery.platform=" + platform + "&crashLogQuery.dpid=" + dpid + "&crashLogQuery.query=" + query;
+	}
+	
+	$("#appName")
+	  .change(function () {
+			var time = $("#time").val();
+			var times = time.split(" ");
+			var period = times[0];
+			var start = converTimeFormat(times[1]);
+			var end = converTimeFormat($("#time2").val());
+			var dpid = $("#dpid").val();
+			var appName = $("#appName").val();
+			var platform = $("#platform").val();
+			
+	 		window.location.href = "?op=appCrashLog&crashLogQuery.day=" + period + "&crashLogQuery.startTime=" + start + "&crashLogQuery.endTime=" + end
+			 + "&crashLogQuery.appName=" + appName + "&crashLogQuery.platform=" + platform + "&crashLogQuery.dpid=" + dpid ;
+
+	  })
+	  
+	$(document).ready(
+		function() {
+			$('#crashLog').addClass('active');
+			$('#time').datetimepicker({
+				format:'Y-m-d H:i',
+				step:30,
+				maxDate:0
+			});
+			$('#time2').datetimepicker({
+				datepicker:false,
+				format:'H:i',
+				step:30,
+				maxDate:0
+			});
+			
+			var startTime = '${payload.crashLogQuery.startTime}';
+			if (startTime == null || startTime.length == 0) {
+				$("#time").val(getDate());
+			} else {
+				$("#time").val('${payload.crashLogQuery.day} ' + startTime);
+			}
+			
+			var endTime = '${payload.crashLogQuery.endTime}';
+			if (endTime == null || endTime.length == 0){
+				$("#time2").val(getTime());
+			}else{
+				$("#time2").val(endTime);
+			}
+			
+			var appName = '${payload.crashLogQuery.appName}';
+			if (appName != null && appName.length != 0) {
+				$("#appName").val(appName);
+			}
+			
+			var platform = '${payload.crashLogQuery.platform}';
+			if (platform != null && platform.length != 0) {
+				$("#platform").val(platform);
+			}
+			
+			var dpid = '${payload.crashLogQuery.dpid}';
+			if (dpid != null && dpid.length != 0) {
+				$("#dpid").val(dpid);
+			}
+			
+			var fields = "${payload.crashLogQuery.query}".split(";");
+			docReady(fields[0], '${model.crashLogDisplayInfo.fieldsInfo.appVersions}','appVersion');
+			docReady(fields[1], '${model.crashLogDisplayInfo.fieldsInfo.platVersions}','platformVersion');
+			docReady(fields[2], '${model.crashLogDisplayInfo.fieldsInfo.modules}','module');
+			docReady(fields[3], '${model.crashLogDisplayInfo.fieldsInfo.levels}','level');
+			docReady(fields[4], '${model.crashLogDisplayInfo.fieldsInfo.devices}','device');
+				
+		});
+	
+	function docReady(field, fields, prefix){
+		var urls = [];
+		
+		if(typeof field == "undefined" || field.length == 0){
+			document.getElementById(prefix + "All").checked = true;
+			clickAll(fields, prefix);
+		}else{
+			urls = field.split(":");
+			for(var i=0; i<urls.length; i++) {
+				if(document.getElementById(prefix + "_" + urls[i]) != null) {
+					document.getElementById(prefix + "_" + urls[i]).checked = true;
+				}
+			}
+		}
+	}
+	
+	function getDate() {
+		var myDate = new Date();
+		var myMonth = new Number(myDate.getMonth());
+		var month = myMonth + 1;
+		var day = myDate.getDate();
+		
+		if(month<10){
+			month = '0' + month;
+		}
+		if(day<10){
+			day = '0' + day;
+		}
+		
+		var myHour = new Number(myDate.getHours());
+		
+		if(myHour < 10){
+			myHour = '0' + myHour;
+		}
+		
+		return myDate.getFullYear() + "-" + month + "-" + day + " " + myHour + ":00";
+	}
+
+	function getTime(){
+		var myDate = new Date();
+		var myHour = new Number(myDate.getHours());
+		var myMinute = new Number(myDate.getMinutes());
+		
+		if(myHour < 10){
+			myHour = '0' + myHour;
+		}
+		if(myMinute < 10){
+			myMinute = '0' + myMinute;
+		}
+		return myHour + ":" + myMinute;
+	}
+
+	function converTimeFormat(time){
+		var times = time.split(":");
+		var hour = times[0];
+		var minute = times[1];
+		
+		if(hour.length == 1){
+			hour = "0" + hour;
+		}
+		if(minute.length == 1) {
+			minute = "0" + minute;
+		}
+		return hour + ":" + minute;
 	}
 	
 	function clickMe(fields, prefix) {
@@ -169,128 +317,6 @@
 		return url;
 	}
 	
-	function docReady(field, fields, prefix){
-		var urls = [];
-		
-		if(typeof field == "undefined" || field.length == 0){
-			document.getElementById(prefix + "All").checked = true;
-			clickAll(fields, prefix);
-		}else{
-			urls = field.split(":");
-			for(var i=0; i<urls.length; i++) {
-				if(document.getElementById(prefix + "_" + urls[i]) != null) {
-					document.getElementById(prefix + "_" + urls[i]).checked = true;
-				}
-			}
-		}
-	}
-	
-	$("#platformType")
-	  .change(function () {
-		  window.location.href = "?op=${payload.action.name}&query1=" + this.value + ";;;;&date=${model.date}&reportType=${payload.reportType}";
-	  })
-	  
-	$(document).ready(
-		function() {
-			$('#crashLog').addClass('active');
-			$('#time').datetimepicker({
-				format:'Y-m-d H:i',
-				step:30,
-				maxDate:0
-			});
-			$('#time2').datetimepicker({
-				datepicker:false,
-				format:'H:i',
-				step:30,
-				maxDate:0
-			});
-			
-			var startTime = '${payload.crashLogQuery.startTime}';
-			if (startTime == null || startTime.length == 0) {
-				$("#time").val(getDate());
-			} else {
-				$("#time").val('${payload.crashLogQuery.day} ' + startTime);
-			}
-			
-			var endTime = '${payload.crashLogQuery.endTime}';
-			if (endTime == null || endTime.length == 0){
-				$("#time2").val(getTime());
-			}else{
-				$("#time2").val(endTime);
-			}
-			
-			var appName = '${payload.crashLogQuery.appName}';
-			if (appName != null && appName.length != 0) {
-				$("#appName").val(appName);
-			}
-			
-			var platform = '${payload.crashLogQuery.platform}';
-			if (platform != null && platform.length != 0) {
-				$("#platform").val(platform);
-			}
-			
-			var fields = "${payload.query1}".split(";");
-			if("${payload.query1}".length > 0) {
-				$("#platformType").val(fields[0]);
-			}
-			docReady(fields[1], '${model.crashLogDisplayInfo.fieldsInfo.appVersions}','appVersion');
-			docReady(fields[2], '${model.crashLogDisplayInfo.fieldsInfo.platVersions}','platformVersion');
-			docReady(fields[3], '${model.crashLogDisplayInfo.fieldsInfo.modules}','module');
-			docReady(fields[4], '${model.crashLogDisplayInfo.fieldsInfo.levels}','level');
-			docReady(fields[4], '${model.crashLogDisplayInfo.fieldsInfo.devices}','device');
-
-			
-		});
-	
-	function getDate() {
-		var myDate = new Date();
-		var myMonth = new Number(myDate.getMonth());
-		var month = myMonth + 1;
-		var day = myDate.getDate();
-		
-		if(month<10){
-			month = '0' + month;
-		}
-		if(day<10){
-			day = '0' + day;
-		}
-		
-		var myHour = new Number(myDate.getHours());
-		
-		if(myHour < 10){
-			myHour = '0' + myHour;
-		}
-		
-		return myDate.getFullYear() + "-" + month + "-" + day + " " + myHour + ":00";
-	}
-
-	function getTime(){
-		var myDate = new Date();
-		var myHour = new Number(myDate.getHours());
-		var myMinute = new Number(myDate.getMinutes());
-		
-		if(myHour < 10){
-			myHour = '0' + myHour;
-		}
-		if(myMinute < 10){
-			myMinute = '0' + myMinute;
-		}
-		return myHour + ":" + myMinute;
-	}
-
-	function converTimeFormat(time){
-		var times = time.split(":");
-		var hour = times[0];
-		var minute = times[1];
-		
-		if(hour.length == 1){
-			hour = "0" + hour;
-		}
-		if(minute.length == 1) {
-			minute = "0" + minute;
-		}
-		return hour + ":" + minute;
-	}
 </script>
 
 <style type="text/css">

@@ -161,6 +161,7 @@
     <member name="device-model" field="device_model" value-type="String" length="20" />
     <member name="updatetime" field="updatetime" value-type="Date" nullable="false" />
     <member name="crash-time" field="crash_time" value-type="Date" nullable="false" />
+    <member name="dpid" field="dpid" value-type="String" length="200" nullable="true" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
     <index name="IX_CONDITION" members="crash_time ASC, app_name ASC" />

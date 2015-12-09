@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.servlet.ServletException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.Level;
 import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.config.web.WebSpeedConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
@@ -57,7 +58,6 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.config.web.js.Level;
 import com.dianping.cat.helper.JsonBuilder;
 import com.site.lookup.util.StringUtils;
 

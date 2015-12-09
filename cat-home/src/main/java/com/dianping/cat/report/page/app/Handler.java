@@ -492,7 +492,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void buildAppCrashLog(Payload payload, Model model) {
-		CrashLogQueryEntity entity = new CrashLogQueryEntity();
+		CrashLogQueryEntity entity = payload.getCrashLogQuery();
 		CrashLogDisplayInfo info = m_crashLogService.buildCrashLogDisplayInfo(entity);
 		model.setCrashLogDisplayInfo(info);
 	}

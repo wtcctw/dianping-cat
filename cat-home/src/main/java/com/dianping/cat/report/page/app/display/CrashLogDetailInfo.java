@@ -21,6 +21,8 @@ public class CrashLogDetailInfo {
 	private String m_deviceModel;
 
 	private Date m_crashTime;
+	
+	private String m_dpid;
 
 	private String m_detail;
 
@@ -30,6 +32,14 @@ public class CrashLogDetailInfo {
 
 	public void setAppName(String appName) {
 		m_appName = appName;
+	}
+
+	public String getDpid() {
+		return m_dpid;
+	}
+
+	public void setDpid(String dpid) {
+		m_dpid = dpid;
 	}
 
 	public String getPlatform() {

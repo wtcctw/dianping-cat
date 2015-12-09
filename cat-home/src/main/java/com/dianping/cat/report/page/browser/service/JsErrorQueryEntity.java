@@ -6,7 +6,7 @@ import java.util.Date;
 
 import org.codehaus.plexus.util.StringUtils;
 
-import com.dianping.cat.config.web.js.Level;
+import com.dianping.cat.config.Level;
 import com.dianping.cat.helper.TimeHelper;
 
 public class JsErrorQueryEntity {

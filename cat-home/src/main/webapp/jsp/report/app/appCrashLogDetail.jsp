@@ -30,6 +30,10 @@
 		<td>${model.crashLogDetailInfo.deviceBrand} - ${model.crashLogDetailInfo.deviceModel}</td>
 	</tr>
 	<tr>
+		<td>Dpid </td>
+		<td>${model.crashLogDetailInfo.dpid}</td>
+	</tr>
+	<tr>
 		<td>Detail </td>
 		<td>${model.crashLogDetailInfo.detail}</td>
 	</tr>

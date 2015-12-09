@@ -1548,5 +1548,43 @@
       </query>
       </query-defs>
 	</entity>
-
+	<entity name="crash-log" table="crash_log" alias="cl">
+		<member name="count" value-type="long" all="false" select-expr="count(*)" length="19" nullable="false" />
+	    <var name="start-time" value-type="Date" />
+	    <var name="end-time" value-type="Date" />
+	    <var name="offset" value-type="int" />
+	   	<var name="limit" value-type="int" />
+	   	<readsets>
+      	<readset name="COUNT-DATA">
+      		<member name="count"/>
+      		<member name="module"/>
+      		<member name="level"/>
+      	</readset>
+      	</readsets>
+      	<query-defs>
+      		<query name="find-data-by-conditions" type="SELECT" multiple="true">
+			<param name="start-time" />
+			<param name="end-time" />
+			<param name="app-name" />
+			<param name="platform" />
+			<param name="dpid" />
+			<param name="offset" />
+			<param name="limit" />
+			<statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE 
+        	<FIELD name='crash-time'/> >= ${start-time} 
+			AND  <FIELD name='crash-time'/> < ${end-time}
+			AND  <FIELD name='app-name'/> = ${app-name}
+			<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+			</IF>
+			<IF type='NOT_NULL' field='dpid'>
+			AND  <FIELD name='dpid'/> = ${dpid}
+			</IF>
+		LIMIT ${offset}, ${limit}
+         ]]></statement>
+		</query>
+      	</query-defs>
+	</entity>
 </entities>

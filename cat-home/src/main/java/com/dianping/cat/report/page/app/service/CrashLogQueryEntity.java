@@ -9,20 +9,24 @@ import org.codehaus.plexus.util.StringUtils;
 import com.dianping.cat.helper.TimeHelper;
 
 public class CrashLogQueryEntity {
-	
+
 	private String m_day;
-	
+
 	private String m_startTime;
-	
+
 	private String m_endTime;
-	
+
 	private String m_appName = "主APP";
-	
+
 	private String m_module;
-	
+
 	private int m_platform;
 
+	private String m_dpid = null;
+
 	private SimpleDateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	
+	private String m_query;
 
 	public Date buildEndTime() {
 		if (StringUtils.isNotBlank(m_day) && StringUtils.isNotBlank(m_endTime)) {
@@ -34,7 +38,7 @@ public class CrashLogQueryEntity {
 		}
 		return TimeHelper.getCurrentDay(1);
 	}
-	
+
 	public Date buildStartTime() {
 		if (StringUtils.isNotBlank(m_day) && StringUtils.isNotBlank(m_startTime)) {
 			try {
@@ -46,12 +50,32 @@ public class CrashLogQueryEntity {
 		return TimeHelper.getCurrentHour();
 	}
 
+	public String getQuery() {
+		return m_query;
+	}
+
+	public void setQuery(String query) {
+		m_query = query;
+	}
+
 	public String getDay() {
 		return m_day;
 	}
 
 	public void setDay(String day) {
 		m_day = day;
+	}
+
+	public String getDpid() {
+		if (StringUtils.isEmpty(m_dpid)) {
+			return null;
+		}
+		
+		return m_dpid;
+	}
+
+	public void setDpid(String dpid) {
+		m_dpid = dpid;
 	}
 
 	public String getAppName() {
@@ -101,5 +125,5 @@ public class CrashLogQueryEntity {
 	public void setFormat(SimpleDateFormat format) {
 		m_format = format;
 	}
-	
+
 }
