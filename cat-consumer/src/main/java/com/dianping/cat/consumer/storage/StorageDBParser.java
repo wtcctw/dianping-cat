@@ -13,7 +13,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 
-public class DatabaseParser implements LogEnabled {
+public class StorageDBParser implements LogEnabled {
 
 	private Logger m_logger;
 

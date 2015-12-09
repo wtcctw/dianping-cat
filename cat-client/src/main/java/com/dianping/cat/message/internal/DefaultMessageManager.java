@@ -40,7 +40,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	@Inject
 	private MessageIdFactory m_factory;
 
-	// we don't use static modifier since MessageManager is configured as singleton
 	private ThreadLocal<Context> m_context = new ThreadLocal<Context>();
 
 	private long m_throttleTimes;
@@ -180,7 +179,17 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	@Override
 	public boolean hasContext() {
-		return m_context.get() != null;
+		Context context = m_context.get();
+		boolean has = context != null;
+
+		if (has) {
+			MessageTree tree = context.m_tree;
+
+			if (tree == null) {
+				return false;
+			}
+		}
+		return has;
 	}
 
 	@Override
@@ -239,7 +248,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
-	public String nextMessageId() {
+	private String nextMessageId() {
 		return m_factory.getNextId();
 	}
 
@@ -552,7 +561,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				String childId = nextMessageId();
 				DefaultTransaction source = (DefaultTransaction) message;
 				DefaultTransaction target = new DefaultTransaction(source.getType(), source.getName(),
-						DefaultMessageManager.this);
+				      DefaultMessageManager.this);
 
 				target.setTimestamp(source.getTimestamp());
 				target.setDurationInMicros(source.getDurationInMicros());

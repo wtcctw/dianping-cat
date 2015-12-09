@@ -23,7 +23,7 @@ public class AlertEntity {
 	private String m_contactGroup;
 
 	private Map<String, Object> m_paras = new HashMap<String, Object>();
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		AlertEntity other = (AlertEntity) obj;
@@ -34,7 +34,7 @@ public class AlertEntity {
 			return false;
 		}
 	}
-	
+
 	public String getContactGroup() {
 		if (m_contactGroup != null) {
 			return m_contactGroup;
@@ -46,7 +46,6 @@ public class AlertEntity {
 	public String getContent() {
 		return m_content;
 	}
-
 
 	public Date getDate() {
 		return m_date;
@@ -80,11 +79,11 @@ public class AlertEntity {
 		return m_paras;
 	}
 
-	public String getRealMetricId(){
+	public String getRealMetricId() {
 		StringBuilder sb = new StringBuilder();
-		
+
 		sb.append(m_domain).append(":Metric:").append(m_metric);
-		
+
 		return sb.toString();
 	}
 
@@ -129,7 +128,7 @@ public class AlertEntity {
 		m_level = level;
 		return this;
 	}
-	
+
 	public AlertEntity setLevel(String level) {
 		m_level = AlertLevel.findByName(level);
 		return this;

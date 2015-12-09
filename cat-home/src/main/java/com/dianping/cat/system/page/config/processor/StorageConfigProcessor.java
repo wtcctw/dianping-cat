@@ -2,11 +2,11 @@ package com.dianping.cat.system.page.config.processor;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.storage.manager.StorageType;
 import com.dianping.cat.report.alert.storage.StorageRuleConfigManager;
 import com.dianping.cat.report.alert.storage.cache.StorageCacheRuleConfigManager;
 import com.dianping.cat.report.alert.storage.rpc.StorageRPCRuleConfigManager;
 import com.dianping.cat.report.alert.storage.sql.StorageSQLRuleConfigManager;
-import com.dianping.cat.report.page.storage.StorageType;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
@@ -46,7 +46,7 @@ public class StorageConfigProcessor extends BaseProcesser {
 	}
 
 	private StorageRuleConfigManager buildConfigManager(Payload payload) {
-		StorageType storageType = StorageType.getByName(payload.getType(), StorageType.SQL);
+		StorageType storageType = StorageType.findByName(payload.getType(), StorageType.SQL);
 
 		switch (storageType) {
 		case SQL:

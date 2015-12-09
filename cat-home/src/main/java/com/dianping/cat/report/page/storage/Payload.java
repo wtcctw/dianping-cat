@@ -4,6 +4,7 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.storage.manager.StorageType;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
@@ -156,7 +157,7 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	}
 
 	public void setType(String type) {
-		m_type = StorageType.getByName(type, StorageType.SQL);
+		m_type = StorageType.findByName(type, StorageType.SQL);
 	}
 
 	@Override

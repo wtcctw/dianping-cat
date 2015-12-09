@@ -10,6 +10,7 @@ import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.storage.manager.StorageType;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.Alert;
 import com.dianping.cat.home.storage.alert.entity.Detail;
@@ -21,7 +22,6 @@ import com.dianping.cat.home.storage.alert.entity.Target;
 import com.dianping.cat.report.alert.service.AlertService;
 import com.dianping.cat.report.alert.spi.AlertLevel;
 import com.dianping.cat.report.page.storage.StorageConstants;
-import com.dianping.cat.report.page.storage.StorageType;
 
 public class StorageAlertInfoBuilder {
 
@@ -67,8 +67,8 @@ public class StorageAlertInfoBuilder {
 		String ip = fields.get(0);
 		String operation = fields.get(1);
 		String target = queryTargetTitle(fields.get(2));
-		int level = queryLevel(alert.getType());
-
+		AlertLevel alertLevel = AlertLevel.findByName(alert.getType());
+		int level = alertLevel.getPriority();
 		Storage storage = alertInfo.findOrCreateStorage(name);
 		storage.incCount();
 		storage.setLevel(buildLevel(storage.getLevel(), level));
@@ -97,16 +97,6 @@ public class StorageAlertInfoBuilder {
 			results.put(title, blankAlertInfo);
 		}
 		return results;
-	}
-
-	private int queryLevel(String level) {
-		if (AlertLevel.ERROR.equals(level)) {
-			return 2;
-		} else if (AlertLevel.WARNING.equals(level)) {
-			return 1;
-		} else {
-			return 0;
-		}
 	}
 
 	private String queryTargetTitle(String target) {

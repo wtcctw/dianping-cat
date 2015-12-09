@@ -674,12 +674,32 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.storage.DatabaseParser</role>
-			<implementation>com.dianping.cat.consumer.storage.DatabaseParser</implementation>
+			<role>com.dianping.cat.consumer.storage.StorageDBParser</role>
+			<implementation>com.dianping.cat.consumer.storage.StorageDBParser</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.storage.StorageReportUpdater</role>
 			<implementation>com.dianping.cat.consumer.storage.StorageReportUpdater</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.storage.manager.StorageManager</role>
+			<role-hint>SQL</role-hint>
+			<implementation>com.dianping.cat.consumer.storage.manager.StorageSQLManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.storage.StorageDBParser</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.storage.manager.StorageManager</role>
+			<role-hint>Cache</role-hint>
+			<implementation>com.dianping.cat.consumer.storage.manager.StorageCacheManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.storage.manager.StorageManager</role>
+			<role-hint>RPC</role-hint>
+			<implementation>com.dianping.cat.consumer.storage.manager.StorageRPCManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
@@ -699,7 +719,7 @@
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.storage.DatabaseParser</role>
+					<role>com.dianping.cat.consumer.storage.StorageDBParser</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.storage.StorageReportUpdater</role>

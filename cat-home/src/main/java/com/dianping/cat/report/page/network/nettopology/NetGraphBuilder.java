@@ -130,10 +130,10 @@ public class NetGraphBuilder {
 	}
 
 	private boolean containsAlert(List<AlertEntity> alertKeys, String group, String domain, String prefix, String suffix) {
-		String actualKey = domain + ":Metric:" + prefix + suffix;
+		String actualKey = prefix + suffix;
 
 		for (AlertEntity metric : alertKeys) {
-			if (metric.getGroup().equals(group) && metric.getRealMetricId().equals(actualKey)) {
+			if (metric.getGroup().equals(group) && metric.getMetric().equals(actualKey)) {
 				return true;
 			}
 		}
