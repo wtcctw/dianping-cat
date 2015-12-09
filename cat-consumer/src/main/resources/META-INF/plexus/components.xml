@@ -682,6 +682,26 @@
 			<implementation>com.dianping.cat.consumer.storage.StorageReportUpdater</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.consumer.storage.manager.StorageManager</role>
+			<role-hint>SQL</role-hint>
+			<implementation>com.dianping.cat.consumer.storage.manager.StorageSQLManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.storage.DatabaseParser</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.storage.manager.StorageManager</role>
+			<role-hint>Cache</role-hint>
+			<implementation>com.dianping.cat.consumer.storage.manager.StorageCacheManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.storage.manager.StorageManager</role>
+			<role-hint>RPC</role-hint>
+			<implementation>com.dianping.cat.consumer.storage.manager.StorageRPCManager</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>storage</role-hint>
 			<implementation>com.dianping.cat.consumer.storage.StorageAnalyzer</implementation>

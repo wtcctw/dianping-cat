@@ -10,6 +10,7 @@ import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.storage.manager.StorageType;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.Alert;
 import com.dianping.cat.home.storage.alert.entity.Detail;
@@ -21,7 +22,6 @@ import com.dianping.cat.home.storage.alert.entity.Target;
 import com.dianping.cat.report.alert.service.AlertService;
 import com.dianping.cat.report.alert.spi.AlertLevel;
 import com.dianping.cat.report.page.storage.StorageConstants;
-import com.dianping.cat.report.page.storage.StorageType;
 
 public class StorageAlertInfoBuilder {
 

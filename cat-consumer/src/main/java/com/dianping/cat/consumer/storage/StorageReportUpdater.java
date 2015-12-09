@@ -55,8 +55,6 @@ public class StorageReportUpdater {
 	}
 
 	public static class StorageUpdateParam {
-		
-		private String m_id;
 
 		private String m_ip;
 
@@ -123,14 +121,5 @@ public class StorageReportUpdater {
 			m_transaction = transaction;
 			return this;
 		}
-
-		public String getId() {
-			return m_id;
-		}
-
-		public void setId(String id) {
-			m_id = id;
-		}
 	}
-	
 }
