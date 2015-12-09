@@ -2,11 +2,18 @@ package com.dianping.cat.report.alert.spi;
 
 public enum AlertLevel {
 
-	WARNING("warning"),
+	WARNING("warning", 1),
 
-	ERROR("error");
+	ERROR("error", 2);
 
 	private String m_level;
+
+	private int m_priority;
+
+	private AlertLevel(String level, int priority) {
+		m_level = level;
+		m_priority = priority;
+	}
 
 	public static AlertLevel findByName(String level) {
 		for (AlertLevel tmp : values()) {
@@ -17,16 +24,11 @@ public enum AlertLevel {
 		return WARNING;
 	}
 
-	private AlertLevel(String level) {
-		m_level = level;
-	}
-
 	public String getLevel() {
 		return m_level;
 	}
 
-	public void setLevel(String level) {
-		m_level = level;
+	public int getPriority() {
+		return m_priority;
 	}
-
 }
