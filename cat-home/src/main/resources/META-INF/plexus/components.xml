@@ -5431,6 +5431,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.display.StorageAlertInfoBuilder</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.storage.builder.StorageBuilderManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5496,6 +5499,10 @@
 					<role>com.dianping.cat.report.alert.service.AlertService</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.storage.builder.StorageBuilderManager</role>
+			<implementation>com.dianping.cat.consumer.storage.builder.StorageBuilderManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.top.Handler</role>

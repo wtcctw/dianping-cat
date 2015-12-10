@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.storage;
+package com.dianping.cat.consumer.storage.builder;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -13,7 +13,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 
-public class StorageDBParser implements LogEnabled {
+public class DatabaseParser implements LogEnabled {
 
 	private Logger m_logger;
 
@@ -26,7 +26,7 @@ public class StorageDBParser implements LogEnabled {
 		m_logger = logger;
 	}
 
-	public Database queryDatabaseName(String connection) {
+	public Database parseDatabase(String connection) {
 		Database database = m_connections.get(connection);
 
 		if (database == null && StringUtils.isNotEmpty(connection) && !m_errorConnections.contains(connection)) {

@@ -10,7 +10,6 @@ import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.storage.manager.StorageType;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.Alert;
 import com.dianping.cat.home.storage.alert.entity.Detail;
@@ -35,7 +34,7 @@ public class StorageAlertInfoBuilder {
 	}
 
 	public Map<String, StorageAlertInfo> buildStorageAlertInfos(Date start, Date end, int minuteCounts,
-	      StorageType type, List<Alert> alerts) {
+	      String type, List<Alert> alerts) {
 		Map<String, StorageAlertInfo> results = prepareBlankAlert(start.getTime(), end.getTime(), minuteCounts, type);
 
 		for (Alert alert : alerts) {
@@ -87,12 +86,12 @@ public class StorageAlertInfoBuilder {
 		tg.getDetails().add(new Detail(alert.getContent()).setLevel(level));
 	}
 
-	private Map<String, StorageAlertInfo> prepareBlankAlert(long start, long end, int minuteCounts, StorageType type) {
+	private Map<String, StorageAlertInfo> prepareBlankAlert(long start, long end, int minuteCounts, String type) {
 		Map<String, StorageAlertInfo> results = new LinkedHashMap<String, StorageAlertInfo>();
 
 		for (long s = start; s <= end; s += TimeHelper.ONE_MINUTE) {
 			String title = m_sdf.format(new Date(s));
-			StorageAlertInfo blankAlertInfo = makeAlertInfo(type.getName(), new Date(start));
+			StorageAlertInfo blankAlertInfo = makeAlertInfo(type, new Date(start));
 
 			results.put(title, blankAlertInfo);
 		}
