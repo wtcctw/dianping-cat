@@ -12,8 +12,8 @@ import java.util.Set;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.alert.AlertInfo.AlertMetric;
-import com.dianping.cat.report.alert.MetricType;
+import com.dianping.cat.report.alert.spi.AlertEntity;
+import com.dianping.cat.report.alert.spi.data.MetricType;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.metric.AbstractGraphCreator;
 
@@ -23,7 +23,7 @@ public class GraphCreator extends AbstractGraphCreator {
 	      Date endDate, final Map<String, double[]> dataWithOutFutures) {
 		Map<String, List<String>> aggregationKeys = buildLineChartKeys(dataWithOutFutures.keySet());
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
-		List<AlertMetric> alertKeys = m_alertInfo.queryLastestAlarmKey(5);
+		List<AlertEntity> alertKeys = m_alertManager.queryLastestAlarmKey(5);
 		int step = m_dataExtractor.getStep();
 
 		for (Entry<String, List<String>> keyMapEntry : aggregationKeys.entrySet()) {
@@ -108,11 +108,10 @@ public class GraphCreator extends AbstractGraphCreator {
 		return aggregationKeys;
 	}
 
-	private void buildLineChartTitle(String productLine, LineChart lineChart, String key, List<AlertMetric> alertKeys) {
+	private void buildLineChartTitle(String productLine, LineChart lineChart, String key, List<AlertEntity> alertKeys) {
 		String title = lineChart.getHtmlTitle();
 		String realKey = key.substring(0, key.lastIndexOf(":"));
 
-		// alertKeys格式 = [domain:Metric:key]
 		if (containsAlert(productLine, realKey, alertKeys) && !title.startsWith("<span style='color:red'>")) {
 			lineChart.setHtmlTitle("<span style='color:red'>" + title + "</span>");
 		} else {
@@ -124,9 +123,12 @@ public class GraphCreator extends AbstractGraphCreator {
 		return lineKey.substring(lineKey.lastIndexOf("-") + 1, lineKey.lastIndexOf(":"));
 	}
 
-	private boolean containsAlert(String productLine, String key, List<AlertMetric> metrics) {
-		for (AlertMetric metric : metrics) {
-			if (metric.getGroup().equals(productLine) && metric.getMetricId().equals(key)) {
+	private boolean containsAlert(String productLine, String key, List<AlertEntity> metrics) {
+		// alertKeys格式 = [domain:Metric:key]
+		String subKey = key.substring(key.lastIndexOf(':') + 1);
+
+		for (AlertEntity metric : metrics) {
+			if (metric.getGroup().equals(productLine) && metric.getMetric().equals(subKey)) {
 				return true;
 			}
 		}

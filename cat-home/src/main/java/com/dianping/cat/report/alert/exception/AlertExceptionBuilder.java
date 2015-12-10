@@ -10,7 +10,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
-import com.dianping.cat.report.alert.AlertLevel;
+import com.dianping.cat.report.alert.spi.AlertLevel;
 import com.dianping.cat.report.page.dependency.TopMetric.Item;
 
 public class AlertExceptionBuilder {
@@ -101,11 +101,11 @@ public class AlertExceptionBuilder {
 
 		private String m_name;
 
-		private String m_type;
+		private AlertLevel m_type;
 
 		private double m_count;
 
-		public AlertException(String name, String type, double count) {
+		public AlertException(String name, AlertLevel type, double count) {
 			m_name = name;
 			m_type = type;
 			m_count = count;
@@ -115,7 +115,7 @@ public class AlertExceptionBuilder {
 			return m_name;
 		}
 
-		public String getType() {
+		public AlertLevel getType() {
 			return m_type;
 		}
 

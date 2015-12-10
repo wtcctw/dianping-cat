@@ -143,7 +143,7 @@
 	  
 	$(document).ready(
 		function() {
-			$('#crashLog').addClass('active');
+			$('#appCrashLog').addClass('active');
 			$('#time').datetimepicker({
 				format:'Y-m-d H:i',
 				step:30,

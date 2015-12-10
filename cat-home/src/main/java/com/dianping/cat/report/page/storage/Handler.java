@@ -27,6 +27,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
+import com.dianping.cat.consumer.storage.builder.StorageBuilderManager;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.SortHelper;
@@ -85,6 +86,9 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private StorageAlertInfoBuilder m_alertInfoBuilder;
 
+	@Inject
+	private StorageBuilderManager m_storageBuilderManager;
+
 	private Map<String, Map<String, List<String>>> buildAlertLinks(Map<String, StorageAlertInfo> alertInfos, String type) {
 		Map<String, Map<String, List<String>>> links = new LinkedHashMap<String, Map<String, List<String>>>();
 		String format = m_storageGroupConfigManager.queryLinkFormat(type);
@@ -120,11 +124,11 @@ public class Handler implements PageHandler<Context> {
 		return links;
 	}
 
-	private List<Alteration> buildAlterations(Date start, Date end, StorageType type) {
+	private List<Alteration> buildAlterations(Date start, Date end, String type) {
 		List<Alteration> results = new LinkedList<Alteration>();
 
 		try {
-			List<Alteration> alterations = m_alterationDao.findByTypeDruation(start, end, type.getName(),
+			List<Alteration> alterations = m_alterationDao.findByTypeDruation(start, end, type,
 			      AlterationEntity.READSET_FULL);
 
 			for (Alteration alteration : alterations) {
@@ -140,7 +144,7 @@ public class Handler implements PageHandler<Context> {
 
 	private void buildDepartments(Payload payload, Model model, StorageReport storageReport) {
 		Map<String, Department> departments = m_storageGroupConfigManager.queryStorageDepartments(
-		      SortHelper.sortDomain(storageReport.getIds()), payload.getType().getName());
+		      SortHelper.sortDomain(storageReport.getIds()), payload.getType());
 
 		model.setDepartments(departments);
 	}
@@ -188,7 +192,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private String buildReportId(Payload payload) {
-		return payload.getId() + "-" + payload.getType().getName();
+		return payload.getId() + "-" + payload.getType();
 	}
 
 	private StorageReport filterReport(Payload payload, Model model, StorageReport storageReport) {
@@ -262,14 +266,15 @@ public class Handler implements PageHandler<Context> {
 			long end = time + model.getMinute() * TimeHelper.ONE_MINUTE;
 			Date startDate = new Date(end - (minuteCounts - 1) * TimeHelper.ONE_MINUTE);
 			Date endDate = new Date(end);
-			StorageType type = payload.getType();
+			String type = payload.getType();
 
-			List<Alert> alerts = m_alertService.query(startDate, endDate, type.getName());
+			List<Alert> alerts = m_alertService.query(new Date(startDate.getTime() + TimeHelper.ONE_MINUTE), new Date(
+			      endDate.getTime() + TimeHelper.ONE_MINUTE), type);
 			Map<String, StorageAlertInfo> alertInfos = m_alertInfoBuilder.buildStorageAlertInfos(startDate, endDate,
 			      minuteCounts, type, alerts);
 			alertInfos = sortAlertInfos(alertInfos);
 
-			model.setLinks(buildAlertLinks(alertInfos, type.getName()));
+			model.setLinks(buildAlertLinks(alertInfos, type));
 			model.setAlertInfos(alertInfos);
 			model.setReportStart(new Date(time));
 			model.setReportEnd(new Date(time + TimeHelper.ONE_HOUR - 1));
@@ -313,7 +318,7 @@ public class Handler implements PageHandler<Context> {
 			model.setMinutes(minutes);
 		} else {
 			if (payload.getOperations() == null) {
-				List<String> defaultMethods = payload.getType().getDefaultMethods();
+				List<String> defaultMethods = m_storageBuilderManager.getDefaultMethods(payload.getType());
 
 				payload.setOperations(buildOperationStr(defaultMethods));
 			}

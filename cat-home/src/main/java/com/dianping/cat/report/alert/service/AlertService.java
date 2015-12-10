@@ -11,22 +11,22 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.report.Alert;
 import com.dianping.cat.home.dal.report.AlertDao;
-import com.dianping.cat.report.alert.AlertType;
-import com.dianping.cat.report.alert.sender.AlertEntity;
-import com.dianping.cat.report.alert.sender.AlertMessageEntity;
+import com.dianping.cat.report.alert.spi.AlertEntity;
+import com.dianping.cat.report.alert.spi.AlertType;
+import com.dianping.cat.report.alert.spi.sender.SendMessageEntity;
 
 public class AlertService {
 
 	@Inject
 	private AlertDao m_alertDao;
 
-	private Alert buildAlert(AlertEntity alertEntity, AlertMessageEntity message) {
+	private Alert buildAlert(AlertEntity alertEntity, SendMessageEntity message) {
 		Alert alert = new Alert();
 
 		alert.setDomain(alertEntity.getDomain());
 		alert.setAlertTime(alertEntity.getDate());
 		alert.setCategory(alertEntity.getType().getName());
-		alert.setType(alertEntity.getLevel());
+		alert.setType(alertEntity.getLevel().getLevel());
 		alert.setContent(message.getTitle() + "<br/>" + message.getContent());
 		alert.setMetric(alertEntity.getMetric());
 
@@ -48,7 +48,7 @@ public class AlertService {
 		return alerts;
 	}
 
-	public void insert(AlertEntity alertEntity, AlertMessageEntity message) {
+	public void insert(AlertEntity alertEntity, SendMessageEntity message) {
 		if (alertEntity.getType().equals(AlertType.FrontEndException.getName())) {
 			return;
 		}

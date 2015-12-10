@@ -20,8 +20,8 @@ import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.entity.SubCondition;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
-import com.dianping.cat.report.alert.AlertLevel;
 import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
+import com.dianping.cat.report.alert.spi.AlertLevel;
 
 public class AppRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 	@Inject
@@ -46,7 +46,7 @@ public class AppRuleConfigManager extends BaseRuleConfigManager implements Initi
 		config.setEndtime("24:00");
 
 		Condition condition = new Condition();
-		condition.setAlertType(AlertLevel.WARNING);
+		condition.setAlertType(AlertLevel.WARNING.getLevel());
 		condition.setMinute(3);
 		SubCondition minSuccessSubCondition = new SubCondition();
 

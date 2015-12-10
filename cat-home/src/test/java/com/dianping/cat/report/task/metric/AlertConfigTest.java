@@ -16,9 +16,9 @@ import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
-import com.dianping.cat.report.alert.AlertResultEntity;
-import com.dianping.cat.report.alert.DataChecker;
-import com.dianping.cat.report.alert.DefaultDataChecker;
+import com.dianping.cat.report.alert.spi.rule.DataCheckEntity;
+import com.dianping.cat.report.alert.spi.rule.DataChecker;
+import com.dianping.cat.report.alert.spi.rule.DefaultDataChecker;
 
 public class AlertConfigTest {
 
@@ -66,7 +66,7 @@ public class AlertConfigTest {
 
 		double baseline[] = { 50, 200, 200 };
 		double value[] = { 50, 100, 100 };
-		AlertResultEntity result = extractError(m_checker.checkData(value, baseline,
+		DataCheckEntity result = extractError(m_checker.checkData(value, baseline,
 		      buildConditions(configMap.get("two-minute"))));
 		Assert.assertEquals(result.isTriggered(), true);
 	}
@@ -79,7 +79,7 @@ public class AlertConfigTest {
 
 		double baseline[] = { 200, 200 };
 		double value[] = { 100, 100 };
-		AlertResultEntity result = extractError(m_checker.checkData(value, baseline,
+		DataCheckEntity result = extractError(m_checker.checkData(value, baseline,
 		      buildConditions(configMap.get("decreasePercentage"))));
 		Assert.assertEquals(result.isTriggered(), true);
 
@@ -122,13 +122,13 @@ public class AlertConfigTest {
 		Assert.assertNull(result);
 	}
 
-	private AlertResultEntity extractError(List<AlertResultEntity> alertResults) {
+	private DataCheckEntity extractError(List<DataCheckEntity> alertResults) {
 		int length = alertResults.size();
 		if (length == 0) {
 			return null;
 		}
 
-		for (AlertResultEntity alertResult : alertResults) {
+		for (DataCheckEntity alertResult : alertResults) {
 			if (alertResult.getAlertLevel().equals("error")) {
 				return alertResult;
 			}

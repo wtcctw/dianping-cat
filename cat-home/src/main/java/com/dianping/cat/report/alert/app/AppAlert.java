@@ -22,11 +22,11 @@ import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.alert.AlertResultEntity;
-import com.dianping.cat.report.alert.AlertType;
-import com.dianping.cat.report.alert.DataChecker;
-import com.dianping.cat.report.alert.sender.AlertEntity;
-import com.dianping.cat.report.alert.sender.AlertManager;
+import com.dianping.cat.report.alert.spi.AlertEntity;
+import com.dianping.cat.report.alert.spi.AlertManager;
+import com.dianping.cat.report.alert.spi.AlertType;
+import com.dianping.cat.report.alert.spi.rule.DataCheckEntity;
+import com.dianping.cat.report.alert.spi.rule.DataChecker;
 import com.dianping.cat.report.page.app.QueryType;
 import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
@@ -157,10 +157,10 @@ public class AppAlert implements Task {
 
 		if (datas != null && datas.length > 0) {
 			List<Condition> checkedConditions = pair.getValue();
-			List<AlertResultEntity> alertResults = m_dataChecker.checkDataForApp(datas, checkedConditions);
+			List<DataCheckEntity> alertResults = m_dataChecker.checkDataForApp(datas, checkedConditions);
 			String commandName = queryCommand(command);
 
-			for (AlertResultEntity alertResult : alertResults) {
+			for (DataCheckEntity alertResult : alertResults) {
 				Map<String, Object> par = new HashMap<String, Object>();
 				par.put("name", name);
 				AlertEntity entity = new AlertEntity();

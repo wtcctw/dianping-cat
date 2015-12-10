@@ -87,8 +87,8 @@
 			var commandId = ${model.command2IdJson}[command].id;
 			var code = $("#code").val();
 			var network = $("#network").val();
-			var version = $("#version").val();
-			var connectionType = $("#connectionType").val();
+			var version = $("#app-version").val();
+			var connectionType = $("#connect-type").val();
 			var platform = $("#platform").val();
 			var city = $("#city").val();
 			var operator = $("#operator").val();
@@ -106,8 +106,8 @@
 		function refreshDisabled(){
 			document.getElementById("code").disabled = false;
 			document.getElementById("network").disabled = false;
-			document.getElementById("version").disabled = false;
-			document.getElementById("connectionType").disabled = false;
+			document.getElementById("app-version").disabled = false;
+			document.getElementById("connect-type").disabled = false;
 			document.getElementById("platform").disabled = false;
 			document.getElementById("city").disabled = false;
 			document.getElementById("operator").disabled = false;
@@ -156,8 +156,8 @@
 
 					$("#code").val(words[2]);
 					$("#network").val(words[3]);
-					$("#version").val(words[4]);
-					$("#connectionType").val(words[5]);
+					$("#app-version").val(words[4]);
+					$("#connect-type").val(words[5]);
 					$("#platform").val(words[6]);
 					$("#city").val(words[7]);
 					$("#operator").val(words[8]);

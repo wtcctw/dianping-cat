@@ -14,14 +14,14 @@ import com.dianping.cat.home.network.entity.NetGraph;
 import com.dianping.cat.home.network.entity.NetGraphSet;
 import com.dianping.cat.home.network.entity.NetTopology;
 import com.dianping.cat.home.network.entity.Switch;
-import com.dianping.cat.report.alert.AlertInfo.AlertMetric;
+import com.dianping.cat.report.alert.spi.AlertEntity;
 
 public class NetGraphBuilder {
 
 	private static final int ERROR = 3;
 
 	public NetGraphSet buildGraphSet(NetGraph netGraphTemplate, Map<String, MetricReport> reports,
-	      List<AlertMetric> alertKeys) {
+	      List<AlertEntity> alertKeys) {
 		NetGraphSet netGraphSet = new NetGraphSet();
 
 		for (int minute = 0; minute <= 59; minute++) {
@@ -51,7 +51,7 @@ public class NetGraphBuilder {
 		return netGraphSet;
 	}
 
-	private void buildConnectionInfo(Map<String, MetricReport> reports, List<AlertMetric> alertKeys, int minute,
+	private void buildConnectionInfo(Map<String, MetricReport> reports, List<AlertEntity> alertKeys, int minute,
 	      List<String> alertSwitchs, Connection connection) {
 		double insum = 0, outsum = 0, inDiscardsSum = 0, outDiscardsSum = 0, inErrorsSum = 0, outErrorsSum = 0;
 		int inState = 0, outState = 0, inDiscardsState = 0, outDiscardsState = 0, inErrorsState = 0, outErrorsState = 0;
@@ -129,11 +129,11 @@ public class NetGraphBuilder {
 		}
 	}
 
-	private boolean containsAlert(List<AlertMetric> alertKeys, String group, String domain, String prefix, String suffix) {
-		String actualKey = domain + ":Metric:" + prefix + suffix;
+	private boolean containsAlert(List<AlertEntity> alertKeys, String group, String domain, String prefix, String suffix) {
+		String actualKey = prefix + suffix;
 
-		for (AlertMetric metric : alertKeys) {
-			if (metric.getGroup().equals(group) && metric.getMetricId().equals(actualKey)) {
+		for (AlertEntity metric : alertKeys) {
+			if (metric.getGroup().equals(group) && metric.getMetric().equals(actualKey)) {
 				return true;
 			}
 		}

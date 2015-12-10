@@ -555,8 +555,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.dependency.DatabaseParser</role>
-			<implementation>com.dianping.cat.consumer.dependency.DatabaseParser</implementation>
+			<role>com.dianping.cat.consumer.storage.builder.DatabaseParser</role>
+			<implementation>com.dianping.cat.consumer.storage.builder.DatabaseParser</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
@@ -575,7 +575,7 @@
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.dependency.DatabaseParser</role>
+					<role>com.dianping.cat.consumer.storage.builder.DatabaseParser</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -674,12 +674,36 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.storage.DatabaseParser</role>
-			<implementation>com.dianping.cat.consumer.storage.DatabaseParser</implementation>
+			<role>com.dianping.cat.consumer.storage.builder.DatabaseParser</role>
+			<implementation>com.dianping.cat.consumer.storage.builder.DatabaseParser</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.storage.StorageReportUpdater</role>
 			<implementation>com.dianping.cat.consumer.storage.StorageReportUpdater</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.storage.builder.StorageBuilderManager</role>
+			<implementation>com.dianping.cat.consumer.storage.builder.StorageBuilderManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.storage.builder.StorageBuilder</role>
+			<role-hint>SQL</role-hint>
+			<implementation>com.dianping.cat.consumer.storage.builder.StorageSQLBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.storage.builder.DatabaseParser</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.storage.builder.StorageBuilder</role>
+			<role-hint>Cache</role-hint>
+			<implementation>com.dianping.cat.consumer.storage.builder.StorageCacheBuilder</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.storage.builder.StorageBuilder</role>
+			<role-hint>RPC</role-hint>
+			<implementation>com.dianping.cat.consumer.storage.builder.StorageRPCBuilder</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
@@ -699,7 +723,7 @@
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.storage.DatabaseParser</role>
+					<role>com.dianping.cat.consumer.storage.builder.DatabaseParser</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.storage.StorageReportUpdater</role>

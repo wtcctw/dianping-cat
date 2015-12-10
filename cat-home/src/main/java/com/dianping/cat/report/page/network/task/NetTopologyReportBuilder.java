@@ -20,7 +20,7 @@ import com.dianping.cat.home.network.entity.NetGraph;
 import com.dianping.cat.home.network.entity.NetGraphSet;
 import com.dianping.cat.home.network.entity.NetTopology;
 import com.dianping.cat.home.network.transform.DefaultNativeBuilder;
-import com.dianping.cat.report.alert.AlertInfo.AlertMetric;
+import com.dianping.cat.report.alert.spi.AlertEntity;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
 import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
 import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
@@ -71,7 +71,7 @@ public class NetTopologyReportBuilder implements TaskBuilder {
 		}
 
 		NetGraphSet netGraphSet = m_netGraphBuilder
-		      .buildGraphSet(netGraphTemplate, reports, new ArrayList<AlertMetric>());
+		      .buildGraphSet(netGraphTemplate, reports, new ArrayList<AlertEntity>());
 		HourlyReport hourlyReport = new HourlyReport();
 
 		hourlyReport.setType(1);

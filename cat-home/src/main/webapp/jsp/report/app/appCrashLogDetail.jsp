@@ -41,8 +41,7 @@
 <script type="text/javascript">
 $(document).ready(
 	function() {
-		$('#Web_report').addClass('active open');
-		$('#web_problem').addClass('active');
+		$('#appCrashLog').addClass('active');
 });
 
 </script>

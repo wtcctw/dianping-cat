@@ -4,6 +4,7 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.storage.builder.StorageSQLBuilder;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
@@ -16,7 +17,7 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private Action m_action;
 
 	@FieldMeta("type")
-	private StorageType m_type;
+	private String m_type = StorageSQLBuilder.ID;
 
 	@FieldMeta("operations")
 	private String m_operations;
@@ -98,7 +99,7 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_sort;
 	}
 
-	public StorageType getType() {
+	public String getType() {
 		return m_type;
 	}
 
@@ -156,17 +157,13 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	}
 
 	public void setType(String type) {
-		m_type = StorageType.getByName(type, StorageType.SQL);
+		m_type = type;
 	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
 			m_action = Action.HOURLY_STORAGE;
-		}
-
-		if (m_type == null) {
-			m_type = StorageType.SQL;
 		}
 	}
 }

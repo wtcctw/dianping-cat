@@ -12,9 +12,9 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.alert.sender.AlertChannel;
-import com.dianping.cat.report.alert.sender.AlertMessageEntity;
-import com.dianping.cat.report.alert.sender.sender.SenderManager;
+import com.dianping.cat.report.alert.spi.AlertChannel;
+import com.dianping.cat.report.alert.spi.sender.SendMessageEntity;
+import com.dianping.cat.report.alert.spi.sender.SenderManager;
 import com.dianping.cat.report.alert.summary.build.RelatedSummaryBuilder;
 import com.dianping.cat.report.alert.summary.build.AlterationSummaryBuilder;
 import com.dianping.cat.report.alert.summary.build.FailureSummaryBuilder;
@@ -87,7 +87,7 @@ public class AlertSummaryExecutor {
 		} else {
 			String title = buildMailTitle(domain, date);
 			List<String> receivers = builderReceivers(receiverStr);
-			AlertMessageEntity message = new AlertMessageEntity(domain, title, "alertSummary", content, receivers);
+			SendMessageEntity message = new SendMessageEntity(domain, title, "alertSummary", content, receivers);
 
 			if (receivers.size() > 0) {
 				m_sendManager.sendAlert(AlertChannel.MAIL, message);

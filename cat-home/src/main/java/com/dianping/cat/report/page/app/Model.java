@@ -244,7 +244,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	public Map<Integer, Item> getPlatforms() {
 		return m_platforms;
 	}
-
+	
 	public ProblemReport getProblemReport() {
 		return m_problemReport;
 	}

@@ -25,10 +25,10 @@ import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.alert.AlertResultEntity;
-import com.dianping.cat.report.alert.DataChecker;
-import com.dianping.cat.report.alert.sender.AlertEntity;
-import com.dianping.cat.report.alert.sender.AlertManager;
+import com.dianping.cat.report.alert.spi.AlertEntity;
+import com.dianping.cat.report.alert.spi.AlertManager;
+import com.dianping.cat.report.alert.spi.rule.DataCheckEntity;
+import com.dianping.cat.report.alert.spi.rule.DataChecker;
 import com.dianping.cat.report.page.storage.StorageConstants;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
 import com.dianping.cat.report.page.storage.transform.StorageMergeHelper;
@@ -112,9 +112,9 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 		return minute;
 	}
 
-	private List<AlertResultEntity> computeAlertForRule(int minute, ReportFetcherParam param, List<Config> configs,
+	private List<DataCheckEntity> computeAlertForRule(int minute, ReportFetcherParam param, List<Config> configs,
 	      StorageReport report) {
-		List<AlertResultEntity> results = new ArrayList<AlertResultEntity>();
+		List<DataCheckEntity> results = new ArrayList<DataCheckEntity>();
 		Pair<Integer, List<Condition>> conditionPair = getRuleConfigManager().convertConditions(configs);
 
 		if (conditionPair != null) {
@@ -194,8 +194,8 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 		return result;
 	}
 
-	private void handleAlertInfos(ReportFetcherParam param, int minute, List<AlertResultEntity> alertResults) {
-		for (AlertResultEntity alertResult : alertResults) {
+	private void handleAlertInfos(ReportFetcherParam param, int minute, List<DataCheckEntity> alertResults) {
+		for (DataCheckEntity alertResult : alertResults) {
 			AlertEntity entity = new AlertEntity();
 
 			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
@@ -221,17 +221,17 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 		int minute = calAlreadyMinute();
 		boolean alert = true;
 		List<Rule> rules = getRuleConfigManager().findRules(id, ip);
-		List<Pair<ReportFetcherParam, List<AlertResultEntity>>> alertEntities = new ArrayList<Pair<ReportFetcherParam, List<AlertResultEntity>>>();
+		List<Pair<ReportFetcherParam, List<DataCheckEntity>>> alertEntities = new ArrayList<Pair<ReportFetcherParam, List<DataCheckEntity>>>();
 
 		for (Rule rule : rules) {
 			ReportFetcherParam param = new ReportFetcherParam(id, ip, rule.getId());
 
 			if (param.getAnd()) {
 				if (alert) {
-					List<AlertResultEntity> results = computeAlertForRule(minute, param, rule.getConfigs(), currentReport);
+					List<DataCheckEntity> results = computeAlertForRule(minute, param, rule.getConfigs(), currentReport);
 
 					if (results.size() > 0) {
-						alertEntities.add(new Pair<ReportFetcherParam, List<AlertResultEntity>>(param, results));
+						alertEntities.add(new Pair<ReportFetcherParam, List<DataCheckEntity>>(param, results));
 					} else {
 						alert = false;
 					}
@@ -239,14 +239,14 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 					continue;
 				}
 			} else {
-				List<AlertResultEntity> results = computeAlertForRule(minute, param, rule.getConfigs(), currentReport);
+				List<DataCheckEntity> results = computeAlertForRule(minute, param, rule.getConfigs(), currentReport);
 
 				handleAlertInfos(param, minute, results);
 			}
 		}
 
 		if (alert) {
-			for (Pair<ReportFetcherParam, List<AlertResultEntity>> entity : alertEntities) {
+			for (Pair<ReportFetcherParam, List<DataCheckEntity>> entity : alertEntities) {
 				handleAlertInfos(entity.getKey(), minute, entity.getValue());
 			}
 		}

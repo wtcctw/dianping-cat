@@ -18,10 +18,9 @@ import com.dianping.cat.home.storage.alert.entity.Operation;
 import com.dianping.cat.home.storage.alert.entity.Storage;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.home.storage.alert.entity.Target;
-import com.dianping.cat.report.alert.AlertLevel;
 import com.dianping.cat.report.alert.service.AlertService;
+import com.dianping.cat.report.alert.spi.AlertLevel;
 import com.dianping.cat.report.page.storage.StorageConstants;
-import com.dianping.cat.report.page.storage.StorageType;
 
 public class StorageAlertInfoBuilder {
 
@@ -35,7 +34,7 @@ public class StorageAlertInfoBuilder {
 	}
 
 	public Map<String, StorageAlertInfo> buildStorageAlertInfos(Date start, Date end, int minuteCounts,
-	      StorageType type, List<Alert> alerts) {
+	      String type, List<Alert> alerts) {
 		Map<String, StorageAlertInfo> results = prepareBlankAlert(start.getTime(), end.getTime(), minuteCounts, type);
 
 		for (Alert alert : alerts) {
@@ -67,8 +66,8 @@ public class StorageAlertInfoBuilder {
 		String ip = fields.get(0);
 		String operation = fields.get(1);
 		String target = queryTargetTitle(fields.get(2));
-		int level = queryLevel(alert.getType());
-
+		AlertLevel alertLevel = AlertLevel.findByName(alert.getType());
+		int level = alertLevel.getPriority();
 		Storage storage = alertInfo.findOrCreateStorage(name);
 		storage.incCount();
 		storage.setLevel(buildLevel(storage.getLevel(), level));
@@ -87,26 +86,16 @@ public class StorageAlertInfoBuilder {
 		tg.getDetails().add(new Detail(alert.getContent()).setLevel(level));
 	}
 
-	private Map<String, StorageAlertInfo> prepareBlankAlert(long start, long end, int minuteCounts, StorageType type) {
+	private Map<String, StorageAlertInfo> prepareBlankAlert(long start, long end, int minuteCounts, String type) {
 		Map<String, StorageAlertInfo> results = new LinkedHashMap<String, StorageAlertInfo>();
 
 		for (long s = start; s <= end; s += TimeHelper.ONE_MINUTE) {
 			String title = m_sdf.format(new Date(s));
-			StorageAlertInfo blankAlertInfo = makeAlertInfo(type.getName(), new Date(start));
+			StorageAlertInfo blankAlertInfo = makeAlertInfo(type, new Date(start));
 
 			results.put(title, blankAlertInfo);
 		}
 		return results;
-	}
-
-	private int queryLevel(String level) {
-		if (AlertLevel.ERROR.equals(level)) {
-			return 2;
-		} else if (AlertLevel.WARNING.equals(level)) {
-			return 1;
-		} else {
-			return 0;
-		}
 	}
 
 	private String queryTargetTitle(String target) {

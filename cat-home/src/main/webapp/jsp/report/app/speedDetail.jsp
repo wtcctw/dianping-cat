@@ -9,7 +9,7 @@
 					<div class="input-group" style="float:left;">
 					<span class="input-group-addon">页面</span>
 					<select id="page" style="width: 240px;">
-					<c:forEach var="item" items="${model.pages}" varStatus="status">
+					<c:forEach var="item" items="${model.appSpeedDisplayInfo.pages}" varStatus="status">
 							<option value='${item}'>${item}</option>
 					</c:forEach>
 					</select></div>
@@ -65,7 +65,7 @@
 						<span class="input-group-addon">开始</span>
 					<input type="text" id="time2" style="width:110px;"/>
 				 <span class="input-group-addon">页面</span> <select id="page2" style="width: 240px;">
-					<c:forEach var="item" items="${model.pages}" varStatus="status">
+					<c:forEach var="item" items="${model.appSpeedDisplayInfo.pages}" varStatus="status">
 							<option value='${item}'>${item}</option>
 					</c:forEach>
 					</select> 

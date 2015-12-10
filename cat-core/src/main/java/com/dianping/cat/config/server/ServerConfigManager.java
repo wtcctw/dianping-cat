@@ -12,7 +12,6 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Files;
 import org.unidal.helper.Splitters;
-import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Constants;
@@ -151,7 +150,7 @@ public class ServerConfigManager implements LogEnabled {
 			return DEFAULT_HDFS_FILE_MAX_SIZE;
 		}
 	}
-	
+
 	public String getHdfsLocalBaseDir(String id) {
 		if (m_config != null) {
 			StorageConfig storage = m_config.getStorage();
@@ -308,10 +307,6 @@ public class ServerConfigManager implements LogEnabled {
 		}
 	}
 
-	public boolean isCacheTransaction(String type) {
-		return StringUtils.isNotEmpty(type) && type.startsWith("Cache.memcached");
-	}
-
 	public boolean isHarMode() {
 		if (m_config != null) {
 			return m_config.getStorage().isHarMode();
@@ -358,10 +353,6 @@ public class ServerConfigManager implements LogEnabled {
 		} else {
 			return false;
 		}
-	}
-
-	public boolean isSQLTransaction(String type) {
-		return "SQL".equals(type);
 	}
 
 	private long toLong(String str, long defaultValue) {

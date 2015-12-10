@@ -22,13 +22,13 @@
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
 							<li id="trend"><a href="/cat/r/app?op=view&showActivity=false&domain=${model.domain}">
-								<i class="menu-icon fa fa-caret-right"></i>API访问趋势</a>
+								<i class="menu-icon fa fa-caret-right"></i>Api访问趋势</a>
 								<b class="arrow"></b></li>
 							<li id="accessPiechart"><a href="/cat/r/app?op=piechart&domain=${model.domain}">
-								<i class="menu-icon fa fa-caret-right"></i>访问量分布</a>
+								<i class="menu-icon fa fa-caret-right"></i>Api访问分布</a>
 								<b class="arrow"></b></li>
 							<li id="speed"><a href="/cat/r/app?op=speed&domain=${model.domain}">
-								<i class="menu-icon fa fa-caret-right"></i>APP页面测速</a>
+								<i class="menu-icon fa fa-caret-right"></i>App页面测速</a>
 								<b class="arrow"></b></li>
 							<li id="statistics"><a href="/cat/r/app?op=statistics&domain=${model.domain}&type=all">
 								<i class="menu-icon fa fa-caret-right"></i>每天报表统计</a>
@@ -40,9 +40,9 @@
 								<i class="menu-icon fa fa-caret-right"></i>长连访问分布</a>
 								<b class="arrow"></b></li>
 							<li id="crashLog"><a href="/cat/r/app?op=crashLog&domain=${model.domain}">
-								<i class="menu-icon fa fa-caret-right"></i>Crash日志</a>
+								<i class="menu-icon fa fa-caret-right"></i>AppCrash日志</a>
 								<b class="arrow"></b></li>
-							<li id="crashLog"><a href="/cat/r/app?op=appCrashLog">
+							<li id="appCrashLog"><a href="/cat/r/app?op=appCrashLog">
 								<i class="menu-icon fa fa-caret-right"></i>Crash日志(新)</a>
 								<b class="arrow"></b></li>
 							<li id="traceLog"><a href="http://mobile-tracer-web01.nh/" target="_blank">
@@ -62,7 +62,6 @@
 					try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
 				</script>
 			</div>
-				
 			<!-- /section:basics/sidebar -->
 			<div class="main-content">
  				<div id="dialog-message" class="hide">

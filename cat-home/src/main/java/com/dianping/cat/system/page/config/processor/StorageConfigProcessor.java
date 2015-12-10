@@ -2,11 +2,13 @@ package com.dianping.cat.system.page.config.processor;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.report.alert.storage.StorageCacheRuleConfigManager;
-import com.dianping.cat.report.alert.storage.StorageRPCRuleConfigManager;
+import com.dianping.cat.consumer.storage.builder.StorageCacheBuilder;
+import com.dianping.cat.consumer.storage.builder.StorageRPCBuilder;
+import com.dianping.cat.consumer.storage.builder.StorageSQLBuilder;
 import com.dianping.cat.report.alert.storage.StorageRuleConfigManager;
-import com.dianping.cat.report.alert.storage.StorageSQLRuleConfigManager;
-import com.dianping.cat.report.page.storage.StorageType;
+import com.dianping.cat.report.alert.storage.cache.StorageCacheRuleConfigManager;
+import com.dianping.cat.report.alert.storage.rpc.StorageRPCRuleConfigManager;
+import com.dianping.cat.report.alert.storage.sql.StorageSQLRuleConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
@@ -41,21 +43,21 @@ public class StorageConfigProcessor extends BaseProcesser {
 			model.setRules(configManager.getMonitorRules().getRules().values());
 			break;
 		default:
-			throw new RuntimeException("Error action name " + action.getName());
+			throw new RuntimeException("Error action name: " + action.getName());
 		}
 	}
 
 	private StorageRuleConfigManager buildConfigManager(Payload payload) {
-		StorageType storageType = StorageType.getByName(payload.getType(), StorageType.SQL);
+		String type = payload.getType();
 
-		switch (storageType) {
-		case SQL:
-			return m_sqlConfigManager;
-		case CACHE:
+		if (StorageCacheBuilder.ID.equals(type)) {
 			return m_cacheConfigManager;
-		case RPC:
+		} else if (StorageRPCBuilder.ID.equals(type)) {
 			return m_rpcConfigManager;
+		} else if (StorageSQLBuilder.ID.equals(type)) {
+			return m_sqlConfigManager;
+		} else {
+			throw new RuntimeException("Error type name: " + type);
 		}
-		return null;
 	}
 }

@@ -44,7 +44,7 @@
 				<th align=left>
 				<div class="input-group" style="float:left;width:120px">
 	              	<span class="input-group-addon">版本</span>
-					<select id="version" style="width: 100px;">
+					<select id="app-version" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
@@ -53,7 +53,7 @@
 	            </div>
 	            <div class="input-group" style="float:left;width:120px">
 	              	<span class="input-group-addon">连接类型</span>
-					<select id="connectionType" style="width: 100px;">
+					<select id="connect-type" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.connectionTypes}"
 							varStatus="status">
@@ -96,7 +96,7 @@
 						<option value='code'>返回码</option>
 						<option value='network'>网络类型</option>
 						<option value='app-version'>版本</option>
-						<option value='connnect-type'>连接类型</option>
+						<option value='connect-type'>连接类型</option>
 						<option value='platform'>平台</option>
 						<option value='city'>地区</option>
 						<option value='operator'>运营商</option>

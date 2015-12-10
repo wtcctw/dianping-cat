@@ -9,7 +9,7 @@ public enum AppDataField {
 
 	APP_VERSION("app-version"),
 
-	CONNECT_TYPE("connnect-type"),
+	CONNECT_TYPE("connect-type"),
 
 	PLATFORM("platform"),
 
