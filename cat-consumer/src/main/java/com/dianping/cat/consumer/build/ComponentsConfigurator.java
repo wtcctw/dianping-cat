@@ -42,8 +42,13 @@ import com.dianping.cat.consumer.problem.ProblemHandler;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.StateDelegate;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
+import com.dianping.cat.consumer.storage.StorageDBParser;
 import com.dianping.cat.consumer.storage.StorageDelegate;
 import com.dianping.cat.consumer.storage.StorageReportUpdater;
+import com.dianping.cat.consumer.storage.manager.StorageCacheManager;
+import com.dianping.cat.consumer.storage.manager.StorageManager;
+import com.dianping.cat.consumer.storage.manager.StorageRPCManager;
+import com.dianping.cat.consumer.storage.manager.StorageSQLManager;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.TopDelegate;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -273,11 +278,15 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	private Collection<Component> defineStorageComponents() {
 		final List<Component> all = new ArrayList<Component>();
 		final String ID = StorageAnalyzer.ID;
-		all.add(C(com.dianping.cat.consumer.storage.DatabaseParser.class));
+		all.add(C(StorageDBParser.class));
 		all.add(C(StorageReportUpdater.class));
+		all.add(C(StorageManager.class, StorageSQLManager.ID, StorageSQLManager.class).req(StorageDBParser.class));
+		all.add(C(StorageManager.class, StorageCacheManager.ID, StorageCacheManager.class));
+		all.add(C(StorageManager.class, StorageRPCManager.ID, StorageRPCManager.class));
+
 		all.add(C(MessageAnalyzer.class, ID, StorageAnalyzer.class).is(PER_LOOKUP).req(ReportManager.class, ID)
-		      .req(ReportDelegate.class, ID).req(ServerConfigManager.class)
-		      .req(com.dianping.cat.consumer.storage.DatabaseParser.class).req(StorageReportUpdater.class));
+		      .req(ReportDelegate.class, ID).req(ServerConfigManager.class).req(StorageDBParser.class)
+		      .req(StorageReportUpdater.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class).is(PER_LOOKUP) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class, DomainValidator.class) //
