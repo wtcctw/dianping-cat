@@ -1,27 +1,39 @@
 package com.dianping.cat.report.page.app.display;
 
+import com.dianping.cat.report.graph.BarChart;
 import com.dianping.cat.report.graph.PieChart;
-import com.dianping.cat.report.graph.PieChartDetailInfo;
+import com.dianping.cat.report.graph.DistributeDetailInfo;
 
 public class AppCommandDisplayInfo {
 
-	private PieChart m_pieChart;
+	private DistributeDetailInfo m_distributeDetails;
 
-	private PieChartDetailInfo m_pieChartDetailInfo;
+	private PieChart m_pieChart;
+	
+	private BarChart m_barChart;
+	
+	public BarChart getBarChart() {
+		return m_barChart;
+	}
+
+	public DistributeDetailInfo getDistributeDetails() {
+		return m_distributeDetails;
+	}
 
 	public PieChart getPieChart() {
 		return m_pieChart;
+	}
+
+	public void setBarChart(BarChart barChart) {
+		m_barChart = barChart;
+	}
+
+	public void setDistributeDetails(DistributeDetailInfo distributeDetails) {
+		m_distributeDetails = distributeDetails;
 	}
 
 	public void setPieChart(PieChart pieChart) {
 		m_pieChart = pieChart;
 	}
 
-	public PieChartDetailInfo getPieChartDetailInfo() {
-		return m_pieChartDetailInfo;
-	}
-
-	public void setPieChartDetailInfo(PieChartDetailInfo pieChartDetailInfo) {
-		m_pieChartDetailInfo = pieChartDetailInfo;
-	}
 }

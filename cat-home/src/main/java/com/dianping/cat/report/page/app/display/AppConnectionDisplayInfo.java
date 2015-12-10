@@ -1,13 +1,13 @@
 package com.dianping.cat.report.page.app.display;
 
 import com.dianping.cat.report.graph.PieChart;
-import com.dianping.cat.report.graph.PieChartDetailInfo;
+import com.dianping.cat.report.graph.DistributeDetailInfo;
 
 public class AppConnectionDisplayInfo {
 	
 	private PieChart m_pieChart;
 
-	private PieChartDetailInfo m_pieChartDetailInfo;
+	private DistributeDetailInfo m_pieChartDetailInfo;
 
 	public PieChart getPieChart() {
 		return m_pieChart;
@@ -17,11 +17,11 @@ public class AppConnectionDisplayInfo {
 		m_pieChart = pieChart;
 	}
 
-	public PieChartDetailInfo getPieChartDetailInfo() {
+	public DistributeDetailInfo getPieChartDetailInfo() {
 		return m_pieChartDetailInfo;
 	}
 
-	public void setPieChartDetailInfo(PieChartDetailInfo pieChartDetailInfo) {
+	public void setPieChartDetailInfo(DistributeDetailInfo pieChartDetailInfo) {
 		m_pieChartDetailInfo = pieChartDetailInfo;
 	}
 }

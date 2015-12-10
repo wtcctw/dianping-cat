@@ -13,10 +13,11 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.app.AppConnectionData;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
+import com.dianping.cat.report.graph.DistributeDetailInfo.DistributeDetail;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
-import com.dianping.cat.report.graph.PieChartDetailInfo;
+import com.dianping.cat.report.graph.DistributeDetailInfo;
 import com.dianping.cat.report.page.app.QueryType;
 import com.dianping.cat.report.page.app.service.AppConnectionService;
 import com.dianping.cat.report.page.app.service.AppDataField;
@@ -67,7 +68,7 @@ public class AppConnectionGraphCreator {
 	}
 
 	public AppConnectionDisplayInfo buildPieChart(CommandQueryEntity entity, AppDataField field) {
-		PieChartDetailInfo info = new PieChartDetailInfo();
+		DistributeDetailInfo info = new DistributeDetailInfo();
 		PieChart pieChart = new PieChart().setMaxSize(Integer.MAX_VALUE);
 		List<Item> items = new ArrayList<Item>();
 		List<AppConnectionData> datas = m_AppConnectionService.queryByField(entity, field);
@@ -75,7 +76,7 @@ public class AppConnectionGraphCreator {
 		for (AppConnectionData data : datas) {
 			Pair<Integer, Item> pair = buildPieChartItem(entity.getId(), data, field);
 			Item item = pair.getValue();
-			com.dianping.cat.report.graph.PieChartDetailInfo.Item infoItem = new com.dianping.cat.report.graph.PieChartDetailInfo.Item();
+			DistributeDetail infoItem = new DistributeDetail();
 
 			infoItem.setId(pair.getKey()).setTitle(item.getTitle()).setRequestSum(item.getNumber());
 			info.add(infoItem);
@@ -88,7 +89,7 @@ public class AppConnectionGraphCreator {
 		AppConnectionDisplayInfo displayInfo = new AppConnectionDisplayInfo();
 		displayInfo.setPieChart(pieChart);
 		displayInfo.setPieChartDetailInfo(info);
-		
+
 		return displayInfo;
 	}
 
@@ -191,16 +192,16 @@ public class AppConnectionGraphCreator {
 		return new Pair<Integer, Item>(pair.getKey(), item);
 	}
 
-	private void updatePieChartDetailInfo(PieChartDetailInfo items) {
+	private void updatePieChartDetailInfo(DistributeDetailInfo items) {
 		double sum = 0;
 
-		for (com.dianping.cat.report.graph.PieChartDetailInfo.Item item : items.getItems()) {
+		for (DistributeDetail item : items.getItems()) {
 			sum += item.getRequestSum();
 		}
 
 		if (sum > 0) {
-			for (com.dianping.cat.report.graph.PieChartDetailInfo.Item item : items.getItems()) {
-				item.setSuccessRatio(item.getRequestSum() / sum);
+			for (DistributeDetail item : items.getItems()) {
+				item.setRatio(item.getRequestSum() / sum);
 			}
 		}
 	}

@@ -66,17 +66,6 @@ import com.dianping.cat.service.ProjectService;
 
 public class Handler implements PageHandler<Context> {
 
-	public class CodeDistributionComparator implements Comparator<String> {
-
-		@Override
-		public int compare(String o1, String o2) {
-			int id1 = Integer.parseInt(o1.replaceAll("X", "0"));
-			int id2 = Integer.parseInt(o2.replaceAll("X", "0"));
-
-			return id2 - id1;
-		}
-	}
-
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -238,9 +227,12 @@ public class Handler implements PageHandler<Context> {
 		return lineChart;
 	}
 
-	private AppCommandDisplayInfo buildPieChart(Payload payload) {
+	private AppCommandDisplayInfo buildCommandDistributeChart(Payload payload) {
 		try {
-			return m_appGraphCreator.buildPieChart(payload.getQueryEntity1(), payload.getGroupByField());
+			AppCommandDisplayInfo displayInfo = m_appGraphCreator.buildCommandDistributeChart(payload.getQueryEntity1(),
+			      payload.getGroupByField());
+			
+			return displayInfo;
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -282,7 +274,7 @@ public class Handler implements PageHandler<Context> {
 			parallelBuildLineChart(model, payload);
 			break;
 		case PIECHART:
-			AppCommandDisplayInfo commandDisplayInfo = buildPieChart(payload);
+			AppCommandDisplayInfo commandDisplayInfo = buildCommandDistributeChart(payload);
 			int commandId = payload.getQueryEntity1().getId();
 
 			model.setCommandDisplayInfo(commandDisplayInfo);
@@ -299,11 +291,11 @@ public class Handler implements PageHandler<Context> {
 			model.setFetchData(m_jsonBuilder.toJson(lineChartObjs));
 			break;
 		case PIECHART_JSON:
-			AppCommandDisplayInfo appCommandDisplayInfo = buildPieChart(payload);
+			AppCommandDisplayInfo appCommandDisplayInfo = buildCommandDistributeChart(payload);
 			Map<String, Object> pieChartObjs = new HashMap<String, Object>();
 
 			pieChartObjs.put("pieCharts", appCommandDisplayInfo.getPieChart());
-			pieChartObjs.put("pieChartDetails", appCommandDisplayInfo.getPieChartDetailInfo());
+			pieChartObjs.put("pieChartDetails", appCommandDisplayInfo.getDistributeDetails());
 			model.setFetchData(m_jsonBuilder.toJson(pieChartObjs));
 			break;
 		case APP_ADD:
@@ -541,4 +533,16 @@ public class Handler implements PageHandler<Context> {
 		AppReport report = m_appReportService.queryDailyReport(Constants.CAT, startDate, endDate);
 		return report;
 	}
+	
+	public class CodeDistributionComparator implements Comparator<String> {
+
+		@Override
+		public int compare(String o1, String o2) {
+			int id1 = Integer.parseInt(o1.replaceAll("X", "0"));
+			int id2 = Integer.parseInt(o2.replaceAll("X", "0"));
+
+			return id2 - id1;
+		}
+	}
+
 }

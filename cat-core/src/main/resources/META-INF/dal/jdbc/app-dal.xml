@@ -85,26 +85,32 @@
       </readset> 
       <readset name="OPERATOR-DATA">
       	<member name="operator"/>
+      	<member name="response-sum-time-sum"/>
       	<member name="access-number-sum"/>
       </readset>
       <readset name="NETWORK-DATA">
       	<member name="network"/>
+      	<member name="response-sum-time-sum"/>
       	<member name="access-number-sum"/>
       </readset>
       <readset name="APP-VERSION-DATA">
       	<member name="app-version"/>
+      	<member name="response-sum-time-sum"/>
       	<member name="access-number-sum"/>
       </readset>
       <readset name="CONNECT-TYPE-DATA">
       	<member name="connect-type"/>
+      	<member name="response-sum-time-sum"/>
       	<member name="access-number-sum"/>
       </readset>
       <readset name="PLATFORM-DATA">
       	<member name="platform"/>
+      	<member name="response-sum-time-sum"/>
       	<member name="access-number-sum"/>
       </readset> 
       <readset name="CITY-DATA">
       	<member name="city"/>
+      	<member name="response-sum-time-sum"/>
       	<member name="access-number-sum"/>
       </readset>
     </readsets>
