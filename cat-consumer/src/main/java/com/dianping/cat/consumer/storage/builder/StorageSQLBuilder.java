@@ -5,7 +5,8 @@ import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.consumer.storage.builder.DatabaseParser.Database;
+import com.dianping.cat.consumer.DatabaseParser;
+import com.dianping.cat.consumer.DatabaseParser.Database;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;

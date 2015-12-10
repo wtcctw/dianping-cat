@@ -60,7 +60,7 @@
 								<i class="menu-icon fa fa-caret-right"></i>Ajax接口告警</a>
 								<b class="arrow"></b></li>
 						<li id="jsRule"><a href="/cat/s/web?op=jsRuleList">
-								<i class="menu-icon fa fa-caret-right"></i>JS错误告警</a>
+								<i class="menu-icon fa fa-caret-right"></i>Js错误告警</a>
 								<b class="arrow"></b></li>
 						<li id="speed"><a href="/cat/s/web?op=speed">
 								<i class="menu-icon fa fa-caret-right"></i>Web测速配置</a>
