@@ -13,7 +13,9 @@ import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.storage.StorageReportUpdater.StorageUpdateParam;
-import com.dianping.cat.consumer.storage.manager.StorageManager;
+import com.dianping.cat.consumer.storage.builder.DatabaseParser;
+import com.dianping.cat.consumer.storage.builder.StorageBuilder;
+import com.dianping.cat.consumer.storage.builder.StorageItem;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
@@ -29,12 +31,12 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	private ReportManager<StorageReport> m_reportManager;
 
 	@Inject
-	private StorageDBParser m_databaseParser;
+	private DatabaseParser m_databaseParser;
 
 	@Inject
 	private StorageReportUpdater m_updater;
 
-	private Map<String, StorageManager> m_storageManagers;
+	private Map<String, StorageBuilder> m_storageBuilders;
 
 	public static final String ID = "storage";
 
@@ -74,7 +76,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_storageManagers = lookupMap(StorageManager.class);
+		m_storageBuilders = lookupMap(StorageBuilder.class);
 	}
 
 	@Override
@@ -88,22 +90,19 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 
 		for (Transaction t : transactions) {
 			String domain = tree.getDomain();
-			Collection<StorageManager> managers = m_storageManagers.values();
+			Collection<StorageBuilder> builders = m_storageBuilders.values();
 
-			for (StorageManager manager : managers) {
-				if (manager.isEligable(t)) {
-					String id = manager.queryId(t);
+			for (StorageBuilder builder : builders) {
+				if (builder.isEligable(t)) {
+					StorageItem item = builder.build(t);
+					String id = item.getId();
 
 					if (StringUtils.isNotEmpty(id)) {
-						String ip = manager.queryIp(t);
-						String method = manager.queryMethod(t);
-						String reportId = manager.queryReportId(id);
-						int threshold = manager.queryThreshold();
-
-						StorageReport report = m_reportManager.getHourlyReport(getStartTime(), reportId, true);
+						StorageReport report = m_reportManager.getHourlyReport(getStartTime(), item.getReportId(), true);
 						StorageUpdateParam param = new StorageUpdateParam();
 
-						param.setDomain(domain).setIp(ip).setMethod(method).setTransaction(t).setThreshold(threshold);
+						param.setDomain(domain).setIp(item.getIp()).setMethod(item.getMethod()).setTransaction(t)
+						      .setThreshold(item.getThreshold());
 						m_updater.updateStorageReport(report, param);
 					}
 				}

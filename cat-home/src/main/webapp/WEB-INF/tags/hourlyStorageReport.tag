@@ -32,7 +32,7 @@
 	}
 
 	function buildHref(id){
-		var href = '<a href="?op=${payload.action.name}&type=${payload.type.name}&domain=${model.domain}&id='+id+'&date=${model.date}">&nbsp;[&nbsp;'+id+'&nbsp;]&nbsp;</a>';
+		var href = '<a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id='+id+'&date=${model.date}">&nbsp;[&nbsp;'+id+'&nbsp;]&nbsp;</a>';
 		return href;
 	}
 	$(document).ready(function() {
@@ -47,12 +47,12 @@
 		}
 		$('#frequentNavbar').html(html);
 		$("#search_go").bind("click",function(e){
-			var newUrl = '${model.baseUri}?op=${payload.action.name}&type=${payload.type.name}&domain=${model.domain}&id='+$( "#search" ).val() +'&date=${model.date}';
+			var newUrl = '${model.baseUri}?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id='+$( "#search" ).val() +'&date=${model.date}';
 			window.location.href = newUrl;
 		});
 		$('#wrap_search').submit(
 			function(){
-				var newUrl = '${model.baseUri}?op=${payload.action.name}&type=${payload.type.name}&domain=${model.domain}&id='+$( "#search" ).val() +'&date=${model.date}';
+				var newUrl = '${model.baseUri}?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id='+$( "#search" ).val() +'&date=${model.date}';
 				window.location.href = newUrl;
 				return false;
 			}		
@@ -114,7 +114,7 @@
 					</form>
 			</div></td>
 			<td><div class="nav-search nav" id="nav-search">
-			<span class="text-danger switch">【<a class="switch" href="${model.baseUri}?op=history&type=${payload.type.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}"><span class="text-danger">切到历史模式</span></a>】</span>
+			<span class="text-danger switch">【<a class="switch" href="${model.baseUri}?op=history&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}"><span class="text-danger">切到历史模式</span></a>】</span>
 			<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&ip=${model.ipAddress}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]
 				</c:forEach>
@@ -136,10 +136,10 @@
 							</c:if>
 							<td class="department">${productline.key}</td>
 							<td><div class="domain"><c:forEach var="id" items="${productline.value.storages}">&nbsp;<c:choose><c:when test="${payload.id eq id}"><a class='domainItem'
-													href="?op=${payload.action.name}&type=${payload.type.name}&domain=${model.domain}&id=${id}&date=${model.date}&reportType=${payload.reportType}"
+													href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${id}&date=${model.date}&reportType=${payload.reportType}"
 													class="current">[&nbsp;${id}&nbsp;]</a></c:when>
 													<c:otherwise><a class='domainItem'
-													href="?op=${payload.action.name}&type=${payload.type.name}&domain=${model.domain}&id=${id}&date=${model.date}&reportType=${payload.reportType}">[&nbsp;${id}&nbsp;]</a>
+													href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${id}&date=${model.date}&reportType=${payload.reportType}">[&nbsp;${id}&nbsp;]</a>
 											</c:otherwise></c:choose>&nbsp;
 									</c:forEach>
 								</div>

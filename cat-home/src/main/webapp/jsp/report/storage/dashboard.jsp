@@ -11,7 +11,7 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.storage.Model" scope="request" />
 
 <a:hourly_report title="Storage Report"
-	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}&type=${payload.type.name}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
+	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}&type=${payload.type}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
 	<jsp:attribute name="subtitle">${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 
@@ -22,9 +22,9 @@
   	</div>
   	
   	<c:set var="linkMap" value="${model.links}" />
-  	<c:if test="${payload.type.name eq 'SQL'}"><c:set var="name" value="数据库" /></c:if>
-  	<c:if test="${payload.type.name eq 'Cache'}"><c:set var="name" value="缓存" /></c:if>
-  	<c:if test="${payload.type.name eq 'RPC'}"><c:set var="name" value="服务" /></c:if>
+  	<c:if test="${payload.type eq 'SQL'}"><c:set var="name" value="数据库" /></c:if>
+  	<c:if test="${payload.type eq 'Cache'}"><c:set var="name" value="缓存" /></c:if>
+  	<c:if test="${payload.type eq 'RPC'}"><c:set var="name" value="服务" /></c:if>
   
   <span>
 	<c:forEach var="entry" items="${model.alertInfos}">
@@ -47,7 +47,7 @@
 					</c:if>
 					<c:if test="${payload.type eq 'Cache'}">缓存集群</c:if> --%>
 			      	<table class="table table-striped table-condensed table-hover table-bordered">
-			      	<thead><tr><td colspan="4" class="center"><h5><strong>${name}：[&nbsp;<a href='/cat/r/storage?domain=${model.domain}&id=${storageInfo.id}&ip=All&date=${model.date}&type=${payload.type.name}' target='_blank'>${storageInfo.id}</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;时间：<span  class='text-danger'>${hour}&nbsp;:&nbsp;${minute}</span></strong></h5></td></tr></thead>
+			      	<thead><tr><td colspan="4" class="center"><h5><strong>${name}：[&nbsp;<a href='/cat/r/storage?domain=${model.domain}&id=${storageInfo.id}&ip=All&date=${model.date}&type=${payload.type}' target='_blank'>${storageInfo.id}</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;时间：<span  class='text-danger'>${hour}&nbsp;:&nbsp;${minute}</span></strong></h5></td></tr></thead>
 						<thead><tr>
 							<th width="10%" class="center">机器</th>
 							<th width="10%" class="center">方法</th>
@@ -58,10 +58,10 @@
 							<tr>
 							<td rowspan="${machine_entry.value.count}" class="center" style="vertical-align:middle">
 								<c:if test="${machine_entry.value.level == 1}">
-									<span class="text-warning"><a href='/cat/r/storage?domain=${model.domain}&id=${storageInfo.id}&ip=${machine_entry.key}&date=${model.date}&type=${payload.type.name}' target='_blank'>${machine_entry.key}</a></span>
+									<span class="text-warning"><a href='/cat/r/storage?domain=${model.domain}&id=${storageInfo.id}&ip=${machine_entry.key}&date=${model.date}&type=${payload.type}' target='_blank'>${machine_entry.key}</a></span>
 								</c:if>
 								<c:if test="${machine_entry.value.level == 2}">
-									<span class="text-danger"><strong><a href='/cat/r/storage?domain=${model.domain}&id=${storageInfo.id}&ip=${machine_entry.key}&date=${model.date}&type=${payload.type.name}' target='_blank'>${machine_entry.key}</a></strong></span>
+									<span class="text-danger"><strong><a href='/cat/r/storage?domain=${model.domain}&id=${storageInfo.id}&ip=${machine_entry.key}&date=${model.date}&type=${payload.type}' target='_blank'>${machine_entry.key}</a></strong></span>
 								</c:if>
 							</td>
 							<c:forEach var="operation_entry" items="${machine_entry.value.operations}" varStatus="index1">
@@ -195,13 +195,13 @@
 		$('.position').hide();
 		$('.switch').hide();
 		$('#Dashboard_report').addClass('active open');
-		<c:if test="${payload.type.name eq 'SQL'}">
+		<c:if test="${payload.type eq 'SQL'}">
 			$('#dashbord_database').addClass('active');
 		</c:if>
-		<c:if test="${payload.type.name eq 'Cache'}">
+		<c:if test="${payload.type eq 'Cache'}">
 			$('#dashbord_cache').addClass('active');
 		</c:if>
-		<c:if test="${payload.type.name eq 'RPC'}">
+		<c:if test="${payload.type eq 'RPC'}">
 			$('#dashbord_rpc').addClass('active');
 		</c:if>
 		
