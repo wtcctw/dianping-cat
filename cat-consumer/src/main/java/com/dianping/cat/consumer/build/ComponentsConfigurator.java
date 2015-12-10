@@ -21,7 +21,6 @@ import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.CrossDelegate;
 import com.dianping.cat.consumer.cross.IpConvertManager;
 import com.dianping.cat.consumer.dal.BusinessReportDao;
-import com.dianping.cat.consumer.dependency.DatabaseParser;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyDelegate;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
@@ -42,13 +41,14 @@ import com.dianping.cat.consumer.problem.ProblemHandler;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.StateDelegate;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
-import com.dianping.cat.consumer.storage.StorageDBParser;
 import com.dianping.cat.consumer.storage.StorageDelegate;
 import com.dianping.cat.consumer.storage.StorageReportUpdater;
-import com.dianping.cat.consumer.storage.manager.StorageCacheManager;
-import com.dianping.cat.consumer.storage.manager.StorageManager;
-import com.dianping.cat.consumer.storage.manager.StorageRPCManager;
-import com.dianping.cat.consumer.storage.manager.StorageSQLManager;
+import com.dianping.cat.consumer.storage.builder.DatabaseParser;
+import com.dianping.cat.consumer.storage.builder.StorageBuilder;
+import com.dianping.cat.consumer.storage.builder.StorageCacheBuilder;
+import com.dianping.cat.consumer.storage.builder.StorageBuilderManager;
+import com.dianping.cat.consumer.storage.builder.StorageRPCBuilder;
+import com.dianping.cat.consumer.storage.builder.StorageSQLBuilder;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.TopDelegate;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -278,14 +278,15 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	private Collection<Component> defineStorageComponents() {
 		final List<Component> all = new ArrayList<Component>();
 		final String ID = StorageAnalyzer.ID;
-		all.add(C(StorageDBParser.class));
+		all.add(C(DatabaseParser.class));
 		all.add(C(StorageReportUpdater.class));
-		all.add(C(StorageManager.class, StorageSQLManager.ID, StorageSQLManager.class).req(StorageDBParser.class));
-		all.add(C(StorageManager.class, StorageCacheManager.ID, StorageCacheManager.class));
-		all.add(C(StorageManager.class, StorageRPCManager.ID, StorageRPCManager.class));
+		all.add(C(StorageBuilderManager.class));
+		all.add(C(StorageBuilder.class, StorageSQLBuilder.ID, StorageSQLBuilder.class).req(DatabaseParser.class));
+		all.add(C(StorageBuilder.class, StorageCacheBuilder.ID, StorageCacheBuilder.class));
+		all.add(C(StorageBuilder.class, StorageRPCBuilder.ID, StorageRPCBuilder.class));
 
 		all.add(C(MessageAnalyzer.class, ID, StorageAnalyzer.class).is(PER_LOOKUP).req(ReportManager.class, ID)
-		      .req(ReportDelegate.class, ID).req(ServerConfigManager.class).req(StorageDBParser.class)
+		      .req(ReportDelegate.class, ID).req(ServerConfigManager.class).req(DatabaseParser.class)
 		      .req(StorageReportUpdater.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class).is(PER_LOOKUP) //
 		      .req(ReportDelegate.class, ID) //

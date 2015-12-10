@@ -15,6 +15,8 @@ import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
+import com.dianping.cat.consumer.storage.builder.DatabaseParser;
+import com.dianping.cat.consumer.storage.builder.DatabaseParser.Database;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -92,7 +94,9 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 				String type = message.getType();
 
 				if (type.equals("SQL.Database")) {
-					return m_parser.parseDatabaseName(message.getName());
+					Database database = m_parser.parseDatabase(message.getName());
+
+					return database.getName();
 				}
 			}
 		}

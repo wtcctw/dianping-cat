@@ -63,7 +63,7 @@
   <xmp class="well">
       <config mode="client">
           <servers>
-             <server ip="192.168.213.115" port="2280" />
+             <server ip="10.66.13.115" port="2280" />
          </servers>
       </config>
   </xmp>
