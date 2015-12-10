@@ -203,11 +203,11 @@
 								return false;
 							}		
 						);
-					graphPieChart(document.getElementById('piechart'), ${model.pieChart.jsonString});
+					graphPieChart(document.getElementById('piechart'), ${model.connDisplayInfo.pieChart.jsonString});
 				});
 	</script>
 	
-		<%@include file="piechartDetail.jsp"%>
+		<%@include file="connPiechartDetail.jsp"%>
 </a:mobile>
 
 <style type="text/css">

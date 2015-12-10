@@ -66,7 +66,7 @@ public class AppGraphCreator {
 		return buildChartData(datas, type);
 	}
 
-	public Pair<PieChart, PieChartDetailInfo> buildPieChart(CommandQueryEntity entity, AppDataField field) {
+	public AppCommandDisplayInfo buildPieChart(CommandQueryEntity entity, AppDataField field) {
 		PieChartDetailInfo info = new PieChartDetailInfo();
 		PieChart pieChart = new PieChart().setMaxSize(Integer.MAX_VALUE);
 		List<Item> items = new ArrayList<Item>();
@@ -84,8 +84,13 @@ public class AppGraphCreator {
 		pieChart.setTitle(field.getName() + "访问情况");
 		pieChart.addItems(items);
 		updatePieChartDetailInfo(info);
+		
+		AppCommandDisplayInfo displayInfo = new AppCommandDisplayInfo();
 
-		return new Pair<PieChart, PieChartDetailInfo>(pieChart, info);
+		displayInfo.setPieChart(pieChart);
+		displayInfo.setPieChartDetailInfo(info);
+		
+		return displayInfo;
 	}
 
 	private Pair<Integer, String> buildPieChartFieldTitlePair(int command, AppCommandData data, AppDataField field) {

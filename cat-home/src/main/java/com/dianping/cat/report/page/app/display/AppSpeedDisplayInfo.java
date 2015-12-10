@@ -1,8 +1,13 @@
 package com.dianping.cat.report.page.app.display;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
+import com.dianping.cat.configuration.app.speed.entity.Speed;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.report.graph.LineChart;
 
 public class AppSpeedDisplayInfo {
@@ -13,12 +18,22 @@ public class AppSpeedDisplayInfo {
 
 	private Map<String, List<AppSpeedDetail>> m_appSpeedDetails;
 
-	public Map<String, List<AppSpeedDetail>> getAppSpeedDetails() {
-		return m_appSpeedDetails;
+	private Map<String, List<Speed>> m_speeds;
+
+	public Map<String, List<Speed>> getSpeeds() {
+		return m_speeds;
 	}
 
-	public Map<String, AppSpeedDetail> getAppSpeedSummarys() {
-		return m_appSpeedSummarys;
+	public void setSpeeds(Map<String, List<Speed>> speeds) {
+		m_speeds = speeds;
+	}
+
+	public String getPage2StepsJson() {
+		return new JsonBuilder().toJson(m_speeds);
+	}
+
+	public Set<String> getPages() {
+		return m_speeds.keySet();
 	}
 
 	public LineChart getLineChart() {
@@ -35,5 +50,36 @@ public class AppSpeedDisplayInfo {
 
 	public void setLineChart(LineChart lineChart) {
 		m_lineChart = lineChart;
+	}
+
+	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedSummarys() {
+		Map<String, Map<Integer, AppSpeedDetail>> map = new LinkedHashMap<String, Map<Integer, AppSpeedDetail>>();
+
+		if (m_appSpeedSummarys != null && !m_appSpeedSummarys.isEmpty()) {
+			for (Entry<String, AppSpeedDetail> entry : m_appSpeedSummarys.entrySet()) {
+				Map<Integer, AppSpeedDetail> m = new LinkedHashMap<Integer, AppSpeedDetail>();
+				AppSpeedDetail d = entry.getValue();
+
+				m.put(d.getMinuteOrder(), d);
+				map.put(entry.getKey(), m);
+			}
+		}
+		return map;
+	}
+
+	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedDetails() {
+		Map<String, Map<Integer, AppSpeedDetail>> map = new LinkedHashMap<String, Map<Integer, AppSpeedDetail>>();
+
+		if (m_appSpeedDetails != null && !m_appSpeedDetails.isEmpty()) {
+			for (Entry<String, List<AppSpeedDetail>> entry : m_appSpeedDetails.entrySet()) {
+				Map<Integer, AppSpeedDetail> m = new LinkedHashMap<Integer, AppSpeedDetail>();
+
+				for (AppSpeedDetail detail : entry.getValue()) {
+					m.put(detail.getMinuteOrder(), detail);
+				}
+				map.put(entry.getKey(), m);
+			}
+		}
+		return map;
 	}
 }

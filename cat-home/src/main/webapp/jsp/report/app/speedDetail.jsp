@@ -130,7 +130,7 @@
 	</tr>
 	</thead>
 	<tbody>
-	<c:set var="summarys" value="${model.appSpeedSummarys}" />
+	<c:set var="summarys" value="${model.appSpeedDisplayInfo.appSpeedSummarys}" />
 		<c:forEach var="entry" items="${summarys['当前值']}" >
 		<tr class="right">
 	 		<td class="right">${entry.value.dayTime}</td>
@@ -174,7 +174,7 @@
 		</c:if>
 	</tr></thead>
 	<tbody id="details">
-		<c:set var="details" value="${model.appSpeedDetails}" />
+		<c:set var="details" value="${model.appSpeedDisplayInfo.appSpeedDetails}" />
 		<c:forEach var="entry" items="${details['当前值']}" >
 		<tr class="right" >
 	 		<td class="right" width="10%">${entry.value.dateTime}</td>

@@ -159,7 +159,7 @@ public class Handler implements PageHandler<Context> {
 		return lineChart;
 	}
 
-	private AjaxDataDisplayInfo buildAjaxPieChart(Payload payload) {
+	private AjaxDataDisplayInfo buildAjaxDistributeChart(Payload payload) {
 		try {
 			AjaxDataDisplayInfo displayInfo = m_graphCreator.buildAjaxDistributeChart(payload.getQueryEntity1(),
 			      payload.getGroupByField());
@@ -288,7 +288,7 @@ public class Handler implements PageHandler<Context> {
 			parallelBuildAjaxLineChart(model, payload);
 			break;
 		case AJAX_PIECHART:
-			AjaxDataDisplayInfo info = buildAjaxPieChart(payload);
+			AjaxDataDisplayInfo info = buildAjaxDistributeChart(payload);
 			model.setAjaxDataDisplayInfo(info);
 			break;
 		case JS_ERROR:

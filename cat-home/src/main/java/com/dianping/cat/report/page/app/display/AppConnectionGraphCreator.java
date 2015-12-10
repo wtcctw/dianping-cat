@@ -66,7 +66,7 @@ public class AppConnectionGraphCreator {
 		return buildChartData(datas, type);
 	}
 
-	public Pair<PieChart, PieChartDetailInfo> buildPieChart(CommandQueryEntity entity, AppDataField field) {
+	public AppConnectionDisplayInfo buildPieChart(CommandQueryEntity entity, AppDataField field) {
 		PieChartDetailInfo info = new PieChartDetailInfo();
 		PieChart pieChart = new PieChart().setMaxSize(Integer.MAX_VALUE);
 		List<Item> items = new ArrayList<Item>();
@@ -85,7 +85,11 @@ public class AppConnectionGraphCreator {
 		pieChart.addItems(items);
 		updatePieChartDetailInfo(info);
 
-		return new Pair<PieChart, PieChartDetailInfo>(pieChart, info);
+		AppConnectionDisplayInfo displayInfo = new AppConnectionDisplayInfo();
+		displayInfo.setPieChart(pieChart);
+		displayInfo.setPieChartDetailInfo(info);
+		
+		return displayInfo;
 	}
 
 	private Pair<Integer, String> buildPieChartFieldTitlePair(int command, AppConnectionData data, AppDataField field) {

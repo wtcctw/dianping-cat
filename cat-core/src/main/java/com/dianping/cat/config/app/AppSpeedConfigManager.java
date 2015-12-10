@@ -3,6 +3,8 @@ package com.dianping.cat.config.app;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,6 +17,7 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
@@ -97,6 +100,34 @@ public class AppSpeedConfigManager implements Initializable {
 			}
 		}
 		return max + 1;
+	}
+
+	public Map<String, List<Speed>> getPageStepInfo() {
+		Map<String, List<Speed>> page2Steps = new HashMap<String, List<Speed>>();
+
+		for (Speed speed : m_config.getSpeeds().values()) {
+			String page = speed.getPage();
+			if (StringUtils.isEmpty(page)) {
+				page = "default";
+			}
+			List<Speed> steps = page2Steps.get(page);
+			if (steps == null) {
+				steps = new ArrayList<Speed>();
+				page2Steps.put(page, steps);
+			}
+			steps.add(speed);
+		}
+		for (Entry<String, List<Speed>> entry : page2Steps.entrySet()) {
+			List<Speed> speeds = entry.getValue();
+			Collections.sort(speeds, new Comparator<Speed>() {
+
+				@Override
+				public int compare(Speed o1, Speed o2) {
+					return o1.getStep() - o2.getStep();
+				}
+			});
+		}
+		return page2Steps;
 	}
 
 	public AppSpeedConfig getConfig() {
