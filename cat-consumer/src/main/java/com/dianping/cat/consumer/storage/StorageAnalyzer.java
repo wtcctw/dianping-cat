@@ -12,8 +12,8 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
-import com.dianping.cat.consumer.storage.StorageReportUpdater.StorageUpdateParam;
-import com.dianping.cat.consumer.storage.builder.DatabaseParser;
+import com.dianping.cat.consumer.DatabaseParser;
+import com.dianping.cat.consumer.storage.StorageReportUpdater.StorageUpdateItem;
 import com.dianping.cat.consumer.storage.builder.StorageBuilder;
 import com.dianping.cat.consumer.storage.builder.StorageItem;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
@@ -78,6 +78,12 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	public void initialize() throws InitializationException {
 		m_storageBuilders = lookupMap(StorageBuilder.class);
 	}
+	
+	@Override
+   public void destroy() {
+		release(m_storageBuilders);
+	   super.destroy();
+   }
 
 	@Override
 	protected void loadReports() {
@@ -99,7 +105,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 
 					if (StringUtils.isNotEmpty(id)) {
 						StorageReport report = m_reportManager.getHourlyReport(getStartTime(), item.getReportId(), true);
-						StorageUpdateParam param = new StorageUpdateParam();
+						StorageUpdateItem param = new StorageUpdateItem();
 
 						param.setDomain(domain).setIp(item.getIp()).setMethod(item.getMethod()).setTransaction(t)
 						      .setThreshold(item.getThreshold());
@@ -109,4 +115,5 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 			}
 		}
 	}
+	
 }
