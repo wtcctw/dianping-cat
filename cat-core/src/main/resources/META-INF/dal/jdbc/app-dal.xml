@@ -85,26 +85,32 @@
       </readset> 
       <readset name="OPERATOR-DATA">
       	<member name="operator"/>
+      	<member name="response-sum-time-sum"/>
       	<member name="access-number-sum"/>
       </readset>
       <readset name="NETWORK-DATA">
       	<member name="network"/>
+      	<member name="response-sum-time-sum"/>
       	<member name="access-number-sum"/>
       </readset>
       <readset name="APP-VERSION-DATA">
       	<member name="app-version"/>
+      	<member name="response-sum-time-sum"/>
       	<member name="access-number-sum"/>
       </readset>
       <readset name="CONNECT-TYPE-DATA">
       	<member name="connect-type"/>
+      	<member name="response-sum-time-sum"/>
       	<member name="access-number-sum"/>
       </readset>
       <readset name="PLATFORM-DATA">
       	<member name="platform"/>
+      	<member name="response-sum-time-sum"/>
       	<member name="access-number-sum"/>
       </readset> 
       <readset name="CITY-DATA">
       	<member name="city"/>
+      	<member name="response-sum-time-sum"/>
       	<member name="access-number-sum"/>
       </readset>
     </readsets>
@@ -1496,6 +1502,31 @@
       	<member name="response-sum-time-sum"/>
       	<member name="slow-response-sum-time-sum"/>
       </readset>
+      <readset name="CITY-DATA">
+      	<member name="city"/>
+      	<member name="access-number-sum"/>
+      	<member name="response-sum-time-sum"/>
+      </readset>
+      <readset name="OPERATOR-DATA">
+      	<member name="operator"/>
+      	<member name="access-number-sum"/>
+      	<member name="response-sum-time-sum"/>
+      </readset>
+      <readset name="NETWORK-DATA">
+      	<member name="network"/>
+      	<member name="access-number-sum"/>
+      	<member name="response-sum-time-sum"/>
+      </readset>
+      <readset name="VERSION-DATA">
+      	<member name="app-version"/>
+      	<member name="access-number-sum"/>
+      	<member name="response-sum-time-sum"/>
+      </readset>
+     <readset name="PLATFORM-DATA">
+      	<member name="platform"/>
+      	<member name="access-number-sum"/>
+      	<member name="response-sum-time-sum"/>
+      </readset>
       </readsets>
       
       <query-defs>
@@ -1525,7 +1556,6 @@
         <param name="network" />
         <param name="app-version" />
         <param name="platform" />
-       
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
@@ -1546,193 +1576,185 @@
 		</IF>
         group by  <FIELD name='minute-order'/>  ]]></statement>
       </query>
+     <query name="find-data-by-city" type="SELECT" multiple="true">
+        <param name="speed-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="platform" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NE' field='app-version' value='-1'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+        group by  <FIELD name='city'/>  ]]></statement>
+      </query>
+      <query name="find-data-by-network" type="SELECT" multiple="true">
+        <param name="speed-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="platform" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NE' field='app-version' value='-1'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+        group by  <FIELD name='network'/>  ]]></statement>
+      </query>
+      <query name="find-data-by-platform" type="SELECT" multiple="true">
+        <param name="speed-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="platform" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NE' field='app-version' value='-1'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+        group by  <FIELD name='platform'/>  ]]></statement>
+      </query>
+      <query name="find-data-by-version" type="SELECT" multiple="true">
+        <param name="speed-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="platform" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NE' field='app-version' value='-1'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+        group by  <FIELD name='app-version'/>  ]]></statement>
+      </query>
+     <query name="find-data-by-operator" type="SELECT" multiple="true">
+        <param name="speed-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="platform" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NE' field='app-version' value='-1'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+        group by  <FIELD name='operator'/>  ]]></statement>
+      </query>
       </query-defs>
 	</entity>
-	<entity name="web-api-data" table="web_api_data" alias="wad">
-		<member name="access-number-sum" value-type="long" all="false"
-			select-expr="sum(access_number)" length="19" nullable="false" />
-		<member name="response-sum-time-sum" value-type="long" all="false"
-			select-expr="sum(response_sum_time)" length="19" nullable="false" />
-		<var name="api-id" value-type="int" />
-		<var name="start-minute-order" value-type="int" />
-		<var name="end-minute-order" value-type="int" />
-		<readsets>
-			<readset name="COUNT-DATA">
-				<member name="minute-order" />
-				<member name="access-number-sum" />
-			</readset>
-			<readset name="AVG-DATA">
-				<member name="minute-order" />
-				<member name="access-number-sum" />
-				<member name="response-sum-time-sum" />
-			</readset>
-			<readset name="SUCCESS-DATA">
-				<member name="minute-order" />
-				<member name="code" />
-				<member name="access-number-sum" />
-			</readset>
-			<readset name="CODE-DATA">
-				<member name="code" />
-				<member name="access-number-sum" />
-				<member name="response-sum-time-sum" />
-			</readset>
-			<readset name="OPERATOR-DATA">
-				<member name="operator" />
-				<member name="access-number-sum" />
-			</readset>
-			<readset name="CITY-DATA">
-				<member name="city" />
-				<member name="access-number-sum" />
-			</readset>
-		</readsets>
-		<query-defs>
-			<query name="insert" type="INSERT" batch="true">
-				<statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
-        VALUES(<VALUES/>)]]></statement>
-			</query>
-			<query name="insert-or-update" type="INSERT" batch="true">
-				<statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
-        VALUES(<VALUES/>) ON DUPLICATE KEY UPDATE 
-        access_number = access_number + ${access-number}
+	<entity name="crash-log" table="crash_log" alias="cl">
+		<member name="count" value-type="long" all="false" select-expr="count(*)" length="19" nullable="false" />
+	    <var name="start-time" value-type="Date" />
+	    <var name="end-time" value-type="Date" />
+	    <var name="offset" value-type="int" />
+	   	<var name="limit" value-type="int" />
+	   	<readsets>
+      	<readset name="COUNT-DATA">
+      		<member name="count"/>
+      		<member name="module"/>
+      		<member name="level"/>
+      	</readset>
+      	</readsets>
+      	<query-defs>
+      		<query name="find-data-by-conditions" type="SELECT" multiple="true">
+			<param name="start-time" />
+			<param name="end-time" />
+			<param name="app-name" />
+			<param name="platform" />
+			<param name="dpid" />
+			<param name="offset" />
+			<param name="limit" />
+			<statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE 
+        	<FIELD name='crash-time'/> >= ${start-time} 
+			AND  <FIELD name='crash-time'/> < ${end-time}
+			AND  <FIELD name='app-name'/> = ${app-name}
+			<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+			</IF>
+			<IF type='NOT_NULL' field='dpid'>
+			AND  <FIELD name='dpid'/> = ${dpid}
+			</IF>
+		LIMIT ${offset}, ${limit}
          ]]></statement>
-			</query>
-			<query name="delete-before-period" type="DELETE">
-				<param name="period" />
-				<statement><![CDATA[DELETE FROM <TABLE/>
-        WHERE <FIELD name='period'/> <= ${period}]]></statement>
-			</query>
-			<query name="find-data-by-minute" type="SELECT" multiple="true">
-				<param name="api-id" />
-				<param name="period" />
-				<param name="city" />
-				<param name="operator" />
-				<param name="code" />
-				<statement><![CDATA[SELECT <FIELDS/>
-        FROM <TABLE/>
-        WHERE <FIELD name='period'/> = ${period} 
-        <IF type='NE' field='city' value='-1'>
-			AND  <FIELD name='city'/> = ${city}
-		</IF>
-        <IF type='NE' field='operator' value='-1'>
-			AND  <FIELD name='operator'/> = ${operator}
-		</IF>
-		<IF type='NE' field='code' value='-1'>
-			AND  <FIELD name='code'/> = ${code}
-		</IF>
-        group by  <FIELD name='minute-order'/>  ]]></statement>
-			</query>
-			<query name="find-daily-data-by-code" type="SELECT" multiple="true">
-				<param name="api-id" />
-				<param name="period" />
-				<statement><![CDATA[SELECT <FIELDS/>
-        FROM <TABLE/>
-        WHERE <FIELD name='period'/> = ${period} 
-        group by <FIELD name='code'/>  ]]></statement>
-			</query>
-			<query name="find-data-by-minute-code" type="SELECT" multiple="true">
-				<param name="api-id" />
-				<param name="period" />
-				<param name="city" />
-				<param name="operator" />
-				<param name="code" />
-				<statement><![CDATA[SELECT <FIELDS/>
-        FROM <TABLE/>
-        WHERE <FIELD name='period'/> = ${period} 
-        <IF type='NE' field='city' value='-1'>
-			AND  <FIELD name='city'/> = ${city}
-		</IF>
-        <IF type='NE' field='operator' value='-1'>
-			AND  <FIELD name='operator'/> = ${operator}
-		</IF> 
-		<IF type='NE' field='code' value='-1'>
-			AND  <FIELD name='code'/> = ${code}
-		</IF>
-        group by  <FIELD name='minute-order'/>,<FIELD name='code'/>  ]]></statement>
-			</query>
-			<query name="find-data-by-code" type="SELECT" multiple="true">
-				<param name="api-id" />
-				<param name="period" />
-				<param name="city" />
-				<param name="operator" />
-				<param name="code" />
-				<param name="start-minute-order" />
-				<param name="end-minute-order" />
-				<statement><![CDATA[SELECT <FIELDS/>
-        FROM <TABLE/>
-        WHERE <FIELD name='period'/> = ${period}
-        <IF type='NE' field='start-minute-order' value='-1'>
-			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
-		</IF>
-		<IF type='NE' field='end-minute-order' value='-1'>
-			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
-		</IF> 
-        <IF type='NE' field='city' value='-1'>
-			AND  <FIELD name='city'/> = ${city}
-		</IF>
-        <IF type='NE' field='operator' value='-1'>
-			AND  <FIELD name='operator'/> = ${operator}
-		</IF>    
-		<IF type='NE' field='code' value='-1'>
-			AND  <FIELD name='code'/> = ${code}
-		</IF>
-        group by  <FIELD name='code'/> ]]></statement>
-			</query>
-			<query name="find-data-by-operator" type="SELECT" multiple="true">
-				<param name="api-id" />
-				<param name="period" />
-				<param name="city" />
-				<param name="operator" />
-				<param name="code" />
-				<param name="start-minute-order" />
-				<param name="end-minute-order" />
-				<statement><![CDATA[SELECT <FIELDS/>
-        FROM <TABLE/>
-        WHERE <FIELD name='period'/> = ${period} 
-        <IF type='NE' field='start-minute-order' value='-1'>
-			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
-		</IF>
-		<IF type='NE' field='end-minute-order' value='-1'>
-			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
-		</IF>
-		<IF type='NE' field='city' value='-1'>
-			AND  <FIELD name='city'/> = ${city}
-		</IF>
-        <IF type='NE' field='operator' value='-1'>
-			AND  <FIELD name='operator'/> = ${operator}
-		</IF>       
-		<IF type='NE' field='code' value='-1'>
-			AND  <FIELD name='code'/> = ${code}
-		</IF>		
-        group by  <FIELD name='operator'/>  ]]></statement>
-			</query>
-			<query name="find-data-by-city" type="SELECT" multiple="true">
-				<param name="api-id" />
-				<param name="period" />
-				<param name="city" />
-				<param name="operator" />
-				<param name="code" />
-				<param name="start-minute-order" />
-				<param name="end-minute-order" />
-				<statement><![CDATA[SELECT <FIELDS/>
-        FROM <TABLE/>
-        WHERE <FIELD name='period'/> = ${period} 
-        <IF type='NE' field='start-minute-order' value='-1'>
-			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
-		</IF>
-		<IF type='NE' field='end-minute-order' value='-1'>
-			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
-		</IF>
-        <IF type='NE' field='city' value='-1'>
-			AND  <FIELD name='city'/> = ${city}
-		</IF>
-        <IF type='NE' field='operator' value='-1'>
-			AND  <FIELD name='operator'/> = ${operator}
-		</IF>     
-		<IF type='NE' field='code' value='-1'>
-			AND  <FIELD name='code'/> = ${code}
-		</IF>	
-        group by  <FIELD name='city'/>  ]]></statement>
-			</query>
-		</query-defs>
+		</query>
+      	</query-defs>
 	</entity>
 </entities>

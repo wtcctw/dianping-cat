@@ -1,6 +1,8 @@
 package com.dianping.cat.report.page.app.display;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,10 +15,12 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.app.AppCommandData;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
+import com.dianping.cat.report.graph.DistributeDetailInfo.DistributeDetail;
+import com.dianping.cat.report.graph.BarChart;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
-import com.dianping.cat.report.graph.PieChartDetailInfo;
+import com.dianping.cat.report.graph.DistributeDetailInfo;
 import com.dianping.cat.report.page.app.QueryType;
 import com.dianping.cat.report.page.app.service.AppDataField;
 import com.dianping.cat.report.page.app.service.AppDataService;
@@ -66,26 +70,94 @@ public class AppGraphCreator {
 		return buildChartData(datas, type);
 	}
 
-	public Pair<PieChart, PieChartDetailInfo> buildPieChart(CommandQueryEntity entity, AppDataField field) {
-		PieChartDetailInfo info = new PieChartDetailInfo();
+	public AppCommandDisplayInfo buildCommandDistributeChart(CommandQueryEntity entity, AppDataField field) {
+		List<AppCommandData> datas = m_AppDataService.queryByField(entity, field);
+		DistributeDetailInfo detailInfos = buildCommandDistributeDetails(entity.getId(), field, datas);
+		AppCommandDisplayInfo displayInfo = new AppCommandDisplayInfo();
+
+		displayInfo.setDistributeDetails(detailInfos);
+		displayInfo.setPieChart(buildPieChart(detailInfos));
+		displayInfo.setBarChart(buildBarChart(detailInfos, field));
+		return displayInfo;
+	}
+	
+	private BarChart buildBarChart(DistributeDetailInfo detailInfos, AppDataField field) {
+		BarChart barChart = new BarChart();
+		barChart.setTitle("加载时间分布");
+		barChart.setyAxis("加载时间(ms)");
+		barChart.setSerieName(field.getName());
+		List<DistributeDetail> datas = detailInfos.getItems();
+
+		Collections.sort(datas, new Comparator<DistributeDetail>() {
+			@Override
+			public int compare(DistributeDetail o1, DistributeDetail o2) {
+				return (int) (o2.getDelayAvg() - o1.getDelayAvg());
+			}
+		});
+
+		List<String> itemList = new ArrayList<String>();
+		List<Double> dataList = new ArrayList<Double>();
+
+		for (DistributeDetail data : datas) {
+			itemList.add(data.getTitle());
+			dataList.add(data.getDelayAvg());
+		}
+
+		barChart.setxAxis(itemList);
+		barChart.setValues(dataList);
+		return barChart;
+	}
+
+	private PieChart buildPieChart(DistributeDetailInfo detailInfos) {
 		PieChart pieChart = new PieChart().setMaxSize(Integer.MAX_VALUE);
 		List<Item> items = new ArrayList<Item>();
-		List<AppCommandData> datas = m_AppDataService.queryByField(entity, field);
 
-		for (AppCommandData data : datas) {
-			Pair<Integer, Item> pair = buildPieChartItem(entity.getId(), data, field);
-			Item item = pair.getValue();
-			com.dianping.cat.report.graph.PieChartDetailInfo.Item infoItem = new com.dianping.cat.report.graph.PieChartDetailInfo.Item();
+		for (DistributeDetail detail : detailInfos.getItems()) {
+			Item item = new Item();
 
-			infoItem.setId(pair.getKey()).setTitle(item.getTitle()).setRequestSum(item.getNumber());
-			info.add(infoItem);
+			item.setTitle(detail.getTitle());
+			item.setId(detail.getId());
+			item.setNumber(detail.getRequestSum());
 			items.add(item);
 		}
-		pieChart.setTitle(field.getName() + "访问情况");
-		pieChart.addItems(items);
-		updatePieChartDetailInfo(info);
 
-		return new Pair<PieChart, PieChartDetailInfo>(pieChart, info);
+		pieChart.setTitle("请求量分布");
+		pieChart.addItems(items);
+		return pieChart;
+	}
+
+	private DistributeDetailInfo buildCommandDistributeDetails(int command, AppDataField field,
+	      List<AppCommandData> datas) {
+		DistributeDetailInfo detailInfos = new DistributeDetailInfo();
+
+		for (AppCommandData data : datas) {
+			DistributeDetail info = new DistributeDetail();
+
+			Pair<Integer, String> pair = buildPieChartFieldTitlePair(command, data, field);
+			info.setId(pair.getKey()).setTitle(pair.getValue());
+
+			long requestSum = data.getAccessNumberSum();
+			info.setRequestSum(requestSum);
+
+			if (requestSum > 0) {
+				info.setDelayAvg(data.getResponseSumTimeSum() / requestSum);
+			}
+
+			detailInfos.add(info);
+		}
+
+		double sum = 0;
+
+		for (DistributeDetail detail : detailInfos.getItems()) {
+			sum += detail.getRequestSum();
+		}
+
+		if (sum > 0) {
+			for (DistributeDetail detail : detailInfos.getItems()) {
+				detail.setRatio(detail.getRequestSum() / sum);
+			}
+		}
+		return detailInfos;
 	}
 
 	private Pair<Integer, String> buildPieChartFieldTitlePair(int command, AppCommandData data, AppDataField field) {
@@ -177,27 +249,4 @@ public class AppGraphCreator {
 		return new Pair<Integer, String>(keyValue, title);
 	}
 
-	private Pair<Integer, Item> buildPieChartItem(int command, AppCommandData data, AppDataField field) {
-		Item item = new Item();
-		Pair<Integer, String> pair = buildPieChartFieldTitlePair(command, data, field);
-
-		item.setTitle(pair.getValue());
-		item.setId(pair.getKey());
-		item.setNumber(data.getAccessNumberSum());
-		return new Pair<Integer, Item>(pair.getKey(), item);
-	}
-
-	private void updatePieChartDetailInfo(PieChartDetailInfo items) {
-		double sum = 0;
-
-		for (com.dianping.cat.report.graph.PieChartDetailInfo.Item item : items.getItems()) {
-			sum += item.getRequestSum();
-		}
-
-		if (sum > 0) {
-			for (com.dianping.cat.report.graph.PieChartDetailInfo.Item item : items.getItems()) {
-				item.setSuccessRatio(item.getRequestSum() / sum);
-			}
-		}
-	}
 }

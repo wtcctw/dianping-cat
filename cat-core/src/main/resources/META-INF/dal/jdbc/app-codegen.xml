@@ -57,7 +57,7 @@
     <member name="city" field="city" value-type="int" length="5" nullable="false" />
     <member name="operator" field="operator" value-type="int" length="3" nullable="false" />
     <member name="network" field="network" value-type="int" length="3" nullable="false" />
-    <member name="app-version" field="app_version" value-type="int" length="10" nullable="false" />
+    <member name="app-version" field="app_version" value-type="int" length="10" />
     <member name="connect-type" field="connect_type" value-type="int" length="3" nullable="false" />
     <member name="code" field="code" value-type="int" length="5" nullable="false" />
     <member name="platform" field="platform" value-type="int" length="3" nullable="false" />
@@ -148,19 +148,23 @@
       </query>
     </query-defs>
   </entity>
-  <entity name="web-api-data" table="web_api_data" alias="wad">
+  <entity name="crash-log" table="crash_log" alias="cl">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
-    <member name="period" field="period" value-type="Date" nullable="false" />
-    <member name="minute-order" field="minute_order" value-type="int" length="5" nullable="false" />
-    <member name="city" field="city" value-type="int" length="5" nullable="false" />
-    <member name="operator" field="operator" value-type="int" length="3" nullable="false" />
-    <member name="code" field="code" value-type="int" length="5" nullable="false" />
-    <member name="access-number" field="access_number" value-type="long" length="19" nullable="false" />
-    <member name="response-sum-time" field="response_sum_time" value-type="long" length="19" nullable="false" />
+    <member name="app-name" field="app_name" value-type="String" length="100" nullable="false" />
+    <member name="platform" field="platform" value-type="int" length="3" nullable="false" />
+    <member name="app-version" field="app_version" value-type="String" length="50" nullable="false" />
+    <member name="platform-version" field="platform_version" value-type="String" length="50" nullable="false" />
+    <member name="module" field="module" value-type="String" length="50" nullable="false" />
+    <member name="level" field="level" value-type="int" length="3" nullable="false" />
+    <member name="msg" field="msg" value-type="String" length="200" nullable="false" />
+    <member name="device-brand" field="device_brand" value-type="String" length="20" />
+    <member name="device-model" field="device_model" value-type="String" length="20" />
     <member name="updatetime" field="updatetime" value-type="Date" nullable="false" />
+    <member name="crash-time" field="crash_time" value-type="Date" nullable="false" />
+    <member name="dpid" field="dpid" value-type="String" length="200" nullable="true" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
-    <index name="IX_condition" unique="true" members="period ASC, minute_order ASC, city ASC, operator ASC, code ASC" />
+    <index name="IX_CONDITION" members="crash_time ASC, app_name ASC" />
     <index name="updatetime" members="updatetime ASC" />
     <readsets>
       <readset name="FULL" all="true" />
@@ -192,6 +196,42 @@
       </query>
     </query-defs>
   </entity>
-  
-  </entities>
+  <entity name="crash-log-content" table="crash_log_content" alias="clc">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" />
+    <member name="content" field="content" value-type="byte[]" length="2147483647" />
+    <member name="updatetime" field="updatetime" value-type="Date" nullable="false" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <index name="updatetime" members="updatetime ASC" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/>
+        SET <FIELDS/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+</entities>
 

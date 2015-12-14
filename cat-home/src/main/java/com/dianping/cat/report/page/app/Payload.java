@@ -5,12 +5,14 @@ import java.util.Date;
 
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
+import org.unidal.web.mvc.payload.annotation.ObjectMeta;
 
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.app.service.AppDataField;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
+import com.dianping.cat.report.page.app.service.CrashLogQueryEntity;
 import com.dianping.cat.report.page.app.service.SpeedQueryEntity;
 
 public class Payload extends AbstractReportPayload<Action, ReportPage> {
@@ -61,6 +63,12 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@FieldMeta("day")
 	private String m_day;
 
+	@FieldMeta("id")
+	private int m_id;
+	
+	@ObjectMeta("crashLogQuery")
+	private CrashLogQueryEntity m_crashLogQuery = new CrashLogQueryEntity();
+
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	public Payload() {
@@ -76,6 +84,14 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_codeId;
 	}
 
+	public CrashLogQueryEntity getCrashLogQuery() {
+		return m_crashLogQuery;
+	}
+
+	public void setCrashLogQuery(CrashLogQueryEntity crashLogQuery) {
+		m_crashLogQuery = crashLogQuery;
+	}
+
 	public String getCommandId() {
 		return m_commandId;
 	}
@@ -86,6 +102,14 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public String getDay() {
 		return m_day;
+	}
+
+	public int getId() {
+		return m_id;
+	}
+
+	public void setId(int id) {
+		m_id = id;
 	}
 
 	public Date getDayDate() {

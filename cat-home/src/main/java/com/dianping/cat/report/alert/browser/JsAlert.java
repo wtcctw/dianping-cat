@@ -9,7 +9,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.web.js.Level;
+import com.dianping.cat.config.Level;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.js.entity.ExceptionLimit;
 import com.dianping.cat.message.Transaction;

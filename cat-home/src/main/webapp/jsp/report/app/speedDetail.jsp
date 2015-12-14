@@ -9,7 +9,7 @@
 					<div class="input-group" style="float:left;">
 					<span class="input-group-addon">页面</span>
 					<select id="page" style="width: 240px;">
-					<c:forEach var="item" items="${model.pages}" varStatus="status">
+					<c:forEach var="item" items="${model.appSpeedDisplayInfo.pages}" varStatus="status">
 							<option value='${item}'>${item}</option>
 					</c:forEach>
 					</select></div>
@@ -65,7 +65,7 @@
 						<span class="input-group-addon">开始</span>
 					<input type="text" id="time2" style="width:110px;"/>
 				 <span class="input-group-addon">页面</span> <select id="page2" style="width: 240px;">
-					<c:forEach var="item" items="${model.pages}" varStatus="status">
+					<c:forEach var="item" items="${model.appSpeedDisplayInfo.pages}" varStatus="status">
 							<option value='${item}'>${item}</option>
 					</c:forEach>
 					</select> 
@@ -130,7 +130,7 @@
 	</tr>
 	</thead>
 	<tbody>
-	<c:set var="summarys" value="${model.appSpeedSummarys}" />
+	<c:set var="summarys" value="${model.appSpeedDisplayInfo.appSpeedSummarys}" />
 		<c:forEach var="entry" items="${summarys['当前值']}" >
 		<tr class="right">
 	 		<td class="right">${entry.value.dayTime}</td>
@@ -174,7 +174,7 @@
 		</c:if>
 	</tr></thead>
 	<tbody id="details">
-		<c:set var="details" value="${model.appSpeedDetails}" />
+		<c:set var="details" value="${model.appSpeedDisplayInfo.appSpeedDetails}" />
 		<c:forEach var="entry" items="${details['当前值']}" >
 		<tr class="right" >
 	 		<td class="right" width="10%">${entry.value.dateTime}</td>

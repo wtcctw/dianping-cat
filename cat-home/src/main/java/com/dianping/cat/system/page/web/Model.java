@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.Level;
 import com.dianping.cat.config.web.WebConfigManager;
-import com.dianping.cat.config.web.js.Level;
 import com.dianping.cat.configuration.web.speed.entity.Speed;
 import com.dianping.cat.configuration.web.url.entity.Code;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;

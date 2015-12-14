@@ -30,6 +30,9 @@
 							<li id="speed"><a href="/cat/r/app?op=speed&domain=${model.domain}">
 								<i class="menu-icon fa fa-caret-right"></i>App页面测速</a>
 								<b class="arrow"></b></li>
+							<li id="speedGraph"><a href="/cat/r/app?op=speedGraph">
+								<i class="menu-icon fa fa-caret-right"></i>App测速分布</a>
+								<b class="arrow"></b></li>
 							<li id="statistics"><a href="/cat/r/app?op=statistics&domain=${model.domain}&type=all">
 								<i class="menu-icon fa fa-caret-right"></i>每天报表统计</a>
 								<b class="arrow"></b></li>
@@ -41,6 +44,9 @@
 								<b class="arrow"></b></li>
 							<li id="crashLog"><a href="/cat/r/app?op=crashLog&domain=${model.domain}">
 								<i class="menu-icon fa fa-caret-right"></i>AppCrash日志</a>
+								<b class="arrow"></b></li>
+							<li id="appCrashLog"><a href="/cat/r/app?op=appCrashLog">
+								<i class="menu-icon fa fa-caret-right"></i>Crash日志(新)</a>
 								<b class="arrow"></b></li>
 							<li id="traceLog"><a href="http://mobile-tracer-web01.nh/" target="_blank">
 								<i class="menu-icon fa fa-caret-right"></i>dpid跟踪日志</a>
@@ -54,6 +60,11 @@
 						</ul>
 					</li>
 				</ul>
+				<!-- #section:basics/sidebar.layout.minimize -->
+			<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+				<i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+			</div>
+				
 				<!-- /section:basics/sidebar.layout.minimize -->
 				<script type="text/javascript">
 					try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}

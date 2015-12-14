@@ -7,7 +7,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.web.js.Level;
+import com.dianping.cat.config.Level;
 import com.dianping.cat.report.page.browser.display.JsErrorDetailInfo;
 import com.dianping.cat.web.JsErrorLog;
 import com.dianping.cat.web.JsErrorLogContent;
