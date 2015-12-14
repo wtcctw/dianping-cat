@@ -33,25 +33,6 @@
 								<b class="arrow"></b></li>
 						</ul>
 					</li>
-					<li id="userMonitor_config" class="hsub" >
-						<a href="/cat/s/config?op=aggregations"  class="dropdown-toggle"><i class="menu-icon fa  fa-users"></i><span class="menu-text">用户监控配置</span>
-						<b class="arrow fa fa-angle-down"></b>
-						</a><b class="arrow"></b>
-						<ul class="submenu">
-							<li id="appList"><a href="/cat/s/config?op=appList">
-								<i class="menu-icon fa fa-caret-right"></i>App监控</a>
-								<b class="arrow"></b></li>
-							<li id="appCommandFormatConfig"><a href="/cat/s/config?op=appCommandFormatConfig">
-								<i class="menu-icon fa fa-caret-right"></i>命令字规则</a>
-								<b class="arrow"></b></li>
-							<li id="appConfigUpdate"><a href="/cat/s/config?op=appConfigUpdate" style="display:none">
-								<i class="menu-icon fa fa-caret-right"></i>App全局</a>
-								<b class="arrow"></b></li>
-							<li id="appRule"><a href="/cat/s/config?op=appRule">
-								<i class="menu-icon fa fa-caret-right"></i>App告警</a>
-								<b class="arrow"></b></li>
-						</ul>
-					</li>
 					<li id="application_config" class="hsub">
 					<a href="/cat/s/config?op=metricConfigList" class="dropdown-toggle"> <i class="menu-icon fa  fa-cloud"></i> <span class="menu-text">应用监控配置</span>
 						<b class="arrow fa fa-angle-down"></b>
