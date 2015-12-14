@@ -231,7 +231,7 @@ public class Handler implements PageHandler<Context> {
 		try {
 			AppCommandDisplayInfo displayInfo = m_appGraphCreator.buildCommandDistributeChart(payload.getQueryEntity1(),
 			      payload.getGroupByField());
-			
+
 			return displayInfo;
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -383,6 +383,9 @@ public class Handler implements PageHandler<Context> {
 			jsonObjs.put("appSpeedSummarys", info.getAppSpeedSummarys());
 			model.setFetchData(m_jsonBuilder.toJson(jsonObjs));
 			break;
+		case SPEED_GRAPH:
+			buildSpeedBarCharts(payload, model);
+			break;
 		case CONN_LINECHART:
 			Pair<LineChart, List<AppDataDetail>> lineChartPair = buildConnLineChart(model, payload);
 
@@ -427,6 +430,19 @@ public class Handler implements PageHandler<Context> {
 
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
+		}
+	}
+
+	private void buildSpeedBarCharts(Payload payload, Model model) {
+		try {
+			Map<String, List<Speed>> speeds = m_appSpeedConfigManager.getPageStepInfo();
+			SpeedQueryEntity queryEntity = normalizeQueryEntity(payload, speeds);
+			AppSpeedDisplayInfo info = m_appSpeedService.buildBarCharts(queryEntity);
+
+			info.setSpeeds(speeds);
+			model.setAppSpeedDisplayInfo(info);
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
 	}
 
@@ -533,7 +549,7 @@ public class Handler implements PageHandler<Context> {
 		AppReport report = m_appReportService.queryDailyReport(Constants.CAT, startDate, endDate);
 		return report;
 	}
-	
+
 	public class CodeDistributionComparator implements Comparator<String> {
 
 		@Override

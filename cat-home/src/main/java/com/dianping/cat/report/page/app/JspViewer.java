@@ -37,6 +37,8 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.APP_CRASH_LOG_DETAIL.getPath();
 		case SPEED:
 			return JspFile.SPEED.getPath();
+		case SPEED_GRAPH:
+			return JspFile.SPEED_GRAPH.getPath();
 		case STATISTICS:
 			return JspFile.STATISTICS.getPath();
 		}

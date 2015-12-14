@@ -30,6 +30,9 @@
 							<li id="speed"><a href="/cat/r/app?op=speed&domain=${model.domain}">
 								<i class="menu-icon fa fa-caret-right"></i>App页面测速</a>
 								<b class="arrow"></b></li>
+							<li id="speedGraph"><a href="/cat/r/app?op=speedGraph">
+								<i class="menu-icon fa fa-caret-right"></i>App测速分布</a>
+								<b class="arrow"></b></li>
 							<li id="statistics"><a href="/cat/r/app?op=statistics&domain=${model.domain}&type=all">
 								<i class="menu-icon fa fa-caret-right"></i>每天报表统计</a>
 								<b class="arrow"></b></li>
