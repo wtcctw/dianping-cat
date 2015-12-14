@@ -9,7 +9,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:config>
+<a:mobile>
 			<h3 class="text-center text-success">编辑APP监控规则</h3>
 			<form name="appRuleUpdate" id="form" method="post">
 				<table style='width:100%' class='table table-striped table-condensed '>
@@ -76,7 +76,7 @@
 					</tr>
 				</table>
 			</form>
-</a:config>
+</a:mobile>
 
 <script type="text/javascript">
 var commandInfo = ${model.commandJson};

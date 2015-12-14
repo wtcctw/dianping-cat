@@ -17,7 +17,7 @@
 					try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
 				</script>
 				<ul class="nav nav-list" style="top: 0px;">
-					<li id="App_report" class="hsub open"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-phone"></i> <span class="menu-text">App</span>
+					<li id="App_report" class="hsub open"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-phone"></i> <span class="menu-text">Mobile</span>
 							<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
@@ -56,6 +56,25 @@
 								<b class="arrow"></b></li>
 							<li id="esConfig" style="display:none"><a href="/cat/r/eslog?op=config" target="_blank">
 								<i class="menu-icon fa fa-caret-right"></i>es日志配置</a>
+								<b class="arrow"></b></li>
+						</ul>
+					</li>
+					<li id="userMonitor_config" class="hsub" >
+						<a href="/cat/s/config?op=aggregations"  class="dropdown-toggle"><i class="menu-icon fa  fa-users"></i><span class="menu-text">Config</span>
+						<b class="arrow fa fa-angle-down"></b>
+						</a><b class="arrow"></b>
+						<ul class="submenu">
+							<li id="appList"><a href="/cat/s/config?op=appList">
+								<i class="menu-icon fa fa-caret-right"></i>App监控</a>
+								<b class="arrow"></b></li>
+							<li id="appCommandFormatConfig"><a href="/cat/s/config?op=appCommandFormatConfig">
+								<i class="menu-icon fa fa-caret-right"></i>Api规则</a>
+								<b class="arrow"></b></li>
+							<li id="appConfigUpdate"><a href="/cat/s/config?op=appConfigUpdate" style="display:none">
+								<i class="menu-icon fa fa-caret-right"></i>App全局</a>
+								<b class="arrow"></b></li>
+							<li id="appRule"><a href="/cat/s/config?op=appRule">
+								<i class="menu-icon fa fa-caret-right"></i>App告警</a>
 								<b class="arrow"></b></li>
 						</ul>
 					</li>
