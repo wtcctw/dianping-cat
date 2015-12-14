@@ -13,7 +13,11 @@ public enum SystemPage implements Page {
 
    ROUTER("router", "router", "Router", "Router", true),
 
-   WEB("web", "web", "Web", "Web", true);
+   WEB("web", "web", "Web", "Web", true),
+
+   PROJECT("project", "project", "Project", "Project", true),
+
+   HELLO("hello", "hello", "Hello", "Hello", true);
 
    private String m_name;
 

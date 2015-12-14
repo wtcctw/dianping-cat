@@ -6618,5 +6618,26 @@
 				</requirement>
 			</requirements>
 		</component>
+		<component>
+			<role>com.dianping.cat.system.page.project.Handler</role>
+			<implementation>com.dianping.cat.system.page.project.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.page.project.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.project.JspViewer</role>
+			<implementation>com.dianping.cat.system.page.project.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
 	</components>
 </plexus>
