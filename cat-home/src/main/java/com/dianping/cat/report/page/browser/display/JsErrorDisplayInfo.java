@@ -2,6 +2,8 @@ package com.dianping.cat.report.page.browser.display;
 
 import java.util.List;
 
+import com.dianping.cat.report.ErrorMsg;
+
 public class JsErrorDisplayInfo {
 
 	private List<String> m_levels;
@@ -10,7 +12,7 @@ public class JsErrorDisplayInfo {
 
 	private int m_totalCount;
 
-	private List<JsErrorMsg> m_errors;
+	private List<ErrorMsg> m_errors;
 
 	private String m_distributionChart;
 
@@ -18,7 +20,7 @@ public class JsErrorDisplayInfo {
 		return m_distributionChart;
 	}
 
-	public List<JsErrorMsg> getErrors() {
+	public List<ErrorMsg> getErrors() {
 		return m_errors;
 	}
 
@@ -38,7 +40,7 @@ public class JsErrorDisplayInfo {
 		m_distributionChart = distributionChart;
 	}
 
-	public void setErrors(List<JsErrorMsg> errors) {
+	public void setErrors(List<ErrorMsg> errors) {
 		m_errors = errors;
 	}
 

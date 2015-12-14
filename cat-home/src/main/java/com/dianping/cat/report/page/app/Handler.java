@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -40,15 +39,17 @@ import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.graph.PieChart;
-import com.dianping.cat.report.graph.PieChartDetailInfo;
+import com.dianping.cat.report.page.app.display.AppCommandDisplayInfo;
 import com.dianping.cat.report.page.app.display.AppCommandsSorter;
+import com.dianping.cat.report.page.app.display.AppConnectionDisplayInfo;
 import com.dianping.cat.report.page.app.display.AppConnectionGraphCreator;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
 import com.dianping.cat.report.page.app.display.AppDetailComparator;
 import com.dianping.cat.report.page.app.display.AppGraphCreator;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 import com.dianping.cat.report.page.app.display.CodeDisplayVisitor;
+import com.dianping.cat.report.page.app.display.CrashLogDetailInfo;
+import com.dianping.cat.report.page.app.display.CrashLogDisplayInfo;
 import com.dianping.cat.report.page.app.display.DisplayCommands;
 import com.dianping.cat.report.page.app.display.UpdateStatus;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor;
@@ -58,21 +59,12 @@ import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.app.service.AppReportService;
 import com.dianping.cat.report.page.app.service.AppSpeedService;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
+import com.dianping.cat.report.page.app.service.CrashLogQueryEntity;
+import com.dianping.cat.report.page.app.service.CrashLogService;
 import com.dianping.cat.report.page.app.service.SpeedQueryEntity;
 import com.dianping.cat.service.ProjectService;
 
 public class Handler implements PageHandler<Context> {
-
-	public class CodeDistributionComparator implements Comparator<String> {
-
-		@Override
-		public int compare(String o1, String o2) {
-			int id1 = Integer.parseInt(o1.replaceAll("X", "0"));
-			int id2 = Integer.parseInt(o2.replaceAll("X", "0"));
-
-			return id2 - id1;
-		}
-	}
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -103,6 +95,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private CrashLogProcessor m_crashLogProcessor;
+
+	@Inject
+	private CrashLogService m_crashLogService;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
@@ -198,6 +193,15 @@ public class Handler implements PageHandler<Context> {
 
 	}
 
+	private AppConnectionDisplayInfo buildConnPieChart(Payload payload) {
+		try {
+			return m_appConnectionGraphCreator.buildPieChart(payload.getQueryEntity1(), payload.getGroupByField());
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new AppConnectionDisplayInfo();
+	}
+
 	private DisplayCommands buildDisplayCommands(AppReport report, String sort) throws IOException {
 		CodeDisplayVisitor distributionVisitor = new CodeDisplayVisitor(m_projectService, m_appConfigManager);
 
@@ -223,43 +227,16 @@ public class Handler implements PageHandler<Context> {
 		return lineChart;
 	}
 
-	private Map<String, List<Speed>> buildPageStepInfo() {
-		Map<String, List<Speed>> page2Steps = new HashMap<String, List<Speed>>();
-
-		for (Speed speed : m_appSpeedConfigManager.getConfig().getSpeeds().values()) {
-			String page = speed.getPage();
-			if (StringUtils.isEmpty(page)) {
-				page = "default";
-			}
-			List<Speed> steps = page2Steps.get(page);
-			if (steps == null) {
-				steps = new ArrayList<Speed>();
-				page2Steps.put(page, steps);
-			}
-			steps.add(speed);
-		}
-		for (Entry<String, List<Speed>> entry : page2Steps.entrySet()) {
-			List<Speed> speeds = entry.getValue();
-			Collections.sort(speeds, new Comparator<Speed>() {
-
-				@Override
-				public int compare(Speed o1, Speed o2) {
-					return o1.getStep() - o2.getStep();
-				}
-			});
-		}
-		return page2Steps;
-	}
-
-	private Pair<PieChart, PieChartDetailInfo> buildPieChart(Payload payload) {
+	private AppCommandDisplayInfo buildCommandDistributeChart(Payload payload) {
 		try {
-			Pair<PieChart, PieChartDetailInfo> pair = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(),
+			AppCommandDisplayInfo displayInfo = m_appGraphCreator.buildCommandDistributeChart(payload.getQueryEntity1(),
 			      payload.getGroupByField());
-			return pair;
+
+			return displayInfo;
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return null;
+		return new AppCommandDisplayInfo();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -297,21 +274,12 @@ public class Handler implements PageHandler<Context> {
 			parallelBuildLineChart(model, payload);
 			break;
 		case PIECHART:
-			try {
-				Pair<PieChart, PieChartDetailInfo> pieChartPair = m_appGraphCreator.buildPieChart(
-				      payload.getQueryEntity1(), payload.getGroupByField());
+			AppCommandDisplayInfo commandDisplayInfo = buildCommandDistributeChart(payload);
+			int commandId = payload.getQueryEntity1().getId();
 
-				if (pieChartPair != null) {
-					model.setPieChart(pieChartPair.getKey());
-					model.setPieChartDetailInfo(pieChartPair.getValue());
-				}
-				int commandId = payload.getQueryEntity1().getId();
-
-				model.setCommandId(commandId);
-				model.setCodes(m_appConfigManager.queryInternalCodes(commandId));
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
+			model.setCommandDisplayInfo(commandDisplayInfo);
+			model.setCommandId(commandId);
+			model.setCodes(m_appConfigManager.queryInternalCodes(commandId));
 			break;
 		case LINECHART_JSON:
 			parallelBuildLineChart(model, payload);
@@ -323,15 +291,12 @@ public class Handler implements PageHandler<Context> {
 			model.setFetchData(m_jsonBuilder.toJson(lineChartObjs));
 			break;
 		case PIECHART_JSON:
-			Pair<PieChart, PieChartDetailInfo> pieChartJsonPair = buildPieChart(payload);
+			AppCommandDisplayInfo appCommandDisplayInfo = buildCommandDistributeChart(payload);
+			Map<String, Object> pieChartObjs = new HashMap<String, Object>();
 
-			if (pieChartJsonPair != null) {
-				Map<String, Object> pieChartObjs = new HashMap<String, Object>();
-
-				pieChartObjs.put("pieCharts", pieChartJsonPair.getKey());
-				pieChartObjs.put("pieChartDetails", pieChartJsonPair.getValue());
-				model.setFetchData(m_jsonBuilder.toJson(pieChartObjs));
-			}
+			pieChartObjs.put("pieCharts", appCommandDisplayInfo.getPieChart());
+			pieChartObjs.put("pieChartDetails", appCommandDisplayInfo.getDistributeDetails());
+			model.setFetchData(m_jsonBuilder.toJson(pieChartObjs));
 			break;
 		case APP_ADD:
 			String domain = payload.getDomain();
@@ -401,34 +366,25 @@ public class Handler implements PageHandler<Context> {
 				Cat.logError(e);
 			}
 			break;
+		case APP_CRASH_LOG:
+			buildAppCrashLog(payload, model);
+			break;
+		case APP_CRASH_LOG_DETAIL:
+			buildAppCrashLogDetail(payload, model);
+			break;
 		case SPEED:
-			try {
-				Map<String, List<Speed>> speeds = buildPageStepInfo();
-				model.setSpeeds(speeds);
-
-				SpeedQueryEntity queryEntity1 = normalizeQueryEntity(payload, speeds);
-				AppSpeedDisplayInfo info = m_appSpeedService.buildSpeedDisplayInfo(queryEntity1,
-				      payload.getSpeedQueryEntity2());
-
-				model.setAppSpeedDisplayInfo(info);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
+			model.setAppSpeedDisplayInfo(buildSpeedTendency(payload));
 			break;
 		case SPEED_JSON:
-			try {
-				Map<String, List<Speed>> speeds = buildPageStepInfo();
-				SpeedQueryEntity queryEntity1 = normalizeQueryEntity(payload, speeds);
-				AppSpeedDisplayInfo info = m_appSpeedService.buildSpeedDisplayInfo(queryEntity1,
-				      payload.getSpeedQueryEntity2());
+			AppSpeedDisplayInfo info = buildSpeedTendency(payload);
 
-				jsonObjs.put("lineCharts", info.getLineChart());
-				jsonObjs.put("appSpeedDetails", info.getAppSpeedDetails());
-				jsonObjs.put("appSpeedSummarys", info.getAppSpeedSummarys());
-				model.setFetchData(m_jsonBuilder.toJson(jsonObjs));
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
+			jsonObjs.put("lineCharts", info.getLineChart());
+			jsonObjs.put("appSpeedDetails", info.getAppSpeedDetails());
+			jsonObjs.put("appSpeedSummarys", info.getAppSpeedSummarys());
+			model.setFetchData(m_jsonBuilder.toJson(jsonObjs));
+			break;
+		case SPEED_GRAPH:
+			buildSpeedBarCharts(payload, model);
 			break;
 		case CONN_LINECHART:
 			Pair<LineChart, List<AppDataDetail>> lineChartPair = buildConnLineChart(model, payload);
@@ -444,35 +400,22 @@ public class Handler implements PageHandler<Context> {
 			model.setFetchData(m_jsonBuilder.toJson(jsonObjs));
 			break;
 		case CONN_PIECHART:
-			Pair<PieChart, PieChartDetailInfo> pieChartPair;
-			try {
-				pieChartPair = m_appConnectionGraphCreator.buildPieChart(payload.getQueryEntity1(),
-				      payload.getGroupByField());
+			AppConnectionDisplayInfo connDisplayInfo = buildConnPieChart(payload);
+			commandId = payload.getQueryEntity1().getId();
 
-				if (pieChartPair != null) {
-					model.setPieChart(pieChartPair.getKey());
-					model.setPieChartDetailInfo(pieChartPair.getValue());
-				}
-				int commandId = payload.getQueryEntity1().getId();
-
-				model.setCommandId(commandId);
-				model.setCodes(m_appConfigManager.queryInternalCodes(commandId));
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
+			model.setConnDisplayInfo(connDisplayInfo);
+			;
+			model.setCommandId(commandId);
+			model.setConnDisplayInfo(connDisplayInfo);
+			model.setCodes(m_appConfigManager.queryInternalCodes(commandId));
 			break;
 		case CONN_PIECHART_JSON:
-			try {
-				pieChartPair = m_appConnectionGraphCreator.buildPieChart(payload.getQueryEntity1(),
-				      payload.getGroupByField());
+			AppConnectionDisplayInfo appConnDisplayInfo = buildConnPieChart(payload);
 
-				if (pieChartPair != null) {
-					jsonObjs.put("pieChart", pieChartPair.getKey());
-					jsonObjs.put("detailInfos", pieChartPair.getValue());
-					model.setFetchData(m_jsonBuilder.toJson(jsonObjs));
-				}
-			} catch (Exception e) {
-				Cat.logError(e);
+			if (appConnDisplayInfo != null) {
+				jsonObjs.put("pieChart", appConnDisplayInfo.getPieChart());
+				jsonObjs.put("detailInfos", appConnDisplayInfo.getPieChartDetailInfo());
+				model.setFetchData(m_jsonBuilder.toJson(jsonObjs));
 			}
 			break;
 		case STATISTICS:
@@ -488,6 +431,45 @@ public class Handler implements PageHandler<Context> {
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
+	}
+
+	private void buildSpeedBarCharts(Payload payload, Model model) {
+		try {
+			Map<String, List<Speed>> speeds = m_appSpeedConfigManager.getPageStepInfo();
+			SpeedQueryEntity queryEntity = normalizeQueryEntity(payload, speeds);
+			AppSpeedDisplayInfo info = m_appSpeedService.buildBarCharts(queryEntity);
+
+			info.setSpeeds(speeds);
+			model.setAppSpeedDisplayInfo(info);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
+
+	private AppSpeedDisplayInfo buildSpeedTendency(Payload payload) {
+		try {
+			Map<String, List<Speed>> speeds = m_appSpeedConfigManager.getPageStepInfo();
+			SpeedQueryEntity queryEntity1 = normalizeQueryEntity(payload, speeds);
+			AppSpeedDisplayInfo info = m_appSpeedService.buildSpeedDisplayInfo(queryEntity1,
+			      payload.getSpeedQueryEntity2());
+
+			info.setSpeeds(speeds);
+			return info;
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new AppSpeedDisplayInfo();
+	}
+
+	private void buildAppCrashLog(Payload payload, Model model) {
+		CrashLogQueryEntity entity = payload.getCrashLogQuery();
+		CrashLogDisplayInfo info = m_crashLogService.buildCrashLogDisplayInfo(entity);
+		model.setCrashLogDisplayInfo(info);
+	}
+
+	private void buildAppCrashLogDetail(Payload payload, Model model) {
+		CrashLogDetailInfo info = m_crashLogService.queryCrashLogDetailIno(payload.getId());
+		model.setCrashLogDetailInfo(info);
 	}
 
 	private void normalize(Model model, Payload payload) {
@@ -567,4 +549,16 @@ public class Handler implements PageHandler<Context> {
 		AppReport report = m_appReportService.queryDailyReport(Constants.CAT, startDate, endDate);
 		return report;
 	}
+
+	public class CodeDistributionComparator implements Comparator<String> {
+
+		@Override
+		public int compare(String o1, String o2) {
+			int id1 = Integer.parseInt(o1.replaceAll("X", "0"));
+			int id2 = Integer.parseInt(o2.replaceAll("X", "0"));
+
+			return id2 - id1;
+		}
+	}
+
 }

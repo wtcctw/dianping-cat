@@ -496,11 +496,21 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>web-api-data</role-hint>
+			<role-hint>crash-log</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>web-api-data</logical-table-name>
-				<physical-table-name>web_api_data</physical-table-name>
+				<logical-table-name>crash-log</logical-table-name>
+				<physical-table-name>crash_log</physical-table-name>
+				<data-source-name>app</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>crash-log-content</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>crash-log-content</logical-table-name>
+				<physical-table-name>crash_log_content</physical-table-name>
 				<data-source-name>app</data-source-name>
 			</configuration>
 		</component>
@@ -532,8 +542,17 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.app.WebApiDataDao</role>
-			<implementation>com.dianping.cat.app.WebApiDataDao</implementation>
+			<role>com.dianping.cat.app.CrashLogDao</role>
+			<implementation>com.dianping.cat.app.CrashLogDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.app.CrashLogContentDao</role>
+			<implementation>com.dianping.cat.app.CrashLogContentDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>

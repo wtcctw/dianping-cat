@@ -31,7 +31,7 @@
         	      <input type="text" id="time2" style="width:60px;"/></div>
 	             <div class="input-group" style="float:left;width:120px">
 	              	<span class="input-group-addon">level</span>
-					<select id="level" style="width:100px">
+					<select id="level" style="width:100px;height:32px">
 						<option value=''>ALL</option>
 						<c:forEach var="level" items="${model.jsErrorDisplayInfo.levels}">
 							<option value="${level}">${level}</option>
@@ -46,14 +46,14 @@
 	            </div> -->
 	            <div class="input-group" style="float:left;">
 					<span class="input-group-addon">模块</span>
-						<span class="input-icon" style="width:250px;">
+						<span class="input-icon" style="width:250px;height:33px">
 							<input type="text" placeholder="" class="search-input search-input form-control ui-autocomplete-input" id="module" autocomplete="on" data=""/>
 							<i class="ace-icon fa fa-search nav-search-icon"></i>
 						</span>
 	            </div>
 	            <div class="input-group" style="float:left;">
 					<span class="input-group-addon">Dpid</span>
-					<input type="text"  id="dpid"/>
+					<input type="text"  id="dpid" />
 	            </div>
 	              <input class="btn btn-primary btn-sm"
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"

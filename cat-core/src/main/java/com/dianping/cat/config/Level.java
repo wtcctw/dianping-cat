@@ -1,4 +1,4 @@
-package com.dianping.cat.config.web.js;
+package com.dianping.cat.config;
 
 import java.util.ArrayList;
 import java.util.List;

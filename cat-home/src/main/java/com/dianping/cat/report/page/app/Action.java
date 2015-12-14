@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.app;
 
 public enum Action implements org.unidal.web.mvc.Action {
+	
 	LINECHART("view"),
 
 	LINECHART_JSON("linechartJson"),
@@ -19,9 +20,15 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	HISTORY_CRASH_LOG("historyCrashLog"),
 
+	APP_CRASH_LOG("appCrashLog"),
+
+	APP_CRASH_LOG_DETAIL("appCrashLogDetail"),
+
 	SPEED("speed"),
 
 	SPEED_JSON("speedJson"),
+
+	SPEED_GRAPH("speedGraph"),
 
 	CONN_LINECHART("connLinechart"),
 

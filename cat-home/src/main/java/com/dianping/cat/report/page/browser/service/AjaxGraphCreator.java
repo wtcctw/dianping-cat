@@ -16,12 +16,12 @@ import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.web.url.entity.Code;
 import com.dianping.cat.report.graph.BarChart;
+import com.dianping.cat.report.graph.DistributeDetailInfo;
+import com.dianping.cat.report.graph.DistributeDetailInfo.DistributeDetail;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.page.browser.display.AjaxDataDisplayInfo;
-import com.dianping.cat.report.page.browser.display.AjaxDistributeDetails;
-import com.dianping.cat.report.page.browser.display.AjaxDistributeDetails.DistributeDetail;
 import com.dianping.cat.web.AjaxData;
 
 public class AjaxGraphCreator {
@@ -76,7 +76,7 @@ public class AjaxGraphCreator {
 
 	public AjaxDataDisplayInfo buildAjaxDistributeChart(AjaxDataQueryEntity entity, AjaxDataField field) {
 		List<AjaxData> datas = m_dataBuilder.queryByField(entity, field);
-		AjaxDistributeDetails detailInfos = buildAjaxDistributeDetails(field, datas);
+		DistributeDetailInfo detailInfos = buildAjaxDistributeDetails(field, datas);
 		AjaxDataDisplayInfo info = new AjaxDataDisplayInfo();
 
 		info.setDistributeDetailInfos(detailInfos);
@@ -85,12 +85,12 @@ public class AjaxGraphCreator {
 		return info;
 	}
 
-	private BarChart buildBarChart(AjaxDistributeDetails detailInfos, AjaxDataField field) {
+	private BarChart buildBarChart(DistributeDetailInfo detailInfos, AjaxDataField field) {
 		BarChart barChart = new BarChart();
 		barChart.setTitle("加载时间分布");
 		barChart.setyAxis("加载时间(ms)");
 		barChart.setSerieName(field.getName());
-		List<DistributeDetail> datas = detailInfos.getDetails();
+		List<DistributeDetail> datas = detailInfos.getItems();
 
 		Collections.sort(datas, new Comparator<DistributeDetail>() {
 			@Override
@@ -112,11 +112,11 @@ public class AjaxGraphCreator {
 		return barChart;
 	}
 
-	private PieChart buildPieChart(AjaxDistributeDetails detailInfos) {
+	private PieChart buildPieChart(DistributeDetailInfo detailInfos) {
 		PieChart pieChart = new PieChart().setMaxSize(Integer.MAX_VALUE);
 		List<Item> items = new ArrayList<Item>();
 
-		for (DistributeDetail detail : detailInfos.getDetails()) {
+		for (DistributeDetail detail : detailInfos.getItems()) {
 			Item item = new Item();
 
 			item.setTitle(detail.getTitle());
@@ -129,32 +129,32 @@ public class AjaxGraphCreator {
 		return pieChart;
 	}
 
-	private AjaxDistributeDetails buildAjaxDistributeDetails(AjaxDataField field, List<AjaxData> datas) {
-		AjaxDistributeDetails detailInfos = new AjaxDistributeDetails();
+	private DistributeDetailInfo buildAjaxDistributeDetails(AjaxDataField field, List<AjaxData> datas) {
+		DistributeDetailInfo detailInfos = new DistributeDetailInfo();
 
 		for (AjaxData data : datas) {
-			DistributeDetail info = new DistributeDetail();
+			DistributeDetail detail = new DistributeDetail();
 
 			Pair<Integer, String> pair = buildPieChartFieldTitlePair(data, field);
-			info.setId(pair.getKey()).setTitle(pair.getValue());
+			detail.setId(pair.getKey()).setTitle(pair.getValue());
 			long requestSum = data.getAccessNumberSum();
-			info.setRequestSum(requestSum);
+			detail.setRequestSum(requestSum);
 
 			if (requestSum > 0) {
-				info.setDelayAvg(data.getResponseSumTimeSum() / requestSum);
+				detail.setDelayAvg(data.getResponseSumTimeSum() / requestSum);
 			}
 
-			detailInfos.addPieChartDetailInfo(info);
+			detailInfos.add(detail);
 		}
 
 		double sum = 0;
 
-		for (DistributeDetail detail : detailInfos.getDetails()) {
+		for (DistributeDetail detail : detailInfos.getItems()) {
 			sum += detail.getRequestSum();
 		}
 
 		if (sum > 0) {
-			for (DistributeDetail detail : detailInfos.getDetails()) {
+			for (DistributeDetail detail : detailInfos.getItems()) {
 				detail.setRatio(detail.getRequestSum() / sum);
 			}
 		}
