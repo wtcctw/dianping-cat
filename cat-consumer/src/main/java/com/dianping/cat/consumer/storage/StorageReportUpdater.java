@@ -24,7 +24,7 @@ public class StorageReportUpdater {
 		}
 	}
 
-	public void updateStorageReport(StorageReport report, StorageUpdateParam param) {
+	public void updateStorageReport(StorageReport report, StorageUpdateItem param) {
 		Transaction t = param.getTransaction();
 		long current = t.getTimestamp() / 1000 / 60;
 		int min = (int) (current % (60));
@@ -54,15 +54,13 @@ public class StorageReportUpdater {
 		}
 	}
 
-	public static class StorageUpdateParam {
+	public static class StorageUpdateItem {
 
 		private String m_ip;
 
 		private String m_domain;
 
 		private String m_method;
-
-		private String m_sqlName;
 
 		private Transaction m_transaction;
 
@@ -80,10 +78,6 @@ public class StorageReportUpdater {
 			return m_method;
 		}
 
-		public String getSqlName() {
-			return m_sqlName;
-		}
-
 		public long getThreshold() {
 			return m_threshold;
 		}
@@ -92,34 +86,30 @@ public class StorageReportUpdater {
 			return m_transaction;
 		}
 
-		public StorageUpdateParam setDomain(String domain) {
+		public StorageUpdateItem setDomain(String domain) {
 			m_domain = domain;
 			return this;
 		}
 
-		public StorageUpdateParam setIp(String ip) {
+		public StorageUpdateItem setIp(String ip) {
 			m_ip = ip;
 			return this;
 		}
 
-		public StorageUpdateParam setMethod(String method) {
+		public StorageUpdateItem setMethod(String method) {
 			m_method = method;
 			return this;
 		}
 
-		public StorageUpdateParam setSqlName(String sqlName) {
-			m_sqlName = sqlName;
-			return this;
-		}
-
-		public StorageUpdateParam setThreshold(long threshold) {
+		public StorageUpdateItem setThreshold(long threshold) {
 			m_threshold = threshold;
 			return this;
 		}
 
-		public StorageUpdateParam setTransaction(Transaction transaction) {
+		public StorageUpdateItem setTransaction(Transaction transaction) {
 			m_transaction = transaction;
 			return this;
 		}
 	}
+	
 }
