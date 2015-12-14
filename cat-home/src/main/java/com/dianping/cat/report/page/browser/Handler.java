@@ -3,7 +3,6 @@ package com.dianping.cat.report.page.browser;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -38,8 +37,6 @@ import com.dianping.cat.report.page.browser.display.AjaxDataDetailSorter;
 import com.dianping.cat.report.page.browser.display.AjaxDataDisplayInfo;
 import com.dianping.cat.report.page.browser.display.JsErrorDisplayInfo;
 import com.dianping.cat.report.page.browser.display.JsErrorDetailInfo;
-import com.dianping.cat.report.page.browser.display.AjaxDistributeDetails;
-import com.dianping.cat.report.page.browser.display.AjaxDistributeDetails.DistributeDetail;
 import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
 import com.dianping.cat.report.page.browser.service.AjaxDataField;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
@@ -161,18 +158,7 @@ public class Handler implements PageHandler<Context> {
 
 	private AjaxDataDisplayInfo buildAjaxDistributeChart(Payload payload) {
 		try {
-			AjaxDataDisplayInfo displayInfo = m_graphCreator.buildAjaxDistributeChart(payload.getQueryEntity1(),
-			      payload.getGroupByField());
-			AjaxDistributeDetails detailInfos = displayInfo.getDistributeDetailInfos();
-
-			Collections.sort(detailInfos.getDetails(), new Comparator<DistributeDetail>() {
-				@Override
-				public int compare(DistributeDetail o1, DistributeDetail o2) {
-					return (int) (o2.getRequestSum() - o1.getRequestSum());
-				}
-			});
-
-			return displayInfo;
+			return m_graphCreator.buildAjaxDistributeChart(payload.getQueryEntity1(), payload.getGroupByField());
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
