@@ -73,6 +73,7 @@ import com.dianping.cat.report.page.ConfigReloadTask;
 import com.dianping.cat.report.page.DomainGroupConfigManager;
 import com.dianping.cat.report.page.app.service.AppConnectionService;
 import com.dianping.cat.report.page.app.service.AppDataService;
+import com.dianping.cat.report.page.app.service.AppSpeedDataBuilder;
 import com.dianping.cat.report.page.app.service.AppSpeedService;
 import com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager;
 import com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder;
@@ -234,7 +235,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DataExtractor.class, DataExtractorImpl.class));
 		all.add(C(MetricDataFetcher.class, MetricDataFetcherImpl.class));
 
-		all.add(C(AppSpeedService.class).req(AppSpeedDataDao.class));
+		all.add(C(AppSpeedDataBuilder.class).req(AppSpeedDataDao.class, AppConfigManager.class));
+		all.add(C(AppSpeedService.class).req(AppSpeedDataDao.class, AppSpeedDataBuilder.class));
+
 		all.add(C(AppDataService.class).req(AppCommandDataDao.class, AppConfigManager.class));
 		all.add(C(AppConnectionService.class).req(AppConnectionDataDao.class, AppConfigManager.class));
 

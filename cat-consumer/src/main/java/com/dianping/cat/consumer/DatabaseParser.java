@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.storage.builder;
+package com.dianping.cat.consumer;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;

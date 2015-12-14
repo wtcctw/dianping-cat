@@ -32,7 +32,7 @@
 				$('#history').slideUp();
 			}
 		}
-		var page2Steps = ${model.page2StepsJson};
+		var page2Steps = ${model.appSpeedDisplayInfo.page2StepsJson};
 		
 		function changeStepByPage(){
 			var page = "";

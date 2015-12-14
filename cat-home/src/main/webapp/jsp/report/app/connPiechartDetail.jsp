@@ -122,7 +122,7 @@
 		
 	</tr></thead>
 	<tbody>
-	<c:forEach var="item" items="${model.pieChartDetailInfo.sortedItems}" varStatus="status">
+	<c:forEach var="item" items="${model.connDisplayInfo.pieChartDetailInfo.sortedItems}" varStatus="status">
 		<tr>
 		<c:if test="${payload.groupByField.name eq 'code'}">
 			<c:choose>

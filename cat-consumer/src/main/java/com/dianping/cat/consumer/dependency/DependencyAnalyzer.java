@@ -11,12 +11,12 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
+import com.dianping.cat.consumer.DatabaseParser;
+import com.dianping.cat.consumer.DatabaseParser.Database;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
-import com.dianping.cat.consumer.storage.builder.DatabaseParser;
-import com.dianping.cat.consumer.storage.builder.DatabaseParser.Database;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;

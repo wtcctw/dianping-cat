@@ -99,7 +99,7 @@
 		
 	</tr></thead>
 	<tbody>
-	<c:forEach var="item" items="${model.ajaxDataDisplayInfo.distributeDetailInfos.details}" varStatus="status">
+	<c:forEach var="item" items="${model.ajaxDataDisplayInfo.distributeDetailInfos.sortedItems}" varStatus="status">
 		<tr>
 		<c:if test="${payload.groupByField.name eq 'code'}">
 				<td colspan="2">${item.id}</td>  

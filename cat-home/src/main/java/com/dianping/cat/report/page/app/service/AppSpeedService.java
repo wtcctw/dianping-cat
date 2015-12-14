@@ -25,6 +25,9 @@ public class AppSpeedService {
 	@Inject
 	private AppSpeedDataDao m_dao;
 
+	@Inject
+	private AppSpeedDataBuilder m_dataBuilder;
+
 	private AppSpeedDetail build5MinuteData(int minute, AppSpeedData data, Date period) {
 		long accessSum = 0, slowAccessSum = 0, sum = 0;
 		double responseSum = 0, responseAvg = 0, ratio = 0;
@@ -132,6 +135,10 @@ public class AppSpeedService {
 		AppSpeedDisplayInfo appSpeedDisplayInfo = buildAppSpeedDisplayInfo(datas);
 
 		return appSpeedDisplayInfo;
+	}
+
+	public AppSpeedDisplayInfo buildBarCharts(SpeedQueryEntity queryEntity) {
+		return m_dataBuilder.buildBarChart(queryEntity);
 	}
 
 	public Double[] computeDelayAvg(AppSpeedSequence convertedData) {

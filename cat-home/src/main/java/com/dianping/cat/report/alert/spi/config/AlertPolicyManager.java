@@ -110,6 +110,7 @@ public class AlertPolicyManager implements Initializable {
 
 	private Level queryLevel(String typeName, String groupName, String levelName) {
 		Type type = m_config.findType(typeName);
+		
 		if (type == null) {
 			type = m_config.findType(DEFAULT_TYPE);
 		}

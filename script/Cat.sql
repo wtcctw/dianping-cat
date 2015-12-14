@@ -158,7 +158,7 @@ CREATE TABLE `project` (
   `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
   `modify_date` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`),
-  KEY `domain` (`domain`)
+  UNIQUE KEY `domain` (`domain`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='项目基本信息';
 
 CREATE TABLE `topologyGraph` (

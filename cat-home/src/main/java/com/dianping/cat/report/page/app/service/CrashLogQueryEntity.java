@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.browser.service;
+package com.dianping.cat.report.page.app.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -6,28 +6,27 @@ import java.util.Date;
 
 import org.codehaus.plexus.util.StringUtils;
 
-import com.dianping.cat.config.Level;
 import com.dianping.cat.helper.TimeHelper;
 
-public class JsErrorQueryEntity {
+public class CrashLogQueryEntity {
+
+	private String m_day;
 
 	private String m_startTime;
 
 	private String m_endTime;
 
-	private String m_level;
+	private String m_appName = "主APP";
 
 	private String m_module;
 
-	private String m_msg;
+	private int m_platform;
 
-	private String m_dpid;
-
-	private static final String ALL = "ALL";
-
-	private String m_day;
+	private String m_dpid = null;
 
 	private SimpleDateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	
+	private String m_query;
 
 	public Date buildEndTime() {
 		if (StringUtils.isNotBlank(m_day) && StringUtils.isNotBlank(m_endTime)) {
@@ -38,14 +37,6 @@ public class JsErrorQueryEntity {
 			}
 		}
 		return TimeHelper.getCurrentDay(1);
-	}
-
-	public int buildLevel() {
-		if (StringUtils.isEmpty(m_level) || ALL.equals(m_level)) {
-			return -1;
-		} else {
-			return Level.getCodeByName(m_level);
-		}
 	}
 
 	public Date buildStartTime() {
@@ -59,60 +50,12 @@ public class JsErrorQueryEntity {
 		return TimeHelper.getCurrentHour();
 	}
 
-	public String getDpid() {
-		if (StringUtils.isEmpty(m_dpid)) {
-			return null;
-		} else {
-			return m_dpid;
-		}
+	public String getQuery() {
+		return m_query;
 	}
 
-	public String getEndTime() {
-		return m_endTime;
-	}
-
-	public String getLevel() {
-		return m_level;
-	}
-
-	public String getModule() {
-		if (StringUtils.isEmpty(m_module)) {
-			return null;
-		} else {
-			return m_module;
-		}
-	}
-
-	public String getMsg() {
-		return m_msg;
-	}
-
-	public String getStartTime() {
-		return m_startTime;
-	}
-
-	public void setDpid(String dpid) {
-		m_dpid = dpid;
-	}
-
-	public void setEndTime(String endTime) {
-		m_endTime = endTime;
-	}
-
-	public void setLevel(String level) {
-		m_level = level;
-	}
-
-	public void setModule(String module) {
-		m_module = module;
-	}
-
-	public void setMsg(String msg) {
-		m_msg = msg;
-	}
-
-	public void setStartTime(String startTime) {
-		m_startTime = startTime;
+	public void setQuery(String query) {
+		m_query = query;
 	}
 
 	public String getDay() {
@@ -121,6 +64,66 @@ public class JsErrorQueryEntity {
 
 	public void setDay(String day) {
 		m_day = day;
+	}
+
+	public String getDpid() {
+		if (StringUtils.isEmpty(m_dpid)) {
+			return null;
+		}
+		
+		return m_dpid;
+	}
+
+	public void setDpid(String dpid) {
+		m_dpid = dpid;
+	}
+
+	public String getAppName() {
+		return m_appName;
+	}
+
+	public void setAppName(String appName) {
+		m_appName = appName;
+	}
+
+	public String getStartTime() {
+		return m_startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		m_startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return m_endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		m_endTime = endTime;
+	}
+
+	public String getModule() {
+		return m_module;
+	}
+
+	public void setModule(String module) {
+		m_module = module;
+	}
+
+	public int getPlatform() {
+		return m_platform;
+	}
+
+	public void setPlatform(int platform) {
+		m_platform = platform;
+	}
+
+	public SimpleDateFormat getFormat() {
+		return m_format;
+	}
+
+	public void setFormat(SimpleDateFormat format) {
+		m_format = format;
 	}
 
 }

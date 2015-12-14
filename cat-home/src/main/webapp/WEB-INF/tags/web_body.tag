@@ -50,6 +50,9 @@
 						<li id="code"><a href="/cat/s/web?op=codeList">
 								<i class="menu-icon fa fa-caret-right"></i>返回码配置</a>
 								<b class="arrow"></b></li>
+						<li id="webConstants"><a href="/cat/s/web?op=webConstants">
+								<i class="menu-icon fa fa-caret-right"></i>常量配置</a>
+								<b class="arrow"></b></li>
 						<li id="urlPatterns"><a href="/cat/s/web?op=urlPatterns">
 								<i class="menu-icon fa fa-caret-right"></i>Ajax接口配置</a>
 								<b class="arrow"></b></li>
@@ -57,13 +60,10 @@
 								<i class="menu-icon fa fa-caret-right"></i>Ajax接口告警</a>
 								<b class="arrow"></b></li>
 						<li id="jsRule"><a href="/cat/s/web?op=jsRuleList">
-								<i class="menu-icon fa fa-caret-right"></i>JS错误告警</a>
+								<i class="menu-icon fa fa-caret-right"></i>Js错误告警</a>
 								<b class="arrow"></b></li>
 						<li id="speed"><a href="/cat/s/web?op=speed">
 								<i class="menu-icon fa fa-caret-right"></i>Web测速配置</a>
-								<b class="arrow"></b></li>
-						<li id="webConstants"><a href="/cat/s/web?op=webConstants">
-								<i class="menu-icon fa fa-caret-right"></i>Web常量配置</a>
 								<b class="arrow"></b></li>
 					</ul>
 				</li>
