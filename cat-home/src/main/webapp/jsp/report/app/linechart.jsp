@@ -48,41 +48,31 @@
 				$('#history').slideUp();
 			}
 		}
- 		var command1Change = function command1Change() {
-			var command = $("#command").val().split('|')[0];
-			var commandId = ${model.command2IdJson}[command].id;
-			var value = queryCodeByCommand(commandId);
-			var code = document.getElementById("code");
-			$("#code").empty();
-			
-			var opt = $('<option />');
-			opt.html("All");
-			opt.val("");
-			opt.appendTo(code);
-			
-			for ( var prop in value) {
+ 		var commandChange = function commandChange(commandDom, codeDom) {
+ 			var command = $("#"+commandDom).val().split('|')[0];
+ 			var cmd = ${model.command2IdJson}[command];
+ 			
+ 			if(typeof(cmd)!="undefined"){
+				var commandId = cmd.id;
+				var value = queryCodeByCommand(commandId);
+				
+				if("code"==codeDom){
+					$("#code").empty();
+				}else{
+					$("#code2").empty();
+				}
+				
 				var opt = $('<option />');
-				opt.html(value[prop]);
-				opt.val(prop);
+				opt.html("All");
+				opt.val("");
 				opt.appendTo(code);
-			}
-		}
-		var command2Change = function command2Change() {
-			var command = $("#command2").val().split('|')[0];
-			var commandId = ${model.command2IdJson}[command].id;
-			var value = queryCodeByCommand(commandId);
-			var code = document.getElementById("code2");
-			$("#code2").empty();
-			var opt = $('<option />');
-			opt.html("All");
-			opt.val("");
-			opt.appendTo(code);
-			
-			for ( var prop in value) {
-				var opt = $('<option />');
-				opt.html(value[prop]);
-				opt.val(prop);
-				opt.appendTo(code);
+				
+				for ( var prop in value) {
+					var opt = $('<option />');
+					opt.html(value[prop]);
+					opt.val(prop);
+					opt.appendTo(code);
+				}
 			}
 		}
 
@@ -218,8 +208,7 @@
 					var command2 = $('#command2');
 					var words = query1.split(";");
 
-					command1.on('change', command1Change);
-					command2.on('change', command2Change);
+					
 					if(typeof(words[1]) != 'undefined' && words[1].length > 0){
 						$("#command").val('${payload.commandId}');
 					}else{
@@ -232,7 +221,6 @@
 						$("#time").val(words[0]);
 					}
 
-					command1Change();
 					$("#code").val(words[2]);
 					$("#network").val(words[3]);
 					$("#version").val(words[4]);
@@ -262,7 +250,7 @@
 						}else{
 							$("#command2").val('${model.defaultCommand}');
 						}
-						command2Change();
+						commandChange("command2","code2");
 						$("#code2").val(words[2]);
 						$("#network2").val(words[3]);
 						$("#version2").val(words[4]);
@@ -273,6 +261,9 @@
 					} else {
 						$("#time2").val(getDate());
 					}
+					
+					command1.on('change', commandChange("command","code"));
+					command2.on('change', commandChange("command2","code2"));
 
 					var checkboxs = document.getElementsByName("typeCheckbox");
 
@@ -315,10 +306,10 @@
 						source: data
 					});
 					$('#command').blur(function(){
-						command1Change();
+						commandChange("command","code");
 					})
 					$('#command2').blur(function(){
-						command2Change();
+						commandChange("command2","code2");
 					})
 					$( "#command2" ).catcomplete({
 						delay: 0,
@@ -326,13 +317,13 @@
 					});
 					$('#wrap_search').submit(
 							function(){
-								command1Change();
+								commandChange("command","code");
 								return false;
 							}		
 						);
 					$('#wrap_search2').submit(
 							function(){
-								command2Change();
+								commandChange("command2","code2");
 								return false;
 							}		
 						);
