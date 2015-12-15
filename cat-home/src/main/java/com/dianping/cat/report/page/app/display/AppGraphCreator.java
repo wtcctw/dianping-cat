@@ -80,7 +80,7 @@ public class AppGraphCreator {
 		displayInfo.setBarChart(buildBarChart(detailInfos, field));
 		return displayInfo;
 	}
-	
+
 	private BarChart buildBarChart(DistributeDetailInfo detailInfos, AppDataField field) {
 		BarChart barChart = new BarChart();
 		barChart.setTitle("加载时间分布");
@@ -99,7 +99,11 @@ public class AppGraphCreator {
 		List<Double> dataList = new ArrayList<Double>();
 
 		for (DistributeDetail data : datas) {
-			itemList.add(data.getTitle());
+			if (field == AppDataField.CODE || field == AppDataField.APP_VERSION) {
+				itemList.add(String.valueOf(data.getId()));
+			} else {
+				itemList.add(data.getTitle());
+			}
 			dataList.add(data.getDelayAvg());
 		}
 
