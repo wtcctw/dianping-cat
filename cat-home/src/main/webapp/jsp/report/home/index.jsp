@@ -6,11 +6,11 @@
 </br>
 <h4 class="text-success">CAT目前现状</h4>
 	<ul>
-		<li>集成中间件产品（RPC、SQL、Cache等）</li>
-		<li>10台CAT物理监控集群</li>
-		<li>1000+ 业务应用（包括部分.net以及Job）</li>
-		<li>3000+ 应用服务器</li>
-		<li>30TB 消息，~250亿消息（每天）</li>
+		<li>15台CAT物理监控集群</li>
+		<li>单台机器15w qps</li>
+		<li>2000+ 业务应用（包括部分.net以及Job）</li>
+		<li>7000+ 应用服务器</li>
+		<li>50TB 消息，~450亿消息（每天）</li>
 	</ul>
 	<br/>
 <h4 class="text-success">CAT监控大盘</h4>
