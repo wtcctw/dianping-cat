@@ -232,7 +232,6 @@ public class AppConfigManager implements Initializable {
 	public Map<String, Integer> getOperators() {
 		return m_operators;
 	}
-	
 
 	public Map<Integer, Command> getRawCommands() {
 		return m_config.getCommands();
@@ -318,7 +317,7 @@ public class AppConfigManager implements Initializable {
 	public Map<Integer, List<Code>> queryCommand2Codes() {
 		Map<Integer, List<Code>> codes = new LinkedHashMap<Integer, List<Code>>();
 
-		for (Command command : queryCommands()) {
+		for (Command command : m_config.getCommands().values()) {
 			List<Code> items = codes.get(command.getId());
 
 			if (items == null) {
@@ -426,7 +425,7 @@ public class AppConfigManager implements Initializable {
 
 	private void refreshData() {
 		m_maxCommandId = m_config.getMaxCommandId();
-		
+
 		Map<Integer, String> excludedCommands = new ConcurrentHashMap<Integer, String>();
 		Collection<Command> commands = m_config.getCommands().values();
 		Map<String, Command> commandMap = new ConcurrentHashMap<String, Command>();
@@ -460,7 +459,7 @@ public class AppConfigManager implements Initializable {
 		}
 		m_operators = operatorMap;
 	}
-	
+
 	public Item getPlatformStr(int platform) {
 		ConfigItem configItem = m_config.findConfigItem(PLATFORM);
 		return configItem.findItem(platform);

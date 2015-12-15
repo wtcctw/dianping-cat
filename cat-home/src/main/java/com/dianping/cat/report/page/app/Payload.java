@@ -84,14 +84,6 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_codeId;
 	}
 
-	public CrashLogQueryEntity getCrashLogQuery() {
-		return m_crashLogQuery;
-	}
-
-	public void setCrashLogQuery(CrashLogQueryEntity crashLogQuery) {
-		m_crashLogQuery = crashLogQuery;
-	}
-
 	public String getCommandId() {
 		return m_commandId;
 	}
@@ -100,16 +92,12 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_commandId2;
 	}
 
+	public CrashLogQueryEntity getCrashLogQuery() {
+		return m_crashLogQuery;
+	}
+
 	public String getDay() {
 		return m_day;
-	}
-
-	public int getId() {
-		return m_id;
-	}
-
-	public void setId(int id) {
-		m_id = id;
 	}
 
 	public Date getDayDate() {
@@ -134,6 +122,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public AppDataField getGroupByField() {
 		return m_groupByField;
+	}
+
+	public int getId() {
+		return m_id;
 	}
 
 	public String getName() {
@@ -169,6 +161,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		}
 	}
 
+	public QueryType getQueryType() {
+		return QueryType.findByName(m_type);
+	}
+
 	public String getSort() {
 		return m_sort;
 	}
@@ -201,10 +197,6 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_type;
 	}
 
-	public QueryType getQueryType() {
-		return QueryType.findByName(m_type);
-	}
-
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.LINECHART);
 	}
@@ -221,6 +213,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		this.m_commandId2 = commandId2;
 	}
 
+	public void setCrashLogQuery(CrashLogQueryEntity crashLogQuery) {
+		m_crashLogQuery = crashLogQuery;
+	}
+
 	public void setDomains(String domains) {
 		m_domains = domains;
 	}
@@ -231,6 +227,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public void setGroupByField(String groupByField) {
 		m_groupByField = AppDataField.getByName(groupByField, AppDataField.CODE);
+	}
+
+	public void setId(int id) {
+		m_id = id;
 	}
 
 	public void setName(String name) {

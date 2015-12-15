@@ -414,7 +414,7 @@ public class WebConfigManager implements Initializable {
 
 			return item;
 		}
-		return null;
+		return new Item(id);
 	}
 
 	public void refreshWebConfig() throws DalException, SAXException, IOException {

@@ -368,8 +368,9 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			return this;
 		}
 
-		public void setTitle(String title) {
+		public ConfigItem setTitle(String title) {
 			m_title = title;
+			return this;
 		}
 
 		public ConfigItem setValue(double value) {

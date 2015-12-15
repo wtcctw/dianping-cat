@@ -17,6 +17,7 @@ import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.report.graph.BarChart;
 import com.dianping.cat.report.page.app.display.AppSpeedDetail;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
+import com.site.lookup.util.StringUtils;
 
 public class AppSpeedDataBuilder {
 
@@ -80,7 +81,12 @@ public class AppSpeedDataBuilder {
 				AppSpeedDetail detail = buildAppSpeedDetail(appSpeedData);
 
 				Item item = builder.queryConfigItem(appSpeedData);
-				detail.setItemName(item.getName());
+
+				if (StringUtils.isNotEmpty(item.getName())) {
+					detail.setItemName(item.getName());
+				} else {
+					detail.setItemName(item.getId().toString());
+				}
 
 				details.add(detail);
 			}
@@ -131,7 +137,13 @@ public class AppSpeedDataBuilder {
 
 		@Override
 		Item queryConfigItem(AppSpeedData data) {
-			return m_appConfig.queryItem(AppConfigManager.CITY, data.getCity());
+			Item item = m_appConfig.queryItem(AppConfigManager.CITY, data.getCity());
+
+			if (item == null) {
+				item = new Item(data.getCity());
+			}
+
+			return item;
 		}
 
 		@Override
@@ -161,7 +173,13 @@ public class AppSpeedDataBuilder {
 
 		@Override
 		Item queryConfigItem(AppSpeedData data) {
-			return m_appConfig.queryItem(AppConfigManager.NETWORK, data.getNetwork());
+			Item item = m_appConfig.queryItem(AppConfigManager.NETWORK, data.getNetwork());
+
+			if (item == null) {
+				item = new Item(data.getNetwork());
+			}
+
+			return item;
 		}
 
 		@Override
@@ -191,7 +209,13 @@ public class AppSpeedDataBuilder {
 
 		@Override
 		Item queryConfigItem(AppSpeedData data) {
-			return m_appConfig.queryItem(AppConfigManager.OPERATOR, data.getOperator());
+			Item item = m_appConfig.queryItem(AppConfigManager.OPERATOR, data.getOperator());
+
+			if (item == null) {
+				item = new Item(data.getOperator());
+			}
+
+			return item;
 		}
 
 		@Override
@@ -223,7 +247,13 @@ public class AppSpeedDataBuilder {
 
 		@Override
 		Item queryConfigItem(AppSpeedData data) {
-			return m_appConfig.queryItem(AppConfigManager.PLATFORM, data.getPlatform());
+			Item item = m_appConfig.queryItem(AppConfigManager.PLATFORM, data.getPlatform());
+
+			if (item == null) {
+				item = new Item(data.getPlatform());
+			}
+
+			return item;
 		}
 
 		@Override
@@ -255,7 +285,13 @@ public class AppSpeedDataBuilder {
 
 		@Override
 		Item queryConfigItem(AppSpeedData data) {
-			return m_appConfig.queryItem(AppConfigManager.VERSION, data.getAppVersion());
+			Item item = m_appConfig.queryItem(AppConfigManager.VERSION, data.getAppVersion());
+
+			if (item == null) {
+				item = new Item(data.getAppVersion());
+			}
+
+			return item;
 		}
 
 		@Override
