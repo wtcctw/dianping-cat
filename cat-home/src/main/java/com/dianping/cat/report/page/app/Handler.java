@@ -109,6 +109,17 @@ public class Handler implements PageHandler<Context> {
 	private ProjectService m_projectService;
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
+	
+	private void buildAppCrashLog(Payload payload, Model model) {
+		CrashLogQueryEntity entity = payload.getCrashLogQuery();
+		CrashLogDisplayInfo info = m_crashLogService.buildCrashLogDisplayInfo(entity);
+		model.setCrashLogDisplayInfo(info);
+	}
+
+	private void buildAppCrashLogDetail(Payload payload, Model model) {
+		CrashLogDetailInfo info = m_crashLogService.queryCrashLogDetailIno(payload.getId());
+		model.setCrashLogDetailInfo(info);
+	}
 
 	private List<AppDataDetail> buildAppDataDetails(Payload payload) {
 		List<AppDataDetail> appDetails = new ArrayList<AppDataDetail>();
@@ -134,6 +145,18 @@ public class Handler implements PageHandler<Context> {
 		}
 		Collections.sort(ids, new CodeDistributionComparator());
 		return ids;
+	}
+
+	private AppCommandDisplayInfo buildCommandDistributeChart(Payload payload) {
+		try {
+			AppCommandDisplayInfo displayInfo = m_appGraphCreator.buildCommandDistributeChart(payload.getQueryEntity1(),
+			      payload.getGroupByField());
+
+			return displayInfo;
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new AppCommandDisplayInfo();
 	}
 
 	private AppDataDetail buildComparisonInfo(CommandQueryEntity entity) {
@@ -227,16 +250,32 @@ public class Handler implements PageHandler<Context> {
 		return lineChart;
 	}
 
-	private AppCommandDisplayInfo buildCommandDistributeChart(Payload payload) {
+	private void buildSpeedBarCharts(Payload payload, Model model) {
 		try {
-			AppCommandDisplayInfo displayInfo = m_appGraphCreator.buildCommandDistributeChart(payload.getQueryEntity1(),
-			      payload.getGroupByField());
+			Map<String, List<Speed>> speeds = m_appSpeedConfigManager.getPageStepInfo();
+			SpeedQueryEntity queryEntity = normalizeQueryEntity(payload, speeds);
+			AppSpeedDisplayInfo info = m_appSpeedService.buildBarCharts(queryEntity);
 
-			return displayInfo;
+			info.setSpeeds(speeds);
+			model.setAppSpeedDisplayInfo(info);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return new AppCommandDisplayInfo();
+	}
+
+	private AppSpeedDisplayInfo buildSpeedTendency(Payload payload) {
+		try {
+			Map<String, List<Speed>> speeds = m_appSpeedConfigManager.getPageStepInfo();
+			SpeedQueryEntity queryEntity1 = normalizeQueryEntity(payload, speeds);
+			AppSpeedDisplayInfo info = m_appSpeedService.buildSpeedDisplayInfo(queryEntity1,
+			      payload.getSpeedQueryEntity2());
+
+			info.setSpeeds(speeds);
+			return info;
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new AppSpeedDisplayInfo();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -433,45 +472,6 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private void buildSpeedBarCharts(Payload payload, Model model) {
-		try {
-			Map<String, List<Speed>> speeds = m_appSpeedConfigManager.getPageStepInfo();
-			SpeedQueryEntity queryEntity = normalizeQueryEntity(payload, speeds);
-			AppSpeedDisplayInfo info = m_appSpeedService.buildBarCharts(queryEntity);
-
-			info.setSpeeds(speeds);
-			model.setAppSpeedDisplayInfo(info);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
-
-	private AppSpeedDisplayInfo buildSpeedTendency(Payload payload) {
-		try {
-			Map<String, List<Speed>> speeds = m_appSpeedConfigManager.getPageStepInfo();
-			SpeedQueryEntity queryEntity1 = normalizeQueryEntity(payload, speeds);
-			AppSpeedDisplayInfo info = m_appSpeedService.buildSpeedDisplayInfo(queryEntity1,
-			      payload.getSpeedQueryEntity2());
-
-			info.setSpeeds(speeds);
-			return info;
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return new AppSpeedDisplayInfo();
-	}
-
-	private void buildAppCrashLog(Payload payload, Model model) {
-		CrashLogQueryEntity entity = payload.getCrashLogQuery();
-		CrashLogDisplayInfo info = m_crashLogService.buildCrashLogDisplayInfo(entity);
-		model.setCrashLogDisplayInfo(info);
-	}
-
-	private void buildAppCrashLogDetail(Payload payload, Model model) {
-		CrashLogDetailInfo info = m_crashLogService.queryCrashLogDetailIno(payload.getId());
-		model.setCrashLogDetailInfo(info);
-	}
-
 	private void normalize(Model model, Payload payload) {
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.APP);
@@ -484,6 +484,7 @@ public class Handler implements PageHandler<Context> {
 		model.setCommands(m_appConfigManager.queryCommands());
 		model.setCommand2Id(m_appConfigManager.getCommands());
 		model.setCommand2Codes(m_appConfigManager.queryCommand2Codes());
+		model.setGlobalCodes(m_appConfigManager.getConfig().getCodes());
 
 		Command defaultCommand = m_appConfigManager.getRawCommands().get(CommandQueryEntity.DEFAULT_COMMAND);
 

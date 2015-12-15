@@ -37,18 +37,24 @@
 							<span class="menu-text">部署文档</span>
 						</a>
 						<b class="arrow"></b>
+					</li><li id="integrationButton" >
+						<a href="/cat/r/home?op=view&docName=integration">
+							<i class="menu-icon fa fa-cutlery"></i>
+							<span class="menu-text">集成文档</span>
+						</a>
+						<b class="arrow"></b>
 					</li>
 					<li id="userButton" >
 						<a href="/cat/r/home?op=view&docName=user">
 							<i class="menu-icon fa fa-users"></i>
-							<span class="menu-text">用户文档</span>
+							<span class="menu-text">应用监控</span>
 						</a>
 						<b class="arrow"></b>
 					</li>
 					<li id="userMonitorButton" >
 						<a href="/cat/r/home?op=view&docName=userMonitor">
 							<i class="menu-icon fa fa-globe"></i>
-							<span class="menu-text">用户侧监控</span>
+							<span class="menu-text">移动监控</span>
 						</a>
 						<b class="arrow"></b>
 					</li>
@@ -63,12 +69,6 @@
 							<span class="menu-text">告警文档</span>
 						</a>
 						<b class="arrow"></b>
-					</li><li id="integrationButton" >
-						<a href="/cat/r/home?op=view&docName=integration">
-							<i class="menu-icon fa fa-cutlery"></i>
-							<span class="menu-text">集成文档</span>
-						</a>
-						<b class="arrow"></b>
 					</li><li id="interfaceButton" >
 						<a href="/cat/r/home?op=view&docName=interface">
 							<i class="menu-icon glyphicon glyphicon-align-left"></i>
@@ -79,12 +79,6 @@
 						<a href="/cat/r/home?op=view&docName=develop">
 							<i class="menu-icon glyphicon glyphicon-refresh"></i>
 							<span class="menu-text">开发者文档</span>
-						</a>
-						<b class="arrow"></b>
-					</li><li id="designButton" >
-						<a href="/cat/r/home?op=view&docName=design">
-							<i class="menu-icon fa fa-book"></i>
-							<span class="menu-text">设计文档</span>
 						</a>
 						<b class="arrow"></b>
 					</li><li id="problemButton" >

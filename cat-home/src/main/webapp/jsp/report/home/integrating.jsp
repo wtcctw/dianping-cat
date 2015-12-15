@@ -102,5 +102,17 @@
       </logger>
   </xmp>
   </dd>
+  
+  <dd>
+  	<h5 class="text-success">6.Java代码一份埋点的样例</strong></span></h5></dt>
+    <p>Transaction用来记录一段程序响应时间</p>
+    <p>Event用来记录一行code的执行次数</p>
+    <p>Metric用来记录一个业务指标</p>
+    <p class="text-danger">这些指标都是独立的，可以单独使用Event，单独使用Metric或者Transaction，主要看业务场景。</p>
+    <p class="text-danger">Transaction的埋点一定要complete，切记放在finally里面。</p>
+    <p class="text-danger">下面的埋点代码里面表示需要记录一个页面的响应时间，并且记录一个代码执行次数，以及记录两个业务指标,所有用了一个Transaction，一个Event，两个Metric</strong></span></p>
+	
+	<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/develop05.png"/>
+  </dd>
 </dl>
 

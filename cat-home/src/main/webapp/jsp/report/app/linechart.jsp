@@ -13,6 +13,22 @@
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
  	<script type="text/javascript">
 		var commandInfo = ${model.command2CodesJson};
+		var globalInfo = ${model.globalCodesJson};
+		
+		var queryCodeByCommand = function queryCode(commandId){
+			var value = commandInfo[commandId];
+			var result = {};
+			
+			for(var tmp in globalInfo){
+				result[globalInfo[tmp].id] =globalInfo[tmp].name;
+			}
+			
+			for (var prop in value) {
+				result[value[prop].id] =value[prop].name;
+			}
+			
+			return result;
+		}
 		function check() {
 			var value = document.getElementById("checkbox").checked;
 
@@ -35,7 +51,7 @@
  		var command1Change = function command1Change() {
 			var command = $("#command").val().split('|')[0];
 			var commandId = ${model.command2IdJson}[command].id;
-			var value = commandInfo[commandId];
+			var value = queryCodeByCommand(commandId);
 			var code = document.getElementById("code");
 			$("#code").empty();
 			
@@ -46,15 +62,15 @@
 			
 			for ( var prop in value) {
 				var opt = $('<option />');
-				opt.html(value[prop].name);
-				opt.val(value[prop].id);
+				opt.html(value[prop]);
+				opt.val(prop);
 				opt.appendTo(code);
 			}
 		}
 		var command2Change = function command2Change() {
 			var command = $("#command2").val().split('|')[0];
 			var commandId = ${model.command2IdJson}[command].id;
-			var value = commandInfo[commandId];
+			var value = queryCodeByCommand(commandId);
 			var code = document.getElementById("code2");
 			$("#code2").empty();
 			var opt = $('<option />');
@@ -64,8 +80,8 @@
 			
 			for ( var prop in value) {
 				var opt = $('<option />');
-				opt.html(value[prop].name);
-				opt.val(value[prop].id);
+				opt.html(value[prop]);
+				opt.val(prop);
 				opt.appendTo(code);
 			}
 		}
