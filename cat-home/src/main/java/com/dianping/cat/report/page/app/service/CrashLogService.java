@@ -72,6 +72,7 @@ public class CrashLogService {
 			info.setDeviceModel(crashLog.getDeviceModel());
 			info.setCrashTime(crashLog.getCrashTime());
 			info.setDetail(new String(detail.getContent()).replace("\n", "<br/>"));
+			info.setDpid(crashLog.getDpid());
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
