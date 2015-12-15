@@ -38,7 +38,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private AppCommandDisplayInfo m_commandDisplayInfo;
 
 	private AppConnectionDisplayInfo m_connDisplayInfo;
-	
+
 	private Map<Integer, Item> m_cities;
 
 	private Map<Integer, Item> m_versions;
@@ -50,6 +50,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private Map<Integer, Item> m_networks;
 
 	private Map<Integer, Item> m_platforms;
+
+	private Map<Integer, Code> m_globalCodes;
 
 	private List<Command> m_commands;
 
@@ -244,7 +246,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	public Map<Integer, Item> getPlatforms() {
 		return m_platforms;
 	}
-	
+
 	public ProblemReport getProblemReport() {
 		return m_problemReport;
 	}
@@ -252,7 +254,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	public ProblemStatistics getProblemStatistics() {
 		return m_problemStatistics;
 	}
-
 
 	public Map<Integer, Item> getVersions() {
 		return m_versions;
@@ -360,6 +361,14 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setVersions(Map<Integer, Item> versions) {
 		m_versions = versions;
+	}
+
+	public String getGlobalCodesJson() {
+		return new JsonBuilder().toJson(m_globalCodes);
+	}
+
+	public void setGlobalCodes(Map<Integer, Code> globalCodes) {
+		m_globalCodes = globalCodes;
 	}
 
 }

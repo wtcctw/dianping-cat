@@ -109,7 +109,7 @@ public class Handler implements PageHandler<Context> {
 	private ProjectService m_projectService;
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
-
+	
 	private List<AppDataDetail> buildAppDataDetails(Payload payload) {
 		List<AppDataDetail> appDetails = new ArrayList<AppDataDetail>();
 
@@ -484,6 +484,7 @@ public class Handler implements PageHandler<Context> {
 		model.setCommands(m_appConfigManager.queryCommands());
 		model.setCommand2Id(m_appConfigManager.getCommands());
 		model.setCommand2Codes(m_appConfigManager.queryCommand2Codes());
+		model.setGlobalCodes(m_appConfigManager.getConfig().getCodes());
 
 		Command defaultCommand = m_appConfigManager.getRawCommands().get(CommandQueryEntity.DEFAULT_COMMAND);
 
