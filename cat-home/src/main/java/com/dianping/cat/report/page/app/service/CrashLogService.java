@@ -111,7 +111,7 @@ public class CrashLogService {
 
 					if (crashLogFilter.checkFlag(log)) {
 						buildErrorMsg(errorMsgs, log);
-						totalCount ++;
+						totalCount++;
 					}
 				}
 
