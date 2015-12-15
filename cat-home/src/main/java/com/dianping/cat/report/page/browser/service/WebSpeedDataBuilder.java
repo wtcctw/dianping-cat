@@ -12,6 +12,7 @@ import java.util.List;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.Readset;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.web.WebConfigManager;
@@ -42,7 +43,7 @@ public class WebSpeedDataBuilder {
 				return (int) (o2.getResponseTimeAvg() - o1.getResponseTimeAvg());
 			}
 		});
-		
+
 		List<String> itemList = new ArrayList<String>();
 		List<Double> dataList = new ArrayList<Double>();
 
@@ -101,8 +102,12 @@ public class WebSpeedDataBuilder {
 			WebSpeedDetail detail = buildWebSpeedDetail(webSpeedData);
 
 			Item item = builder.queryConfigItem(webSpeedData);
-			detail.setItemName(item.getName());
 
+			if (StringUtils.isNotEmpty(item.getName())) {
+				detail.setItemName(item.getName());
+			} else {
+				detail.setItemName(item.getId().toString());
+			}
 			details.add(detail);
 		}
 		return details;
