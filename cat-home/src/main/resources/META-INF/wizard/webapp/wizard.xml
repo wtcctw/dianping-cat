@@ -94,8 +94,11 @@
          <page name="router" title="Router" path="router" view="/jsp/system/router/router.jsp" template="default">
             <description>Router</description>
          </page>
-         <page name="webconfig" title="Webconfig" path="webconfig" template="default">
-            <description>Webconfig</description>
+         <page name="web" title="Web" path="web" template="default">
+            <description>Web</description>
+         </page>
+         <page name="project" title="Project" path="project" template="default">
+            <description>Project</description>
          </page>
       </module>
    </webapp>

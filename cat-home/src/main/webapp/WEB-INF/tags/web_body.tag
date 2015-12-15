@@ -16,7 +16,7 @@
 				try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
 			</script>
 			<ul class="nav nav-list" style="top: 0px;">
-				<li id="Web_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-globe"></i> <span class="menu-text">Web</span>
+				<li id="Web_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-globe"></i> <span class="menu-text">Browser</span>
 						<b class="arrow fa fa-angle-down"></b>
 				</a> <b class="arrow"></b>
 					<ul class="submenu">
