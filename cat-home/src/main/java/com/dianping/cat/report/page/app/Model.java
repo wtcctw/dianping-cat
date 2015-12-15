@@ -100,44 +100,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		super(ctx);
 	}
 
-	public CrashLogDetailInfo getCrashLogDetailInfo() {
-		return m_crashLogDetailInfo;
-	}
-
-	public AppConnectionDisplayInfo getConnDisplayInfo() {
-		return m_connDisplayInfo;
-	}
-
-	public void setConnDisplayInfo(AppConnectionDisplayInfo connDisplayInfo) {
-		m_connDisplayInfo = connDisplayInfo;
-	}
-
-	public void setCrashLogDetailInfo(CrashLogDetailInfo crashLogDetailInfo) {
-		m_crashLogDetailInfo = crashLogDetailInfo;
-	}
-
-	public CrashLogDisplayInfo getCrashLogDisplayInfo() {
-		return m_crashLogDisplayInfo;
-	}
-
-	public void setCrashLogDisplayInfo(CrashLogDisplayInfo crashLogDisplayInfo) {
-		m_crashLogDisplayInfo = crashLogDisplayInfo;
-	}
-
 	public List<AppDataDetail> getAppDataDetailInfos() {
 		return m_appDataDetailInfos;
 	}
 
 	public AppReport getAppReport() {
 		return m_appReport;
-	}
-
-	public AppCommandDisplayInfo getCommandDisplayInfo() {
-		return m_commandDisplayInfo;
-	}
-
-	public void setCommandDisplayInfo(AppCommandDisplayInfo commandDisplayInfo) {
-		m_commandDisplayInfo = commandDisplayInfo;
 	}
 
 	public AppSpeedDisplayInfo getAppSpeedDisplayInfo() {
@@ -172,6 +140,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return new JsonBuilder().toJson(m_command2Id);
 	}
 
+	public AppCommandDisplayInfo getCommandDisplayInfo() {
+		return m_commandDisplayInfo;
+	}
+
 	public int getCommandId() {
 		return m_commandId;
 	}
@@ -184,12 +156,24 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_comparisonAppDetails;
 	}
 
+	public AppConnectionDisplayInfo getConnDisplayInfo() {
+		return m_connDisplayInfo;
+	}
+
 	public Map<Integer, Item> getConnectionTypes() {
 		return m_connectionTypes;
 	}
 
 	public String getContent() {
 		return m_content;
+	}
+
+	public CrashLogDetailInfo getCrashLogDetailInfo() {
+		return m_crashLogDetailInfo;
+	}
+
+	public CrashLogDisplayInfo getCrashLogDisplayInfo() {
+		return m_crashLogDisplayInfo;
 	}
 
 	public Collection<CrashLogDomain> getCrashLogDomains() {
@@ -229,6 +213,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public FieldsInfo getFieldsInfo() {
 		return m_fieldsInfo;
+	}
+
+	public String getGlobalCodesJson() {
+		return new JsonBuilder().toJson(m_globalCodes);
 	}
 
 	public LineChart getLineChart() {
@@ -291,6 +279,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_command2Id = rawCommands;
 	}
 
+	public void setCommandDisplayInfo(AppCommandDisplayInfo commandDisplayInfo) {
+		m_commandDisplayInfo = commandDisplayInfo;
+	}
+
 	public void setCommandId(int commandId) {
 		m_commandId = commandId;
 	}
@@ -303,12 +295,24 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_comparisonAppDetails = comparisonAppDetail;
 	}
 
+	public void setConnDisplayInfo(AppConnectionDisplayInfo connDisplayInfo) {
+		m_connDisplayInfo = connDisplayInfo;
+	}
+
 	public void setConnectionTypes(Map<Integer, Item> map) {
 		m_connectionTypes = map;
 	}
 
 	public void setContent(String content) {
 		m_content = content;
+	}
+
+	public void setCrashLogDetailInfo(CrashLogDetailInfo crashLogDetailInfo) {
+		m_crashLogDetailInfo = crashLogDetailInfo;
+	}
+
+	public void setCrashLogDisplayInfo(CrashLogDisplayInfo crashLogDisplayInfo) {
+		m_crashLogDisplayInfo = crashLogDisplayInfo;
 	}
 
 	public void setCrashLogDomains(Collection<CrashLogDomain> crashLogDomains) {
@@ -333,6 +337,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setFieldsInfo(FieldsInfo fieldsInfo) {
 		m_fieldsInfo = fieldsInfo;
+	}
+
+	public void setGlobalCodes(Map<Integer, Code> globalCodes) {
+		m_globalCodes = globalCodes;
 	}
 
 	public void setLineChart(LineChart lineChart) {
@@ -361,14 +369,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setVersions(Map<Integer, Item> versions) {
 		m_versions = versions;
-	}
-
-	public String getGlobalCodesJson() {
-		return new JsonBuilder().toJson(m_globalCodes);
-	}
-
-	public void setGlobalCodes(Map<Integer, Code> globalCodes) {
-		m_globalCodes = globalCodes;
 	}
 
 }

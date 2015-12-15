@@ -16,6 +16,15 @@ public enum QueryType {
 
 	private String m_title;
 
+	public static QueryType findByName(String name) {
+		for (QueryType type : values()) {
+			if (type.getName().equals(name)) {
+				return type;
+			}
+		}
+		return REQUEST;
+	}
+
 	private QueryType(String name, String title) {
 		m_name = name;
 		m_title = title;
@@ -27,14 +36,5 @@ public enum QueryType {
 
 	public String getTitle() {
 		return m_title;
-	}
-
-	public static QueryType findByName(String name) {
-		for (QueryType type : values()) {
-			if (type.getName().equals(name)) {
-				return type;
-			}
-		}
-		return REQUEST;
 	}
 }
