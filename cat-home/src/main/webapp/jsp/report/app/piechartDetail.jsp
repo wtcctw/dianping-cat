@@ -108,11 +108,20 @@
 				</th>
 			</tr>
 		</table>
-			<table><tr>
-		<td width="40%"><div>
-		<div id="piechart" ></div></div></td>
-		<td width="40%">
-		<div id="barchart"></div></td></tr></table>
+		
+		<c:choose>
+	 <c:when test="${(payload.groupByField.name eq 'network') or (payload.groupByField.name eq 'connect-type') or (payload.groupByField.name eq 'platform') or (payload.groupByField.name eq 'operator')}" >
+ 	<table><tr>	<td width="40%"><div>
+				<div id="piechart" ></div></div></td>
+				<td width="40%">
+				<div id="barchart"></div></td>	</tr></table>
+		</c:when>
+		<c:otherwise>
+		<table  width="100%"><tr><td><div><div id="piechart" ></div></div></td>
+		</tr><tr><td><div id="barchart"></div></td>	</tr></table>
+		</c:otherwise>
+		</c:choose>
+	
 		<br/>
 	<table id="web_content" class="table table-striped table-condensed">
 		<thead><tr class="text-success">

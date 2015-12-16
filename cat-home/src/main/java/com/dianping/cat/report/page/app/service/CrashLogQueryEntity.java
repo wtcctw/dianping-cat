@@ -16,11 +16,11 @@ public class CrashLogQueryEntity {
 
 	private String m_endTime;
 
-	private String m_appName = "主APP";
+	private String m_appName = "Android(主APP)";
 
 	private String m_module;
 
-	private int m_platform;
+	private int m_platform = -1;
 
 	private String m_dpid = null;
 
