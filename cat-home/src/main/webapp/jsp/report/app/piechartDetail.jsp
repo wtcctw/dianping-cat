@@ -108,7 +108,6 @@
 				</th>
 			</tr>
 		</table>
-		
 		<c:choose>
 	 <c:when test="${(payload.groupByField.name eq 'network') or (payload.groupByField.name eq 'connect-type') or (payload.groupByField.name eq 'platform') or (payload.groupByField.name eq 'operator')}" >
  	<table><tr>	<td width="40%"><div>
@@ -121,21 +120,21 @@
 		</tr><tr><td><div id="barchart"></div></td>	</tr></table>
 		</c:otherwise>
 		</c:choose>
-	
 		<br/>
 	<table id="web_content" class="table table-striped table-condensed">
 		<thead><tr class="text-success">
 		<c:if test="${payload.groupByField.name eq 'code'}">
-		<th width="20%" colspan="2">返回码 (默认设置无法编辑)</th>
+		<th width="20%" >返回码 (默认设置无法编辑)</th>
 		</c:if>
 		<th>类别</th>
-		<th>请求总数</th>
-		<th>请求延时</th>
-		<th>百分比</th>
-		
+		<th class="right"><a onclick="queryWithSort('request')">请求总数</a></th>
+		<th class="right"><a onclick="queryWithSort('delay')">请求延时</a></th>
+		<th class="right">百分比</th>
 	</tr></thead>
 	<tbody>
-	<c:forEach var="item" items="${model.commandDisplayInfo.distributeDetails.sortedItems}" varStatus="status">
+	<c:choose>
+	<c:when test="${payload.sort eq 'request' }">
+	<c:forEach var="item" items="${model.commandDisplayInfo.distributeDetails.requestSortedItems}" varStatus="status">
 		<tr>
 		<c:if test="${payload.groupByField.name eq 'code'}">
 			<c:choose>
@@ -143,15 +142,37 @@
 				<td width="5%">${item.id}</td><td><a  class="btn btn-xs" href="/cat/s/config?op=appCodeUpdate&id=${model.commandId}&code=${item.id}">编辑</a></td>  
 			</c:when>
 			<c:otherwise>
-				<td colspan="2">${item.id}</td>  
+				<td>${item.id}</td>  
 			</c:otherwise>
 			</c:choose>
 		</c:if>
 		<td>${item.title}</td>
-		<td>${w:format(item.requestSum,'#,###,###,###,##0')}</td>
-		<td>${w:format(item.delayAvg,'#,###,###,###,##0')}</td>
-		<td>${w:format(item.ratio,'#0.000%')}</td>
+		<td class="right">${w:format(item.requestSum,'#,###,###,###,##0')}</td>
+		<td class="right">${w:format(item.delayAvg,'#,###,###,###,##0')}</td>
+		<td class="right">${w:format(item.ratio,'#0.000%')}</td>
 		</tr>
 	</c:forEach>
+	</c:when>
+	<c:otherwise>
+		<c:forEach var="item" items="${model.commandDisplayInfo.distributeDetails.delaySortedItems}" varStatus="status">
+		<tr>
+		<c:if test="${payload.groupByField.name eq 'code'}">
+			<c:choose>
+			<c:when test="${model.codes[item.id] != null}">
+				<td width="5%">${item.id}</td><td><a  class="btn btn-xs" href="/cat/s/config?op=appCodeUpdate&id=${model.commandId}&code=${item.id}">编辑</a></td>  
+			</c:when>
+			<c:otherwise>
+				<td>${item.id}</td>  
+			</c:otherwise>
+			</c:choose>
+		</c:if>
+		<td>${item.title}</td>
+		<td class="right">${w:format(item.requestSum,'#,###,###,###,##0')}</td>
+		<td class="right">${w:format(item.delayAvg,'#,###,###,###,##0')}</td>
+		<td class="right">${w:format(item.ratio,'#0.000%')}</td>
+		</tr>
+	</c:forEach>
+	</c:otherwise>
+	</c:choose>
 	</tbody>
 </table>
