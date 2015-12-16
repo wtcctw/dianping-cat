@@ -224,7 +224,9 @@
 				urls = fields[4].split(":");
 				for(var i=0; i<urls.length; i++) {
 					var deviceid = urls[i];
-					$('#' + deviceid).attr("selected", "true");
+					if(deviceid != 'null' && deviceid.length != 0) {
+						document.getElementById(deviceid).selected = true;
+					}
 				}
 			}
 			
