@@ -8,8 +8,13 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model" scope="request" />
 <a:mobile>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/select2.css"/>
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/chosen.css"/>
+	
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
-
+	<script src="${model.webapp}/assets/js/select2.min.js"></script>
+	<script src="${model.webapp}/assets/js/chosen.jquery.min.js"></script>
+	
 	<div class="report">
 		<c:set var="navUrlPrefix" value="op=${payload.action.name}&query1=${payload.query1}"/> 
 		<table class="table ">
@@ -67,11 +72,13 @@
 		  				</label><c:forEach var="item" items="${model.crashLogDisplayInfo.fieldsInfo.levels}" varStatus="status"><label class="btn btn-info btn-sm"><input type="checkbox" id="level_${item}" value="${item}" onclick="clickMe('${model.crashLogDisplayInfo.fieldsInfo.levels}', 'level')" unchecked>${item}</label></c:forEach>
 						</div>
 						</td></tr>
-					<tr><td width="60px;">设备</td><td><div>
-						<label class="btn btn-info btn-sm">
-		    				<input type="checkbox" id="deviceAll" onclick="clickAll('${model.crashLogDisplayInfo.fieldsInfo.devices}', 'device')"  unchecked>All
-		  				</label><c:forEach var="item" items="${model.crashLogDisplayInfo.fieldsInfo.devices}" varStatus="status"><label class="btn btn-info btn-sm"><input type="checkbox" id="device_${item}" value="${item}" onclick="clickMe('${model.crashLogDisplayInfo.fieldsInfo.devices}', 'device')" unchecked>${item}</label></c:forEach>
-						</div>
+					<tr><td width="60px;">设备</td><td>
+						<select multiple="true"	class="chosen-select tag-input-style" id="device_select" name="devices"  data-placeholder="Choose devices...">
+						<option id="device_all" value="device_all">ALL</option>
+						<c:forEach var="item" items="${model.crashLogDisplayInfo.fieldsInfo.devices}">
+							<option id="${item}" value="${item}">${item}</option>
+						</c:forEach>
+						</select>
 						</td></tr>
 	</table>
 	</div>
@@ -117,12 +124,27 @@
 		var platVersion = queryField('${model.crashLogDisplayInfo.fieldsInfo.platVersions}','platformVersion');
 		var module = queryField('${model.crashLogDisplayInfo.fieldsInfo.modules}','module');
 		var level = queryField('${model.crashLogDisplayInfo.fieldsInfo.levels}','level');
-		var device = queryField('${model.crashLogDisplayInfo.fieldsInfo.devices}','device');
+		var device = queryDevice();
 		var split = ";";
 		var query = appVersion + split + platVersion + split + module + split + level + split + device;
  		
  		window.location.href = "?op=appCrashLog&crashLogQuery.day=" + period + "&crashLogQuery.startTime=" + start + "&crashLogQuery.endTime=" + end
  			 + "&crashLogQuery.appName=" + appName + "&crashLogQuery.platform=" + platform + "&crashLogQuery.dpid=" + dpid + "&crashLogQuery.query=" + query;
+	}
+	
+	function queryDevice() {
+		var device = "";
+		$('.search-choice').each(function(){
+			var o = $(this).children("span").eq(0).html();
+			if (o == 'ALL') {
+				device = "";
+				return;
+			} else {
+				device += o + ":";
+			}
+			console.log(device);
+		});
+		return device;
 	}
 	
 	$("#appName")
@@ -190,8 +212,34 @@
 			docReady(fields[1], '${model.crashLogDisplayInfo.fieldsInfo.platVersions}','platformVersion');
 			docReady(fields[2], '${model.crashLogDisplayInfo.fieldsInfo.modules}','module');
 			docReady(fields[3], '${model.crashLogDisplayInfo.fieldsInfo.levels}','level');
-			docReady(fields[4], '${model.crashLogDisplayInfo.fieldsInfo.devices}','device');
-				
+			
+			$("#device_select").select({
+				placeholder : "选择执行任务的设备",
+				allowClear : true
+			});
+			
+			if(typeof fields[4] == "undefined" || fields[4].length == 0){
+				$('#device_all').attr("selected", "true");
+			}else{
+				urls = fields[4].split(":");
+				for(var i=0; i<urls.length; i++) {
+					var deviceid = urls[i];
+					$('#' + deviceid).attr("selected", "true");
+				}
+			}
+			
+			$('.chosen-select').chosen({
+				allow_single_deselect : true
+			});
+			//resize the chosen on window resize
+			$(window).off('resize.chosen').on('resize.chosen', function() {
+				$('.chosen-select').each(function() {
+					var $this = $(this);
+					$this.next().css({
+						'width' : '800px'
+					});
+				})
+			}).trigger('resize.chosen');
 		});
 	
 	function docReady(field, fields, prefix){
@@ -332,5 +380,8 @@
 		font-size: 0;
 		white-space: normal;
 		vertical-align: middle;
+	}
+	.chosen-container-multi .chosen-choices li.search-choice .search-choice-close {
+		background:inherit;
 	}
 </style>

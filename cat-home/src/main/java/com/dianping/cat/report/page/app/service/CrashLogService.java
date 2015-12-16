@@ -71,7 +71,8 @@ public class CrashLogService {
 			info.setDeviceBrand(crashLog.getDeviceBrand());
 			info.setDeviceModel(crashLog.getDeviceModel());
 			info.setCrashTime(crashLog.getCrashTime());
-			info.setDetail(new String(detail.getContent()));
+			info.setDetail(new String(detail.getContent()).replace("\n", "<br/>"));
+			info.setDpid(crashLog.getDpid());
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
@@ -111,7 +112,7 @@ public class CrashLogService {
 
 					if (crashLogFilter.checkFlag(log)) {
 						buildErrorMsg(errorMsgs, log);
-						totalCount ++;
+						totalCount++;
 					}
 				}
 
