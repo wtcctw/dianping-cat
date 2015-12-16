@@ -109,15 +109,17 @@ public class Handler implements PageHandler<Context> {
 	private ProjectService m_projectService;
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
-	
+
 	private void buildAppCrashLog(Payload payload, Model model) {
 		CrashLogQueryEntity entity = payload.getCrashLogQuery();
 		CrashLogDisplayInfo info = m_crashLogService.buildCrashLogDisplayInfo(entity);
+		
 		model.setCrashLogDisplayInfo(info);
 	}
 
 	private void buildAppCrashLogDetail(Payload payload, Model model) {
-		CrashLogDetailInfo info = m_crashLogService.queryCrashLogDetailIno(payload.getId());
+		CrashLogDetailInfo info = m_crashLogService.queryCrashLogDetailInfo(payload.getId());
+		
 		model.setCrashLogDetailInfo(info);
 	}
 
@@ -213,7 +215,6 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 		}
 		return new Pair<LineChart, List<AppDataDetail>>(lineChart, appDetails);
-
 	}
 
 	private AppConnectionDisplayInfo buildConnPieChart(Payload payload) {
@@ -278,6 +279,69 @@ public class Handler implements PageHandler<Context> {
 		return new AppSpeedDisplayInfo();
 	}
 
+	private void commandAdd(Payload payload, Model model) {
+		String domain = payload.getDomain();
+		String name = payload.getName();
+		String title = payload.getTitle();
+
+		if (StringUtils.isEmpty(name)) {
+			model.setContent(UpdateStatus.NO_NAME.getStatusJson());
+		} else {
+			if (m_appConfigManager.isNameDuplicate(name)) {
+				model.setContent(UpdateStatus.DUPLICATE_NAME.getStatusJson());
+			} else {
+				try {
+					Command command = new Command();
+
+					command.setDomain(domain).setTitle(title).setName(name);
+
+					Pair<Boolean, Integer> addCommandResult = m_appConfigManager.addCommand(command);
+
+					if (addCommandResult.getKey()) {
+						m_appRuleConfigManager.addDefultRule(name, addCommandResult.getValue());
+						model.setContent(UpdateStatus.SUCCESS.getStatusJson());
+					} else {
+						model.setContent(UpdateStatus.INTERNAL_ERROR.getStatusJson());
+					}
+				} catch (Exception e) {
+					model.setContent(UpdateStatus.INTERNAL_ERROR.getStatusJson());
+				}
+			}
+		}
+	}
+
+	private void commandDelete(Payload payload, Model model) {
+		String domain = payload.getDomain();
+		String name = payload.getName();
+
+		if (StringUtils.isEmpty(name)) {
+			model.setContent(UpdateStatus.NO_NAME.getStatusJson());
+
+		} else {
+			Pair<Boolean, List<Integer>> deleteCommandResult = m_appConfigManager.deleteCommand(domain, name);
+			if (deleteCommandResult.getKey()) {
+				m_appRuleConfigManager.deleteDefaultRule(name, deleteCommandResult.getValue());
+				model.setContent(UpdateStatus.SUCCESS.getStatusJson());
+			} else {
+				model.setContent(UpdateStatus.INTERNAL_ERROR.getStatusJson());
+			}
+		}
+	}
+
+	private void fetchConfig(Payload payload, Model model) {
+		String type = payload.getType();
+
+		try {
+			if ("xml".equalsIgnoreCase(type)) {
+				model.setFetchData(m_appConfigManager.getConfig().toString());
+			} else if (StringUtils.isEmpty(type) || "json".equalsIgnoreCase(type)) {
+				model.setFetchData(m_jsonBuilder.toJson(m_appConfigManager.getConfig()));
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private <T> T fetchTaskResult(FutureTask task) {
 		T data = null;
@@ -338,72 +402,17 @@ public class Handler implements PageHandler<Context> {
 			model.setFetchData(m_jsonBuilder.toJson(pieChartObjs));
 			break;
 		case APP_ADD:
-			String domain = payload.getDomain();
-			String name = payload.getName();
-			String title = payload.getTitle();
-
-			if (StringUtils.isEmpty(name)) {
-				model.setContent(UpdateStatus.NO_NAME.getStatusJson());
-			} else {
-				if (m_appConfigManager.isNameDuplicate(name)) {
-					model.setContent(UpdateStatus.DUPLICATE_NAME.getStatusJson());
-				} else {
-					try {
-						Command command = new Command();
-
-						command.setDomain(domain).setTitle(title).setName(name);
-
-						Pair<Boolean, Integer> addCommandResult = m_appConfigManager.addCommand(command);
-
-						if (addCommandResult.getKey()) {
-							m_appRuleConfigManager.addDefultRule(name, addCommandResult.getValue());
-							model.setContent(UpdateStatus.SUCCESS.getStatusJson());
-						} else {
-							model.setContent(UpdateStatus.INTERNAL_ERROR.getStatusJson());
-						}
-					} catch (Exception e) {
-						model.setContent(UpdateStatus.INTERNAL_ERROR.getStatusJson());
-					}
-				}
-			}
+			commandAdd(payload, model);
 			break;
 		case APP_DELETE:
-			domain = payload.getDomain();
-			name = payload.getName();
-
-			if (StringUtils.isEmpty(name)) {
-				model.setContent(UpdateStatus.NO_NAME.getStatusJson());
-
-			} else {
-				Pair<Boolean, List<Integer>> deleteCommandResult = m_appConfigManager.deleteCommand(domain, name);
-				if (deleteCommandResult.getKey()) {
-					m_appRuleConfigManager.deleteDefaultRule(name, deleteCommandResult.getValue());
-					model.setContent(UpdateStatus.SUCCESS.getStatusJson());
-				} else {
-					model.setContent(UpdateStatus.INTERNAL_ERROR.getStatusJson());
-				}
-			}
+			commandDelete(payload, model);
 			break;
 		case APP_CONFIG_FETCH:
-			String type = payload.getType();
-
-			try {
-				if ("xml".equalsIgnoreCase(type)) {
-					model.setFetchData(m_appConfigManager.getConfig().toString());
-				} else if (StringUtils.isEmpty(type) || "json".equalsIgnoreCase(type)) {
-					model.setFetchData(m_jsonBuilder.toJson(m_appConfigManager.getConfig()));
-				}
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
+			fetchConfig(payload, model);
 			break;
 		case HOURLY_CRASH_LOG:
 		case HISTORY_CRASH_LOG:
-			try {
-				m_crashLogProcessor.process(action, payload, model);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
+			m_crashLogProcessor.process(action, payload, model);
 			break;
 		case APP_CRASH_LOG:
 			buildAppCrashLog(payload, model);
@@ -443,7 +452,6 @@ public class Handler implements PageHandler<Context> {
 			commandId = payload.getQueryEntity1().getId();
 
 			model.setConnDisplayInfo(connDisplayInfo);
-			;
 			model.setCommandId(commandId);
 			model.setConnDisplayInfo(connDisplayInfo);
 			model.setCodes(m_appConfigManager.queryInternalCodes(commandId));
@@ -548,6 +556,7 @@ public class Handler implements PageHandler<Context> {
 		Date startDate = payload.getDayDate();
 		Date endDate = TimeHelper.addDays(startDate, 1);
 		AppReport report = m_appReportService.queryDailyReport(Constants.CAT, startDate, endDate);
+		
 		return report;
 	}
 

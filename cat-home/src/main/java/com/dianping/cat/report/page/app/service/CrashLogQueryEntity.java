@@ -25,7 +25,7 @@ public class CrashLogQueryEntity {
 	private String m_dpid = null;
 
 	private SimpleDateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-	
+
 	private String m_query;
 
 	public Date buildEndTime() {
@@ -70,7 +70,7 @@ public class CrashLogQueryEntity {
 		if (StringUtils.isEmpty(m_dpid)) {
 			return null;
 		}
-		
+
 		return m_dpid;
 	}
 

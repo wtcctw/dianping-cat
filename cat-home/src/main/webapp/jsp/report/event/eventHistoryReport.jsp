@@ -10,7 +10,6 @@
 <a:historyReport title="History Report" navUrlPrefix="type=${payload.encodedType}&ip=${model.ipAddress}">
 	<jsp:attribute name="subtitle">${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <table class="machines">
 	<tr style="text-align: left">
 		<th> <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp; 

@@ -55,7 +55,7 @@ public class CrashLogService {
 
 	private String DEVICES = "devices";
 
-	public CrashLogDetailInfo queryCrashLogDetailIno(int id) {
+	public CrashLogDetailInfo queryCrashLogDetailInfo(int id) {
 		CrashLogDetailInfo info = new CrashLogDetailInfo();
 
 		try {
@@ -133,7 +133,6 @@ public class CrashLogService {
 		if (!fieldsMap.isEmpty()) {
 			info.setFieldsInfo(buildFiledsInfo(fieldsMap));
 		}
-
 	}
 
 	private void buildFieldsMap(Map<String, Set<String>> fieldsMap, CrashLog log) {
@@ -258,4 +257,5 @@ public class CrashLogService {
 			return this;
 		}
 	}
+	
 }

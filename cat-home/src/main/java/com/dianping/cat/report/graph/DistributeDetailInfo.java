@@ -17,8 +17,22 @@ public class DistributeDetailInfo {
 		return m_items;
 	}
 
-	public List<DistributeDetail> getSortedItems() {
-		Collections.sort(m_items, new DetailInfoComparator());
+	public List<DistributeDetail> getRequestSortedItems() {
+		Collections.sort(m_items, new Comparator<DistributeDetail>() {
+			public int compare(DistributeDetail o1, DistributeDetail o2) {
+				return (int) (o2.getRequestSum() - o1.getRequestSum());
+			}
+		});
+
+		return m_items;
+	}
+
+	public List<DistributeDetail> getDelaySortedItems() {
+		Collections.sort(m_items, new Comparator<DistributeDetail>() {
+			public int compare(DistributeDetail o1, DistributeDetail o2) {
+				return (int) (o2.getDelayAvg() - o1.getDelayAvg());
+			}
+		});
 
 		return m_items;
 	}
@@ -83,11 +97,4 @@ public class DistributeDetailInfo {
 		}
 	}
 
-	public static class DetailInfoComparator implements Comparator<DistributeDetail> {
-
-		@Override
-		public int compare(DistributeDetail o1, DistributeDetail o2) {
-			return (int) (o2.getRequestSum() - o1.getRequestSum());
-		}
-	}
 }
