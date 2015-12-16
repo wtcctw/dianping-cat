@@ -25,6 +25,9 @@ import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.NullMessage;
+import com.dianping.cat.message.internal.NullMessageManager;
+import com.dianping.cat.message.internal.NullMessageProducer;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessageTree;
 
@@ -43,24 +46,41 @@ public class Cat {
 	private PlexusContainer m_container;
 
 	private static void checkAndInitialize() {
-		if (!s_init) {
-			synchronized (s_instance) {
-				if (!s_init) {
-					initialize(new File(getCatHome(), "client.xml"));
-					log("WARN", "Cat is lazy initialized!");
-					s_init = true;
+		try {
+			if (!s_init) {
+				synchronized (s_instance) {
+					if (!s_init) {
+						initialize(new File(getCatHome(), "client.xml"));
+						log("WARN", "Cat is lazy initialized!");
+						s_init = true;
+					}
 				}
 			}
+		} catch (Exception e) {
+			errorHandler(e);
 		}
 	}
 
 	public static String createMessageId() {
-		return Cat.getProducer().createMessageId();
+		try {
+			return Cat.getProducer().createMessageId();
+		} catch (Exception e) {
+			errorHandler(e);
+			return null;
+		}
 	}
 
 	public static void destroy() {
-		s_instance.m_container.dispose();
-		s_instance = new Cat();
+		try {
+			s_instance.m_container.dispose();
+			s_instance = new Cat();
+		} catch (Exception e) {
+			errorHandler(e);
+		}
+	}
+
+	private static void errorHandler(Exception e) {
+		e.printStackTrace();
 	}
 
 	public static String getCatHome() {
@@ -70,17 +90,22 @@ public class Cat {
 	}
 
 	public static String getCurrentMessageId() {
-		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+		try {
+			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 
-		if (tree != null) {
-			String messageId = tree.getMessageId();
+			if (tree != null) {
+				String messageId = tree.getMessageId();
 
-			if (messageId == null) {
-				messageId = Cat.createMessageId();
-				tree.setMessageId(messageId);
+				if (messageId == null) {
+					messageId = Cat.createMessageId();
+					tree.setMessageId(messageId);
+				}
+				return messageId;
+			} else {
+				return null;
 			}
-			return messageId;
-		} else {
+		} catch (Exception e) {
+			errorHandler(e);
 			return null;
 		}
 	}
@@ -90,71 +115,53 @@ public class Cat {
 	}
 
 	public static MessageManager getManager() {
-		checkAndInitialize();
-
-		return s_instance.m_manager;
+		try {
+			checkAndInitialize();
+			
+			return s_instance.m_manager;
+		} catch (Exception e) {
+			errorHandler(e);
+			return NullMessageManager.NULL_MESSAGE_MANAGER;
+		}
 	}
 
 	public static MessageProducer getProducer() {
-		checkAndInitialize();
-
-		return s_instance.m_producer;
+		try {
+			checkAndInitialize();
+			
+			return s_instance.m_producer;
+		} catch (Exception e) {
+			errorHandler(e);
+			return NullMessageProducer.NULL_MESSAGE_PRODUCER;
+		}
 	}
 
 	// this should be called during application initialization time
 	public static void initialize(File configFile) {
-		PlexusContainer container = ContainerLoader.getDefaultContainer();
+		try {
+			PlexusContainer container = ContainerLoader.getDefaultContainer();
 
-		initialize(container, configFile);
+			initialize(container, configFile);
+		} catch (Exception e) {
+			errorHandler(e);
+		}
 	}
 
 	public static void initialize(PlexusContainer container, File configFile) {
-		ModuleContext ctx = new DefaultModuleContext(container);
-		Module module = ctx.lookup(Module.class, CatClientModule.ID);
+		try {
+			ModuleContext ctx = new DefaultModuleContext(container);
+			Module module = ctx.lookup(Module.class, CatClientModule.ID);
 
-		if (!module.isInitialized()) {
-			ModuleInitializer initializer = ctx.lookup(ModuleInitializer.class);
+			if (!module.isInitialized()) {
+				ModuleInitializer initializer = ctx.lookup(ModuleInitializer.class);
 
-			ctx.setAttribute("cat-client-config-file", configFile);
-			initializer.execute(ctx, module);
+				ctx.setAttribute("cat-client-config-file", configFile);
+				initializer.execute(ctx, module);
+			}
+		} catch (Exception e) {
+			errorHandler(e);
 		}
 	}
-	
-	public static void initializeByDomain(String domain, String... servers) {
-      initializeByDomain(domain, 2280, 80, servers);
-  }
-
-  public static void initializeByDomain(String domain, int port, int httpPort, String... servers) {
-      try {
-          File configFile = null;
-          try {
-              configFile = File.createTempFile("cat-client", ".xml");
-          } catch (Exception ex) {
-              String catHome = getCatHome();
-              configFile = File.createTempFile("cat-client", ".xml", new File(catHome));
-              ex.printStackTrace();
-          }
-          ClientConfig config = new ClientConfig().setMode("client");
-
-          if (null != domain) {
-              Domain domainObj = new Domain(domain);
-              domainObj.setEnabled(true);
-              config.addDomain(domainObj);
-          }
-
-          for (String server : servers) {
-              Server serverObj = new Server(server);
-              serverObj.setHttpPort(httpPort);
-              serverObj.setPort(port);
-              config.addServer(serverObj);
-          }
-
-          Files.forIO().writeTo(configFile, config.toString());
-          initialize(configFile);
-      } catch (Exception ex) {
-      	ex.printStackTrace();
-      }
-  }
 
 	public static void initialize(String... servers) {
 		File configFile = null;
@@ -168,10 +175,51 @@ public class Cat {
 			}
 
 			Files.forIO().writeTo(configFile, config.toString());
+
+			initialize(configFile);
 		} catch (IOException e) {
-			e.printStackTrace();
+			errorHandler(e);
 		}
-		initialize(configFile);
+	}
+
+	public static void initializeByDomain(String domain, int port, int httpPort, String... servers) {
+		try {
+			File configFile = null;
+			try {
+				configFile = File.createTempFile("cat-client", ".xml");
+			} catch (Exception ex) {
+				String catHome = getCatHome();
+				configFile = File.createTempFile("cat-client", ".xml", new File(catHome));
+				ex.printStackTrace();
+			}
+			ClientConfig config = new ClientConfig().setMode("client");
+
+			if (null != domain) {
+				Domain domainObj = new Domain(domain);
+				domainObj.setEnabled(true);
+				config.addDomain(domainObj);
+			}
+
+			for (String server : servers) {
+				Server serverObj = new Server(server);
+				serverObj.setHttpPort(httpPort);
+				serverObj.setPort(port);
+				config.addServer(serverObj);
+			}
+
+			Files.forIO().writeTo(configFile, config.toString());
+			initialize(configFile);
+		} catch (Exception ex) {
+			errorHandler(ex);
+		}
+	}
+
+	public static void initializeByDomain(String domain, String... servers) {
+		try {
+			initializeByDomain(domain, 2280, 80, servers);
+		} catch (Exception e) {
+			errorHandler(e);
+		}
 	}
 
 	public static boolean isInitialized() {
@@ -187,23 +235,43 @@ public class Cat {
 	}
 
 	public static void logError(String message, Throwable cause) {
-		Cat.getProducer().logError(message, cause);
+		try {
+			Cat.getProducer().logError(message, cause);
+		} catch (Exception e) {
+			errorHandler(e);
+		}
 	}
 
 	public static void logError(Throwable cause) {
-		Cat.getProducer().logError(cause);
+		try {
+			Cat.getProducer().logError(cause);
+		} catch (Exception e) {
+			errorHandler(e);
+		}
 	}
 
 	public static void logEvent(String type, String name) {
-		Cat.getProducer().logEvent(type, name);
+		try {
+			Cat.getProducer().logEvent(type, name);
+		} catch (Exception e) {
+			errorHandler(e);
+		}
 	}
 
 	public static void logEvent(String type, String name, String status, String nameValuePairs) {
-		Cat.getProducer().logEvent(type, name, status, nameValuePairs);
+		try {
+			Cat.getProducer().logEvent(type, name, status, nameValuePairs);
+		} catch (Exception e) {
+			errorHandler(e);
+		}
 	}
 
 	public static void logHeartbeat(String type, String name, String status, String nameValuePairs) {
-		Cat.getProducer().logHeartbeat(type, name, status, nameValuePairs);
+		try {
+			Cat.getProducer().logHeartbeat(type, name, status, nameValuePairs);
+		} catch (Exception e) {
+			errorHandler(e);
+		}
 	}
 
 	public static void logMetric(String name, Object... keyValues) {
@@ -219,7 +287,7 @@ public class Cat {
 	public static void logMetricForCount(String name) {
 		logMetricInternal(name, "C", "1");
 	}
-	
+
 	/**
 	 * Increase the counter specified by <code>name</code> by one.
 	 * 
@@ -269,55 +337,75 @@ public class Cat {
 	}
 
 	private static void logMetricInternal(String name, String status, String keyValuePairs) {
-		Cat.getProducer().logMetric(name, status, keyValuePairs);
+		try {
+			Cat.getProducer().logMetric(name, status, keyValuePairs);
+		} catch (Exception e) {
+			errorHandler(e);
+		}
 	}
 
 	public static void logRemoteCallClient(Context ctx) {
-		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
-		String messageId = tree.getMessageId();
+		try {
+			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+			String messageId = tree.getMessageId();
 
-		if (messageId == null) {
-			messageId = Cat.createMessageId();
-			tree.setMessageId(messageId);
+			if (messageId == null) {
+				messageId = Cat.createMessageId();
+				tree.setMessageId(messageId);
+			}
+
+			String childId = Cat.createMessageId();
+			Cat.logEvent(CatConstants.TYPE_REMOTE_CALL, "", Event.SUCCESS, childId);
+
+			String root = tree.getRootMessageId();
+
+			if (root == null) {
+				root = messageId;
+			}
+
+			ctx.addProperty(Context.ROOT, root);
+			ctx.addProperty(Context.PARENT, messageId);
+			ctx.addProperty(Context.CHILD, childId);
+		} catch (Exception e) {
+			errorHandler(e);
 		}
-
-		String childId = Cat.createMessageId();
-		Cat.logEvent(CatConstants.TYPE_REMOTE_CALL, "", Event.SUCCESS, childId);
-
-		String root = tree.getRootMessageId();
-
-		if (root == null) {
-			root = messageId;
-		}
-
-		ctx.addProperty(Context.ROOT, root);
-		ctx.addProperty(Context.PARENT, messageId);
-		ctx.addProperty(Context.CHILD, childId);
 	}
 
 	public static void logRemoteCallServer(Context ctx) {
-		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
-		String messageId = ctx.getProperty(Context.CHILD);
-		String rootId = ctx.getProperty(Context.ROOT);
-		String parentId = ctx.getProperty(Context.PARENT);
+		try {
+			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+			String messageId = ctx.getProperty(Context.CHILD);
+			String rootId = ctx.getProperty(Context.ROOT);
+			String parentId = ctx.getProperty(Context.PARENT);
 
-		if (messageId != null) {
-			tree.setMessageId(messageId);
-		}
-		if (parentId != null) {
-			tree.setParentMessageId(parentId);
-		}
-		if (rootId != null) {
-			tree.setRootMessageId(rootId);
+			if (messageId != null) {
+				tree.setMessageId(messageId);
+			}
+			if (parentId != null) {
+				tree.setParentMessageId(parentId);
+			}
+			if (rootId != null) {
+				tree.setRootMessageId(rootId);
+			}
+		} catch (Exception e) {
+			errorHandler(e);
 		}
 	}
 
 	public static void logTrace(String type, String name) {
-		Cat.getProducer().logTrace(type, name);
+		try {
+			Cat.getProducer().logTrace(type, name);
+		} catch (Exception e) {
+			errorHandler(e);
+		}
 	}
 
 	public static void logTrace(String type, String name, String status, String nameValuePairs) {
-		Cat.getProducer().logTrace(type, name, status, nameValuePairs);
+		try {
+			Cat.getProducer().logTrace(type, name, status, nameValuePairs);
+		} catch (Exception e) {
+			errorHandler(e);
+		}
 	}
 
 	public static <T> T lookup(Class<T> role) throws ComponentLookupException {
@@ -329,29 +417,59 @@ public class Cat {
 	}
 
 	public static Event newEvent(String type, String name) {
-		return Cat.getProducer().newEvent(type, name);
+		try {
+			return Cat.getProducer().newEvent(type, name);
+		} catch (Exception e) {
+			errorHandler(e);
+			return NullMessage.EVENT;
+		}
 	}
 
 	public static ForkedTransaction newForkedTransaction(String type, String name) {
-		return Cat.getProducer().newForkedTransaction(type, name);
+		try {
+			return Cat.getProducer().newForkedTransaction(type, name);
+		} catch (Exception e) {
+			errorHandler(e);
+			return NullMessage.TRANSACTION;
+		}
 	}
 
 	public static Heartbeat newHeartbeat(String type, String name) {
-		return Cat.getProducer().newHeartbeat(type, name);
+		try {
+			return Cat.getProducer().newHeartbeat(type, name);
+		} catch (Exception e) {
+			errorHandler(e);
+			return NullMessage.HEARTBEAT;
+		}
 	}
 
 	public static TaggedTransaction newTaggedTransaction(String type, String name, String tag) {
-		return Cat.getProducer().newTaggedTransaction(type, name, tag);
+		try {
+			return Cat.getProducer().newTaggedTransaction(type, name, tag);
+		} catch (Exception e) {
+			errorHandler(e);
+			return NullMessage.TRANSACTION;
+		}
 	}
 
 	public static Trace newTrace(String type, String name) {
-		return Cat.getProducer().newTrace(type, name);
+		try {
+			return Cat.getProducer().newTrace(type, name);
+		} catch (Exception e) {
+			errorHandler(e);
+			return NullMessage.TRACE;
+		}
 	}
 
 	public static Transaction newTransaction(String type, String name) {
-		return Cat.getProducer().newTransaction(type, name);
+		try {
+			return Cat.getProducer().newTransaction(type, name);
+		} catch (Exception e) {
+			errorHandler(e);
+			return NullMessage.TRANSACTION;
+		}
 	}
-	
+
 	// this should be called when a thread ends to clean some thread local data
 	public static void reset() {
 		// remove me
@@ -359,7 +477,11 @@ public class Cat {
 
 	// this should be called when a thread starts to create some thread local data
 	public static void setup(String sessionToken) {
-		Cat.getManager().setup();
+		try {
+			Cat.getManager().setup();
+		} catch (Exception e) {
+			errorHandler(e);
+		}
 	}
 
 	private Cat() {

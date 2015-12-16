@@ -142,6 +142,15 @@ public class Handler implements PageHandler<Context> {
 		return ajaxDetails;
 	}
 
+	private AjaxDataDisplayInfo buildAjaxDistributeChart(Payload payload) {
+		try {
+			return m_graphCreator.buildAjaxDistributeChart(payload.getQueryEntity1(), payload.getGroupByField());
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new AjaxDataDisplayInfo();
+	}
+
 	private LineChart buildAjaxLineChart(Payload payload) {
 		AjaxDataQueryEntity entity1 = payload.getQueryEntity1();
 		AjaxDataQueryEntity entity2 = payload.getQueryEntity2();
@@ -154,15 +163,6 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 		}
 		return lineChart;
-	}
-
-	private AjaxDataDisplayInfo buildAjaxDistributeChart(Payload payload) {
-		try {
-			return m_graphCreator.buildAjaxDistributeChart(payload.getQueryEntity1(), payload.getGroupByField());
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return new AjaxDataDisplayInfo();
 	}
 
 	private AjaxDataDetail buildComparisonInfo(AjaxDataQueryEntity entity) {
@@ -239,6 +239,19 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
+	private void fetchConfig(Payload payload, Model model) {
+		String type = payload.getType();
+		try {
+			if ("xml".equalsIgnoreCase(type)) {
+				model.setFetchData(m_webSpeedConfigManager.getConfig().toString());
+			} else if (StringUtils.isEmpty(type) || "json".equalsIgnoreCase(type)) {
+				model.setFetchData(m_jsonBuilder.toJson(m_webSpeedConfigManager.getConfig()));
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private <T> T fetchTaskResult(List<FutureTask> tasks, int i) {
 		T data = null;
@@ -293,16 +306,7 @@ public class Handler implements PageHandler<Context> {
 			buildSpeedBarCharts(payload, model);
 			break;
 		case SPEED_CONFIG_FETCH:
-			String type = payload.getType();
-			try {
-				if ("xml".equalsIgnoreCase(type)) {
-					model.setFetchData(m_webSpeedConfigManager.getConfig().toString());
-				} else if (StringUtils.isEmpty(type) || "json".equalsIgnoreCase(type)) {
-					model.setFetchData(m_jsonBuilder.toJson(m_webSpeedConfigManager.getConfig()));
-				}
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
+			fetchConfig(payload, model);
 			break;
 		}
 

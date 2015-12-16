@@ -132,6 +132,7 @@
 
 		$(document).ready(
 				function() {
+					$('#App_report').addClass('active open');
 					$('#connPiechart').addClass('active');
 					$('#time').datetimepicker({
 						format:'Y-m-d H:i',
