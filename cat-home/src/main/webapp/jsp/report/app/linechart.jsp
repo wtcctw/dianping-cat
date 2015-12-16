@@ -35,7 +35,6 @@
 			if (value == true) {
 				$('#history').slideDown();
 				$("#command2").val($("#command").val());
-				command2Change();
 				$("#code2").val($("#code").val());
 				$("#network2").val($("#network").val());
 				$("#version2").val($("#version").val());
@@ -44,6 +43,7 @@
 				$("#city2").val($("#city").val());
 				$("#operator2").val($("#operator").val());
 				$("#time2").val($("#time").val());
+				commandChange("command2","code2");
 			} else {
 				$('#history').slideUp();
 			}
@@ -56,22 +56,18 @@
 				var commandId = cmd.id;
 				var value = queryCodeByCommand(commandId);
 				
-				if("code"==codeDom){
-					$("#code").empty();
-				}else{
-					$("#code2").empty();
-				}
+				$("#"+codeDom).empty();
 				
 				var opt = $('<option />');
 				opt.html("All");
 				opt.val("");
-				opt.appendTo(code);
+				opt.appendTo($("#"+codeDom));
 				
 				for ( var prop in value) {
 					var opt = $('<option />');
 					opt.html(value[prop]);
 					opt.val(prop);
-					opt.appendTo(code);
+					opt.appendTo($("#"+codeDom));
 				}
 			}
 		}
