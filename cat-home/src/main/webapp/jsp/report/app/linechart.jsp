@@ -8,9 +8,6 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model" scope="request" />
 
 <a:mobile>
-	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
-	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
-	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
  	<script type="text/javascript">
 		var commandInfo = ${model.command2CodesJson};
 		var globalInfo = ${model.globalCodesJson};
@@ -35,7 +32,6 @@
 			if (value == true) {
 				$('#history').slideDown();
 				$("#command2").val($("#command").val());
-				command2Change();
 				$("#code2").val($("#code").val());
 				$("#network2").val($("#network").val());
 				$("#version2").val($("#version").val());
@@ -44,6 +40,7 @@
 				$("#city2").val($("#city").val());
 				$("#operator2").val($("#operator").val());
 				$("#time2").val($("#time").val());
+				commandChange("command2","code2");
 			} else {
 				$('#history').slideUp();
 			}
@@ -56,22 +53,18 @@
 				var commandId = cmd.id;
 				var value = queryCodeByCommand(commandId);
 				
-				if("code"==codeDom){
-					$("#code").empty();
-				}else{
-					$("#code2").empty();
-				}
+				$("#"+codeDom).empty();
 				
 				var opt = $('<option />');
 				opt.html("All");
 				opt.val("");
-				opt.appendTo(code);
+				opt.appendTo($("#"+codeDom));
 				
 				for ( var prop in value) {
 					var opt = $('<option />');
 					opt.html(value[prop]);
 					opt.val(prop);
-					opt.appendTo(code);
+					opt.appendTo($("#"+codeDom));
 				}
 			}
 		}

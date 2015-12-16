@@ -8,10 +8,6 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.browser.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.browser.Model" scope="request"/>
 <a:web_body>
-	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
-	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
-	<script type="text/javascript" src="/cat/js/baseGraph.js"></script>
-
 <style type="text/css">
 .graph {
 	width: 500px;
