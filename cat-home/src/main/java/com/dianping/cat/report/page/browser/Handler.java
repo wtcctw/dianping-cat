@@ -4,63 +4,52 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.ServletException;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.config.Level;
-import com.dianping.cat.config.web.WebConfigManager;
-import com.dianping.cat.config.web.WebSpeedConfigManager;
-import com.dianping.cat.config.web.url.UrlPatternConfigManager;
-import com.dianping.cat.configuration.web.speed.entity.Speed;
-import com.dianping.cat.configuration.web.speed.entity.Step;
-import com.dianping.cat.configuration.web.url.entity.PatternItem;
-import com.dianping.cat.mvc.PayloadNormalizer;
-import com.dianping.cat.report.ErrorMsg;
-import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.graph.PieChart;
-import com.dianping.cat.report.graph.PieChart.Item;
-import com.dianping.cat.report.page.browser.display.AjaxDataDetail;
-import com.dianping.cat.report.page.browser.display.AjaxDataDetailSorter;
-import com.dianping.cat.report.page.browser.display.AjaxDataDisplayInfo;
-import com.dianping.cat.report.page.browser.display.JsErrorDisplayInfo;
-import com.dianping.cat.report.page.browser.display.JsErrorDetailInfo;
-import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
-import com.dianping.cat.report.page.browser.service.AjaxDataField;
-import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
-import com.dianping.cat.report.page.browser.service.AjaxDataService;
-import com.dianping.cat.report.page.browser.service.AjaxGraphCreator;
-import com.dianping.cat.report.page.browser.service.JsErrorLogService;
-import com.dianping.cat.report.page.browser.service.AjaxQueryType;
-import com.dianping.cat.report.page.browser.service.SpeedQueryEntity;
-import com.dianping.cat.report.page.browser.service.WebSpeedService;
-import com.dianping.cat.web.JsErrorLog;
-
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.config.web.WebConfigManager;
+import com.dianping.cat.config.web.WebSpeedConfigManager;
+import com.dianping.cat.config.web.url.UrlPatternConfigManager;
+import com.dianping.cat.configuration.web.speed.entity.Speed;
+import com.dianping.cat.configuration.web.speed.entity.Step;
+import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.mvc.PayloadNormalizer;
+import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.page.browser.display.AjaxDataDetail;
+import com.dianping.cat.report.page.browser.display.AjaxDataDetailSorter;
+import com.dianping.cat.report.page.browser.display.AjaxDataDisplayInfo;
+import com.dianping.cat.report.page.browser.display.JsErrorDetailInfo;
+import com.dianping.cat.report.page.browser.display.JsErrorDisplayInfo;
+import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
+import com.dianping.cat.report.page.browser.service.AjaxDataField;
+import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
+import com.dianping.cat.report.page.browser.service.AjaxDataService;
+import com.dianping.cat.report.page.browser.service.AjaxGraphCreator;
+import com.dianping.cat.report.page.browser.service.AjaxQueryType;
+import com.dianping.cat.report.page.browser.service.JsErrorLogService;
+import com.dianping.cat.report.page.browser.service.JsErrorQueryEntity;
+import com.dianping.cat.report.page.browser.service.SpeedQueryEntity;
+import com.dianping.cat.report.page.browser.service.WebSpeedService;
 import com.site.lookup.util.StringUtils;
 
 public class Handler implements PageHandler<Context> {
-
-	private final int LIMIT = 10000;
 
 	@Inject
 	private AjaxDataService m_ajaxDataService;
@@ -70,9 +59,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private JspViewer m_jspViewer;
-
-	@Inject
-	private ModuleManager m_moduleManager;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
@@ -94,17 +80,6 @@ public class Handler implements PageHandler<Context> {
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
-	public void addBrowserCount(String browser, Map<String, AtomicInteger> distributions) {
-		AtomicInteger count = distributions.get(browser);
-
-		if (count == null) {
-			count = new AtomicInteger(1);
-			distributions.put(browser, count);
-		} else {
-			count.incrementAndGet();
-		}
-	}
-
 	protected Map<String, AjaxDataDetail> buildAjaxComparisonInfo(Payload payload) {
 		AjaxDataQueryEntity currentEntity = payload.getQueryEntity1();
 		AjaxDataQueryEntity comparisonEntity = payload.getQueryEntity2();
@@ -125,7 +100,6 @@ public class Handler implements PageHandler<Context> {
 				result.put("对比值", detail);
 			}
 		}
-
 		return result;
 	}
 
@@ -178,21 +152,6 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 		}
 		return appDetail;
-	}
-
-	public String buildJsErrorDistributionChart(Map<String, AtomicInteger> distributions) {
-		PieChart chart = new PieChart();
-		List<Item> items = new ArrayList<Item>();
-
-		for (Entry<String, AtomicInteger> entry : distributions.entrySet()) {
-			Item item = new Item();
-
-			item.setNumber(entry.getValue().get()).setTitle(entry.getKey());
-			items.add(item);
-		}
-		chart.addItems(items);
-
-		return chart.getJsonString();
 	}
 
 	private void buildSpeedBarCharts(Payload payload, Model model) {
@@ -409,70 +368,10 @@ public class Handler implements PageHandler<Context> {
 		model.setAjaxDataDisplayInfo(info);
 	}
 
-	private void processLog(Map<String, ErrorMsg> errorMsgs, JsErrorLog log, Map<String, AtomicInteger> distributions) {
-		String msg = log.getMsg();
-		ErrorMsg errorMsg = errorMsgs.get(msg);
-
-		if (errorMsg == null) {
-			errorMsg = new ErrorMsg();
-			errorMsg.setMsg(msg);
-			errorMsgs.put(msg, errorMsg);
-		}
-
-		errorMsg.addCount();
-		errorMsg.addId(log.getId());
-
-		addBrowserCount(log.getBrowser(), distributions);
-	}
-
-	private List<ErrorMsg> sort(Map<String, ErrorMsg> errorMsgs) {
-		List<ErrorMsg> errorMsgList = new ArrayList<ErrorMsg>();
-		Iterator<Entry<String, ErrorMsg>> iter = errorMsgs.entrySet().iterator();
-
-		while (iter.hasNext()) {
-			errorMsgList.add(iter.next().getValue());
-		}
-
-		Collections.sort(errorMsgList);
-		return errorMsgList;
-	}
-
 	private void viewJsError(Payload payload, Model model) {
-		try {
-			Map<String, ErrorMsg> errorMsgs = new HashMap<String, ErrorMsg>();
-			int offset = 0;
-			int totalCount = 0;
-			Map<String, AtomicInteger> distributions = new HashMap<String, AtomicInteger>();
-
-			while (true) {
-				List<JsErrorLog> result = m_jsErrorLogService.queryJsErrorInfo(payload.getJsErrorQuery(), offset, LIMIT);
-
-				for (JsErrorLog log : result) {
-					processLog(errorMsgs, log, distributions);
-				}
-
-				int count = result.size();
-				totalCount += count;
-				offset += count;
-
-				if (count < LIMIT) {
-					break;
-				}
-			}
-
-			List<ErrorMsg> errorMsgList = sort(errorMsgs);
-			JsErrorDisplayInfo info = new JsErrorDisplayInfo();
-
-			info.setErrors(errorMsgList);
-			info.setTotalCount(totalCount);
-			info.setLevels(Level.getLevels());
-			info.setModules(m_moduleManager.getModules());
-			info.setDistributionChart(buildJsErrorDistributionChart(distributions));
-
-			model.setJsErrorDisplayInfo(info);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
+		JsErrorQueryEntity jsErrorQuery = payload.getJsErrorQuery();
+		JsErrorDisplayInfo info = m_jsErrorLogService.buildJsErrorDisplayInfo(jsErrorQuery);
+		model.setJsErrorDisplayInfo(info);
 	}
 
 	private void viewJsErrorDetail(Payload payload, Model model) {

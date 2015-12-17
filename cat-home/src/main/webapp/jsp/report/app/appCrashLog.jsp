@@ -83,7 +83,7 @@
 	</table>
 	</div>
 	
-	<div style="text-align:center;font-size:large"><a id="showChart" onclick="showChart()">显示图表</a></div>
+	<div style="text-align:center;font-size:large"><a id="showChart" onclick="showChart()">点击显示图表</a></div>
 	<div id="distributions" style="display:none">
 	<br>
 	<table>
@@ -117,11 +117,11 @@
 
 <script type="text/javascript">
 	function showChart() {
-		if(document.getElementById("showChart").text == "显示图表"){
+		if(document.getElementById("showChart").text == "点击显示图表"){
 			document.getElementById("showChart").text = "隐藏图表";
 			document.getElementById("distributions").style.display = '';
 		}else {
-			document.getElementById("showChart").text = "显示图表";
+			document.getElementById("showChart").text = "点击显示图表";
 			document.getElementById("distributions").style.display = 'none';
 		}
 	}

@@ -54,7 +54,7 @@ public class JsAlert implements Task {
 					String level = Level.getNameByCode(levelCode);
 					ExceptionLimit limit = m_jsRuleConfigManager.queryExceptionLimit(module, level);
 
-					if (count >= limit.getLimit()) {
+					if (limit != null && count >= limit.getLimit()) {
 						AlertEntity entity = new AlertEntity();
 						entity.setDate(startTime).setContent(buildContent(module, level, count))
 						      .setLevel(level.toLowerCase());
