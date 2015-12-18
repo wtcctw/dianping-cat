@@ -177,13 +177,8 @@
 			var targetId = $(this).data("id");
 			var hour = $(this).data("hour");
 			var minute = $(this).data("minute");
-			if(hour < 10){
-				hour = "0" + hour;
-			}
-			if(minute < 10){
-				minute = "0" + minute;
-			}
 			e.preventDefault();
+			console.log($("#dialog-message-"+targetId+"-"+hour+"-"+minute));
 			var dialog = $("#dialog-message-"+targetId+"-"+hour+"-"+minute).removeClass('hide').dialog({
 				width:'auto',
 				modal: true,
