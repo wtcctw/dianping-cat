@@ -82,12 +82,19 @@
 						</td></tr>
 	</table>
 	</div>
+	
+	<div style="text-align:center;font-size:large"><a id="showChart" onclick="showChart()">点击显示图表</a></div>
+	<div id="distributions" style="display:none">
 	<br>
-	<table class="table table-hover table-striped table-condensed"  style="width:100%">
+	<table>
+	<tr><td><div id="appVersions"></div></td><td><div id="platformVersions"></div></td></tr>
+	<tr><td><div id="modules"></div></td><td><div id="devices"></div></td></tr>				
+</table></div>
+	<table class="table table-hover table-striped table-condensed">
 	<tr>
-		<th width="30%">Msg</th>
+		<th width="40%">Msg</th>
 		<th width="5%">Count</th>
-		<th width="55%">SampleLinks</th>
+		<th width="30%">SampleLinks</th>
 	</tr>
 	<tr>
 		<td><strong>Total</strong></td>
@@ -106,10 +113,19 @@
 	</tr>
 	</c:forEach>
 </table>
-
 </a:mobile>
 
 <script type="text/javascript">
+	function showChart() {
+		if(document.getElementById("showChart").text == "点击显示图表"){
+			document.getElementById("showChart").text = "隐藏图表";
+			document.getElementById("distributions").style.display = '';
+		}else {
+			document.getElementById("showChart").text = "点击显示图表";
+			document.getElementById("distributions").style.display = 'none';
+		}
+	}
+
 	function query(){
 		var time = $("#time").val();
 		var times = time.split(" ");
@@ -142,7 +158,6 @@
 			} else {
 				device += o + ":";
 			}
-			console.log(device);
 		});
 		return device;
 	}
@@ -242,6 +257,10 @@
 					});
 				})
 			}).trigger('resize.chosen');
+			
+			<c:forEach var="entry" items="${model.crashLogDisplayInfo.distributions}" >
+			graphPieChartWithName(document.getElementById('${entry.key}'), ${entry.value.jsonString},  '${entry.value.title}');
+			</c:forEach> 
 		});
 	
 	function docReady(field, fields, prefix){

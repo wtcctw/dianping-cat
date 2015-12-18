@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
@@ -26,6 +27,8 @@ import com.dianping.cat.config.Level;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.report.ErrorMsg;
+import com.dianping.cat.report.graph.PieChart;
+import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.page.app.display.CrashLogDetailInfo;
 import com.dianping.cat.report.page.app.display.CrashLogDisplayInfo;
 
@@ -92,6 +95,7 @@ public class CrashLogService {
 	private void buildCrashLogData(CrashLogQueryEntity entity, CrashLogDisplayInfo info) {
 		Map<String, Set<String>> fieldsMap = new HashMap<String, Set<String>>();
 		CrashLogFilter crashLogFilter = new CrashLogFilter(entity.getQuery());
+		Map<String, Map<String, AtomicInteger>> distributions = new HashMap<String, Map<String, AtomicInteger>>();
 
 		Date startTime = entity.buildStartTime();
 		Date endTime = entity.buildEndTime();
@@ -112,6 +116,7 @@ public class CrashLogService {
 
 					if (crashLogFilter.checkFlag(log)) {
 						buildErrorMsg(errorMsgs, log);
+						buildDistributions(log, distributions);
 						totalCount++;
 					}
 				}
@@ -129,9 +134,62 @@ public class CrashLogService {
 
 		info.setTotalCount(totalCount);
 		info.setErrors(buildErrors(errorMsgs));
+		info.setDistributions(buildDistributionChart(distributions));
 
 		if (!fieldsMap.isEmpty()) {
 			info.setFieldsInfo(buildFiledsInfo(fieldsMap));
+		}
+	}
+
+	public Map<String, PieChart> buildDistributionChart(Map<String, Map<String, AtomicInteger>> distributions) {
+		Map<String, PieChart> charts = new HashMap<String, PieChart>();
+
+		for (Entry<String, Map<String, AtomicInteger>> entrys : distributions.entrySet()) {
+			Map<String, AtomicInteger> distribution = entrys.getValue();
+			PieChart chart = new PieChart();
+			List<Item> items = new ArrayList<Item>();
+
+			for (Entry<String, AtomicInteger> entry : distribution.entrySet()) {
+				Item item = new Item();
+
+				item.setNumber(entry.getValue().get()).setTitle(entry.getKey());
+				items.add(item);
+			}
+			chart.addItems(items);
+			chart.setTitle(entrys.getKey());
+			charts.put(entrys.getKey(), chart);
+		}
+
+		return charts;
+	}
+
+	private void buildDistributions(CrashLog log, Map<String, Map<String, AtomicInteger>> distributions) {
+		if (distributions.isEmpty()) {
+			Map<String, AtomicInteger> appVersions = new HashMap<String, AtomicInteger>();
+			Map<String, AtomicInteger> platVersions = new HashMap<String, AtomicInteger>();
+			Map<String, AtomicInteger> modules = new HashMap<String, AtomicInteger>();
+			Map<String, AtomicInteger> devices = new HashMap<String, AtomicInteger>();
+
+			distributions.put(APP_VERSIONS, appVersions);
+			distributions.put(PLATFORM_VERSIONS, platVersions);
+			distributions.put(MODULES, modules);
+			distributions.put(DEVICES, devices);
+		}
+
+		addCount(log.getAppVersion(), distributions.get(APP_VERSIONS));
+		addCount(log.getPlatformVersion(), distributions.get(PLATFORM_VERSIONS));
+		addCount(log.getModule(), distributions.get(MODULES));
+		addCount(log.getDeviceBrand() + "-" + log.getDeviceModel(), distributions.get(DEVICES));
+	}
+
+	private void addCount(String item, Map<String, AtomicInteger> distributions) {
+		AtomicInteger count = distributions.get(item);
+
+		if (count == null) {
+			count = new AtomicInteger(1);
+			distributions.put(item, count);
+		} else {
+			count.incrementAndGet();
 		}
 	}
 
@@ -257,5 +315,5 @@ public class CrashLogService {
 			return this;
 		}
 	}
-	
+
 }

@@ -80,14 +80,12 @@
 	</tr>
 	</c:forEach>
 </table>
- <table align="center">
+ <table>
+ 	<tr><td colspan="2"><h4 style="text-align:center"  class='text-center text-info'>错误分布</h4>
+ 	</td></tr>
 	<tr>
-		<td><h5 style="text-align:center"  class='text-center text-info'>错误分布</h5>
-		<div id="distributionChart" class="graph"></div></td>
-	</tr>
-	<tr><td  style="display:none">
-		<div id ="distributionChartMeta">${model.jsErrorDisplayInfo.distributionChart}</div>
-		</td>
+		<td><div id="modules" class="graph"></div></td>
+		<td><div id="browsers" class="graph"></div></td>
 	</tr>
 </table> 
 <script type="text/javascript">
@@ -159,11 +157,9 @@ $(document).ready(
 			source: data
 		});
 		
-		var distributionChart = ${model.jsErrorDisplayInfo.distributionChart};
-
-		if(distributionChart!=null){
-			graphPieChart(document.getElementById('distributionChart'), distributionChart);
-		}	 
+		<c:forEach var="entry" items="${model.jsErrorDisplayInfo.distributions}" >
+			graphPieChart(document.getElementById('${entry.key}'), ${entry.value.jsonString});
+		</c:forEach> 
 });
 
 function query() {

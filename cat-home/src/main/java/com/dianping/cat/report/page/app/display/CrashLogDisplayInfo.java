@@ -2,9 +2,11 @@ package com.dianping.cat.report.page.app.display;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import com.dianping.cat.configuration.server.filter.entity.CrashLogDomain;
 import com.dianping.cat.report.ErrorMsg;
+import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.page.app.service.CrashLogService.FieldsInfo;
 
 public class CrashLogDisplayInfo {
@@ -16,6 +18,16 @@ public class CrashLogDisplayInfo {
 	private int m_totalCount;
 	
 	private List<ErrorMsg> m_errors;
+	
+	private Map<String, PieChart> m_distributions;
+	
+	public Map<String, PieChart> getDistributions() {
+		return m_distributions;
+	}
+
+	public void setDistributions(Map<String, PieChart> distributions) {
+		m_distributions = distributions;
+	}
 
 	public Collection<CrashLogDomain> getAppNames() {
 		return m_appNames;
