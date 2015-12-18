@@ -14,6 +14,10 @@ import com.dianping.cat.app.AppCommandData;
 import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppSpeedData;
 import com.dianping.cat.app.AppSpeedDataDao;
+import com.dianping.cat.app.CrashLog;
+import com.dianping.cat.app.CrashLogContent;
+import com.dianping.cat.app.CrashLogContentDao;
+import com.dianping.cat.app.CrashLogDao;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.configuration.app.entity.Command;
@@ -32,6 +36,12 @@ public class AppDatabasePruner implements TaskBuilder {
 
 	@Inject
 	private AppCommandDataDao m_appCommandDataDao;
+
+	@Inject
+	private CrashLogDao m_crashLogDao;
+
+	@Inject
+	private CrashLogContentDao m_crashLogContentDao;
 
 	@Inject
 	private AppConfigManager m_appConfigManager;
@@ -61,7 +71,7 @@ public class AppDatabasePruner implements TaskBuilder {
 	}
 
 	public void pruneAppCommandTable(Date period, int id) throws DalException {
-		AppCommandData appCommandData = new AppCommandDataDao().createLocal();
+		AppCommandData appCommandData = m_appCommandDataDao.createLocal();
 
 		appCommandData.setCommandId(id);
 		appCommandData.setPeriod(period);
@@ -107,7 +117,7 @@ public class AppDatabasePruner implements TaskBuilder {
 	}
 
 	public void pruneAppSpeedTable(Date period, int speedId) throws DalException {
-		AppSpeedData appSpeedData = new AppSpeedDataDao().createLocal();
+		AppSpeedData appSpeedData = m_appSpeedDataDao.createLocal();
 
 		appSpeedData.setSpeedId(speedId);
 		appSpeedData.setPeriod(period);
@@ -118,8 +128,34 @@ public class AppDatabasePruner implements TaskBuilder {
 		Date period = queryPeriod(months);
 		boolean command = pruneAppCommndData(period);
 		boolean speed = pruneAppSpeedData(period);
+		boolean crash = pruneCrashLog(period);
 
-		return command && speed;
+		return command && speed && crash;
+	}
+
+	public boolean pruneCrashLog(Date period) {
+		boolean success = true;
+		Transaction t = Cat.newTransaction("DeleteTask", "crashLog");
+
+		try {
+			CrashLog crashLog = m_crashLogDao.createLocal();
+			crashLog.setUpdatetime(period);
+			m_crashLogDao.deleteBeforePeriod(crashLog);
+
+			CrashLogContent crashLogContent = m_crashLogContentDao.createLocal();
+			crashLogContent.setUpdatetime(period);
+			m_crashLogContentDao.deleteBeforePeriod(crashLogContent);
+
+			t.setStatus(Transaction.SUCCESS);
+		} catch (Exception e) {
+			Cat.logError(e);
+			t.setStatus(e);
+			success = false;
+		} finally {
+			t.complete();
+		}
+
+		return success;
 	}
 
 	public Date queryPeriod(int months) {

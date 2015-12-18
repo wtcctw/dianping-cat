@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -53,6 +54,10 @@ public class WebSpeedConfigManager implements Initializable {
 	public boolean deleteSpeed(int id) {
 		m_config.removeSpeed(id);
 		return storeConfig();
+	}
+	
+	public Set<Integer> querySpeedIds() {
+		return m_config.getSpeeds().keySet();
 	}
 
 	private int generateId(List<Integer> ids) {

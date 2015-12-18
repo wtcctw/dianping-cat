@@ -69,6 +69,8 @@ public class Constants {
 	public static final String REPORT_JAR = "jar";
 
 	public static final String APP_DATABASE_PRUNER = "appDatabasePruner";
+	
+	public static final String WEB_DATABASE_PRUNER = "webDatabasePruner";
 
 	public static final String CACHED_REPORT = "cachedReport";
 

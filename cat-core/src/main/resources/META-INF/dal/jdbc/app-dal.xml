@@ -1755,6 +1755,20 @@
 		LIMIT ${offset}, ${limit}
          ]]></statement>
 		</query>
+		<query name="delete-before-period" type="DELETE">
+        <param name="updatetime" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='updatetime'/> <= ${updatetime}]]></statement>
+      </query>
+      	</query-defs>
+	</entity>
+	 <entity name="crash-log-content" table="crash_log_content" alias="clc">
+		<query-defs>	
+			<query name="delete-before-period" type="DELETE">
+        	<param name="updatetime" />
+        	<statement><![CDATA[DELETE FROM <TABLE/>
+       	 WHERE <FIELD name='updatetime'/> <= ${updatetime}]]></statement>
+      		</query>
       	</query-defs>
 	</entity>
 </entities>

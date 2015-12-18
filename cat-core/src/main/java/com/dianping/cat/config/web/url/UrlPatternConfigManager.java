@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -64,6 +65,10 @@ public class UrlPatternConfigManager implements Initializable {
 
 	public Map<Integer, PatternItem> getId2Items() {
 		return m_id2Items;
+	}
+	
+	public Set<Integer> getUrlIds() {
+		return m_id2Items.keySet();
 	}
 
 	public PatternItem handle(String url) {
