@@ -1634,6 +1634,37 @@
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.app.CrashLogDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.app.CrashLogContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role-hint>webDatabasePruner</role-hint>
+			<implementation>com.dianping.cat.report.page.browser.task.WebDatabasePruner</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.web.AjaxDataDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.web.WebSpeedDataDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.WebSpeedConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.web.JsErrorLogDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.web.JsErrorLogContentDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

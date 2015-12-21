@@ -8,10 +8,14 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppSpeedDataDao;
+import com.dianping.cat.app.CrashLogContentDao;
+import com.dianping.cat.app.CrashLogDao;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
+import com.dianping.cat.config.web.WebSpeedConfigManager;
+import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.core.config.ConfigDao;
@@ -33,6 +37,7 @@ import com.dianping.cat.report.page.app.service.AppReportService;
 import com.dianping.cat.report.page.app.task.AppDatabasePruner;
 import com.dianping.cat.report.page.app.task.AppReportBuilder;
 import com.dianping.cat.report.page.app.task.CommandAutoCompleter;
+import com.dianping.cat.report.page.browser.task.WebDatabasePruner;
 import com.dianping.cat.report.page.cross.service.CrossReportService;
 import com.dianping.cat.report.page.cross.task.CrossReportBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
@@ -104,6 +109,10 @@ import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.page.router.config.RouterConfigHandler;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
 import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
+import com.dianping.cat.web.AjaxDataDao;
+import com.dianping.cat.web.JsErrorLogContentDao;
+import com.dianping.cat.web.JsErrorLogDao;
+import com.dianping.cat.web.WebSpeedDataDao;
 
 public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -213,7 +222,10 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AppDatabaseConfigurator.class).req(AppCommandDataDao.class, AppSpeedDataDao.class));
 
 		all.add(C(TaskBuilder.class, AppDatabasePruner.ID, AppDatabasePruner.class).req(AppCommandDataDao.class,
-		      AppSpeedDataDao.class, AppSpeedConfigManager.class, AppConfigManager.class));
+		      AppSpeedDataDao.class, AppSpeedConfigManager.class, AppConfigManager.class, CrashLogDao.class, CrashLogContentDao.class));
+		
+		all.add(C(TaskBuilder.class, WebDatabasePruner.ID, WebDatabasePruner.class).req(AjaxDataDao.class,
+		      WebSpeedDataDao.class, WebSpeedConfigManager.class, UrlPatternConfigManager.class, JsErrorLogDao.class, JsErrorLogContentDao.class));
 
 		all.add(C(TaskBuilder.class, MetricGraphPruner.ID, MetricGraphPruner.class).req(MetricGraphService.class));
 
