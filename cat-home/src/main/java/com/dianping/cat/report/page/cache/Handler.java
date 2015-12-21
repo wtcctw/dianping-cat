@@ -207,4 +207,5 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.CACHE);
 		model.setQueryName(payload.getQueryName());
 	}
+	
 }

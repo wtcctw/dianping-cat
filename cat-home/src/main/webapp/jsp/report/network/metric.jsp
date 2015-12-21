@@ -41,7 +41,6 @@
 	</c:when>
 	<c:otherwise>
 		<a:application>
-		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 		<div class="report">
 			
 			<div class="breadcrumbs" id="breadcrumbs">

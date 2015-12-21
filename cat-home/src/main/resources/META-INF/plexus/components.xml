@@ -5789,9 +5789,6 @@
 					<role>com.dianping.cat.report.page.browser.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.browser.ModuleManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
@@ -5896,24 +5893,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.browser.ModuleManager</role>
-			<implementation>com.dianping.cat.report.page.browser.ModuleManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.web.JsErrorLogDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.web.JsErrorLogDao</role>
-			<implementation>com.dianping.cat.web.JsErrorLogDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.config.web.WebSpeedConfigManager</role>
 			<implementation>com.dianping.cat.config.web.WebSpeedConfigManager</implementation>
 			<requirements>
@@ -5968,6 +5947,9 @@
 				<requirement>
 					<role>com.dianping.cat.web.JsErrorLogDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.browser.ModuleManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5976,6 +5958,24 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.web.JsErrorLogDao</role>
+			<implementation>com.dianping.cat.web.JsErrorLogDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.browser.ModuleManager</role>
+			<implementation>com.dianping.cat.report.page.browser.ModuleManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.web.JsErrorLogDao</role>
 				</requirement>
 			</requirements>
 		</component>

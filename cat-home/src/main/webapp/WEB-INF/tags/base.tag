@@ -11,19 +11,23 @@
 	<title>CAT</title>
 	<meta name="description" content="Restyling jQuery UI Widgets and Elements">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap.min.css">
-	<link rel="stylesheet" href="${model.webapp}/assets/css/font-awesome.min.css">
-	<link rel="stylesheet" href="${model.webapp}/assets/css/font-awesome.min.css">
-	<link rel="stylesheet" href="${model.webapp}/assets/css/jquery-ui.min.css">
-	<link rel="stylesheet" href="${model.webapp}/assets/css/ace-fonts.css">
-	<link rel="stylesheet" href="${model.webapp}/assets/css/ace.min.css" id="main-ace-style">
-	<link rel="stylesheet" href="${model.webapp}/assets/css/ace-skins.min.css">
-	<link rel="stylesheet" href="${model.webapp}/assets/css/ace-rtl.min.css">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/jquery-ui.min.css">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/ace-fonts.css">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/ace.min.css" id="main-ace-style">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/ace-skins.min.css">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/ace-rtl.min.css">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/css/body.css">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	
 	<script src='${model.webapp}/assets/js/jquery.min.js'> </script>
 	<script src="${model.webapp}/assets/js/ace-extra.min.js"></script>
 	<script src="${model.webapp}/assets/js/bootstrap.min.js"></script>
-	<res:useJs value="${res.js.local['highcharts.js']}" target="head-js" />
-	<res:useCss value='${res.css.local.body_css}' target="head-css" />
+	<script src="${model.webapp}/js/highcharts.js"></script>
+	<script src="${model.webapp}/js/baseGraph.js"></script>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<script src="${model.webapp}/assets/js/jquery-ui.min.js"></script>
 	<script src="${model.webapp}/assets/js/jquery.ui.touch-punch.min.js"></script>
 	<script src="${model.webapp}/assets/js/ace-elements.min.js"></script>

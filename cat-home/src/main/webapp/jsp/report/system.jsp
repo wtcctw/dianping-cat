@@ -8,9 +8,6 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.system.Model" scope="request" />
 
 <a:application>
-	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
-	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
-	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
 		function query() {
 			var domain = $("#search").val();

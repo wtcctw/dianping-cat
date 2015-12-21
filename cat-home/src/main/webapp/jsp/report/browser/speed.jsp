@@ -10,9 +10,6 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.browser.Model" scope="request" />
 
 <a:web_body>
-	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
-	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
-	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 
 <script type="text/javascript">
 function check() {

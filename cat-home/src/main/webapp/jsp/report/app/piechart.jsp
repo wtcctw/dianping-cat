@@ -8,9 +8,6 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model" scope="request" />
 
 <a:mobile>
-	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
-	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
-	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
 		var commandInfo = ${model.command2CodesJson};
 		var globalInfo = ${model.globalCodesJson};
@@ -93,8 +90,12 @@
 			}
 			return hour + ":" + minute;
 		}
-
+		
 		function query() {
+			queryWithSort("request");
+		}
+		
+		function queryWithSort(sort) {
 			var time = $("#time").val();
 			var times = time.split(" ");
 			var period = times[0];
@@ -116,7 +117,7 @@
 					+ split + platform + split + city + split + operator + split + start + split + end;
 			
 			var field = $("#piechartSelect").val();
-			var href = "?op=piechart&query1=" + query1 + "&groupByField=" + field+"&commandId="+$("#command").val();
+			var href = "?op=piechart&query1=" + query1 + "&groupByField=" + field+"&commandId="+$("#command").val() + "&sort=" + sort;
  			window.location.href = href;
  		}
 		

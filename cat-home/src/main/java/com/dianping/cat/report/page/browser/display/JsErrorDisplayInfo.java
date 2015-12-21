@@ -1,8 +1,10 @@
 package com.dianping.cat.report.page.browser.display;
 
 import java.util.List;
+import java.util.Map;
 
 import com.dianping.cat.report.ErrorMsg;
+import com.dianping.cat.report.graph.PieChart;
 
 public class JsErrorDisplayInfo {
 
@@ -14,10 +16,10 @@ public class JsErrorDisplayInfo {
 
 	private List<ErrorMsg> m_errors;
 
-	private String m_distributionChart;
+	private Map<String, PieChart> m_distributions;
 
-	public String getDistributionChart() {
-		return m_distributionChart;
+	public Map<String, PieChart> getDistributions() {
+		return m_distributions;
 	}
 
 	public List<ErrorMsg> getErrors() {
@@ -36,8 +38,8 @@ public class JsErrorDisplayInfo {
 		return m_totalCount;
 	}
 
-	public void setDistributionChart(String distributionChart) {
-		m_distributionChart = distributionChart;
+	public void setDistributions(Map<String, PieChart> distributions) {
+		m_distributions = distributions;
 	}
 
 	public void setErrors(List<ErrorMsg> errors) {

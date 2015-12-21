@@ -8,9 +8,6 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model" scope="request" />
 
 <a:mobile>
-	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
-	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
-	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
 		var commandInfo = ${model.command2CodesJson};
 		var globalInfo = ${model.globalCodesJson};
@@ -132,6 +129,7 @@
 
 		$(document).ready(
 				function() {
+					$('#App_report').addClass('active open');
 					$('#connPiechart').addClass('active');
 					$('#time').datetimepicker({
 						format:'Y-m-d H:i',
