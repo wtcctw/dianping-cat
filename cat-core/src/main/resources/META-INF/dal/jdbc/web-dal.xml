@@ -65,6 +65,11 @@
         	FROM <TABLE/>
          ]]></statement>
 		</query>
+		<query name="delete-before-period" type="DELETE">
+        <param name="updatetime" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='updatetime'/> <= ${updatetime}]]></statement>
+      </query>
 		</query-defs>
 	</entity>
 	<entity name="js-error-log-content" table="js_error_log_content"
@@ -74,6 +79,11 @@
 			<statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
         VALUES(<VALUES/>)]]></statement>
 		</query>
+		<query name="delete-before-period" type="DELETE">
+        <param name="updatetime" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='updatetime'/> <= ${updatetime}]]></statement>
+      </query>
 		</query-defs>
 	</entity>
 	<entity name="ajax-data" table="ajax_data" alias="ad">
@@ -1561,6 +1571,11 @@
         response_sum_time31 = response_sum_time31 + ${response-sum-time31},
         response_sum_time32 = response_sum_time32 + ${response-sum-time32}
          ]]></statement>
+      </query>  
+       <query name="delete-before-period" type="DELETE">
+        <param name="period" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='period'/> <= ${period}]]></statement>
       </query>  
       <query name="find-data-by-minute" type="SELECT" multiple="true">
         <param name="speed-id" />
