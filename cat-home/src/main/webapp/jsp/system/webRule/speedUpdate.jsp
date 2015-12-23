@@ -32,6 +32,7 @@
 					</c:otherwise>
 					</c:choose>
 					<input class='btn btn-primary btn-sm' type="submit" name="submit" value="提交" />
+					<span style="color:red">填写测试页面名称获取pageId</span>
 					</td>
 				</tr>
 				<tr>

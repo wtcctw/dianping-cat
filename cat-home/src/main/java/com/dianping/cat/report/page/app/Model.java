@@ -26,6 +26,7 @@ import com.dianping.cat.report.page.app.display.AppDataDetail;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 import com.dianping.cat.report.page.app.display.CrashLogDetailInfo;
 import com.dianping.cat.report.page.app.display.CrashLogDisplayInfo;
+import com.dianping.cat.report.page.app.display.DashBoardInfo;
 import com.dianping.cat.report.page.app.display.DisplayCommands;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
 
@@ -96,8 +97,18 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private CrashLogDisplayInfo m_crashLogDisplayInfo;
 
+	private DashBoardInfo m_dashBoardInfo;
+
 	public Model(Context ctx) {
 		super(ctx);
+	}
+
+	public DashBoardInfo getDashBoardInfo() {
+		return m_dashBoardInfo;
+	}
+
+	public void setDashBoardInfo(DashBoardInfo dashBoardInfo) {
+		m_dashBoardInfo = dashBoardInfo;
 	}
 
 	public List<AppDataDetail> getAppDataDetailInfos() {

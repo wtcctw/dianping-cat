@@ -166,7 +166,7 @@
 	
 	$(document).ready(
 		function() {
-			$('#Web_report').addClass('active open');
+			$('#Browser').addClass('active open');
 			$('#web_speedGraph').addClass('active');
 			$('#time').datetimepicker({
 				format:'Y-m-d H:i',

@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.app.service;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -63,6 +64,15 @@ public class CommandQueryEntity extends BaseQueryEntity {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
+	}
+
+	public CommandQueryEntity(int id) {
+		super();
+		m_id = id;
+		int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+		int minute = Calendar.getInstance().get(Calendar.MINUTE);
+		m_startMinuteOrder = hour * 60;
+		m_endMinuteOrder = m_startMinuteOrder + minute;
 	}
 
 	public int getCode() {

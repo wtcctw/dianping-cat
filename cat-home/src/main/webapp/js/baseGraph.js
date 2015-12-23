@@ -53,6 +53,50 @@ function graphPieChartWithName(container, data, title) {
 	});
 }
 
+function graphMapChart(id, title, subtitle, dataName, minVal, maxVal, dataPoints) {
+    var myChart = echarts.init(document.getElementById(id));
+    var option = {
+    		title : {
+    	        text: title,
+    	        subtext: subtitle,
+    	        x:'center'
+    	    },
+    	    tooltip : {
+    	        trigger: 'item'
+    	    },
+    	    dataRange: {
+    	        min: minVal,
+    	        max: maxVal,
+    	        x: 'left',
+    	        y: 'bottom',
+    	        calculable : true,
+    	        color: ['red', 'orangered','yellow','lightgreen']
+    	    },
+    	    toolbox: {
+    	        show: true,
+    	        orient : 'horizontal',
+    	        x: 'right',
+    	        feature : {
+    	            dataView : {show: true, readOnly: false},
+    	            saveAsImage : {show: true}
+    	        }
+    	    },
+    	    series : [
+    	        {
+    	            name: dataName,
+    	            type: 'map',
+    	            mapType: 'china',
+    	            itemStyle:{
+    	                normal:{label:{show:true}},
+    	                emphasis:{label:{show:true}}
+    	            },
+    	            data: dataPoints
+    	        }
+    	    ]	
+    }
+    myChart.setOption(option);
+ }
+
 function graphBarChart(id, picTitle, subTitle, xData, yTitle, dataList,
 		serieName) {
 	$(id).highcharts(

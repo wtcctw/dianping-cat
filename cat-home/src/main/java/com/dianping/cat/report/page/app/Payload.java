@@ -160,6 +160,14 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 			return null;
 		}
 	}
+	
+	public CommandQueryEntity getDashBoardQuery() {
+		if (m_query1 != null && m_query1.length() > 0) {
+			return new CommandQueryEntity(m_query1);
+		} else {
+			return new CommandQueryEntity(0);
+		}
+	}
 
 	public QueryType getQueryType() {
 		return QueryType.findByName(m_type);
