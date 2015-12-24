@@ -1489,6 +1489,8 @@
 	    <member name="slow-response-sum-time-sum" value-type="long" all="false" select-expr="sum(slow_response_sum_time)" length="19" nullable="false" />
 	    <var name="key-id" value-type="int" key-member="id" />
     	<var name="speed-id" value-type="int" />
+    	 <var name="start-minute-order" value-type="int" />
+		<var name="end-minute-order" value-type="int" />
 	  <readsets>
       <readset name="COUNT-DATA">
       	<member name="minute-order"/>
@@ -1584,9 +1586,17 @@
         <param name="network" />
         <param name="app-version" />
         <param name="platform" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF>
         <IF type='NE' field='city' value='-1'>
 			AND  <FIELD name='city'/> = ${city}
 		</IF>
@@ -1612,9 +1622,17 @@
         <param name="network" />
         <param name="app-version" />
         <param name="platform" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF>
         <IF type='NE' field='city' value='-1'>
 			AND  <FIELD name='city'/> = ${city}
 		</IF>
@@ -1640,9 +1658,17 @@
         <param name="network" />
         <param name="app-version" />
         <param name="platform" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF>
         <IF type='NE' field='city' value='-1'>
 			AND  <FIELD name='city'/> = ${city}
 		</IF>
@@ -1668,9 +1694,17 @@
         <param name="network" />
         <param name="app-version" />
         <param name="platform" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
-        WHERE <FIELD name='period'/> = ${period} 
+        WHERE <FIELD name='period'/> = ${period}
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF> 
         <IF type='NE' field='city' value='-1'>
 			AND  <FIELD name='city'/> = ${city}
 		</IF>
@@ -1696,9 +1730,17 @@
         <param name="network" />
         <param name="app-version" />
         <param name="platform" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF>
         <IF type='NE' field='city' value='-1'>
 			AND  <FIELD name='city'/> = ${city}
 		</IF>

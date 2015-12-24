@@ -149,7 +149,8 @@ public class AppSpeedDataBuilder {
 		@Override
 		List<AppSpeedData> queryRawData(SpeedQueryEntity entity) throws DalException {
 			return m_dao.findDataByCity(entity.getId(), entity.getDate(), entity.getCity(), entity.getOperator(),
-			      entity.getNetwork(), entity.getVersion(), entity.getPlatfrom(), AppSpeedDataEntity.READSET_CITY_DATA);
+			      entity.getNetwork(), entity.getVersion(), entity.getPlatfrom(), entity.getStartMinuteOrder(),
+			      entity.getEndMinuteOrder(), AppSpeedDataEntity.READSET_CITY_DATA);
 		}
 
 		@Override
@@ -185,7 +186,8 @@ public class AppSpeedDataBuilder {
 		@Override
 		List<AppSpeedData> queryRawData(SpeedQueryEntity entity) throws DalException {
 			return m_dao.findDataByNetwork(entity.getId(), entity.getDate(), entity.getCity(), entity.getOperator(),
-			      entity.getNetwork(), entity.getVersion(), entity.getPlatfrom(), AppSpeedDataEntity.READSET_NETWORK_DATA);
+			      entity.getNetwork(), entity.getVersion(), entity.getPlatfrom(), entity.getStartMinuteOrder(),
+			      entity.getEndMinuteOrder(), AppSpeedDataEntity.READSET_NETWORK_DATA);
 		}
 
 		@Override
@@ -220,10 +222,9 @@ public class AppSpeedDataBuilder {
 
 		@Override
 		List<AppSpeedData> queryRawData(SpeedQueryEntity entity) throws DalException {
-			return m_dao
-			      .findDataByOperator(entity.getId(), entity.getDate(), entity.getCity(), entity.getOperator(),
-			            entity.getNetwork(), entity.getVersion(), entity.getPlatfrom(),
-			            AppSpeedDataEntity.READSET_OPERATOR_DATA);
+			return m_dao.findDataByOperator(entity.getId(), entity.getDate(), entity.getCity(), entity.getOperator(),
+			      entity.getNetwork(), entity.getVersion(), entity.getPlatfrom(), entity.getStartMinuteOrder(),
+			      entity.getEndMinuteOrder(), AppSpeedDataEntity.READSET_OPERATOR_DATA);
 		}
 
 		@Override
@@ -258,10 +259,9 @@ public class AppSpeedDataBuilder {
 
 		@Override
 		List<AppSpeedData> queryRawData(SpeedQueryEntity entity) throws DalException {
-			return m_dao
-			      .findDataByPlatform(entity.getId(), entity.getDate(), entity.getCity(), entity.getOperator(),
-			            entity.getNetwork(), entity.getVersion(), entity.getPlatfrom(),
-			            AppSpeedDataEntity.READSET_PLATFORM_DATA);
+			return m_dao.findDataByPlatform(entity.getId(), entity.getDate(), entity.getCity(), entity.getOperator(),
+			      entity.getNetwork(), entity.getVersion(), entity.getPlatfrom(), entity.getStartMinuteOrder(),
+			      entity.getEndMinuteOrder(), AppSpeedDataEntity.READSET_PLATFORM_DATA);
 		}
 
 		@Override
@@ -297,7 +297,8 @@ public class AppSpeedDataBuilder {
 		@Override
 		List<AppSpeedData> queryRawData(SpeedQueryEntity entity) throws DalException {
 			return m_dao.findDataByVersion(entity.getId(), entity.getDate(), entity.getCity(), entity.getOperator(),
-			      entity.getNetwork(), entity.getVersion(), entity.getPlatfrom(), AppSpeedDataEntity.READSET_VERSION_DATA);
+			      entity.getNetwork(), entity.getVersion(), entity.getPlatfrom(), entity.getStartMinuteOrder(),
+			      entity.getEndMinuteOrder(), AppSpeedDataEntity.READSET_VERSION_DATA);
 		}
 
 		@Override

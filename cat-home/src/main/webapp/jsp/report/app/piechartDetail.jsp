@@ -15,7 +15,6 @@
 				<div class="input-group" style="float:left;width:60px">
 	              <span class="input-group-addon">结束</span>
         	      <input type="text" id="time2" style="width:60px;"/></div>
-	            </div>
 				<div class="input-group" style="float:left;">
 					<span class="input-group-addon">命令字</span>
 		            <form id="wrap_search" style="margin-bottom:0px;">
