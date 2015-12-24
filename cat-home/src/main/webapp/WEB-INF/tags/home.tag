@@ -51,7 +51,7 @@
 						</a>
 						<b class="arrow"></b>
 					</li>
-					<li id="userMonitorButton" >
+					<li id="mobileMonitorButton" >
 						<a href="/cat/r/home?op=view&docName=mobileMonitor">
 							<i class="menu-icon fa fa-globe"></i>
 							<span class="menu-text">移动监控</span>
