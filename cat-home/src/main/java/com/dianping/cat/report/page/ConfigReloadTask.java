@@ -12,6 +12,7 @@ import com.dianping.cat.influxdb.config.InfluxDBConfigManager;
 import com.dianping.cat.influxdb.service.InfluxDBConnection;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.metric.DataSourceService;
+import com.dianping.cat.report.page.server.config.ServerMetricConfigManager;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
 
 public class ConfigReloadTask implements Task {
@@ -30,6 +31,9 @@ public class ConfigReloadTask implements Task {
 
 	@Inject
 	private InfluxDBConfigManager m_influxDBConfigManager;
+
+	@Inject
+	private ServerMetricConfigManager m_serverMetricConfigManager;
 
 	@Inject
 	private DataSourceService<InfluxDBConnection> m_dataSourceService;
@@ -73,6 +77,12 @@ public class ConfigReloadTask implements Task {
 
 			try {
 				m_influxDBConfigManager.refreshConfig();
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+
+			try {
+				m_serverMetricConfigManager.refreshConfig();
 			} catch (Exception e) {
 				Cat.logError(e);
 			}

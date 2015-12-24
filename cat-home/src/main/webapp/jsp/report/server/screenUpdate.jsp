@@ -52,7 +52,7 @@ function submit(){
 }
 
 $(document).ready(function() {
-	$('#serverChart').addClass('active open');
+	$('#serverConfig').addClass('active open');
 	$('#serverScreens').addClass('active');
 	
 	var tag_input = $('#tag_graphs');

@@ -1,6 +1,8 @@
 package com.dianping.cat.report.page.server;
 
 public enum JspFile {
+	VIEW("/jsp/report/server/view.jsp"),
+
 	GRAPH("/jsp/report/server/graph.jsp"),
 
 	SCREEN("/jsp/report/server/screen.jsp"),
@@ -14,8 +16,10 @@ public enum JspFile {
 	SCREEN_UPDATE("/jsp/report/server/screenUpdate.jsp"),
 
 	SCREEN_CONFIG_UPDATE("/jsp/report/server/graphUpdate.jsp"),
-	
+
 	INFLUX_CONFIG_UPDATE("/jsp/report/server/influxConfig.jsp"),
+
+	SERVER_METRIC_CONFIG_UPDATE("/jsp/report/server/serverMetricConfig.jsp"),
 
 	;
 

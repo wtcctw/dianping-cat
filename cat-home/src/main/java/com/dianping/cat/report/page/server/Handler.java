@@ -2,6 +2,8 @@ package com.dianping.cat.report.page.server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,6 +28,8 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.graph.entity.Graph;
 import com.dianping.cat.home.graph.entity.Item;
 import com.dianping.cat.home.graph.entity.Segment;
+import com.dianping.cat.home.server.entity.Group;
+import com.dianping.cat.home.server.entity.ServerMetricConfig;
 import com.dianping.cat.influxdb.config.InfluxDBConfigManager;
 import com.dianping.cat.metric.MetricService;
 import com.dianping.cat.metric.MetricType;
@@ -34,6 +38,7 @@ import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.metric.DataExtractor;
+import com.dianping.cat.report.page.server.config.ServerMetricConfigManager;
 import com.dianping.cat.report.page.server.display.MetricScreenInfo;
 import com.dianping.cat.report.page.server.service.MetricGraphBuilder;
 import com.dianping.cat.report.page.server.service.MetricGraphService;
@@ -69,6 +74,9 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private InfluxDBConfigManager m_influxDBConfigManager;
 
+	@Inject
+	private ServerMetricConfigManager m_serverMetricConfigManager;
+
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
 	private Graph buildGraph(Payload payload) {
@@ -103,6 +111,41 @@ public class Handler implements PageHandler<Context> {
 		return lineCharts;
 	}
 
+	private List<LineChart> buildLineCharts(Date start, Date end, String interval, String endPoint,
+	      List<com.dianping.cat.home.server.entity.Item> items) {
+		List<LineChart> lineCharts = new LinkedList<LineChart>();
+
+		for (com.dianping.cat.home.server.entity.Item item : items) {
+			for (com.dianping.cat.home.server.entity.Segment segment : item.getSegments().values()) {
+				LineChart linechart = new LineChart();
+
+				linechart.setId(segment.getId());
+				linechart.setHtmlTitle(segment.getId());
+
+				String measurement = segment.getId();
+				List<String> measures = m_metricService.queryMeasurements(segment.getCategory(), measurement,
+				      Arrays.asList(endPoint));
+				List<String> results = parseSeries(measures);
+				Collections.sort(results);
+
+				if (!results.isEmpty()) {
+					for (String tag : results) {
+						Map<Long, Double> datas = fetchData(start, end, endPoint, tag, segment, interval);
+
+						linechart.add(tag, datas);
+					}
+				} else {
+					Map<Long, Double> datas = fetchData(start, end, endPoint, "", segment, interval);
+					String title = segment.getId();
+
+					linechart.add(title, datas);
+				}
+				lineCharts.add(linechart);
+			}
+		}
+		return lineCharts;
+	}
+
 	private Graph convertGraphType(Graph graph, String type) {
 		for (Entry<String, Item> entry : graph.getItems().entrySet()) {
 			for (Entry<String, Segment> e : entry.getValue().getSegments().entrySet()) {
@@ -122,6 +165,17 @@ public class Handler implements PageHandler<Context> {
 
 		Map<Long, Double> result = m_metricService.query(parameter);
 
+		return result;
+	}
+
+	private Map<Long, Double> fetchData(Date start, Date end, String endPoint, String tags,
+	      com.dianping.cat.home.server.entity.Segment segment, String interval) {
+		MetricType type = MetricType.getByName(segment.getType(), MetricType.AVG);
+		QueryParameter parameter = new QueryParameter();
+		parameter.setCategory(segment.getCategory()).setStart(start).setEnd(end).setMeasurement(segment.getId())
+		      .setType(type).setTags(m_graphBuilder.buildTag(tags, endPoint)).setInterval(interval);
+
+		Map<Long, Double> result = m_metricService.query(parameter);
 		return result;
 	}
 
@@ -145,6 +199,32 @@ public class Handler implements PageHandler<Context> {
 		Date end = payload.getHistoryEndDate();
 
 		switch (action) {
+		case VIEW:
+			normalizeGraphInfo(payload, model);
+			ServerMetricConfig config = m_serverMetricConfigManager.getConfig();
+			Group group = config.getGroups().get(payload.getCategory());
+
+			if (group != null) {
+				String gName = payload.getGroup();
+				List<com.dianping.cat.home.server.entity.Item> items = new LinkedList<com.dianping.cat.home.server.entity.Item>();
+
+				if (StringUtils.isNotEmpty(gName)) {
+					com.dianping.cat.home.server.entity.Item item = group.getItems().get(gName);
+
+					if (item != null) {
+						items.add(item);
+					}
+				} else {
+					items = new LinkedList<com.dianping.cat.home.server.entity.Item>(group.getItems().values());
+				}
+
+				List<LineChart> lineCharts = buildLineCharts(start, end, payload.getInterval(), payload.getEndPoint(),
+				      items);
+
+				model.setLineCharts(lineCharts);
+			}
+			model.setServerMetricConfig(config);
+			break;
 		case GRAPH:
 			normalizeGraphInfo(payload, model);
 
@@ -250,6 +330,14 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setConfig(m_configHtmlParser.parse(m_influxDBConfigManager.getConfig().toString()));
 			break;
+		case SERVER_METRIC_CONFIG_UPDATE:
+			content = payload.getContent();
+
+			if (!StringUtils.isEmpty(content)) {
+				model.setOpState(m_serverMetricConfigManager.insert(content));
+			}
+			model.setConfig(m_configHtmlParser.parse(m_serverMetricConfigManager.getConfig().toString()));
+			break;
 		}
 
 		if (!ctx.isProcessStopped()) {
@@ -294,6 +382,18 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
+	private List<String> parseSeries(List<String> measures) {
+		List<String> results = new ArrayList<String>();
+
+		for (String measure : measures) {
+			measure = measure.replaceAll("(domain=[^,]*(,|$))|(endPoint=[^,]*(,|$))", "").replaceAll(",$", "")
+			      .replaceAll(",", ";");
+
+			results.add(measure);
+		}
+		return results;
+	}
+
 	public Set<String> queryEndPoints(String search, List<String> keywords) {
 		Set<String> endPoints = new HashSet<String>();
 		Set<String> keySet = m_influxDBConfigManager.getConfig().getInfluxdbs().keySet();
@@ -316,15 +416,8 @@ public class Handler implements PageHandler<Context> {
 
 		for (String key : m_influxDBConfigManager.getConfig().getInfluxdbs().keySet()) {
 			List<String> measures = m_metricService.queryMeasurements(key, endPoints);
-			List<String> results = new ArrayList<String>();
 
-			for (String measure : measures) {
-				measure = measure.replaceAll("(domain=[^,]*(,|$))|(endPoint=[^,]*(,|$))", "").replaceAll(",$", "")
-				      .replaceAll(",", ";");
-
-				results.add(measure);
-			}
-			measurements.addAll(results);
+			measurements.addAll(parseSeries(measures));
 		}
 
 		return measurements;

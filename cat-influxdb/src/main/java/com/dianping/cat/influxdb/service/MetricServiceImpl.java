@@ -152,6 +152,21 @@ public class MetricServiceImpl implements MetricService, Initializable {
 	}
 
 	@Override
+	public List<String> queryEndPoints(String category) {
+		InfluxDBConnection conn = m_dataSourceService.getConnection(category);
+
+		if (conn != null) {
+			String query = "SHOW TAG VALUES FROM  /.*/  WITH KEY = \"endPoint\"";
+			QueryResult result = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
+			List<String> results = parseData(result, 0);
+
+			return results;
+		} else {
+			return Collections.emptyList();
+		}
+	}
+
+	@Override
 	public List<String> queryEndPoints(String category, String tag, List<String> keywords) {
 		InfluxDBConnection conn = m_dataSourceService.getConnection(category);
 
@@ -212,6 +227,30 @@ public class MetricServiceImpl implements MetricService, Initializable {
 
 			String format = "SHOW SERIES WHERE %s";
 			String query = String.format(format, StringUtils.join(list, " OR "));
+			QueryResult result = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
+			List<String> results = parseData(result, 0);
+
+			return results;
+		} else {
+			return Collections.emptyList();
+		}
+	}
+
+	@Override
+	public List<String> queryMeasurements(String category, String measurement, List<String> endPoints) {
+		InfluxDBConnection conn = m_dataSourceService.getConnection(category);
+
+		if (conn != null) {
+			List<String> list = new ArrayList<String>();
+
+			for (String endPoint : endPoints) {
+				String query = "endPoint='" + endPoint + "'";
+
+				list.add(query);
+			}
+
+			String format = "SHOW SERIES FROM \"%s\" WHERE %s";
+			String query = String.format(format, measurement, StringUtils.join(list, " OR "));
 			QueryResult result = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
 			List<String> results = parseData(result, 0);
 

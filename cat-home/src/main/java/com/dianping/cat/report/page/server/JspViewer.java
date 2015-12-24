@@ -9,6 +9,8 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		Action action = model.getAction();
 
 		switch (action) {
+		case VIEW:
+			return JspFile.VIEW.getPath();
 		case GRAPH:
 			return JspFile.GRAPH.getPath();
 		case SCREEN:
@@ -30,6 +32,8 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.SCREEN_CONFIG_UPDATE.getPath();
 		case INFLUX_CONFIG_UPDATE:
 			return JspFile.INFLUX_CONFIG_UPDATE.getPath();
+		case SERVER_METRIC_CONFIG_UPDATE:
+			return JspFile.SERVER_METRIC_CONFIG_UPDATE.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

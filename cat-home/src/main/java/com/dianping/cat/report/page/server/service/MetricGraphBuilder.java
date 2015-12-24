@@ -97,7 +97,7 @@ public class MetricGraphBuilder {
 		return items;
 	}
 
-	private String buildTag(String measure, String endPoint) {
+	public String buildTag(String measure, String endPoint) {
 		StringBuilder sb = new StringBuilder("endPoint='" + endPoint + "'");
 		int index = measure.indexOf(TAG_SEPARATOR);
 

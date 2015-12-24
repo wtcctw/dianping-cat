@@ -39,7 +39,7 @@
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#serverChart').addClass('active open');
+			$('#serverConfig').addClass('active open');
 			$('#serverScreens').addClass('active');
 		});
 	</script>

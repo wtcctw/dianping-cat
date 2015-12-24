@@ -83,6 +83,7 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.eslog.EsServerConfigManager;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
 import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
+import com.dianping.cat.report.page.server.config.ServerMetricConfigManager;
 import com.dianping.cat.report.page.server.display.MetricScreenTransformer;
 import com.dianping.cat.report.page.server.service.MetricGraphService;
 import com.dianping.cat.report.page.server.service.MetricScreenService;
@@ -220,9 +221,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TopoGraphFormatConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(EsServerConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      RouterConfigManager.class, AllReportConfigManager.class, InfluxDBConfigManager.class).req(
-		      DataSourceService.class, InfluxDB.ID));
+		all.add(C(ServerMetricConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(ConfigReloadTask.class)
+		      .req(MetricConfigManager.class, ProductLineConfigManager.class, RouterConfigManager.class,
+		            AllReportConfigManager.class, InfluxDBConfigManager.class).req(DataSourceService.class, InfluxDB.ID)
+		      .req(ServerMetricConfigManager.class));
 
 		return all;
 	}

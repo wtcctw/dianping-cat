@@ -5,6 +5,10 @@
 	<div class="main-container" id="main-container">
 		<script type="text/javascript">
 			try{ace.settings.check('main-container', 'fixed')}catch(e){}
+			
+			$(document).ready(function() {
+				$("#nav_server").addClass("disabled");
+			});
 		</script>
 		<div id="sidebar" class="sidebar responsive">
 			<script type="text/javascript">
@@ -15,6 +19,10 @@
 						<b class="arrow fa fa-angle-down"></b>
 				</a> <b class="arrow"></b>
 					<ul class="submenu">
+						<li id="view"><a href="/cat/r/server?domain=${model.domain}&op=view">
+							<i class="menu-icon fa fa-caret-right"></i>指标查看</a>
+							<b class="arrow"></b>
+						</li>
 						<li id="serverAggregate"><a href="/cat/r/server?domain=${model.domain}&op=aggregate">
 							<i class="menu-icon fa fa-caret-right"></i>指标聚合</a>
 							<b class="arrow"></b>
@@ -27,16 +35,20 @@
 							<i class="menu-icon fa fa-caret-right"></i>系统指标</a>
 							<b class="arrow"></b>
 						</li>
-						<li id="serverScreens"><a href="/cat/r/server?op=screens&domain=${model.domain}">
-							<i class="menu-icon fa fa-caret-right"></i>Screen配置</a>
-							<b class="arrow"></b>
-						</li>
 					</ul>
 				</li>
 				<li id="serverConfig" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-cogs"></i> <span class="menu-text">Config</span>
 						<b class="arrow fa fa-angle-down"></b>
 				</a> <b class="arrow"></b>
 					<ul class="submenu">
+						<li id="serverScreens"><a href="/cat/r/server?op=screens&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>Screen配置</a>
+							<b class="arrow"></b>
+						</li>
+						<li id="influx"><a href="/cat/r/server?op=serverMetricConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>指标模板配置</a>
+								<b class="arrow"></b>
+						</li>
 						<li id="influx"><a href="/cat/r/server?op=influxConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>influxDB配置</a>
 								<b class="arrow"></b>

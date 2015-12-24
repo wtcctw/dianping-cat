@@ -1,6 +1,9 @@
 package com.dianping.cat.report.page.server;
 
 public enum Action implements org.unidal.web.mvc.Action {
+
+	VIEW("view"),
+
 	GRAPH("graph"),
 
 	AGGREGATE("aggregate"),
@@ -26,6 +29,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 	GRAPH_SUBMIT("graphSubmit"),
 
 	INFLUX_CONFIG_UPDATE("influxConfigUpdate"),
+
+	SERVER_METRIC_CONFIG_UPDATE("serverMetricConfigUpdate"),
 
 	;
 

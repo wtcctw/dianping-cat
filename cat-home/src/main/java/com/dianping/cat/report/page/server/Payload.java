@@ -43,6 +43,9 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@FieldMeta("endPoints")
 	private List<String> m_endPoints;
 
+	@FieldMeta("endPoint")
+	private String m_endPoint;
+
 	@FieldMeta("measurements")
 	private List<String> m_measurements;
 
@@ -58,6 +61,12 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@ObjectMeta("graphParam")
 	private GraphParam m_graphParam = new GraphParam();
 
+	@FieldMeta("category")
+	private String m_category;
+
+	@FieldMeta("group")
+	private String m_group;
+
 	private ReportPage m_page;
 
 	private SimpleDateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -71,8 +80,16 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_action;
 	}
 
+	public String getCategory() {
+		return m_category;
+	}
+
 	public String getContent() {
 		return m_content;
+	}
+
+	public String getEndPoint() {
+		return m_endPoint;
 	}
 
 	public List<String> getEndPoints() {
@@ -95,6 +112,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		String[] graphs = m_graph.split(",[ ]*");
 
 		return Arrays.asList(graphs);
+	}
+
+	public String getGroup() {
+		return m_group;
 	}
 
 	public Date getHistoryEndDate() {
@@ -170,8 +191,16 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		m_action = Action.getByName(action, Action.SCREEN);
 	}
 
+	public void setCategory(String category) {
+		m_category = category;
+	}
+
 	public void setContent(String content) {
 		m_content = content;
+	}
+
+	public void setEndPoint(String endPoint) {
+		m_endPoint = endPoint;
 	}
 
 	public void setEndPoints(String endPoints) {
@@ -189,6 +218,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public void setGraphParam(GraphParam graphParam) {
 		m_graphParam = graphParam;
+	}
+
+	public void setGroup(String group) {
+		m_group = group;
 	}
 
 	public void setInterval(String interval) {
