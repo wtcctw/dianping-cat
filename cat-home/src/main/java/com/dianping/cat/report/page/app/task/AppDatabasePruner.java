@@ -57,17 +57,17 @@ public class AppDatabasePruner implements TaskBuilder {
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
-		throw new RuntimeException("daily report builder don't support hourly task");
+		throw new RuntimeException("AppDatabasePruner builder don't support hourly task");
 	}
 
 	@Override
 	public boolean buildMonthlyTask(String name, String domain, Date period) {
-		throw new RuntimeException("daily report builder don't support monthly task");
+		throw new RuntimeException("AppDatabasePruner builder don't support monthly task");
 	}
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		throw new RuntimeException("daily report builder don't support weekly task");
+		throw new RuntimeException("AppDatabasePruner builder don't support weekly task");
 	}
 
 	public void pruneAppCommandTable(Date period, int id) throws DalException {
