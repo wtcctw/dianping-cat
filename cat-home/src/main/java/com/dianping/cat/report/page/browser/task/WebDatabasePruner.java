@@ -68,7 +68,7 @@ public class WebDatabasePruner implements TaskBuilder {
 		throw new RuntimeException("WebDatabasePruner builder don't support weekly task");
 	}
 
-	private Date queryPeriod(int months) {
+	public Date queryPeriod(int months) {
 		Calendar cal = Calendar.getInstance();
 
 		cal.set(Calendar.HOUR_OF_DAY, 0);
