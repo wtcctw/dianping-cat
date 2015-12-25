@@ -31,7 +31,7 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#serverConfig').addClass('active open');
-			$('#influx').addClass('active');
+			$('#serverMetric').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){
 				$('#state').html('操作成功');

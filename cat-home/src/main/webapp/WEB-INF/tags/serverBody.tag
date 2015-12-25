@@ -45,7 +45,7 @@
 							<i class="menu-icon fa fa-caret-right"></i>Screen配置</a>
 							<b class="arrow"></b>
 						</li>
-						<li id="influx"><a href="/cat/r/server?op=serverMetricConfigUpdate">
+						<li id="serverMetric"><a href="/cat/r/server?op=serverMetricConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>指标模板配置</a>
 								<b class="arrow"></b>
 						</li>
@@ -53,21 +53,6 @@
 								<i class="menu-icon fa fa-caret-right"></i>influxDB配置</a>
 								<b class="arrow"></b>
 						</li>
-					</ul>
-				</li>
-				<li id="serverDocuments" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-book"></i> <span class="menu-text">Documents</span>
-						<b class="arrow fa fa-angle-down"></b>
-				</a> <b class="arrow"></b>
-					<ul class="submenu">
-						<li id="browserMonitorButton"><a href="/cat/r/home?op=webView&docName=browserMonitor">
-								<i class="menu-icon fa fa-caret-right"></i>用户侧监控</a>
-								<b class="arrow"></b></li>
-						<li id="webInterfaceButton"><a href="/cat/r/home?op=webView&docName=webInterface">
-								<i class="menu-icon fa fa-caret-right"></i>接口文档</a>
-								<b class="arrow"></b></li>
-						<li id="webAlertButton"><a href="/cat/r/home?op=webView&docName=webAlert">
-								<i class="menu-icon fa fa-caret-right"></i>告警文档</a>
-								<b class="arrow"></b></li>
 					</ul>
 				</li>
 			</ul>
