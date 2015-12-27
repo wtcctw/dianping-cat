@@ -3,15 +3,13 @@ package com.dianping.cat.metric;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MetricEntity {
+import com.dianping.cat.Constants;
 
-	public static final String END_POINT = "endPoint";
+public class MetricEntity {
 
 	private String m_category;
 
 	private String m_measure;
-
-	private String m_endPoint;
 
 	private long m_timestamp;
 
@@ -22,10 +20,9 @@ public class MetricEntity {
 	public MetricEntity(String category, String measure, String endPoint, long timestamp) {
 		m_category = category;
 		m_measure = measure;
-		m_endPoint = endPoint;
 		m_timestamp = timestamp;
 
-		m_tags.put(END_POINT, endPoint);
+		m_tags.put(Constants.END_POINT, endPoint);
 	}
 
 	public void addField(String field, Object value) {
@@ -49,7 +46,7 @@ public class MetricEntity {
 	}
 
 	public String getEndPoint() {
-		return m_endPoint;
+		return m_tags.get(Constants.END_POINT);
 	}
 
 	public Map<String, Object> getFields() {
@@ -72,10 +69,6 @@ public class MetricEntity {
 		m_category = category;
 	}
 
-	public void setEndPoint(String endPoint) {
-		m_endPoint = endPoint;
-	}
-
 	public void setFields(Map<String, Object> fields) {
 		m_fields = fields;
 	}
@@ -91,4 +84,10 @@ public class MetricEntity {
 	public void setTimestamp(long timestamp) {
 		m_timestamp = timestamp;
 	}
+
+	@Override
+   public String toString() {
+	   return "MetricEntity [m_category=" + m_category + ", m_measure=" + m_measure + ", m_timestamp=" + m_timestamp
+	         + ", m_tags=" + m_tags + ", m_fields=" + m_fields + "]";
+   }
 }
