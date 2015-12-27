@@ -9,7 +9,10 @@ package com.dianping.cat.influxdb.dto;
 public class Query {
 
 	private final String command;
+
 	private final String database;
+
+	private final String method;
 
 	/**
 	 * @param command
@@ -19,30 +22,13 @@ public class Query {
 		super();
 		this.command = command;
 		this.database = database;
-	}
+		int index = command.indexOf(" ");
 
-	/**
-	 * @return the command
-	 */
-	public String getCommand() {
-		return this.command;
-	}
-
-	/**
-	 * @return the database
-	 */
-	public String getDatabase() {
-		return this.database;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((command == null) ? 0 : command.hashCode());
-		result = prime * result
-				+ ((database == null) ? 0 : database.hashCode());
-		return result;
+		if (index > -1) {
+			this.method = command.substring(0, index);
+		} else {
+			this.method = command;
+		}
 	}
 
 	@Override
@@ -65,5 +51,32 @@ public class Query {
 		} else if (!database.equals(other.database))
 			return false;
 		return true;
+	}
+
+	/**
+	 * @return the command
+	 */
+	public String getCommand() {
+		return this.command;
+	}
+
+	/**
+	 * @return the database
+	 */
+	public String getDatabase() {
+		return this.database;
+	}
+
+	public String getMethod() {
+		return this.method;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((command == null) ? 0 : command.hashCode());
+		result = prime * result + ((database == null) ? 0 : database.hashCode());
+		return result;
 	}
 }

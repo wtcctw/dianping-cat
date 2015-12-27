@@ -5,6 +5,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
+import retrofit.RestAdapter;
+import retrofit.client.Header;
+import retrofit.client.OkClient;
+import retrofit.client.Response;
+import retrofit.mime.TypedString;
+
+import com.dianping.cat.Cat;
 import com.dianping.cat.influxdb.InfluxDB;
 import com.dianping.cat.influxdb.dto.BatchPoints;
 import com.dianping.cat.influxdb.dto.Point;
@@ -12,13 +19,7 @@ import com.dianping.cat.influxdb.dto.Pong;
 import com.dianping.cat.influxdb.dto.Query;
 import com.dianping.cat.influxdb.dto.QueryResult;
 import com.dianping.cat.influxdb.impl.BatchProcessor.BatchEntry;
-
-import retrofit.RestAdapter;
-import retrofit.client.Header;
-import retrofit.client.OkClient;
-import retrofit.client.Response;
-import retrofit.mime.TypedString;
-
+import com.dianping.cat.message.Transaction;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
@@ -105,32 +106,73 @@ public class InfluxDBImpl implements InfluxDB {
 	@Override
 	public Pong ping() {
 		Stopwatch watch = Stopwatch.createStarted();
-		Response response = this.influxDBService.ping();
-		List<Header> headers = response.getHeaders();
-		String version = "unknown";
-		for (Header header : headers) {
-			if (null != header.getName() && header.getName().equalsIgnoreCase("X-Influxdb-Version")) {
-				version = header.getValue();
-			}
+		Response response = null;
+		Transaction t = Cat.newTransaction(InfluxDB.ID, "ping");
+
+		try {
+			response = this.influxDBService.ping();
+			t.setStatus(Transaction.SUCCESS);
+		} catch (Exception e) {
+			Cat.logError(e);
+			t.setStatus(e);
+		} finally {
+			t.complete();
 		}
-		Pong pong = new Pong();
-		pong.setVersion(version);
-		pong.setResponseTime(watch.elapsed(TimeUnit.MILLISECONDS));
-		return pong;
+
+		if (response != null) {
+			List<Header> headers = response.getHeaders();
+			String version = "unknown";
+
+			for (Header header : headers) {
+				if (null != header.getName() && header.getName().equalsIgnoreCase("X-Influxdb-Version")) {
+					version = header.getValue();
+				}
+			}
+			Pong pong = new Pong();
+			pong.setVersion(version);
+			pong.setResponseTime(watch.elapsed(TimeUnit.MILLISECONDS));
+			return pong;
+		} else {
+			return null;
+		}
 	}
 
 	@Override
 	public QueryResult query(final Query query) {
-		QueryResult response = this.influxDBService.query(this.username, this.password, query.getDatabase(),
-		      query.getCommand());
-		return response;
+		Transaction t = Cat.newTransaction(InfluxDB.ID, query.getMethod());
+
+		try {
+			QueryResult response = this.influxDBService.query(this.username, this.password, query.getDatabase(),
+			      query.getCommand());
+
+			t.setStatus(Transaction.SUCCESS);
+			return response;
+		} catch (Exception e) {
+			Cat.logError(e);
+			t.setStatus(e);
+			return null;
+		} finally {
+			t.complete();
+		}
 	}
 
 	@Override
 	public QueryResult query(final Query query, final TimeUnit timeUnit) {
-		QueryResult response = this.influxDBService.query(this.username, this.password, query.getDatabase(),
-		      TimeUtil.toTimePrecision(timeUnit), query.getCommand());
-		return response;
+		Transaction t = Cat.newTransaction(InfluxDB.ID, query.getMethod());
+
+		try {
+			QueryResult response = this.influxDBService.query(this.username, this.password, query.getDatabase(),
+			      TimeUtil.toTimePrecision(timeUnit), query.getCommand());
+
+			t.setStatus(Transaction.SUCCESS);
+			return response;
+		} catch (Exception e) {
+			Cat.logError(e);
+			t.setStatus(e);
+			return null;
+		} finally {
+			t.complete();
+		}
 	}
 
 	@Override
@@ -164,10 +206,19 @@ public class InfluxDBImpl implements InfluxDB {
 	public void write(final BatchPoints batchPoints) {
 		this.batchedCount.addAndGet(batchPoints.getPoints().size());
 		TypedString lineProtocol = new TypedString(batchPoints.lineProtocol());
-		this.influxDBService.writePoints(this.username, this.password, batchPoints.getDatabase(), batchPoints
-		      .getRetentionPolicy(), TimeUtil.toTimePrecision(TimeUnit.NANOSECONDS),
-		      batchPoints.getConsistency().value(), lineProtocol);
+		Transaction t = Cat.newTransaction(InfluxDB.ID, "batchInsert");
 
+		try {
+			this.influxDBService.writePoints(this.username, this.password, batchPoints.getDatabase(), batchPoints
+			      .getRetentionPolicy(), TimeUtil.toTimePrecision(TimeUnit.NANOSECONDS), batchPoints.getConsistency()
+			      .value(), lineProtocol);
+			t.setStatus(Transaction.SUCCESS);
+		} catch (Exception e) {
+			Cat.logError(e);
+			t.setStatus(e);
+		} finally {
+			t.complete();
+		}
 	}
 
 	@Override
@@ -178,7 +229,18 @@ public class InfluxDBImpl implements InfluxDB {
 		} else {
 			BatchPoints batchPoints = BatchPoints.database(database).retentionPolicy(retentionPolicy).build();
 			batchPoints.point(point);
-			this.write(batchPoints);
+
+			Transaction t = Cat.newTransaction(InfluxDB.ID, "insert");
+
+			try {
+				this.write(batchPoints);
+				t.setStatus(Transaction.SUCCESS);
+			} catch (Exception e) {
+				Cat.logError(e);
+				t.setStatus(e);
+			} finally {
+				t.complete();
+			}
 			this.unBatchedCount.incrementAndGet();
 		}
 		this.writeCount.incrementAndGet();

@@ -475,7 +475,7 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.metric.DataSourceService</role>
-					<role-hint>influxDB</role-hint>
+					<role-hint>Influx</role-hint>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.server.config.ServerMetricConfigManager</role>

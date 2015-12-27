@@ -47,7 +47,7 @@ public interface InfluxDB {
 		FULL;
 	}
 
-	public static final String ID = "influxDB";
+	public static final String ID = "Influx";
 
 	public void createDatabase(final String name);
 

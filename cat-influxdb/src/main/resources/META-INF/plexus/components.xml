@@ -287,12 +287,12 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.metric.MetricService</role>
-			<role-hint>influxDB</role-hint>
+			<role-hint>Influx</role-hint>
 			<implementation>com.dianping.cat.influxdb.service.MetricServiceImpl</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.metric.DataSourceService</role>
-					<role-hint>influxDB</role-hint>
+					<role-hint>Influx</role-hint>
 				</requirement>
 			</requirements>
 		</component>
@@ -307,7 +307,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.metric.DataSourceService</role>
-			<role-hint>influxDB</role-hint>
+			<role-hint>Influx</role-hint>
 			<implementation>com.dianping.cat.influxdb.service.DataSourceServiceImpl</implementation>
 			<requirements>
 				<requirement>
