@@ -3,8 +3,12 @@ package com.dianping.cat.report.page.server;
 public enum Action implements org.unidal.web.mvc.Action {
 
 	VIEW("view"),
+	
+	VIEW_JSON("viewJson"),
 
 	GRAPH("graph"),
+
+	GRAPH_JSON("graphJson"),
 
 	AGGREGATE("aggregate"),
 
@@ -15,6 +19,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 	BUILDVIEW("buildview"),
 
 	SCREEN("screen"),
+
+	SCREEN_JSON("screenJson"),
 
 	SCREENS("screens"),
 
@@ -34,12 +40,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	;
 
-	private String m_name;
-
-	private Action(String name) {
-		m_name = name;
-	}
-
 	public static Action getByName(String name, Action defaultAction) {
 		for (Action action : Action.values()) {
 			if (action.getName().equals(name)) {
@@ -48,6 +48,12 @@ public enum Action implements org.unidal.web.mvc.Action {
 		}
 
 		return defaultAction;
+	}
+
+	private String m_name;
+
+	private Action(String name) {
+		m_name = name;
 	}
 
 	@Override

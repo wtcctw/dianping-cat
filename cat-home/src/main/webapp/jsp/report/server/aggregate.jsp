@@ -88,7 +88,7 @@
 							    </button>
 								<ul class="dropdown-menu dropdown-info dropdown-menu-right">
 									<li><a href="javascript:buildview('endPoint')">EndPoint视角</a></li>
-									<li><a href="javascript:buildview('measure')">Measure视角</a></li>
+									<li><a href="javascript:buildview('measurement')">Measure视角</a></li>
 								</ul>
 							</div>
 							</th></tr>

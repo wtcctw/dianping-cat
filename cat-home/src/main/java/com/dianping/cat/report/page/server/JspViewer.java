@@ -20,6 +20,9 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		case ENDPOINT:
 		case MEASUREMTN:
 		case BUILDVIEW:
+		case VIEW_JSON:
+		case GRAPH_JSON:
+		case SCREEN_JSON:
 			return JspFile.JSON.getPath();
 		case SCREENS:
 		case SCREEN_SUBMIT:
