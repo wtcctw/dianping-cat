@@ -335,12 +335,8 @@ public class ChannelManager implements Task {
 	         if (matchTypes != null) {
 	         	m_matchTypes = Splitters.by(";").noEmptyItem().split(matchTypes);
 	         }
-
-	         System.out.println(m_startTypes);
-	         System.out.println(m_matchTypes);
          } catch (Exception e) {
          	e.printStackTrace();
-         	// ignore
          }
 			
 			return current.trim();

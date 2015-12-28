@@ -16,7 +16,6 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.configuration.ClientConfigManager;
-import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.internal.MessageIdFactory;
