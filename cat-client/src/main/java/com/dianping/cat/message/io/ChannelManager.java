@@ -28,8 +28,11 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.KVConfig;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.spi.MessageQueue;
+import com.dianping.cat.message.spi.MessageTree;
 import com.site.helper.JsonBuilder;
 
 public class ChannelManager implements Task {
@@ -54,16 +57,20 @@ public class ChannelManager implements Task {
 
 	private ChannelHolder m_activeChannelHolder;
 
-	private MessageIdFactory m_idfactory;
+	private MessageIdFactory m_idFactory;
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
+
+	private List<String> m_startTypes = new ArrayList<String>();
+
+	private List<String> m_matchTypes = new ArrayList<String>();
 
 	public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses, MessageQueue messageQueue,
 	      ClientConfigManager configManager, MessageIdFactory idFactory) {
 		m_logger = logger;
 		m_messageQueue = messageQueue;
 		m_configManager = configManager;
-		m_idfactory = idFactory;
+		m_idFactory = idFactory;
 
 		EventLoopGroup group = new NioEventLoopGroup(1, new ThreadFactory() {
 			@Override
@@ -197,6 +204,14 @@ public class ChannelManager implements Task {
 		}
 	}
 
+	public List<String> getAtomicTransactionStartType() {
+		return m_startTypes;
+	}
+
+	public List<String> getAtomicTransactionType() {
+		return m_matchTypes;
+	}
+
 	@Override
 	public String getName() {
 		return "TcpSocketSender-ChannelManager";
@@ -204,10 +219,6 @@ public class ChannelManager implements Task {
 
 	public double getSample() {
 		return m_sample;
-	}
-
-	public boolean isBlock() {
-		return m_block;
 	}
 
 	private ChannelHolder initChannel(List<InetSocketAddress> addresses, String serverConfig) {
@@ -255,6 +266,32 @@ public class ChannelManager implements Task {
 		return null;
 	}
 
+	public boolean isAtomicMessage(MessageTree tree) {
+		Message message = tree.getMessage();
+
+		if (message instanceof Transaction) {
+			String type = message.getType();
+
+			if (m_startTypes != null) {
+				for (String s : m_startTypes) {
+					if (type.startsWith(s)) {
+						return true;
+					}
+				}
+			}
+			if (m_matchTypes != null) {
+				return m_matchTypes.contains(type);
+			}
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public boolean isBlock() {
+		return m_block;
+	}
+
 	private boolean isChannelDisabled(ChannelFuture activeFuture) {
 		return activeFuture != null && !activeFuture.channel().isOpen();
 	}
@@ -288,6 +325,24 @@ public class ChannelManager implements Task {
 			m_sample = Double.valueOf(routerConfig.getValue("sample").trim());
 			m_block = Boolean.valueOf(routerConfig.getValue("block").trim());
 
+			try {
+	         String startTypes = routerConfig.getValue("startTransactionTypes");
+	         String matchTypes = routerConfig.getValue("matchTransactionTypes");
+
+	         if (startTypes != null) {
+	         	m_startTypes = Splitters.by(";").noEmptyItem().split(startTypes);
+	         }
+	         if (matchTypes != null) {
+	         	m_matchTypes = Splitters.by(";").noEmptyItem().split(matchTypes);
+	         }
+
+	         System.out.println(m_startTypes);
+	         System.out.println(m_matchTypes);
+         } catch (Exception e) {
+         	e.printStackTrace();
+         	// ignore
+         }
+			
 			return current.trim();
 		} catch (Exception e) {
 			// ignore
@@ -350,7 +405,7 @@ public class ChannelManager implements Task {
 	public void run() {
 		while (m_active) {
 			// make save message id index asyc
-			m_idfactory.saveMark();
+			m_idFactory.saveMark();
 			checkServerChanged();
 
 			ChannelFuture activeFuture = m_activeChannelHolder.getActiveFuture();
@@ -380,14 +435,6 @@ public class ChannelManager implements Task {
 	@Override
 	public void shutdown() {
 		m_active = false;
-	}
-
-	public class ClientMessageHandler extends SimpleChannelInboundHandler<Object> {
-
-		@Override
-		protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-			m_logger.info("receiver msg from server:" + msg);
-		}
 	}
 
 	public static class ChannelHolder {
@@ -465,6 +512,14 @@ public class ChannelManager implements Task {
 			sb.append(" ip:").append(m_ip);
 			sb.append(" server config:").append(m_activeServerConfig);
 			return sb.toString();
+		}
+	}
+
+	public class ClientMessageHandler extends SimpleChannelInboundHandler<Object> {
+
+		@Override
+		protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+			m_logger.info("receiver msg from server:" + msg);
 		}
 	}
 

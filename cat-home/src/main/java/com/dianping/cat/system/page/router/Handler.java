@@ -16,6 +16,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.configuration.KVConfig;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
@@ -32,6 +33,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private RouterConfigManager m_configManager;
+	
+	@Inject
+	private ServerFilterConfigManager m_filterManager;
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
@@ -118,6 +122,8 @@ public class Handler implements PageHandler<Context> {
 			kvs.put("block", String.valueOf(block));
 			kvs.put("routers", buildRouterInfo(ip, domain, report));
 			kvs.put("sample", String.valueOf(buildSampleInfo(domain, 1.0)));
+			kvs.put("startTransactionTypes", m_filterManager.getAtomicStartTypes());
+			kvs.put("matchTransactionTypes", m_filterManager.getAtomicMatchTypes());
 			model.setContent(m_jsonBuilder.toJson(config));
 			break;
 		case MODEL:

@@ -102,22 +102,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		Threads.forGroup("cat").start(new MergeAtomicTask());
 	}
 
-	private boolean isAtomicMessage(MessageTree tree) {
-		Message message = tree.getMessage();
-
-		if (message instanceof Transaction) {
-			String type = message.getType();
-
-			if (type.startsWith("Cache.") || "SQL".equals(type)) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return true;
-		}
-	}
-
 	private void logQueueFullInfo(MessageTree tree) {
 		if (m_statistics != null) {
 			m_statistics.onOverflowed(tree);
@@ -157,7 +141,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	}
 
 	private void offer(MessageTree tree) {
-		if (isAtomicMessage(tree)) {
+		if (m_manager.isAtomicMessage(tree)) {
 			boolean result = m_atomicQueue.offer(tree);
 
 			if (!result) {
