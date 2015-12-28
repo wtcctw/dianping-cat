@@ -5401,6 +5401,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.app.display.AppGraphCreator</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

@@ -152,7 +152,7 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 			return new CommandQueryEntity();
 		}
 	}
-
+	
 	public CommandQueryEntity getQueryEntity2() {
 		if (m_query2 != null && m_query2.length() > 0) {
 			return new CommandQueryEntity(m_query2);

@@ -479,7 +479,7 @@ public class Handler implements PageHandler<Context> {
 			model.setCodeDistributions(buildCodeDistributions(displayCommands));
 			break;
 		case DASHBOARD:
-			DashBoardInfo dashboardInfo = m_dashboardBuilder.buildDashBoard(payload.getQueryEntity1());
+			DashBoardInfo dashboardInfo = m_dashboardBuilder.buildDashBoard(payload.getDashBoardQuery());
 			model.setDashBoardInfo(dashboardInfo);
 			break;
 		}

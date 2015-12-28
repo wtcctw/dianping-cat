@@ -71,8 +71,7 @@ public class AppGraphCreator {
 	}
 
 	public AppCommandDisplayInfo buildCommandDistributeChart(CommandQueryEntity entity, AppDataField field) {
-		List<AppCommandData> datas = m_AppDataService.queryByField(entity, field);
-		DistributeDetailInfo detailInfos = buildCommandDistributeDetails(entity.getId(), field, datas);
+		DistributeDetailInfo detailInfos = buildCommandDistributeDetails(entity, field);
 		AppCommandDisplayInfo displayInfo = new AppCommandDisplayInfo();
 
 		displayInfo.setDistributeDetails(detailInfos);
@@ -130,14 +129,15 @@ public class AppGraphCreator {
 		return pieChart;
 	}
 
-	private DistributeDetailInfo buildCommandDistributeDetails(int command, AppDataField field,
-	      List<AppCommandData> datas) {
+	public DistributeDetailInfo buildCommandDistributeDetails(CommandQueryEntity entity, AppDataField field) {
+		List<AppCommandData> datas = m_AppDataService.queryByField(entity, field);
+
 		DistributeDetailInfo detailInfos = new DistributeDetailInfo();
 
 		for (AppCommandData data : datas) {
 			DistributeDetail info = new DistributeDetail();
 
-			Pair<Integer, String> pair = buildPieChartFieldTitlePair(command, data, field);
+			Pair<Integer, String> pair = buildPieChartFieldTitlePair(entity.getId(), data, field);
 			info.setId(pair.getKey()).setTitle(pair.getValue());
 
 			long requestSum = data.getAccessNumberSum();
@@ -164,7 +164,7 @@ public class AppGraphCreator {
 		return detailInfos;
 	}
 
-	private Pair<Integer, String> buildPieChartFieldTitlePair(int command, AppCommandData data, AppDataField field) {
+	public Pair<Integer, String> buildPieChartFieldTitlePair(int command, AppCommandData data, AppDataField field) {
 		String title = "Unknown";
 		int keyValue = -1;
 

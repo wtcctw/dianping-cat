@@ -31,9 +31,61 @@
 	            <input class="btn btn-primary btn-sm"
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
 					type="submit" />   </th> </tr> </table>
-	<div style="height:10px"></div>
-	<div style="height: 400px;width: 600px;float:left;margin-left:30px;"><div id="delay" style="height: 400px;width: 600px; "></div></div>
-	<div style="height: 400px;width: 400px;margin-left:50px;float:left"><div id="operator"></div></div>
+	<div style="float:left;margin-left:20px;margin-top:10px">
+		<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 45px;">	
+    <li class="active"><a href="#city_delay" data-toggle="tab"><strong>响应时间</strong></a></li>
+    <li><a href="#city_success" data-toggle="tab"><strong>成功率(%)</strong></a></li>
+ 	 </ul>
+	<div class="tab-content">
+	<div class="tab-pane active" id="city_delay">
+		<div id="delay" style="height: 360px;width: 600px;"></div></div>
+	 <div class="tab-pane" id="city_success"> 
+	 	<div id="success" style="height: 360px;width: 600px;"></div></div>
+	</div>
+	</div>
+	
+	<div style="height: 405px;width: 430px;margin-left:20px;margin-top:10px;float:left">
+	<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 80px;">	
+	<h4 align="center">运营商性能</h4>
+    <li class="active"><a href="#operator_delay" data-toggle="tab"><strong>响应时间</strong></a></li>
+    <li><a href="#operator_success" data-toggle="tab"><strong>成功率(%)</strong></a></li>
+ 	 </ul>
+	<div class="tab-content">
+	<div class="tab-pane active" id="operator_delay">
+		<div id="operator" style="height:320px;width: 400px;"></div></div>
+	 <div class="tab-pane" id="operator_success"> 
+	 	<div id="operator-success" style="height:320px;width: 400px;"></div></div>
+	</div>
+	</div>
+ 	<div style="height: 450px;width: 630px;float:left;margin-left:20px;margin-top:40px;border:1px solid #c5d0dc"><div id="lineChart" style="height:430px"></div></div>
+	
+	<div style="height: 450px;width: 420px;margin-left:30px;float:left;margin-top:40px">
+	<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 80px;">	
+	<h4 align="center">平台性能</h4>
+    <li class="active"><a href="#platform_delay" data-toggle="tab"><strong>响应时间</strong></a></li>
+    <li><a href="#platform_success" data-toggle="tab"><strong>成功率(%)</strong></a></li>
+ 	 </ul>
+	<div class="tab-content">
+	<div class="tab-pane active" id="platform_delay">
+		<div id="platform" style="height:340px;width: 380px;"></div></div>
+	 <div class="tab-pane" id="platform_success"> 
+	 	<div id="platform-success" style="height:340px;width: 380px;"></div></div>
+	</div>
+	</div>
+	
+	<div style="width: 1050px;margin-left:30px;float:left;margin-top:40px">
+		<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 85px;">	
+	<h4 align="center">版本性能</h4>
+    <li class="active"><a href="#version_delay" data-toggle="tab"><strong>响应时间</strong></a></li>
+    <li><a href="#version_success" data-toggle="tab"><strong>成功率(%)</strong></a></li>
+ 	 </ul>
+	<div class="tab-content">
+	<div class="tab-pane active" id="version_delay">
+		<div id="version" style="width:1000px;"></div></div>
+	 <div class="tab-pane" id="version_success"> 
+	 	<div id="version-success" style="width:1000px;"></div></div>
+	</div>
+	</div>
 </a:mobile>
 <script type="text/javascript">
 function query() {
@@ -70,13 +122,13 @@ $(document).ready(
 		var query1 = '${payload.query1}';
 		var words = query1.split(";");
 		if (words[0] == null || words.length == 1) {
-			$("#time").val(getDate());
+			$("#time").val(getFromTime());
 		} else {
 			$("#time").val(words[0] + " " + words[9]);
 		}
 		
 		if(words[10] == null || words.length == 1){
-			$("#time2").val(getTime());
+			$("#time2").val(getTime(new Date()));
 		}else{
 			$("#time2").val(words[10]);
 		}
@@ -117,15 +169,52 @@ $(document).ready(
 			delay: 0,
 			source: data
 		});
+		
 		graphMapChart('delay', '${model.dashBoardInfo.mapChart.title}', '${model.dashBoardInfo.mapChart.subTitle}', 'delay', ${model.dashBoardInfo.mapChart.min}, ${model.dashBoardInfo.mapChart.max},  ${model.dashBoardInfo.mapChart.data});
+		graphSuccessMapChart('success', '${model.dashBoardInfo.successMapChart.title}', '${model.dashBoardInfo.successMapChart.subTitle}', 'successRatio', ${model.dashBoardInfo.successMapChart.min}, ${model.dashBoardInfo.successMapChart.max},  ${model.dashBoardInfo.successMapChart.data});
+
 		graphBarChart('#operator', '${model.dashBoardInfo.operatorChart.title}', '',
 				${model.dashBoardInfo.operatorChart.xAxisJson}, '${model.dashBoardInfo.operatorChart.yAxis}',
 				${model.dashBoardInfo.operatorChart.valuesJson}, '${model.dashBoardInfo.operatorChart.serieName}');
-
+		graphBarChart('#operator-success', '${model.dashBoardInfo.operatorSuccessChart.title}', '',
+				${model.dashBoardInfo.operatorSuccessChart.xAxisJson}, '${model.dashBoardInfo.operatorSuccessChart.yAxis}',
+				${model.dashBoardInfo.operatorSuccessChart.valuesJson}, '${model.dashBoardInfo.operatorSuccessChart.serieName}');
+		graphColumnChart('#version', '${model.dashBoardInfo.versionChart.title}', '',
+				${model.dashBoardInfo.versionChart.xAxisJson}, '${model.dashBoardInfo.versionChart.yAxis}',
+				${model.dashBoardInfo.versionChart.valuesJson}, '${model.dashBoardInfo.versionChart.serieName}');
+		graphColumnChart('#version-success', '${model.dashBoardInfo.versionSuccessChart.title}', '',
+				${model.dashBoardInfo.versionSuccessChart.xAxisJson}, '${model.dashBoardInfo.versionSuccessChart.yAxis}',
+				${model.dashBoardInfo.versionSuccessChart.valuesJson}, '${model.dashBoardInfo.versionSuccessChart.serieName}');
+		graphColumnChart('#platform', '${model.dashBoardInfo.platformChart.title}', '',
+				${model.dashBoardInfo.platformChart.xAxisJson}, '${model.dashBoardInfo.platformChart.yAxis}',
+				${model.dashBoardInfo.platformChart.valuesJson}, '${model.dashBoardInfo.platformChart.serieName}');
+		graphColumnChart('#platform-success', '${model.dashBoardInfo.platformSuccessChart.title}', '',
+				${model.dashBoardInfo.platformSuccessChart.xAxisJson}, '${model.dashBoardInfo.platformSuccessChart.yAxis}',
+				${model.dashBoardInfo.platformSuccessChart.valuesJson}, '${model.dashBoardInfo.platformSuccessChart.serieName}');
+		
+		var datePair = {};
+		datePair["当前值"]= getDay(new Date());
+		var data = ${model.dashBoardInfo.lineChart.jsonString};
+		graphMetricChartForDay(document.getElementById("lineChart"), data, datePair);
 	});
 	
-function getDate() {
-	var myDate = new Date();
+function getFromTime() {
+	var now = new Date();
+	var myDate = now.getTime() - 15 * 60 * 1000;
+	var from = new Date(myDate);
+	
+	var day = getDay(from);
+	var nowDay = getDay(now);
+	
+	if(day == nowDay){
+		return day + " " + getTime(from) ;
+	}else {
+		return nowDay + " 00:00";
+	}
+	
+}
+
+function getDay(myDate){
 	var myMonth = new Number(myDate.getMonth());
 	var month = myMonth + 1;
 	var day = myDate.getDate();
@@ -137,16 +226,10 @@ function getDate() {
 		day = '0' + day;
 	}
 	
-	var myHour = new Number(myDate.getHours());
-	if(myHour < 10){
-		myHour = '0' + myHour;
-	}
-	
-	return myDate.getFullYear() + "-" + month + "-" + day + " " + myHour + ":00";
+	return myDate.getFullYear() + "-" + month + "-" + day ;
 }
 
-function getTime(){
-	var myDate = new Date();
+function getTime(myDate){
 	var myHour = new Number(myDate.getHours());
 	var myMinute = new Number(myDate.getMinutes());
 	

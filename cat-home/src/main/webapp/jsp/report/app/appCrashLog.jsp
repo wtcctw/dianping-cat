@@ -86,7 +86,7 @@
 <div class="tabbable">
  <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 50px;">
     <li class="active"><a href="#report" data-toggle="tab"><strong>详细日志</strong></a></li>
-    <li><a href="#charts" data-toggle="tab"><strong>统计图表</strong></a></a></li>
+    <li><a href="#charts" data-toggle="tab"><strong>统计图表</strong></a></li>
   </ul>
   
   <div class="tab-content">

@@ -3,21 +3,23 @@ package com.dianping.cat.report.page.app.service;
 import org.unidal.lookup.util.StringUtils;
 
 public enum AppDataField {
-	OPERATOR("operator"),
+	OPERATOR("operator", "运营商"),
 
-	NETWORK("network"),
+	NETWORK("network", "网络类型"),
 
-	APP_VERSION("app-version"),
+	APP_VERSION("app-version", "版本"),
 
-	CONNECT_TYPE("connect-type"),
+	CONNECT_TYPE("connect-type", "连接类型"),
 
-	PLATFORM("platform"),
+	PLATFORM("platform", "平台"),
 
-	CITY("city"),
+	CITY("city", "城市"),
 
-	CODE("code");
+	CODE("code", "返回码");
 
 	private String m_name;
+
+	private String m_title;
 
 	public static AppDataField getByName(String name, AppDataField defaultField) {
 		if (StringUtils.isNotEmpty(name)) {
@@ -30,12 +32,17 @@ public enum AppDataField {
 		return defaultField;
 	}
 
-	AppDataField(String name) {
+	AppDataField(String name, String title) {
 		m_name = name;
+		m_title = title;
 	}
 
 	public String getName() {
 		return m_name;
+	}
+
+	public String getTitle() {
+		return m_title;
 	}
 
 }

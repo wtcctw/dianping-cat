@@ -230,23 +230,23 @@
 				$("#city").val(words[6]);
 				$("#operator").val(words[7]);
 				
-				graphBarChart('#cityChart', '${model.appSpeedDisplayInfo.cityChart.title}', '',
+				graphColumnChart('#cityChart', '${model.appSpeedDisplayInfo.cityChart.title}', '',
 						${model.appSpeedDisplayInfo.cityChart.xAxisJson}, '${model.appSpeedDisplayInfo.cityChart.yAxis}',
 						${model.appSpeedDisplayInfo.cityChart.valuesJson}, '${model.appSpeedDisplayInfo.cityChart.serieName}');
 				
-				graphBarChart('#operatorChart', '${model.appSpeedDisplayInfo.operatorChart.title}', '',
+				graphColumnChart('#operatorChart', '${model.appSpeedDisplayInfo.operatorChart.title}', '',
 						${model.appSpeedDisplayInfo.operatorChart.xAxisJson}, '${model.appSpeedDisplayInfo.operatorChart.yAxis}',
 						${model.appSpeedDisplayInfo.operatorChart.valuesJson}, '${model.appSpeedDisplayInfo.operatorChart.serieName}');
 
-				graphBarChart('#versionChart', '${model.appSpeedDisplayInfo.versionChart.title}', '',
+				graphColumnChart('#versionChart', '${model.appSpeedDisplayInfo.versionChart.title}', '',
 						${model.appSpeedDisplayInfo.versionChart.xAxisJson}, '${model.appSpeedDisplayInfo.versionChart.yAxis}',
 						${model.appSpeedDisplayInfo.versionChart.valuesJson}, '${model.appSpeedDisplayInfo.versionChart.serieName}');
 
-				graphBarChart('#platformChart', '${model.appSpeedDisplayInfo.platformChart.title}', '',
+				graphColumnChart('#platformChart', '${model.appSpeedDisplayInfo.platformChart.title}', '',
 						${model.appSpeedDisplayInfo.platformChart.xAxisJson}, '${model.appSpeedDisplayInfo.platformChart.yAxis}',
 						${model.appSpeedDisplayInfo.platformChart.valuesJson}, '${model.appSpeedDisplayInfo.platformChart.serieName}');
 
-				graphBarChart('#networkChart', '${model.appSpeedDisplayInfo.networkChart.title}', '',
+				graphColumnChart('#networkChart', '${model.appSpeedDisplayInfo.networkChart.title}', '',
 						${model.appSpeedDisplayInfo.networkChart.xAxisJson}, '${model.appSpeedDisplayInfo.networkChart.yAxis}',
 						${model.appSpeedDisplayInfo.networkChart.valuesJson}, '${model.appSpeedDisplayInfo.networkChart.serieName}');
 

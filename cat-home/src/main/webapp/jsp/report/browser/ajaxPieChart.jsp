@@ -165,7 +165,7 @@
 							}		
 						);
 					graphPieChartWithName(document.getElementById('piechart'), ${model.ajaxDataDisplayInfo.pieChart.jsonString},  '${model.ajaxDataDisplayInfo.pieChart.title}');
-					graphBarChart('#barchart', '${model.ajaxDataDisplayInfo.barChart.title}', '',
+					graphColumnChart('#barchart', '${model.ajaxDataDisplayInfo.barChart.title}', '',
 							${model.ajaxDataDisplayInfo.barChart.xAxisJson}, '${model.ajaxDataDisplayInfo.barChart.yAxis}',
 							${model.ajaxDataDisplayInfo.barChart.valuesJson}, '${model.ajaxDataDisplayInfo.barChart.serieName}');
 				});

@@ -90,20 +90,110 @@ function graphMapChart(id, title, subtitle, dataName, minVal, maxVal, dataPoints
     	                normal:{label:{show:true}},
     	                emphasis:{label:{show:true}}
     	            },
-    	            data: dataPoints
+    	            data: dataPoints,
+    	            mapValuePrecision: 2
     	        }
     	    ]	
     }
     myChart.setOption(option);
  }
 
-function graphBarChart(id, picTitle, subTitle, xData, yTitle, dataList,
+function graphSuccessMapChart(id, title, subtitle, dataName, minVal, maxVal, dataPoints) {
+    var myChart = echarts.init(document.getElementById(id));
+    var option = {
+    		title : {
+    	        text: title,
+    	        subtext: subtitle,
+    	        x:'center'
+    	    },
+    	    tooltip : {
+    	        trigger: 'item'
+    	    },
+    	    dataRange: {
+    	        min: minVal,
+    	        max: maxVal,
+    	        x: 'left',
+    	        y: 'bottom',
+    	        calculable : true,
+    	        color: ['lightgreen', 'yellow', 'orangered', 'red']
+    	    },
+    	    toolbox: {
+    	        show: true,
+    	        orient : 'horizontal',
+    	        x: 'right',
+    	        feature : {
+    	            dataView : {show: true, readOnly: false},
+    	            saveAsImage : {show: true}
+    	        }
+    	    },
+    	    series : [
+    	        {
+    	            name: dataName,
+    	            type: 'map',
+    	            mapType: 'china',
+    	            itemStyle:{
+    	                normal:{label:{show:true}},
+    	                emphasis:{label:{show:true}}
+    	            },
+    	            data: dataPoints,
+    	            mapValuePrecision: 3
+    	        }
+    	    ]	
+    }
+    myChart.setOption(option);
+ }
+
+function graphColumnChart(id, picTitle, subTitle, xData, yTitle, dataList,
 		serieName) {
 	$(id).highcharts(
 			{
 				chart : {
 					type : 'column'
 				},
+				tooltip:{
+					valueDecimals: 2
+				},	
+				title : {
+					text : picTitle
+				},
+				subtitle : {
+					text : subTitle
+				},
+				xAxis : {
+					categories : xData
+				},
+				yAxis : {
+					min : 0,
+					title : {
+						text : yTitle
+					}
+				},
+				plotOptions : {
+					column : {
+						pointPadding : 0,
+						borderWidth : 0
+					}
+				},
+				series : [ {
+					name : serieName,
+					data : dataList
+				} ],
+				colors : [ '#8085e8', '#91e8e1', '#8d4653', '#e4d354',
+						'#f7a35c', '#7cb5ec', '#90ed7d', '#434348', '#8085e9',
+						'#f15c80' ]
+			});
+}
+
+function graphBarChart(id, picTitle, subTitle, xData, yTitle, dataList,
+		serieName) {
+	$(id).highcharts(
+			{
+				chart : {
+					type : 'bar'
+				},
+				tooltip:{
+					valueDecimals: 2
+				},	
 				title : {
 					text : picTitle
 				},
