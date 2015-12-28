@@ -239,7 +239,7 @@
 					}		
 				);
 				$("#search_tag_go").bind("click",function(e){
-					queryEndPoints('endPoint');
+					queryEndPoints('tag');
 				});
 				$('#wrap_search_tag').submit(
 					function(){
