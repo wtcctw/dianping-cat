@@ -83,7 +83,7 @@ function query() {
 		
 $(document).ready(
 	function() {
-		$('#Web_report').addClass('active open');
+		$('#Browser').addClass('active open');
 		$('#web_speed').addClass('active');
 		$('#time').datetimepicker({
 			format:'Y-m-d',

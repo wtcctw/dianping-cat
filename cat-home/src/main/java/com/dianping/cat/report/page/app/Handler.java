@@ -50,6 +50,7 @@ import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 import com.dianping.cat.report.page.app.display.CodeDisplayVisitor;
 import com.dianping.cat.report.page.app.display.CrashLogDetailInfo;
 import com.dianping.cat.report.page.app.display.CrashLogDisplayInfo;
+import com.dianping.cat.report.page.app.display.DashBoardInfo;
 import com.dianping.cat.report.page.app.display.DisplayCommands;
 import com.dianping.cat.report.page.app.display.UpdateStatus;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor;
@@ -61,6 +62,7 @@ import com.dianping.cat.report.page.app.service.AppSpeedService;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 import com.dianping.cat.report.page.app.service.CrashLogQueryEntity;
 import com.dianping.cat.report.page.app.service.CrashLogService;
+import com.dianping.cat.report.page.app.service.DashBoardBuilder;
 import com.dianping.cat.report.page.app.service.SpeedQueryEntity;
 import com.dianping.cat.service.ProjectService;
 
@@ -108,18 +110,21 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ProjectService m_projectService;
 
+	@Inject
+	private DashBoardBuilder m_dashboardBuilder;
+
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
 	private void buildAppCrashLog(Payload payload, Model model) {
 		CrashLogQueryEntity entity = payload.getCrashLogQuery();
 		CrashLogDisplayInfo info = m_crashLogService.buildCrashLogDisplayInfo(entity);
-		
+
 		model.setCrashLogDisplayInfo(info);
 	}
 
 	private void buildAppCrashLogDetail(Payload payload, Model model) {
 		CrashLogDetailInfo info = m_crashLogService.queryCrashLogDetailInfo(payload.getId());
-		
+
 		model.setCrashLogDetailInfo(info);
 	}
 
@@ -473,6 +478,10 @@ public class Handler implements PageHandler<Context> {
 			model.setAppReport(report);
 			model.setCodeDistributions(buildCodeDistributions(displayCommands));
 			break;
+		case DASHBOARD:
+			DashBoardInfo dashboardInfo = m_dashboardBuilder.buildDashBoard(payload.getDashBoardQuery());
+			model.setDashBoardInfo(dashboardInfo);
+			break;
 		}
 
 		if (!ctx.isProcessStopped()) {
@@ -556,7 +565,7 @@ public class Handler implements PageHandler<Context> {
 		Date startDate = payload.getDayDate();
 		Date endDate = TimeHelper.addDays(startDate, 1);
 		AppReport report = m_appReportService.queryDailyReport(Constants.CAT, startDate, endDate);
-		
+
 		return report;
 	}
 

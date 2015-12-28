@@ -166,7 +166,7 @@
 	
 	$(document).ready(
 		function() {
-			$('#Web_report').addClass('active open');
+			$('#Browser').addClass('active open');
 			$('#web_speedGraph').addClass('active');
 			$('#time').datetimepicker({
 				format:'Y-m-d H:i',
@@ -233,23 +233,23 @@
 			$("#operator").val(words[6]);
 			$("#source").val(words[7]);
 			
-			graphBarChart('#cityChart', '${model.webSpeedDisplayInfo.cityChart.title}', '',
+			graphColumnChart('#cityChart', '${model.webSpeedDisplayInfo.cityChart.title}', '',
 					${model.webSpeedDisplayInfo.cityChart.xAxisJson}, '${model.webSpeedDisplayInfo.cityChart.yAxis}',
 					${model.webSpeedDisplayInfo.cityChart.valuesJson}, '${model.webSpeedDisplayInfo.cityChart.serieName}');
 			
-			graphBarChart('#operatorChart', '${model.webSpeedDisplayInfo.operatorChart.title}', '',
+			graphColumnChart('#operatorChart', '${model.webSpeedDisplayInfo.operatorChart.title}', '',
 					${model.webSpeedDisplayInfo.operatorChart.xAxisJson}, '${model.webSpeedDisplayInfo.operatorChart.yAxis}',
 					${model.webSpeedDisplayInfo.operatorChart.valuesJson}, '${model.webSpeedDisplayInfo.operatorChart.serieName}');
 
-			graphBarChart('#sourceChart', '${model.webSpeedDisplayInfo.sourceChart.title}', '',
+			graphColumnChart('#sourceChart', '${model.webSpeedDisplayInfo.sourceChart.title}', '',
 					${model.webSpeedDisplayInfo.sourceChart.xAxisJson}, '${model.webSpeedDisplayInfo.sourceChart.yAxis}',
 					${model.webSpeedDisplayInfo.sourceChart.valuesJson}, '${model.webSpeedDisplayInfo.sourceChart.serieName}');
 
-			graphBarChart('#platformChart', '${model.webSpeedDisplayInfo.platformChart.title}', '',
+			graphColumnChart('#platformChart', '${model.webSpeedDisplayInfo.platformChart.title}', '',
 					${model.webSpeedDisplayInfo.platformChart.xAxisJson}, '${model.webSpeedDisplayInfo.platformChart.yAxis}',
 					${model.webSpeedDisplayInfo.platformChart.valuesJson}, '${model.webSpeedDisplayInfo.platformChart.serieName}');
 
-			graphBarChart('#networkChart', '${model.webSpeedDisplayInfo.networkChart.title}', '',
+			graphColumnChart('#networkChart', '${model.webSpeedDisplayInfo.networkChart.title}', '',
 					${model.webSpeedDisplayInfo.networkChart.xAxisJson}, '${model.webSpeedDisplayInfo.networkChart.yAxis}',
 					${model.webSpeedDisplayInfo.networkChart.valuesJson}, '${model.webSpeedDisplayInfo.networkChart.serieName}');
 

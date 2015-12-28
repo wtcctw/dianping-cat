@@ -224,7 +224,7 @@
 						);
 					
 					graphPieChartWithName(document.getElementById('piechart'), ${model.commandDisplayInfo.pieChart.jsonString},  '${model.commandDisplayInfo.pieChart.title}');
-					graphBarChart('#barchart', '${model.commandDisplayInfo.barChart.title}', '',
+					graphColumnChart('#barchart', '${model.commandDisplayInfo.barChart.title}', '',
 							${model.commandDisplayInfo.barChart.xAxisJson}, '${model.commandDisplayInfo.barChart.yAxis}',
 							${model.commandDisplayInfo.barChart.valuesJson}, '${model.commandDisplayInfo.barChart.serieName}');
 

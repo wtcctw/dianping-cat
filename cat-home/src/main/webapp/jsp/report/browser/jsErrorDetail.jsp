@@ -33,7 +33,7 @@
 <script type="text/javascript">
 $(document).ready(
 	function() {
-		$('#Web_report').addClass('active open');
+		$('#Browser').addClass('active open');
 		$('#web_problem').addClass('active');
 });
 

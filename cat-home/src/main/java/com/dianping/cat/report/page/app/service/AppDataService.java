@@ -457,7 +457,7 @@ public class AppDataService {
 			responsePackageSum += data.getResponsePackageSum();
 			requestPackageSum += data.getRequestPackageSum();
 		}
-		double responseTimeAvg = accessNumberSum == 0 ? 0 : (double) responseTimeSum / accessNumberSum;
+		double responseTimeAvg = accessNumberSum == 0 ? 0 :  (double) responseTimeSum / accessNumberSum;
 		double responsePackageAvg = accessNumberSum == 0 ? 0 : (double) responsePackageSum / accessNumberSum;
 		double requestPackageAvg = accessNumberSum == 0 ? 0 : (double) requestPackageSum / accessNumberSum;
 

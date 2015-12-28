@@ -82,14 +82,15 @@
 						</td></tr>
 	</table>
 	</div>
-	
-	<div style="text-align:center;font-size:large"><a id="showChart" onclick="showChart()">点击显示图表</a></div>
-	<div id="distributions" style="display:none">
-	<br>
-	<table>
-	<tr><td><div id="appVersions"></div></td><td><div id="platformVersions"></div></td></tr>
-	<tr><td><div id="modules"></div></td><td><div id="devices"></div></td></tr>				
-</table></div>
+
+<div class="tabbable">
+ <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 50px;">
+    <li class="active"><a href="#report" data-toggle="tab"><strong>详细日志</strong></a></li>
+    <li><a href="#charts" data-toggle="tab"><strong>统计图表</strong></a></li>
+  </ul>
+  
+  <div class="tab-content">
+ <div class="tab-pane active" id="report">
 	<table class="table table-hover table-striped table-condensed">
 	<tr>
 		<th width="40%">Msg</th>
@@ -112,20 +113,20 @@
 		</td>
 	</tr>
 	</c:forEach>
-</table>
+</table></div>
+  <div class="tab-pane" id="charts">
+	<div id="distributions">
+	<br>
+	<table>
+	<tr><td><div id="appVersions"></div></td><td><div id="platformVersions"></div></td></tr>
+	<tr><td><div id="modules"></div></td><td><div id="devices"></div></td></tr>				
+</table></div>
+</div>
+</div>
+</div>
 </a:mobile>
 
 <script type="text/javascript">
-	function showChart() {
-		if(document.getElementById("showChart").text == "点击显示图表"){
-			document.getElementById("showChart").text = "隐藏图表";
-			document.getElementById("distributions").style.display = '';
-		}else {
-			document.getElementById("showChart").text = "点击显示图表";
-			document.getElementById("distributions").style.display = 'none';
-		}
-	}
-
 	function query(){
 		var time = $("#time").val();
 		var times = time.split(" ");
