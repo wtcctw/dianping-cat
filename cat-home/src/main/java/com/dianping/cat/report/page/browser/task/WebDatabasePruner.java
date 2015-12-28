@@ -55,17 +55,17 @@ public class WebDatabasePruner implements TaskBuilder {
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
-		throw new RuntimeException("daily report builder don't support hourly task");
+		throw new RuntimeException("WebDatabasePruner  builder don't support hourly task");
 	}
 
 	@Override
 	public boolean buildMonthlyTask(String name, String domain, Date period) {
-		throw new RuntimeException("daily report builder don't support monthly task");
+		throw new RuntimeException("WebDatabasePruner builder don't support monthly task");
 	}
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		throw new RuntimeException("daily report builder don't support weekly task");
+		throw new RuntimeException("WebDatabasePruner builder don't support weekly task");
 	}
 
 	public Date queryPeriod(int months) {
@@ -164,7 +164,7 @@ public class WebDatabasePruner implements TaskBuilder {
 		m_webSpeedDataDao.deleteBeforePeriod(webSpeedData);
    }
 
-	class DeleteTask implements Task {
+	private class DeleteTask implements Task {
 
 		@Override
 		public void run() {
@@ -183,7 +183,6 @@ public class WebDatabasePruner implements TaskBuilder {
 		@Override
 		public void shutdown() {
 		}
-
 	}
 
 }
