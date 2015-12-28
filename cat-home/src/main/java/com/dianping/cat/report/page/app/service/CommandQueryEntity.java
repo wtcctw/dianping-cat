@@ -71,7 +71,7 @@ public class CommandQueryEntity extends BaseQueryEntity {
 		m_id = id;
 		int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 		int minute = Calendar.getInstance().get(Calendar.MINUTE);
-		m_startMinuteOrder = hour * 60 + minute - 15;
+		m_startMinuteOrder = hour * 60 + minute - 30;
 
 		if (m_startMinuteOrder < 0) {
 			m_startMinuteOrder = DEFAULT_VALUE;

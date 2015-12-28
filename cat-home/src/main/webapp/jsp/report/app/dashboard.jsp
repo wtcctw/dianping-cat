@@ -200,7 +200,7 @@ $(document).ready(
 	
 function getFromTime() {
 	var now = new Date();
-	var myDate = now.getTime() - 15 * 60 * 1000;
+	var myDate = now.getTime() - 30 * 60 * 1000;
 	var from = new Date(myDate);
 	
 	var day = getDay(from);
