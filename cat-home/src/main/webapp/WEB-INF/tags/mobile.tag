@@ -17,7 +17,13 @@
 					try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
 				</script>
 				<ul class="nav nav-list" style="top: 0px;">
-					<li id="App_report" class="hsub open"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-phone"></i> <span class="menu-text">Mobile</span>
+					<li id="Dashboard" class="hsub"><a href="/cat/r/app?op=dashboard">
+						<i class="menu-icon fa fa-tachometer"></i>
+						<span class="menu-text">Dashboard</span>
+					</a>
+					<b class="arrow"></b>
+					</li>		
+					<li id="App_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-phone"></i> <span class="menu-text">Mobile</span>
 							<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">

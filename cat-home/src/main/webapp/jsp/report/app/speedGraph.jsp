@@ -13,10 +13,13 @@
 		<table>
 		<tr>
 			<th align=left>
-					<div class="input-group" style="float:left;">
-						<span class="input-group-addon">日期</span>
-					<input type="text" id="time" style="width:110px;"/>
-					</div>
+						<div class="input-group" style="float:left;">
+	              <span class="input-group-addon">开始</span>
+	              <input type="text" id="time" style="width:130px"/>
+	            </div>
+				<div class="input-group" style="float:left;width:60px">
+	              <span class="input-group-addon">结束</span>
+        	      <input type="text" id="time2" style="width:60px;"/></div>
 					<div class="input-group" style="float:left;">
 					<span class="input-group-addon">页面</span>
 					<select id="page" style="width: 240px;">
@@ -130,11 +133,43 @@
 				day = '0' + day;
 			}
 
-			return myDate.getFullYear() + "-" + month + "-" + day;
+			return myDate.getFullYear() + "-" + month + "-" + day + " 00:00";
 		}
-
+		
+		function getTime(){
+			var myDate = new Date();
+			var myHour = new Number(myDate.getHours());
+			var myMinute = new Number(myDate.getMinutes());
+			
+			if(myHour < 10){
+				myHour = '0' + myHour;
+			}
+			if(myMinute < 10){
+				myMinute = '0' + myMinute;
+			}
+			return myHour + ":" + myMinute;
+		}
+		
+		function converTimeFormat(time){
+			var times = time.split(":");
+			var hour = times[0];
+			var minute = times[1];
+			
+			if(hour.length == 1){
+				hour = "0" + hour;
+			}
+			if(minute.length == 1) {
+				minute = "0" + minute;
+			}
+			return hour + ":" + minute;
+		}
+		
 		function query() {
 			var time = $("#time").val();
+			var times = time.split(" ");
+			var period = times[0];
+			var start = converTimeFormat(times[1]);
+			var end = converTimeFormat($("#time2").val());
 			var page = $("#page").val();
 			var step = $("#step").val();
 			var network = $("#network").val();
@@ -143,9 +178,9 @@
 			var city = $("#city").val();
 			var operator = $("#operator").val();
 			var split = ";";
-			var query1 = time + split + page + split + step + split + network
+			var query1 = period + split + page + split + step + split + network
 					+ split + version + split + platform + split + city + split
-					+ operator;
+					+ operator + split + start + split + end;
 
 			window.location.href = "?op=speedGraph&query1=" + query1;
 		}
@@ -154,13 +189,14 @@
 			function() {
 				$('#speedGraph').addClass('active');
 				$('#time').datetimepicker({
-					format:'Y-m-d',
-					timepicker:false,
+					format:'Y-m-d H:i',
+					step:30,
 					maxDate:0
 				});
 				$('#time2').datetimepicker({
-					format:'Y-m-d',
-					timepicker:false,
+					datepicker:false,
+					format:'H:i',
+					step:30,
 					maxDate:0
 				});
 
@@ -169,12 +205,18 @@
 
 				$("#page").on('change', changeStepByPage);
 
-				if (typeof (words[0]) != "undefined"
-						&& words[0].length == 0) {
+				if (words[0] == null || words.length == 1) {
 					$("#time").val(getDate());
 				} else {
-					$("#time").val(words[0]);
+					$("#time").val(words[0] + " " + words[8]);
 				}
+				
+				if(words[9] == null || words.length == 1){
+					$("#time2").val(getTime());
+				}else{
+					$("#time2").val(words[9]);
+				}
+				
 				if(typeof words[1] != "undefined"  && words[1].length > 0) {
 					$("#page").val(words[1]);
 				}
@@ -188,23 +230,23 @@
 				$("#city").val(words[6]);
 				$("#operator").val(words[7]);
 				
-				graphBarChart('#cityChart', '${model.appSpeedDisplayInfo.cityChart.title}', '',
+				graphColumnChart('#cityChart', '${model.appSpeedDisplayInfo.cityChart.title}', '',
 						${model.appSpeedDisplayInfo.cityChart.xAxisJson}, '${model.appSpeedDisplayInfo.cityChart.yAxis}',
 						${model.appSpeedDisplayInfo.cityChart.valuesJson}, '${model.appSpeedDisplayInfo.cityChart.serieName}');
 				
-				graphBarChart('#operatorChart', '${model.appSpeedDisplayInfo.operatorChart.title}', '',
+				graphColumnChart('#operatorChart', '${model.appSpeedDisplayInfo.operatorChart.title}', '',
 						${model.appSpeedDisplayInfo.operatorChart.xAxisJson}, '${model.appSpeedDisplayInfo.operatorChart.yAxis}',
 						${model.appSpeedDisplayInfo.operatorChart.valuesJson}, '${model.appSpeedDisplayInfo.operatorChart.serieName}');
 
-				graphBarChart('#versionChart', '${model.appSpeedDisplayInfo.versionChart.title}', '',
+				graphColumnChart('#versionChart', '${model.appSpeedDisplayInfo.versionChart.title}', '',
 						${model.appSpeedDisplayInfo.versionChart.xAxisJson}, '${model.appSpeedDisplayInfo.versionChart.yAxis}',
 						${model.appSpeedDisplayInfo.versionChart.valuesJson}, '${model.appSpeedDisplayInfo.versionChart.serieName}');
 
-				graphBarChart('#platformChart', '${model.appSpeedDisplayInfo.platformChart.title}', '',
+				graphColumnChart('#platformChart', '${model.appSpeedDisplayInfo.platformChart.title}', '',
 						${model.appSpeedDisplayInfo.platformChart.xAxisJson}, '${model.appSpeedDisplayInfo.platformChart.yAxis}',
 						${model.appSpeedDisplayInfo.platformChart.valuesJson}, '${model.appSpeedDisplayInfo.platformChart.serieName}');
 
-				graphBarChart('#networkChart', '${model.appSpeedDisplayInfo.networkChart.title}', '',
+				graphColumnChart('#networkChart', '${model.appSpeedDisplayInfo.networkChart.title}', '',
 						${model.appSpeedDisplayInfo.networkChart.xAxisJson}, '${model.appSpeedDisplayInfo.networkChart.yAxis}',
 						${model.appSpeedDisplayInfo.networkChart.valuesJson}, '${model.appSpeedDisplayInfo.networkChart.serieName}');
 

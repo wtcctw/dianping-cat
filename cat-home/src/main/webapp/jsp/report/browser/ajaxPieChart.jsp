@@ -83,9 +83,8 @@
 
 		$(document).ready(
 				function() {
-					$('#Web_report').addClass('active open');
 					$('#web_piechart').addClass('active');
-					$('#Web_report').addClass('active open');
+					$('#Browser').addClass('active open');
 					$('#time').datetimepicker({
 						format:'Y-m-d H:i',
 						step:30,
@@ -166,7 +165,7 @@
 							}		
 						);
 					graphPieChartWithName(document.getElementById('piechart'), ${model.ajaxDataDisplayInfo.pieChart.jsonString},  '${model.ajaxDataDisplayInfo.pieChart.title}');
-					graphBarChart('#barchart', '${model.ajaxDataDisplayInfo.barChart.title}', '',
+					graphColumnChart('#barchart', '${model.ajaxDataDisplayInfo.barChart.title}', '',
 							${model.ajaxDataDisplayInfo.barChart.xAxisJson}, '${model.ajaxDataDisplayInfo.barChart.yAxis}',
 							${model.ajaxDataDisplayInfo.barChart.valuesJson}, '${model.ajaxDataDisplayInfo.barChart.serieName}');
 				});

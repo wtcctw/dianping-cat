@@ -5132,6 +5132,9 @@
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.app.service.DashBoardBuilder</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5382,6 +5385,24 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.app.service.DashBoardBuilder</role>
+			<implementation>com.dianping.cat.report.page.app.service.DashBoardBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.helper.JsonBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.app.service.AppDataService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.app.display.AppGraphCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
