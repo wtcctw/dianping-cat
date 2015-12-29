@@ -27,6 +27,7 @@ import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.alert.spi.AlertEntity;
 import com.dianping.cat.report.alert.spi.AlertManager;
+import com.dianping.cat.report.alert.spi.AlertType;
 import com.dianping.cat.report.alert.spi.rule.DataCheckEntity;
 import com.dianping.cat.report.alert.spi.rule.DataChecker;
 import com.dianping.cat.report.page.storage.StorageConstants;
@@ -163,14 +164,19 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 	private StorageReport fetchStorageReport(String name, ModelPeriod period) {
 		String all = Constants.ALL;
-		ModelRequest request = new ModelRequest(name + "-" + getName(), period.getStartTime()) //
+		String type = getName();
+		ModelRequest request = new ModelRequest(name + "-" + type, period.getStartTime()) //
 		      .setProperty("ip", all).setProperty("requireAll", "true");
 		ModelResponse<StorageReport> response = m_service.invoke(request);
 
 		if (response != null) {
 			StorageReport report = response.getModel();
 
-			return m_reportMergeHelper.mergeReport(report, all, all);
+			if (AlertType.STORAGE_RPC.getName().equals(type)) {
+				return m_reportMergeHelper.mergeReport(report, all, all);
+			} else {
+				return m_reportMergeHelper.mergeAllDomains(report, all);
+			}
 		} else {
 			return null;
 		}
@@ -207,8 +213,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 	private void processStorage(String id) {
 		StorageReport currentReport = fetchStorageReport(id, ModelPeriod.CURRENT);
-		Set<String> machines = currentReport.getIps();
-		machines.add(Constants.ALL);
+		Set<String> machines = currentReport.getMachines().keySet();
 
 		if (currentReport != null) {
 			for (String ip : machines) {

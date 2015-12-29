@@ -39,7 +39,7 @@
 		<tr><td>t</td><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
 		<tr><td>msg</td><td>message</td><td>错误的类型,简要信息</td><td>String</td></tr>
 		<tr><td>n</td><td>appName</td><td>错误的发生的应用模块</td><td>String</td></tr>
-		<tr><td>l</td><td>level</td><td>错误等级</td><td>String</td></tr>
+		<tr><td>l</td><td>level</td><td>错误等级</td><td>String,包括ERROR,WARN,INFO,DEV</td></tr>
 		<tr><td>a</td><td>agent</td><td>浏览器信息</td><td>String</td></tr>
 		<tr><td>id</td><td>dpid</td><td>用户ID，用于搜索错误日志</td><td>String</td></tr>
 		<tr><td>data</td><td>data</td><td>详细出错信息</td><td>String，如果没有的话，传空串</td></tr>
@@ -52,7 +52,7 @@
 	批量接口POST内容，前面加上v=1&c=，不同请求之间用回车<span class="text-danger">ENTER</span>分隔，字段之间用<span class="text-danger">TAB</span>分隔。
 
 	<pre>
-	timstamp<span class="text-danger">TAB</span>targetUrl<span class="text-danger">TAB</span>dnslookup<span class="text-danger">TAB</span>tcpconnect<span class="text-danger">TAB</span>request<span class="text-danger">TAB</span>response<span class="text-danger">ENTER</span>
+	timstamp<span class="text-danger">TAB</span>level<span class="text-danger">TAB</span>requestId<span class="text-danger">TAB</span>appName<span class="text-danger">TAB</span>url<span class="text-danger">TAB</span>message<span class="text-danger">ENTER</span>
 	
 	sample如下:
 	
@@ -76,7 +76,7 @@
 		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>	
 		<tr><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
 		<tr><td>level</td><td>log等级</td><td>DEV,INFO,WARN,ERROR</td></tr>
-		<tr><td>requestId</td><td>用户dpId</td><td>String</td></tr>
+		<tr><td>requestId</td><td>用户id</td><td>String</td></tr>
 		<tr><td>appName</td><td>应用名</td><td>String</td></tr>
 		<tr><td>Url</td><td>请求访问的URL</td><td>String</td></tr>
 		<tr><td>message</td><td>日志信息</td><td>String</td></tr>

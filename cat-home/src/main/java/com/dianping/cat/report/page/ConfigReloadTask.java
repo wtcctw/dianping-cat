@@ -8,7 +8,11 @@ import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.influxdb.config.InfluxDBConfigManager;
+import com.dianping.cat.influxdb.service.InfluxDBConnection;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.metric.DataSourceService;
+import com.dianping.cat.report.page.server.config.ServerMetricConfigManager;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
 
 public class ConfigReloadTask implements Task {
@@ -24,6 +28,15 @@ public class ConfigReloadTask implements Task {
 
 	@Inject
 	private AllReportConfigManager m_allTransactionConfigManager;
+
+	@Inject
+	private InfluxDBConfigManager m_influxDBConfigManager;
+
+	@Inject
+	private ServerMetricConfigManager m_serverMetricConfigManager;
+
+	@Inject
+	private DataSourceService<InfluxDBConnection> m_dataSourceService;
 
 	@Override
 	public String getName() {
@@ -61,6 +74,25 @@ public class ConfigReloadTask implements Task {
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
+
+			try {
+				m_influxDBConfigManager.refreshConfig();
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+
+			try {
+				m_serverMetricConfigManager.refreshConfig();
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+
+			try {
+				m_dataSourceService.refresh();
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+
 			try {
 				Thread.sleep(TimeHelper.ONE_MINUTE);
 			} catch (InterruptedException e) {

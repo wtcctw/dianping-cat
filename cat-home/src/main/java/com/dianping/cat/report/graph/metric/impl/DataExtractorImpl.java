@@ -15,9 +15,26 @@ public class DataExtractorImpl implements DataExtractor {
 	private static final int MAX_POINT_NUMBER = 180;
 
 	@Override
+	public int calculateInterval(int length) {
+		int[] values = { 1, 2, 3, 6, 10, 20, 30, 60 };
+		for (int value : values) {
+			int pm = length / value;
+			if (pm >= MIN_POINT_NUMBER && pm < MAX_POINT_NUMBER) {
+				return value;
+			}
+		}
+		int pm = length / 60;
+		if (pm > MAX_POINT_NUMBER) {
+			return 60;
+		} else {
+			return 1;
+		}
+	}
+
+	@Override
 	public double[] extract(double[] values) {
 		int length = values.length;
-		m_step = intervalCalculate(length);
+		m_step = calculateInterval(length);
 		int size = length / m_step;
 
 		if (size * m_step < length) {
@@ -50,22 +67,6 @@ public class DataExtractorImpl implements DataExtractor {
 	@Override
 	public int getStep() {
 		return m_step;
-	}
-
-	private int intervalCalculate(int length) {
-		int[] values = { 1, 2, 3, 6, 10, 20, 30, 60 };
-		for (int value : values) {
-			int pm = length / value;
-			if (pm >= MIN_POINT_NUMBER && pm < MAX_POINT_NUMBER) {
-				return value;
-			}
-		}
-		int pm = length / 60;
-		if (pm > MAX_POINT_NUMBER) {
-			return 60;
-		} else {
-			return 1;
-		}
 	}
 
 }

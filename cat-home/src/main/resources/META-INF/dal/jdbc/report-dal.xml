@@ -200,7 +200,95 @@
 			</query>
 		</query-defs>
 	</entity>
-	
+	<entity name="metric-graph" table="metric_graph" alias="mg">
+		<var name="number" value-type="int" />
+		<member name="creation-date" insert-expr="NOW()" />
+		<member name="updatetime" insert-expr="NOW()" update-expr="NOW()" />
+		<query-defs>
+			<query name="find-by-grap-id" type="SELECT" >
+				<param name="graph-id"/>
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='graph-id'/> = ${graph-id}
+					]]></statement>
+			</query>
+			<query name="find-last" type="SELECT" >
+				<param name="number"/>
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					ORDER BY <FIELD name='creation-date'/> DESC LIMIT ${number} 
+					]]></statement>
+			</query>
+			<query name="delete-before-date" type="DELETE" >
+				<param name="creation-date"/>
+				<statement><![CDATA[DELETE FROM <TABLE/>
+        			WHERE <FIELD name='creation-date'/> < ${creation-date}]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="metric-screen" table="metric_screen" alias="ms">
+		<member name="creation-date" insert-expr="NOW()" />
+		<member name="updatetime" insert-expr="NOW()" update-expr="NOW()" />
+		<readsets>
+			<readset name="content">
+				<member name="content" />
+			</readset>
+			<readset name="metaInfo">
+				<member name="id" />
+				<member name="name" />
+				<member name="graph-name" />
+			</readset>
+		 </readsets>
+		<query-defs>
+			<query name="find-all" type="SELECT" multiple="true">
+				<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				]]></statement>
+			</query>
+			<query name="find-by-name-graph" type="SELECT" >
+				<param name="name"/>
+				<param name="graph-name"/>
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='name'/> = ${name}
+					AND <FIELD name='graph-name'/> = ${graph-name} 
+					]]></statement>
+			</query>
+			<query name="find-by-name" type="SELECT" multiple="true">
+				<param name="name"/>
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='name'/> = ${name}
+					]]></statement>
+			</query>
+			<query name="insert-or-update-by-name-graph" type="INSERT">
+	        	<statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+			        VALUES(<VALUES/>) ON DUPLICATE KEY UPDATE 
+			        <FIELD name='view'/> = ${view},
+			        <FIELD name='end-points'/> = ${end-points},
+			        <FIELD name='measurements'/> = ${measurements},
+			        <FIELD name='content'/> = ${content}
+			         ]]></statement>
+	      	</query>
+			<query name="delete-by-name" type="DELETE">
+				<param name="name"/>
+				<statement><![CDATA[DELETE FROM <TABLE/>
+        			WHERE <FIELD name='name'/> = ${name}]]></statement>
+			</query>
+			<query name="delete-by-name-graph" type="DELETE">
+				<param name="name"/>
+				<param name="graph-name"/>
+				<statement><![CDATA[DELETE FROM <TABLE/>
+        			WHERE <FIELD name='name'/> = ${name}
+        			AND <FIELD name='graph-name'/> = ${graph-name}]]></statement>
+			</query>
+		</query-defs>
+	</entity>
     <entity name="overload" table="overload" alias="ot">
    		<var name="start-time" value-type="Date" />
 		<var name="end-time" value-type="Date" />

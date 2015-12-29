@@ -6,6 +6,7 @@
 <jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
+
 <a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['editor.js']}" target="head-js" />

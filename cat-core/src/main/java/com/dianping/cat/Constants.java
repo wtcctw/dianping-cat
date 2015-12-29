@@ -1,9 +1,9 @@
 package com.dianping.cat;
 
 public class Constants {
-	
+
 	public static final int MAX_SPEED_POINT = 32;
-	
+
 	public static final String ALL = "All";
 
 	public static final String CAT = "cat";
@@ -51,7 +51,7 @@ public class Constants {
 	public static final String REPORT_NET_TOPOLOGY = "NetTopology";
 
 	public static final String BROKER_SERVICE = "broker-service";
-	
+
 	public static final String WEB_BROKER_SERVICE = "web-broker-service";
 
 	public static final String METRIC_USER_MONITOR = "userMonitor";
@@ -72,6 +72,8 @@ public class Constants {
 	
 	public static final String WEB_DATABASE_PRUNER = "webDatabasePruner";
 
+	public static final String METRIC_GRAPH_PRUNER = "metricGraphPruner";
+
 	public static final String CACHED_REPORT = "cachedReport";
 
 	public static final String REPORT_SYSTEM = "system";
@@ -83,5 +85,9 @@ public class Constants {
 	public static final String CURRENT_STR = "当前值";
 
 	public static final String COMPARISION_STR = "对比值";
+
+	public final static String END_POINT = "endPoint";
+
+	public final static String MEASUREMENT = "measurement";
 
 }

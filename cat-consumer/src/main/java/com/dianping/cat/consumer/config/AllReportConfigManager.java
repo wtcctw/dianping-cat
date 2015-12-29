@@ -106,9 +106,9 @@ public class AllReportConfigManager implements Initializable, LogEnabled {
 		synchronized (this) {
 			if (modifyTime > m_modifyTime) {
 				String content = config.getContent();
-				AllConfig blackList = DefaultSaxParser.parse(content);
+				AllConfig allConfig = DefaultSaxParser.parse(content);
 
-				m_config = blackList;
+				m_config = allConfig;
 				m_modifyTime = modifyTime;
 			}
 		}

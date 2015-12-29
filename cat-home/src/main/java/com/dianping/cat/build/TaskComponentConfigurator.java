@@ -75,6 +75,8 @@ import com.dianping.cat.report.page.problem.service.ProblemReportService;
 import com.dianping.cat.report.page.problem.task.ProblemGraphCreator;
 import com.dianping.cat.report.page.problem.task.ProblemMerger;
 import com.dianping.cat.report.page.problem.task.ProblemReportBuilder;
+import com.dianping.cat.report.page.server.service.MetricGraphService;
+import com.dianping.cat.report.page.server.task.MetricGraphPruner;
 import com.dianping.cat.report.page.state.service.StateReportService;
 import com.dianping.cat.report.page.state.task.StateReportBuilder;
 import com.dianping.cat.report.page.statistics.service.ClientReportService;
@@ -224,6 +226,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		
 		all.add(C(TaskBuilder.class, WebDatabasePruner.ID, WebDatabasePruner.class).req(AjaxDataDao.class,
 		      WebSpeedDataDao.class, WebSpeedConfigManager.class, UrlPatternConfigManager.class, JsErrorLogDao.class, JsErrorLogContentDao.class));
+
+		all.add(C(TaskBuilder.class, MetricGraphPruner.ID, MetricGraphPruner.class).req(MetricGraphService.class));
 
 		all.add(C(CommandAutoCompleter.class).req(TransactionReportService.class, AppConfigManager.class));
 
