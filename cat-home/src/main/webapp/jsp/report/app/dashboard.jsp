@@ -9,82 +9,106 @@
 <a:mobile>
 	<script src="${model.webapp}/js/echarts-all.js"></script>
 	<script src="${model.webapp}/js/baseGraph.js"></script>
-	
+
 	<table align="center">
-	<tr> <th>
-				<div class="input-group" style="float:left;">
-	              <span class="input-group-addon">开始</span>
-	              <input type="text" id="time" style="width:130px"/>
-	            </div>
-				<div class="input-group" style="float:left;width:60px">
-	              <span class="input-group-addon">结束</span>
-        	      <input type="text" id="time2" style="width:60px;"/></div>
-				<div class="input-group" style="float:left;">
+		<tr>
+			<th>
+				<div class="input-group" style="float: left;">
+					<span class="input-group-addon">开始</span> <input type="text"
+						id="time" style="width: 130px" />
+				</div>
+				<div class="input-group" style="float: left; width: 60px">
+					<span class="input-group-addon">结束</span> <input type="text"
+						id="time2" style="width: 60px;" />
+				</div>
+				<div class="input-group" style="float: left;">
 					<span class="input-group-addon">命令字</span>
-		            <form id="wrap_search" style="margin-bottom:0px;">
-						<span class="input-icon" style="width:350px;">
-							<input type="text" placeholder="" class="search-input search-input form-control ui-autocomplete-input" id="command" autocomplete="on" data=""/>
-							<i class="ace-icon fa fa-search nav-search-icon"></i>
+					<form id="wrap_search" style="margin-bottom: 0px;">
+						<span class="input-icon" style="width: 350px;"> <input
+							type="text" placeholder=""
+							class="search-input search-input form-control ui-autocomplete-input"
+							id="command" autocomplete="on" data="" /> <i
+							class="ace-icon fa fa-search nav-search-icon"></i>
 						</span>
 					</form>
-	            </div>   
-	            <input class="btn btn-primary btn-sm"
-					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
-					type="submit" />   </th> </tr> </table>
-	<div style="float:left;margin-left:20px;margin-top:10px">
-		<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 45px;">	
-    <li class="active"><a href="#city_delay" data-toggle="tab"><strong>响应时间</strong></a></li>
-    <li><a href="#city_success" data-toggle="tab"><strong>成功率(%)</strong></a></li>
- 	 </ul>
-	<div class="tab-content">
-	<div class="tab-pane active" id="city_delay">
-		<div id="delay" style="height: 360px;width: 600px;"></div></div>
-	 <div class="tab-pane" id="city_success"> 
-	 	<div id="success" style="height: 360px;width: 600px;"></div></div>
+				</div> <input class="btn btn-primary btn-sm"
+				value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
+				type="submit" />
+			</th>
+		</tr>
+	</table>
+	<div style="float: left; margin-left: 20px; margin-top: 10px">
+		<ul class="nav nav-tabs padding-12 tab-color-blue background-blue"
+			style="height: 45px;">
+			<li class="active"><a href="#city_delay" data-toggle="tab"><strong>响应时间</strong></a></li>
+			<li><a href="#city_success" data-toggle="tab"><strong>成功率(%)</strong></a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="city_delay">
+				<div id="delay" style="height: 360px; width: 600px;"></div>
+			</div>
+			<div class="tab-pane" id="city_success">
+				<div id="success" style="height: 360px; width: 600px;"></div>
+			</div>
+		</div>
 	</div>
+
+	<div
+		style="height: 405px; width: 430px; margin-left: 20px; margin-top: 10px; float: left">
+		<ul class="nav nav-tabs padding-12 tab-color-blue background-blue"
+			style="height: 85px;">
+			<h4 align="center">运营商性能</h4>
+			<li class="active"><a href="#operator_delay" data-toggle="tab"><strong>响应时间</strong></a></li>
+			<li><a href="#operator_success" data-toggle="tab"><strong>成功率(%)</strong></a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="operator_delay">
+				<div id="operator" style="height: 320px; width: 400px;"></div>
+			</div>
+			<div class="tab-pane" id="operator_success">
+				<div id="operator-success" style="height: 320px; width: 400px;"></div>
+			</div>
+		</div>
 	</div>
-	
-	<div style="height: 405px;width: 430px;margin-left:20px;margin-top:10px;float:left">
-	<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 85px;">	
-	<h4 align="center">运营商性能</h4>
-    <li class="active"><a href="#operator_delay" data-toggle="tab"><strong>响应时间</strong></a></li>
-    <li><a href="#operator_success" data-toggle="tab"><strong>成功率(%)</strong></a></li>
- 	 </ul>
-	<div class="tab-content">
-	<div class="tab-pane active" id="operator_delay">
-		<div id="operator" style="height:320px;width: 400px;"></div></div>
-	 <div class="tab-pane" id="operator_success"> 
-	 	<div id="operator-success" style="height:320px;width: 400px;"></div></div>
+	<div
+		style="height: 450px; width: 630px; float: left; margin-left: 20px; margin-top: 40px; border: 1px solid #c5d0dc">
+		<h4 align="center">响应时间趋势(ms)</h4>
+		<div id="lineChart" style="height: 400px"></div>
 	</div>
+
+	<div
+		style="height: 450px; width: 420px; margin-left: 30px; float: left; margin-top: 40px">
+		<ul class="nav nav-tabs padding-12 tab-color-blue background-blue"
+			style="height: 85px;">
+			<h4 align="center">平台性能</h4>
+			<li class="active"><a href="#platform_delay" data-toggle="tab"><strong>响应时间</strong></a></li>
+			<li><a href="#platform_success" data-toggle="tab"><strong>成功率(%)</strong></a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="platform_delay">
+				<div id="platform" style="height: 340px; width: 380px;"></div>
+			</div>
+			<div class="tab-pane" id="platform_success">
+				<div id="platform-success" style="height: 340px; width: 380px;"></div>
+			</div>
+		</div>
 	</div>
- 	<div style="height: 450px;width: 630px;float:left;margin-left:20px;margin-top:40px;border:1px solid #c5d0dc">
- 	<h4 align="center">响应时间趋势(ms)</h4><div id="lineChart" style="height:400px"></div></div>
-	
-	<div style="height: 450px;width: 420px;margin-left:30px;float:left;margin-top:40px">
-	<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 85px;">	
-	<h4 align="center">平台性能</h4>
-    <li class="active"><a href="#platform_delay" data-toggle="tab"><strong>响应时间</strong></a></li>
-    <li><a href="#platform_success" data-toggle="tab"><strong>成功率(%)</strong></a></li>
- 	 </ul>
-	<div class="tab-content">
-	<div class="tab-pane active" id="platform_delay">
-		<div id="platform" style="height:340px;width: 380px;"></div></div>
-	 <div class="tab-pane" id="platform_success"> 
-	 	<div id="platform-success" style="height:340px;width: 380px;"></div></div>
-	</div>
-	</div>
-	<div style="width: 1050px;margin-left:30px;float:left;margin-top:40px">
-		<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 85px;">	
-	<h4 align="center">版本性能</h4>
-    <li class="active"><a href="#version_delay" data-toggle="tab"><strong>响应时间</strong></a></li>
-    <li><a href="#version_success" data-toggle="tab"><strong>成功率(%)</strong></a></li>
- 	 </ul>
-	<div class="tab-content">
-	<div class="tab-pane active" id="version_delay">
-		<div id="version" style="width:1000px;"></div></div>
-	 <div class="tab-pane" id="version_success"> 
-	 	<div id="version-success" style="width:1000px;"></div></div>
-	</div>
+	<div
+		style="width: 1050px; margin-left: 30px; float: left; margin-top: 40px">
+		<ul class="nav nav-tabs padding-12 tab-color-blue background-blue"
+			style="height: 85px;">
+			<h4 align="center">版本性能</h4>
+			<li class="active"><a href="#version_delay" data-toggle="tab"><strong>响应时间</strong></a></li>
+			<li><a href="#version_success" data-toggle="tab"><strong>成功率(%)</strong></a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="version_delay">
+				<div id="version" style="width: 1000px;"></div>
+			</div>
+			<div class="tab-pane" id="version_success">
+				<div id="version-success" style="width: 1000px;"></div>
+			</div>
+		</div>
 	</div>
 </a:mobile>
 <script type="text/javascript">
@@ -178,19 +202,19 @@ $(document).ready(
 				${model.dashBoardInfo.operatorChart.valuesJson}, '${model.dashBoardInfo.operatorChart.serieName}');
 		graphBarChart('#operator-success', '${model.dashBoardInfo.operatorSuccessChart.title}', '',
 				${model.dashBoardInfo.operatorSuccessChart.xAxisJson}, '${model.dashBoardInfo.operatorSuccessChart.yAxis}',
-				${model.dashBoardInfo.operatorSuccessChart.valuesJson}, '${model.dashBoardInfo.operatorSuccessChart.serieName}');
+				${model.dashBoardInfo.operatorSuccessChart.valuesJson}, '${model.dashBoardInfo.operatorSuccessChart.serieName}', 90);
 		graphColumnChart('#version', '${model.dashBoardInfo.versionChart.title}', '',
 				${model.dashBoardInfo.versionChart.xAxisJson}, '${model.dashBoardInfo.versionChart.yAxis}',
 				${model.dashBoardInfo.versionChart.valuesJson}, '${model.dashBoardInfo.versionChart.serieName}');
 		graphColumnChart('#version-success', '${model.dashBoardInfo.versionSuccessChart.title}', '',
 				${model.dashBoardInfo.versionSuccessChart.xAxisJson}, '${model.dashBoardInfo.versionSuccessChart.yAxis}',
-				${model.dashBoardInfo.versionSuccessChart.valuesJson}, '${model.dashBoardInfo.versionSuccessChart.serieName}');
+				${model.dashBoardInfo.versionSuccessChart.valuesJson}, '${model.dashBoardInfo.versionSuccessChart.serieName}', 90);
 		graphColumnChart('#platform', '${model.dashBoardInfo.platformChart.title}', '',
 				${model.dashBoardInfo.platformChart.xAxisJson}, '${model.dashBoardInfo.platformChart.yAxis}',
 				${model.dashBoardInfo.platformChart.valuesJson}, '${model.dashBoardInfo.platformChart.serieName}');
 		graphColumnChart('#platform-success', '${model.dashBoardInfo.platformSuccessChart.title}', '',
 				${model.dashBoardInfo.platformSuccessChart.xAxisJson}, '${model.dashBoardInfo.platformSuccessChart.yAxis}',
-				${model.dashBoardInfo.platformSuccessChart.valuesJson}, '${model.dashBoardInfo.platformSuccessChart.serieName}');
+				${model.dashBoardInfo.platformSuccessChart.valuesJson}, '${model.dashBoardInfo.platformSuccessChart.serieName}', 90);
 		
 		var data = ${model.dashBoardInfo.lineChart.jsonString};
 		graphLineChartForDashboard(document.getElementById("lineChart"), data);

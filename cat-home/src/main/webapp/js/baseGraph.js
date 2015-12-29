@@ -144,7 +144,7 @@ function graphSuccessMapChart(id, title, subtitle, dataName, minVal, maxVal, dat
  }
 
 function graphColumnChart(id, picTitle, subTitle, xData, yTitle, dataList,
-		serieName) {
+		serieName, minY) {
 	$(id).highcharts(
 			{
 				chart : {
@@ -163,7 +163,7 @@ function graphColumnChart(id, picTitle, subTitle, xData, yTitle, dataList,
 					categories : xData
 				},
 				yAxis : {
-					min : 0,
+					min : minY,
 					title : {
 						text : yTitle
 					}
@@ -185,7 +185,7 @@ function graphColumnChart(id, picTitle, subTitle, xData, yTitle, dataList,
 }
 
 function graphBarChart(id, picTitle, subTitle, xData, yTitle, dataList,
-		serieName) {
+		serieName, minY) {
 	$(id).highcharts(
 			{
 				chart : {
@@ -204,7 +204,7 @@ function graphBarChart(id, picTitle, subTitle, xData, yTitle, dataList,
 					categories : xData
 				},
 				yAxis : {
-					min : 0,
+					min : minY,
 					title : {
 						text : yTitle
 					}
