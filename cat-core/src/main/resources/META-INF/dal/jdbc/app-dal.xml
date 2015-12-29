@@ -283,9 +283,17 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+  		<param name="start-minute-order" />
+        <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF> 
         <IF type='NE' field='city' value='-1'>
 			AND  <FIELD name='city'/> = ${city}
 		</IF>
@@ -319,9 +327,17 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF> 
         <IF type='NE' field='city' value='-1'>
 			AND  <FIELD name='city'/> = ${city}
 		</IF>
@@ -355,9 +371,17 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF> 
         <IF type='NE' field='city' value='-1'>
 			AND  <FIELD name='city'/> = ${city}
 		</IF>
@@ -391,9 +415,17 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF> 
         <IF type='NE' field='city' value='-1'>
 			AND  <FIELD name='city'/> = ${city}
 		</IF>
@@ -427,9 +459,17 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF> 
         <IF type='NE' field='city' value='-1'>
 			AND  <FIELD name='city'/> = ${city}
 		</IF>
@@ -463,9 +503,17 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
+         <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF> 
         <IF type='NE' field='city' value='-1'>
 			AND  <FIELD name='city'/> = ${city}
 		</IF>

@@ -6,23 +6,23 @@ import com.dianping.cat.report.graph.MapChart;
 
 public class DashBoardInfo {
 
-	private MapChart m_mapChart;
+	private MapChart m_mapChart = new MapChart();
 	
-	private MapChart m_successMapChart;
+	private MapChart m_successMapChart = new MapChart();
 	
-	private BarChart m_operatorChart;
+	private BarChart m_operatorChart = new BarChart();
 	
-	private BarChart m_versionChart;
+	private BarChart m_versionChart = new BarChart();
 	
-	private BarChart m_platformChart;
+	private BarChart m_platformChart = new BarChart();
 	
-	private BarChart m_operatorSuccessChart;
+	private BarChart m_operatorSuccessChart = new BarChart();
 	
-	private BarChart m_platformSuccessChart;
+	private BarChart m_platformSuccessChart = new BarChart();
 	
-	private BarChart m_versionSuccessChart;
+	private BarChart m_versionSuccessChart = new BarChart();
 	
-	private LineChart m_lineChart;
+	private LineChart m_lineChart = new LineChart();
 	
 	public MapChart getSuccessMapChart() {
 		return m_successMapChart;

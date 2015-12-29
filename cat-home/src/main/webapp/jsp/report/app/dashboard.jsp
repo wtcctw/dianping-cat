@@ -45,7 +45,7 @@
 	</div>
 	
 	<div style="height: 405px;width: 430px;margin-left:20px;margin-top:10px;float:left">
-	<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 80px;">	
+	<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 85px;">	
 	<h4 align="center">运营商性能</h4>
     <li class="active"><a href="#operator_delay" data-toggle="tab"><strong>响应时间</strong></a></li>
     <li><a href="#operator_success" data-toggle="tab"><strong>成功率(%)</strong></a></li>
@@ -57,10 +57,11 @@
 	 	<div id="operator-success" style="height:320px;width: 400px;"></div></div>
 	</div>
 	</div>
- 	<div style="height: 450px;width: 630px;float:left;margin-left:20px;margin-top:40px;border:1px solid #c5d0dc"><div id="lineChart" style="height:430px"></div></div>
+ 	<div style="height: 450px;width: 630px;float:left;margin-left:20px;margin-top:40px;border:1px solid #c5d0dc">
+ 	<h4 align="center">响应时间趋势(ms)</h4><div id="lineChart" style="height:400px"></div></div>
 	
 	<div style="height: 450px;width: 420px;margin-left:30px;float:left;margin-top:40px">
-	<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 80px;">	
+	<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 85px;">	
 	<h4 align="center">平台性能</h4>
     <li class="active"><a href="#platform_delay" data-toggle="tab"><strong>响应时间</strong></a></li>
     <li><a href="#platform_success" data-toggle="tab"><strong>成功率(%)</strong></a></li>
@@ -72,7 +73,6 @@
 	 	<div id="platform-success" style="height:340px;width: 380px;"></div></div>
 	</div>
 	</div>
-	
 	<div style="width: 1050px;margin-left:30px;float:left;margin-top:40px">
 		<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 85px;">	
 	<h4 align="center">版本性能</h4>
@@ -192,10 +192,8 @@ $(document).ready(
 				${model.dashBoardInfo.platformSuccessChart.xAxisJson}, '${model.dashBoardInfo.platformSuccessChart.yAxis}',
 				${model.dashBoardInfo.platformSuccessChart.valuesJson}, '${model.dashBoardInfo.platformSuccessChart.serieName}');
 		
-		var datePair = {};
-		datePair["当前值"]= getDay(new Date());
 		var data = ${model.dashBoardInfo.lineChart.jsonString};
-		graphMetricChartForDay(document.getElementById("lineChart"), data, datePair);
+		graphLineChartForDashboard(document.getElementById("lineChart"), data);
 	});
 	
 function getFromTime() {
@@ -255,4 +253,5 @@ function converTimeFormat(time){
 	}
 	return hour + ":" + minute;
 }
+
 </script>
