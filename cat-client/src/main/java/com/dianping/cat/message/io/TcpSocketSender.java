@@ -188,7 +188,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	@Override
 	public void send(MessageTree tree) {
 		if (!m_configManager.isBlock()) {
-			double sampleRatio = m_configManager.getSample();
+			double sampleRatio = m_configManager.getSampleRatio();
 
 			if (tree.isSample() && sampleRatio < 1.0) {
 				if (sampleRatio > 0) {

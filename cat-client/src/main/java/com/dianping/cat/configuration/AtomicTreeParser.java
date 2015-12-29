@@ -16,9 +16,6 @@ public class AtomicTreeParser {
 	private List<String> m_matchTypes = new ArrayList<String>();
 
 	public void init(String startTypes, String matchTypes) {
-		System.err.println("----"+startTypes+"-------");
-		System.err.println("----"+matchTypes+"-------");
-		
 		if (startTypes != null) {
 			m_startTypes = Splitters.by(";").noEmptyItem().split(startTypes);
 		}

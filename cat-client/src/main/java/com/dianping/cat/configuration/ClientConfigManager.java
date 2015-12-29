@@ -15,7 +15,7 @@ public interface ClientConfigManager {
 
 	public String getRouters();
 
-	public double getSample();
+	public double getSampleRatio();
 
 	public List<Server> getServers();
 

@@ -37,11 +37,11 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 
 	private volatile boolean m_block = false;
 
+	private String m_routers;
+
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
 	private AtomicTreeParser m_atomicTreeParser = new AtomicTreeParser();
-
-	private String m_routers;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -76,10 +76,13 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 
 	@Override
 	public String getRouters() {
+		if (m_routers == null) {
+			refreshConfig();
+		}
 		return m_routers;
 	}
 
-	public double getSample() {
+	public double getSampleRatio() {
 		return m_sample;
 	}
 
@@ -88,8 +91,12 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 			return null;
 		} else {
 			List<Server> servers = m_config.getServers();
+			int size = servers.size();
+			int index = (int) (size * Math.random());
 
-			for (Server server : servers) {
+			if (index >= 0 && index < size) {
+				Server server = servers.get(index);
+
 				Integer httpPort = server.getHttpPort();
 
 				if (httpPort == null || httpPort == 0) {

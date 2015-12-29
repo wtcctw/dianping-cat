@@ -39,7 +39,7 @@ public class ChannelManager implements Task {
 
 	private int m_retriedTimes = 0;
 
-	private int m_count = -2;
+	private int m_refreshCount = -10;
 
 	private MessageQueue m_messageQueue;
 
@@ -73,11 +73,11 @@ public class ChannelManager implements Task {
 		});
 		m_bootstrap = bootstrap;
 
-		String serverConfig = loadServerConfig();
+		String routerConfig = m_configManager.getRouters();
 
-		if (StringUtils.isNotEmpty(serverConfig)) {
-			List<InetSocketAddress> configedAddresses = parseSocketAddress(serverConfig);
-			ChannelHolder holder = initChannel(configedAddresses, serverConfig);
+		if (StringUtils.isNotEmpty(routerConfig)) {
+			List<InetSocketAddress> configedAddresses = parseSocketAddress(routerConfig);
+			ChannelHolder holder = initChannel(configedAddresses, routerConfig);
 
 			if (holder != null) {
 				m_activeChannelHolder = holder;
@@ -107,9 +107,7 @@ public class ChannelManager implements Task {
 	}
 
 	private void checkServerChanged() {
-		if (shouldCheckServerConfig(++m_count)) {
-			m_configManager.refreshConfig();
-			
+		if (shouldCheckServerConfig(++m_refreshCount)) {
 			Pair<Boolean, String> pair = routerConfigChanged();
 
 			if (pair.getKey()) {
@@ -260,10 +258,6 @@ public class ChannelManager implements Task {
 		}
 	}
 
-	private String loadServerConfig() {
-		return m_configManager.getRouters();
-	}
-
 	private List<InetSocketAddress> parseSocketAddress(String content) {
 		try {
 			List<String> strs = Splitters.by(";").noEmptyItem().split(content);
@@ -306,12 +300,12 @@ public class ChannelManager implements Task {
 	}
 
 	private Pair<Boolean, String> routerConfigChanged() {
-		String current = loadServerConfig();
+		String routerConfig = m_configManager.getRouters();
 
-		if (!StringUtils.isEmpty(current) && !current.equals(m_activeChannelHolder.getActiveServerConfig())) {
-			return new Pair<Boolean, String>(true, current);
+		if (!StringUtils.isEmpty(routerConfig) && !routerConfig.equals(m_activeChannelHolder.getActiveServerConfig())) {
+			return new Pair<Boolean, String>(true, routerConfig);
 		} else {
-			return new Pair<Boolean, String>(false, current);
+			return new Pair<Boolean, String>(false, routerConfig);
 		}
 	}
 
