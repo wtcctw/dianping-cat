@@ -16,6 +16,7 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
+import com.dianping.cat.configuration.server.filter.entity.AtomicTreeConfig;
 import com.dianping.cat.configuration.server.filter.entity.CrashLogDomain;
 import com.dianping.cat.configuration.server.filter.entity.ServerFilterConfig;
 import com.dianping.cat.configuration.server.filter.transform.DefaultSaxParser;
@@ -48,6 +49,26 @@ public class ServerFilterConfigManager implements Initializable {
 			return true;
 		}
 		return false;
+	}
+
+	public String getAtomicMatchTypes() {
+		AtomicTreeConfig atomicTreeConfig = m_config.getAtomicTreeConfig();
+
+		if (atomicTreeConfig != null) {
+			return atomicTreeConfig.getMatchTypes();
+		} else {
+			return null;
+		}
+	}
+
+	public String getAtomicStartTypes() {
+		AtomicTreeConfig atomicTreeConfig = m_config.getAtomicTreeConfig();
+
+		if (atomicTreeConfig != null) {
+			return atomicTreeConfig.getStartTypes();
+		} else {
+			return null;
+		}
 	}
 
 	public ServerFilterConfig getConfig() {
@@ -112,6 +133,21 @@ public class ServerFilterConfigManager implements Initializable {
 		return m_config.getCrashLogDomains().containsKey(domain);
 	}
 
+	public void refreshConfig() throws DalException, SAXException, IOException {
+		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+		long modifyTime = config.getModifyDate().getTime();
+
+		synchronized (this) {
+			if (modifyTime > m_modifyTime) {
+				String content = config.getContent();
+				ServerFilterConfig serverConfig = DefaultSaxParser.parse(content);
+
+				m_config = serverConfig;
+				m_modifyTime = modifyTime;
+			}
+		}
+	}
+
 	public boolean storeConfig() {
 		try {
 			Config config = m_configDao.createLocal();
@@ -130,21 +166,6 @@ public class ServerFilterConfigManager implements Initializable {
 
 	public boolean validateDomain(String domain) {
 		return !m_config.getDomains().contains(domain) && !m_config.getCrashLogDomains().containsKey(domain);
-	}
-
-	public void refreshConfig() throws DalException, SAXException, IOException {
-		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
-		long modifyTime = config.getModifyDate().getTime();
-
-		synchronized (this) {
-			if (modifyTime > m_modifyTime) {
-				String content = config.getContent();
-				ServerFilterConfig serverConfig = DefaultSaxParser.parse(content);
-
-				m_config = serverConfig;
-				m_modifyTime = modifyTime;
-			}
-		}
 	}
 
 	public class ConfigReloadTask implements Task {

@@ -16,7 +16,6 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.configuration.ClientConfigManager;
-import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.internal.MessageIdFactory;
@@ -50,7 +49,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private List<InetSocketAddress> m_serverAddresses;
 
-	private ChannelManager m_manager;
+	private ChannelManager m_channelManager;
 
 	private Logger m_logger;
 
@@ -95,27 +94,11 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	@Override
 	public void initialize() {
-		m_manager = new ChannelManager(m_logger, m_serverAddresses, m_queue, m_configManager, m_factory);
+		m_channelManager = new ChannelManager(m_logger, m_serverAddresses, m_queue, m_configManager, m_factory);
 
 		Threads.forGroup("cat").start(this);
-		Threads.forGroup("cat").start(m_manager);
+		Threads.forGroup("cat").start(m_channelManager);
 		Threads.forGroup("cat").start(new MergeAtomicTask());
-	}
-
-	private boolean isAtomicMessage(MessageTree tree) {
-		Message message = tree.getMessage();
-
-		if (message instanceof Transaction) {
-			String type = message.getType();
-
-			if (type.startsWith("Cache.") || "SQL".equals(type)) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return true;
-		}
 	}
 
 	private void logQueueFullInfo(MessageTree tree) {
@@ -157,7 +140,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	}
 
 	private void offer(MessageTree tree) {
-		if (isAtomicMessage(tree)) {
+		if (m_configManager.isAtomicMessage(tree)) {
 			boolean result = m_atomicQueue.offer(tree);
 
 			if (!result) {
@@ -177,7 +160,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		m_active = true;
 
 		while (m_active) {
-			ChannelFuture channel = m_manager.channel();
+			ChannelFuture channel = m_channelManager.channel();
 
 			if (channel != null && checkWritable(channel)) {
 				try {
@@ -204,8 +187,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	@Override
 	public void send(MessageTree tree) {
-		if (!m_manager.isBlock()) {
-			double sampleRatio = m_manager.getSample();
+		if (!m_configManager.isBlock()) {
+			double sampleRatio = m_configManager.getSampleRatio();
 
 			if (tree.isSample() && sampleRatio < 1.0) {
 				if (sampleRatio > 0) {
@@ -228,7 +211,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	}
 
 	private void sendInternal(MessageTree tree) {
-		ChannelFuture future = m_manager.channel();
+		ChannelFuture future = m_channelManager.channel();
 		ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(10 * 1024); // 10K
 
 		m_codec.encode(tree, buf);
@@ -263,7 +246,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	@Override
 	public void shutdown() {
 		m_active = false;
-		m_manager.shutdown();
+		m_channelManager.shutdown();
 	}
 
 	public class MergeAtomicTask implements Task {
