@@ -57,38 +57,55 @@
 			</th>
 			</tr>
 	</table>
-	<table class="table table-hover table-striped table-condensed"  style="width:100%">
-	<tr>
-		<th width="30%">Msg</th>
-		<th width="5%">Count</th>
-		<th width="55%">SampleLinks</th>
-	</tr>
-	<tr>
-		<td><strong>Total</strong></td>
-		<td class="right">${w:format(model.jsErrorDisplayInfo.totalCount,'#,###,###,###,##0')}&nbsp;</td>
-		<td></td>
-	</tr>
-	<c:forEach var="error" items="${model.jsErrorDisplayInfo.errors}" varStatus="index">
-	<tr>
-		<td>${error.msg}</td>
-		<td  class="right">${w:format(error.count,'#,###,###,###,##0')}&nbsp;</td>
-		<td >
-			<c:forEach var="id" items="${error.ids}" varStatus="linkIndex">
-				<a href="/cat/r/browser?op=jsErrorDetail&id=${id}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
-			</c:forEach>
-		</td>
-	</tr>
-	</c:forEach>
-</table>
- <table>
- 	<tr><td colspan="2"><h4 style="text-align:center"  class='text-center text-info'>错误分布</h4>
- 	</td></tr>
-	<tr>
-		<td><div id="modules" class="graph"></div></td>
-		<td><div id="browsers" class="graph"></div></td>
-	</tr>
-</table> 
-<script type="text/javascript">
+
+	<div class="tabbable">
+		<ul class="nav nav-tabs padding-12 tab-color-blue background-blue"
+			style="height: 50px;">
+			<li class="active"><a href="#report" data-toggle="tab"><strong>详细日志</strong></a></li>
+			<li><a href="#charts" data-toggle="tab"><strong>统计图表</strong></a></li>
+		</ul>
+
+		<div class="tab-content">
+			<div class="tab-pane active" id="report">
+				<table class="table table-hover table-striped table-condensed"
+					style="width: 100%">
+					<tr>
+						<th width="30%">Msg</th>
+						<th width="5%">Count</th>
+						<th width="55%">SampleLinks</th>
+					</tr>
+					<tr>
+						<td><strong>Total</strong></td>
+						<td class="right">${w:format(model.jsErrorDisplayInfo.totalCount,'#,###,###,###,##0')}&nbsp;</td>
+						<td></td>
+					</tr>
+					<c:forEach var="error" items="${model.jsErrorDisplayInfo.errors}"
+						varStatus="index">
+						<tr>
+							<td>${error.msg}</td>
+							<td class="right">${w:format(error.count,'#,###,###,###,##0')}&nbsp;</td>
+							<td><c:forEach var="id" items="${error.ids}"
+									varStatus="linkIndex">
+									<a href="/cat/r/browser?op=jsErrorDetail&id=${id}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
+								</c:forEach></td>
+						</tr>
+					</c:forEach>
+				</table>
+
+			</div>
+			<div class="tab-pane" id="charts">
+				<table>
+					<tr>
+						<td><div id="modules" class="graph"></div></td>
+						<td><div id="browsers" class="graph"></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
 $(document).ready(
 	function() {
 		$('#Browser').addClass('active open');

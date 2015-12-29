@@ -6684,6 +6684,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
