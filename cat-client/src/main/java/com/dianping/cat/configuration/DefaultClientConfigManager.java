@@ -23,13 +23,10 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.site.helper.JsonBuilder;
 
 public class DefaultClientConfigManager implements LogEnabled, ClientConfigManager, Initializable {
-	private static final String CAT_CLIENT_XML = "/META-INF/cat/client.xml";
 
-	private static final String PROPERTIES_CLIENT_XML = "/META-INF/app.properties";
+	private static final String PROPERTIES_FILE = "/META-INF/app.properties";
 
 	private static final String XML = "/data/appdatas/cat/client.xml";
-
-	private Logger m_logger;
 
 	private ClientConfig m_config;
 
@@ -42,6 +39,8 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
 	private AtomicTreeParser m_atomicTreeParser = new AtomicTreeParser();
+
+	private Logger m_logger;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -134,7 +133,7 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 	public void initialize(File configFile) throws InitializationException {
 		try {
 			ClientConfig globalConfig = null;
-			ClientConfig clientConfig = null;
+			ClientConfig warConfig = null;
 
 			if (configFile != null) {
 				if (configFile.exists()) {
@@ -148,21 +147,18 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 			}
 
 			// load the client configure from Java class-path
-			clientConfig = loadConfigFromEnviroment();
+			warConfig = loadConfigFromEnviroment();
 
-			if (clientConfig == null) {
-				clientConfig = loadConfigFromXml();
-			}
 			// merge the two configures together to make it effected
-			if (globalConfig != null && clientConfig != null) {
-				globalConfig.accept(new ClientConfigMerger(clientConfig));
+			if (globalConfig != null && warConfig != null) {
+				globalConfig.accept(new ClientConfigMerger(warConfig));
 			}
 
-			if (clientConfig != null) {
-				clientConfig.accept(new ClientConfigValidator());
+			if (warConfig != null) {
+				warConfig.accept(new ClientConfigValidator());
 			}
 
-			m_config = clientConfig;
+			m_config = warConfig;
 		} catch (Exception e) {
 			throw new InitializationException(e.getMessage(), e);
 		}
@@ -207,42 +203,14 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		return null;
 	}
 
-	private ClientConfig loadConfigFromXml() {
-		InputStream in = null;
-		try {
-			in = Thread.currentThread().getContextClassLoader().getResourceAsStream(CAT_CLIENT_XML);
-
-			if (in == null) {
-				in = Cat.class.getResourceAsStream(CAT_CLIENT_XML);
-			}
-			if (in != null) {
-				String xml = Files.forIO().readFrom(in, "utf-8");
-
-				m_logger.info(String.format("Resource file(%s) found.", Cat.class.getResource(CAT_CLIENT_XML)));
-				return DefaultSaxParser.parse(xml);
-			}
-			return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (Exception e) {
-				}
-			}
-		}
-		return null;
-	}
-
 	private String loadProjectName() {
 		String appName = null;
 		InputStream in = null;
 		try {
-			in = Thread.currentThread().getContextClassLoader().getResourceAsStream(PROPERTIES_CLIENT_XML);
+			in = Thread.currentThread().getContextClassLoader().getResourceAsStream(PROPERTIES_FILE);
 
 			if (in == null) {
-				in = Cat.class.getResourceAsStream(PROPERTIES_CLIENT_XML);
+				in = Cat.class.getResourceAsStream(PROPERTIES_FILE);
 			}
 			if (in != null) {
 				Properties prop = new Properties();
@@ -257,10 +225,10 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 					return null;
 				}
 			} else {
-				m_logger.info(String.format("Can't find app.properties in %s", PROPERTIES_CLIENT_XML));
+				m_logger.info(String.format("Can't find app.properties in %s", PROPERTIES_FILE));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			m_logger.error(e.getMessage(), e);
 		} finally {
 			if (in != null) {
 				try {
