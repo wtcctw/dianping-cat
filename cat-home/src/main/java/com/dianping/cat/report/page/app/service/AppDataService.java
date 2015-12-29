@@ -257,27 +257,27 @@ public class AppDataService {
 			switch (groupByField) {
 			case OPERATOR:
 				datas = m_dao.findDataByOperatorCode(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, AppCommandDataEntity.READSET_OPERATOR_CODE_DATA);
+				      code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_OPERATOR_CODE_DATA);
 				break;
 			case NETWORK:
 				datas = m_dao.findDataByNetworkCode(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, AppCommandDataEntity.READSET_NETWORK_CODE_DATA);
+				      code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_NETWORK_CODE_DATA);
 				break;
 			case APP_VERSION:
 				datas = m_dao.findDataByAppVersionCode(commandId, period, city, operator, network, appVersion,
-				      connnectType, code, platform, AppCommandDataEntity.READSET_APP_VERSION_CODE__DATA);
+				      connnectType, code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_APP_VERSION_CODE__DATA);
 				break;
 			case CONNECT_TYPE:
 				datas = m_dao.findDataByConnectTypeCode(commandId, period, city, operator, network, appVersion,
-				      connnectType, code, platform, AppCommandDataEntity.READSET_CONNECT_TYPE_CODE_DATA);
+				      connnectType, code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_CONNECT_TYPE_CODE_DATA);
 				break;
 			case PLATFORM:
 				datas = m_dao.findDataByPlatformCode(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, AppCommandDataEntity.READSET_PLATFORM_CODE_DATA);
+				      code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_PLATFORM_CODE_DATA);
 				break;
 			case CITY:
 				datas = m_dao.findDataByCityCode(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, AppCommandDataEntity.READSET_CITY_CODE_DATA);
+				      code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_CITY_CODE_DATA);
 				break;
 			case CODE:
 				datas = m_dao.findDataByCode(commandId, period, city, operator, network, appVersion, connnectType, code,
@@ -323,7 +323,7 @@ public class AppDataService {
 		return size > 0 ? delaySum / size : -1;
 	}
 
-	private List<AppCommandData> queryByMinute(CommandQueryEntity entity, QueryType type) {
+	public List<AppCommandData> queryByMinute(CommandQueryEntity entity, QueryType type) {
 		int commandId = entity.getId();
 		Date period = entity.getDate();
 		int city = entity.getCity();

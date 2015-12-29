@@ -1,2 +1,2 @@
 <br/>
-<a href='http://cat.dianpingoa.com/cat/r/browser?op=jsError&day=${date}&start=${start}&end=${end}&level=${level}&module=${module}'>点击此处查看详情</a><br/>
+<a href='http://cat.dianpingoa.com/cat/r/browser?op=jsError&jsErrorQuery.day=${date}&jsErrorQuery.startTime=${start}&jsErrorQuery.endTime=${end}&jsErrorQuery.level=${level}&jsErrorQuery.module=${module}'>点击此处查看详情</a><br/>
