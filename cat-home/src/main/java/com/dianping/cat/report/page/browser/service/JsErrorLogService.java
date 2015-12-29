@@ -133,6 +133,11 @@ public class JsErrorLogService {
 
 	private void processLog(Map<String, ErrorMsg> errorMsgs, JsErrorLog log) {
 		String msg = log.getMsg();
+		int index = msg.indexOf("?");
+
+		if (index > 0) {
+			msg = msg.substring(0, index);
+		}
 		ErrorMsg errorMsg = errorMsgs.get(msg);
 
 		if (errorMsg == null) {
