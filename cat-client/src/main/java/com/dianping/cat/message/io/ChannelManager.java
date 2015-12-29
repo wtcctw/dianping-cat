@@ -11,7 +11,6 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
-import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,21 +18,14 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.logging.Logger;
-import org.unidal.helper.Files;
 import org.unidal.helper.Splitters;
 import org.unidal.helper.Threads.Task;
-import org.unidal.helper.Urls;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.configuration.ClientConfigManager;
-import com.dianping.cat.configuration.KVConfig;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.spi.MessageQueue;
-import com.dianping.cat.message.spi.MessageTree;
-import com.site.helper.JsonBuilder;
 
 public class ChannelManager implements Task {
 
@@ -47,23 +39,13 @@ public class ChannelManager implements Task {
 
 	private int m_retriedTimes = 0;
 
-	private int m_count = -10;
-
-	private volatile double m_sample = 1d;
-
-	private volatile boolean m_block = false;
+	private int m_count = -2;
 
 	private MessageQueue m_messageQueue;
 
 	private ChannelHolder m_activeChannelHolder;
 
 	private MessageIdFactory m_idFactory;
-
-	private JsonBuilder m_jsonBuilder = new JsonBuilder();
-
-	private List<String> m_startTypes = new ArrayList<String>();
-
-	private List<String> m_matchTypes = new ArrayList<String>();
 
 	public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses, MessageQueue messageQueue,
 	      ClientConfigManager configManager, MessageIdFactory idFactory) {
@@ -126,6 +108,8 @@ public class ChannelManager implements Task {
 
 	private void checkServerChanged() {
 		if (shouldCheckServerConfig(++m_count)) {
+			m_configManager.refreshConfig();
+			
 			Pair<Boolean, String> pair = routerConfigChanged();
 
 			if (pair.getKey()) {
@@ -204,21 +188,9 @@ public class ChannelManager implements Task {
 		}
 	}
 
-	public List<String> getAtomicTransactionStartType() {
-		return m_startTypes;
-	}
-
-	public List<String> getAtomicTransactionType() {
-		return m_matchTypes;
-	}
-
 	@Override
 	public String getName() {
 		return "TcpSocketSender-ChannelManager";
-	}
-
-	public double getSample() {
-		return m_sample;
 	}
 
 	private ChannelHolder initChannel(List<InetSocketAddress> addresses, String serverConfig) {
@@ -266,32 +238,6 @@ public class ChannelManager implements Task {
 		return null;
 	}
 
-	public boolean isAtomicMessage(MessageTree tree) {
-		Message message = tree.getMessage();
-
-		if (message instanceof Transaction) {
-			String type = message.getType();
-
-			if (m_startTypes != null) {
-				for (String s : m_startTypes) {
-					if (type.startsWith(s)) {
-						return true;
-					}
-				}
-			}
-			if (m_matchTypes != null) {
-				return m_matchTypes.contains(type);
-			}
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	public boolean isBlock() {
-		return m_block;
-	}
-
 	private boolean isChannelDisabled(ChannelFuture activeFuture) {
 		return activeFuture != null && !activeFuture.channel().isOpen();
 	}
@@ -315,35 +261,7 @@ public class ChannelManager implements Task {
 	}
 
 	private String loadServerConfig() {
-		try {
-			String url = m_configManager.getServerConfigUrl();
-			InputStream inputstream = Urls.forIO().readTimeout(2000).connectTimeout(1000).openStream(url);
-			String content = Files.forIO().readFrom(inputstream, "utf-8");
-
-			KVConfig routerConfig = (KVConfig) m_jsonBuilder.parse(content.trim(), KVConfig.class);
-			String current = routerConfig.getValue("routers");
-			m_sample = Double.valueOf(routerConfig.getValue("sample").trim());
-			m_block = Boolean.valueOf(routerConfig.getValue("block").trim());
-
-			try {
-	         String startTypes = routerConfig.getValue("startTransactionTypes");
-	         String matchTypes = routerConfig.getValue("matchTransactionTypes");
-
-	         if (startTypes != null) {
-	         	m_startTypes = Splitters.by(";").noEmptyItem().split(startTypes);
-	         }
-	         if (matchTypes != null) {
-	         	m_matchTypes = Splitters.by(";").noEmptyItem().split(matchTypes);
-	         }
-         } catch (Exception e) {
-         	e.printStackTrace();
-         }
-			
-			return current.trim();
-		} catch (Exception e) {
-			// ignore
-		}
-		return null;
+		return m_configManager.getRouters();
 	}
 
 	private List<InetSocketAddress> parseSocketAddress(String content) {
