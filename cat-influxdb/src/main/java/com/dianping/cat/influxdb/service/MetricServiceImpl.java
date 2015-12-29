@@ -42,6 +42,7 @@ public class MetricServiceImpl implements MetricService, Initializable {
 
 	private Map<String, List<MetricEntity>> buildCategories(List<MetricEntity> entities) {
 		Map<String, List<MetricEntity>> categories = new LinkedHashMap<String, List<MetricEntity>>();
+
 		for (MetricEntity entity : entities) {
 			String category = entity.getCategory();
 			List<MetricEntity> list = categories.get(category);
@@ -65,6 +66,7 @@ public class MetricServiceImpl implements MetricService, Initializable {
 
 	@Override
 	public boolean insert(List<MetricEntity> entities) {
+		boolean ret = true;
 		Map<String, List<MetricEntity>> categories = buildCategories(entities);
 
 		for (Entry<String, List<MetricEntity>> entry : categories.entrySet()) {
@@ -81,10 +83,12 @@ public class MetricServiceImpl implements MetricService, Initializable {
 
 				conn.getInfluxDB().write(batchPoints);
 			} catch (Exception e) {
+				ret = ret && false;
+
 				Cat.logError(e);
 			}
 		}
-		return true;
+		return ret;
 	}
 
 	private List<String> parseData(QueryResult result, int index) {
