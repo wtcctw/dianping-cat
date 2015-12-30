@@ -170,13 +170,19 @@ public class StatusUpdateTask implements Task, Initializable {
 				t.setStatus(Message.SUCCESS);
 				t.complete();
 			}
-			
-			try{
-				m_manager.refreshConfig();
-			}catch(Exception e){
-				//ignore
+
+			try {
+				long current = System.currentTimeMillis() / 1000 / 60;
+				int min = (int) (current % (60));
+
+				// refresh config 3 minute
+				if (min % 3 == 0) {
+					m_manager.refreshConfig();
+				}
+			} catch (Exception e) {
+				// ignore
 			}
-			
+
 			long elapsed = MilliSecondTimer.currentTimeMillis() - start;
 
 			if (elapsed < m_interval) {
