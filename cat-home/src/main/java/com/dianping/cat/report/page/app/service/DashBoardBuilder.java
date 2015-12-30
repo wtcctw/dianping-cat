@@ -3,12 +3,20 @@ package com.dianping.cat.report.page.app.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
+import com.dianping.cat.app.AppCommandData;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.BarChart;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.MapChart;
@@ -33,29 +41,120 @@ public class DashBoardBuilder {
 	@Inject
 	private AppConfigManager m_appConfigManager;
 
-	public DashBoardInfo buildDashBoard(CommandQueryEntity entity) {
-		DashBoardInfo dashboard = new DashBoardInfo();
+	public DashBoardInfo buildDashBoard(final CommandQueryEntity entity) {
+		final DashBoardInfo dashboard = new DashBoardInfo();
+		ExecutorService executor = Executors.newFixedThreadPool(5);
 
-		List<AppDataDetail> cities = m_appDataService.buildAppDataDetailInfos(entity, AppDataField.CITY);
-		dashboard.setMapChart(buildResponseMapChart(cities));
-		dashboard.setSuccessMapChart(buildSuccessMapChart(cities));
+		executor.execute(new Runnable() {
+			@Override
+         public void run() {
+				List<AppDataDetail> cities = m_appDataService.buildAppDataDetailInfos(entity, AppDataField.CITY);
+				dashboard.setMapChart(buildResponseMapChart(cities));
+				dashboard.setSuccessMapChart(buildSuccessMapChart(cities));
+         }
+			
+		});
 
-		List<AppDataDetail> operators = m_appDataService.buildAppDataDetailInfos(entity, AppDataField.OPERATOR);
-		dashboard.setOperatorChart(buildResponseBarChart(operators, AppDataField.OPERATOR));
-		dashboard.setOperatorSuccessChart(buildSuccessRatioBarChart(operators, AppDataField.OPERATOR));
+		executor.execute(new Runnable() {
+			@Override
+         public void run() {
+				List<AppDataDetail> operators = m_appDataService.buildAppDataDetailInfos(entity, AppDataField.OPERATOR);
+				dashboard.setOperatorChart(buildResponseBarChart(operators, AppDataField.OPERATOR));
+				dashboard.setOperatorSuccessChart(buildSuccessRatioBarChart(operators, AppDataField.OPERATOR));
+         }
+		});
+		
+		executor.execute(new Runnable() {
+			@Override
+         public void run() {
+				List<AppDataDetail> version = m_appDataService.buildAppDataDetailInfos(entity, AppDataField.APP_VERSION);
+				version = buildTops(version, 15);
+				dashboard.setVersionChart(buildResponseBarChart(version, AppDataField.APP_VERSION));
+				dashboard.setVersionSuccessChart(buildSuccessRatioBarChart(version, AppDataField.APP_VERSION));
+         }
+		});
 
-		List<AppDataDetail> version = m_appDataService.buildAppDataDetailInfos(entity, AppDataField.APP_VERSION);
-		dashboard.setVersionChart(buildResponseBarChart(version, AppDataField.APP_VERSION));
-		dashboard.setVersionSuccessChart(buildSuccessRatioBarChart(version, AppDataField.APP_VERSION));
+		executor.execute(new Runnable() {
+			@Override
+         public void run() {
+				List<AppDataDetail> platform = m_appDataService.buildAppDataDetailInfos(entity, AppDataField.PLATFORM);
+				dashboard.setPlatformChart(buildResponseBarChart(platform, AppDataField.PLATFORM));
+				dashboard.setPlatformSuccessChart(buildSuccessRatioBarChart(platform, AppDataField.PLATFORM));
+         }
+		});
 
-		List<AppDataDetail> platform = m_appDataService.buildAppDataDetailInfos(entity, AppDataField.PLATFORM);
-		dashboard.setPlatformChart(buildResponseBarChart(platform, AppDataField.PLATFORM));
-		dashboard.setPlatformSuccessChart(buildSuccessRatioBarChart(platform, AppDataField.PLATFORM));
-
-		LineChart lineChart = m_appGraphCreator.buildLineChart(entity, null, QueryType.DELAY);
-		dashboard.setLineChart(lineChart);
-
+		executor.execute(new Runnable() {
+			@Override
+         public void run() {
+				LineChart lineChart = buildDelayLineChart(entity);
+				dashboard.setLineChart(lineChart);
+         }
+		});
+		
+		executor.shutdown();
+		try {
+	      executor.awaitTermination(30, TimeUnit.SECONDS);
+      } catch (InterruptedException e) {
+      	Cat.logError(e);
+      }
+		
 		return dashboard;
+	}
+
+	private LineChart buildDelayLineChart(CommandQueryEntity entity) {
+		List<AppCommandData> datas = m_appDataService.queryByMinute(entity, QueryType.DELAY);
+
+		Collections.sort(datas, new Comparator<AppCommandData>() {
+			@Override
+			public int compare(AppCommandData o1, AppCommandData o2) {
+				return (int) (o1.getMinuteOrder() - o2.getMinuteOrder());
+			}
+		});
+		int size = (entity.getEndMinuteOrder() - entity.getStartMinuteOrder()) / 5 + 1;
+		Double[] data = new Double[size];
+
+		for (AppCommandData commandData : datas) {
+			long count = commandData.getAccessNumberSum();
+			long sum = commandData.getResponseSumTimeSum();
+
+			if (count > 0) {
+				double avg = sum / count;
+				int index = (commandData.getMinuteOrder() - entity.getStartMinuteOrder()) / 5;
+
+				if (index < size) {
+					data[index] = avg;
+				}
+			}
+		}
+		LineChart lineChart = new LineChart();
+		Date start = new Date(entity.getDate().getTime() + entity.getStartMinuteOrder() * TimeHelper.ONE_MINUTE);
+
+		lineChart.setSize(size);
+		lineChart.setStep(TimeHelper.ONE_MINUTE * 5);
+		lineChart.setStart(start);
+		lineChart.add(Constants.CURRENT_STR, data);
+		return lineChart;
+	}
+
+	private List<AppDataDetail> buildTops(List<AppDataDetail> version, int count) {
+		Collections.sort(version, new Comparator<AppDataDetail>() {
+			@Override
+			public int compare(AppDataDetail o1, AppDataDetail o2) {
+				return (int) (o2.getAccessNumberSum() - o1.getAccessNumberSum());
+			}
+		});
+		List<AppDataDetail> tops = new ArrayList<AppDataDetail>();
+		int index = 0;
+
+		for (AppDataDetail detail : version) {
+			tops.add(detail);
+			index++;
+
+			if (index >= count) {
+				break;
+			}
+		}
+		return tops;
 	}
 
 	private BarChart buildSuccessRatioBarChart(List<AppDataDetail> datas, AppDataField field) {
@@ -65,7 +164,13 @@ public class DashBoardBuilder {
 		Collections.sort(datas, new Comparator<AppDataDetail>() {
 			@Override
 			public int compare(AppDataDetail o1, AppDataDetail o2) {
-				return (int) (o2.getSuccessRatio() - o1.getSuccessRatio());
+				if (o2.getSuccessRatio() > o1.getSuccessRatio()) {
+					return 1;
+				} else if (o2.getSuccessRatio() < o1.getSuccessRatio()) {
+					return -1;
+				} else {
+					return 0;
+				}
 			}
 		});
 		List<String> itemList = new ArrayList<String>();
@@ -88,7 +193,13 @@ public class DashBoardBuilder {
 		Collections.sort(datas, new Comparator<AppDataDetail>() {
 			@Override
 			public int compare(AppDataDetail o1, AppDataDetail o2) {
-				return (int) (o2.getResponseTimeAvg() - o1.getResponseTimeAvg());
+				if (o2.getResponseTimeAvg() > o1.getResponseTimeAvg()) {
+					return 1;
+				} else if (o2.getResponseTimeAvg() < o1.getResponseTimeAvg()) {
+					return -1;
+				} else {
+					return 0;
+				}
 			}
 		});
 		List<String> itemList = new ArrayList<String>();
