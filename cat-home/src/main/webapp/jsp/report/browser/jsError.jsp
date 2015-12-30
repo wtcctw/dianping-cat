@@ -96,6 +96,10 @@
 			<div class="tab-pane" id="charts">
 				<table>
 					<tr>
+						<td><h5 class="text-center">模块分布</h5></td>
+						<td><h5 class="text-center">浏览器分布</h5></td>
+					</tr>
+					<tr>
 						<td><div id="modules" class="graph"></div></td>
 						<td><div id="browsers" class="graph"></div></td>
 					</tr>
