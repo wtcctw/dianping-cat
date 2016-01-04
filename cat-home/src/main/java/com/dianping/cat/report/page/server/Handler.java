@@ -2,11 +2,11 @@ package com.dianping.cat.report.page.server;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -33,13 +33,12 @@ import com.dianping.cat.home.server.entity.Group;
 import com.dianping.cat.home.server.entity.ServerMetricConfig;
 import com.dianping.cat.influxdb.config.InfluxDBConfigManager;
 import com.dianping.cat.metric.MetricService;
-import com.dianping.cat.metric.MetricType;
-import com.dianping.cat.metric.QueryParameter;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.metric.DataExtractor;
 import com.dianping.cat.report.page.server.config.ServerMetricConfigManager;
+import com.dianping.cat.report.page.server.display.LineChartBuilder;
 import com.dianping.cat.report.page.server.display.MetricScreenInfo;
 import com.dianping.cat.report.page.server.service.MetricGraphBuilder;
 import com.dianping.cat.report.page.server.service.MetricGraphService;
@@ -73,6 +72,9 @@ public class Handler implements PageHandler<Context> {
 	private MetricGraphBuilder m_graphBuilder;
 
 	@Inject
+	private LineChartBuilder m_linechartBuilder;
+
+	@Inject
 	private InfluxDBConfigManager m_influxDBConfigManager;
 
 	@Inject
@@ -91,13 +93,12 @@ public class Handler implements PageHandler<Context> {
 		List<LineChart> linecharts = new LinkedList<LineChart>();
 
 		try {
-			normalizeGraphInfo(payload, model);
-
 			Graph graph = m_graphService.queryByGraphId(payload.getGraphId());
 			graph = convertGraphType(graph, payload.getType());
 
 			if (graph != null) {
-				linecharts = buildLineCharts(start, end, payload.getInterval(), payload.getView(), graph);
+				linecharts = m_linechartBuilder
+				      .buildLineCharts(start, end, payload.getInterval(), payload.getView(), graph);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -105,83 +106,17 @@ public class Handler implements PageHandler<Context> {
 		return linecharts;
 	}
 
-	private List<LineChart> buildLineCharts(Date start, Date end, String interval, String view, Graph graph) {
-		List<LineChart> lineCharts = new LinkedList<LineChart>();
-
-		for (Entry<String, Item> entry : graph.getItems().entrySet()) {
-			Item item = entry.getValue();
-
-			if (StringUtils.isEmpty(view) || view.equals(item.getView())) {
-				LineChart linechart = new LineChart();
-
-				linechart.setId(entry.getKey());
-				linechart.setHtmlTitle(entry.getKey());
-
-				for (Entry<String, Segment> e : item.getSegments().entrySet()) {
-					try {
-						Segment segment = e.getValue();
-						Map<Long, Double> result = fetchData(start, end, e.getValue(), interval);
-						String title = segment.getId();
-
-						linechart.add(title, result);
-					} catch (Exception ex) {
-						Cat.logError(ex);
-					}
-				}
-				lineCharts.add(linechart);
-			}
-		}
-		return lineCharts;
-	}
-
-	private List<LineChart> buildLineCharts(Date start, Date end, String interval, String endPoint,
-	      List<com.dianping.cat.home.server.entity.Item> items) {
-		List<LineChart> lineCharts = new LinkedList<LineChart>();
-
-		for (com.dianping.cat.home.server.entity.Item item : items) {
-			for (com.dianping.cat.home.server.entity.Segment segment : item.getSegments().values()) {
-				LineChart linechart = new LineChart();
-
-				linechart.setId(segment.getId());
-				linechart.setHtmlTitle(segment.getId());
-
-				String measurement = segment.getId();
-				List<String> measures = m_metricService.queryMeasurements(segment.getCategory(), measurement,
-				      Arrays.asList(endPoint));
-				List<String> results = parseSeries(measures);
-				Collections.sort(results);
-
-				if (!results.isEmpty()) {
-					for (String tag : results) {
-						Map<Long, Double> datas = fetchData(start, end, endPoint, tag, segment, interval);
-
-						linechart.add(tag, datas);
-					}
-				} else {
-					Map<Long, Double> datas = fetchData(start, end, endPoint, "", segment, interval);
-					String title = segment.getId();
-
-					linechart.add(title, datas);
-				}
-				lineCharts.add(linechart);
-			}
-		}
-		return lineCharts;
-	}
-
-	private List<LineChart> buildScreenLinecharts(Model model, Payload payload, Date start, Date end) {
+	private List<LineChart> buildScreenLinecharts(String screen, String interval, Date start, Date end) {
 		List<LineChart> lineCharts = new LinkedList<LineChart>();
 
 		try {
-			normalizeScreenInfo(payload, model);
-
-			Map<String, MetricScreenInfo> graphs = m_screenService.queryByName(payload.getScreen());
+			Map<String, MetricScreenInfo> graphs = m_screenService.queryByName(screen);
 
 			for (MetricScreenInfo info : graphs.values()) {
 				Graph g = info.getGraph();
 
 				if (g != null) {
-					List<LineChart> lines = buildLineCharts(start, end, payload.getInterval(), "", g);
+					List<LineChart> lines = m_linechartBuilder.buildLineCharts(start, end, interval, "", g);
 
 					lineCharts.addAll(lines);
 				}
@@ -192,12 +127,10 @@ public class Handler implements PageHandler<Context> {
 		return lineCharts;
 	}
 
-	private List<LineChart> buildViewLinecharts(Model model, Payload payload, Date start, Date end) {
+	private List<LineChart> buildViewLinecharts(Payload payload, Date start, Date end) {
 		List<LineChart> lineCharts = new LinkedList<LineChart>();
 
 		try {
-			normalizeGraphInfo(payload, model);
-
 			ServerMetricConfig config = m_serverMetricConfigManager.getConfig();
 			Group group = config.getGroups().get(payload.getCategory());
 
@@ -215,7 +148,8 @@ public class Handler implements PageHandler<Context> {
 					items = new LinkedList<com.dianping.cat.home.server.entity.Item>(group.getItems().values());
 				}
 
-				lineCharts = buildLineCharts(start, end, payload.getInterval(), payload.getEndPoint(), items);
+				lineCharts = m_linechartBuilder.buildLineCharts(start, end, payload.getInterval(), payload.getEndPoint(),
+				      items);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -232,28 +166,6 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		return graph;
-	}
-
-	private Map<Long, Double> fetchData(Date start, Date end, Segment segment, String interval) {
-		MetricType type = MetricType.getByName(segment.getType(), MetricType.AVG);
-		QueryParameter parameter = new QueryParameter();
-		parameter.setCategory(segment.getCategory()).setStart(start).setEnd(end).setMeasurement(segment.getMeasure())
-		      .setType(type).setTags(segment.getTags()).setInterval(interval);
-
-		Map<Long, Double> result = m_metricService.query(parameter);
-
-		return result;
-	}
-
-	private Map<Long, Double> fetchData(Date start, Date end, String endPoint, String tags,
-	      com.dianping.cat.home.server.entity.Segment segment, String interval) {
-		MetricType type = MetricType.getByName(segment.getType(), MetricType.AVG);
-		QueryParameter parameter = new QueryParameter();
-		parameter.setCategory(segment.getCategory()).setStart(start).setEnd(end).setMeasurement(segment.getId())
-		      .setType(type).setTags(m_graphBuilder.buildTag(tags, endPoint)).setInterval(interval);
-
-		Map<Long, Double> result = m_metricService.query(parameter);
-		return result;
 	}
 
 	@Override
@@ -278,36 +190,44 @@ public class Handler implements PageHandler<Context> {
 
 		switch (action) {
 		case VIEW:
-			List<LineChart> lineCharts = buildViewLinecharts(model, payload, start, end);
+			normalizeEndPoints(model, payload);
+			normalizeGraphInfo(payload, model);
+
+			List<LineChart> lineCharts = buildViewLinecharts(payload, start, end);
 
 			model.setLineCharts(lineCharts);
 			model.setServerMetricConfig(m_serverMetricConfigManager.getConfig());
 			break;
 		case VIEW_JSON:
-			lineCharts = buildViewLinecharts(model, payload, start, end);
+			normalizeGraphInfo(payload, model);
+			lineCharts = buildViewLinecharts(payload, start, end);
 
 			JsonDatas.put("lineCharts", lineCharts);
 			model.setJson(m_jsonBuilder.toJson(JsonDatas));
 			break;
 		case GRAPH:
+			normalizeGraphInfo(payload, model);
 			lineCharts = buildGraphLinecharts(model, payload, start, end);
 
 			model.setLineCharts(lineCharts);
 			break;
 		case GRAPH_JSON:
+			normalizeGraphInfo(payload, model);
 			lineCharts = buildGraphLinecharts(model, payload, start, end);
 
 			JsonDatas.put("lineCharts", lineCharts);
 			model.setJson(m_jsonBuilder.toJson(JsonDatas));
 			break;
 		case SCREEN:
-			lineCharts = buildScreenLinecharts(model, payload, start, end);
+			normalizeScreenInfo(payload, model);
+			lineCharts = buildScreenLinecharts(payload.getScreen(), payload.getInterval(), start, end);
 
 			model.setLineCharts(lineCharts);
 			model.setMetricScreenInfos(m_screenService.queryScreens());
 			break;
 		case SCREEN_JSON:
-			lineCharts = buildScreenLinecharts(model, payload, start, end);
+			normalizeScreenInfo(payload, model);
+			lineCharts = buildScreenLinecharts(payload.getScreen(), payload.getInterval(), start, end);
 
 			JsonDatas.put("lineCharts", lineCharts);
 			model.setJson(m_jsonBuilder.toJson(JsonDatas));
@@ -344,7 +264,6 @@ public class Handler implements PageHandler<Context> {
 			model.setMetricScreenInfos(m_screenService.queryScreens());
 			break;
 		case AGGREGATE:
-
 			break;
 		case ENDPOINT:
 			List<String> keywords = payload.getKeywordsList();
@@ -361,7 +280,7 @@ public class Handler implements PageHandler<Context> {
 			List<String> endPoints = payload.getEndPoints();
 
 			if (!endPoints.isEmpty()) {
-				Set<String> measurements = queryMeasurements(endPoints);
+				List<String> measurements = queryMeasurements(endPoints);
 				Map<String, Object> jsons = new HashMap<String, Object>();
 
 				jsons.put("endPoints", measurements);
@@ -408,6 +327,18 @@ public class Handler implements PageHandler<Context> {
 		m_normalizePayload.normalize(model, payload);
 	}
 
+	private void normalizeEndPoints(Model model, Payload payload) {
+		Map<String, List<String>> eps = queryEndpoints();
+
+		if (StringUtils.isEmpty(payload.getEndPoint())) {
+			Entry<String, List<String>> catgy = eps.entrySet().iterator().next();
+
+			payload.setCategory(catgy.getKey());
+			payload.setEndPoint(catgy.getValue().get(0));
+		}
+		model.setEndPoints(eps);
+	}
+
 	private void normalizeGraphInfo(Payload payload, Model model) {
 		if (StringUtils.isEmpty(payload.getInterval())) {
 			long end = payload.getHistoryEndDate().getTime();
@@ -439,14 +370,14 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private List<String> parseSeries(List<String> measures) {
-		List<String> results = new ArrayList<String>();
+	private Map<String, List<String>> queryEndpoints() {
+		Map<String, List<String>> results = new LinkedHashMap<String, List<String>>();
 
-		for (String measure : measures) {
-			measure = measure.replaceAll("(domain=[^,]*(,|$))|(endPoint=[^,]*(,|$))", "").replaceAll(",$", "")
-			      .replaceAll(",", ";");
+		for (String category : m_serverMetricConfigManager.getConfig().getGroups().keySet()) {
+			List<String> endPoints = m_metricService.queryEndPoints(category);
 
-			results.add(measure);
+			Collections.sort(endPoints);
+			results.put(category, endPoints);
 		}
 		return results;
 	}
@@ -468,15 +399,16 @@ public class Handler implements PageHandler<Context> {
 		return endPoints;
 	}
 
-	private Set<String> queryMeasurements(List<String> endPoints) {
-		Set<String> measurements = new HashSet<String>();
+	private List<String> queryMeasurements(List<String> endPoints) {
+		List<String> measurements = new ArrayList<String>();
 
 		for (String key : m_influxDBConfigManager.getConfig().getInfluxdbs().keySet()) {
 			List<String> measures = m_metricService.queryMeasurements(key, endPoints);
 
-			measurements.addAll(parseSeries(measures));
+			measurements.addAll(m_linechartBuilder.parseSeries(measures));
 		}
 
+		Collections.sort(measurements);
 		return measurements;
 	}
 }

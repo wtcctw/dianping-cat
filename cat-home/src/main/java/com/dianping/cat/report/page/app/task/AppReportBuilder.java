@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.app.task;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
@@ -27,6 +28,7 @@ import com.dianping.cat.home.app.entity.AppReport;
 import com.dianping.cat.home.app.entity.Code;
 import com.dianping.cat.home.app.entity.Transaction;
 import com.dianping.cat.home.app.transform.DefaultNativeBuilder;
+import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.page.app.service.AppReportService;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.report.task.TaskBuilder;
@@ -49,7 +51,35 @@ public class AppReportBuilder implements TaskBuilder {
 	@Inject
 	private CommandAutoCompleter m_autoCompleter;
 
+	@Inject
+	private AppRuleConfigManager m_appRuleConfigManager;
+
 	public static final String ID = Constants.APP;
+
+	public static final int COMMAND_MIN_COUNT = 10;
+
+	private void appCommandPrune(AppReport appReport) {
+		for (Entry<Integer, com.dianping.cat.home.app.entity.Command> command : appReport.getCommands().entrySet()) {
+			if (command.getValue().getCount() < COMMAND_MIN_COUNT) {
+				int id = command.getKey();
+				boolean success = m_appConfigManager.deleteCommand(id);
+
+				if (success) {
+					Cat.logEvent("AppCommandPrune", String.valueOf(id));
+					m_appRuleConfigManager.deleteByCommandId(id);
+				}
+			}
+		}
+	}
+
+	private AppReport buildDailyReport(String id, Date period) {
+		AppReport report = m_appReportService.makeReport(id, period, TaskHelper.tomorrowZero(period));
+
+		for (Command command : m_appConfigManager.queryCommands()) {
+			processCommand(period, command, report);
+		}
+		return report;
+	}
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -61,6 +91,9 @@ public class AppReportBuilder implements TaskBuilder {
 
 		try {
 			AppReport appReport = buildDailyReport(domain, period);
+
+			appCommandPrune(appReport);
+
 			DailyReport report = new DailyReport();
 
 			report.setCreationDate(new Date());
@@ -78,13 +111,19 @@ public class AppReportBuilder implements TaskBuilder {
 		}
 	}
 
-	private AppReport buildDailyReport(String id, Date period) {
-		AppReport report = m_appReportService.makeReport(id, period, TaskHelper.tomorrowZero(period));
+	@Override
+	public boolean buildHourlyTask(String name, String domain, Date period) {
+		throw new RuntimeException("daily report builder don't support hourly task");
+	}
 
-		for (Command command : m_appConfigManager.queryCommands()) {
-			processCommand(period, command, report);
-		}
-		return report;
+	@Override
+	public boolean buildMonthlyTask(String name, String domain, Date period) {
+		throw new RuntimeException("daily report builder don't support monthly task");
+	}
+
+	@Override
+	public boolean buildWeeklyTask(String name, String domain, Date period) {
+		throw new RuntimeException("daily report builder don't support weekly task");
 	}
 
 	private void processCommand(Date period, Command command, AppReport report) {
@@ -109,17 +148,6 @@ public class AppReportBuilder implements TaskBuilder {
 		if (StringUtils.isNotEmpty(domain) && commandId != AppConfigManager.ALL_COMMAND_ID) {
 			processTransactionInfo(cmd, domain, period);
 		}
-	}
-
-	private void processTransactionInfo(com.dianping.cat.home.app.entity.Command command, String domain, Date period) {
-		Date end = TimeHelper.addDays(period, 1);
-		TransactionReport report = m_transactionReportService.queryDailyReport(domain, period, end);
-		TransactionReportVisitor visitor = new TransactionReportVisitor(command.getName());
-
-		visitor.visitTransactionReport(report);
-		Transaction transaction = visitor.getTransaction();
-
-		command.setTransaction(transaction);
 	}
 
 	private void processRecord(int commandId, com.dianping.cat.home.app.entity.Command cmd, AppCommandData data) {
@@ -154,19 +182,15 @@ public class AppReportBuilder implements TaskBuilder {
 		}
 	}
 
-	@Override
-	public boolean buildHourlyTask(String name, String domain, Date period) {
-		throw new RuntimeException("daily report builder don't support hourly task");
-	}
+	private void processTransactionInfo(com.dianping.cat.home.app.entity.Command command, String domain, Date period) {
+		Date end = TimeHelper.addDays(period, 1);
+		TransactionReport report = m_transactionReportService.queryDailyReport(domain, period, end);
+		TransactionReportVisitor visitor = new TransactionReportVisitor(command.getName());
 
-	@Override
-	public boolean buildMonthlyTask(String name, String domain, Date period) {
-		throw new RuntimeException("daily report builder don't support monthly task");
-	}
+		visitor.visitTransactionReport(report);
+		Transaction transaction = visitor.getTransaction();
 
-	@Override
-	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		throw new RuntimeException("daily report builder don't support weekly task");
+		command.setTransaction(transaction);
 	}
 
 	public static class TransactionReportVisitor extends BaseVisitor {
@@ -181,6 +205,13 @@ public class AppReportBuilder implements TaskBuilder {
 
 		public Transaction getTransaction() {
 			return m_transation;
+		}
+
+		@Override
+		public void visitMachine(Machine machine) {
+			if (Constants.ALL.equals(machine.getIp())) {
+				super.visitMachine(machine);
+			}
 		}
 
 		@Override
@@ -199,13 +230,6 @@ public class AppReportBuilder implements TaskBuilder {
 		public void visitType(TransactionType type) {
 			if ("URL".equals(type.getId())) {
 				super.visitType(type);
-			}
-		}
-
-		@Override
-		public void visitMachine(Machine machine) {
-			if (Constants.ALL.equals(machine.getIp())) {
-				super.visitMachine(machine);
 			}
 		}
 	}

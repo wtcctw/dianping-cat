@@ -41,6 +41,7 @@ import com.dianping.cat.home.dal.report.UserDefineRuleDao;
 import com.dianping.cat.influxdb.InfluxDB;
 import com.dianping.cat.influxdb.config.InfluxDBConfigManager;
 import com.dianping.cat.metric.DataSourceService;
+import com.dianping.cat.metric.MetricService;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.alert.browser.JsRuleConfigManager;
@@ -84,7 +85,9 @@ import com.dianping.cat.report.page.eslog.EsServerConfigManager;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
 import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
 import com.dianping.cat.report.page.server.config.ServerMetricConfigManager;
+import com.dianping.cat.report.page.server.display.LineChartBuilder;
 import com.dianping.cat.report.page.server.display.MetricScreenTransformer;
+import com.dianping.cat.report.page.server.service.MetricGraphBuilder;
 import com.dianping.cat.report.page.server.service.MetricGraphService;
 import com.dianping.cat.report.page.server.service.MetricScreenService;
 import com.dianping.cat.report.page.state.StateGraphBuilder;
@@ -249,6 +252,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MetricScreenService.class).req(MetricScreenDao.class,
 		      com.dianping.cat.report.page.server.service.MetricGraphBuilder.class, MetricScreenTransformer.class));
 		all.add(C(MetricGraphService.class).req(MetricGraphDao.class));
+		all.add(C(LineChartBuilder.class).req(MetricService.class, InfluxDB.ID).req(MetricGraphBuilder.class));
 
 		return all;
 	}

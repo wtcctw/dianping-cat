@@ -20,6 +20,12 @@
 		<ul class="breadcrumb">
 		<table>
 			<tr>
+				<th>
+					<div>
+						&nbsp;开始 <input type="text" id="startTime" style="width: 150px;" />
+						结束 <input type="text" id="endTime" style="width: 150px;" />
+					</div>
+				</th>
 				<th>分类
 				<select id="category" style="width: 150px">
 					<c:forEach var="item" items="${model.serverMetricConfig.groups}" varStatus="status">
@@ -31,18 +37,23 @@
 					<select id="group" style="width: 100px">
 					</select>
 				</th>
-				<th>EndPoint
-					<input type="text" placeholder="input endPoint for search" value="${payload.endPoint}" id="endPoint" style="width: 200px">
-				</th>
-				<th class="left">
-					<div style="float: left;">
-						&nbsp;开始 <input type="text" id="startTime" style="width: 150px;" />
-						结束 <input type="text" id="endTime" style="width: 150px;" />
-					</div>
-				</th>
-				<th>&nbsp;<input class="btn btn-primary btn-sm "
-					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
-					type="submit" /></th>
+				<th>
+ 				<div class="navbar-header pull-left position" style="width:350px;">
+					<form id="wrap_search" style="margin-bottom:0px;">
+					<div class="input-group">
+						<span class="input-icon" style="width:300px;">
+							<input type="text" placeholder="input endPoint for search" value="${payload.endPoint}" class="search-input search-input form-control ui-autocomplete-input" id="endPoint" autocomplete="off" />
+								<i class="ace-icon fa fa-search nav-search-icon"></i>
+						</span>
+						<span class="input-group-btn" style="width:50px">
+							<button class="btn btn-sm btn-primary" type="button" id="search_go">
+							Go
+							</button>
+						</span>
+						</div>
+					</form>
+				</div>
+ 				</th>
 			</tr>
 		</table>
 
@@ -93,6 +104,44 @@
 				opt.val(group.items[prop].id);
 				opt.appendTo($("#group"));
 			}
+			
+			tagRefresh();
+		}
+		
+		function tagRefresh(){
+			$.widget( "custom.catcomplete", $.ui.autocomplete, {
+				_renderMenu: function( ul, items ) {
+					var that = this,
+					currentCategory = "";
+					$.each( items, function( index, item ) {
+						if ( item.category != currentCategory ) {
+							ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+							currentCategory = item.category;
+						}
+						that._renderItemData( ul, item );
+					});
+				}
+			});
+			
+			var data = [];
+			var category = $("#category").val();
+			var endPoints = ${model.endPointsJson}[category];
+			
+			for ( var prop in endPoints) {
+				var item = {};
+				item['label'] = endPoints[prop] + ' ';
+				item['category'] = category;
+				data.push(item);
+			}
+					
+			$( "#endPoint" ).catcomplete({
+				delay: 0,
+				source: data
+			});
+			
+			if('${payload.endPoint}' == ''  || '${payload.category}' != category){
+				$( "#endPoint" ).val(endPoints[0]);
+			}
 		}
 
 		$(document).ready(function() {
@@ -121,6 +170,19 @@
 			
 			$('#serverChart').addClass('active open');
 			$('#view').addClass('active');
+			
+			tagRefresh();
+			
+			$("#search_go").bind("click",function(e){
+				query();
+			});
+			
+			$('#wrap_search').submit(
+				function(){
+					query();
+					return false;
+				}		
+			);
 
 			<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 				var data = ${item.jsonString};

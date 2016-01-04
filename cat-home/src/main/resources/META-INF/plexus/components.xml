@@ -587,6 +587,19 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.server.display.LineChartBuilder</role>
+			<implementation>com.dianping.cat.report.page.server.display.LineChartBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.metric.MetricService</role>
+					<role-hint>Influx</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.server.service.MetricGraphBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-home</role-hint>
 			<implementation>com.dianping.cat.CatHomeModule</implementation>
@@ -6075,6 +6088,9 @@
 					<role>com.dianping.cat.report.page.server.service.MetricGraphBuilder</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.server.display.LineChartBuilder</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>
 				</requirement>
 				<requirement>
@@ -6144,6 +6160,18 @@
 		<component>
 			<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
 			<implementation>com.dianping.cat.system.page.config.ConfigHtmlParser</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.server.display.LineChartBuilder</role>
+			<implementation>com.dianping.cat.report.page.server.display.LineChartBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.metric.MetricService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.server.service.MetricGraphBuilder</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>

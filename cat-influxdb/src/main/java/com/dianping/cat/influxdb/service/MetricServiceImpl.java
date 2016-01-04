@@ -1,6 +1,5 @@
 package com.dianping.cat.influxdb.service;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,8 +12,6 @@ import java.util.Map.Entry;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 
@@ -27,18 +24,15 @@ import com.dianping.cat.influxdb.dto.Query;
 import com.dianping.cat.influxdb.dto.QueryResult;
 import com.dianping.cat.influxdb.dto.QueryResult.Result;
 import com.dianping.cat.influxdb.dto.QueryResult.Series;
-import com.dianping.cat.influxdb.service.InfluxDBConnection;
 import com.dianping.cat.metric.DataSourceService;
 import com.dianping.cat.metric.MetricEntity;
 import com.dianping.cat.metric.MetricService;
 import com.dianping.cat.metric.QueryParameter;
 
-public class MetricServiceImpl implements MetricService, Initializable {
+public class MetricServiceImpl implements MetricService {
 
 	@Inject(InfluxDB.ID)
 	private DataSourceService<InfluxDBConnection> m_dataSourceService;
-
-	private SimpleDateFormat m_sdf;
 
 	private Map<String, List<MetricEntity>> buildCategories(List<MetricEntity> entities) {
 		Map<String, List<MetricEntity>> categories = new LinkedHashMap<String, List<MetricEntity>>();
@@ -55,13 +49,6 @@ public class MetricServiceImpl implements MetricService, Initializable {
 			list.add(entity);
 		}
 		return categories;
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		m_sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-
-		m_sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 	}
 
 	@Override
@@ -110,45 +97,43 @@ public class MetricServiceImpl implements MetricService, Initializable {
 		return results;
 	}
 
-	private Map<Long, Double> parseValue(QueryResult result) {
-		Map<Long, Double> datas = new LinkedHashMap<Long, Double>();
+	@Override
+	public Map<Long, Double> query(QueryParameter parameter) {
+		InfluxDBConnection conn = m_dataSourceService.getConnection(parameter.getCategory());
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-		for (Result r : result.getResults()) {
-			List<Series> series = r.getSeries();
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-			if (series != null) {
-				for (Series s : series) {
-					if (s != null && s.getValues() != null) {
-						for (List<Object> v : s.getValues()) {
-							try {
-								Date date = m_sdf.parse(String.valueOf(v.get(0)));
-								double data = (double) (v.get(1));
+		if (conn != null) {
+			String format = "SELECT %s(value) FROM \"%s\" WHERE %s TIME >= '%s' AND TIME < '%s' GROUP BY time(%s) fill(0)";
+			String query = String.format(format, parameter.getType().getName(), parameter.getMeasurement(),
+			      parameter.getTags(), sdf.format(parameter.getStart()), sdf.format(parameter.getEnd()),
+			      parameter.getInterval());
 
-								datas.put(date.getTime(), data);
-							} catch (ParseException e) {
-								Cat.logError(e);
+			QueryResult queryResult = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
+			Map<Long, Double> datas = new LinkedHashMap<Long, Double>();
+
+			for (Result r : queryResult.getResults()) {
+				List<Series> series = r.getSeries();
+
+				if (series != null) {
+					for (Series s : series) {
+						if (s != null && s.getValues() != null) {
+							for (List<Object> v : s.getValues()) {
+								try {
+									Date date = sdf.parse(String.valueOf(v.get(0)));
+									double data = (double) (v.get(1));
+
+									datas.put(date.getTime(), data);
+								} catch (Exception e) {
+									Cat.logError(e);
+									System.out.println(v.get(0) + ":" + v.get(1));
+								}
 							}
 						}
 					}
 				}
 			}
-		}
-		return datas;
-	}
-
-	@Override
-	public Map<Long, Double> query(QueryParameter parameter) {
-		InfluxDBConnection conn = m_dataSourceService.getConnection(parameter.getCategory());
-
-		if (conn != null) {
-			String format = "SELECT %s(value) FROM \"%s\" WHERE %s TIME >= '%s' AND TIME < '%s' GROUP BY time(%s) fill(0)";
-			String query = String.format(format, parameter.getType().getName(), parameter.getMeasurement(),
-			      parameter.getTags(), m_sdf.format(parameter.getStart()), m_sdf.format(parameter.getEnd()),
-			      parameter.getInterval());
-
-			QueryResult queryResult = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
-			Map<Long, Double> datas = parseValue(queryResult);
-
 			return datas;
 		} else {
 			return Collections.emptyMap();
@@ -160,7 +145,8 @@ public class MetricServiceImpl implements MetricService, Initializable {
 		InfluxDBConnection conn = m_dataSourceService.getConnection(category);
 
 		if (conn != null) {
-			String query = "SHOW TAG VALUES FROM  /.*/  WITH KEY = \"endPoint\"";
+			String format = "SHOW TAG VALUES FROM  /%s.*/  WITH KEY = \"endPoint\"";
+			String query = String.format(format, category);
 			QueryResult result = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
 			List<String> results = parseData(result, 0);
 

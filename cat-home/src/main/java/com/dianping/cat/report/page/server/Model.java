@@ -34,9 +34,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Date m_endTime;
 
-	private Set<String> m_endPoints;
-
-	private Set<String> m_measures;
+	private Map<String, List<String>> m_endPoints;
 
 	private Set<String> m_graphs;
 
@@ -75,8 +73,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return new HashSet<String>();
 	}
 
-	public Set<String> getEndPoints() {
+	public Map<String, List<String>> getEndPoints() {
 		return m_endPoints;
+	}
+
+	public String getEndPointsJson() {
+		return new JsonBuilder().toJson(m_endPoints);
 	}
 
 	public Date getEndTime() {
@@ -93,10 +95,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public List<LineChart> getLineCharts() {
 		return m_lineCharts;
-	}
-
-	public Set<String> getMeasures() {
-		return m_measures;
 	}
 
 	public MetricScreenInfo getMetricScreenInfo() {
@@ -127,7 +125,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_config = config;
 	}
 
-	public void setEndPoints(Set<String> endPoints) {
+	public void setEndPoints(Map<String, List<String>> endPoints) {
 		m_endPoints = endPoints;
 	}
 
@@ -145,10 +143,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setLineCharts(List<LineChart> lineCharts) {
 		m_lineCharts = lineCharts;
-	}
-
-	public void setMeasures(Set<String> measures) {
-		m_measures = measures;
 	}
 
 	public void setMetricScreenInfo(MetricScreenInfo metricScreenInfo) {

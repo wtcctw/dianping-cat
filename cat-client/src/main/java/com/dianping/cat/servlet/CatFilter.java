@@ -104,7 +104,6 @@ public class CatFilter implements Filter {
 
 					setTraceMode(req);
 				} else {
-					System.out.println("===" + Cat.getManager().getThreadLocalMessageTree() + "====");
 					ctx.setType(CatConstants.TYPE_URL_FORWARD);
 				}
 
