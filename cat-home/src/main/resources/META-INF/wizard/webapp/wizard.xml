@@ -77,6 +77,9 @@
          <page name="browser" title="Browser" path="browser" template="default">
             <description>Browser</description>
          </page>
+         <page name="server" title="Server" path="server" template="default">
+            <description>Server</description>
+         </page>
          <page name="eslog" title="Eslog" path="eslog" template="default">
             <description>Eslog</description>
          </page>

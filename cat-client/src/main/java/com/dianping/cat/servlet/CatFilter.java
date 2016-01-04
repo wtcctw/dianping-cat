@@ -104,6 +104,7 @@ public class CatFilter implements Filter {
 
 					setTraceMode(req);
 				} else {
+					System.out.println("===" + Cat.getManager().getThreadLocalMessageTree() + "====");
 					ctx.setType(CatConstants.TYPE_URL_FORWARD);
 				}
 
@@ -313,21 +314,27 @@ public class CatFilter implements Filter {
 					ctx.handle();
 					customizeStatus(t, req);
 				} catch (ServletException e) {
-					Cat.logError(e);
 					t.setStatus(e);
+					Cat.logError(e);
 					throw e;
 				} catch (IOException e) {
-					Cat.logError(e);
 					t.setStatus(e);
+					Cat.logError(e);
 					throw e;
 				} catch (RuntimeException e) {
-					Cat.logError(e);
 					t.setStatus(e);
+					Cat.logError(e);
 					throw e;
+				} catch (Exception e) {
+					t.setStatus(e);
+					Cat.logError(e);
 				} catch (Error e) {
-					Cat.logError(e);
 					t.setStatus(e);
+					Cat.logError(e);
 					throw e;
+				} catch (Throwable e) {
+					t.setStatus(e);
+					Cat.logError(e);
 				} finally {
 					customizeUri(t, req);
 					t.complete();

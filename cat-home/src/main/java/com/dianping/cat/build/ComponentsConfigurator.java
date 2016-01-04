@@ -34,8 +34,13 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.DailyReportContentDao;
 import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.home.dal.report.MetricGraphDao;
+import com.dianping.cat.home.dal.report.MetricScreenDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.UserDefineRuleDao;
+import com.dianping.cat.influxdb.InfluxDB;
+import com.dianping.cat.influxdb.config.InfluxDBConfigManager;
+import com.dianping.cat.metric.DataSourceService;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.alert.browser.JsRuleConfigManager;
@@ -78,6 +83,10 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.eslog.EsServerConfigManager;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
 import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
+import com.dianping.cat.report.page.server.config.ServerMetricConfigManager;
+import com.dianping.cat.report.page.server.display.MetricScreenTransformer;
+import com.dianping.cat.report.page.server.service.MetricGraphService;
+import com.dianping.cat.report.page.server.service.MetricScreenService;
 import com.dianping.cat.report.page.state.StateGraphBuilder;
 import com.dianping.cat.report.page.state.service.StateReportService;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
@@ -212,8 +221,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TopoGraphFormatConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(EsServerConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      RouterConfigManager.class, AllReportConfigManager.class));
+		all.add(C(ServerMetricConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(ConfigReloadTask.class)
+		      .req(MetricConfigManager.class, ProductLineConfigManager.class, RouterConfigManager.class,
+		            AllReportConfigManager.class, InfluxDBConfigManager.class).req(DataSourceService.class, InfluxDB.ID)
+		      .req(ServerMetricConfigManager.class));
 
 		return all;
 	}
@@ -231,6 +243,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AppDataService.class).req(AppCommandDataDao.class, AppConfigManager.class));
 		all.add(C(AppConnectionService.class).req(AppConnectionDataDao.class, AppConfigManager.class));
+
+		all.add(C(GraphBuilder.class));
+		all.add(C(MetricScreenTransformer.class));
+		all.add(C(MetricScreenService.class).req(MetricScreenDao.class,
+		      com.dianping.cat.report.page.server.service.MetricGraphBuilder.class, MetricScreenTransformer.class));
+		all.add(C(MetricGraphService.class).req(MetricGraphDao.class));
 
 		return all;
 	}

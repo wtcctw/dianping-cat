@@ -50,8 +50,14 @@ public class TestStorageMessage {
 
 		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 		((DefaultMessageTree) tree).setDomain(domain);
-		Thread.sleep(500 + new Random().nextInt(1000));
-		t.setStatus(Transaction.SUCCESS);
+		int nextInt = new Random().nextInt(1000);
+		Thread.sleep(500 + nextInt);
+
+		if (nextInt % 2 == 0) {
+			t.setStatus(Transaction.SUCCESS);
+		} else {
+			t.setStatus("");
+		}
 		t.complete();
 	}
 

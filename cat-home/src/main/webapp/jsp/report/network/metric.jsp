@@ -100,7 +100,6 @@
 			var date='${model.date}';
 			var domain='${model.domain}';
 			var network=$("#search").val();
-			console.log(network);
 			var timeRange=${payload.timeRange};
 			var href = "?op=metric&date="+date+"&domain="+domain+"&product="+network+"&timeRange="+timeRange;
 			window.location.href=href;

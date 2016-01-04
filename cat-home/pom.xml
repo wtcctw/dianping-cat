@@ -19,6 +19,10 @@
          <artifactId>cat-hadoop</artifactId>
       </dependency>
       <dependency>
+         <groupId>com.dianping.cat</groupId>
+         <artifactId>cat-influxdb</artifactId>
+      </dependency>
+      <dependency>
          <groupId>org.unidal.webres</groupId>
          <artifactId>WebResServer</artifactId>
       </dependency>
@@ -137,9 +141,11 @@
 								${basedir}/src/main/resources/META-INF/dal/model/storage-alert-info-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/app-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/client-report-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/graph-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/js-rule-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/es-server-config-manifest.xml,
-						</manifest>
+								${basedir}/src/main/resources/META-INF/dal/model/server-metric-config-manifest.xml,
+					</manifest>
                   </configuration>
                </execution>
                <execution>
@@ -149,7 +155,15 @@
                      <goal>dal-jdbc</goal>
                   </goals>
                   <configuration>
-                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,]]></manifest>
+                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,,
+                        ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
+                     ,,
+                        ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
+                     ,,
+                        ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
+                     ,]]><![CDATA[,
+                        ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
+                     ,]]></manifest>
                   </configuration>
                </execution>
             </executions>
@@ -211,7 +225,6 @@
       </plugins>
    </build>
    <properties>
-      <packaging>war</packaging>
       <env>alpha</env>
       <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
    </properties>

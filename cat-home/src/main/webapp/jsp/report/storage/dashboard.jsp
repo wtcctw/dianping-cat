@@ -178,6 +178,7 @@
 			var hour = $(this).data("hour");
 			var minute = $(this).data("minute");
 			e.preventDefault();
+			console.log($("#dialog-message-"+targetId+"-"+hour+"-"+minute));
 			var dialog = $("#dialog-message-"+targetId+"-"+hour+"-"+minute).removeClass('hide').dialog({
 				width:'auto',
 				modal: true,
