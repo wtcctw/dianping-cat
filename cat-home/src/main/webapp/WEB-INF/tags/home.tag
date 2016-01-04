@@ -53,15 +53,20 @@
 					</li>
 					<li id="mobileMonitorButton" >
 						<a href="/cat/r/home?op=view&docName=mobileMonitor">
-							<i class="menu-icon fa fa-globe"></i>
+							<i class="menu-icon glyphicon glyphicon-phone"></i>
 							<span class="menu-text">移动监控</span>
 						</a>
 						<b class="arrow"></b>
 					</li>
 					<li id="browserMonitorButton">
 						<a href="/cat/r/home?op=view&docName=browserMonitor">
-							<i class="menu-icon fa fa-desktop"></i>
+							<i class="menu-icon fa fa-globe"></i>
 							<span class="menu-text">浏览器监控</span></a>
+							<b class="arrow"></b></li>
+					<li id="serverMonitorButton">
+						<a href="/cat/r/home?op=view&docName=serverMonitor">
+							<i class="menu-icon fa fa-desktop"></i>
+							<span class="menu-text">服务端监控</span></a>
 							<b class="arrow"></b></li>
 					<li id="alertButton" >
 						<a href="/cat/r/home?op=view&docName=alert">

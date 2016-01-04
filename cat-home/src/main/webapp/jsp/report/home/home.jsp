@@ -27,6 +27,9 @@
 	   	<c:when test="${payload.docName == 'mobileMonitor'}">
 	   		<%@ include file="mobile.jsp"%>
 	   	</c:when>
+	   	<c:when test="${payload.docName == 'serverMonitor'}">
+	   		<%@ include file="server/server.jsp"%>
+	   	</c:when>
 	  	<c:when test="${payload.docName == 'alert'}">
 	   		<%@ include file="alert.jsp"%>
 	   	</c:when>
