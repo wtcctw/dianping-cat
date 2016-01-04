@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entities do-package="com.dianping.cat.app" gen="true" >
+    <entity name="app-command-data-daily" table="app_command_data_daily" alias="acdd">
+      <var name="command-id" value-type="int" />
+     <query-defs>
+      <query name="insert-or-update" type="INSERT"  batch="true">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>) ON DUPLICATE KEY UPDATE 
+        access_number = access_number + ${access-number},
+        response_sum_time = response_sum_time + ${response-sum-time},
+        request_package = request_package + ${request-package},
+        response_package = response_package + ${response-package}
+         ]]></statement>
+      </query>
+      </query-defs>
+  	</entity>
    <entity name="app-command-data" table="app_command_data" alias="acd">
     <member name="access-number" field="access_number" value-type="long" length="19" nullable="false" />
     <member name="response-sum-time" field="response_sum_time" value-type="long" length="19" nullable="false" />
