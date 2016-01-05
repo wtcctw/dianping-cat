@@ -71,11 +71,23 @@
 		</div>
 	</div>
 	<div
-		style="height: 450px; width: 630px; float: left; margin-left: 20px; margin-top: 40px; border: 1px solid #c5d0dc">
-		<h4 align="center">响应时间趋势(ms)</h4>
-		<div id="lineChart" style="height: 400px"></div>
+		style="height: 450px; width: 630px; float: left; margin-left: 20px; margin-top: 40px; ">
+		<ul class="nav nav-tabs padding-12 tab-color-blue background-blue"
+			style="height: 85px;">
+		<h4 align="center">访问趋势</h4>
+			<li class="active"><a href="#trend_delay" data-toggle="tab"><strong>响应时间</strong></a></li>
+			<li><a href="#trend_success" data-toggle="tab"><strong>成功率(%)</strong></a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="trend_delay">
+				<div id="lineChart" style="height: 340px;"></div>
+			</div>
+			<div class="tab-pane" id="trend_success">
+				<div id="successLineChart" style="height: 340px;"></div>
+			</div>
+		</div>
 	</div>
-
+	
 	<div
 		style="height: 450px; width: 420px; margin-left: 30px; float: left; margin-top: 40px">
 		<ul class="nav nav-tabs padding-12 tab-color-blue background-blue"
@@ -218,6 +230,9 @@ $(document).ready(
 		
 		var data = ${model.dashBoardInfo.lineChart.jsonString};
 		graphLineChartForDashboard(document.getElementById("lineChart"), data);
+		
+		var successData = ${model.dashBoardInfo.successLineChart.jsonString};
+		graphLineChartForDashboard(document.getElementById("successLineChart"), successData);
 	});
 	
 function getFromTime() {

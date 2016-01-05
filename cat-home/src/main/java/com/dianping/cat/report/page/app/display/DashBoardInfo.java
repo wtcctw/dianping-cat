@@ -7,23 +7,33 @@ import com.dianping.cat.report.graph.MapChart;
 public class DashBoardInfo {
 
 	private MapChart m_mapChart = new MapChart();
-	
+
 	private MapChart m_successMapChart = new MapChart();
-	
+
 	private BarChart m_operatorChart = new BarChart();
-	
+
 	private BarChart m_versionChart = new BarChart();
-	
+
 	private BarChart m_platformChart = new BarChart();
-	
+
 	private BarChart m_operatorSuccessChart = new BarChart();
-	
+
 	private BarChart m_platformSuccessChart = new BarChart();
-	
+
 	private BarChart m_versionSuccessChart = new BarChart();
-	
+
 	private LineChart m_lineChart = new LineChart();
-	
+
+	private LineChart m_successLineChart = new LineChart();
+
+	public LineChart getSuccessLineChart() {
+		return m_successLineChart;
+	}
+
+	public void setSuccessLineChart(LineChart successLineChart) {
+		m_successLineChart = successLineChart;
+	}
+
 	public MapChart getSuccessMapChart() {
 		return m_successMapChart;
 	}
@@ -95,5 +105,5 @@ public class DashBoardInfo {
 	public void setVersionChart(BarChart versionChart) {
 		m_versionChart = versionChart;
 	}
-	
+
 }
