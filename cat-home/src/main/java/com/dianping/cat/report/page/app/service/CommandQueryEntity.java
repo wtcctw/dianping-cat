@@ -12,9 +12,9 @@ public class CommandQueryEntity extends BaseQueryEntity {
 
 	public static final int DEFAULT_COMMAND = 1;
 
-	private int m_code = DEFAULT_VALUE;
+	protected int m_code = DEFAULT_VALUE;
 
-	private int m_connectType = DEFAULT_VALUE;
+	protected int m_connectType = DEFAULT_VALUE;
 
 	private int m_startMinuteOrder = DEFAULT_VALUE;
 

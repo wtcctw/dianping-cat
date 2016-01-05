@@ -13,6 +13,7 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.app.service.AppDataField;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 import com.dianping.cat.report.page.app.service.CrashLogQueryEntity;
+import com.dianping.cat.report.page.app.service.DailyCommandQueryEntity;
 import com.dianping.cat.report.page.app.service.SpeedQueryEntity;
 
 public class Payload extends AbstractReportPayload<Action, ReportPage> {
@@ -175,6 +176,14 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public String getSort() {
 		return m_sort;
+	}
+	
+	public DailyCommandQueryEntity getCommandDailyQueryEntity() {
+		if (m_query1 != null && m_query1.length() > 0) {
+			return new DailyCommandQueryEntity(m_query1);
+		} else {
+			return new DailyCommandQueryEntity();
+		}
 	}
 
 	public SpeedQueryEntity getSpeedQueryEntity1() {

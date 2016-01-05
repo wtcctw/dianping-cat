@@ -62,6 +62,8 @@ import com.dianping.cat.report.page.app.service.AppSpeedService;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 import com.dianping.cat.report.page.app.service.CrashLogQueryEntity;
 import com.dianping.cat.report.page.app.service.CrashLogService;
+import com.dianping.cat.report.page.app.service.DailyCommandQueryEntity;
+import com.dianping.cat.report.page.app.service.DailyReportService;
 import com.dianping.cat.report.page.app.service.DashBoardBuilder;
 import com.dianping.cat.report.page.app.service.SpeedQueryEntity;
 import com.dianping.cat.service.ProjectService;
@@ -112,6 +114,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private DashBoardBuilder m_dashboardBuilder;
+	
+	@Inject
+	private DailyReportService m_dailyService;
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
@@ -439,6 +444,9 @@ public class Handler implements PageHandler<Context> {
 		case SPEED_GRAPH:
 			buildSpeedBarCharts(payload, model);
 			break;
+		case APP_COMMAND_DAILY:
+			buildCommandDailyChart(payload, model);
+			break;
 		case CONN_LINECHART:
 			Pair<LineChart, List<AppDataDetail>> lineChartPair = buildConnLineChart(model, payload);
 
@@ -487,6 +495,13 @@ public class Handler implements PageHandler<Context> {
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
+	}
+
+	private void buildCommandDailyChart(Payload payload, Model model) {
+		DailyCommandQueryEntity queryEntity = payload.getCommandDailyQueryEntity();
+		
+		LineChart lineChart = m_dailyService.buildLineChart(queryEntity, payload.getQueryType());
+		model.setLineChart(lineChart);
 	}
 
 	private void normalize(Model model, Payload payload) {

@@ -33,6 +33,9 @@
 							<li id="accessPiechart"><a href="/cat/r/app?op=piechart&domain=${model.domain}">
 								<i class="menu-icon fa fa-caret-right"></i>Api访问分布</a>
 								<b class="arrow"></b></li>
+							<li id="apiDaily"><a href="/cat/r/app?op=commandDaily">
+								<i class="menu-icon fa fa-caret-right"></i>Api访问日报表</a>
+								<b class="arrow"></b></li>
 							<li id="speed"><a href="/cat/r/app?op=speed&domain=${model.domain}">
 								<i class="menu-icon fa fa-caret-right"></i>App页面测速</a>
 								<b class="arrow"></b></li>

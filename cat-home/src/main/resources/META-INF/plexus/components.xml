@@ -2379,6 +2379,11 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-command-data-daily</role-hint>
+			<implementation>com.dianping.cat.config.app.AppCmdDailyTableProvider</implementation>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>app-connection-data</role-hint>
 			<implementation>com.dianping.cat.config.app.AppConnectionTableProvider</implementation>
 		</component>
@@ -5256,6 +5261,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.app.service.DashBoardBuilder</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.app.service.DailyReportService</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5524,6 +5532,27 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.app.service.DailyReportService</role>
+			<implementation>com.dianping.cat.report.page.app.service.DailyReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.app.AppCommandDataDailyDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.app.AppCommandDataDailyDao</role>
+			<implementation>com.dianping.cat.app.AppCommandDataDailyDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -22,6 +22,8 @@ public enum JspFile {
 	SPEED("/jsp/report/app/speed.jsp"),
 
 	SPEED_GRAPH("/jsp/report/app/speedGraph.jsp"),
+	
+	APP_COMMAND_DAILY("/jsp/report/app/commandDaily.jsp"),
 
 	STATISTICS("/jsp/report/app/statistics.jsp"),
 	

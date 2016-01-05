@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entities do-package="com.dianping.cat.app" gen="true" >
     <entity name="app-command-data-daily" table="app_command_data_daily" alias="acdd">
+      <member name="access-number-sum" value-type="long" all="false" select-expr="sum(access_number)" length="19" nullable="false" />
+      <member name="response-sum-time-sum" value-type="long" all="false" select-expr="sum(response_sum_time)" length="19" nullable="false" />
       <var name="command-id" value-type="int" />
+      <var name="start-date" value-type="Date" />
+	  <var name="end-date" value-type="Date" />
+	  <readsets>
+	  <readset name="COUNT-DATA">
+      	<member name="period"/>
+      	<member name="access-number-sum"/>
+      </readset>
+      <readset name="AVG-DATA">
+      	<member name="period"/>
+      	<member name="access-number-sum"/>
+      	<member name="response-sum-time-sum"/>
+      </readset>
+      <readset name="SUCCESS-DATA">
+      	<member name="period"/>
+      	<member name="code"/>
+      	<member name="access-number-sum"/>
+      </readset>
+	  </readsets>
      <query-defs>
       <query name="insert-or-update" type="INSERT"  batch="true">
         <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
@@ -11,6 +31,86 @@
         request_package = request_package + ${request-package},
         response_package = response_package + ${response-package}
          ]]></statement>
+      </query>
+      <query name="find-data-by-period-code" type="SELECT" multiple="true">
+        <param name="command-id" />
+        <param name="start-date" />
+        <param name="end-date" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="connect-type" />
+        <param name="code" />
+        <param name="platform" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE
+         <FIELD name='period'/> >= ${start-date} 
+         AND  <FIELD name='period'/> <= ${end-date} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NE' field='app-version' value='-1'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+        <IF type='NE' field='connect-type' value='-1'>
+			AND  <FIELD name='connect-type'/> = ${connect-type}
+		</IF>
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+        group by  <FIELD name='period'/>, <FIELD name='code'/>
+         order by <FIELD name='period'/>  ]]></statement>
+      </query>
+     <query name="find-data-by-period" type="SELECT" multiple="true">
+        <param name="command-id" />
+        <param name="start-date" />
+        <param name="end-date" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="connect-type" />
+        <param name="code" />
+        <param name="platform" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE
+         <FIELD name='period'/> >= ${start-date} 
+         AND  <FIELD name='period'/> <= ${end-date} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NE' field='app-version' value='-1'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+        <IF type='NE' field='connect-type' value='-1'>
+			AND  <FIELD name='connect-type'/> = ${connect-type}
+		</IF>
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+        group by  <FIELD name='period'/> 
+        order by <FIELD name='period'/>  ]]></statement>
       </query>
       </query-defs>
   	</entity>

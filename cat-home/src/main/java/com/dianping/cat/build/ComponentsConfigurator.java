@@ -15,6 +15,7 @@ import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppConnectionDataDao;
 import com.dianping.cat.app.AppSpeedDataDao;
+import com.dianping.cat.config.app.AppCmdDailyTableProvider;
 import com.dianping.cat.config.app.AppCommandTableProvider;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppConnectionTableProvider;
@@ -165,6 +166,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
 		all.add(C(TableProvider.class, "app-command-data", AppCommandTableProvider.class));
+		all.add(C(TableProvider.class, "app-command-data-daily", AppCmdDailyTableProvider.class));
 		all.add(C(TableProvider.class, "app-connection-data", AppConnectionTableProvider.class));
 		all.add(C(TableProvider.class, "app-speed-data", AppSpeedTableProvider.class));
 		all.add(C(TableProvider.class, "ajax-data", AjaxDataTableProvider.class));
