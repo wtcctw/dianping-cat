@@ -5244,13 +5244,7 @@
 					<role>com.dianping.cat.report.alert.app.AppRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.app.processor.CrashLogProcessor</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.app.service.CrashLogService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.app.service.AppReportService</role>
@@ -5428,26 +5422,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.app.processor.CrashLogProcessor</role>
-			<implementation>com.dianping.cat.report.page.app.processor.CrashLogProcessor</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.problem.service.ProblemReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>problem</role-hint>
-					<field-name>m_service</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

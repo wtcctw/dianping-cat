@@ -28,9 +28,6 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		case CONN_PIECHART_JSON:
 		case APP_CONFIG_FETCH:
 			return JspFile.APP_FETCH_DATA.getPath();
-		case HOURLY_CRASH_LOG:
-		case HISTORY_CRASH_LOG:
-			return JspFile.CRASH_LOG.getPath();
 		case APP_CRASH_LOG:
 			return JspFile.APP_CRASH_LOG.getPath();
 		case APP_CRASH_LOG_DETAIL:

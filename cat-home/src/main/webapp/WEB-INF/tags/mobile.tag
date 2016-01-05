@@ -51,11 +51,8 @@
 							<li id="connPiechart"><a href="/cat/r/app?op=connPiechart&domain=${model.domain}">
 								<i class="menu-icon fa fa-caret-right"></i>长连访问分布</a>
 								<b class="arrow"></b></li>
-							<li id="crashLog"><a href="/cat/r/app?op=crashLog&domain=${model.domain}">
-								<i class="menu-icon fa fa-caret-right"></i>AppCrash日志</a>
-								<b class="arrow"></b></li>
 							<li id="appCrashLog"><a href="/cat/r/app?op=appCrashLog">
-								<i class="menu-icon fa fa-caret-right"></i>Crash日志(新)</a>
+								<i class="menu-icon fa fa-caret-right"></i>AppCrash日志</a>
 								<b class="arrow"></b></li>
 							<li id="eslog"><a href="/cat/r/eslog" target="_blank">
 								<i class="menu-icon fa fa-caret-right"></i>dpid实时日志</a>

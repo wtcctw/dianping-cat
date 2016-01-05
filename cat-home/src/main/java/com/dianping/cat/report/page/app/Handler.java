@@ -35,7 +35,6 @@ import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.app.entity.AppReport;
-import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.graph.LineChart;
@@ -53,7 +52,6 @@ import com.dianping.cat.report.page.app.display.CrashLogDisplayInfo;
 import com.dianping.cat.report.page.app.display.DashBoardInfo;
 import com.dianping.cat.report.page.app.display.DisplayCommands;
 import com.dianping.cat.report.page.app.display.UpdateStatus;
-import com.dianping.cat.report.page.app.processor.CrashLogProcessor;
 import com.dianping.cat.report.page.app.service.AppConnectionService;
 import com.dianping.cat.report.page.app.service.AppDataField;
 import com.dianping.cat.report.page.app.service.AppDataService;
@@ -98,13 +96,7 @@ public class Handler implements PageHandler<Context> {
 	private AppRuleConfigManager m_appRuleConfigManager;
 
 	@Inject
-	private CrashLogProcessor m_crashLogProcessor;
-
-	@Inject
 	private CrashLogService m_crashLogService;
-
-	@Inject
-	private PayloadNormalizer m_normalizePayload;
 
 	@Inject
 	private AppReportService m_appReportService;
@@ -114,7 +106,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private DashBoardBuilder m_dashboardBuilder;
-	
+
 	@Inject
 	private DailyReportService m_dailyService;
 
@@ -420,10 +412,6 @@ public class Handler implements PageHandler<Context> {
 		case APP_CONFIG_FETCH:
 			fetchConfig(payload, model);
 			break;
-		case HOURLY_CRASH_LOG:
-		case HISTORY_CRASH_LOG:
-			m_crashLogProcessor.process(action, payload, model);
-			break;
 		case APP_CRASH_LOG:
 			buildAppCrashLog(payload, model);
 			break;
@@ -499,7 +487,7 @@ public class Handler implements PageHandler<Context> {
 
 	private void buildCommandDailyChart(Payload payload, Model model) {
 		DailyCommandQueryEntity queryEntity = payload.getCommandDailyQueryEntity();
-		
+
 		LineChart lineChart = m_dailyService.buildLineChart(queryEntity, payload.getQueryType());
 		model.setLineChart(lineChart);
 	}
@@ -521,7 +509,6 @@ public class Handler implements PageHandler<Context> {
 		Command defaultCommand = m_appConfigManager.getRawCommands().get(CommandQueryEntity.DEFAULT_COMMAND);
 
 		model.setDefaultCommand(defaultCommand.getName() + "|" + defaultCommand.getTitle());
-		m_normalizePayload.normalize(model, payload);
 	}
 
 	private SpeedQueryEntity normalizeQueryEntity(Payload payload, Map<String, List<Speed>> speeds) {
