@@ -2392,6 +2392,11 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-command-data-daily</role-hint>
+			<implementation>com.dianping.cat.config.app.AppCmdDailyTableProvider</implementation>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>app-connection-data</role-hint>
 			<implementation>com.dianping.cat.config.app.AppConnectionTableProvider</implementation>
 		</component>
@@ -2619,6 +2624,16 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-command-data-daily</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>app-command-data-daily</logical-table-name>
+				<physical-table-name>app_command_data_daily</physical-table-name>
+				<data-source-name>app</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>app-connection-data</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -2660,6 +2675,15 @@
 		<component>
 			<role>com.dianping.cat.app.AppCommandDataDao</role>
 			<implementation>com.dianping.cat.app.AppCommandDataDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.app.AppCommandDataDailyDao</role>
+			<implementation>com.dianping.cat.app.AppCommandDataDailyDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -5233,13 +5257,7 @@
 					<role>com.dianping.cat.report.alert.app.AppRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.app.processor.CrashLogProcessor</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.app.service.CrashLogService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.app.service.AppReportService</role>
@@ -5249,6 +5267,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.app.service.DashBoardBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.app.service.DailyReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5418,26 +5439,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.app.processor.CrashLogProcessor</role>
-			<implementation>com.dianping.cat.report.page.app.processor.CrashLogProcessor</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.problem.service.ProblemReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>problem</role-hint>
-					<field-name>m_service</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.app.service.CrashLogService</role>
 			<implementation>com.dianping.cat.report.page.app.service.CrashLogService</implementation>
 			<requirements>
@@ -5518,6 +5519,27 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.app.service.DailyReportService</role>
+			<implementation>com.dianping.cat.report.page.app.service.DailyReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.app.AppCommandDataDailyDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.app.AppCommandDataDailyDao</role>
+			<implementation>com.dianping.cat.app.AppCommandDataDailyDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>

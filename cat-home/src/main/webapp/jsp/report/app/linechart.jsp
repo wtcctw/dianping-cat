@@ -200,7 +200,6 @@
 					var command1 = $('#command');
 					var command2 = $('#command2');
 					var words = query1.split(";");
-
 					
 					if(typeof(words[1]) != 'undefined' && words[1].length > 0){
 						$("#command").val('${payload.commandId}');

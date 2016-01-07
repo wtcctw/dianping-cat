@@ -12,9 +12,9 @@ public class CommandQueryEntity extends BaseQueryEntity {
 
 	public static final int DEFAULT_COMMAND = 1;
 
-	private int m_code = DEFAULT_VALUE;
+	protected int m_code = DEFAULT_VALUE;
 
-	private int m_connectType = DEFAULT_VALUE;
+	protected int m_connectType = DEFAULT_VALUE;
 
 	private int m_startMinuteOrder = DEFAULT_VALUE;
 
@@ -47,8 +47,8 @@ public class CommandQueryEntity extends BaseQueryEntity {
 
 	public CommandQueryEntity(Date date, String conditions, int start, int end) {
 		m_date = date;
-		m_startMinuteOrder = start;
-		m_endMinuteOrder = end;
+		m_startMinuteOrder = start - start % 5;
+		m_endMinuteOrder = end - end % 5;
 
 		List<String> strs = Splitters.by(";").split(conditions);
 
@@ -72,6 +72,7 @@ public class CommandQueryEntity extends BaseQueryEntity {
 		int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 		int minute = Calendar.getInstance().get(Calendar.MINUTE);
 		m_endMinuteOrder = hour * 60 + minute;
+		m_endMinuteOrder = m_endMinuteOrder - m_endMinuteOrder % 5;
 		m_startMinuteOrder = m_endMinuteOrder - 30;
 
 		if (m_startMinuteOrder < 0) {

@@ -507,7 +507,7 @@ function graphLineChart(container, data) {
 								+ this.series.name
 								+ '</b><br/>'
 								+ Highcharts.dateFormat('%Y-%m-%d %H:%M',
-										this.x) + ': ' + this.y;
+										this.x) + ': ' +  this.y.toFixed(2);
 					}
 				},
 				series : _data
@@ -569,7 +569,7 @@ function graphLineChartForDashboard(container, data) {
 					formatter : function() {
 						return Highcharts.dateFormat('%Y-%m-%d %H:%M',
 										this.x) + "~" +  Highcharts.dateFormat('%H:%M', (this.x + 300000)) +
-								'<br/><b>'	+ this.series.name	+ '</b>'+ ': ' + this.y ;
+								'<br/><b>'	+ this.series.name	+ '</b>'+ ': ' + this.y.toFixed(2) ;
 					}
 				},
 				series : _data

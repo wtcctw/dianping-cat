@@ -28,7 +28,6 @@ import com.dianping.cat.report.page.app.display.CrashLogDetailInfo;
 import com.dianping.cat.report.page.app.display.CrashLogDisplayInfo;
 import com.dianping.cat.report.page.app.display.DashBoardInfo;
 import com.dianping.cat.report.page.app.display.DisplayCommands;
-import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
 
 @ModelMeta(Constants.APP)
 public class Model extends AbstractReportModel<Action, ReportPage, Context> {
@@ -69,8 +68,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private int m_commandId;
 
 	private ProblemStatistics m_problemStatistics;
-
-	private FieldsInfo m_fieldsInfo;
 
 	private ProblemReport m_problemReport;
 
@@ -222,10 +219,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_fetchData;
 	}
 
-	public FieldsInfo getFieldsInfo() {
-		return m_fieldsInfo;
-	}
-
 	public String getGlobalCodesJson() {
 		return new JsonBuilder().toJson(m_globalCodes);
 	}
@@ -344,10 +337,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setFetchData(String fetchData) {
 		m_fetchData = fetchData;
-	}
-
-	public void setFieldsInfo(FieldsInfo fieldsInfo) {
-		m_fieldsInfo = fieldsInfo;
 	}
 
 	public void setGlobalCodes(Map<Integer, Code> globalCodes) {

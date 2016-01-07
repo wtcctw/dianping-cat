@@ -9,16 +9,14 @@ public enum Action implements org.unidal.web.mvc.Action {
 	PIECHART("piechart"),
 
 	PIECHART_JSON("piechartJson"),
+	
+	APP_COMMAND_DAILY("commandDaily"),
 
 	APP_ADD("appAdd"),
 
 	APP_DELETE("appDelete"),
 
 	APP_CONFIG_FETCH("appConfigFetch"),
-
-	HOURLY_CRASH_LOG("crashLog"),
-
-	HISTORY_CRASH_LOG("historyCrashLog"),
 
 	APP_CRASH_LOG("appCrashLog"),
 
@@ -29,7 +27,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	SPEED_JSON("speedJson"),
 
 	SPEED_GRAPH("speedGraph"),
-
+	
 	CONN_LINECHART("connLinechart"),
 
 	CONN_LINECHART_JSON("connLinechartJson"),

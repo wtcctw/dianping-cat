@@ -304,11 +304,11 @@ public class AppConfigManager implements Initializable {
 	public Map<Integer, Code> queryCodeByCommand(int command) {
 		Command c = m_config.findCommand(command);
 		Map<Integer, Code> result = new HashMap<Integer, Code>();
+	
+		result.putAll(m_config.getCodes());
 
 		if (c != null) {
 			Map<Integer, Code> values = c.getCodes();
-
-			result.putAll(m_config.getCodes());
 			result.putAll(values);
 		}
 		return result;
