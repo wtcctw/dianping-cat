@@ -93,7 +93,8 @@
 	</table>
 	
 	<br>
-	<table>
+	<table class="table table-striped table-condensed table-hover ">
+		<tr><th>日志明细</th></tr>
 		<c:forEach var="item" items="${model.logs}" >
 			<tr><td>${item}</td></tr>
 		</c:forEach>

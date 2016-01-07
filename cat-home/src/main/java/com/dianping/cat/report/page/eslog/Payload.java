@@ -34,7 +34,7 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	@FieldMeta("content")
 	private String m_content;
-
+	
 	@FieldMeta("type")
 	private String m_type = "applog";
 
