@@ -68,9 +68,10 @@ public class DataSourceServiceImpl implements DataSourceService<InfluxDBConnecti
 	@Override
 	public void refresh() {
 		InfluxdbConfig config = m_configManager.getConfig();
+		String oldxml = m_influxdbConfig.toString();
 
-		if (!m_influxdbConfig.equals(config)) {
-			m_influxdbConfig = m_configManager.getConfig();
+		if (!oldxml.equals(config.toString())) {
+			m_influxdbConfig = config;
 			m_connections = buildConnections(m_influxdbConfig);
 		}
 	}
