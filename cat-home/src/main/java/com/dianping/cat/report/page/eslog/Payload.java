@@ -11,7 +11,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
 
-public class Payload extends AbstractReportPayload<Action,ReportPage> {
+public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private ReportPage m_page;
 
 	@FieldMeta("op")
@@ -28,21 +28,21 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 
 	@FieldMeta("business")
 	private String m_business;
-	
+
 	@FieldMeta("dpid")
 	private String m_dpid;
 
 	@FieldMeta("content")
 	private String m_content;
-	
+
 	@FieldMeta("type")
-	private String m_type;
-	
+	private String m_type = "applog";
+
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	public Payload() {
-	   super(ReportPage.ESLOG);
-   }
+		super(ReportPage.ESLOG);
+	}
 
 	@Override
 	public Action getAction() {
@@ -93,7 +93,7 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 				// ingnore
 			}
 		}
-		return new Date(System.currentTimeMillis()-TimeHelper.ONE_HOUR);
+		return new Date(System.currentTimeMillis() - TimeHelper.ONE_HOUR);
 	}
 
 	public String getType() {

@@ -145,7 +145,7 @@ public class MetricServiceImpl implements MetricService {
 		InfluxDBConnection conn = m_dataSourceService.getConnection(category);
 
 		if (conn != null) {
-			String format = "SHOW TAG VALUES FROM  /%s.*/  WITH KEY = \"endPoint\"";
+			String format = "SHOW TAG VALUES FROM  /^%s.*/  WITH KEY = \"endPoint\"";
 			String query = String.format(format, category);
 			QueryResult result = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
 			List<String> results = parseData(result, 0);
