@@ -85,9 +85,23 @@
 								${basedir}/src/main/resources/META-INF/dal/jdbc/web-manifest.xml, <![CDATA[,
                         ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
                         ${basedir}/src/main/resources/META-INF/dal/jdbc/config-manifest.xml,
-                     ,]]><![CDATA[,
+                     ,,
                         ${basedir}/src/main/resources/META-INF/dal/jdbc/web-manifest.xml,
+                     ,]]><![CDATA[,
+                        ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
+                        ${basedir}/src/main/resources/META-INF/dal/jdbc/config-manifest.xml,
+                        ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,
                      ,]]></manifest>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>generate plexus component descriptor</id>
+                  <phase>process-classes</phase>
+                  <goals>
+                     <goal>plexus</goal>
+                  </goals>
+                  <configuration>
+                     <className>com.dianping.cat.build.ComponentsConfigurator</className>
                   </configuration>
                </execution>
             </executions>

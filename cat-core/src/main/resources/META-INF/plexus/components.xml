@@ -715,5 +715,14 @@
 				</requirement>
 			</requirements>
 		</component>
+		<component>
+			<role>com.dianping.cat.alarm.ServerAlarmRuleService</role>
+			<implementation>com.dianping.cat.alarm.ServerAlarmRuleService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.alarm.ServerAlarmRuleDao</role>
+				</requirement>
+			</requirements>
+		</component>
 	</components>
 </plexus>

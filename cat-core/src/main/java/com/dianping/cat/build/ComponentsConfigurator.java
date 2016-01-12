@@ -83,9 +83,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(CommandFormatHandler.class, ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(AppConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		
+
 		all.add(C(WebConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		
+
 		all.add(C(WebSpeedConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(AppSpeedConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
@@ -103,9 +103,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(new CatCoreDatabaseConfigurator().defineComponents());
 		all.addAll(new AppDatabaseConfigurator().defineComponents());
 		all.addAll(new WebDatabaseConfigurator().defineComponents());
-		
+
 		all.addAll(new CodecComponentConfigurator().defineComponents());
 		all.addAll(new StorageComponentConfigurator().defineComponents());
+		all.addAll(new AlarmComponentConfigurator().defineComponents());
 
 		return all;
 	}

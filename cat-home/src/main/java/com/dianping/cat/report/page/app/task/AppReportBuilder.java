@@ -58,15 +58,19 @@ public class AppReportBuilder implements TaskBuilder {
 
 	public static final int COMMAND_MIN_COUNT = 10;
 
-	private void appCommandPrune(AppReport appReport) {
+	private void pruneAppCommand(AppReport appReport) {
 		for (Entry<Integer, com.dianping.cat.home.app.entity.Command> command : appReport.getCommands().entrySet()) {
 			if (command.getValue().getCount() < COMMAND_MIN_COUNT) {
-				int id = command.getKey();
-				boolean success = m_appConfigManager.deleteCommand(id);
+				try {
+					int id = command.getKey();
+					boolean success = m_appConfigManager.deleteCommand(id);
 
-				if (success) {
-					Cat.logEvent("AppCommandPrune", String.valueOf(id));
-					m_appRuleConfigManager.deleteByCommandId(id);
+					if (success) {
+						Cat.logEvent("AppCommandPrune", String.valueOf(id));
+						m_appRuleConfigManager.deleteByCommandId(id);
+					}
+				} catch (Exception e) {
+					Cat.logError(e);
 				}
 			}
 		}
@@ -92,7 +96,7 @@ public class AppReportBuilder implements TaskBuilder {
 		try {
 			AppReport appReport = buildDailyReport(domain, period);
 
-			appCommandPrune(appReport);
+			pruneAppCommand(appReport);
 
 			DailyReport report = new DailyReport();
 
