@@ -66,7 +66,9 @@ public class AppReportBuilder implements TaskBuilder {
 					boolean success = m_appConfigManager.deleteCommand(id);
 
 					if (success) {
-						Cat.logEvent("AppCommandPrune", String.valueOf(id));
+						String name = m_appConfigManager.getRawCommands().get(id).getName();
+
+						Cat.logEvent("AppCommandPrune", name);
 						m_appRuleConfigManager.deleteByCommandId(id);
 					}
 				} catch (Exception e) {
