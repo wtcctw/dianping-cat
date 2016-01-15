@@ -33,6 +33,7 @@ import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.OverloadDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
+import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.page.app.service.AppReportService;
 import com.dianping.cat.report.page.app.task.AppDatabasePruner;
 import com.dianping.cat.report.page.app.task.AppReportBuilder;
@@ -222,17 +223,20 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AppDatabaseConfigurator.class).req(AppCommandDataDao.class, AppSpeedDataDao.class));
 
 		all.add(C(TaskBuilder.class, AppDatabasePruner.ID, AppDatabasePruner.class).req(AppCommandDataDao.class,
-		      AppSpeedDataDao.class, AppSpeedConfigManager.class, AppConfigManager.class, CrashLogDao.class, CrashLogContentDao.class));
-		
+		      AppSpeedDataDao.class, AppSpeedConfigManager.class, AppConfigManager.class, CrashLogDao.class,
+		      CrashLogContentDao.class));
+
 		all.add(C(TaskBuilder.class, WebDatabasePruner.ID, WebDatabasePruner.class).req(AjaxDataDao.class,
-		      WebSpeedDataDao.class, WebSpeedConfigManager.class, UrlPatternConfigManager.class, JsErrorLogDao.class, JsErrorLogContentDao.class));
+		      WebSpeedDataDao.class, WebSpeedConfigManager.class, UrlPatternConfigManager.class, JsErrorLogDao.class,
+		      JsErrorLogContentDao.class));
 
 		all.add(C(TaskBuilder.class, MetricGraphPruner.ID, MetricGraphPruner.class).req(MetricGraphService.class));
 
 		all.add(C(CommandAutoCompleter.class).req(TransactionReportService.class, AppConfigManager.class));
 
 		all.add(C(TaskBuilder.class, AppReportBuilder.ID, AppReportBuilder.class).req(AppCommandDataDao.class,
-		      AppConfigManager.class, AppReportService.class, TransactionReportService.class, CommandAutoCompleter.class));
+		      AppConfigManager.class, AppReportService.class, TransactionReportService.class, CommandAutoCompleter.class,
+		      AppRuleConfigManager.class));
 
 		all.add(C(ReportFacade.class));
 
