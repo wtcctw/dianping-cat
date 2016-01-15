@@ -476,12 +476,12 @@ CREATE TABLE `server_alarm_rule` (
   `category` varchar(50) NOT NULL COMMENT '监控分类',
   `endPoint` varchar(200) NOT NULL COMMENT '监控对象ID',
   `measurement` varchar(200) NOT NULL COMMENT '监控指标',
+  `tags` varchar(200) NOT NULL COMMENT '监控指标标签',
   `content` varchar(200) NOT NULL COMMENT '配置的具体内容',
   `type` longtext COMMENT '数据聚合方式',
   `creator` varchar(100) NOT NULL COMMENT '创建人',
   `creation_date` datetime NOT NULL COMMENT '配置创建时间',
   `updatetime` datetime NOT NULL COMMENT '配置修改时间',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `category_endPint_measure` (`category`,`endPoint`,`measurement`),
   KEY `updatetime` (`updatetime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统告警的配置';
