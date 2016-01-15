@@ -29,8 +29,6 @@ public class LocalMessageBucket implements MessageBucket {
 
 	private File m_baseDir = new File(".");
 
-	private MessageBlockReader m_reader;
-
 	private MessageBlockWriter m_writer;
 
 	private AtomicBoolean m_dirty = new AtomicBoolean();
@@ -50,14 +48,12 @@ public class LocalMessageBucket implements MessageBucket {
 	@Override
 	public void close() throws IOException {
 		synchronized (this) {
-			if (m_reader != null) {
-				m_reader.close();
+			if (m_writer != null) {
 				m_writer.close();
 				m_out.close();
 				m_buf.close();
 				m_out = null;
 				m_buf = null;
-				m_reader = null;
 				m_writer = null;
 			}
 		}
@@ -71,10 +67,13 @@ public class LocalMessageBucket implements MessageBucket {
 	}
 
 	public MessageTree findByIndex(int index) throws IOException {
+		File file = new File(m_baseDir, m_dataFile);
+		MessageBlockReader reader = new MessageBlockReader(file);
+		
 		try {
 			m_lastAccessTime = System.currentTimeMillis();
 
-			byte[] data = m_reader.readMessage(index);
+			byte[] data = reader.readMessage(index);
 			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(data.length);
 			MessageTree tree = new DefaultMessageTree();
 
@@ -84,6 +83,8 @@ public class LocalMessageBucket implements MessageBucket {
 		} catch (EOFException e) {
 			Cat.logError(e);
 			return null;
+		} finally{
+			reader.close();
 		}
 	}
 
@@ -125,7 +126,6 @@ public class LocalMessageBucket implements MessageBucket {
 		File file = new File(m_baseDir, dataFile);
 
 		m_writer = new MessageBlockWriter(file);
-		m_reader = new MessageBlockReader(file);
 		m_block = new MessageBlock(m_dataFile);
 		m_buf = new ByteArrayOutputStream(16384);
 		m_out = new GZIPOutputStream(m_buf);
