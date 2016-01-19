@@ -21,6 +21,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 	APP_CRASH_LOG("appCrashLog"),
 
 	APP_CRASH_LOG_DETAIL("appCrashLogDetail"),
+	
+	APP_CRASH_GRAPH("appCrashGraph"),
 
 	SPEED("speed"),
 

@@ -21,12 +21,22 @@ public class CrashLogDisplayInfo {
 	
 	private Map<String, PieChart> m_distributions;
 	
+	private Map<String, PieChart> m_msgDistributions;
+	
 	public Map<String, PieChart> getDistributions() {
 		return m_distributions;
 	}
-
+	
 	public void setDistributions(Map<String, PieChart> distributions) {
 		m_distributions = distributions;
+	}
+	
+	public Map<String, PieChart> getMsgDistributions() {
+		return m_msgDistributions;
+	}
+
+	public void setMsgDistributions(Map<String, PieChart> msgDistributions) {
+		m_msgDistributions = msgDistributions;
 	}
 
 	public Collection<CrashLogDomain> getAppNames() {

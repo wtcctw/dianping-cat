@@ -102,9 +102,11 @@
 		<td class="right">${w:format(model.crashLogDisplayInfo.totalCount,'#,###,###,###,##0')}&nbsp;</td>
 		<td></td>
 	</tr>
-	<c:forEach var="error" items="${model.crashLogDisplayInfo.errors}" varStatus="index">
+	<c:forEach var="error" items="${model.crashLogDisplayInfo.errors}" varStatus="typeIndex">
 	<tr>
-		<td>${error.msg}</td>
+		<td>
+		<a href="" class="crash_graph_link" data-status="${typeIndex.index}" msg="${error.msg}">[:: show ::]</a>
+		${error.msg}</td>
 		<td  class="right">${w:format(error.count,'#,###,###,###,##0')}&nbsp;</td>
 		<td >
 			<c:forEach var="id" items="${error.ids}" varStatus="linkIndex">
@@ -112,6 +114,8 @@
 			</c:forEach>
 		</td>
 	</tr>
+	<tr></tr>
+	<tr class="graphs"><td colspan="5" style="display:none"><div id="${typeIndex.index}" style="display:none"></div></td></tr>
 	</c:forEach>
 </table></div>
   <div class="tab-pane" id="charts">
@@ -128,6 +132,10 @@
 
 <script type="text/javascript">
 	function query(){
+ 		window.location.href = "?op=appCrashLog" + getQueryParams();
+	}
+	
+	function getQueryParams() {
 		var time = $("#time").val();
 		var times = time.split(" ");
 		var period = times[0];
@@ -144,9 +152,9 @@
 		var device = queryDevice();
 		var split = ";";
 		var query = appVersion + split + platVersion + split + module + split + level + split + device;
- 		
- 		window.location.href = "?op=appCrashLog&crashLogQuery.day=" + period + "&crashLogQuery.startTime=" + start + "&crashLogQuery.endTime=" + end
- 			 + "&crashLogQuery.appName=" + appName + "&crashLogQuery.platform=" + platform + "&crashLogQuery.dpid=" + dpid + "&crashLogQuery.query=" + query;
+		
+ 		return "&crashLogQuery.day=" + period + "&crashLogQuery.startTime=" + start + "&crashLogQuery.endTime=" + end
+			 + "&crashLogQuery.appName=" + appName + "&crashLogQuery.platform=" + platform + "&crashLogQuery.dpid=" + dpid + "&crashLogQuery.query=" + query;
 	}
 	
 	function queryDevice() {
@@ -263,6 +271,75 @@
 			graphPieChartWithName(document.getElementById('${entry.key}'), ${entry.value.jsonString},  '${entry.value.title}');
 			</c:forEach> 
 		});
+	
+	$(document).delegate(
+			'.crash_graph_link',
+			'click',
+			function(e) {
+				var anchor = this, el = $(anchor), id = Number(el
+						.attr('data-status')) || 0;
+
+				if (e.ctrlKey || e.metaKey) {
+					return true;
+				} else {
+					e.preventDefault();
+				}
+
+				var cell = document.getElementById(id);
+				var text = el.html();
+				anchor.href =  "?op=appCrashGraph" + getQueryParams() + "&crashLogQuery.msg=" + el.attr('msg') ;
+				
+				if (text == '[:: show ::]') {
+					anchor.innerHTML = '[:: hide ::]';
+
+					if (cell.nodeName == 'IMG') { // <img src='...'/>
+						cell.src = anchor.href;
+					} else { // <div>...</div>
+						$.ajax({
+							type : "get",
+							url : anchor.href,
+							success : function(response, textStatus) {
+								cell.style.display = 'block';
+								cell.parentNode.style.display = 'block';
+								cell.innerHTML = response;
+								
+								var data = $('#appVersionsMeta', cell).text();
+								graphPieChartWithName($('#appVersions', cell)[0], eval('(' + data + ')'),  'APP版本分布');
+								
+								data = $('#platformVersionsMeta', cell).text();
+								graphPieChartWithName($('#platformVersions', cell)[0], eval('(' + data + ')'),  '平台版本分布');
+								
+								data = $('#modulesMeta', cell).text();
+								graphPieChartWithName($('#modules', cell)[0], eval('(' + data + ')'),  '模块分布');
+								
+								data = $('#devicesMeta', cell).text();
+								graphPieChartWithName($('#devices', cell)[0], eval('(' + data + ')'),  '设备分布');
+								
+							}
+						});
+					}
+				} else {
+					anchor.innerHTML = '[:: show ::]';
+					cell.style.display = 'none';
+					cell.parentNode.style.display = 'none';
+				}
+			});
+	
+	function executeScript(html) {
+	    var reg = /<script[^>]*>([^\x00]+)$/i;
+	    var htmlBlock = html.split("<\/script>");
+	    for (var i in htmlBlock) {
+	        var blocks;
+	        if (blocks = htmlBlock[i].match(reg)) 
+	        {
+	            var code = blocks[1].replace(/<!--/, '');
+	            try {
+	                eval(code) //执行脚本
+	            } catch (e) {
+	            }
+	        }
+	    }
+	}
 	
 	function docReady(field, fields, prefix){
 		var urls = [];
