@@ -1,6 +1,7 @@
 package com.dianping.cat.consumer.state;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicLong;
@@ -18,6 +19,7 @@ import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.Message;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
+import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
@@ -188,15 +190,26 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	}
 
 	@Override
-   public ReportManager<StateReport> getReportManager() {
-	   return m_reportManager;
-   }
+	public ReportManager<StateReport> getReportManager() {
+		return m_reportManager;
+	}
+
+	@Override
+	public boolean isEligable(MessageTree tree) {
+		List<Heartbeat> heartbeats = tree.getHeartbeats();
+
+		if (heartbeats.size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	@Override
 	protected void loadReports() {
 		// do nothing
 	}
-	
+
 	@Override
 	protected void process(MessageTree tree) {
 		String domain = tree.getDomain();
@@ -209,4 +222,5 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			machine.findOrCreateProcessDomain(domain).addIp(ip);
 		}
 	}
+
 }
