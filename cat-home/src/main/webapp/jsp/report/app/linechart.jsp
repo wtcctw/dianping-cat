@@ -201,19 +201,22 @@
 					var command2 = $('#command2');
 					var words = query1.split(";");
 					
+					command1.on('change', commandChange("command","code"));
+					
 					if(typeof(words[1]) != 'undefined' && words[1].length > 0){
 						$("#command").val('${payload.commandId}');
 					}else{
 						$("#command").val('${model.defaultCommand}');
 					}
+					commandChange("command","code");
 					
 					if (typeof(words[0]) != 'undefined' && words[0].length == 0) {
 						$("#time").val(getDate());
 					} else {
 						$("#time").val(words[0]);
 					}
-
 					$("#code").val(words[2]);
+					console.log(words[2]);
 					$("#network").val(words[3]);
 					$("#version").val(words[4]);
 					$("#connectionType").val(words[5]);
@@ -236,6 +239,8 @@
 						}
 						
 						datePair["对比值"]=$("#time2").val();
+						
+						command2.on('change', commandChange("command2","code2"));
 
 						if(typeof(words[1]) != 'undefined' && words[1].length > 0){
 							$("#command2").val('${payload.commandId2}');
@@ -243,6 +248,7 @@
 							$("#command2").val('${model.defaultCommand}');
 						}
 						commandChange("command2","code2");
+						
 						$("#code2").val(words[2]);
 						$("#network2").val(words[3]);
 						$("#version2").val(words[4]);
@@ -253,9 +259,6 @@
 					} else {
 						$("#time2").val(getDate());
 					}
-					
-					command1.on('change', commandChange("command","code"));
-					command2.on('change', commandChange("command2","code2"));
 
 					var checkboxs = document.getElementsByName("typeCheckbox");
 
