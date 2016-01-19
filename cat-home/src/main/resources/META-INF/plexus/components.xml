@@ -1737,6 +1737,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.app.task.CommandAutoCompleter</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.app.AppRuleConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
