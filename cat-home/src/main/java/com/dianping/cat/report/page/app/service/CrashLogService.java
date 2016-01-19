@@ -92,6 +92,50 @@ public class CrashLogService {
 		return info;
 	}
 
+	public CrashLogDisplayInfo buildCrashGraph(CrashLogQueryEntity entity) {
+		CrashLogDisplayInfo info = new CrashLogDisplayInfo();
+		buildCrashGraph(entity, info);
+
+		return info;
+	}
+
+	private void buildCrashGraph(CrashLogQueryEntity entity, CrashLogDisplayInfo info) {
+		CrashLogFilter crashLogFilter = new CrashLogFilter(entity.getQuery());
+		Map<String, Map<String, AtomicInteger>> distributions = new HashMap<String, Map<String, AtomicInteger>>();
+
+		Date startTime = entity.buildStartTime();
+		Date endTime = entity.buildEndTime();
+		String appName = entity.getAppName();
+		int platform = entity.getPlatform();
+		String dpid = entity.getDpid();
+		int offset = 0;
+
+		try {
+			while (true) {
+				List<CrashLog> result = m_crashLogDao.findDataByConditions(startTime, endTime, appName, platform, dpid,
+				      offset, LIMIT, CrashLogEntity.READSET_FULL);
+
+				for (CrashLog log : result) {
+					if (crashLogFilter.checkFlag(log) && log.getMsg().equals(entity.getMsg())) {
+						buildDistributions(log, distributions);
+					}
+				}
+
+				int count = result.size();
+				offset += count;
+
+				if (count < LIMIT) {
+					break;
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+
+		info.setMsgDistributions(buildDistributionChart(distributions));
+
+	}
+
 	private void buildCrashLogData(CrashLogQueryEntity entity, CrashLogDisplayInfo info) {
 		Map<String, Set<String>> fieldsMap = new HashMap<String, Set<String>>();
 		CrashLogFilter crashLogFilter = new CrashLogFilter(entity.getQuery());

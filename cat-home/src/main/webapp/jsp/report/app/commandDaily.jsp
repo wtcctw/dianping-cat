@@ -276,12 +276,16 @@ $(document).ready(
 			} else {
 				$("#time2").val(words[1]);
 			}
+			
+			command1.on('change', commandChange("command","code"));
 
 			if(typeof(words[2]) != 'undefined' && words[2].length > 0){
 				$("#command").val('${payload.commandId}');
 			}else{
 				$("#command").val('${model.defaultCommand}');
 			}
+			
+			commandChange("command","code");
 			
 			$("#code").val(words[3]);
 			$("#network").val(words[4]);
@@ -300,7 +304,6 @@ $(document).ready(
 				}
 			}
 
-			command1.on('change', commandChange("command","code"));
 			 $.widget( "custom.catcomplete", $.ui.autocomplete, {
 					_renderMenu: function( ul, items ) {
 						var that = this,

@@ -24,6 +24,8 @@ public class CrashLogQueryEntity {
 
 	private String m_dpid = null;
 
+	private String m_msg = null;
+
 	private SimpleDateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	private String m_query;
@@ -118,12 +120,12 @@ public class CrashLogQueryEntity {
 		m_platform = platform;
 	}
 
-	public SimpleDateFormat getFormat() {
-		return m_format;
+	public String getMsg() {
+		return m_msg;
 	}
 
-	public void setFormat(SimpleDateFormat format) {
-		m_format = format;
+	public void setMsg(String msg) {
+		m_msg = msg;
 	}
 
 }
