@@ -96,7 +96,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 				if (type.equals("SQL.Database")) {
 					Database database = m_parser.parseDatabase(message.getName());
 
-					return database.getName();
+					return database != null ? database.getName() : null;
 				}
 			}
 		}
