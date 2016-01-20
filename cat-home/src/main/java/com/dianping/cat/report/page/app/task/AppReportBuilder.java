@@ -28,6 +28,7 @@ import com.dianping.cat.home.app.entity.AppReport;
 import com.dianping.cat.home.app.entity.Code;
 import com.dianping.cat.home.app.entity.Transaction;
 import com.dianping.cat.home.app.transform.DefaultNativeBuilder;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.page.app.service.AppReportService;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
@@ -63,12 +64,11 @@ public class AppReportBuilder implements TaskBuilder {
 			if (command.getValue().getCount() < COMMAND_MIN_COUNT) {
 				try {
 					int id = command.getKey();
+					String name = m_appConfigManager.getRawCommands().get(id).getName();
 					boolean success = m_appConfigManager.deleteCommand(id);
 
 					if (success) {
-						String name = m_appConfigManager.getRawCommands().get(id).getName();
-
-						Cat.logEvent("AppCommandPrune", name);
+						Cat.logEvent("AppCommandPrune", id + ":" + name, Event.SUCCESS, command.toString());
 						m_appRuleConfigManager.deleteByCommandId(id);
 					}
 				} catch (Exception e) {
@@ -98,7 +98,9 @@ public class AppReportBuilder implements TaskBuilder {
 		try {
 			AppReport appReport = buildDailyReport(domain, period);
 
-			pruneAppCommand(appReport);
+			if (m_appConfigManager.getConfig().isAutoPrune()) {
+				pruneAppCommand(appReport);
+			}
 
 			DailyReport report = new DailyReport();
 
