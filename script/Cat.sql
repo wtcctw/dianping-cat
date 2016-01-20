@@ -179,7 +179,7 @@ CREATE TABLE `config` (
   `creation_date` datetime NOT NULL COMMENT '配置创建时间',
   `modify_date` datetime NOT NULL COMMENT '配置修改时间',
   PRIMARY KEY (`id`),
-  KEY `name` (`name`)
+  UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于存储系统的全局配置信息';
 
 CREATE TABLE `baseline` (
