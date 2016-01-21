@@ -276,12 +276,16 @@ $(document).ready(
 			} else {
 				$("#time2").val(words[1]);
 			}
+			
+			command1.on('change', commandChange("command","code"));
 
 			if(typeof(words[2]) != 'undefined' && words[2].length > 0){
 				$("#command").val('${payload.commandId}');
 			}else{
 				$("#command").val('${model.defaultCommand}');
 			}
+			
+			commandChange("command","code");
 			
 			$("#code").val(words[3]);
 			$("#network").val(words[4]);
@@ -300,7 +304,6 @@ $(document).ready(
 				}
 			}
 
-			command1.on('change', commandChange("command","code"));
 			 $.widget( "custom.catcomplete", $.ui.autocomplete, {
 					_renderMenu: function( ul, items ) {
 						var that = this,
@@ -342,7 +345,72 @@ $(document).ready(
 					}		
 				);		
 		 	var data = ${model.lineChart.jsonString};
-			graphLineChart(document.getElementById('lineChart'), data);  
+			graphLineChartForDaily(document.getElementById('lineChart'), data);  
 		});
+		
+function graphLineChartForDaily(container, data) {
+	Highcharts.setOptions({
+		global : {
+			useUTC : false
+		}
+	});
+	var _data = parseLineData(data);
+	$(container).highcharts(
+			{
+				chart : {
+					type : 'spline'
+				},
+				title : {
+					text : data.title,
+					useHTML : true
+				},
+				xAxis : {
+					type : 'datetime',
+					minTickInterval: 24 * 3600 * 1000,
+					dateTimeLabelFormats : {
+						second : '%H:%M:%S',
+						minute : '%H:%M',
+						hour : '%H:%M',
+						day : '%m-%d',
+						week : '%Y-%m-%d',
+						month : '%m-%d',
+						year : '%Y-%m'
+					}
+				},
+				yAxis : {
+					min : 0.0
+				},
+				credits : {
+					enabled : false
+				},
+				plotOptions : {
+					spline : {
+						lineWidth : 2,
+						states : {
+							hover : {
+								lineWidth : 2
+							}
+						},
+						marker : {
+							enabled : false
+						}
+					}
+				},
+				legend : {
+					maxHeight : 82
+				},
+				tooltip : {
+					allowPointSelect : false,
+					formatter : function() {
+						return '<b>'
+								+ this.series.name
+								+ '</b><br/>'
+								+ Highcharts.dateFormat('%Y-%m-%d %H:%M',
+										this.x) + ': ' +  this.y.toFixed(2);
+					}
+				},
+				series : _data
+			});
+}
 </script>
 </a:mobile>

@@ -514,7 +514,7 @@ function graphLineChart(container, data) {
 			});
 }
 
-function graphLineChartForDashboard(container, data) {
+function graphLineChartForDashboard(container, data, yMin) {
 	Highcharts.setOptions({
 		global : {
 			useUTC : false
@@ -543,7 +543,7 @@ function graphLineChartForDashboard(container, data) {
 					}
 				},
 				yAxis : {
-					min : 0.0
+					min : yMin
 				},
 				credits : {
 					enabled : false

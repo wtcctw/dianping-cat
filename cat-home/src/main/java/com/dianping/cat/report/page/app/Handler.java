@@ -418,6 +418,9 @@ public class Handler implements PageHandler<Context> {
 		case APP_CRASH_LOG_DETAIL:
 			buildAppCrashLogDetail(payload, model);
 			break;
+		case APP_CRASH_GRAPH:
+			buildAppCrashGraph(payload, model);
+			break;
 		case SPEED:
 			model.setAppSpeedDisplayInfo(buildSpeedTendency(payload));
 			break;
@@ -484,6 +487,13 @@ public class Handler implements PageHandler<Context> {
 			m_jspViewer.view(ctx, model);
 		}
 	}
+
+	private void buildAppCrashGraph(Payload payload, Model model) {
+		CrashLogQueryEntity entity = payload.getCrashLogQuery();
+		CrashLogDisplayInfo info = m_crashLogService.buildCrashGraph(entity);
+
+		model.setCrashLogDisplayInfo(info);	   
+   }
 
 	private void buildCommandDailyChart(Payload payload, Model model) {
 		DailyCommandQueryEntity queryEntity = payload.getCommandDailyQueryEntity();

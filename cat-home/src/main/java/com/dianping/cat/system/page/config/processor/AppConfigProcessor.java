@@ -15,7 +15,6 @@ import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.Constants;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatConfigManager;
@@ -88,7 +87,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 	public void buildBatchApiConfig(Payload payload, Model model) {
 		Date start = TimeHelper.getCurrentDay(-1);
 		Date end = TimeHelper.getCurrentDay();
-		EventReport report = m_eventReportService.queryReport(Constants.BROKER_SERVICE, start, end);
+		EventReport report = m_eventReportService.queryReport(m_appConfigManager.getConfig().getBroker(), start, end);
 		EventReportVisitor visitor = new EventReportVisitor();
 
 		visitor.visitEventReport(report);
