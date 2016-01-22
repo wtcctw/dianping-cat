@@ -303,6 +303,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	}
 
 	public class CloseBucketChecker implements Task {
+		
 		private void closeBuckets(final List<String> paths) {
 			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
@@ -312,7 +313,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				if (bucket != null) {
 					try {
 						bucket.close();
-						Cat.logEvent("System", "CloseBucket-" + ip);
+						Cat.logEvent("CloseBucket", ip);
 					} catch (Exception e) {
 						Cat.logError(e);
 					} finally {
