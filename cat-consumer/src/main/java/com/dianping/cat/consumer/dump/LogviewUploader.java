@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.FileMatcher;
@@ -20,7 +19,6 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.hadoop.hdfs.HdfsUploader;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.storage.LocalMessageBucket;
 
 public class LogviewUploader implements Task {
 
@@ -28,39 +26,16 @@ public class LogviewUploader implements Task {
 
 	private LocalMessageBucketManager m_bucketManager;
 
-	private ConcurrentHashMap<String, LocalMessageBucket> m_buckets;
-
-	private HdfsUploader m_logviewUploader;
+	private HdfsUploader m_hdfsUploader;
 
 	private ServerConfigManager m_configManager;
 
-	private static final long ONE_HOUR = 60 * 60 * 1000L;
-
-	public LogviewUploader(LocalMessageBucketManager bucketManager,
-	      ConcurrentHashMap<String, LocalMessageBucket> buckets, HdfsUploader logviewUploader,
+	public LogviewUploader(LocalMessageBucketManager bucketManager, HdfsUploader hdfsUploader,
 	      ServerConfigManager configManager) {
 		m_baseDir = new File(configManager.getHdfsLocalBaseDir(ServerConfigManager.DUMP_DIR));
 		m_bucketManager = bucketManager;
-		m_buckets = buckets;
-		m_logviewUploader = logviewUploader;
+		m_hdfsUploader = hdfsUploader;
 		m_configManager = configManager;
-	}
-
-	private void closeBuckets(final List<String> paths) {
-		for (String path : paths) {
-			LocalMessageBucket bucket = m_buckets.get(path);
-
-			if (bucket != null) {
-				try {
-					bucket.close();
-				} catch (Exception e) {
-					Cat.logError(e);
-				} finally {
-					m_buckets.remove(path);
-					m_bucketManager.releaseBucket(bucket);
-				}
-			}
-		}
 	}
 
 	private void deleteFile(String path) {
@@ -106,29 +81,6 @@ public class LogviewUploader implements Task {
 		if (paths.size() > 0) {
 			processLogviewFiles(new ArrayList<String>(paths), false);
 		}
-	}
-
-	private List<String> findCloseBuckets() {
-		final Set<String> paths = new HashSet<String>();
-
-		Scanners.forDir().scan(m_baseDir, new FileMatcher() {
-			@Override
-			public Direction matches(File base, String path) {
-				if (new File(base, path).isFile()) {
-					if (shouldUpload(path)) {
-						int index = path.indexOf(".idx");
-
-						if (index == -1) {
-							paths.add(path);
-						} else {
-							paths.add(path.substring(0, index));
-						}
-					}
-				}
-				return Direction.DOWN;
-			}
-		});
-		return new ArrayList<String>(paths);
 	}
 
 	private Set<String> findValidPath(int storageDays) {
@@ -194,16 +146,12 @@ public class LogviewUploader implements Task {
 				if (m_configManager.isHdfsOn()) {
 					// make system 0-10 min is not busy
 					if (min >= 9) {
-						List<String> paths = findCloseBuckets();
+						List<String> paths = m_bucketManager.findCloseBuckets();
 
-						closeBuckets(paths);
 						processLogviewFiles(paths, true);
 					}
 				} else {
 					// for clean java memory
-					List<String> paths = findCloseBuckets();
-
-					closeBuckets(paths);
 					deleteOldMessages();
 				}
 			} catch (Throwable e) {
@@ -222,26 +170,6 @@ public class LogviewUploader implements Task {
 		}
 	}
 
-	private boolean shouldUpload(String path) {
-		long current = System.currentTimeMillis();
-		long currentHour = current - current % ONE_HOUR;
-		long lastHour = currentHour - ONE_HOUR;
-		long nextHour = currentHour + ONE_HOUR;
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd/HH");
-		String currentHourStr = sdf.format(new Date(currentHour));
-		String lastHourStr = sdf.format(new Date(lastHour));
-		String nextHourStr = sdf.format(new Date(nextHour));
-
-		int indexOf = path.indexOf(currentHourStr);
-		int indexOfLast = path.indexOf(lastHourStr);
-		int indexOfNext = path.indexOf(nextHourStr);
-
-		if (indexOf > -1 || indexOfLast > -1 || indexOfNext > -1) {
-			return false;
-		}
-		return true;
-	}
-
 	@Override
 	public void shutdown() {
 	}
@@ -249,7 +177,7 @@ public class LogviewUploader implements Task {
 	private void uploadFile(String path) {
 		File file = new File(m_baseDir, path);
 
-		m_logviewUploader.uploadLogviewFile(path, file);
+		m_hdfsUploader.uploadLogviewFile(path, file);
 	}
 
 }

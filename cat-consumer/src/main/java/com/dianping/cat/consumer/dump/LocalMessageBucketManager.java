@@ -3,9 +3,12 @@ package com.dianping.cat.consumer.dump;
 import io.netty.buffer.ByteBuf;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -28,9 +31,10 @@ import com.dianping.cat.CatConstants;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.hadoop.hdfs.HdfsUploader;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.PathBuilder;
 import com.dianping.cat.message.MessageProducer;
+import com.dianping.cat.message.PathBuilder;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
@@ -43,6 +47,7 @@ import com.dianping.cat.statistic.ServerStatisticManager;
 
 public class LocalMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable,
       LogEnabled {
+
 	public static final String ID = "local";
 
 	@Inject
@@ -55,7 +60,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	private PathBuilder m_pathBuilder;
 
 	@Inject
-	private HdfsUploader m_logviewUploader;
+	private HdfsUploader m_hdfsUploader;
 
 	private ConcurrentHashMap<String, LocalMessageBucket> m_buckets = new ConcurrentHashMap<String, LocalMessageBucket>();
 
@@ -107,12 +112,36 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		m_logger = logger;
 	}
 
+	public List<String> findCloseBuckets() {
+		final Set<String> paths = new HashSet<String>();
+
+		Scanners.forDir().scan(m_baseDir, new FileMatcher() {
+			@Override
+			public Direction matches(File base, String path) {
+				if (new File(base, path).isFile()) {
+					if (shouldUpload(path)) {
+						int index = path.indexOf(".idx");
+
+						if (index == -1) {
+							paths.add(path);
+						} else {
+							paths.add(path.substring(0, index));
+						}
+					}
+				}
+				return Direction.DOWN;
+			}
+		});
+		return new ArrayList<String>(paths);
+	}
+
 	@Override
 	public void initialize() throws InitializationException {
 		m_baseDir = new File(m_configManager.getHdfsLocalBaseDir(ServerConfigManager.DUMP_DIR));
 
 		Threads.forGroup("cat").start(new BlockDumper(m_buckets, m_messageBlocks, m_serverStateManager));
-		Threads.forGroup("cat").start(new LogviewUploader(this, m_buckets, m_logviewUploader, m_configManager));
+		Threads.forGroup("cat").start(new LogviewUploader(this, m_hdfsUploader, m_configManager));
+		Threads.forGroup("cat").start(new CloseBucketChecker());
 
 		if (m_configManager.isLocalMode()) {
 			m_gzipThreads = 2;
@@ -222,16 +251,32 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	public void releaseBucket(LocalMessageBucket bucket) {
-		release(bucket);
-	}
-
 	public void setBaseDir(File baseDir) {
 		m_baseDir = baseDir;
 	}
 
 	public void setLocalIp(String localIp) {
 		m_localIp = localIp;
+	}
+
+	private boolean shouldUpload(String path) {
+		long current = System.currentTimeMillis();
+		long currentHour = current - current % TimeHelper.ONE_HOUR;
+		long lastHour = currentHour - TimeHelper.ONE_HOUR;
+		long nextHour = currentHour + TimeHelper.ONE_HOUR;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd/HH");
+		String currentHourStr = sdf.format(new Date(currentHour));
+		String lastHourStr = sdf.format(new Date(lastHour));
+		String nextHourStr = sdf.format(new Date(nextHour));
+
+		int indexOf = path.indexOf(currentHourStr);
+		int indexOfLast = path.indexOf(lastHourStr);
+		int indexOfNext = path.indexOf(nextHourStr);
+
+		if (indexOf > -1 || indexOfLast > -1 || indexOfNext > -1) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -255,6 +300,56 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			m_serverStateManager.addMessageDumpLoss(1);
 		}
 		logStorageState(tree);
+	}
+
+	public class CloseBucketChecker implements Task {
+		private void closeBuckets(final List<String> paths) {
+			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
+			for (String path : paths) {
+				LocalMessageBucket bucket = m_buckets.get(path);
+
+				if (bucket != null) {
+					try {
+						bucket.close();
+						Cat.logEvent("System", "CloseBucket-" + ip);
+					} catch (Exception e) {
+						Cat.logError(e);
+					} finally {
+						m_buckets.remove(path);
+						release(bucket);
+					}
+				}
+			}
+		}
+
+		@Override
+		public String getName() {
+			return "LocalMessageBucketManager-CloseBucketChecker";
+		}
+
+		@Override
+		public void run() {
+			try {
+				while (true) {
+					Thread.sleep(TimeHelper.ONE_MINUTE);
+
+					try {
+						List<String> paths = findCloseBuckets();
+
+						closeBuckets(paths);
+					} catch (Exception e) {
+						Cat.logError(e);
+					}
+				}
+			} catch (InterruptedException e) {
+				// ignore it
+			}
+		}
+
+		@Override
+		public void shutdown() {
+		}
 	}
 
 	public class MessageGzip implements Task {
