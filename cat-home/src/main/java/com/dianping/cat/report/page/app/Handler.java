@@ -112,11 +112,11 @@ public class Handler implements PageHandler<Context> {
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
-	private void buildAppCrashLog(Payload payload, Model model) {
+	private CrashLogDisplayInfo buildAppCrashLog(Payload payload) {
 		CrashLogQueryEntity entity = payload.getCrashLogQuery();
 		CrashLogDisplayInfo info = m_crashLogService.buildCrashLogDisplayInfo(entity);
 
-		model.setCrashLogDisplayInfo(info);
+		return info;
 	}
 
 	private void buildAppCrashLogDetail(Payload payload, Model model) {
@@ -413,7 +413,14 @@ public class Handler implements PageHandler<Context> {
 			fetchConfig(payload, model);
 			break;
 		case APP_CRASH_LOG:
-			buildAppCrashLog(payload, model);
+			CrashLogDisplayInfo displayInfo = buildAppCrashLog(payload);
+
+			model.setCrashLogDisplayInfo(displayInfo);
+			break;
+		case APP_CRASH_LOG_JSON:
+			displayInfo = buildAppCrashLog(payload);
+
+			model.setFetchData(m_jsonBuilder.toJson(displayInfo));
 			break;
 		case APP_CRASH_LOG_DETAIL:
 			buildAppCrashLogDetail(payload, model);
@@ -492,8 +499,8 @@ public class Handler implements PageHandler<Context> {
 		CrashLogQueryEntity entity = payload.getCrashLogQuery();
 		CrashLogDisplayInfo info = m_crashLogService.buildCrashGraph(entity);
 
-		model.setCrashLogDisplayInfo(info);	   
-   }
+		model.setCrashLogDisplayInfo(info);
+	}
 
 	private void buildCommandDailyChart(Payload payload, Model model) {
 		DailyCommandQueryEntity queryEntity = payload.getCommandDailyQueryEntity();
