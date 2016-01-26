@@ -13,6 +13,8 @@ public interface ServerAlarmRuleService {
 
 	public Map<String, List<ServerAlarmRule>> queryAllRules();
 
+	public List<ServerAlarmRule> queryRules(String category);
+
 	public ServerAlarmRule queryById(int id);
 
 	public boolean update(ServerAlarmRule rule);
