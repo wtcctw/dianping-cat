@@ -17,6 +17,7 @@ import com.dianping.cat.home.service.client.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.statistics.service.ClientReportService;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.report.task.TaskBuilder;
+import com.dianping.cat.service.ProjectService;
 
 public class ClientReportBuilder implements TaskBuilder {
 
@@ -30,6 +31,9 @@ public class ClientReportBuilder implements TaskBuilder {
 
 	@Inject
 	private ServerFilterConfigManager m_configManger;
+
+	@Inject
+	private ProjectService m_projectService;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -49,9 +53,7 @@ public class ClientReportBuilder implements TaskBuilder {
 
 	private ClientReport buildClientReport(Date startTime) {
 		Date endTime = TimeHelper.addDays(startTime, 1);
-		TransactionReport transactionReport = m_transactionReportService.queryDailyReport(Constants.CAT, startTime,
-		      endTime);
-		Set<String> domains = transactionReport.getDomainNames();
+		Set<String> domains = m_projectService.findAllDomains();
 		ClientReportStatistics statistics = new ClientReportStatistics();
 
 		for (String domain : domains) {
@@ -59,7 +61,9 @@ public class ClientReportBuilder implements TaskBuilder {
 				if (m_configManger.validateDomain(domain)) {
 					TransactionReport r = m_transactionReportService.queryReport(domain, startTime, endTime);
 
-					statistics.visitTransactionReport(r);
+					if (r != null) {
+						statistics.visitTransactionReport(r);
+					}
 				}
 			} catch (Exception e) {
 				Cat.logError(domain + " client report visitor error", e);

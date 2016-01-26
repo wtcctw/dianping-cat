@@ -266,8 +266,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 		TransactionReport report = m_reportManager.getHourlyReport(period, domain, false);
 
-		report.getDomainNames().addAll(m_reportManager.getDomains(period));
-
 		if (period == current) {
 			report.accept(m_computer.setDuration(remainder / 1000));
 		} else if (period < current) {

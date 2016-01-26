@@ -2,7 +2,6 @@ package com.dianping.cat.report.page.transaction.service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
@@ -162,8 +161,6 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 		transactionReport.setStartTime(start);
 		transactionReport.setEndTime(new Date(end.getTime() - 1));
 
-		Set<String> domains = queryAllDomainNames(start, end, TransactionAnalyzer.ID);
-		transactionReport.getDomainNames().addAll(domains);
 		return convert(transactionReport);
 	}
 

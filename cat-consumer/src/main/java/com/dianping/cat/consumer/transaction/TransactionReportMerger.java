@@ -148,7 +148,6 @@ public class TransactionReportMerger extends DefaultMerger {
 	@Override
 	public void visitTransactionReport(TransactionReport transactionReport) {
 		super.visitTransactionReport(transactionReport);
-		getTransactionReport().getDomainNames().addAll(transactionReport.getDomainNames());
 		getTransactionReport().getIps().addAll(transactionReport.getIps());
 	}
 }

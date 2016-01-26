@@ -35,7 +35,6 @@ public class TransactionMerger {
 
 		transactionReport.addMachine(allMachines);
 		transactionReport.getIps().add("All");
-		transactionReport.getDomainNames().addAll(domainSet);
 
 		Date date = transactionReport.getStartTime();
 		transactionReport.setStartTime(TaskHelper.todayZero(date));

@@ -109,7 +109,6 @@ public class TransactionReportVistor extends BaseVisitor {
 
 		super.visitTransactionReport(transactionReport);
 		m_cacheReport.setDomain(transactionReport.getDomain());
-		m_cacheReport.setDomainNames(transactionReport.getDomainNames());
 		m_cacheReport.setStartTime(transactionReport.getStartTime());
 		m_cacheReport.setEndTime(transactionReport.getEndTime());
 		m_cacheReport.setIps(transactionReport.getIps());
