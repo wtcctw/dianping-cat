@@ -11,7 +11,7 @@
 <p>2、公网IP，<span class="text-danger">114.80.165.63</span>，文档后面{ip}使用这个</p>
 <br/>
 
-<h4 class="text-danger">APP用户访问批量接口</h4>
+<h4 class="text-danger">APP用户访问批量上报接口</h4>
 	<pre>	http://{ip}/broker-service/api/batch</pre>
 	<p>批量接口POST内容，前面加上“<span class="text-danger">v=2&c=</span>”(v=1已遗弃)，不同请求之间用回车<span class="text-danger">ENTER</span>分隔，字段之间用<span class="text-danger">TAB</span>分隔。</p>
 	
@@ -46,7 +46,7 @@
 	</pre>	
 <br/>
 
-<h4 class="text-danger">APP加载速度批量接口</h4>
+<h4 class="text-danger">APP加载速度批量上报接口</h4>
 	<pre>	http://{ip}/broker-service/api/speed</pre>
 	<p>批量接口POST内容，前面加上“<span class="text-danger">v=1&c=</span>”，不同请求之间用回车<span class="text-danger">ENTER</span>分隔，字段之间用<span class="text-danger">TAB</span>分隔。</p>
 	
@@ -79,7 +79,7 @@
 	</pre>	
 <br/>
 
-<h4 class="text-danger">APP Crash日志接口</h4>
+<h4 class="text-danger">APP Crash日志上报接口</h4>
 	<pre>	http://{ip}/broker-service/api/crash</pre>
 		<p class="text-danger">参数可以post上来，需要对value进行encode。</p>
 	<table class="table table-bordered table-striped table-condensed  ">
@@ -98,11 +98,15 @@
 		<tr><td>t</td><td>crash时间戳</td><td>long</td></tr>
 		<tr><td>d</td><td>详细的错误日志</td><td>String</td></tr>
 	</table>
-	
+<br/>
+
+<h4 class="text-danger">APP Crash日志统计获取接口</h4>
+	<pre>	http://cat.dianpingoa.com/cat/r/app?op=appCrashLogJson</pre>
+		<p>其他所有参数的设置可以在<a href="http://cat.dianpingoa.com/cat/r/app?op=appCrashLog">页面</a>点击查询后自动拼接生成，<span class="text-danger">将op参数设置为appCrashLogJson</span>就可以获取网页上的各个统计信息的JSON数据</p>
 <br/>
 
 
-<h4 class="text-danger">APP 长连访问批量接口</h4>
+<h4 class="text-danger">APP 长连访问批量上报接口</h4>
 	<pre>	http://{ip}/broker-service/api/connection</pre>
 	<p>批量接口POST内容，前面加上“<span class="text-danger">v=3&c=</span>”，不同请求之间用回车<span class="text-danger">ENTER</span>分隔，字段之间用<span class="text-danger">TAB</span>分隔。</p>
 	
@@ -139,7 +143,7 @@
 <br/>
 
 
-<h4 class="text-danger">APP监控报表获取&nbsp;&nbsp;&nbsp;&nbsp; </h4>
+<h4 class="text-danger">APP监控报表获取接口</h4>
 <p>Cat支持其它系统通过调用HTTP API来获取APP监控报表数据（JSON格式）</p>
 <pre>
 	http请求方式: GET或者POST
