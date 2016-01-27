@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
-  <entity name="server-alarm-rule" root="true">
+  <entity name="server-alarm-rule-config" root="true">
     <attribute name="id" value-type="String" />
     <entity-ref name="rule" type="list" names="rules" />
   </entity>

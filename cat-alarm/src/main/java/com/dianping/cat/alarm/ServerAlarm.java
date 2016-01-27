@@ -6,9 +6,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutorService;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
@@ -17,6 +21,7 @@ import org.xml.sax.SAXException;
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.entity.Condition;
 import com.dianping.cat.alarm.entity.Rule;
+import com.dianping.cat.alarm.entity.ServerAlarmRuleConfig;
 import com.dianping.cat.alarm.transform.DefaultSaxParser;
 import com.dianping.cat.core.alarm.ServerAlarmRule;
 import com.dianping.cat.metric.MetricService;
@@ -54,7 +59,7 @@ public abstract class ServerAlarm implements Task {
 		List<QueryParameter> queries = new ArrayList<QueryParameter>();
 
 		try {
-			com.dianping.cat.alarm.entity.ServerAlarmRule ruleConfig = DefaultSaxParser.parse(rule.getContent());
+			ServerAlarmRuleConfig ruleConfig = DefaultSaxParser.parse(rule.getContent());
 			List<Rule> rules = ruleConfig.getRules();
 
 			for (Rule r : rules) {
@@ -123,5 +128,4 @@ public abstract class ServerAlarm implements Task {
 			}
 		}
 	}
-
 }
