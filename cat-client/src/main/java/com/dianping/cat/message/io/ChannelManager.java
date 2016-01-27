@@ -34,19 +34,19 @@ public class ChannelManager implements Task {
 
 	private Bootstrap m_bootstrap;
 
-	private Logger m_logger;
-
 	private boolean m_active = true;
 
-	private int m_retriedTimes = 0;
+	private int m_channelStalledTimes = 0;
 
-	private int m_refreshCount = -10;
+	private int m_count = -10;
 
 	private ChannelHolder m_activeChannelHolder;
 
 	private MessageIdFactory m_idFactory;
 
 	private AtomicInteger m_attempts = new AtomicInteger();
+
+	private Logger m_logger;
 
 	public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses, ClientConfigManager configManager,
 	      MessageIdFactory idFactory) {
@@ -110,7 +110,7 @@ public class ChannelManager implements Task {
 	}
 
 	private void checkServerChanged() {
-		if (shouldCheckServerConfig(++m_refreshCount)) {
+		if (shouldCheckServerConfig(++m_count)) {
 			Pair<Boolean, String> pair = routerConfigChanged();
 
 			if (pair.getKey()) {
@@ -144,7 +144,7 @@ public class ChannelManager implements Task {
 				int count = m_attempts.incrementAndGet();
 
 				if (count % 1000 == 0 || count == 1) {
-					m_logger.error("Netty write buffer is full! Attempts: " + count);
+					m_logger.warn("channel buf is is full when send msg! Attempts: " + count);
 				}
 			}
 		}
@@ -268,7 +268,7 @@ public class ChannelManager implements Task {
 
 		if (!stalled) {
 			m_logger.warn("future can't write data in check thread " + holder.toString());
-			if ((++m_retriedTimes) % 3 == 0) {
+			if ((++m_channelStalledTimes) % 3 == 0) {
 				return true;
 			} else {
 				return false;
@@ -351,6 +351,7 @@ public class ChannelManager implements Task {
 	}
 
 	private boolean shouldCheckServerConfig(int count) {
+		// check very 30*10s
 		int duration = 30;
 
 		if (count % duration == 0 || m_activeChannelHolder.getActiveIndex() == -1) {
