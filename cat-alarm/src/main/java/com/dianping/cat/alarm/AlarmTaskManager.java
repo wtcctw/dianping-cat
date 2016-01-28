@@ -10,16 +10,18 @@ import org.unidal.lookup.ContainerHolder;
 
 public class AlarmTaskManager extends ContainerHolder implements Initializable {
 
-	private int MAX_THREADS = 500;
-
-	private Map<String, AlarmTask> m_tasks = new ConcurrentHashMap<String, AlarmTask>();
+	private Map<Integer, Long> m_runTimes = new ConcurrentHashMap<Integer, Long>();
 
 	@Override
 	public void initialize() throws InitializationException {
 		AlarmTaskConsumer consumerTask = lookup(AlarmTaskConsumer.class);
 
 		Threads.forGroup("cat").start(consumerTask);
-		Threads.forGroup("cat").start(new AlarmRuleSyncTask());
+		Threads.forGroup("cat").start(new AlarmSchedular(m_runTimes));
+	}
+
+	public Map<Integer, Long> getRunTimes() {
+		return m_runTimes;
 	}
 
 }
