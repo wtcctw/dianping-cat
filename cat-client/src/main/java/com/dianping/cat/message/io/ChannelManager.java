@@ -12,10 +12,12 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Splitters;
@@ -25,7 +27,6 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.internal.MessageIdFactory;
-import com.dianping.cat.message.spi.MessageQueue;
 
 public class ChannelManager implements Task {
 
@@ -33,24 +34,23 @@ public class ChannelManager implements Task {
 
 	private Bootstrap m_bootstrap;
 
-	private Logger m_logger;
-
 	private boolean m_active = true;
 
-	private int m_retriedTimes = 0;
+	private int m_channelStalledTimes = 0;
 
-	private int m_refreshCount = -10;
-
-	private MessageQueue m_messageQueue;
+	private int m_count = -10;
 
 	private ChannelHolder m_activeChannelHolder;
 
 	private MessageIdFactory m_idFactory;
 
-	public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses, MessageQueue messageQueue,
-	      ClientConfigManager configManager, MessageIdFactory idFactory) {
+	private AtomicInteger m_attempts = new AtomicInteger();
+
+	private Logger m_logger;
+
+	public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses, ClientConfigManager configManager,
+	      MessageIdFactory idFactory) {
 		m_logger = logger;
-		m_messageQueue = messageQueue;
 		m_configManager = configManager;
 		m_idFactory = idFactory;
 
@@ -100,14 +100,17 @@ public class ChannelManager implements Task {
 
 	public ChannelFuture channel() {
 		if (m_activeChannelHolder != null) {
-			return m_activeChannelHolder.getActiveFuture();
-		} else {
-			return null;
+			ChannelFuture future = m_activeChannelHolder.getActiveFuture();
+
+			if (checkWritable(future)) {
+				return future;
+			}
 		}
+		return null;
 	}
 
 	private void checkServerChanged() {
-		if (shouldCheckServerConfig(++m_refreshCount)) {
+		if (shouldCheckServerConfig(++m_count)) {
 			Pair<Boolean, String> pair = routerConfigChanged();
 
 			if (pair.getKey()) {
@@ -130,10 +133,33 @@ public class ChannelManager implements Task {
 		}
 	}
 
+	private boolean checkWritable(ChannelFuture future) {
+		boolean isWriteable = false;
+		Channel channel = future.channel();
+
+		if (future != null && channel.isOpen()) {
+			if (channel.isActive() && channel.isWritable()) {
+				isWriteable = true;
+			} else {
+				int count = m_attempts.incrementAndGet();
+
+				if (count % 1000 == 0 || count == 1) {
+					m_logger.warn("channel buf is is full when send msg! Attempts: " + count);
+				}
+			}
+		}
+
+		return isWriteable;
+	}
+
 	private void closeChannel(ChannelFuture channel) {
 		try {
 			if (channel != null) {
-				m_logger.info("close channel " + channel.channel().remoteAddress());
+				SocketAddress address = channel.channel().remoteAddress();
+
+				if (address != null) {
+					m_logger.info("close channel " + address);
+				}
 				channel.channel().close();
 			}
 		} catch (Exception e) {
@@ -176,9 +202,9 @@ public class ChannelManager implements Task {
 		return null;
 	}
 
-	private void doubleCheckActiveServer(ChannelFuture activeFuture) {
+	private void doubleCheckActiveServer(ChannelHolder channelHolder) {
 		try {
-			if (isChannelStalled(activeFuture) || isChannelDisabled(activeFuture)) {
+			if (isChannelStalled(channelHolder)) {
 				closeChannelHolder(m_activeChannelHolder);
 			}
 		} catch (Throwable e) {
@@ -236,19 +262,13 @@ public class ChannelManager implements Task {
 		return null;
 	}
 
-	private boolean isChannelDisabled(ChannelFuture activeFuture) {
-		return activeFuture != null && !activeFuture.channel().isOpen();
-	}
+	private boolean isChannelStalled(ChannelHolder holder) {
+		ChannelFuture future = holder.getActiveFuture();
+		boolean stalled = checkWritable(future);
 
-	private boolean isChannelStalled(ChannelFuture activeFuture) {
-		m_retriedTimes++;
-
-		int size = m_messageQueue.size();
-		boolean stalled = activeFuture != null && size >= TcpSocketSender.SIZE - 10;
-
-		if (stalled) {
-			if (m_retriedTimes >= 50) {
-				m_retriedTimes = 0;
+		if (!stalled) {
+			m_logger.warn("future can't write data in check thread " + holder.toString());
+			if ((++m_channelStalledTimes) % 3 == 0) {
 				return true;
 			} else {
 				return false;
@@ -319,7 +339,7 @@ public class ChannelManager implements Task {
 			ChannelFuture activeFuture = m_activeChannelHolder.getActiveFuture();
 			List<InetSocketAddress> serverAddresses = m_activeChannelHolder.getServerAddresses();
 
-			doubleCheckActiveServer(activeFuture);
+			doubleCheckActiveServer(m_activeChannelHolder);
 			reconnectDefaultServer(activeFuture, serverAddresses);
 
 			try {
@@ -331,6 +351,7 @@ public class ChannelManager implements Task {
 	}
 
 	private boolean shouldCheckServerConfig(int count) {
+		// check very 30*10s
 		int duration = 30;
 
 		if (count % duration == 0 || m_activeChannelHolder.getActiveIndex() == -1) {
