@@ -109,6 +109,21 @@ public class ChannelManager implements Task {
 		return null;
 	}
 
+	private boolean checkActive(ChannelFuture future) {
+		boolean isActive = false;
+		Channel channel = future.channel();
+
+		if (future != null && channel.isOpen()) {
+			if (channel.isActive()) {
+				isActive = true;
+			} else {
+				m_logger.warn("channel buf is not active");
+			}
+		}
+
+		return isActive;
+	}
+
 	private void checkServerChanged() {
 		if (shouldCheckServerConfig(++m_count)) {
 			Pair<Boolean, String> pair = routerConfigChanged();
@@ -204,7 +219,7 @@ public class ChannelManager implements Task {
 
 	private void doubleCheckActiveServer(ChannelHolder channelHolder) {
 		try {
-			if (isChannelStalled(channelHolder)) {
+			if (isChannelNotActive(channelHolder)) {
 				closeChannelHolder(m_activeChannelHolder);
 			}
 		} catch (Throwable e) {
@@ -262,18 +277,20 @@ public class ChannelManager implements Task {
 		return null;
 	}
 
-	private boolean isChannelStalled(ChannelHolder holder) {
+	private boolean isChannelNotActive(ChannelHolder holder) {
 		ChannelFuture future = holder.getActiveFuture();
-		boolean stalled = checkWritable(future);
+		boolean active = checkActive(future);
 
-		if (!stalled) {
-			m_logger.warn("future can't write data in check thread " + holder.toString());
+		if (!active) {
 			if ((++m_channelStalledTimes) % 3 == 0) {
 				return true;
 			} else {
 				return false;
 			}
 		} else {
+			if (m_channelStalledTimes > 0) {
+				m_channelStalledTimes--;
+			}
 			return false;
 		}
 	}
