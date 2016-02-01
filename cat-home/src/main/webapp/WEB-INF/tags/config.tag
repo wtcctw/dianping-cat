@@ -125,6 +125,9 @@
 							<li id="serverFilterUpdate"><a href="/cat/s/config?op=serverFilterConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>服务端过滤</a>
 								<b class="arrow"></b></li>
+							<li id="sampleConfigUpdate"><a href="/cat/s/config?op=sampleConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>客户端采样</a>
+								<b class="arrow"></b></li>
 							<li id="routerConfigUpdate"><a href="/cat/s/config?op=routerConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>客户端路由</a>
 								<b class="arrow"></b></li>

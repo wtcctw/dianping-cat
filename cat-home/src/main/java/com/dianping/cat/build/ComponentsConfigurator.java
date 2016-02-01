@@ -103,6 +103,7 @@ import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.page.router.config.RouterConfigHandler;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
+import com.dianping.cat.system.page.router.config.SampleConfigManager;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
@@ -219,6 +220,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(JsRuleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(SampleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(RouterConfigManager.class).req(ConfigDao.class, ContentFetcher.class, DailyReportDao.class,
 		      DailyReportContentDao.class));
 		all.add(C(RouterConfigHandler.class).req(StateReportService.class, RouterConfigService.class,
@@ -230,7 +233,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ConfigReloadTask.class)
 		      .req(MetricConfigManager.class, ProductLineConfigManager.class, RouterConfigManager.class,
 		            AllReportConfigManager.class, InfluxDBConfigManager.class).req(DataSourceService.class, InfluxDB.ID)
-		      .req(ServerMetricConfigManager.class));
+		      .req(ServerMetricConfigManager.class, SampleConfigManager.class));
 
 		return all;
 	}

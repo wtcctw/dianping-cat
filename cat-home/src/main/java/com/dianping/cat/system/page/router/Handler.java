@@ -24,6 +24,7 @@ import com.dianping.cat.home.router.entity.Domain;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.entity.Server;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
+import com.dianping.cat.system.page.router.config.SampleConfigManager;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
 
 public class Handler implements PageHandler<Context> {
@@ -33,6 +34,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private RouterConfigManager m_configManager;
+	
+	@Inject
+	private SampleConfigManager m_sampleConfigManager;
 	
 	@Inject
 	private ServerFilterConfigManager m_filterManager;
@@ -67,7 +71,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private double buildSampleInfo(String domain, double defaultValue) {
-		Domain domainConfig = m_configManager.getRouterConfig().findDomain(domain);
+		com.dianping.cat.home.sample.entity.Domain domainConfig = m_sampleConfigManager.getConfig().findDomain(domain);
 
 		if (domainConfig != null) {
 			defaultValue = domainConfig.getSample();

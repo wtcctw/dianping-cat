@@ -371,6 +371,30 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.alert.thirdParty.ThirdPartyConfigManager</role>
+			<implementation>com.dianping.cat.report.alert.thirdParty.ThirdPartyConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.router.config.SampleConfigManager</role>
+			<implementation>com.dianping.cat.system.page.router.config.SampleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
 			<implementation>com.dianping.cat.system.page.router.config.RouterConfigManager</implementation>
 			<requirements>
@@ -479,6 +503,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.server.config.ServerMetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.config.SampleConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6417,6 +6444,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.page.router.config.RouterConfigHandler</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.config.SampleConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -6491,6 +6521,18 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.router.config.SampleConfigManager</role>
+			<implementation>com.dianping.cat.system.page.router.config.SampleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6957,6 +6999,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.config.SampleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>

@@ -14,6 +14,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.metric.DataSourceService;
 import com.dianping.cat.report.page.server.config.ServerMetricConfigManager;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
+import com.dianping.cat.system.page.router.config.SampleConfigManager;
 
 public class ConfigReloadTask implements Task {
 
@@ -37,6 +38,9 @@ public class ConfigReloadTask implements Task {
 
 	@Inject
 	private DataSourceService<InfluxDBConnection> m_dataSourceService;
+
+	@Inject
+	private SampleConfigManager m_sampleConfigManager;
 
 	@Override
 	public String getName() {
@@ -67,6 +71,12 @@ public class ConfigReloadTask implements Task {
 				t.setStatus(e);
 			} finally {
 				t.complete();
+			}
+			
+			try{
+				m_sampleConfigManager.refreshConfig();
+			}catch(Exception e){
+				Cat.logError(e);
 			}
 
 			try {

@@ -25,6 +25,7 @@ import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
 import com.dianping.cat.system.page.router.config.RouterConfigHandler;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
+import com.dianping.cat.system.page.router.config.SampleConfigManager;
 
 public class GlobalConfigProcessor {
 
@@ -54,6 +55,9 @@ public class GlobalConfigProcessor {
 
 	@Inject
 	private RouterConfigHandler m_routerConfigHandler;
+
+	@Inject
+	private SampleConfigManager m_sampleConfigManager;
 
 	private boolean deleteProject(Payload payload) {
 		Project proto = new Project();
@@ -118,7 +122,7 @@ public class GlobalConfigProcessor {
 			break;
 		case ROUTER_CONFIG_UPDATE:
 			String routerConfig = payload.getContent();
-			
+
 			if (!StringUtils.isEmpty(routerConfig)) {
 				boolean ret = m_routerConfigManager.insert(routerConfig);
 
@@ -131,7 +135,7 @@ public class GlobalConfigProcessor {
 			break;
 		case ALERT_SENDER_CONFIG_UPDATE:
 			String senderConfig = payload.getContent();
-			
+
 			if (!StringUtils.isEmpty(senderConfig)) {
 				model.setOpState(m_senderConfigManager.insert(senderConfig));
 			}
@@ -139,7 +143,7 @@ public class GlobalConfigProcessor {
 			break;
 		case STORAGE_GROUP_CONFIG_UPDATE:
 			String storageGroup = payload.getContent();
-			
+
 			if (!StringUtils.isEmpty(storageGroup)) {
 				model.setOpState(m_groupConfigManager.insert(storageGroup));
 			}
@@ -147,7 +151,7 @@ public class GlobalConfigProcessor {
 			break;
 		case SERVER_FILTER_CONFIG_UPDATE:
 			String serverConfig = payload.getContent();
-			
+
 			if (!StringUtils.isEmpty(serverConfig)) {
 				model.setOpState(m_serverFilterConfigManager.insert(serverConfig));
 			}
@@ -155,11 +159,19 @@ public class GlobalConfigProcessor {
 			break;
 		case ALL_REPORT_CONFIG:
 			String transactionConfig = payload.getContent();
-			
+
 			if (!StringUtils.isEmpty(transactionConfig)) {
 				model.setOpState(m_transactionConfigManager.insert(transactionConfig));
 			}
 			model.setContent(m_configHtmlParser.parse(m_transactionConfigManager.getConfig().toString()));
+			break;
+		case SAMPLE_CONFIG_UPDATE:
+			String sampleConfig = payload.getContent();
+
+			if (!StringUtils.isEmpty(sampleConfig)) {
+				model.setOpState(m_sampleConfigManager.insert(sampleConfig));
+			}
+			model.setContent(m_configHtmlParser.parse(m_sampleConfigManager.getConfig().toString()));
 			break;
 		default:
 			break;

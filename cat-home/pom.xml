@@ -145,6 +145,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/js-rule-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/es-server-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/server-metric-config-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/sample-config-manifest.xml,
 					</manifest>
                   </configuration>
                </execution>
