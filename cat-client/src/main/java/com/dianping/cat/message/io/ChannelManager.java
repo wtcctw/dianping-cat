@@ -38,8 +38,6 @@ public class ChannelManager implements Task {
 
 	private int m_channelStalledTimes = 0;
 
-	private int m_count = -10;
-
 	private ChannelHolder m_activeChannelHolder;
 
 	private MessageIdFactory m_idFactory;
@@ -117,7 +115,7 @@ public class ChannelManager implements Task {
 			if (channel.isActive()) {
 				isActive = true;
 			} else {
-				m_logger.warn("channel buf is not active");
+				m_logger.warn("channel buf is not active ,current channel " + future.channel().remoteAddress());
 			}
 		}
 
@@ -125,24 +123,23 @@ public class ChannelManager implements Task {
 	}
 
 	private void checkServerChanged() {
-		if (shouldCheckServerConfig(++m_count)) {
-			Pair<Boolean, String> pair = routerConfigChanged();
+		Pair<Boolean, String> pair = routerConfigChanged();
 
-			if (pair.getKey()) {
-				String servers = pair.getValue();
-				List<InetSocketAddress> serverAddresses = parseSocketAddress(servers);
-				ChannelHolder newHolder = initChannel(serverAddresses, servers);
+		if (pair.getKey()) {
+			m_logger.info("router config changed :" + pair.getValue());
+			String servers = pair.getValue();
+			List<InetSocketAddress> serverAddresses = parseSocketAddress(servers);
+			ChannelHolder newHolder = initChannel(serverAddresses, servers);
 
-				if (newHolder != null) {
-					if (newHolder.isConnectChanged()) {
-						ChannelHolder last = m_activeChannelHolder;
+			if (newHolder != null) {
+				if (newHolder.isConnectChanged()) {
+					ChannelHolder last = m_activeChannelHolder;
 
-						m_activeChannelHolder = newHolder;
-						closeChannelHolder(last);
-						m_logger.info("switch active channel to " + m_activeChannelHolder);
-					} else {
-						m_activeChannelHolder = newHolder;
-					}
+					m_activeChannelHolder = newHolder;
+					closeChannelHolder(last);
+					m_logger.info("switch active channel to " + m_activeChannelHolder);
+				} else {
+					m_activeChannelHolder = newHolder;
 				}
 			}
 		}
@@ -187,13 +184,13 @@ public class ChannelManager implements Task {
 			ChannelFuture channel = channelHolder.getActiveFuture();
 
 			closeChannel(channel);
-			channelHolder.setActiveIndex(-1);
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 
 	private ChannelFuture createChannel(InetSocketAddress address) {
+		m_logger.info("start connect server" + address.toString());
 		ChannelFuture future = null;
 
 		try {
@@ -219,8 +216,9 @@ public class ChannelManager implements Task {
 
 	private void doubleCheckActiveServer(ChannelHolder channelHolder) {
 		try {
-			if (isChannelNotActive(channelHolder)) {
+			if (isChannelStalled(channelHolder)) {
 				closeChannelHolder(m_activeChannelHolder);
+				channelHolder.setActiveIndex(-1);
 			}
 		} catch (Throwable e) {
 			m_logger.error(e.getMessage(), e);
@@ -277,7 +275,7 @@ public class ChannelManager implements Task {
 		return null;
 	}
 
-	private boolean isChannelNotActive(ChannelHolder holder) {
+	private boolean isChannelStalled(ChannelHolder holder) {
 		ChannelFuture future = holder.getActiveFuture();
 		boolean active = checkActive(future);
 
@@ -364,17 +362,6 @@ public class ChannelManager implements Task {
 			} catch (InterruptedException e) {
 				// ignore
 			}
-		}
-	}
-
-	private boolean shouldCheckServerConfig(int count) {
-		// check very 30*10s
-		int duration = 30;
-
-		if (count % duration == 0 || m_activeChannelHolder.getActiveIndex() == -1) {
-			return true;
-		} else {
-			return false;
 		}
 	}
 
