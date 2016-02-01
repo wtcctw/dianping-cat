@@ -24,6 +24,8 @@ import com.dianping.cat.consumer.all.config.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.task.ConfigSyncTask;
+import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
 public class AllReportConfigManager implements Initializable, LogEnabled {
 
@@ -84,6 +86,19 @@ public class AllReportConfigManager implements Initializable, LogEnabled {
 		if (m_config == null) {
 			m_config = new AllConfig();
 		}
+
+		ConfigSyncTask.getInstance().register(new SyncHandler() {
+
+			@Override
+			public void handle() throws Exception {
+				refreshConfig();
+			}
+
+			@Override
+			public String getName() {
+				return CONFIG_NAME;
+			}
+		});
 	}
 
 	public boolean insert(String xml) {

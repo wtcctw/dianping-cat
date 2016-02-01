@@ -14,6 +14,8 @@ import com.dianping.cat.influxdb.config.InfluxDBConfigManager;
 import com.dianping.cat.influxdb.config.entity.Influxdb;
 import com.dianping.cat.influxdb.config.entity.InfluxdbConfig;
 import com.dianping.cat.metric.DataSourceService;
+import com.dianping.cat.task.ConfigSyncTask;
+import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
 public class DataSourceServiceImpl implements DataSourceService<InfluxDBConnection> {
 
@@ -63,6 +65,19 @@ public class DataSourceServiceImpl implements DataSourceService<InfluxDBConnecti
 	public void initialize() throws InitializationException {
 		m_influxdbConfig = m_configManager.getConfig();
 		m_connections = buildConnections(m_influxdbConfig);
+		
+		ConfigSyncTask.getInstance().register(new SyncHandler() {
+
+			@Override
+			public void handle() throws Exception {
+				refresh();
+			}
+
+			@Override
+			public String getName() {
+				return "Influx-Datasource-Serivce";
+			}
+		});
 	}
 
 	@Override

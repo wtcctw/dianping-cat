@@ -383,18 +383,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.sample.SampleConfigManager</role>
-			<implementation>com.dianping.cat.config.sample.SampleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
 			<implementation>com.dianping.cat.system.page.router.config.RouterConfigManager</implementation>
 			<requirements>

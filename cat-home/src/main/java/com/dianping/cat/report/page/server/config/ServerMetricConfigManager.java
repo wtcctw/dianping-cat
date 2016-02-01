@@ -17,6 +17,8 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.server.entity.ServerMetricConfig;
 import com.dianping.cat.home.server.transform.DefaultSaxParser;
+import com.dianping.cat.task.ConfigSyncTask;
+import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
 public class ServerMetricConfigManager implements Initializable {
 
@@ -70,6 +72,19 @@ public class ServerMetricConfigManager implements Initializable {
 		if (m_config == null) {
 			m_config = new ServerMetricConfig();
 		}
+
+		ConfigSyncTask.getInstance().register(new SyncHandler() {
+
+			@Override
+			public void handle() throws Exception {
+				refreshConfig();
+			}
+
+			@Override
+			public String getName() {
+				return CONFIG_NAME;
+			}
+		});
 	}
 
 	public boolean insert(String xml) {

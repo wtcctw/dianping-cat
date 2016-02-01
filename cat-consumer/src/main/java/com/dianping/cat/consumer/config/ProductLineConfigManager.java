@@ -32,6 +32,8 @@ import com.dianping.cat.consumer.company.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.task.ConfigSyncTask;
+import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
 public class ProductLineConfigManager implements Initializable, LogEnabled {
 
@@ -124,6 +126,19 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 			initializeConfig(productLine);
 		}
 		m_metricProductLines = buildMetricProductLines();
+
+		ConfigSyncTask.getInstance().register(new SyncHandler() {
+
+			@Override
+			public void handle() throws Exception {
+				refreshConfig();
+			}
+
+			@Override
+         public String getName() {
+	         return CONFIG_NAME;
+         }
+		});
 	}
 
 	private void initializeConfig(ProductLineConfig productLine) {

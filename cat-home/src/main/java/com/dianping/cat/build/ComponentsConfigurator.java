@@ -22,12 +22,10 @@ import com.dianping.cat.config.app.AppConnectionTableProvider;
 import com.dianping.cat.config.app.AppSpeedTableProvider;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
-import com.dianping.cat.config.sample.SampleConfigManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.web.AjaxDataTableProvider;
 import com.dianping.cat.config.web.WebSpeedDataTableProvider;
-import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
@@ -41,8 +39,6 @@ import com.dianping.cat.home.dal.report.MetricScreenDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.UserDefineRuleDao;
 import com.dianping.cat.influxdb.InfluxDB;
-import com.dianping.cat.influxdb.config.InfluxDBConfigManager;
-import com.dianping.cat.metric.DataSourceService;
 import com.dianping.cat.metric.MetricService;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
@@ -72,7 +68,6 @@ import com.dianping.cat.report.graph.svg.DefaultGraphBuilder;
 import com.dianping.cat.report.graph.svg.DefaultValueTranslater;
 import com.dianping.cat.report.graph.svg.GraphBuilder;
 import com.dianping.cat.report.graph.svg.ValueTranslater;
-import com.dianping.cat.report.page.ConfigReloadTask;
 import com.dianping.cat.report.page.DomainGroupConfigManager;
 import com.dianping.cat.report.page.app.service.AppConnectionService;
 import com.dianping.cat.report.page.app.service.AppDataService;
@@ -229,10 +224,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(EsServerConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ServerMetricConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(ConfigReloadTask.class)
-		      .req(MetricConfigManager.class, ProductLineConfigManager.class, RouterConfigManager.class,
-		            AllReportConfigManager.class, InfluxDBConfigManager.class).req(DataSourceService.class, InfluxDB.ID)
-		      .req(ServerMetricConfigManager.class, SampleConfigManager.class));
 
 		return all;
 	}

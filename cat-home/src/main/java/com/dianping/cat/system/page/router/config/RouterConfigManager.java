@@ -46,6 +46,8 @@ import com.dianping.cat.home.router.entity.ServerGroup;
 import com.dianping.cat.home.router.transform.DefaultNativeParser;
 import com.dianping.cat.home.router.transform.DefaultSaxParser;
 import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
+import com.dianping.cat.task.ConfigSyncTask;
+import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
 public class RouterConfigManager implements Initializable, LogEnabled {
 
@@ -140,7 +142,22 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		if (m_routerConfig == null) {
 			m_routerConfig = new RouterConfig();
 		}
+
 		refreshNetInfo();
+
+		ConfigSyncTask.getInstance().register(new SyncHandler() {
+
+			@Override
+			public void handle() throws Exception {
+				refreshConfigInfo();
+				refreshReportInfo();
+			}
+
+			@Override
+			public String getName() {
+				return CONFIG_NAME;
+			}
+		});
 	}
 
 	public boolean insert(String xml) {
@@ -257,11 +274,6 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 			}
 		}
 		return result;
-	}
-
-	public void refreshConfig() throws Exception {
-		refreshConfigInfo();
-		refreshReportInfo();
 	}
 
 	private void refreshConfigInfo() throws DalException, SAXException, IOException {

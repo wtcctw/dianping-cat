@@ -7,8 +7,6 @@ import java.util.List;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.xml.sax.SAXException;
 
@@ -20,6 +18,8 @@ import com.dianping.cat.configuration.web.js.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.task.ConfigSyncTask;
+import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
 public class AggregationConfigManager implements Initializable {
 	@Inject
@@ -81,8 +81,18 @@ public class AggregationConfigManager implements Initializable {
 		}
 		m_handler.register(queryAggregationRules());
 
-		Threads.forGroup("cat").start(new ConfigReloadTask());
-	}
+		ConfigSyncTask.getInstance().register(new SyncHandler() {
+
+			@Override
+			public void handle() throws Exception {
+				refreshAggreationConfig();
+			}
+
+			@Override
+			public String getName() {
+				return CONFIG_NAME;
+			}
+		});	}
 
 	public boolean insertAggregationRule(AggregationRule rule) {
 		m_aggregation.addAggregationRule(rule);
@@ -157,35 +167,6 @@ public class AggregationConfigManager implements Initializable {
 			return false;
 		}
 		return true;
-	}
-
-	public class ConfigReloadTask implements Task {
-
-		@Override
-		public String getName() {
-			return "Aggreation-Config-Reload";
-		}
-
-		@Override
-		public void run() {
-			boolean active = true;
-			while (active) {
-				try {
-					refreshAggreationConfig();
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-				try {
-					Thread.sleep(60 * 1000L);
-				} catch (InterruptedException e) {
-					active = false;
-				}
-			}
-		}
-
-		@Override
-		public void shutdown() {
-		}
 	}
 
 }
