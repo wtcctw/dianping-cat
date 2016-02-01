@@ -1,9 +1,7 @@
 package com.dianping.cat.report.page.transaction.task;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -43,9 +41,6 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 
 	@Inject
 	private TransactionGraphCreator m_transactionGraphCreator;
-
-	@Inject
-	private TransactionMerger m_transactionMerger;
 
 	private Logger m_logger;
 
@@ -169,39 +164,57 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 		double duration = (end.getTime() - start.getTime()) * 1.0 / TimeHelper.ONE_DAY;
 		HistoryTransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(domain))
 		      .setDuration(duration);
+		TransactionReport transactionReport = merger.getTransactionReport();
+
+		TransactionReportDailyGraphCreator creator = new TransactionReportDailyGraphCreator(transactionReport,
+		      (int) duration, start);
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				TransactionReport reportModel = m_reportService.queryReport(domain, new Date(startTime),
-				      new Date(startTime + TimeHelper.ONE_DAY));
+				TransactionReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
+				      + TimeHelper.ONE_DAY));
 
+				creator.creatorGraph(reportModel);
 				reportModel.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
 		}
-		TransactionReport transactionReport = merger.getTransactionReport();
 
 		transactionReport.setStartTime(start);
 		transactionReport.setEndTime(end);
+
 		new TransactionReportCountFilter().visitTransactionReport(transactionReport);
 		return transactionReport;
 	}
 
 	private TransactionReport queryHourlyReportsByDuration(String name, String domain, Date start, Date endDate)
 	      throws DalException {
-		Set<String> domainSet = m_reportService.queryAllDomainNames(start, endDate, TransactionAnalyzer.ID);
-		List<TransactionReport> reports = new ArrayList<TransactionReport>();
 		long startTime = start.getTime();
 		long endTime = endDate.getTime();
 		double duration = (endTime - startTime) * 1.0 / TimeHelper.ONE_DAY;
+		HistoryTransactionReportMerger dailyMerger = new HistoryTransactionReportMerger(new TransactionReport(domain))
+		      .setDuration(duration);
+		TransactionReportHourlyGraphCreator graphCreator = new TransactionReportHourlyGraphCreator(
+		      dailyMerger.getTransactionReport(), 10);
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
-			TransactionReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(
-			      startTime + TimeHelper.ONE_HOUR));
+			TransactionReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
+			      + TimeHelper.ONE_HOUR));
 
-			reports.add(report);
+			graphCreator.creatorGraph(report);
+			report.accept(dailyMerger);
 		}
-		return m_transactionMerger.mergeForDaily(domain, reports, domainSet, duration);
+
+		TransactionReport dailyreport = dailyMerger.getTransactionReport();
+		Date date = dailyreport.getStartTime();
+		Date end = new Date(TaskHelper.tomorrowZero(date).getTime() - 1000);
+
+		dailyreport.setStartTime(TaskHelper.todayZero(date));
+		dailyreport.setEndTime(end);
+
+		new TransactionReportCountFilter().visitTransactionReport(dailyreport);
+
+		return dailyreport;
 	}
 }

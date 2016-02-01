@@ -1143,10 +1143,6 @@
 			<implementation>com.dianping.cat.report.page.problem.task.ProblemGraphCreator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.transaction.task.TransactionMerger</role>
-			<implementation>com.dianping.cat.report.page.transaction.task.TransactionMerger</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.event.task.EventMerger</role>
 			<implementation>com.dianping.cat.report.page.event.task.EventMerger</implementation>
 		</component>
@@ -1219,9 +1215,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.transaction.task.TransactionGraphCreator</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.transaction.task.TransactionMerger</role>
 				</requirement>
 			</requirements>
 		</component>

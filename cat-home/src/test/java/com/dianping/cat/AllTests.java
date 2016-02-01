@@ -43,7 +43,6 @@ import com.dianping.cat.report.task.service.ServiceReportMergerTest;
 import com.dianping.cat.report.task.storage.HistoryStorageReportMergerTest;
 import com.dianping.cat.report.task.transaction.DailyTransactionReportGraphTest;
 import com.dianping.cat.report.task.transaction.HistoryTransactionMergerTest;
-import com.dianping.cat.report.task.transaction.TransactionDailyGraphMergerTest;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreatorTest;
 
 @RunWith(Suite.class)
@@ -90,8 +89,6 @@ TransactionGraphCreatorTest.class,
 EventGraphCreatorTest.class,
 
 EventDailyGraphMergerTest.class,
-
-TransactionDailyGraphMergerTest.class,
 
 ProblemDailyGraphMergerTest.class,
 

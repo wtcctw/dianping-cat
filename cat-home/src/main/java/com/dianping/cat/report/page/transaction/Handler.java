@@ -35,6 +35,7 @@ import com.dianping.cat.report.page.transaction.service.TransactionReportService
 import com.dianping.cat.report.page.transaction.transform.DistributionDetailVisitor;
 import com.dianping.cat.report.page.transaction.transform.PieGraphChartVisitor;
 import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
+import com.dianping.cat.report.page.transaction.transform.TransactionTrendGraphBuilder;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
@@ -222,6 +223,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY_REPORT:
 			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
+			report = m_mergeHelper.mergeAllMachines(report, ipAddress);
 
 			if (report != null) {
 				model.setReport(report);
@@ -234,8 +236,11 @@ public class Handler implements PageHandler<Context> {
 
 				buildDistributionInfo(model, type, name, report);
 			}
-
-			m_historyGraph.buildTrendGraph(model, payload);
+			boolean isOld = new TransactionTrendGraphBuilder(m_reportService).buildTrendGraph(model, payload);
+			
+			if(isOld) {
+				m_historyGraph.buildTrendGraph(model, payload);
+			}
 			break;
 		case GRAPHS:
 			report = getHourlyGraphReport(model, payload);
