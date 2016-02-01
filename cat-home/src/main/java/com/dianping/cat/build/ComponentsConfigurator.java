@@ -22,6 +22,7 @@ import com.dianping.cat.config.app.AppConnectionTableProvider;
 import com.dianping.cat.config.app.AppSpeedTableProvider;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
+import com.dianping.cat.config.sample.SampleConfigManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.web.AjaxDataTableProvider;
@@ -103,7 +104,6 @@ import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.page.router.config.RouterConfigHandler;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
-import com.dianping.cat.system.page.router.config.SampleConfigManager;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
@@ -221,7 +221,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(SampleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(RouterConfigManager.class).req(ConfigDao.class, ContentFetcher.class, DailyReportDao.class,
 		      DailyReportContentDao.class));
 		all.add(C(RouterConfigHandler.class).req(StateReportService.class, RouterConfigService.class,

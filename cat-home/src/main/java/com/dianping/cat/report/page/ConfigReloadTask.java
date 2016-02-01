@@ -4,6 +4,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.sample.SampleConfigManager;
 import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
@@ -14,7 +15,6 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.metric.DataSourceService;
 import com.dianping.cat.report.page.server.config.ServerMetricConfigManager;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
-import com.dianping.cat.system.page.router.config.SampleConfigManager;
 
 public class ConfigReloadTask implements Task {
 

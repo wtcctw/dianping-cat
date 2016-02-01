@@ -383,8 +383,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.router.config.SampleConfigManager</role>
-			<implementation>com.dianping.cat.system.page.router.config.SampleConfigManager</implementation>
+			<role>com.dianping.cat.config.sample.SampleConfigManager</role>
+			<implementation>com.dianping.cat.config.sample.SampleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -505,7 +505,7 @@
 					<role>com.dianping.cat.report.page.server.config.ServerMetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.router.config.SampleConfigManager</role>
+					<role>com.dianping.cat.config.sample.SampleConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6445,7 +6445,7 @@
 					<role>com.dianping.cat.system.page.router.config.RouterConfigHandler</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.router.config.SampleConfigManager</role>
+					<role>com.dianping.cat.config.sample.SampleConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6525,8 +6525,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.router.config.SampleConfigManager</role>
-			<implementation>com.dianping.cat.system.page.router.config.SampleConfigManager</implementation>
+			<role>com.dianping.cat.config.sample.SampleConfigManager</role>
+			<implementation>com.dianping.cat.config.sample.SampleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -7001,7 +7001,7 @@
 					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.router.config.SampleConfigManager</role>
+					<role>com.dianping.cat.config.sample.SampleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>

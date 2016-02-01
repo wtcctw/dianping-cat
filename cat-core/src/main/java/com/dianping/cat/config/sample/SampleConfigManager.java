@@ -1,4 +1,4 @@
-package com.dianping.cat.system.page.router.config;
+package com.dianping.cat.config.sample;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -10,8 +10,8 @@ import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.sample.entity.SampleConfig;
-import com.dianping.cat.home.sample.transform.DefaultSaxParser;
+import com.dianping.cat.sample.entity.SampleConfig;
+import com.dianping.cat.sample.transform.DefaultSaxParser;
 
 public class SampleConfigManager implements Initializable {
 

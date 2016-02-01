@@ -165,6 +165,22 @@
 			<tr>
 		</table>
 	</div>
+	<c:if test="${model.sample ne 1.0}" >
+		<div class="ace-settings-container" id="ace-settings-container">
+			<div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">采样</div>
+	
+			<div class="ace-settings-box clearfix" id="ace-settings-box">
+				<div class="pull-left width-50">
+					<!-- #section:settings.navbar -->
+					<div class="ace-settings-item">
+						<label class="lbl" for="ace-settings-navbar">${model.sample}</label>
+					</div>
+	
+					<!-- /section:settings.container -->
+				</div><!-- /.pull-left -->
+			</div><!-- /.ace-settings-box -->
+		</div>
+	</c:if>
 	<jsp:doBody />
 	</div>
 </a:application>

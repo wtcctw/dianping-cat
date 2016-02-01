@@ -23,6 +23,7 @@ import com.dianping.cat.config.app.command.CommandFormatHandler;
 import com.dianping.cat.config.app.command.DefaultCommandFormatlHandler;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
+import com.dianping.cat.config.sample.SampleConfigManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.web.WebConfigManager;
@@ -82,10 +83,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(CommandFormatConfigManager.class)
 		      .req(CommandFormatHandler.class, ConfigDao.class, ContentFetcher.class));
 
+		all.add(C(SampleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+
 		all.add(C(AppConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		
+
 		all.add(C(WebConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		
+
 		all.add(C(WebSpeedConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(AppSpeedConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
@@ -103,7 +106,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(new CatCoreDatabaseConfigurator().defineComponents());
 		all.addAll(new AppDatabaseConfigurator().defineComponents());
 		all.addAll(new WebDatabaseConfigurator().defineComponents());
-		
+
 		all.addAll(new CodecComponentConfigurator().defineComponents());
 		all.addAll(new StorageComponentConfigurator().defineComponents());
 

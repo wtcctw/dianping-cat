@@ -10,6 +10,7 @@ import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.config.sample.SampleConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.core.dal.Project;
@@ -25,7 +26,6 @@ import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
 import com.dianping.cat.system.page.router.config.RouterConfigHandler;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
-import com.dianping.cat.system.page.router.config.SampleConfigManager;
 
 public class GlobalConfigProcessor {
 
