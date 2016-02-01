@@ -467,37 +467,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.ConfigReloadTask</role>
-			<implementation>com.dianping.cat.report.page.ConfigReloadTask</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.metric.DataSourceService</role>
-					<role-hint>Influx</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.server.config.ServerMetricConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.sample.SampleConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.graph.metric.CachedMetricReportService</role>
 			<implementation>com.dianping.cat.report.graph.metric.impl.CachedMetricReportServiceImpl</implementation>
 			<requirements>
