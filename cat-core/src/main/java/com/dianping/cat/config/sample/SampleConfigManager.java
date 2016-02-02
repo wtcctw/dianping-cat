@@ -1,56 +1,37 @@
-package com.dianping.cat.consumer.config;
+package com.dianping.cat.config.sample;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
-import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.consumer.all.config.entity.AllConfig;
-import com.dianping.cat.consumer.all.config.entity.Name;
-import com.dianping.cat.consumer.all.config.entity.Report;
-import com.dianping.cat.consumer.all.config.entity.Type;
-import com.dianping.cat.consumer.all.config.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.sample.entity.SampleConfig;
+import com.dianping.cat.sample.transform.DefaultSaxParser;
 import com.dianping.cat.task.ConfigSyncTask;
 import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
-public class AllReportConfigManager implements Initializable, LogEnabled {
+public class SampleConfigManager implements Initializable {
 
 	@Inject
-	private ConfigDao m_configDao;
+	protected ConfigDao m_configDao;
 
 	@Inject
-	private ContentFetcher m_fetcher;
+	protected ContentFetcher m_fetcher;
 
 	private int m_configId;
 
-	private volatile AllConfig m_config;
-
-	private Logger m_logger;
-
 	private long m_modifyTime;
 
-	private static final String CONFIG_NAME = "all-report-config";
+	private SampleConfig m_config;
 
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
+	private static final String CONFIG_NAME = "sampleConfig";
 
-	public AllConfig getConfig() {
+	public SampleConfig getConfig() {
 		return m_config;
 	}
 
@@ -61,22 +42,18 @@ public class AllReportConfigManager implements Initializable, LogEnabled {
 			String content = config.getContent();
 
 			m_configId = config.getId();
-			m_config = DefaultSaxParser.parse(content);
 			m_modifyTime = config.getModifyDate().getTime();
+			m_config = DefaultSaxParser.parse(content);
 		} catch (DalNotFoundException e) {
 			try {
 				String content = m_fetcher.getConfigContent(CONFIG_NAME);
 				Config config = m_configDao.createLocal();
-				Date now = new Date();
 
 				config.setName(CONFIG_NAME);
 				config.setContent(content);
-				config.setModifyDate(now);
 				m_configDao.insert(config);
-
 				m_configId = config.getId();
 				m_config = DefaultSaxParser.parse(content);
-				m_modifyTime = now.getTime();
 			} catch (Exception ex) {
 				Cat.logError(ex);
 			}
@@ -84,7 +61,7 @@ public class AllReportConfigManager implements Initializable, LogEnabled {
 			Cat.logError(e);
 		}
 		if (m_config == null) {
-			m_config = new AllConfig();
+			m_config = new SampleConfig();
 		}
 
 		ConfigSyncTask.getInstance().register(new SyncHandler() {
@@ -104,26 +81,24 @@ public class AllReportConfigManager implements Initializable, LogEnabled {
 	public boolean insert(String xml) {
 		try {
 			m_config = DefaultSaxParser.parse(xml);
-			boolean result = storeConfig();
 
-			return result;
+			return storeConfig();
 		} catch (Exception e) {
 			Cat.logError(e);
-			m_logger.error(e.getMessage(), e);
 			return false;
 		}
 	}
 
-	private void refreshConfig() throws DalException, SAXException, IOException {
+	private void refreshConfig() throws Exception {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 
 		synchronized (this) {
 			if (modifyTime > m_modifyTime) {
 				String content = config.getContent();
-				AllConfig allConfig = DefaultSaxParser.parse(content);
+				SampleConfig sampleConfig = DefaultSaxParser.parse(content);
 
-				m_config = allConfig;
+				m_config = sampleConfig;
 				m_modifyTime = modifyTime;
 			}
 		}
@@ -145,40 +120,6 @@ public class AllReportConfigManager implements Initializable, LogEnabled {
 			}
 		}
 		return true;
-	}
-
-	public boolean validate(String reportName, String type) {
-		Report report = m_config.getReports().get(reportName);
-
-		if (report != null) {
-			Map<String, Type> types = report.getTypes();
-
-			return types.containsKey(type) || types.containsKey("*");
-		} else {
-			return false;
-		}
-	}
-
-	public boolean validate(String reportName, String type, String name) {
-		Report report = m_config.getReports().get(reportName);
-
-		if (report != null) {
-			Map<String, Type> types = report.getTypes();
-			Type typeConfig = types.get(type);
-
-			if (typeConfig != null) {
-				List<Name> list = typeConfig.getNameList();
-
-				for (Name nameConfig : list) {
-					String configId = nameConfig.getId();
-
-					if (configId.equals(name) || "*".equals(configId)) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
 	}
 
 }

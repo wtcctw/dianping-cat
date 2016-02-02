@@ -57,30 +57,9 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private AtomicInteger m_errors = new AtomicInteger();
 
-	private AtomicInteger m_attempts = new AtomicInteger();
-
 	private AtomicInteger m_sampleCount = new AtomicInteger();
 
 	private static final int MAX_CHILD_NUMBER = 200;
-
-	private boolean checkWritable(ChannelFuture future) {
-		boolean isWriteable = false;
-		Channel channel = future.channel();
-
-		if (future != null && channel.isOpen()) {
-			if (channel.isActive() && channel.isWritable()) {
-				isWriteable = true;
-			} else {
-				int count = m_attempts.incrementAndGet();
-
-				if (count % 1000 == 0 || count == 1) {
-					m_logger.error("Netty write buffer is full! Attempts: " + count);
-				}
-			}
-		}
-
-		return isWriteable;
-	}
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -94,7 +73,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	@Override
 	public void initialize() {
-		m_channelManager = new ChannelManager(m_logger, m_serverAddresses, m_queue, m_configManager, m_factory);
+		m_channelManager = new ChannelManager(m_logger, m_serverAddresses,  m_configManager, m_factory);
 
 		Threads.forGroup("cat").start(this);
 		Threads.forGroup("cat").start(m_channelManager);
@@ -162,7 +141,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		while (m_active) {
 			ChannelFuture channel = m_channelManager.channel();
 
-			if (channel != null && checkWritable(channel)) {
+			if (channel != null) {
 				try {
 					MessageTree tree = m_queue.poll();
 

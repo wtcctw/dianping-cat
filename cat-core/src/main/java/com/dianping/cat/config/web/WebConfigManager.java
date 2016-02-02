@@ -16,8 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
@@ -29,12 +27,13 @@ import com.dianping.cat.configuration.web.entity.Code;
 import com.dianping.cat.configuration.web.entity.Command;
 import com.dianping.cat.configuration.web.entity.ConfigItem;
 import com.dianping.cat.configuration.web.entity.Item;
-import com.dianping.cat.configuration.web.transform.DefaultSaxParser;
 import com.dianping.cat.configuration.web.entity.WebConfig;
+import com.dianping.cat.configuration.web.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.task.ConfigSyncTask;
+import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
 public class WebConfigManager implements Initializable {
 
@@ -277,7 +276,18 @@ public class WebConfigManager implements Initializable {
 		if (m_config == null) {
 			m_config = new WebConfig();
 		}
-		Threads.forGroup("cat").start(new ConfigReloadTask());
+		ConfigSyncTask.getInstance().register(new SyncHandler() {
+
+			@Override
+			public void handle() throws Exception {
+				refreshConfig();
+			}
+
+			@Override
+			public String getName() {
+				return CONFIG_NAME;
+			}
+		});
 	}
 
 	public boolean insert(String xml) {
@@ -417,7 +427,7 @@ public class WebConfigManager implements Initializable {
 		return new Item(id);
 	}
 
-	public void refreshWebConfig() throws DalException, SAXException, IOException {
+	private void refreshConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 
@@ -572,35 +582,6 @@ public class WebConfigManager implements Initializable {
 				c2 = title2;
 			}
 			return c1.compareTo(c2);
-		}
-	}
-
-	public class ConfigReloadTask implements Task {
-
-		@Override
-		public String getName() {
-			return "Web-Config-Reload";
-		}
-
-		@Override
-		public void run() {
-			boolean active = true;
-			while (active) {
-				try {
-					refreshWebConfig();
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-				try {
-					Thread.sleep(TimeHelper.ONE_MINUTE);
-				} catch (InterruptedException e) {
-					active = false;
-				}
-			}
-		}
-
-		@Override
-		public void shutdown() {
 		}
 	}
 }

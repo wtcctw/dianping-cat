@@ -12,6 +12,8 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.influxdb.config.entity.InfluxdbConfig;
 import com.dianping.cat.influxdb.config.transform.DefaultSaxParser;
+import com.dianping.cat.task.ConfigSyncTask;
+import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
 public class InfluxDBConfigManager implements Initializable {
 
@@ -60,9 +62,22 @@ public class InfluxDBConfigManager implements Initializable {
 		if (m_config == null) {
 			m_config = new InfluxdbConfig();
 		}
+
+		ConfigSyncTask.getInstance().register(new SyncHandler() {
+
+			@Override
+			public void handle() throws Exception {
+				refreshConfig();
+			}
+
+			@Override
+			public String getName() {
+				return CONFIG_NAME;
+			}
+		});
 	}
 
-	public void refreshConfig() throws Exception {
+	private void refreshConfig() throws Exception {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 

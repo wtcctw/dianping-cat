@@ -16,6 +16,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.config.sample.SampleConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.configuration.KVConfig;
 import com.dianping.cat.helper.JsonBuilder;
@@ -33,7 +34,10 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private RouterConfigManager m_configManager;
-	
+
+	@Inject
+	private SampleConfigManager m_sampleConfigManager;
+
 	@Inject
 	private ServerFilterConfigManager m_filterManager;
 
@@ -67,7 +71,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private double buildSampleInfo(String domain, double defaultValue) {
-		Domain domainConfig = m_configManager.getRouterConfig().findDomain(domain);
+		com.dianping.cat.sample.entity.Domain domainConfig = m_sampleConfigManager.getConfig().findDomain(domain);
 
 		if (domainConfig != null) {
 			defaultValue = domainConfig.getSample();

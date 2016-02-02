@@ -21,12 +21,10 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppConnectionTableProvider;
 import com.dianping.cat.config.app.AppSpeedTableProvider;
 import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.web.AjaxDataTableProvider;
 import com.dianping.cat.config.web.WebSpeedDataTableProvider;
-import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
@@ -40,8 +38,6 @@ import com.dianping.cat.home.dal.report.MetricScreenDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.UserDefineRuleDao;
 import com.dianping.cat.influxdb.InfluxDB;
-import com.dianping.cat.influxdb.config.InfluxDBConfigManager;
-import com.dianping.cat.metric.DataSourceService;
 import com.dianping.cat.metric.MetricService;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
@@ -71,7 +67,6 @@ import com.dianping.cat.report.graph.svg.DefaultGraphBuilder;
 import com.dianping.cat.report.graph.svg.DefaultValueTranslater;
 import com.dianping.cat.report.graph.svg.GraphBuilder;
 import com.dianping.cat.report.graph.svg.ValueTranslater;
-import com.dianping.cat.report.page.ConfigReloadTask;
 import com.dianping.cat.report.page.DomainGroupConfigManager;
 import com.dianping.cat.report.page.app.service.AppConnectionService;
 import com.dianping.cat.report.page.app.service.AppDataService;
@@ -147,8 +142,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(ContentFetcher.class, DefaultContentFetcher.class));
-
 		all.addAll(defineCommonComponents());
 
 		all.addAll(defineConfigComponents());
@@ -219,6 +212,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(JsRuleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(RouterConfigManager.class).req(ConfigDao.class, ContentFetcher.class, DailyReportDao.class,
 		      DailyReportContentDao.class));
 		all.add(C(RouterConfigHandler.class).req(StateReportService.class, RouterConfigService.class,
@@ -227,10 +221,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(EsServerConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ServerMetricConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(ConfigReloadTask.class)
-		      .req(MetricConfigManager.class, ProductLineConfigManager.class, RouterConfigManager.class,
-		            AllReportConfigManager.class, InfluxDBConfigManager.class).req(DataSourceService.class, InfluxDB.ID)
-		      .req(ServerMetricConfigManager.class));
 
 		return all;
 	}

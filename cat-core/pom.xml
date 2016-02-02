@@ -3,7 +3,7 @@
    <parent>
       <groupId>com.dianping.cat</groupId>
       <artifactId>parent</artifactId>
-      <version>1.3.9-SNAPSHOT</version>
+      <version>1.4.0</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>cat-core</artifactId>
@@ -69,7 +69,9 @@
 								${basedir}/src/main/resources/META-INF/dal/model/app-comparison-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/app-speed-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/web-speed-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/server-filter-config-manifest.xml,</manifest>
+								${basedir}/src/main/resources/META-INF/dal/model/server-filter-config-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/sample-config-manifest.xml,
+					</manifest>
                   </configuration>
                </execution>
                <execution>

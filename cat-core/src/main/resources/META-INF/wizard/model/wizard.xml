@@ -21,4 +21,7 @@
    <model package="com.dianping.cat.WebSpeedConfig" name="web-speed-config">
       <sample-model>../cat-home/src/main/resources/config/web-speed-config.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.sample" name="sample-config">
+      <sample-model>src/main/resources/config/sampleConfig.xml</sample-model>
+   </model>
 </wizard>

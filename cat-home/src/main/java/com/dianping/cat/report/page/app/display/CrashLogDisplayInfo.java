@@ -4,33 +4,33 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.dianping.cat.configuration.server.filter.entity.CrashLogDomain;
+import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.report.ErrorMsg;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.page.app.service.CrashLogService.FieldsInfo;
 
 public class CrashLogDisplayInfo {
-	
-	private Collection<CrashLogDomain> m_appNames;
-	
+
+	private Collection<Item> m_appNames;
+
 	private FieldsInfo m_fieldsInfo;
-	
+
 	private int m_totalCount;
-	
+
 	private List<ErrorMsg> m_errors;
-	
+
 	private Map<String, PieChart> m_distributions;
-	
+
 	private Map<String, PieChart> m_msgDistributions;
-	
+
 	public Map<String, PieChart> getDistributions() {
 		return m_distributions;
 	}
-	
+
 	public void setDistributions(Map<String, PieChart> distributions) {
 		m_distributions = distributions;
 	}
-	
+
 	public Map<String, PieChart> getMsgDistributions() {
 		return m_msgDistributions;
 	}
@@ -39,7 +39,7 @@ public class CrashLogDisplayInfo {
 		m_msgDistributions = msgDistributions;
 	}
 
-	public Collection<CrashLogDomain> getAppNames() {
+	public Collection<Item> getAppNames() {
 		return m_appNames;
 	}
 
@@ -59,7 +59,7 @@ public class CrashLogDisplayInfo {
 		return m_totalCount;
 	}
 
-	public void setAppNames(Collection<CrashLogDomain> appNames) {
+	public void setAppNames(Collection<Item> appNames) {
 		m_appNames = appNames;
 	}
 
@@ -70,5 +70,5 @@ public class CrashLogDisplayInfo {
 	public void setTotalCount(int totalCount) {
 		m_totalCount = totalCount;
 	}
-	
+
 }

@@ -16,7 +16,9 @@ import org.unidal.web.mvc.Page;
 import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.sample.SampleConfigManager;
 import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.sample.entity.Domain;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.service.ProjectService.Department;
@@ -46,13 +48,26 @@ public abstract class AbstractReportModel<A extends Action, P extends Page, M ex
 
 	private HostinfoService m_hostinfoService;
 
+	private SampleConfigManager m_sampleConfigManager;
+
 	public AbstractReportModel(M ctx) {
 		super(ctx);
 		try {
 			m_projectService = ContainerLoader.getDefaultContainer().lookup(ProjectService.class);
 			m_hostinfoService = ContainerLoader.getDefaultContainer().lookup(HostinfoService.class);
+			m_sampleConfigManager = ContainerLoader.getDefaultContainer().lookup(SampleConfigManager.class);
 		} catch (Exception e) {
 			Cat.logError(e);
+		}
+	}
+
+	public double getSample() {
+		Domain domain = m_sampleConfigManager.getConfig().findDomain(getDomain());
+
+		if (domain != null) {
+			return domain.getSample();
+		} else {
+			return 1.0;
 		}
 	}
 

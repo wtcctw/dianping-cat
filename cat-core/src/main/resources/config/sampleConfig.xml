@@ -1,0 +1,4 @@
+<sample-config>
+	<domain id="cat" sample="1.0"></domain>
+	<domain id="shop-server" sample="1.0"></domain>
+</sample-config>
