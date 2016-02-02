@@ -6,7 +6,6 @@ import java.util.Date;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.config.server.ServerConfigManager;
