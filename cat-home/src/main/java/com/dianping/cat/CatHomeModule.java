@@ -28,7 +28,6 @@ import com.dianping.cat.report.alert.thirdParty.ThirdPartyAlert;
 import com.dianping.cat.report.alert.thirdParty.ThirdPartyAlertBuilder;
 import com.dianping.cat.report.alert.transaction.TransactionAlert;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
-import com.dianping.cat.task.ConfigSyncTask;
 
 public class CatHomeModule extends AbstractModule {
 	public static final String ID = "cat-home";
@@ -38,8 +37,6 @@ public class CatHomeModule extends AbstractModule {
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
 
 		ctx.lookup(MessageConsumer.class);
-
-		Threads.forGroup("cat").start(ConfigSyncTask.getInstance());
 
 		if (serverConfigManager.isJobMachine()) {
 			DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);

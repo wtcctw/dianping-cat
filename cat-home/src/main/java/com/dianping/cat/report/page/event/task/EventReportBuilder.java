@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
@@ -25,8 +27,10 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.event.service.EventReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.cached.CurrentWeeklyMonthlyReportTask;
+import com.dianping.cat.report.task.cached.CurrentWeeklyMonthlyReportTask.CurrentWeeklyMonthlyTask;
 
-public class EventReportBuilder implements TaskBuilder {
+public class EventReportBuilder implements TaskBuilder, Initializable {
 
 	public static final String ID = EventAnalyzer.ID;
 
@@ -149,6 +153,27 @@ public class EventReportBuilder implements TaskBuilder {
 		report.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(eventReport);
 		return m_reportService.insertWeeklyReport(report, binaryContent);
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		CurrentWeeklyMonthlyReportTask.getInstance().register(new CurrentWeeklyMonthlyTask() {
+
+			@Override
+			public void buildMonthlyTask(String name, String domain, Date start) {
+				buildMonthlyTask(name, domain, start);
+			}
+
+			@Override
+			public void buildWeeklyTask(String name, String domain, Date start) {
+				buildWeeklyTask(name, domain, start);
+			}
+			
+			@Override
+         public String getReportName() {
+				return ID;
+         }
+		});
 	}
 
 	private EventReport queryDailyReportsByDuration(String domain, Date start, Date end) {
