@@ -7,6 +7,8 @@ import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
@@ -27,8 +29,10 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.cached.CurrentWeeklyMonthlyReportTask;
+import com.dianping.cat.report.task.cached.CurrentWeeklyMonthlyReportTask.CurrentWeeklyMonthlyTask;
 
-public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
+public class TransactionReportBuilder implements Initializable, TaskBuilder, LogEnabled {
 
 	public static final String ID = TransactionAnalyzer.ID;
 
@@ -163,6 +167,27 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 		m_logger = logger;
 	}
 
+	@Override
+	public void initialize() throws InitializationException {
+		CurrentWeeklyMonthlyReportTask.getInstance().register(new CurrentWeeklyMonthlyTask() {
+
+			@Override
+			public void buildMonthlyTask(String name, String domain, Date start) {
+				buildMonthlyTask(name, domain, start);
+			}
+
+			@Override
+			public void buildWeeklyTask(String name, String domain, Date start) {
+				buildWeeklyTask(name, domain, start);
+			}
+
+			@Override
+         public String getReportName() {
+				return ID;
+         }
+		});
+	}
+
 	private TransactionReport queryDailyReportsByDuration(String domain, Date start, Date end) {
 		long startTime = start.getTime();
 		long endTime = end.getTime();
@@ -172,8 +197,8 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				TransactionReport reportModel = m_reportService.queryReport(domain, new Date(startTime),
-				      new Date(startTime + TimeHelper.ONE_DAY));
+				TransactionReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
+				      + TimeHelper.ONE_DAY));
 
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -197,11 +222,12 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 		double duration = (endTime - startTime) * 1.0 / TimeHelper.ONE_DAY;
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
-			TransactionReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(
-			      startTime + TimeHelper.ONE_HOUR));
+			TransactionReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
+			      + TimeHelper.ONE_HOUR));
 
 			reports.add(report);
 		}
 		return m_transactionMerger.mergeForDaily(domain, reports, domainSet, duration);
 	}
+	
 }

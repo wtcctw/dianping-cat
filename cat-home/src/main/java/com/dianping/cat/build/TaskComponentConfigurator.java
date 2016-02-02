@@ -102,7 +102,6 @@ import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.ReportFacade;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.cached.CachedReportBuilder;
-import com.dianping.cat.report.task.cached.CachedReportTask;
 import com.dianping.cat.report.task.cmdb.CmdbInfoReloadBuilder;
 import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
 import com.dianping.cat.service.HostinfoService;
@@ -190,7 +189,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TaskBuilder.class, ClientReportBuilder.ID, ClientReportBuilder.class).req(ClientReportService.class,
 		      TransactionReportService.class, ServerFilterConfigManager.class));
 
-		all.add(C(TaskBuilder.class, CachedReportBuilder.ID, CachedReportBuilder.class).req(CachedReportTask.class));
+		all.add(C(TaskBuilder.class, CachedReportBuilder.ID, CachedReportBuilder.class).req(ProjectService.class,
+		      ServerFilterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, StorageReportBuilder.ID, StorageReportBuilder.class).req(StorageReportService.class,
 		      StorageMergeHelper.class));
@@ -239,13 +239,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      AppRuleConfigManager.class));
 
 		all.add(C(ReportFacade.class));
-
-		all.add(C(CachedReportTask.class).req(ServerFilterConfigManager.class).req(TransactionReportService.class)
-		      .req(TaskBuilder.class, TransactionReportBuilder.ID, "m_transactionReportBuilder")
-		      .req(TaskBuilder.class, EventReportBuilder.ID, "m_eventReportBuilder")
-		      .req(TaskBuilder.class, ProblemReportBuilder.ID, "m_problemReportBuilder")
-		      .req(TaskBuilder.class, CrossReportBuilder.ID, "m_crossReportBuilder")
-		      .req(TaskBuilder.class, MatrixReportBuilder.ID, "m_matrixReportBuilder"));
 
 		return all;
 	}
