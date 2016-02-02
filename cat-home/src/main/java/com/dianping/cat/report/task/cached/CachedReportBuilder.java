@@ -38,7 +38,6 @@ public class CachedReportBuilder implements TaskBuilder {
 					domains.add(project.getDomain());
 				}
 			}
-			
 			reportTask.setDomains(domains);
 
 			Threads.forGroup(Constants.CAT).start(reportTask);
