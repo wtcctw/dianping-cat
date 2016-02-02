@@ -280,7 +280,7 @@ public class WebConfigManager implements Initializable {
 
 			@Override
 			public void handle() throws Exception {
-				refreshWebConfig();
+				refreshConfig();
 			}
 
 			@Override
@@ -427,7 +427,7 @@ public class WebConfigManager implements Initializable {
 		return new Item(id);
 	}
 
-	public void refreshWebConfig() throws DalException, SAXException, IOException {
+	private void refreshConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 

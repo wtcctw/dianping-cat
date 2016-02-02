@@ -143,7 +143,7 @@ public class ServerFilterConfigManager implements Initializable {
 		return m_config.getCrashLogDomains().containsKey(domain);
 	}
 
-	public void refreshConfig() throws DalException, SAXException, IOException {
+	private void refreshConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 

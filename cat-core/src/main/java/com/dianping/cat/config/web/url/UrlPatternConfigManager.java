@@ -165,7 +165,7 @@ public class UrlPatternConfigManager implements Initializable {
 
 			@Override
 			public void handle() throws Exception {
-				refreshUrlPatternConfig();
+				refreshConfig();
 			}
 
 			@Override
@@ -229,7 +229,7 @@ public class UrlPatternConfigManager implements Initializable {
 		m_id2Items = id2Items;
 	}
 
-	public void refreshUrlPatternConfig() throws DalException, SAXException, IOException {
+	public void refreshConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 

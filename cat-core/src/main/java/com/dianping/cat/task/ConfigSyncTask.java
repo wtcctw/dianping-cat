@@ -13,10 +13,6 @@ import com.dianping.cat.message.Transaction;
 
 public class ConfigSyncTask implements Task {
 
-	public static ConfigSyncTask getInstance() {
-		return m_instance;
-	}
-
 	private List<SyncHandler> m_handlers = new ArrayList<SyncHandler>();
 
 	private static ConfigSyncTask m_instance = new ConfigSyncTask();
@@ -24,6 +20,10 @@ public class ConfigSyncTask implements Task {
 	private static ExecutorService s_threadPool = Threads.forPool().getFixedThreadPool("Cat-ConfigSyncTask", 5);
 
 	private static final long DURATION = TimeHelper.ONE_MINUTE;
+
+	public static ConfigSyncTask getInstance() {
+		return m_instance;
+	}
 
 	@Override
 	public String getName() {

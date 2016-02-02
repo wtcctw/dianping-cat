@@ -271,7 +271,7 @@ public class AppConfigManager implements Initializable {
 
 			@Override
 			public void handle() throws Exception {
-				refreshAppConfig();
+				refreshConfig();
 			}
 
 			@Override
@@ -418,7 +418,7 @@ public class AppConfigManager implements Initializable {
 		return null;
 	}
 
-	public void refreshAppConfig() throws DalException, SAXException, IOException {
+	private void refreshConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 

@@ -80,7 +80,7 @@ public class AppSpeedConfigManager implements Initializable {
 
 			@Override
 			public void handle() throws Exception {
-				updateConfig();
+				refreshConfig();
 			}
 
 			@Override
@@ -166,7 +166,7 @@ public class AppSpeedConfigManager implements Initializable {
 		return storeConfig();
 	}
 
-	public void updateConfig() throws DalException, SAXException, IOException {
+	private void refreshConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 
