@@ -53,26 +53,27 @@ public class TransactionTrendGraphBuilder {
 
 		Map<String, double[]> data = getDatas(start, end, domain, ip, type, name);
 
-		ReportType queryType = ReportType.findByName(reportType);
-		long step = queryType.getStep() * m_duration;
-		int size = (int) ((start.getTime() - end.getTime()) / step);
+		if (!m_isOld) {
+			ReportType queryType = ReportType.findByName(reportType);
+			long step = queryType.getStep() * m_duration;
+			int size = (int) ((start.getTime() - end.getTime()) / step);
 
-		LineChart fail = buildLineChart(start, end, step, size);
-		LineChart count = buildLineChart(start, end, step, size);
-		LineChart avg = buildLineChart(start, end, step, size);
+			LineChart fail = buildLineChart(start, end, step, size);
+			LineChart count = buildLineChart(start, end, step, size);
+			LineChart avg = buildLineChart(start, end, step, size);
 
-		fail.setTitle(display + queryType.getFailTitle());
-		count.setTitle(display + queryType.getSumTitle());
-		avg.setTitle(display + queryType.getResponseTimeTitle());
+			fail.setTitle(display + queryType.getFailTitle());
+			count.setTitle(display + queryType.getSumTitle());
+			avg.setTitle(display + queryType.getResponseTimeTitle());
 
-		fail.addValue(data.get(FAIL));
-		count.addValue(data.get(COUNT));
-		avg.addValue(data.get(AVG));
+			fail.addValue(data.get(FAIL));
+			count.addValue(data.get(COUNT));
+			avg.addValue(data.get(AVG));
 
-		model.setErrorTrend(fail.getJsonString());
-		model.setHitTrend(count.getJsonString());
-		model.setResponseTrend(avg.getJsonString());
-
+			model.setErrorTrend(fail.getJsonString());
+			model.setHitTrend(count.getJsonString());
+			model.setResponseTrend(avg.getJsonString());
+		}
 		return m_isOld;
 	}
 

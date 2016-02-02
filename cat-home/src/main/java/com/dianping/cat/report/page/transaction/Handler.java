@@ -237,8 +237,8 @@ public class Handler implements PageHandler<Context> {
 				buildDistributionInfo(model, type, name, report);
 			}
 			boolean isOld = new TransactionTrendGraphBuilder(m_reportService).buildTrendGraph(model, payload);
-			
-			if(isOld) {
+
+			if (isOld) {
 				m_historyGraph.buildTrendGraph(model, payload);
 			}
 			break;
