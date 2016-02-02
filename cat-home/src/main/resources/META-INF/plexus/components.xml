@@ -1,10 +1,6 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.config.content.ContentFetcher</role>
-			<implementation>com.dianping.cat.config.content.DefaultContentFetcher</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.helper.JsonBuilder</role>
 			<implementation>com.dianping.cat.helper.JsonBuilder</implementation>
 		</component>

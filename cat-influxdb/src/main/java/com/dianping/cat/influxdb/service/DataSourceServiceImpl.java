@@ -70,7 +70,7 @@ public class DataSourceServiceImpl implements DataSourceService<InfluxDBConnecti
 
 			@Override
 			public void handle() throws Exception {
-				refresh();
+				refreshConfig();
 			}
 
 			@Override
@@ -80,8 +80,7 @@ public class DataSourceServiceImpl implements DataSourceService<InfluxDBConnecti
 		});
 	}
 
-	@Override
-	public void refresh() {
+	private void refreshConfig() {
 		InfluxdbConfig config = m_configManager.getConfig();
 		String oldxml = m_influxdbConfig.toString();
 

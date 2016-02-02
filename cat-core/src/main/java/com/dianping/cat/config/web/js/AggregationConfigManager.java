@@ -85,7 +85,7 @@ public class AggregationConfigManager implements Initializable {
 
 			@Override
 			public void handle() throws Exception {
-				refreshAggreationConfig();
+				refreshConfig();
 			}
 
 			@Override
@@ -131,7 +131,7 @@ public class AggregationConfigManager implements Initializable {
 		return new ArrayList<AggregationRule>(m_aggregation.getAggregationRules().values());
 	}
 
-	public void refreshAggreationConfig() throws DalException, SAXException, IOException {
+	private void refreshConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 

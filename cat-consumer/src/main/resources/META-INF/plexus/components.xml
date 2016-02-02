@@ -617,10 +617,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.content.ContentFetcher</role>
-			<implementation>com.dianping.cat.config.content.DefaultContentFetcher</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 			<implementation>com.dianping.cat.consumer.config.ProductLineConfigManager</implementation>
 			<requirements>

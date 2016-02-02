@@ -89,7 +89,7 @@ public class SampleConfigManager implements Initializable {
 		}
 	}
 
-	public void refreshConfig() throws Exception {
+	private void refreshConfig() throws Exception {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 
