@@ -42,7 +42,7 @@ public class ConfigSyncTask implements Task {
 
 		while (active) {
 			long current = System.currentTimeMillis();
-
+			
 			for (final SyncHandler handler : m_handlers) {
 				s_threadPool.submit(new Runnable() {
 

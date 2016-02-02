@@ -21,7 +21,6 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppConnectionTableProvider;
 import com.dianping.cat.config.app.AppSpeedTableProvider;
 import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.web.AjaxDataTableProvider;
@@ -142,8 +141,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-
-		all.add(C(ContentFetcher.class, DefaultContentFetcher.class));
 
 		all.addAll(defineCommonComponents());
 
