@@ -31,6 +31,7 @@ public class ConfigSyncTask implements Task {
 	}
 
 	public void register(SyncHandler handler) {
+		System.err.println("register" + handler.getName());
 		synchronized (this) {
 			m_handlers.add(handler);
 		}
