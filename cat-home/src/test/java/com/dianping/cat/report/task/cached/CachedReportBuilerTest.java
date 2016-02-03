@@ -32,12 +32,12 @@ public class CachedReportBuilerTest extends ComponentTestCase {
 			}
 
 			@Override
-			public void buildWeeklyTask(String name, String domain, Date start) {
+			public void buildCurrentWeeklyTask(String name, String domain, Date start) {
 				m_index++;
 			}
 
 			@Override
-			public void buildMonthlyTask(String name, String domain, Date start) {
+			public void buildCurrentMonthlyTask(String name, String domain, Date start) {
 				m_index++;
 			}
 		});
