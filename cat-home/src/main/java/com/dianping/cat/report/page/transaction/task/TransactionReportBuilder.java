@@ -172,12 +172,12 @@ public class TransactionReportBuilder implements Initializable, TaskBuilder, Log
 		CurrentWeeklyMonthlyReportTask.getInstance().register(new CurrentWeeklyMonthlyTask() {
 
 			@Override
-			public void buildMonthlyTask(String name, String domain, Date start) {
+			public void buildCurrentMonthlyTask(String name, String domain, Date start) {
 				buildMonthlyTask(name, domain, start);
 			}
 
 			@Override
-			public void buildWeeklyTask(String name, String domain, Date start) {
+			public void buildCurrentWeeklyTask(String name, String domain, Date start) {
 				buildWeeklyTask(name, domain, start);
 			}
 

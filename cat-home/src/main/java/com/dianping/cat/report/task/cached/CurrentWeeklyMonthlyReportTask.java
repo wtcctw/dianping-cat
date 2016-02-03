@@ -39,7 +39,7 @@ public class CurrentWeeklyMonthlyReportTask implements Task {
 
 			for (CurrentWeeklyMonthlyTask task : m_tasks) {
 				try {
-					task.buildWeeklyTask(task.getReportName(), domain, TimeHelper.getCurrentMonth());
+					task.buildCurrentWeeklyTask(task.getReportName(), domain, TimeHelper.getCurrentMonth());
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
@@ -55,7 +55,7 @@ public class CurrentWeeklyMonthlyReportTask implements Task {
 			Transaction t = Cat.newTransaction("ReloadTask", "Reload-Week-" + domain);
 
 			for (CurrentWeeklyMonthlyTask task : m_tasks) {
-				task.buildWeeklyTask(task.getReportName(), domain, TimeHelper.getCurrentWeek());
+				task.buildCurrentWeeklyTask(task.getReportName(), domain, TimeHelper.getCurrentWeek());
 			}
 
 			t.setStatus(Transaction.SUCCESS);
@@ -78,9 +78,9 @@ public class CurrentWeeklyMonthlyReportTask implements Task {
 	}
 
 	public static interface CurrentWeeklyMonthlyTask {
-		public void buildMonthlyTask(String name, String domain, Date start);
+		public void buildCurrentMonthlyTask(String name, String domain, Date start);
 
-		public void buildWeeklyTask(String name, String domain, Date start);
+		public void buildCurrentWeeklyTask(String name, String domain, Date start);
 
 		public String getReportName();
 	}
