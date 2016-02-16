@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.cached;
+package com.dianping.cat.report.task.current;
 
 import java.util.ArrayList;
 import java.util.Date;

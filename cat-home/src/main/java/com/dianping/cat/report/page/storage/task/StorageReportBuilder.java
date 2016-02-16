@@ -22,8 +22,8 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.storage.transform.StorageMergeHelper;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.cached.CurrentWeeklyMonthlyReportTask;
-import com.dianping.cat.report.task.cached.CurrentWeeklyMonthlyReportTask.CurrentWeeklyMonthlyTask;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask.CurrentWeeklyMonthlyTask;
 
 public class StorageReportBuilder implements TaskBuilder, Initializable {
 

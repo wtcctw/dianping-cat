@@ -1446,8 +1446,8 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.TaskBuilder</role>
-			<role-hint>cachedReport</role-hint>
-			<implementation>com.dianping.cat.report.task.cached.CachedReportBuilder</implementation>
+			<role-hint>currentReport</role-hint>
+			<implementation>com.dianping.cat.report.task.current.CurrentReportBuilder</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>

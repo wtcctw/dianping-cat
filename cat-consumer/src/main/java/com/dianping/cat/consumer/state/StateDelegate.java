@@ -65,7 +65,7 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 		// for daily report aggreation done
 		if (hour >= 4) {
 			m_taskManager.createTask(startTime, domain, Constants.REPORT_ROUTER, TaskProlicy.DAILY);
-			m_taskManager.createTask(startTime, domain, Constants.CACHED_REPORT, TaskProlicy.DAILY);
+			m_taskManager.createTask(startTime, domain, Constants.CURRENT_REPORT, TaskProlicy.DAILY);
 			m_taskManager.createTask(startTime, domain, Constants.REPORT_CLIENT, TaskProlicy.DAILY);
 			m_taskManager.createTask(startTime, domain, Constants.APP, TaskProlicy.DAILY);
 		}
