@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
@@ -26,8 +28,10 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.problem.service.ProblemReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.cached.CurrentWeeklyMonthlyReportTask;
+import com.dianping.cat.report.task.cached.CurrentWeeklyMonthlyReportTask.CurrentWeeklyMonthlyTask;
 
-public class ProblemReportBuilder implements TaskBuilder {
+public class ProblemReportBuilder implements TaskBuilder ,Initializable{
 	
 	public static final String ID = ProblemAnalyzer.ID;
 
@@ -45,7 +49,7 @@ public class ProblemReportBuilder implements TaskBuilder {
 
 	@Inject
 	private ProblemMerger m_problemMerger;
-
+	
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		try {
@@ -143,6 +147,27 @@ public class ProblemReportBuilder implements TaskBuilder {
 		report.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(problemReport);
 		return m_reportService.insertWeeklyReport(report, binaryContent);
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		CurrentWeeklyMonthlyReportTask.getInstance().register(new CurrentWeeklyMonthlyTask() {
+
+			@Override
+			public void buildCurrentMonthlyTask(String name, String domain, Date start) {
+				buildMonthlyTask(name, domain, start);
+			}
+
+			@Override
+			public void buildCurrentWeeklyTask(String name, String domain, Date start) {
+				buildWeeklyTask(name, domain, start);
+			}
+			
+			@Override
+         public String getReportName() {
+				return ID;
+         }
+		});
 	}
 
 	private ProblemReport queryDailyReportsByDuration(String domain, Date start, Date end) {

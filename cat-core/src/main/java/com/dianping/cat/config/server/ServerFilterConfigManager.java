@@ -9,8 +9,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.xml.sax.SAXException;
 
@@ -23,7 +21,8 @@ import com.dianping.cat.configuration.server.filter.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.task.ConfigSyncTask;
+import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
 public class ServerFilterConfigManager implements Initializable {
 
@@ -115,7 +114,18 @@ public class ServerFilterConfigManager implements Initializable {
 		if (m_config == null) {
 			m_config = new ServerFilterConfig();
 		}
-		Threads.forGroup("cat").start(new ConfigReloadTask());
+		ConfigSyncTask.getInstance().register(new SyncHandler() {
+
+			@Override
+			public void handle() throws Exception {
+				refreshConfig();
+			}
+
+			@Override
+			public String getName() {
+				return CONFIG_NAME;
+			}
+		});
 	}
 
 	public boolean insert(String xml) {
@@ -133,7 +143,7 @@ public class ServerFilterConfigManager implements Initializable {
 		return m_config.getCrashLogDomains().containsKey(domain);
 	}
 
-	public void refreshConfig() throws DalException, SAXException, IOException {
+	private void refreshConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 
@@ -166,36 +176,6 @@ public class ServerFilterConfigManager implements Initializable {
 
 	public boolean validateDomain(String domain) {
 		return !m_config.getDomains().contains(domain) && !m_config.getCrashLogDomains().containsKey(domain);
-	}
-
-	public class ConfigReloadTask implements Task {
-
-		@Override
-		public String getName() {
-			return "Server-Filter-Config-Reload";
-		}
-
-		@Override
-		public void run() {
-			boolean active = true;
-
-			while (active) {
-				try {
-					refreshConfig();
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-				try {
-					Thread.sleep(TimeHelper.ONE_MINUTE);
-				} catch (InterruptedException e) {
-					active = false;
-				}
-			}
-		}
-
-		@Override
-		public void shutdown() {
-		}
 	}
 
 }

@@ -27,18 +27,11 @@
 				<div class="input-group" style="float:left;width:60px">
 	              <span class="input-group-addon">结束</span>
         	      <input type="text" id="time2" style="width:60px;"/></div>
-				 <div class="input-group" style="float:left;width:60px">
-	              <span class="input-group-addon">平台</span>  
-				<select id="platform" style="width: 80px;height:33px">
-					<option value='-1'>ALL</option>
-					<option value='1'>Android</option>
-					<option value='2'>IOS</option>
-				</select></div>
 				  <div class="input-group" style="float:left;width:60px">
 	              <span class="input-group-addon">APP Name</span>  
 				<select id="appName" style="width: 200px; height:33px">
 						<c:forEach var="appName" items="${model.crashLogDisplayInfo.appNames}">
-							<option value="${appName.title}">${appName.title}</option>
+							<option value="${appName.name}">${appName.des}</option>
 						</c:forEach>
 				</select></div>
 				    <div class="input-group" style="float:left;">
@@ -143,7 +136,7 @@
 		var end = converTimeFormat($("#time2").val());
 		var dpid = $("#dpid").val();
 		var appName = $("#appName").val();
-		var platform = $("#platform").val();
+		var platform = -1;
 		
  		var appVersion = queryField('${model.crashLogDisplayInfo.fieldsInfo.appVersions}','appVersion');
 		var platVersion = queryField('${model.crashLogDisplayInfo.fieldsInfo.platVersions}','platformVersion');
@@ -180,7 +173,7 @@
 			var end = converTimeFormat($("#time2").val());
 			var dpid = $("#dpid").val();
 			var appName = $("#appName").val();
-			var platform = $("#platform").val();
+			var platform = -1;
 			
 	 		window.location.href = "?op=appCrashLog&crashLogQuery.day=" + period + "&crashLogQuery.startTime=" + start + "&crashLogQuery.endTime=" + end
 			 + "&crashLogQuery.appName=" + appName + "&crashLogQuery.platform=" + platform + "&crashLogQuery.dpid=" + dpid ;
@@ -219,11 +212,6 @@
 			var appName = '${payload.crashLogQuery.appName}';
 			if (appName != null && appName.length != 0) {
 				$("#appName").val(appName);
-			}
-			
-			var platform = '${payload.crashLogQuery.platform}';
-			if (platform != null && platform.length != 0) {
-				$("#platform").val(platform);
 			}
 			
 			var dpid = '${payload.crashLogQuery.dpid}';

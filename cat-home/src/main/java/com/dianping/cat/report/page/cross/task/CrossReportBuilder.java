@@ -3,6 +3,8 @@ package com.dianping.cat.report.page.cross.task;
 import java.util.Date;
 import java.util.Set;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -18,9 +20,11 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.cross.service.CrossReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.cached.CurrentWeeklyMonthlyReportTask;
+import com.dianping.cat.report.task.cached.CurrentWeeklyMonthlyReportTask.CurrentWeeklyMonthlyTask;
 
-public class CrossReportBuilder implements TaskBuilder {
-	
+public class CrossReportBuilder implements TaskBuilder, Initializable {
+
 	public static final String ID = CrossAnalyzer.ID;
 
 	@Inject
@@ -75,6 +79,27 @@ public class CrossReportBuilder implements TaskBuilder {
 		report.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(crossReport);
 		return m_reportService.insertWeeklyReport(report, binaryContent);
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		CurrentWeeklyMonthlyReportTask.getInstance().register(new CurrentWeeklyMonthlyTask() {
+
+			@Override
+			public void buildCurrentMonthlyTask(String name, String domain, Date start) {
+				buildMonthlyTask(name, domain, start);
+			}
+
+			@Override
+			public void buildCurrentWeeklyTask(String name, String domain, Date start) {
+				buildWeeklyTask(name, domain, start);
+			}
+			
+			@Override
+         public String getReportName() {
+				return ID;
+         }
+		});
 	}
 
 	private CrossReport queryDailyReportsByDuration(String domain, Date start, Date end) {

@@ -16,7 +16,7 @@ public class CrashLogQueryEntity {
 
 	private String m_endTime;
 
-	private String m_appName = "Android(主APP)";
+	private String m_appName = "AndroidCrashLog";
 
 	private String m_module;
 

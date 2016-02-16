@@ -25,7 +25,6 @@ import com.dianping.cat.app.CrashLogDao;
 import com.dianping.cat.app.CrashLogEntity;
 import com.dianping.cat.config.Level;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.report.ErrorMsg;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
@@ -44,9 +43,6 @@ public class CrashLogService {
 
 	@Inject
 	private AppConfigManager m_appConfigManager;
-
-	@Inject
-	private ServerFilterConfigManager m_serverFilterConfigManager;
 
 	private String APP_VERSIONS = "appVersions";
 
@@ -87,7 +83,7 @@ public class CrashLogService {
 		CrashLogDisplayInfo info = new CrashLogDisplayInfo();
 
 		buildCrashLogData(entity, info);
-		info.setAppNames(m_serverFilterConfigManager.getCrashLogDomains().values());
+		info.setAppNames( m_appConfigManager.queryConfigItem(AppConfigManager.APP_NAME).values());
 
 		return info;
 	}

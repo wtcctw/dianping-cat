@@ -1,39 +1,65 @@
 package com.dianping.cat.report.task.cached;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
+import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.report.task.TaskBuilder;
+import com.dianping.cat.service.ProjectService;
 
 public class CachedReportBuilder implements TaskBuilder {
 
 	public static final String ID = Constants.CACHED_REPORT;
 
 	@Inject
-	private CachedReportTask m_cachedReportTask;
-	
+	private ProjectService m_projectService;
+
+	@Inject
+	private ServerFilterConfigManager m_serverFilterConfigManager;
+
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
-		Threads.forGroup(Constants.CAT).start(m_cachedReportTask);
+		CurrentWeeklyMonthlyReportTask reportTask = CurrentWeeklyMonthlyReportTask.getInstance();
+
+		try {
+			List<Project> projects = m_projectService.findAll();
+			List<String> domains = new ArrayList<String>();
+
+			for (Project project : projects) {
+				if (m_serverFilterConfigManager.validateDomain(project.getDomain())) {
+					domains.add(project.getDomain());
+				}
+			}
+			reportTask.setDomains(domains);
+
+			Threads.forGroup(Constants.CAT).start(reportTask);
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
 		return true;
 	}
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
-		throw new RuntimeException("router builder don't support hourly task");
+		throw new RuntimeException("current weekly monthly report builder don't support hourly task");
 	}
 
 	@Override
 	public boolean buildMonthlyTask(String name, String domain, Date period) {
-		throw new RuntimeException("router builder don't support monthly task");
+		throw new RuntimeException("current weekly monthly report builder don't support monthly task");
 	}
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		throw new RuntimeException("router builder don't support weekly task");
+		throw new RuntimeException("current weekly monthly report builder don't support weekly task");
 	}
 
 }

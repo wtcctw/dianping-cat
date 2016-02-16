@@ -16,8 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
@@ -34,7 +32,8 @@ import com.dianping.cat.configuration.app.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.task.ConfigSyncTask;
+import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
 public class AppConfigManager implements Initializable {
 
@@ -73,6 +72,8 @@ public class AppConfigManager implements Initializable {
 	public static final String CITY = "城市";
 
 	public static final String CONNECT_TYPE = "连接类型";
+	
+	public static final String APP_NAME = "APP类型";
 
 	public static final int ALL_COMMAND_ID = 0;
 
@@ -105,7 +106,7 @@ public class AppConfigManager implements Initializable {
 			return false;
 		}
 	}
-
+	
 	private Map<String, List<Command>> buildSortedCommands(Map<String, List<Command>> commands) {
 		Map<String, List<Command>> results = new LinkedHashMap<String, List<Command>>();
 		List<String> domains = new ArrayList<String>(commands.keySet());
@@ -267,7 +268,19 @@ public class AppConfigManager implements Initializable {
 		if (m_config == null) {
 			m_config = new AppConfig();
 		}
-		Threads.forGroup("cat").start(new ConfigReloadTask());
+
+		ConfigSyncTask.getInstance().register(new SyncHandler() {
+
+			@Override
+			public void handle() throws Exception {
+				refreshConfig();
+			}
+
+			@Override
+			public String getName() {
+				return CONFIG_NAME;
+			}
+		});
 	}
 
 	public boolean insert(String xml) {
@@ -304,7 +317,7 @@ public class AppConfigManager implements Initializable {
 	public Map<Integer, Code> queryCodeByCommand(int command) {
 		Command c = m_config.findCommand(command);
 		Map<Integer, Code> result = new HashMap<Integer, Code>();
-	
+
 		result.putAll(m_config.getCodes());
 
 		if (c != null) {
@@ -407,7 +420,7 @@ public class AppConfigManager implements Initializable {
 		return null;
 	}
 
-	public void refreshAppConfig() throws DalException, SAXException, IOException {
+	private void refreshConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 
@@ -549,35 +562,6 @@ public class AppConfigManager implements Initializable {
 				c2 = title2;
 			}
 			return c1.compareTo(c2);
-		}
-	}
-
-	public class ConfigReloadTask implements Task {
-
-		@Override
-		public String getName() {
-			return "App-Config-Reload";
-		}
-
-		@Override
-		public void run() {
-			boolean active = true;
-			while (active) {
-				try {
-					refreshAppConfig();
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-				try {
-					Thread.sleep(TimeHelper.ONE_MINUTE);
-				} catch (InterruptedException e) {
-					active = false;
-				}
-			}
-		}
-
-		@Override
-		public void shutdown() {
 		}
 	}
 }

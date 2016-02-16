@@ -9,8 +9,6 @@ import java.util.Map;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.xml.sax.SAXException;
 
@@ -23,6 +21,8 @@ import com.dianping.cat.configuration.app.command.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.task.ConfigSyncTask;
+import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
 public class CommandFormatConfigManager implements Initializable {
 	@Inject
@@ -98,7 +98,19 @@ public class CommandFormatConfigManager implements Initializable {
 		if (m_urlFormat == null) {
 			m_urlFormat = new CommandFormat();
 		}
-		Threads.forGroup("cat").start(new ConfigReloadTask());
+		
+		ConfigSyncTask.getInstance().register(new SyncHandler() {
+
+			@Override
+			public void handle() throws Exception {
+				refreshConfig();
+			}
+
+			@Override
+			public String getName() {
+				return CONFIG_NAME;
+			}
+		});
 	}
 
 	public boolean insert(String xml) {
@@ -133,7 +145,7 @@ public class CommandFormatConfigManager implements Initializable {
 		m_modifyTime = modifyTime;
 	}
 
-	private void refreshUrlFormatConfig() throws DalException, SAXException, IOException {
+	private void refreshConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 
@@ -163,34 +175,4 @@ public class CommandFormatConfigManager implements Initializable {
 		}
 		return true;
 	}
-
-	public class ConfigReloadTask implements Task {
-
-		@Override
-		public String getName() {
-			return "App-Rule-Config-Reload";
-		}
-
-		@Override
-		public void run() {
-			boolean active = true;
-			while (active) {
-				try {
-					refreshUrlFormatConfig();
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-				try {
-					Thread.sleep(60 * 1000L);
-				} catch (InterruptedException e) {
-					active = false;
-				}
-			}
-		}
-
-		@Override
-		public void shutdown() {
-		}
-	}
-
 }

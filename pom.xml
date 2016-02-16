@@ -15,6 +15,7 @@
 		<module>cat-hadoop</module>
 		<module>cat-influxdb</module>
 		<module>cat-home</module>
+		<module>cat-log</module>
 		<module>cat-alarm</module>
 		<module>cat-maven-plugin</module>
 	</modules>

@@ -215,6 +215,9 @@
 														<th width="5%"><a href="?op=appConstantAdd&type=${entry.key}" class="btn btn-primary btn-xs" >
 														<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 													</c:if>
+													<c:if test="${entry.key eq 'APP类型'}">
+													<th>desc</th>
+												</c:if>
 												</tr>
 											</thead>
 											
@@ -225,6 +228,9 @@
 													<td><a href="?op=appConstantUpdate&id=${e.key}&type=${entry.key}" class="btn btn-primary btn-xs">
 														<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
 													</td>
+												</c:if>
+												<c:if test="${entry.key eq 'APP类型'}">
+													<td>${e.value.des}</td>
 												</c:if>
 									    	</c:forEach>
 									    </table>

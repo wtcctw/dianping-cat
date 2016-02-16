@@ -22,7 +22,8 @@ import com.dianping.cat.config.app.command.CommandFormatConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatHandler;
 import com.dianping.cat.config.app.command.DefaultCommandFormatlHandler;
 import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.config.content.DefaultContentFetcher;
+import com.dianping.cat.config.content.LocalResourceContentFetcher;
+import com.dianping.cat.config.sample.SampleConfigManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.web.WebConfigManager;
@@ -63,7 +64,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TaskManager.class).req(TaskDao.class));
 		all.add(C(ServerStatisticManager.class));
 		all.add(C(DomainValidator.class));
-		all.add(C(ContentFetcher.class, DefaultContentFetcher.class));
+		all.add(C(ContentFetcher.class, LocalResourceContentFetcher.class));
 		all.add(C(ServerFilterConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(PathBuilder.class, DefaultPathBuilder.class));
@@ -81,6 +82,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(CommandFormatConfigManager.class)
 		      .req(CommandFormatHandler.class, ConfigDao.class, ContentFetcher.class));
+
+		all.add(C(SampleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(AppConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
