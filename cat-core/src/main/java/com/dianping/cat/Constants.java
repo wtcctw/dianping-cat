@@ -74,7 +74,7 @@ public class Constants {
 
 	public static final String METRIC_GRAPH_PRUNER = "metricGraphPruner";
 
-	public static final String CACHED_REPORT = "cachedReport";
+	public static final String CURRENT_REPORT = "currentReport";
 
 	public static final String REPORT_SYSTEM = "system";
 

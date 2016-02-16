@@ -17,7 +17,7 @@ public class ConfigSyncTask implements Task {
 
 	private static ConfigSyncTask m_instance = new ConfigSyncTask();
 
-	private static ExecutorService s_threadPool = Threads.forPool().getFixedThreadPool("Cat-ConfigSyncTask", 5);
+	private static ExecutorService s_threadPool = Threads.forPool().getFixedThreadPool("Cat-ConfigSyncTask", 3);
 
 	private static final long DURATION = TimeHelper.ONE_MINUTE;
 

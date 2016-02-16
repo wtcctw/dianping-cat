@@ -17,7 +17,7 @@ public class TransactionMergeHelper {
 		return report;
 	}
 
-	public TransactionReport mergeAllNames(TransactionReport report, String allName) {
+	private TransactionReport mergeAllNames(TransactionReport report, String allName) {
 		if (StringUtils.isEmpty(allName) || Constants.ALL.equalsIgnoreCase(allName)) {
 			AllNameMerger all = new AllNameMerger();
 

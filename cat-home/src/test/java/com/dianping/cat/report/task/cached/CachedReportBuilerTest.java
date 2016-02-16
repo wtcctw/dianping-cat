@@ -11,7 +11,9 @@ import org.unidal.lookup.ComponentTestCase;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.task.TaskBuilder;
-import com.dianping.cat.report.task.cached.CurrentWeeklyMonthlyReportTask.CurrentWeeklyMonthlyTask;
+import com.dianping.cat.report.task.current.CurrentReportBuilder;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask.CurrentWeeklyMonthlyTask;
 
 public class CachedReportBuilerTest extends ComponentTestCase {
 
@@ -23,7 +25,7 @@ public class CachedReportBuilerTest extends ComponentTestCase {
 
 		manager.initialize(new File("/data/appdatas/cat/server.xml"));
 
-		TaskBuilder builder = lookup(TaskBuilder.class, CachedReportBuilder.ID);
+		TaskBuilder builder = lookup(TaskBuilder.class, CurrentReportBuilder.ID);
 		CurrentWeeklyMonthlyReportTask.getInstance().register(new CurrentWeeklyMonthlyTask() {
 
 			@Override

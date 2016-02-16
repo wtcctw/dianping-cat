@@ -46,6 +46,15 @@ public class StorageReportService extends AbstractReportService<StorageReport> {
 		return report;
 	}
 
+	public Set<String> queryAllIds(Date start, Date end) {
+		Set<String> ids = new HashSet<String>();
+
+		for (String id : queryAllDomainNames(start, end, StorageAnalyzer.ID)) {
+			ids.add(id);
+		}
+		return ids;
+	}
+
 	private Set<String> queryAllIds(Date start, Date end, String name, String reportId) {
 		Set<String> ids = new HashSet<String>();
 		String type = reportId.substring(reportId.lastIndexOf("-"));

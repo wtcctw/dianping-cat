@@ -27,8 +27,8 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.cached.CurrentWeeklyMonthlyReportTask;
-import com.dianping.cat.report.task.cached.CurrentWeeklyMonthlyReportTask.CurrentWeeklyMonthlyTask;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask.CurrentWeeklyMonthlyTask;
 
 public class TransactionReportBuilder implements Initializable, TaskBuilder, LogEnabled {
 

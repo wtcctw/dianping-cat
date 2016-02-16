@@ -14,6 +14,7 @@
 		<module>cat-consumer</module>
 		<module>cat-hadoop</module>
 		<module>cat-home</module>
+		<module>cat-log</module>
 		<module>cat-influxdb</module>
 		<module>cat-maven-plugin</module>
 	</modules>
@@ -42,6 +43,11 @@
 			<dependency>
 				<groupId>com.dianping.cat</groupId>
 				<artifactId>cat-influxdb</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.dianping.cat</groupId>
+				<artifactId>cat-log</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
