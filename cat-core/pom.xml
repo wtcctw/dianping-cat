@@ -70,7 +70,6 @@
 								${basedir}/src/main/resources/META-INF/dal/model/app-speed-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/web-speed-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/server-filter-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/server-alarm-rule-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/sample-config-manifest.xml,
 					</manifest>
                   </configuration>
@@ -92,16 +91,6 @@
                         ${basedir}/src/main/resources/META-INF/dal/jdbc/web-manifest.xml,
                         ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,
                      ,]]></manifest>
-                  </configuration>
-               </execution>
-               <execution>
-                  <id>generate plexus component descriptor</id>
-                  <phase>process-classes</phase>
-                  <goals>
-                     <goal>plexus</goal>
-                  </goals>
-                  <configuration>
-                     <className>com.dianping.cat.build.ComponentsConfigurator</className>
                   </configuration>
                </execution>
             </executions>

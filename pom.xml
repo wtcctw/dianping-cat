@@ -17,6 +17,7 @@
 		<module>cat-home</module>
 		<module>cat-log</module>
 		<module>cat-alarm</module>
+		<module>cat-alarm-home</module>
 		<module>cat-maven-plugin</module>
 	</modules>
 	<dependencyManagement>
@@ -44,6 +45,11 @@
 			<dependency>
 				<groupId>com.dianping.cat</groupId>
 				<artifactId>cat-influxdb</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.dianping.cat</groupId>
+				<artifactId>cat-alarm</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

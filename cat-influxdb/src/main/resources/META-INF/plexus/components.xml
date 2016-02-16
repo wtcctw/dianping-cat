@@ -274,6 +274,25 @@
 			</requirements>
 		</component>
 		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>server-alarm-rule</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>server-alarm-rule</logical-table-name>
+				<physical-table-name>server_alarm_rule</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.alarm.ServerAlarmRuleDao</role>
+			<implementation>com.dianping.cat.core.alarm.ServerAlarmRuleDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>
 			<implementation>com.dianping.cat.influxdb.config.InfluxDBConfigManager</implementation>
 			<requirements>

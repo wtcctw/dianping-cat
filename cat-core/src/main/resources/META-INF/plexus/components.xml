@@ -728,8 +728,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.alarm.ServerAlarmRuleService</role>
-			<implementation>com.dianping.cat.alarm.ServerAlarmRuleService</implementation>
+			<role>com.dianping.cat.alarm.ServerAlarmRuleServiceImpl</role>
+			<implementation>com.dianping.cat.alarm.ServerAlarmRuleServiceImpl</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.alarm.ServerAlarmRuleDao</role>
