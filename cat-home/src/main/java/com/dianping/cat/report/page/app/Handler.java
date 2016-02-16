@@ -349,7 +349,7 @@ public class Handler implements PageHandler<Context> {
 		T data = null;
 
 		try {
-			data = (T) task.get(10L, TimeUnit.SECONDS);
+			data = (T) task.get(30L, TimeUnit.SECONDS);
 		} catch (Exception e) {
 			task.cancel(true);
 			Cat.logError(e);
