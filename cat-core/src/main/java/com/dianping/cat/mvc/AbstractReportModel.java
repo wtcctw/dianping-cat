@@ -122,7 +122,9 @@ public abstract class AbstractReportModel<A extends Action, P extends Page, M ex
 		return m_projectService.findDepartments(getDomains());
 	}
 
-	public abstract Collection<String> getDomains();
+	public Collection<String> getDomains() {
+		return m_projectService.findAllDomains();
+	}
 
 	// required by report tag
 	public Throwable getException() {

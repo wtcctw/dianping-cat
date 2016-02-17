@@ -4,13 +4,16 @@
   height: 30px;
 }
 </style>
-<table width="100%">
+<table>
 			<tr>
 				<th>
-				<div class="input-group" style="float:left;width:120px">
-	              <span class="input-group-addon">日期</span>
-	              <input type="text" id="time" style="width:100px"/>
+				<div class="input-group" style="float:left;">
+	              <span class="input-group-addon">开始</span>
+	              <input type="text" id="time" style="width:130px"/>
 	            </div>
+				<div class="input-group" style="float:left;width:60px">
+	              <span class="input-group-addon">结束</span>
+        	      <input type="text" id="endTime" style="width:60px;"/></div>
 				<div class="input-group" style="float:left;width:350px">
 					<span class="input-group-addon">命令字</span>
 		            <form id="wrap_search" style="margin-bottom:0px;">
@@ -96,10 +99,13 @@
 		<table id="history" style="display: none">
 				<tr>
 				<th>
-				<div class="input-group" style="float:left;width:120px">
-	              <span class="input-group-addon">日期</span>
-	              <input type="text" id="time2" style="width:100px"/>
+				<div class="input-group" style="float:left;">
+	              <span class="input-group-addon">开始</span>
+	              <input type="text" id="time2" style="width:130px"/>
 	            </div>
+	            <div class="input-group" style="float:left;width:60px">
+	              <span class="input-group-addon">结束</span>
+        	      <input type="text" id="endTime2" style="width:60px;"/></div>
 				<div class="input-group" style="float:left;width:350px">
 					<span class="input-group-addon">命令字</span>
 		            <form id="wrap_search2" style="margin-bottom:0px;">

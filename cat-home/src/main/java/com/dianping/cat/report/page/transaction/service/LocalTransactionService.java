@@ -93,8 +93,6 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 					TransactionReport tmp = DefaultSaxParser.parse(xml);
 
 					tmp.accept(merger);
-				} else {
-					report.getDomainNames().addAll(bucket.getIds());
 				}
 			} finally {
 				if (bucket != null) {

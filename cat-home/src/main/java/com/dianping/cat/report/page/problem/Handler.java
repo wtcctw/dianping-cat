@@ -68,6 +68,35 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private JsonBuilder m_jsonBuilder;
 
+	private void buildDefaultThreshold(Model model, Payload payload) {
+		Map<String, Domain> domains = m_manager.getLongConfigDomains();
+		Domain d = domains.get(payload.getDomain());
+
+		if (d != null) {
+			int longUrlTime = d.getUrlThreshold() == null ? m_manager.getLongUrlDefaultThreshold() : d.getUrlThreshold()
+			      .intValue();
+
+			if (longUrlTime != 500 && longUrlTime != 1000 && longUrlTime != 2000 && longUrlTime != 3000
+			      && longUrlTime != 4000 && longUrlTime != 5000) {
+				double sec = (double) (longUrlTime) / (double) 1000;
+				NumberFormat nf = new DecimalFormat("#.##");
+				String option = "<option value=\"" + longUrlTime + "\"" + ">" + nf.format(sec) + " Sec</option>";
+
+				model.setDefaultThreshold(option);
+			}
+
+			int longSqlTime = d.getSqlThreshold();
+
+			if (longSqlTime != 100 && longSqlTime != 500 && longSqlTime != 1000) {
+				double sec = (double) (longSqlTime);
+				NumberFormat nf = new DecimalFormat("#");
+				String option = "<option value=\"" + longSqlTime + "\"" + ">" + nf.format(sec) + " ms</option>";
+
+				model.setDefaultSqlThreshold(option);
+			}
+		}
+	}
+
 	private void buildDistributionChart(Model model, Payload payload, ProblemReport report) {
 		if (payload.getIpAddress().equalsIgnoreCase(Constants.ALL)) {
 			PieGraphChartVisitor pieChart = new PieGraphChartVisitor(payload.getType(), payload.getStatus());
@@ -278,39 +307,10 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
-		setDefaultThreshold(model, payload);
+		buildDefaultThreshold(model, payload);
 		model.setPage(ReportPage.PROBLEM);
 		model.setAction(payload.getAction());
 		m_normalizePayload.normalize(model, payload);
-	}
-
-	private void setDefaultThreshold(Model model, Payload payload) {
-		Map<String, Domain> domains = m_manager.getLongConfigDomains();
-		Domain d = domains.get(payload.getDomain());
-
-		if (d != null) {
-			int longUrlTime = d.getUrlThreshold() == null ? m_manager.getLongUrlDefaultThreshold() : d.getUrlThreshold()
-			      .intValue();
-
-			if (longUrlTime != 500 && longUrlTime != 1000 && longUrlTime != 2000 && longUrlTime != 3000
-			      && longUrlTime != 4000 && longUrlTime != 5000) {
-				double sec = (double) (longUrlTime) / (double) 1000;
-				NumberFormat nf = new DecimalFormat("#.##");
-				String option = "<option value=\"" + longUrlTime + "\"" + ">" + nf.format(sec) + " Sec</option>";
-
-				model.setDefaultThreshold(option);
-			}
-
-			int longSqlTime = d.getSqlThreshold();
-
-			if (longSqlTime != 100 && longSqlTime != 500 && longSqlTime != 1000) {
-				double sec = (double) (longSqlTime);
-				NumberFormat nf = new DecimalFormat("#");
-				String option = "<option value=\"" + longSqlTime + "\"" + ">" + nf.format(sec) + " ms</option>";
-
-				model.setDefaultSqlThreshold(option);
-			}
-		}
 	}
 
 	private void showDetail(Model model, Payload payload) {

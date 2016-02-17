@@ -42,11 +42,11 @@ public abstract class BaseAlert implements Task, LogEnabled {
 	@Inject
 	protected AlertManager m_sendManager;
 
+	protected Logger m_logger;
+	
 	private static final int DATA_AREADY_MINUTE = 1;
 
 	protected static final long DURATION = TimeHelper.ONE_MINUTE;
-
-	protected Logger m_logger;
 
 	protected int calAlreadyMinute() {
 		long current = (System.currentTimeMillis()) / 1000 / 60;

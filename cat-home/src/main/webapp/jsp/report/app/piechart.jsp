@@ -77,20 +77,6 @@
 			return myHour + ":" + myMinute;
 		}
 		
-		function converTimeFormat(time){
-			var times = time.split(":");
-			var hour = times[0];
-			var minute = times[1];
-			
-			if(hour.length == 1){
-				hour = "0" + hour;
-			}
-			if(minute.length == 1) {
-				minute = "0" + minute;
-			}
-			return hour + ":" + minute;
-		}
-		
 		function query() {
 			queryWithSort("request");
 		}
@@ -99,8 +85,6 @@
 			var time = $("#time").val();
 			var times = time.split(" ");
 			var period = times[0];
-			var start = converTimeFormat(times[1]);
-			var end = converTimeFormat($("#time2").val());
 			var command = $("#command").val().split('|')[0];
 			var commandId = ${model.command2IdJson}[command].id;
 			var code = $("#code").val();
@@ -114,7 +98,7 @@
 			var split = ";";
 			var query1 = period + split + commandId + split + code + split
 					+ network + split + version + split + connectionType
-					+ split + platform + split + city + split + operator + split + start + split + end;
+					+ split + platform + split + city + split + operator + split + times[1] + split + $("#time2").val();
 			
 			var field = $("#piechartSelect").val();
 			var href = "?op=piechart&query1=" + query1 + "&groupByField=" + field+"&commandId="+$("#command").val() + "&sort=" + sort;

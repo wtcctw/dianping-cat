@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.cached;
+package com.dianping.cat.report.task.current;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,9 +15,9 @@ import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.service.ProjectService;
 
-public class CachedReportBuilder implements TaskBuilder {
+public class CurrentReportBuilder implements TaskBuilder {
 
-	public static final String ID = Constants.CACHED_REPORT;
+	public static final String ID = Constants.CURRENT_REPORT;
 
 	@Inject
 	private ProjectService m_projectService;

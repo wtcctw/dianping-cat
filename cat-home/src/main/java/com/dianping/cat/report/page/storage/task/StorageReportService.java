@@ -50,7 +50,6 @@ public class StorageReportService extends AbstractReportService<StorageReport> {
 		Set<String> ids = new HashSet<String>();
 
 		for (String id : queryAllDomainNames(start, end, StorageAnalyzer.ID)) {
-
 			ids.add(id);
 		}
 		return ids;

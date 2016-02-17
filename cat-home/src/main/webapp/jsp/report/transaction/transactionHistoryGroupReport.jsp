@@ -17,6 +17,8 @@
 <table class="machines">
 	<tr style="text-align: left">
 		<th>
+			&nbsp;[ &nbsp;<a href="?op=history&domain=${model.domain}&date=${model.date}&type=${payload.encodedType}&queryname=${model.queryName}&reportType=${payload.reportType}${model.customDate}">All</a>
+			&nbsp;]&nbsp;
    	  		 <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
 						<a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&type=${payload.encodedType}&queryname=${model.queryName}&reportType=${payload.reportType}${model.customDate}">${ip}</a>
    	 		&nbsp;]&nbsp;
@@ -32,12 +34,12 @@
 				<c:choose>
 							<c:when test="${payload.group eq group}">
 		   	  		&nbsp;[&nbsp;
-		   	  			<a class="current" href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}">${group}</a>
+		   	  			<a class="current" href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}&reportType=${payload.reportType}">${group}</a>
 		   	 		&nbsp;]&nbsp;
 	   	 		</c:when>
 	   	 		<c:otherwise>
 		   	  		&nbsp;[&nbsp;
-		   	  			<a href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}">${group}</a>
+		   	  			<a href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}&reportType=${payload.reportType}">${group}</a>
 		   	 		&nbsp;]&nbsp;
 	   	 		</c:otherwise>
 						</c:choose>
