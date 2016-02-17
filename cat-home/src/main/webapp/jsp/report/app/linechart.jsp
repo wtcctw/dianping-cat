@@ -255,7 +255,6 @@
 					}
 					
 					$("#code").val(words[2]);
-					console.log(words[2]);
 					$("#network").val(words[3]);
 					$("#version").val(words[4]);
 					$("#connectionType").val(words[5]);
@@ -264,7 +263,7 @@
 					$("#operator").val(words[8]);
 					
 					var datePair = {};
-					datePair["当前值"]=$("#time").val();
+					datePair["当前值"]=$("#time").val().split(" ")[0];
 
 					if (query2 != null && query2 != '') {
 						$('#history').slideDown();
@@ -283,7 +282,7 @@
 							$("#endTime2").val(words[10]);
 						}
 						
-						datePair["对比值"]=$("#time2").val();
+						datePair["对比值"]=$("#time2").val().split(" ")[0];
 						
 						command2.on('change', commandChange("command2","code2"));
 
