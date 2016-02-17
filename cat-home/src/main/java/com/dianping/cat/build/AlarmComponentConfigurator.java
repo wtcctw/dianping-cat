@@ -208,24 +208,25 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AlertManager.class).req(AlertPolicyManager.class, DecoratorManager.class, ContactorManager.class,
 		      AlertService.class, SpliterManager.class, SenderManager.class, ServerConfigManager.class));
 
-		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class)
-		      .req(MetricReportGroupService.class, BusinessRuleConfigManager.class, DataChecker.class,
-		            AlertManager.class, BaselineService.class));
+		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class).req(
+		      MetricReportGroupService.class, BusinessRuleConfigManager.class, DataChecker.class, AlertManager.class,
+		      BaselineService.class));
 
-		all.add(C(NetworkAlert.class).req(ProductLineConfigManager.class).req(
-		      MetricReportGroupService.class, NetworkRuleConfigManager.class, DataChecker.class, AlertManager.class));
+		all.add(C(NetworkAlert.class).req(ProductLineConfigManager.class).req(MetricReportGroupService.class,
+		      NetworkRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
-		all.add(C(DatabaseAlert.class).req(ProductLineConfigManager.class).req(
-		      MetricReportGroupService.class, DatabaseRuleConfigManager.class, DataChecker.class, AlertManager.class));
+		all.add(C(DatabaseAlert.class).req(ProductLineConfigManager.class).req(MetricReportGroupService.class,
+		      DatabaseRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
 		all.add(C(HeartbeatAlert.class)
 		      .req(HeartbeatDisplayPolicyManager.class)
 		      .req(HeartbeatRuleConfigManager.class, DataChecker.class, ServerFilterConfigManager.class,
-		            AlertManager.class).req(ModelService.class, HeartbeatAnalyzer.ID, "m_heartbeatService")
+		            AlertManager.class, ProjectService.class)
+		      .req(ModelService.class, HeartbeatAnalyzer.ID, "m_heartbeatService")
 		      .req(ModelService.class, TransactionAnalyzer.ID, "m_transactionService"));
 
-		all.add(C(SystemAlert.class).req(ProductLineConfigManager.class).req(
-		      MetricReportGroupService.class, SystemRuleConfigManager.class, DataChecker.class, AlertManager.class));
+		all.add(C(SystemAlert.class).req(ProductLineConfigManager.class).req(MetricReportGroupService.class,
+		      SystemRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
 		all.add(C(AppAlert.class).req(AppDataService.class, AlertManager.class, AppRuleConfigManager.class,
 		      DataChecker.class, AppConfigManager.class));
