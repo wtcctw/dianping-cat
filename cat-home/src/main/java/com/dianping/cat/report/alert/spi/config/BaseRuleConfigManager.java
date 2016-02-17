@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.config;
+package com.dianping.cat.report.alert.spi.config;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,20 +17,20 @@ import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.rule.entity.Condition;
+import com.dianping.cat.alarm.rule.entity.Config;
+import com.dianping.cat.alarm.rule.entity.MetricItem;
+import com.dianping.cat.alarm.rule.entity.MonitorRules;
+import com.dianping.cat.alarm.rule.entity.Rule;
+import com.dianping.cat.alarm.rule.entity.SubCondition;
+import com.dianping.cat.alarm.rule.transform.DefaultJsonParser;
+import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
+import com.dianping.cat.alarm.spi.rule.RuleType;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.rule.entity.Condition;
-import com.dianping.cat.home.rule.entity.Config;
-import com.dianping.cat.home.rule.entity.MetricItem;
-import com.dianping.cat.home.rule.entity.MonitorRules;
-import com.dianping.cat.home.rule.entity.Rule;
-import com.dianping.cat.home.rule.entity.SubCondition;
-import com.dianping.cat.home.rule.transform.DefaultJsonParser;
-import com.dianping.cat.home.rule.transform.DefaultSaxParser;
+import com.dianping.cat.helper.MetricType;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.alert.spi.AlarmRule;
-import com.dianping.cat.report.alert.spi.data.MetricType;
-import com.dianping.cat.report.alert.spi.rule.RuleType;
 
 public abstract class BaseRuleConfigManager {
 

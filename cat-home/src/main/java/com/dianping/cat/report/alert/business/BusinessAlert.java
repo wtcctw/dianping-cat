@@ -14,18 +14,18 @@ import com.dianping.cat.consumer.config.ProductLineConfig;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.config.entity.Tag;
-import com.dianping.cat.home.rule.entity.Condition;
-import com.dianping.cat.home.rule.entity.Config;
+import com.dianping.cat.helper.MetricType;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.report.page.metric.service.BaselineService;
-import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
 import com.dianping.cat.report.alert.spi.AlarmRule;
-import com.dianping.cat.report.alert.spi.AlertEntity;
-import com.dianping.cat.report.alert.spi.AlertType;
 import com.dianping.cat.report.alert.spi.BaseAlert;
+import com.dianping.cat.report.alert.spi.config.BaseRuleConfigManager;
 import com.dianping.cat.report.alert.spi.data.MetricReportGroup;
-import com.dianping.cat.report.alert.spi.data.MetricType;
-import com.dianping.cat.report.alert.spi.rule.DataCheckEntity;
+import com.dianping.cat.report.page.metric.service.BaselineService;
+import com.dianping.cat.alarm.rule.entity.Condition;
+import com.dianping.cat.alarm.rule.entity.Config;
+import com.dianping.cat.alarm.spi.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertType;
+import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
 
 public class BusinessAlert extends BaseAlert {
 

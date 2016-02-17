@@ -2,8 +2,8 @@ package com.dianping.cat.report.page.metric.service;
 
 import java.util.Date;
 
+import com.dianping.cat.helper.MetricType;
 import com.dianping.cat.home.dal.report.Baseline;
-import com.dianping.cat.report.alert.spi.data.MetricType;
 
 public interface BaselineService {
 

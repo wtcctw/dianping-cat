@@ -15,13 +15,13 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
+import com.dianping.cat.helper.MetricType;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.Baseline;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.BaselineEntity;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.alert.spi.data.MetricType;
 
 public class DefaultBaselineService implements BaselineService {
 

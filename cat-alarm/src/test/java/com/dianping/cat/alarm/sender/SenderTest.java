@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.sender;
+package com.dianping.cat.alarm.sender;
 
 import java.util.Arrays;
 import java.util.Map;

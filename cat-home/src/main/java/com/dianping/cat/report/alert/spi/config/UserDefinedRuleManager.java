@@ -1,4 +1,4 @@
-package com.dianping.cat.alarm.config;
+package com.dianping.cat.report.alert.spi.config;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;

@@ -6,9 +6,14 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dianping.cat.alarm.AlertDao;
+import com.dianping.cat.alarm.spi.AlertManager;
+import com.dianping.cat.alarm.spi.config.AlertConfigManager;
+import com.dianping.cat.alarm.spi.decorator.Decorator;
+import com.dianping.cat.alarm.spi.receiver.Contactor;
+import com.dianping.cat.alarm.spi.rule.DataChecker;
+import com.dianping.cat.alarm.spi.sender.SenderManager;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
@@ -20,8 +25,6 @@ import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.core.config.ConfigDao;
-import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.AlertSummaryDao;
 import com.dianping.cat.home.dal.report.AlterationDao;
 import com.dianping.cat.report.alert.app.AppAlert;
@@ -61,28 +64,7 @@ import com.dianping.cat.report.alert.network.NetworkAlert;
 import com.dianping.cat.report.alert.network.NetworkContactor;
 import com.dianping.cat.report.alert.network.NetworkDecorator;
 import com.dianping.cat.report.alert.network.NetworkRuleConfigManager;
-import com.dianping.cat.report.alert.service.AlertService;
-import com.dianping.cat.report.alert.spi.AlertManager;
-import com.dianping.cat.report.alert.spi.config.AlertConfigManager;
-import com.dianping.cat.report.alert.spi.config.AlertPolicyManager;
-import com.dianping.cat.report.alert.spi.config.SenderConfigManager;
 import com.dianping.cat.report.alert.spi.data.MetricReportGroupService;
-import com.dianping.cat.report.alert.spi.decorator.Decorator;
-import com.dianping.cat.report.alert.spi.decorator.DecoratorManager;
-import com.dianping.cat.report.alert.spi.receiver.Contactor;
-import com.dianping.cat.report.alert.spi.receiver.ContactorManager;
-import com.dianping.cat.report.alert.spi.rule.DataChecker;
-import com.dianping.cat.report.alert.spi.rule.DefaultDataChecker;
-import com.dianping.cat.report.alert.spi.sender.MailSender;
-import com.dianping.cat.report.alert.spi.sender.Sender;
-import com.dianping.cat.report.alert.spi.sender.SenderManager;
-import com.dianping.cat.report.alert.spi.sender.SmsSender;
-import com.dianping.cat.report.alert.spi.sender.WeixinSender;
-import com.dianping.cat.report.alert.spi.spliter.MailSpliter;
-import com.dianping.cat.report.alert.spi.spliter.SmsSpliter;
-import com.dianping.cat.report.alert.spi.spliter.Spliter;
-import com.dianping.cat.report.alert.spi.spliter.SpliterManager;
-import com.dianping.cat.report.alert.spi.spliter.WeixinSpliter;
 import com.dianping.cat.report.alert.storage.cache.StorageCacheAlert;
 import com.dianping.cat.report.alert.storage.cache.StorageCacheContactor;
 import com.dianping.cat.report.alert.storage.cache.StorageCacheDecorator;
@@ -134,9 +116,9 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 
 		List<Component> all = new ArrayList<Component>();
-
-		all.add(C(DataChecker.class, DefaultDataChecker.class));
+		
 		all.add(C(MetricReportGroupService.class).req(ModelService.class, MetricAnalyzer.ID));
+		
 		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
 
@@ -165,7 +147,6 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Contactor.class, StorageSQLContactor.ID, StorageSQLContactor.class).req(AlertConfigManager.class));
 		all.add(C(Contactor.class, StorageCacheContactor.ID, StorageCacheContactor.class).req(AlertConfigManager.class));
 		all.add(C(Contactor.class, StorageRPCContactor.ID, StorageRPCContactor.class).req(AlertConfigManager.class));
-		all.add(C(ContactorManager.class));
 
 		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProductLineConfigManager.class,
 		      AlertSummaryExecutor.class, ProjectService.class));
@@ -184,29 +165,6 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Decorator.class, StorageSQLDecorator.ID, StorageSQLDecorator.class));
 		all.add(C(Decorator.class, StorageCacheDecorator.ID, StorageCacheDecorator.class));
 		all.add(C(Decorator.class, StorageRPCDecorator.ID, StorageRPCDecorator.class));
-
-		all.add(C(DecoratorManager.class));
-
-		all.add(C(AlertPolicyManager.class).req(ConfigDao.class, ContentFetcher.class));
-
-		all.add(C(Spliter.class, MailSpliter.ID, MailSpliter.class));
-
-		all.add(C(Spliter.class, SmsSpliter.ID, SmsSpliter.class));
-
-		all.add(C(Spliter.class, WeixinSpliter.ID, WeixinSpliter.class));
-
-		all.add(C(SpliterManager.class));
-
-		all.add(C(Sender.class, MailSender.ID, MailSender.class).req(SenderConfigManager.class));
-
-		all.add(C(Sender.class, SmsSender.ID, SmsSender.class).req(SenderConfigManager.class));
-
-		all.add(C(Sender.class, WeixinSender.ID, WeixinSender.class).req(SenderConfigManager.class));
-
-		all.add(C(SenderManager.class).req(ServerConfigManager.class));
-
-		all.add(C(AlertManager.class).req(AlertPolicyManager.class, DecoratorManager.class, ContactorManager.class,
-		      AlertService.class, SpliterManager.class, SenderManager.class, ServerConfigManager.class));
 
 		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class)
 		      .req(MetricReportGroupService.class, BusinessRuleConfigManager.class, DataChecker.class,
@@ -264,8 +222,6 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ThirdPartyAlertBuilder.class).req(HttpConnector.class, ThirdPartyAlert.class,
 		      ThirdPartyConfigManager.class));
-
-		all.add(C(AlertService.class).req(AlertDao.class));
 
 		all.add(C(AlertInfoBuilder.class).req(AlertDao.class, TopologyGraphManager.class));
 

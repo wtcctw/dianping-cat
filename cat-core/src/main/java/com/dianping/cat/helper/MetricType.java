@@ -1,4 +1,4 @@
-package com.dianping.cat.alarm.spi.data;
+package com.dianping.cat.helper;
 
 public enum MetricType {
 	COUNT("COUNT"),

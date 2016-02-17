@@ -12,6 +12,8 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatHomeModule;
+import com.dianping.cat.alarm.UserDefineRuleDao;
+import com.dianping.cat.alarm.service.AlertService;
 import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppConnectionDataDao;
 import com.dianping.cat.app.AppSpeedDataDao;
@@ -36,21 +38,17 @@ import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.dal.report.MetricGraphDao;
 import com.dianping.cat.home.dal.report.MetricScreenDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
-import com.dianping.cat.home.dal.report.UserDefineRuleDao;
 import com.dianping.cat.influxdb.InfluxDB;
 import com.dianping.cat.metric.MetricService;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.alert.browser.JsRuleConfigManager;
 import com.dianping.cat.report.alert.business.BusinessRuleConfigManager;
-import com.dianping.cat.report.alert.config.UserDefinedRuleManager;
 import com.dianping.cat.report.alert.event.EventRuleConfigManager;
 import com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager;
 import com.dianping.cat.report.alert.heartbeat.HeartbeatRuleConfigManager;
 import com.dianping.cat.report.alert.network.NetworkRuleConfigManager;
-import com.dianping.cat.report.alert.service.AlertService;
-import com.dianping.cat.report.alert.spi.config.AlertConfigManager;
-import com.dianping.cat.report.alert.spi.config.SenderConfigManager;
+import com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager;
 import com.dianping.cat.report.alert.storage.cache.StorageCacheRuleConfigManager;
 import com.dianping.cat.report.alert.storage.rpc.StorageRPCRuleConfigManager;
 import com.dianping.cat.report.alert.storage.sql.StorageSQLRuleConfigManager;
@@ -208,7 +206,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      ContentFetcher.class));
 		all.add(C(StorageRPCRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
 		      ContentFetcher.class));
-		all.add(C(AlertConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(JsRuleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
@@ -219,7 +216,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      RouterConfigManager.class, DailyReportDao.class));
 		all.add(C(TopoGraphFormatConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(EsServerConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ServerMetricConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
 		return all;
