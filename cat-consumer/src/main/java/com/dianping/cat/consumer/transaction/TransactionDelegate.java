@@ -4,7 +4,6 @@ import static com.dianping.cat.Constants.ALL;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -39,13 +38,6 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 	@Override
 	public void beforeSave(Map<String, TransactionReport> reports) {
-		for (TransactionReport report : reports.values()) {
-			Set<String> domainNames = report.getDomainNames();
-
-			domainNames.clear();
-			domainNames.addAll(reports.keySet());
-		}
-
 		if (reports.size() > 0) {
 			TransactionReport all = createAggregatedReport(reports);
 
@@ -79,7 +71,6 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 					if (!domain.equals(Constants.ALL)) {
 						all.getIps().add(domain);
-						all.getDomainNames().add(domain);
 
 						visitor.visitTransactionReport(report);
 					}

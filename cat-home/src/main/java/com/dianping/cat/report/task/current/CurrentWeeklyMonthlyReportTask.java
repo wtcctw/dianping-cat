@@ -39,7 +39,7 @@ public class CurrentWeeklyMonthlyReportTask implements Task {
 
 			for (CurrentWeeklyMonthlyTask task : m_tasks) {
 				try {
-					task.buildCurrentWeeklyTask(task.getReportName(), domain, TimeHelper.getCurrentMonth());
+					task.buildCurrentMonthlyTask(task.getReportName(), domain, TimeHelper.getCurrentMonth());
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
