@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.transaction.task;
 
 import java.util.Date;
-import java.util.List;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -16,11 +15,7 @@ import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionReportCountFilter;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultNativeBuilder;
-import com.dianping.cat.core.dal.DailyGraph;
-import com.dianping.cat.core.dal.DailyGraphDao;
 import com.dianping.cat.core.dal.DailyReport;
-import com.dianping.cat.core.dal.Graph;
-import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
@@ -35,16 +30,7 @@ public class TransactionReportBuilder implements Initializable, TaskBuilder, Log
 	public static final String ID = TransactionAnalyzer.ID;
 
 	@Inject
-	protected GraphDao m_graphDao;
-
-	@Inject
-	protected DailyGraphDao m_dailyGraphDao;
-
-	@Inject
 	protected TransactionReportService m_reportService;
-
-	@Inject
-	private TransactionGraphCreator m_transactionGraphCreator;
 
 	private Logger m_logger;
 
@@ -53,8 +39,6 @@ public class TransactionReportBuilder implements Initializable, TaskBuilder, Log
 		try {
 			Date end = TaskHelper.tomorrowZero(period);
 			TransactionReport transactionReport = queryHourlyReportsByDuration(name, domain, period, end);
-
-			buildDailyTransactionGraph(transactionReport);
 
 			DailyReport report = new DailyReport();
 
@@ -73,41 +57,8 @@ public class TransactionReportBuilder implements Initializable, TaskBuilder, Log
 		}
 	}
 
-	private void buildDailyTransactionGraph(TransactionReport report) {
-		DailyTransactionGraphCreator creator = new DailyTransactionGraphCreator();
-		List<DailyGraph> graphs = creator.buildDailygraph(report);
-
-		for (DailyGraph graph : graphs) {
-			try {
-				m_dailyGraphDao.insert(graph);
-			} catch (DalException e) {
-				Cat.logError(e);
-			}
-		}
-	}
-
-	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
-		long startTime = period.getTime();
-		TransactionReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
-		      + TimeHelper.ONE_HOUR));
-
-		return m_transactionGraphCreator.splitReportToGraphs(period, domain, TransactionAnalyzer.ID, report);
-	}
-
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
-		try {
-			List<Graph> graphs = buildHourlyGraphs(name, domain, period);
-			if (graphs != null) {
-				for (Graph graph : graphs) {
-					m_graphDao.insert(graph);
-				}
-			}
-		} catch (Exception e) {
-			m_logger.error(e.getMessage(), e);
-			Cat.logError(e);
-			return false;
-		}
 		return true;
 	}
 
@@ -187,6 +138,7 @@ public class TransactionReportBuilder implements Initializable, TaskBuilder, Log
 		long startTime = start.getTime();
 		long endTime = end.getTime();
 		double duration = (end.getTime() - start.getTime()) * 1.0 / TimeHelper.ONE_DAY;
+		
 		HistoryTransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(domain))
 		      .setDuration(duration);
 		TransactionReport transactionReport = merger.getTransactionReport();
@@ -218,6 +170,7 @@ public class TransactionReportBuilder implements Initializable, TaskBuilder, Log
 		long startTime = start.getTime();
 		long endTime = endDate.getTime();
 		double duration = (endTime - startTime) * 1.0 / TimeHelper.ONE_DAY;
+		
 		HistoryTransactionReportMerger dailyMerger = new HistoryTransactionReportMerger(new TransactionReport(domain))
 		      .setDuration(duration);
 		TransactionReportHourlyGraphCreator graphCreator = new TransactionReportHourlyGraphCreator(
