@@ -17,6 +17,8 @@
 <table class="machines">
 	<tr style="text-align: left">
 		<th>
+			&nbsp;[ &nbsp;<a href="?op=history&domain=${model.domain}&date=${model.date}&type=${payload.encodedType}&queryname=${model.queryName}&reportType=${payload.reportType}${model.customDate}">All</a>
+			&nbsp;]&nbsp;
    	  		 <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
 						<a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&type=${payload.encodedType}&queryname=${model.queryName}&reportType=${payload.reportType}${model.customDate}">${ip}</a>
    	 		&nbsp;]&nbsp;

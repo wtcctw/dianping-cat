@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.transaction;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -204,13 +205,16 @@ public class Handler implements PageHandler<Context> {
 		String type = payload.getType();
 		String name = payload.getName();
 		String ip = payload.getIpAddress();
-
+		Date start = payload.getHistoryStartDate();
+		Date end = payload.getHistoryEndDate();
+		
 		if (StringUtils.isEmpty(group)) {
 			group = m_configManager.queryDefaultGroup(domain);
 			payload.setGroup(group);
 		}
 		model.setGroupIps(m_configManager.queryIpByDomainAndGroup(domain, group));
 		model.setGroups(m_configManager.queryDomainGroup(payload.getDomain()));
+	
 		switch (action) {
 		case HOURLY_REPORT:
 			TransactionReport report = getHourlyReport(payload);
@@ -231,12 +235,15 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case HISTORY_GRAPH:
-			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
-				report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
-
+			report = m_reportService.queryReport(domain, start, end);
+			
+			if (Constants.ALL.equalsIgnoreCase(ip)) {
 				buildDistributionInfo(model, type, name, report);
 			}
-			boolean isOld = new TransactionTrendGraphBuilder(m_reportService).buildTrendGraph(model, payload);
+
+			report = m_mergeHelper.mergeAllMachines(report, ip);
+
+			boolean isOld = new TransactionTrendGraphBuilder().buildTrendGraph(model, payload, report);
 
 			if (isOld) {
 				m_historyGraph.buildTrendGraph(model, payload);
@@ -292,13 +299,17 @@ public class Handler implements PageHandler<Context> {
 			buildTransactionNameGraph(model, report, type, name, ip);
 			break;
 		case HISTORY_GROUP_GRAPH:
-			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
+			report = m_reportService.queryReport(domain, start, end);
 			report = filterReportByGroup(report, domain, group);
-
+			
 			buildDistributionInfo(model, type, name, report);
-			List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
+			
+			report = m_mergeHelper.mergeAllMachines(report, ip);
+			isOld = new TransactionTrendGraphBuilder().buildTrendGraph(model, payload, report);
 
-			m_historyGraph.buildGroupTrendGraph(model, payload, ips);
+			if (isOld) {
+				m_historyGraph.buildTrendGraph(model, payload);
+			}
 			break;
 		}
 

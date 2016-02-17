@@ -11,7 +11,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.transaction.Model;
 import com.dianping.cat.report.page.transaction.Payload;
-import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.Graph;
 import com.dianping.cat.consumer.transaction.model.entity.Graph2;
@@ -27,9 +26,7 @@ public class TransactionTrendGraphBuilder {
 
 	private boolean m_isOld = false;
 
-	private TransactionReportService m_reportService;
-
-	private int m_duration;
+	private int m_duration = 1;
 
 	public static final String COUNT = "count";
 
@@ -37,21 +34,16 @@ public class TransactionTrendGraphBuilder {
 
 	public static final String AVG = "avg";
 
-	public TransactionTrendGraphBuilder(TransactionReportService reportService) {
-		m_reportService = reportService;
-	}
-
-	public boolean buildTrendGraph(Model model, Payload payload) {
+	public boolean buildTrendGraph(Model model, Payload payload, TransactionReport report) {
 		String name = payload.getName();
-		String domain = model.getDomain();
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 		String reportType = payload.getReportType();
-		String ip = model.getIpAddress();
+		String ip = payload.getIpAddress();
 		String type = payload.getType();
 		String display = name != null ? name : type;
 
-		Map<String, double[]> data = getDatas(start, end, domain, ip, type, name);
+		Map<String, double[]> data = getDatas(report, ip, type, name);
 
 		if (!m_isOld) {
 			ReportType queryType = ReportType.findByName(reportType);
@@ -103,9 +95,7 @@ public class TransactionTrendGraphBuilder {
 		return sb.toString();
 	}
 
-	private Map<String, double[]> getDatas(Date start, Date end, String domain, String ip, String type, String name) {
-		TransactionReport report = m_reportService.queryReport(domain, start, end);
-		report = new TransactionMergeHelper().mergeAllMachines(report, ip);
+	private Map<String, double[]> getDatas(TransactionReport report, String ip, String type, String name) {
 		TransactionReportVisitor visitor = new TransactionReportVisitor(ip, type, name);
 		visitor.visitTransactionReport(report);
 
