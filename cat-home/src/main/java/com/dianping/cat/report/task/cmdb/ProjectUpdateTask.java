@@ -78,27 +78,26 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 		return true;
 	}
 
-	private void deleteUnusedDomainInfo() {
+	public void deleteUnusedDomainInfo() {
 		try {
-			List<Project> projects = m_projectService.findAll();
+			List<Project> all = m_projectService.findAll();
 			Date start = TimeHelper.getCurrentDay(-30);
 			Date end = TimeHelper.getCurrentDay();
 			Set<String> domainNames = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
-			List<Project> removeds = new ArrayList<Project>();
+			List<Project> toRemoves = new ArrayList<Project>();
 
-			for (Project project : projects) {
+			for (Project project : all) {
 				String name = project.getDomain();
 
 				if (!domainNames.contains(name)) {
-					removeds.add(project);
+					toRemoves.add(project);
 				}
 			}
 
-			for (Project project : removeds) {
+			for (Project project : toRemoves) {
 				m_projectService.delete(project);
 				Cat.logEvent("DeleteDomainInfo", project.getDomain(), Event.SUCCESS, project.toString());
 			}
-
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
