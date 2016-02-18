@@ -100,7 +100,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
-	public void flush(MessageTree tree) {
+	public void flush(MessageTree tree, boolean clearContext) {
 		if (tree.getMessageId() == null) {
 			tree.setMessageId(nextMessageId());
 		}
@@ -110,7 +110,9 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		if (sender != null && isMessageEnabled()) {
 			sender.send(tree);
 
-			reset();
+			if (clearContext) {
+				reset();
+			}
 		} else {
 			m_throttleTimes++;
 
@@ -356,7 +358,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				MessageTree tree = m_tree.copy();
 
 				tree.setMessage(message);
-				flush(tree);
+				flush(tree, true);
 			} else {
 				Transaction parent = m_stack.peek();
 
@@ -418,7 +420,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 						adjustForTruncatedTransaction((Transaction) tree.getMessage());
 					}
 
-					manager.flush(tree);
+					manager.flush(tree, true);
 					return true;
 				}
 			}
@@ -595,7 +597,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				ctx.m_length = stack.size();
 				ctx.m_totalDurationInMicros = ctx.m_totalDurationInMicros + target.getDurationInMicros();
 
-				flush(t);
+				flush(t, false);
 			}
 		}
 
