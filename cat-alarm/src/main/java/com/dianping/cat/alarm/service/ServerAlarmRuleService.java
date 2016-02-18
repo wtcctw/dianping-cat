@@ -1,9 +1,9 @@
-package com.dianping.cat.alarm;
+package com.dianping.cat.alarm.service;
 
 import java.util.List;
 import java.util.Map;
 
-import com.dianping.cat.core.alarm.ServerAlarmRule;
+import com.dianping.cat.alarm.ServerAlarmRule;
 
 public interface ServerAlarmRuleService {
 

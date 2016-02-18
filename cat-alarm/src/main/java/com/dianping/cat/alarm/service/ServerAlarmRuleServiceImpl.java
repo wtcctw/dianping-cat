@@ -1,4 +1,4 @@
-package com.dianping.cat.alarm;
+package com.dianping.cat.alarm.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,9 +12,9 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.core.alarm.ServerAlarmRule;
-import com.dianping.cat.core.alarm.ServerAlarmRuleDao;
-import com.dianping.cat.core.alarm.ServerAlarmRuleEntity;
+import com.dianping.cat.alarm.ServerAlarmRule;
+import com.dianping.cat.alarm.ServerAlarmRuleDao;
+import com.dianping.cat.alarm.ServerAlarmRuleEntity;
 
 public class ServerAlarmRuleServiceImpl implements ServerAlarmRuleService, Initializable {
 
@@ -128,8 +128,8 @@ public class ServerAlarmRuleServiceImpl implements ServerAlarmRuleService, Initi
 	}
 
 	@Override
-   public List<ServerAlarmRule> queryRules(String category) {
-	   return m_alarmRules.get(category);
-   }
+	public List<ServerAlarmRule> queryRules(String category) {
+		return m_alarmRules.get(category);
+	}
 
 }

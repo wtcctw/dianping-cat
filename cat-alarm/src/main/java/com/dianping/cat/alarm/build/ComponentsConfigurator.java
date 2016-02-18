@@ -8,7 +8,10 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.alarm.AlertDao;
+import com.dianping.cat.alarm.ServerAlarmRuleDao;
 import com.dianping.cat.alarm.service.AlertService;
+import com.dianping.cat.alarm.service.ServerAlarmRuleService;
+import com.dianping.cat.alarm.service.ServerAlarmRuleServiceImpl;
 import com.dianping.cat.alarm.spi.AlertManager;
 import com.dianping.cat.alarm.spi.config.AlertConfigManager;
 import com.dianping.cat.alarm.spi.config.AlertPolicyManager;
@@ -41,6 +44,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
+		all.add(C(ServerAlarmRuleService.class, ServerAlarmRuleServiceImpl.class).req(ServerAlarmRuleDao.class));
+
 		all.add(C(AlertService.class).req(AlertDao.class));
 		all.add(C(AlertConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
@@ -48,9 +53,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DataChecker.class, DefaultDataChecker.class));
 		all.add(C(DecoratorManager.class));
 		all.add(C(ContactorManager.class));
-		
+
 		all.add(C(AlertPolicyManager.class).req(ConfigDao.class, ContentFetcher.class));
-		
+
 		all.add(C(Spliter.class, MailSpliter.ID, MailSpliter.class));
 
 		all.add(C(Spliter.class, SmsSpliter.ID, SmsSpliter.class));

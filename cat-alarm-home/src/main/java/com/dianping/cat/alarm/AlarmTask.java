@@ -11,7 +11,6 @@ import org.unidal.helper.Threads.Task;
 import com.dianping.cat.alarm.server.entity.Condition;
 import com.dianping.cat.alarm.server.entity.Rule;
 import com.dianping.cat.alarm.server.entity.SubCondition;
-import com.dianping.cat.core.alarm.ServerAlarmRule;
 import com.dianping.cat.metric.MetricService;
 import com.dianping.cat.metric.QueryParameter;
 

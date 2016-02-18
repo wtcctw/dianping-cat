@@ -19,9 +19,6 @@ public final class CatDatabaseConfigurator extends AbstractJdbcResourceConfigura
       defineSimpleTableProviderComponents(all, "cat", com.dianping.cat.core.config._INDEX.getEntityClasses());
       defineDaoComponents(all, com.dianping.cat.core.config._INDEX.getDaoClasses());
 
-      defineSimpleTableProviderComponents(all, "cat", com.dianping.cat.core.alarm._INDEX.getEntityClasses());
-      defineDaoComponents(all, com.dianping.cat.core.alarm._INDEX.getDaoClasses());
-
       return all;
    }
 }

@@ -26,7 +26,7 @@ import com.dianping.cat.alarm.server.entity.Condition;
 import com.dianping.cat.alarm.server.entity.Rule;
 import com.dianping.cat.alarm.server.entity.ServerAlarmRuleConfig;
 import com.dianping.cat.alarm.server.transform.DefaultSaxParser;
-import com.dianping.cat.core.alarm.ServerAlarmRule;
+import com.dianping.cat.alarm.service.ServerAlarmRuleService;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.metric.MetricService;
