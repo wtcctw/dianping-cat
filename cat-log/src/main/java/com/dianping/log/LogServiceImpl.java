@@ -22,6 +22,5 @@ public class LogServiceImpl implements LogService{
 		// query user es api
 		return null;
    }
-	
 
 }
