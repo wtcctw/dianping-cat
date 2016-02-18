@@ -165,7 +165,6 @@ public class StorageReportBuilder implements TaskBuilder, Initializable {
 
 					for (String id : ids) {
 						buildMonthlyTask(name, id, start);
-
 					}
 				}
 			}
