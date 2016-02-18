@@ -1,7 +1,6 @@
 package com.dianping.cat.report.alert.heartbeat;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +37,7 @@ import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManag
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
+import com.dianping.cat.service.ProjectService;
 
 public class HeartbeatAlert implements Task {
 
@@ -61,6 +61,9 @@ public class HeartbeatAlert implements Task {
 
 	@Inject
 	protected AlertManager m_sendManager;
+	
+	@Inject
+	private ProjectService m_projectService;
 
 	private static final int DATA_AREADY_MINUTE = 1;
 
@@ -344,18 +347,6 @@ public class HeartbeatAlert implements Task {
 		}
 	}
 
-	private Set<String> queryDomains() {
-		Set<String> domains = new HashSet<String>();
-		ModelRequest request = new ModelRequest("cat", System.currentTimeMillis());
-
-		if (m_transactionService.isEligable(request)) {
-			ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
-			domains.addAll(response.getModel().getDomainNames());
-		}
-
-		return domains;
-	}
-
 	@Override
 	public void run() {
 		boolean active = TimeHelper.sleepToNextMinute();
@@ -365,7 +356,7 @@ public class HeartbeatAlert implements Task {
 			long current = System.currentTimeMillis();
 
 			try {
-				Set<String> domains = queryDomains();
+				Set<String> domains = m_projectService.findAllDomains();
 
 				for (String domain : domains) {
 					if (m_serverFilterConfigManager.validateDomain(domain) && StringUtils.isNotEmpty(domain)) {

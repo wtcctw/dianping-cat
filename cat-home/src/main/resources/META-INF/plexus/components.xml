@@ -1111,20 +1111,12 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.transaction.task.TransactionGraphCreator</role>
-			<implementation>com.dianping.cat.report.page.transaction.task.TransactionGraphCreator</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.event.task.EventGraphCreator</role>
 			<implementation>com.dianping.cat.report.page.event.task.EventGraphCreator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.problem.task.ProblemGraphCreator</role>
 			<implementation>com.dianping.cat.report.page.problem.task.ProblemGraphCreator</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.transaction.task.TransactionMerger</role>
-			<implementation>com.dianping.cat.report.page.transaction.task.TransactionMerger</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.event.task.EventMerger</role>
@@ -1189,19 +1181,7 @@
 			<implementation>com.dianping.cat.report.page.transaction.task.TransactionReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.transaction.task.TransactionGraphCreator</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.transaction.task.TransactionMerger</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1441,6 +1421,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3172,6 +3155,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.spi.AlertManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>

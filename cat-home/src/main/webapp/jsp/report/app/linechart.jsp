@@ -32,7 +32,6 @@
 			if (value == true) {
 				$('#history').slideDown();
 				$("#command2").val($("#command").val());
-				$("#code2").val($("#code").val());
 				$("#network2").val($("#network").val());
 				$("#version2").val($("#version").val());
 				$("#connectionType2").val($("#connectionType").val());
@@ -40,7 +39,9 @@
 				$("#city2").val($("#city").val());
 				$("#operator2").val($("#operator").val());
 				$("#time2").val($("#time").val());
+				$("#endTime2").val($("#endTime").val());
 				commandChange("command2","code2");
+				$("#code2").val($("#code").val());
 			} else {
 				$('#history').slideUp();
 			}
@@ -68,7 +69,7 @@
 				}
 			}
 		}
-
+		
 		function getDate() {
 			var myDate = new Date();
 			var myMonth = new Number(myDate.getMonth());
@@ -81,8 +82,21 @@
 			if(day<10){
 				day = '0' + day;
 			}
-
-			return myDate.getFullYear() + "-" + month + "-" + day;
+			return myDate.getFullYear() + "-" + month + "-" + day + " 00:00";
+		}
+		
+		function getTime(){
+			var myDate = new Date();
+			var myHour = new Number(myDate.getHours());
+			var myMinute = new Number(myDate.getMinutes());
+			
+			if(myHour < 10){
+				myHour = '0' + myHour;
+			}
+			if(myMinute < 10){
+				myMinute = '0' + myMinute;
+			}
+			return myHour + ":" + myMinute;
 		}
 		
 		function queryGroupBy(sort){
@@ -93,7 +107,10 @@
 		}
 
 		function query(field,networkCode,appVersionCode,channelCode,platformCode,cityCode,operatorCode,sort) {
-			var time = $("#time").val();
+			var times = $("#time").val().split(" ");
+			var period = times[0];
+			var start = times[1];
+			var end = $("#endTime").val();
 			var command = $("#command").val().split('|')[0];
 			var code = $("#code").val();
 			var network = "";
@@ -134,14 +151,17 @@
 			}
 			var split = ";";
 			var commandId = ${model.command2IdJson}[command].id;
-			var query1 = time + split + commandId + split + code + split
+			var query1 = period + split + commandId + split + code + split
 					+ network + split + version + split + connectionType
-					+ split + platform + split + city + split + operator + split + split;
+					+ split + platform + split + city + split + operator + split + start + split + end;
 			var query2 = "";
 			var value = document.getElementById("checkbox").checked;
 
 			if (value) {
-				var time2 = $("#time2").val();
+				var times2 = $("#time2").val().split(" ");
+				var period2 = times2[0];
+				var start2 = times2[1];
+				var end2 = $("#endTime2").val();
 				var command2 = $("#command2").val().split('|')[0];
 				var commandId2 = ${model.command2IdJson}[command2].id;
 				var code2 = $("#code2").val();
@@ -151,10 +171,10 @@
 				var platform2 = $("#platform2").val();
 				var city2 = $("#city2").val();
 				var operator2 = $("#operator2").val();
-				query2 = time2 + split + commandId2 + split + code2 + split
+				query2 = period2 + split + commandId2 + split + code2 + split
 						+ network2 + split + version2 + split + connectionType2
 						+ split + platform2 + split + city2 + split
-						+ operator2 + split + split;
+						+ operator2 + split + start2 + split + end2;
 			}
 
 			var checkboxs = document.getElementsByName("typeCheckbox");
@@ -185,13 +205,25 @@
 				function() {
 					$('#trend').addClass('active');
 					$('#time').datetimepicker({
-						format:'Y-m-d',
-						timepicker:false,
+						format:'Y-m-d H:i',
+						step:30,
+						maxDate:0
+					});
+					$('#endTime').datetimepicker({
+						datepicker:false,
+						format:'H:i',
+						step:30,
 						maxDate:0
 					});
 					$('#time2').datetimepicker({
-						format:'Y-m-d',
-						timepicker:false,
+						format:'Y-m-d H:i',
+						step:30,
+						maxDate:0
+					});
+					$('#endTime2').datetimepicker({
+						datepicker:false,
+						format:'H:i',
+						step:30,
 						maxDate:0
 					});
 
@@ -213,10 +245,16 @@
 					if (typeof(words[0]) != 'undefined' && words[0].length == 0) {
 						$("#time").val(getDate());
 					} else {
-						$("#time").val(words[0]);
+						$("#time").val(words[0] + " " + words[9]);
 					}
+					
+					if(words[10] == null || words.length == 1){
+						$("#endTime").val(getTime());
+					}else{
+						$("#endTime").val(words[10]);
+					}
+					
 					$("#code").val(words[2]);
-					console.log(words[2]);
 					$("#network").val(words[3]);
 					$("#version").val(words[4]);
 					$("#connectionType").val(words[5]);
@@ -225,7 +263,7 @@
 					$("#operator").val(words[8]);
 					
 					var datePair = {};
-					datePair["当前值"]=$("#time").val();
+					datePair["当前值"]=$("#time").val().split(" ")[0];
 
 					if (query2 != null && query2 != '') {
 						$('#history').slideDown();
@@ -235,10 +273,16 @@
 						if (words[0] == null || words[0].length == 0) {
 							$("#time2").val(getDate());
 						} else {
-							$("#time2").val(words[0]);
+							$("#time2").val(words[0] + " " + words[9]);
 						}
 						
-						datePair["对比值"]=$("#time2").val();
+						if(words[10] == null || words.length == 1){
+							$("#endTime2").val(getTime());
+						}else{
+							$("#endTime2").val(words[10]);
+						}
+						
+						datePair["对比值"]=$("#time2").val().split(" ")[0];
 						
 						command2.on('change', commandChange("command2","code2"));
 

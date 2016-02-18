@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -69,6 +70,10 @@ public class ProjectService implements Initializable {
 
 	public List<Project> findAll() throws DalException {
 		return new ArrayList<Project>(m_domainToProjects.values());
+	}
+
+	public Set<String> findAllDomains() {
+		return m_domains.keySet();
 	}
 
 	public Project findByDomain(String domainName) {
