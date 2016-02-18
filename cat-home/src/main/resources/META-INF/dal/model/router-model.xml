@@ -12,7 +12,6 @@
     <entity-ref name="domain" type="map" names="domains" method-find-or-create='true'/>
     <entity-ref name="network-policy" type="map" names="network-policies" method-find-or-create='true'/>
     <entity-ref name="server-group" type="map" names="server-groups" method-find-or-create='true'/>
-    <entity-ref name="machine" type="map" names="machines" method-find-or-create='true' />
   </entity>
   <entity name="default-server">
     <attribute name="id" value-type="String" key="true" />
@@ -38,7 +37,6 @@
   </entity>
   <entity name="domain">
     <attribute name="id" value-type="String" key="true" />
-    <attribute name="sample" value-type="double" primitive="true" default-value="1"/>
     <entity-ref name="group" type="map" names="groups" method-find-or-create='true'/>
   </entity>
   <entity name="group">
@@ -49,12 +47,5 @@
     <attribute name="id" value-type="String"/>
     <attribute name="port" value-type="int" primitive="true" />
     <attribute name="weight" value-type="double" primitive="true" default-value="1"/>
-  </entity>
-  <entity name="machine">
-    <attribute name="id" value-type="String" key="true" />
-    <attribute name="domain" value-type="String" />
-    <attribute name="target" value-type="String" />
-    <attribute name="weight" value-type="double" primitive="true" default-value="1.0"/>
-    <attribute name="total" value-type="long" primitive="true" />
   </entity>
 </model>
