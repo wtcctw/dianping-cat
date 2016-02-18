@@ -6,6 +6,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Graph;
 import com.dianping.cat.consumer.transaction.model.entity.Graph2;
+import com.dianping.cat.consumer.transaction.model.entity.GraphTrend;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
@@ -165,6 +166,41 @@ public class TransactionReportMerger extends DefaultMerger {
 
 	@Override
 	public void mergeGraph2(Graph2 to, Graph2 from) {
+		String toCount = to.getCount();
+		String fromCount = from.getCount();
+		Integer[] count = mergeIntegerValue(toCount, fromCount);
+		to.setCount(StringUtils.join(count, GRAPH_SPLITTER));
+
+		String toSum = to.getSum();
+		String fromSum = from.getSum();
+		Double[] sum = mergeDoubleValue(toSum, fromSum);
+		to.setSum(StringUtils.join(sum, GRAPH_SPLITTER));
+
+		String toFails = to.getFails();
+		String fromFails = from.getFails();
+		Integer[] fails = mergeIntegerValue(toFails, fromFails);
+		to.setFails(StringUtils.join(fails, GRAPH_SPLITTER));
+
+		int length = count.length;
+		Double[] avg = new Double[length];
+
+		for (int i = 0; i < length; i++) {
+			try {
+				if (count[i] > 0) {
+					avg[i] = sum[i] / count[i];
+				} else {
+					avg[i] = 0.0;
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
+				avg[i] = 0.0;
+			}
+		}
+		to.setAvg(StringUtils.join(avg, GRAPH_SPLITTER));
+	}
+	
+	@Override
+	public void mergeGraphTrend(GraphTrend to, GraphTrend from) {
 		String toCount = to.getCount();
 		String fromCount = from.getCount();
 		Integer[] count = mergeIntegerValue(toCount, fromCount);

@@ -6,8 +6,7 @@ import org.codehaus.plexus.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
-import com.dianping.cat.consumer.transaction.model.entity.Graph;
-import com.dianping.cat.consumer.transaction.model.entity.Graph2;
+import com.dianping.cat.consumer.transaction.model.entity.GraphTrend;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -22,7 +21,7 @@ public class TransactionReportDailyGraphCreator {
 	private int m_length;
 
 	private int m_duration = 1;
-	
+
 	private Date m_start;
 
 	public TransactionReportDailyGraphCreator(TransactionReport transactionReport, int length, Date start) {
@@ -62,54 +61,53 @@ public class TransactionReportDailyGraphCreator {
 
 		@Override
 		public void visitType(TransactionType type) {
-			type.getGraph2s().clear();
-
 			String typeId = type.getId();
 			m_currentType = m_currentMachine.findOrCreateType(typeId);
-			Graph2 graph = m_currentType.findOrCreateGraph2(m_duration);
 
-			Long[] count = parseToInteger(graph.getCount());
-			Long[] fails = parseToInteger(graph.getFails());
-			Double[] sum = parseToDouble(graph.getSum());
-			Double[] avg = parseToDouble(graph.getAvg());
+			GraphTrend graph = m_currentType.getGraphTrend();
 
-			count[m_day] = type.getTotalCount();
-			fails[m_day] = type.getFailCount();
-			sum[m_day] = ((int) (type.getSum() * 100)) / 100.0;
-			avg[m_day] = ((int) (type.getAvg() * 100)) / 100.0;
-
-			graph.setCount(StringUtils.join(count, TransactionReportMerger.GRAPH_SPLITTER));
-			graph.setAvg(StringUtils.join(avg, TransactionReportMerger.GRAPH_SPLITTER));
-			graph.setSum(StringUtils.join(sum, TransactionReportMerger.GRAPH_SPLITTER));
-			graph.setFails(StringUtils.join(fails, TransactionReportMerger.GRAPH_SPLITTER));
+			if (graph == null) {
+				graph = new GraphTrend();
+				graph.setDuration(m_duration);
+				m_currentType.setGraphTrend(graph);
+			}
+			buildGraphTrend(graph, type.getTotalCount(), type.getFailCount(), type.getSum(), type.getAvg());
 
 			super.visitType(type);
 		}
 
 		@Override
 		public void visitName(TransactionName name) {
-			name.getGraphs().clear();
-
 			String nameId = name.getId();
 			m_currentName = m_currentType.findOrCreateName(nameId);
-			Graph graph = m_currentName.findOrCreateGraph(m_duration);
 
+			GraphTrend graph = m_currentName.getGraphTrend();
+
+			if (graph == null) {
+				graph = new GraphTrend();
+				graph.setDuration(m_duration);
+				m_currentName.setGraphTrend(graph);
+			}
+			buildGraphTrend(graph, name.getTotalCount(), name.getFailCount(), name.getSum(), name.getAvg());
+
+			super.visitName(name);
+		}
+
+		private void buildGraphTrend(GraphTrend graph, long totalCount, long failCount, double sumValue, double avgValue) {
 			Long[] count = parseToInteger(graph.getCount());
 			Long[] fails = parseToInteger(graph.getFails());
 			Double[] sum = parseToDouble(graph.getSum());
 			Double[] avg = parseToDouble(graph.getAvg());
 
-			count[m_day] = name.getTotalCount();
-			fails[m_day] = name.getFailCount();
-			sum[m_day] = ((int) (name.getSum() * 100)) / 100.0;
-			avg[m_day] = ((int) (name.getAvg() * 100)) / 100.0;
+			count[m_day] = totalCount;
+			fails[m_day] = failCount;
+			sum[m_day] = ((int) (sumValue * 100)) / 100.0;
+			avg[m_day] = ((int) (avgValue * 100)) / 100.0;
 
 			graph.setCount(StringUtils.join(count, TransactionReportMerger.GRAPH_SPLITTER));
 			graph.setAvg(StringUtils.join(avg, TransactionReportMerger.GRAPH_SPLITTER));
 			graph.setSum(StringUtils.join(sum, TransactionReportMerger.GRAPH_SPLITTER));
 			graph.setFails(StringUtils.join(fails, TransactionReportMerger.GRAPH_SPLITTER));
-
-			super.visitName(name);
 		}
 
 		private Double[] parseToDouble(String str) {

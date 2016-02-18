@@ -31,6 +31,7 @@
 		<entity-ref name="range2" type="map" names="range2s" method-find-or-create="true" render="false"/>
 		<entity-ref name="graph2" type="map" names="graph2s" method-find-or-create="true"/>
 		<entity-ref name="all-duration" type="map" names="all-durations" method-find-or-create="true" render="false"/>
+		<entity-ref name="graph-trend"/>
 	</entity>
 	<entity name="name" class-name="TransactionName">
 		<attribute name="id" key="true" />
@@ -51,6 +52,7 @@
 		<entity-ref name="graph" type="map" names="graphs" method-find-or-create="true" />
 		<entity-ref name="duration" type="map" names="durations" method-find-or-create="true" />
 		<entity-ref name="all-duration" type="map" names="all-durations" method-find-or-create="true"  render="false"/>
+		<entity-ref name="graph-trend"/>
 	</entity>
 	<entity name="range">
 		<attribute name="value" value-type="int" primitive="true" key="true" />
@@ -74,6 +76,13 @@
 		<attribute name="fails" value-type="String" primitive="true" />
 	</entity>
 	<entity name="graph2">
+		<attribute name="duration" value-type="int" primitive="true" key="true" />
+		<attribute name="sum" value-type="String" primitive="true" />
+		<attribute name="avg" value-type="String" primitive="true" />
+		<attribute name="count" value-type="String" primitive="true" />
+		<attribute name="fails" value-type="String" primitive="true" />
+	</entity>
+	<entity name="graph-trend">
 		<attribute name="duration" value-type="int" primitive="true" key="true" />
 		<attribute name="sum" value-type="String" primitive="true" />
 		<attribute name="avg" value-type="String" primitive="true" />
