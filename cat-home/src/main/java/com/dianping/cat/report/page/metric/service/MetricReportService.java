@@ -70,7 +70,7 @@ public class MetricReportService extends AbstractReportService<MetricReport> {
 
 		metricReport.setStartTime(start);
 		metricReport.setEndTime(new Date(end.getTime() - 1));
-		return transform(metricReport);
+		return metricReport;
 	}
 
 	@Override
@@ -81,31 +81,6 @@ public class MetricReportService extends AbstractReportService<MetricReport> {
 	@Override
 	public MetricReport queryWeeklyReport(String domain, Date start) {
 		throw new RuntimeException("Metric report don't support weekly report");
-	}
-
-	public MetricReport transform(MetricReport report) {
-		Map<String, MetricItem> items = report.getMetricItems();
-
-		for (Entry<String, MetricItem> item : items.entrySet()) {
-			MetricItem metricItem = item.getValue();
-			Map<Integer, Segment> segs = metricItem.getSegments();
-
-			if (segs.size() == 0) {
-				Map<Integer, Point> oldPoints = metricItem.findOrCreateAbtest("-1").findOrCreateGroup("").getPoints();
-
-				for (Point point : oldPoints.values()) {
-					Segment seg = new Segment();
-
-					seg.setId(point.getId());
-					seg.setCount(point.getCount());
-					seg.setAvg(point.getAvg());
-					seg.setSum(point.getSum());
-					segs.put(seg.getId(), seg);
-				}
-			}
-		}
-
-		return report;
 	}
 
 }
