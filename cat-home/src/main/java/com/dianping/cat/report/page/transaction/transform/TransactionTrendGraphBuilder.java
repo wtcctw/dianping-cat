@@ -14,6 +14,7 @@ import com.dianping.cat.report.page.transaction.Payload;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.Graph;
 import com.dianping.cat.consumer.transaction.model.entity.Graph2;
+import com.dianping.cat.consumer.transaction.model.entity.GraphTrend;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -24,8 +25,6 @@ import com.site.lookup.util.StringUtils;
 
 public class TransactionTrendGraphBuilder {
 
-	private boolean m_isOld = false;
-
 	private int m_duration = 1;
 
 	public static final String COUNT = "count";
@@ -34,7 +33,7 @@ public class TransactionTrendGraphBuilder {
 
 	public static final String AVG = "avg";
 
-	public boolean buildTrendGraph(Model model, Payload payload, TransactionReport report) {
+	public void buildTrendGraph(Model model, Payload payload, TransactionReport report) {
 		String name = payload.getName();
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
@@ -45,28 +44,25 @@ public class TransactionTrendGraphBuilder {
 
 		Map<String, double[]> data = getDatas(report, ip, type, name);
 
-		if (!m_isOld) {
-			ReportType queryType = ReportType.findByName(reportType);
-			long step = queryType.getStep() * m_duration;
-			int size = (int) ((start.getTime() - end.getTime()) / step);
+		ReportType queryType = ReportType.findByName(reportType);
+		long step = queryType.getStep() * m_duration;
+		int size = (int) ((start.getTime() - end.getTime()) / step);
 
-			LineChart fail = buildLineChart(start, end, step, size);
-			LineChart count = buildLineChart(start, end, step, size);
-			LineChart avg = buildLineChart(start, end, step, size);
+		LineChart fail = buildLineChart(start, end, step, size);
+		LineChart count = buildLineChart(start, end, step, size);
+		LineChart avg = buildLineChart(start, end, step, size);
 
-			fail.setTitle(display + queryType.getFailTitle());
-			count.setTitle(display + queryType.getSumTitle());
-			avg.setTitle(display + queryType.getResponseTimeTitle());
+		fail.setTitle(display + queryType.getFailTitle());
+		count.setTitle(display + queryType.getSumTitle());
+		avg.setTitle(display + queryType.getResponseTimeTitle());
 
-			fail.addValue(data.get(FAIL));
-			count.addValue(data.get(COUNT));
-			avg.addValue(data.get(AVG));
+		fail.addValue(data.get(FAIL));
+		count.addValue(data.get(COUNT));
+		avg.addValue(data.get(AVG));
 
-			model.setErrorTrend(fail.getJsonString());
-			model.setHitTrend(count.getJsonString());
-			model.setResponseTrend(avg.getJsonString());
-		}
-		return m_isOld;
+		model.setErrorTrend(fail.getJsonString());
+		model.setHitTrend(count.getJsonString());
+		model.setResponseTrend(avg.getJsonString());
 	}
 
 	private LineChart buildLineChart(Date start, Date end, long step, int size) {
@@ -200,10 +196,6 @@ public class TransactionTrendGraphBuilder {
 
 		private String m_name;
 
-		private boolean m_isThisIp;
-
-		private boolean m_isThisType;
-
 		private Map<String, double[]> m_datas;
 
 		public TransactionReportVisitor(String ip, String type, String name) {
@@ -219,11 +211,8 @@ public class TransactionTrendGraphBuilder {
 		@Override
 		public void visitMachine(Machine machine) {
 			if (machine.getIp().equalsIgnoreCase(m_ip)) {
-				m_isThisIp = true;
-			} else {
-				m_isThisIp = false;
+				super.visitMachine(machine);
 			}
-			super.visitMachine(machine);
 		}
 
 		@Override
@@ -231,43 +220,58 @@ public class TransactionTrendGraphBuilder {
 			String id = type.getId();
 
 			if (id.equalsIgnoreCase(m_type)) {
-				m_isThisType = true;
-			} else {
-				m_isThisType = false;
-			}
+				if (StringUtils.isEmpty(m_name)) {
+					Map<Integer, Graph2> graph2s = type.getGraph2s();
 
-			if (type.getGraph2s() == null || type.getGraph2s().size() == 0) {
-				m_isOld = true;
-			} else {
-				if (m_isThisIp && m_isThisType && StringUtils.isEmpty(m_name)) {
-					for (Graph2 graph : type.getGraph2s().values()) {
-						m_duration = graph.getDuration();
-						m_datas = new HashMap<String, double[]>();
-						m_datas.put(AVG, parseToDouble(graph.getAvg()));
-						m_datas.put(COUNT, parseToDouble(graph.getCount()));
-						m_datas.put(FAIL, parseToDouble(graph.getFails()));
-						break;
+					if (graph2s != null && graph2s.size() > 0) {
+						Graph2 graph2 = graph2s.entrySet().iterator().next().getValue();
+						GraphTrend graphTrend = new GraphTrend();
+
+						graphTrend.setDuration(graph2.getDuration());
+						graphTrend.setAvg(graph2.getAvg());
+						graphTrend.setCount(graph2.getCount());
+						graphTrend.setFails(graph2.getFails());
+						graphTrend.setSum(graph2.getSum());
+						resolveGraphTrend(graphTrend);
+					} else {
+						resolveGraphTrend(type.getGraphTrend());
 					}
+				} else {
+					super.visitType(type);
 				}
 			}
-			super.visitType(type);
 		}
 
 		@Override
 		public void visitName(TransactionName name) {
 			String id = name.getId();
 
-			if (m_isThisIp && m_isThisType && StringUtils.isNotEmpty(id) && id.equalsIgnoreCase(m_name)) {
-				for (Graph graph : name.getGraphs().values()) {
-					m_duration = graph.getDuration();
-					m_datas = new HashMap<String, double[]>();
-					m_datas.put(AVG, parseToDouble(graph.getAvg()));
-					m_datas.put(COUNT, parseToDouble(graph.getCount()));
-					m_datas.put(FAIL, parseToDouble(graph.getFails()));
-					break;
+			if (StringUtils.isNotEmpty(id) && id.equalsIgnoreCase(m_name)) {
+				Map<Integer, Graph> graphs = name.getGraphs();
+
+				if (graphs != null && graphs.size() > 0) {
+					Graph graph = graphs.entrySet().iterator().next().getValue();
+					GraphTrend graphTrend = new GraphTrend();
+
+					graphTrend.setDuration(graph.getDuration());
+					graphTrend.setAvg(graph.getAvg());
+					graphTrend.setCount(graph.getCount());
+					graphTrend.setFails(graph.getFails());
+					graphTrend.setSum(graph.getSum());
+					resolveGraphTrend(graphTrend);
+				} else {
+					resolveGraphTrend(name.getGraphTrend());
 				}
 			}
 			super.visitName(name);
+		}
+
+		private void resolveGraphTrend(GraphTrend graph) {
+			m_duration = graph.getDuration();
+			m_datas = new HashMap<String, double[]>();
+			m_datas.put(AVG, parseToDouble(graph.getAvg()));
+			m_datas.put(COUNT, parseToDouble(graph.getCount()));
+			m_datas.put(FAIL, parseToDouble(graph.getFails()));
 		}
 
 		private double[] parseToDouble(String str) {

@@ -5,6 +5,7 @@ import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Graph;
 import com.dianping.cat.consumer.transaction.model.entity.Graph2;
+import com.dianping.cat.consumer.transaction.model.entity.GraphTrend;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
@@ -104,5 +105,14 @@ public class AllMachineMerger extends BaseVisitor {
 
 		m_merger.mergeGraph2(temp, graph2);
 		super.visitGraph2(graph2);
+	}
+	
+	@Override
+	public void visitGraphTrend(GraphTrend graph) {
+		GraphTrend temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
+		      .findOrCreateName(m_currentName).getGraphTrend();
+
+		m_merger.mergeGraphTrend(temp, graph);
+		super.visitGraphTrend(graph);
 	}
 }
