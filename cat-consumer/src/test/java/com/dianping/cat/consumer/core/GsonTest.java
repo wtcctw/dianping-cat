@@ -28,7 +28,7 @@ public class GsonTest {
 
 	@Test
 	public void testSame() {
-		check(null, "");
+		check(null, "null");
 		check(1, "1");
 		check(1.2, "1.2");
 		check(true, "true");
