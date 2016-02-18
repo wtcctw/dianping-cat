@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Files;
 import org.unidal.helper.Threads.Task;
 import org.unidal.helper.Urls;
@@ -20,10 +21,12 @@ import org.unidal.webres.json.JsonArray;
 import org.unidal.webres.json.JsonObject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.service.HostinfoService;
@@ -73,6 +76,31 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 			return false;
 		}
 		return true;
+	}
+
+	public void deleteUnusedDomainInfo() {
+		try {
+			List<Project> all = m_projectService.findAll();
+			Date start = TimeHelper.getCurrentDay(-30);
+			Date end = TimeHelper.getCurrentDay();
+			Set<String> domainNames = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
+			List<Project> toRemoves = new ArrayList<Project>();
+
+			for (Project project : all) {
+				String name = project.getDomain();
+
+				if (!domainNames.contains(name)) {
+					toRemoves.add(project);
+				}
+			}
+
+			for (Project project : toRemoves) {
+				m_projectService.delete(project);
+				Cat.logEvent("DeleteDomainInfo", project.getDomain(), Event.SUCCESS, project.toString());
+			}
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
 	}
 
 	@Override
@@ -273,9 +301,9 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 	@Override
 	public void run() {
-		Transaction t1 = Cat.newTransaction("CMDB", "UpdateHostname");
+		Transaction t1 = Cat.newTransaction("CMDB", "DeleteUnusedDomain");
 		try {
-			updateHostNameInfo();
+			deleteUnusedDomainInfo();
 			t1.setStatus(Transaction.SUCCESS);
 		} catch (Exception e) {
 			t1.setStatus(e);
@@ -283,14 +311,24 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 			t1.complete();
 		}
 
-		Transaction t2 = Cat.newTransaction("CMDB", "UpdateProjectInfo");
+		Transaction t2 = Cat.newTransaction("CMDB", "UpdateHostname");
 		try {
-			updateProjectInfo();
+			updateHostNameInfo();
 			t2.setStatus(Transaction.SUCCESS);
 		} catch (Exception e) {
 			t2.setStatus(e);
 		} finally {
 			t2.complete();
+		}
+
+		Transaction t3 = Cat.newTransaction("CMDB", "UpdateProjectInfo");
+		try {
+			updateProjectInfo();
+			t3.setStatus(Transaction.SUCCESS);
+		} catch (Exception e) {
+			t3.setStatus(e);
+		} finally {
+			t3.complete();
 		}
 	}
 
