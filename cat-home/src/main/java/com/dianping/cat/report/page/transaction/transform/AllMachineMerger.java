@@ -43,6 +43,35 @@ public class AllMachineMerger extends BaseVisitor {
 	}
 
 	@Override
+	public void visitGraph(Graph graph) {
+		int duration = graph.getDuration();
+		Graph temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
+		      .findOrCreateName(m_currentName).findOrCreateGraph(duration);
+
+		m_merger.mergeGraph(temp, graph);
+		super.visitGraph(graph);
+	}
+
+	@Override
+	public void visitGraph2(Graph2 graph2) {
+		int duration = graph2.getDuration();
+		Graph2 temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
+		      .findOrCreateGraph2(duration);
+
+		m_merger.mergeGraph2(temp, graph2);
+		super.visitGraph2(graph2);
+	}
+
+	@Override
+	public void visitGraphTrend(GraphTrend graph) {
+		GraphTrend temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
+		      .findOrCreateName(m_currentName).getGraphTrend();
+
+		m_merger.mergeGraphTrend(temp, graph);
+		super.visitGraphTrend(graph);
+	}
+
+	@Override
 	public void visitMachine(Machine machine) {
 		m_report.findOrCreateMachine(Constants.ALL);
 		super.visitMachine(machine);
@@ -77,7 +106,7 @@ public class AllMachineMerger extends BaseVisitor {
 
 		super.visitTransactionReport(transactionReport);
 	}
-
+	
 	@Override
 	public void visitType(TransactionType type) {
 		m_currentType = type.getId();
@@ -85,34 +114,5 @@ public class AllMachineMerger extends BaseVisitor {
 
 		m_merger.mergeType(temp, type);
 		super.visitType(type);
-	}
-
-	@Override
-	public void visitGraph(Graph graph) {
-		int duration = graph.getDuration();
-		Graph temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
-		      .findOrCreateName(m_currentName).findOrCreateGraph(duration);
-
-		m_merger.mergeGraph(temp, graph);
-		super.visitGraph(graph);
-	}
-
-	@Override
-	public void visitGraph2(Graph2 graph2) {
-		int duration = graph2.getDuration();
-		Graph2 temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
-		      .findOrCreateGraph2(duration);
-
-		m_merger.mergeGraph2(temp, graph2);
-		super.visitGraph2(graph2);
-	}
-	
-	@Override
-	public void visitGraphTrend(GraphTrend graph) {
-		GraphTrend temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
-		      .findOrCreateName(m_currentName).getGraphTrend();
-
-		m_merger.mergeGraphTrend(temp, graph);
-		super.visitGraphTrend(graph);
 	}
 }

@@ -44,55 +44,6 @@ public class TransactionReportDailyGraphCreator {
 
 		private int m_day;
 
-		@Override
-		public void visitTransactionReport(TransactionReport transactionReport) {
-			Date from = transactionReport.getStartTime();
-
-			m_day = (int) ((from.getTime() - m_start.getTime()) / TimeHelper.ONE_DAY);
-			super.visitTransactionReport(transactionReport);
-		}
-
-		@Override
-		public void visitMachine(Machine machine) {
-			String ip = machine.getIp();
-			m_currentMachine = m_report.findOrCreateMachine(ip);
-			super.visitMachine(machine);
-		}
-
-		@Override
-		public void visitType(TransactionType type) {
-			String typeId = type.getId();
-			m_currentType = m_currentMachine.findOrCreateType(typeId);
-
-			GraphTrend graph = m_currentType.getGraphTrend();
-
-			if (graph == null) {
-				graph = new GraphTrend();
-				graph.setDuration(m_duration);
-				m_currentType.setGraphTrend(graph);
-			}
-			buildGraphTrend(graph, type.getTotalCount(), type.getFailCount(), type.getSum(), type.getAvg());
-
-			super.visitType(type);
-		}
-
-		@Override
-		public void visitName(TransactionName name) {
-			String nameId = name.getId();
-			m_currentName = m_currentType.findOrCreateName(nameId);
-
-			GraphTrend graph = m_currentName.getGraphTrend();
-
-			if (graph == null) {
-				graph = new GraphTrend();
-				graph.setDuration(m_duration);
-				m_currentName.setGraphTrend(graph);
-			}
-			buildGraphTrend(graph, name.getTotalCount(), name.getFailCount(), name.getSum(), name.getAvg());
-
-			super.visitName(name);
-		}
-
 		private void buildGraphTrend(GraphTrend graph, long totalCount, long failCount, double sumValue, double avgValue) {
 			Long[] count = parseToInteger(graph.getCount());
 			Long[] fails = parseToInteger(graph.getFails());
@@ -152,6 +103,55 @@ public class TransactionReportDailyGraphCreator {
 				}
 			}
 			return result;
+		}
+
+		@Override
+		public void visitMachine(Machine machine) {
+			String ip = machine.getIp();
+			m_currentMachine = m_report.findOrCreateMachine(ip);
+			super.visitMachine(machine);
+		}
+
+		@Override
+		public void visitName(TransactionName name) {
+			String nameId = name.getId();
+			m_currentName = m_currentType.findOrCreateName(nameId);
+
+			GraphTrend graph = m_currentName.getGraphTrend();
+
+			if (graph == null) {
+				graph = new GraphTrend();
+				graph.setDuration(m_duration);
+				m_currentName.setGraphTrend(graph);
+			}
+			buildGraphTrend(graph, name.getTotalCount(), name.getFailCount(), name.getSum(), name.getAvg());
+
+			super.visitName(name);
+		}
+
+		@Override
+		public void visitTransactionReport(TransactionReport transactionReport) {
+			Date from = transactionReport.getStartTime();
+
+			m_day = (int) ((from.getTime() - m_start.getTime()) / TimeHelper.ONE_DAY);
+			super.visitTransactionReport(transactionReport);
+		}
+
+		@Override
+		public void visitType(TransactionType type) {
+			String typeId = type.getId();
+			m_currentType = m_currentMachine.findOrCreateType(typeId);
+
+			GraphTrend graph = m_currentType.getGraphTrend();
+
+			if (graph == null) {
+				graph = new GraphTrend();
+				graph.setDuration(m_duration);
+				m_currentType.setGraphTrend(graph);
+			}
+			buildGraphTrend(graph, type.getTotalCount(), type.getFailCount(), type.getSum(), type.getAvg());
+
+			super.visitType(type);
 		}
 	}
 
