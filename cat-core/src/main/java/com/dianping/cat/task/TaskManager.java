@@ -68,7 +68,7 @@ public class TaskManager {
 		}
 	}
 
-	private void insertToDatabase(Date period, String domain, String name, int reportType) throws DalException {
+	protected void insertToDatabase(Date period, String domain, String name, int reportType) throws DalException {
 		Task task = m_taskDao.createLocal();
 
 		task.setCreationDate(new Date());
