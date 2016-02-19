@@ -52,10 +52,10 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		
+
 		GraphTrendParser graphTrendParser = new GraphTrendParser();
 		report.accept(graphTrendParser);
-		
+
 		return report;
 	}
 
@@ -233,7 +233,7 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 		public void visitType(TransactionType type) {
 			Map<Integer, Graph2> graph2s = type.getGraph2s();
 
-			if (graph2s != null && graph2s.size() > 0) {
+			if (graph2s != null && graph2s.size() > 0 && type.getGraphTrend() == null) {
 				Graph2 graph2 = graph2s.entrySet().iterator().next().getValue();
 				GraphTrend graphTrend = new GraphTrend();
 
@@ -243,6 +243,8 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 				graphTrend.setFails(graph2.getFails());
 				graphTrend.setSum(graph2.getSum());
 				type.setGraphTrend(graphTrend);
+				
+				graph2s.clear();
 			}
 			super.visitType(type);
 		}
@@ -251,7 +253,7 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 		public void visitName(TransactionName name) {
 			Map<Integer, Graph> graphs = name.getGraphs();
 
-			if (graphs != null && graphs.size() > 0) {
+			if (graphs != null && graphs.size() > 0 && name.getGraphTrend() == null) {
 				Graph graph = graphs.entrySet().iterator().next().getValue();
 				GraphTrend graphTrend = new GraphTrend();
 
@@ -261,6 +263,8 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 				graphTrend.setFails(graph.getFails());
 				graphTrend.setSum(graph.getSum());
 				name.setGraphTrend(graphTrend);
+				
+				graphs.clear();
 			}
 		}
 	}

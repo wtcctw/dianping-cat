@@ -30,7 +30,7 @@ public class TransactionReportBuilderTest  extends ComponentTestCase {
 
 		try {
 			builder.buildWeeklyTask(TransactionReportBuilder.ID, Constants.CAT,
-			      new SimpleDateFormat("yyyy-MM-dd").parse("2016-01-23"));
+			      new SimpleDateFormat("yyyy-MM-dd").parse("2016-02-13"));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

@@ -114,6 +114,8 @@ public class TransactionReportDailyGraphCreator {
 
 		@Override
 		public void visitName(TransactionName name) {
+			name.setGraphTrend(null);
+			
 			String nameId = name.getId();
 			m_currentName = m_currentType.findOrCreateName(nameId);
 
@@ -139,6 +141,8 @@ public class TransactionReportDailyGraphCreator {
 
 		@Override
 		public void visitType(TransactionType type) {
+			type.setGraphTrend(null);
+			
 			String typeId = type.getId();
 			m_currentType = m_currentMachine.findOrCreateType(typeId);
 

@@ -201,8 +201,6 @@ public class TransactionReportMerger extends DefaultMerger {
 	
 	@Override
 	public void mergeGraphTrend(GraphTrend to, GraphTrend from) {
-		to.setDuration(from.getDuration());
-		
 		String toCount = to.getCount();
 		String fromCount = from.getCount();
 		Integer[] count = mergeIntegerValue(toCount, fromCount);
