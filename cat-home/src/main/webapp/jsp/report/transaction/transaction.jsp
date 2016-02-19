@@ -51,7 +51,7 @@
 		<th> 
 			<c:forEach var="group" items="${model.groups}">
 	   	  		&nbsp;[&nbsp;
-	   	  			<a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${group}">${group}</a>
+	   	  			<a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${group}&type=${payload.encodedType}">${group}</a>
 	   	 		&nbsp;]&nbsp;
 			 </c:forEach>
 		</th>

@@ -12,8 +12,6 @@ import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.transaction.Model;
 import com.dianping.cat.report.page.transaction.Payload;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
-import com.dianping.cat.consumer.transaction.model.entity.Graph;
-import com.dianping.cat.consumer.transaction.model.entity.Graph2;
 import com.dianping.cat.consumer.transaction.model.entity.GraphTrend;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
@@ -221,21 +219,7 @@ public class TransactionTrendGraphBuilder {
 
 			if (id.equalsIgnoreCase(m_type)) {
 				if (StringUtils.isEmpty(m_name)) {
-					Map<Integer, Graph2> graph2s = type.getGraph2s();
-
-					if (graph2s != null && graph2s.size() > 0) {
-						Graph2 graph2 = graph2s.entrySet().iterator().next().getValue();
-						GraphTrend graphTrend = new GraphTrend();
-
-						graphTrend.setDuration(graph2.getDuration());
-						graphTrend.setAvg(graph2.getAvg());
-						graphTrend.setCount(graph2.getCount());
-						graphTrend.setFails(graph2.getFails());
-						graphTrend.setSum(graph2.getSum());
-						resolveGraphTrend(graphTrend);
-					} else {
-						resolveGraphTrend(type.getGraphTrend());
-					}
+					resolveGraphTrend(type.getGraphTrend());
 				} else {
 					super.visitType(type);
 				}
@@ -247,23 +231,8 @@ public class TransactionTrendGraphBuilder {
 			String id = name.getId();
 
 			if (StringUtils.isNotEmpty(id) && id.equalsIgnoreCase(m_name)) {
-				Map<Integer, Graph> graphs = name.getGraphs();
-
-				if (graphs != null && graphs.size() > 0) {
-					Graph graph = graphs.entrySet().iterator().next().getValue();
-					GraphTrend graphTrend = new GraphTrend();
-
-					graphTrend.setDuration(graph.getDuration());
-					graphTrend.setAvg(graph.getAvg());
-					graphTrend.setCount(graph.getCount());
-					graphTrend.setFails(graph.getFails());
-					graphTrend.setSum(graph.getSum());
-					resolveGraphTrend(graphTrend);
-				} else {
-					resolveGraphTrend(name.getGraphTrend());
-				}
+				resolveGraphTrend(name.getGraphTrend());
 			}
-			super.visitName(name);
 		}
 
 		private void resolveGraphTrend(GraphTrend graph) {
