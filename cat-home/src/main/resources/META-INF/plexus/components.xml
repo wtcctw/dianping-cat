@@ -3164,11 +3164,6 @@
 					<role-hint>heartbeat</role-hint>
 					<field-name>m_heartbeatService</field-name>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>transaction</role-hint>
-					<field-name>m_transactionService</field-name>
-				</requirement>
 			</requirements>
 		</component>
 		<component>

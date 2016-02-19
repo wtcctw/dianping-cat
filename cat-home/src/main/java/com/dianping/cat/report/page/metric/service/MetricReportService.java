@@ -2,8 +2,6 @@ package com.dianping.cat.report.page.metric.service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
@@ -13,10 +11,7 @@ import com.dianping.cat.consumer.dal.BusinessReport;
 import com.dianping.cat.consumer.dal.BusinessReportDao;
 import com.dianping.cat.consumer.dal.BusinessReportEntity;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
-import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.consumer.metric.model.entity.Point;
-import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeParser;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.service.AbstractReportService;
@@ -70,7 +65,7 @@ public class MetricReportService extends AbstractReportService<MetricReport> {
 
 		metricReport.setStartTime(start);
 		metricReport.setEndTime(new Date(end.getTime() - 1));
-		return transform(metricReport);
+		return metricReport;
 	}
 
 	@Override
@@ -81,31 +76,6 @@ public class MetricReportService extends AbstractReportService<MetricReport> {
 	@Override
 	public MetricReport queryWeeklyReport(String domain, Date start) {
 		throw new RuntimeException("Metric report don't support weekly report");
-	}
-
-	public MetricReport transform(MetricReport report) {
-		Map<String, MetricItem> items = report.getMetricItems();
-
-		for (Entry<String, MetricItem> item : items.entrySet()) {
-			MetricItem metricItem = item.getValue();
-			Map<Integer, Segment> segs = metricItem.getSegments();
-
-			if (segs.size() == 0) {
-				Map<Integer, Point> oldPoints = metricItem.findOrCreateAbtest("-1").findOrCreateGroup("").getPoints();
-
-				for (Point point : oldPoints.values()) {
-					Segment seg = new Segment();
-
-					seg.setId(point.getId());
-					seg.setCount(point.getCount());
-					seg.setAvg(point.getAvg());
-					seg.setSum(point.getSum());
-					segs.put(seg.getId(), seg);
-				}
-			}
-		}
-
-		return report;
 	}
 
 }

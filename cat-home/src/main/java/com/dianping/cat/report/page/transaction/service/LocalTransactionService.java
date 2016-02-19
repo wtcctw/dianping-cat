@@ -34,26 +34,6 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 		super(TransactionAnalyzer.ID);
 	}
 
-	private String filterReport(ApiPayload payload, TransactionReport report) {
-		String type = payload.getType();
-		String name = payload.getName();
-		String ip = payload.getIpAddress();
-		int min = payload.getMin();
-		int max = payload.getMax();
-		String xml = null;
-
-		try {
-			TransactionReportFilter filter = new TransactionReportFilter(type, name, ip, min, max);
-
-			xml = filter.buildXml(report);
-		} catch (Exception e) {
-			TransactionReportFilter filter = new TransactionReportFilter(type, name, ip, min, max);
-
-			xml = filter.buildXml(report);
-		}
-		return xml;
-	}
-
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
@@ -74,6 +54,26 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 			report = getReportFromLocalDisk(startTime, domain);
 		}
 		return filterReport(payload, report);
+	}
+
+	private String filterReport(ApiPayload payload, TransactionReport report) {
+		String type = payload.getType();
+		String name = payload.getName();
+		String ip = payload.getIpAddress();
+		int min = payload.getMin();
+		int max = payload.getMax();
+		String xml = null;
+
+		try {
+			TransactionReportFilter filter = new TransactionReportFilter(type, name, ip, min, max);
+
+			xml = filter.buildXml(report);
+		} catch (Exception e) {
+			TransactionReportFilter filter = new TransactionReportFilter(type, name, ip, min, max);
+
+			xml = filter.buildXml(report);
+		}
+		return xml;
 	}
 
 	private TransactionReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

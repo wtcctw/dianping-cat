@@ -21,8 +21,6 @@ import com.dianping.cat.consumer.heartbeat.model.entity.Extension;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
@@ -43,9 +41,6 @@ public class HeartbeatAlert implements Task {
 
 	@Inject(type = ModelService.class, value = HeartbeatAnalyzer.ID)
 	private ModelService<HeartbeatReport> m_heartbeatService;
-
-	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
-	private ModelService<TransactionReport> m_transactionService;
 
 	@Inject
 	private HeartbeatDisplayPolicyManager m_displayManager;

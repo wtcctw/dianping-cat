@@ -134,6 +134,24 @@ public class Handler implements PageHandler<Context> {
 		model.setPieChart(new JsonBuilder().toJson(chart));
 	}
 
+	private boolean checkIfOldReport(TransactionReport report) {
+		Map<String, Machine> machines = report.getMachines();
+
+		if (machines != null && machines.size() > 0) {
+			Map<String, TransactionType> types = machines.entrySet().iterator().next().getValue().getTypes();
+
+			if (types != null && types.size() > 0) {
+				TransactionType type = types.entrySet().iterator().next().getValue();
+				Map<Integer, Graph2> graph2s = type.getGraph2s();
+
+				if ((graph2s == null || graph2s.size() == 0) && type.getGraphTrend() == null) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	private TransactionReport filterReportByGroup(TransactionReport report, String domain, String group) {
 		List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
 		List<String> removes = new ArrayList<String>();
@@ -323,26 +341,6 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			m_jspViewer.view(ctx, model);
 		}
-	}
-
-	private boolean checkIfOldReport(TransactionReport report) {
-		Map<String, Machine> machines = report.getMachines();
-
-		if (machines != null && machines.size() > 0) {
-			Map<String, TransactionType> types = machines.entrySet().iterator().next().getValue().getTypes();
-
-			if (types != null && types.size() > 0) {
-				TransactionType type = types.entrySet().iterator().next().getValue();
-				Map<Integer, Graph2> graph2s = type.getGraph2s();
-
-				if ((graph2s == null || graph2s.size() == 0) && type.getGraphTrend() == null) {
-					return true;
-				}
-			}
-		}
-
-		return false;
-
 	}
 
 	private void normalize(Model model, Payload payload) {
