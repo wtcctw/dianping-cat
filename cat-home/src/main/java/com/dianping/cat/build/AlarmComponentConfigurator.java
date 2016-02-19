@@ -222,8 +222,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(HeartbeatDisplayPolicyManager.class)
 		      .req(HeartbeatRuleConfigManager.class, DataChecker.class, ServerFilterConfigManager.class,
 		            AlertManager.class, ProjectService.class)
-		      .req(ModelService.class, HeartbeatAnalyzer.ID, "m_heartbeatService")
-		      .req(ModelService.class, TransactionAnalyzer.ID, "m_transactionService"));
+		      .req(ModelService.class, HeartbeatAnalyzer.ID, "m_heartbeatService"));
 
 		all.add(C(SystemAlert.class).req(ProductLineConfigManager.class).req(MetricReportGroupService.class,
 		      SystemRuleConfigManager.class, DataChecker.class, AlertManager.class));
