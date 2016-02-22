@@ -10,7 +10,7 @@ public class InfluxdbDemo extends ComponentTestCase {
 
 	@Test
 	public void test() {
-		InfluxDB influxDB = InfluxDBFactory.connect("http://10.128.53.56:8086", "root", "123456");
+		InfluxDB influxDB = InfluxDBFactory.connect("http://172.24.53.30:8086", "root", "root");
 		String dbName = "aTimeSeries";
 		influxDB.createDatabase(dbName);
 		//

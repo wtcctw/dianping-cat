@@ -2597,6 +2597,10 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.alert.AlarmManager</role>
+			<implementation>com.dianping.cat.report.alert.AlarmManager</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</role>
 			<implementation>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</implementation>
 			<requirements>

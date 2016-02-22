@@ -27,6 +27,7 @@ import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.home.dal.report.AlertSummaryDao;
 import com.dianping.cat.home.dal.report.AlterationDao;
+import com.dianping.cat.report.alert.AlarmManager;
 import com.dianping.cat.report.alert.app.AppAlert;
 import com.dianping.cat.report.alert.app.AppContactor;
 import com.dianping.cat.report.alert.app.AppDecorator;
@@ -116,9 +117,11 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 
 		List<Component> all = new ArrayList<Component>();
-		
+
+		all.add(C(AlarmManager.class));
+
 		all.add(C(MetricReportGroupService.class).req(ModelService.class, MetricAnalyzer.ID));
-		
+
 		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
 
@@ -166,9 +169,9 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Decorator.class, StorageCacheDecorator.ID, StorageCacheDecorator.class));
 		all.add(C(Decorator.class, StorageRPCDecorator.ID, StorageRPCDecorator.class));
 
-		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class)
-		      .req(MetricReportGroupService.class, BusinessRuleConfigManager.class, DataChecker.class,
-		            AlertManager.class, BaselineService.class));
+		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class).req(
+		      MetricReportGroupService.class, BusinessRuleConfigManager.class, DataChecker.class, AlertManager.class,
+		      BaselineService.class));
 
 		all.add(C(NetworkAlert.class).req(ProductLineConfigManager.class).req(MetricReportGroupService.class,
 		      NetworkRuleConfigManager.class, DataChecker.class, AlertManager.class));

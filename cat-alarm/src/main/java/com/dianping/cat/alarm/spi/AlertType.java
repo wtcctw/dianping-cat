@@ -1,7 +1,5 @@
 package com.dianping.cat.alarm.spi;
 
-import com.dianping.cat.alarm.spi.AlertType;
-
 public enum AlertType {
 
 	Business("Business", "业务告警"),
@@ -23,7 +21,7 @@ public enum AlertType {
 	JS("Js", "JS错误告警"),
 
 	App("App", "APP接口告警"),
-	
+
 	Ajax("Ajax", "Ajax访问告警"),
 
 	Transaction("Transaction", "Transacation告警"),
@@ -34,7 +32,9 @@ public enum AlertType {
 
 	STORAGE_CACHE("Cache", "缓存大盘告警"),
 
-	STORAGE_RPC("RPC", "服务大盘告警");
+	STORAGE_RPC("RPC", "服务大盘告警"),
+
+	SERVER("Server", "服务端告警");
 
 	private String m_name;
 
