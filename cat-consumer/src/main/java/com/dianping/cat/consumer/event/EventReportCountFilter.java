@@ -14,7 +14,7 @@ import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
 
 public class EventReportCountFilter extends BaseVisitor {
 
-	private int m_maxItems = 400;
+	private int m_maxItems = 600;
 
 	private void mergeName(EventName old, EventName other) {
 		old.setTotalCount(old.getTotalCount() + other.getTotalCount());
