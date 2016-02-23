@@ -182,7 +182,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      JarReportService.class, ServerFilterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, ClientReportBuilder.ID, ClientReportBuilder.class).req(ClientReportService.class,
-		      TransactionReportService.class, ServerFilterConfigManager.class, ProjectService.class));
+		      TransactionReportService.class, ServerFilterConfigManager.class, ProjectService.class,
+		      TransactionMergeHelper.class));
 
 		all.add(C(TaskBuilder.class, CurrentReportBuilder.ID, CurrentReportBuilder.class).req(ProjectService.class,
 		      ServerFilterConfigManager.class));
@@ -231,7 +232,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TaskBuilder.class, AppReportBuilder.ID, AppReportBuilder.class).req(AppCommandDataDao.class,
 		      AppConfigManager.class, AppReportService.class, TransactionReportService.class, CommandAutoCompleter.class,
-		      AppRuleConfigManager.class));
+		      AppRuleConfigManager.class, TransactionMergeHelper.class));
 
 		all.add(C(ReportFacade.class));
 
