@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.dependency.config;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -31,6 +32,18 @@ public class TopoGraphFormatConfigManager implements Initializable {
 	private TopoGraphFormatConfig m_config;
 
 	private static final String CONFIG_NAME = "topoGraphFormat";
+
+	public String buildFormatJson() {
+		Map<String, Map<String, Integer>> map = new HashMap<String, Map<String, Integer>>();
+
+		for (ProductLine productline : m_config.getProductLines()) {
+			Map<String, Integer> p = new HashMap<String, Integer>();
+
+			map.put(productline.getId(), p);
+			p.put("colInside", productline.getColInside());
+		}
+		return new JsonBuilder().toJson(map);
+	}
 
 	public TopoGraphFormatConfig getConfig() {
 		return m_config;
@@ -76,6 +89,10 @@ public class TopoGraphFormatConfigManager implements Initializable {
 		}
 	}
 
+	public List<ProductLine> queryProduct() {
+		return m_config.getProductLines();
+	}
+
 	private boolean storeConfig() {
 		synchronized (this) {
 			try {
@@ -92,17 +109,5 @@ public class TopoGraphFormatConfigManager implements Initializable {
 			}
 		}
 		return true;
-	}
-
-	public String buildFormatJson() {
-		Map<String, Map<String, Integer>> map = new HashMap<String, Map<String, Integer>>();
-
-		for (ProductLine productline : m_config.getProductLines()) {
-			Map<String, Integer> p = new HashMap<String, Integer>();
-
-			map.put(productline.getId(), p);
-			p.put("colInside", productline.getColInside());
-		}
-		return new JsonBuilder().toJson(map);
 	}
 }

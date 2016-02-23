@@ -229,10 +229,6 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		return queryProductLines(ProductLineConfig.DATABASE);
 	}
 
-	public Map<String, ProductLine> queryApplicationProductLines() {
-		return queryProductLines(ProductLineConfig.APPLICATION);
-	}
-
 	public List<String> queryDomainsByProductLine(String productLine, ProductLineConfig productLineConfig) {
 		List<String> domains = new ArrayList<String>();
 		ProductLine line = productLineConfig.getCompany().findProductLine(productLine);

@@ -73,10 +73,13 @@
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
+					<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
@@ -4586,6 +4589,9 @@
 				<requirement>
 					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4601,13 +4607,16 @@
 					<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
+					<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
@@ -4626,6 +4635,18 @@
 		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
+			<implementation>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -6455,18 +6476,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
-			<implementation>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>

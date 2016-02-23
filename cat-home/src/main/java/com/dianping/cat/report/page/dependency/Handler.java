@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.dependency;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -26,11 +27,14 @@ import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
+import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.home.dependency.graph.transform.DefaultJsonBuilder;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager;
 import com.dianping.cat.report.page.dependency.graph.LineGraphBuilder;
+import com.dianping.cat.report.page.dependency.graph.ProductLinesDashboard;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
@@ -52,6 +56,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
+	
+	@Inject
+	private TopoGraphFormatConfigManager m_formatConfigManager;
 
 	public static final List<String> NORMAL_URLS = Arrays.asList("/cat/r", "/cat/r/", "/cat/r/dependency");
 
@@ -77,6 +84,28 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		return result;
+	}
+
+	private void buildDependencyDashboard(Model model, Payload payload, Date reportTime) {
+		ProductLinesDashboard dashboardGraph = m_graphManager.buildDependencyDashboard(reportTime.getTime());
+		Map<String, List<TopologyNode>> nodes = dashboardGraph.getNodes();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
+		String minute = String.valueOf(parseQueryMinute(payload));
+
+		for (List<TopologyNode> n : nodes.values()) {
+			for (TopologyNode node : n) {
+				String domain = node.getId();
+				String link = String.format("?op=dependencyGraph&minute=%s&domain=%s&date=%s", minute, domain,
+				      sdf.format(new Date(payload.getDate())));
+				node.setLink(link);
+			}
+		}
+
+		model.setReportStart(new Date(payload.getDate()));
+		model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
+		model.setDashboardGraph(dashboardGraph.toJson());
+		model.setDashboardGraphData(dashboardGraph);
+		model.setFormat(m_formatConfigManager.buildFormatJson());
 	}
 
 	private void buildDependencyLineChart(Model model, Payload payload, Date reportTime) {
@@ -145,7 +174,7 @@ public class Handler implements PageHandler<Context> {
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
 	}
-
+	
 	@Override
 	@OutboundActionMeta(name = DependencyAnalyzer.ID)
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
@@ -165,6 +194,9 @@ public class Handler implements PageHandler<Context> {
 				break;
 			case TOPOLOGY:
 				buildProjectTopology(model, payload, reportTime);
+				break;
+			case DEPENDENCY_DASHBOARD:
+				buildDependencyDashboard(model, payload, reportTime);
 				break;
 			}
 			m_jspViewer.view(ctx, model);
