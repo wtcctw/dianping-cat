@@ -45,13 +45,13 @@
 							<c:when test="${payload.group eq group}">
 		   	  		&nbsp;[&nbsp;
 		   	  			<a class="current"
-									href="?op=groupReport&domain=${model.domain}&group=${group}&date=${model.date}">${group}</a>
+									href="?op=groupReport&domain=${model.domain}&group=${group}&date=${model.date}&type=${payload.encodedType}">${group}</a>
 		   	 		&nbsp;]&nbsp;
 	   	 		</c:when>
 	   	 		<c:otherwise>
 		   	  		&nbsp;[&nbsp;
 		   	  			<a
-									href="?op=groupReport&domain=${model.domain}&group=${group}&date=${model.date}">${group}</a>
+									href="?op=groupReport&domain=${model.domain}&group=${group}&date=${model.date}&type=${payload.encodedType}">${group}</a>
 		   	 		&nbsp;]&nbsp;
 	   	 		</c:otherwise>
 						</c:choose>

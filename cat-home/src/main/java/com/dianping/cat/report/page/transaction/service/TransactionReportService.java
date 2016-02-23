@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.transaction.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
@@ -9,6 +10,9 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
+import com.dianping.cat.consumer.transaction.model.entity.Graph;
+import com.dianping.cat.consumer.transaction.model.entity.Graph2;
+import com.dianping.cat.consumer.transaction.model.entity.GraphTrend;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -48,6 +52,10 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
+
+		GraphTrendParser graphTrendParser = new GraphTrendParser();
+		report.accept(graphTrendParser);
+
 		return report;
 	}
 
@@ -219,4 +227,46 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 			}
 		}
 	}
+
+	public class GraphTrendParser extends BaseVisitor {
+		@Override
+		public void visitType(TransactionType type) {
+			Map<Integer, Graph2> graph2s = type.getGraph2s();
+
+			if (graph2s != null && graph2s.size() > 0 && type.getGraphTrend() == null) {
+				Graph2 graph2 = graph2s.entrySet().iterator().next().getValue();
+				GraphTrend graphTrend = new GraphTrend();
+
+				graphTrend.setDuration(graph2.getDuration());
+				graphTrend.setAvg(graph2.getAvg());
+				graphTrend.setCount(graph2.getCount());
+				graphTrend.setFails(graph2.getFails());
+				graphTrend.setSum(graph2.getSum());
+				type.setGraphTrend(graphTrend);
+				
+				graph2s.clear();
+			}
+			super.visitType(type);
+		}
+
+		@Override
+		public void visitName(TransactionName name) {
+			Map<Integer, Graph> graphs = name.getGraphs();
+
+			if (graphs != null && graphs.size() > 0 && name.getGraphTrend() == null) {
+				Graph graph = graphs.entrySet().iterator().next().getValue();
+				GraphTrend graphTrend = new GraphTrend();
+
+				graphTrend.setDuration(graph.getDuration());
+				graphTrend.setAvg(graph.getAvg());
+				graphTrend.setCount(graph.getCount());
+				graphTrend.setFails(graph.getFails());
+				graphTrend.setSum(graph.getSum());
+				name.setGraphTrend(graphTrend);
+				
+				graphs.clear();
+			}
+		}
+	}
+
 }

@@ -43,7 +43,7 @@ public class MessageTest extends ComponentTestCase {
 				break;
 			}
 		}
-		
+
 		Assert.assertEquals(expected, sb.toString());
 	}
 
@@ -67,8 +67,8 @@ public class MessageTest extends ComponentTestCase {
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		
-		defineComponent(TransportManager.class, null, MockTransportManager.class);
+
+		defineComponent(TransportManager.class, MockTransportManager.class);
 
 		MockTransportManager transportManager = (MockTransportManager) lookup(TransportManager.class);
 		transportManager.setQueue(m_queue);
@@ -80,12 +80,13 @@ public class MessageTest extends ComponentTestCase {
 		configManager.initialize(configurationFile);
 
 		m_queue.clear();
-		
-		Reflects.forMethod().invokeDeclaredMethod(Cat.getInstance(), "setContainer", PlexusContainer.class, getContainer());
+
+		Reflects.forMethod().invokeDeclaredMethod(Cat.getInstance(), "setContainer", PlexusContainer.class,
+		      getContainer());
 	}
 
 	@Test
-	public void testEvent() {
+	public void testEvent() throws InterruptedException {
 		Event event = Cat.getProducer().newEvent("Review", "New");
 
 		event.addData("id", 12345);
@@ -148,7 +149,8 @@ public class MessageTest extends ComponentTestCase {
 			t.complete();
 		}
 
-		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("message-truncated-for-duration.txt"), "utf-8");
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("message-truncated-for-duration.txt"),
+		      "utf-8");
 
 		checkMessage(expected);
 	}
@@ -158,17 +160,17 @@ public class MessageTest extends ComponentTestCase {
 		Transaction t = Cat.newTransaction("URL", "MyPage");
 
 		try {
-			// do your business here
 			t.addData("k1", "v1");
 			for (int i = 0; i < 20; i++) {
-				Transaction t0 = Cat.newTransaction("URL0", "MyPage");
+				Thread.sleep(1); // make sure total duration is larger than 1 millsecond
+				Transaction t0 = Cat.newTransaction("URL0", "MyPage" + i);
 
 				t0.setStatus(Message.SUCCESS);
 				t0.complete();
 			}
 
-			Transaction t1 = Cat.newTransaction("URL1", "MyPage");
-			Transaction t2 = Cat.newTransaction("URL2", "MyPage");
+			Transaction t1 = Cat.newTransaction("URL1", "MyPageT1");
+			Transaction t2 = Cat.newTransaction("URL2", "MyPageT2");
 
 			for (int i = 0; i < 20; i++) {
 				Cat.logEvent("Event", "Name" + i);
@@ -183,7 +185,8 @@ public class MessageTest extends ComponentTestCase {
 			t.complete();
 		}
 
-		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("message-truncated-for-size.txt"), "utf-8");
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("message-truncated-for-size.txt"),
+		      "utf-8");
 
 		checkMessage(expected);
 	}

@@ -59,7 +59,7 @@ public class TransactionReportBuilder implements Initializable, TaskBuilder, Log
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
-		return true;
+		throw new RuntimeException("transaction report don't support HourlyReport!");
 	}
 
 	@Override
