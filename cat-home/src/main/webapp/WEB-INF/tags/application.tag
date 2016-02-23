@@ -107,6 +107,9 @@
 						<b class="arrow fa fa-angle-down"></b>
 				</a> <b class="arrow"></b>
 					<ul class="submenu">
+						<li id="dependency_dashboard"><a href="/cat/r/dependency?op=dashboard&domain=${model.domain}&date=${model.date}">
+							<i class="menu-icon fa fa-caret-right"></i>综合大盘</a>
+							<b class="arrow"></b></li>
 						<li id="dependency_trend"><a href="/cat/r/dependency?op=lineChart&domain=${model.domain}&date=${model.date}">
 							<i class="menu-icon fa fa-caret-right"></i>趋势图</a>
 							<b class="arrow"></b></li>

@@ -12,8 +12,6 @@ public enum ProductLineConfig {
 
 	METRIC("metricProductLine", "业务监控", ""),
 
-	APPLICATION("applicationProductLine", "应用监控", ""),
-
 	NETWORK("networkProductLine", "网络监控", "switch-|f5-"),
 
 	SYSTEM("systemProductLine", "系统监控", "system-"),
@@ -95,7 +93,7 @@ public enum ProductLineConfig {
 	}
 
 	public boolean needCheckDuplicate() {
-		return ProductLineConfig.METRIC.equals(this) || ProductLineConfig.APPLICATION.equals(this);
+		return ProductLineConfig.METRIC.equals(this) ;
 	}
 
 	public void setCompany(Company company) {
