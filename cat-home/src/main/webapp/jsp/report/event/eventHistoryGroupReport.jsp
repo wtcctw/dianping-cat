@@ -39,12 +39,12 @@
    	 		<c:forEach var="group" items="${model.groups}">
 				<c:choose><c:when test="${payload.group eq group}">
 		   	  		&nbsp;[&nbsp;
-		   	  			<a class="current" href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}&type=${payload.encodedType}">${group}</a>
+		   	  			<a class="current" href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}&reportType=${payload.reportType}&type=${payload.encodedType}">${group}</a>
 		   	 		&nbsp;]&nbsp;
 	   	 		</c:when>
 	   	 		<c:otherwise>
 		   	  		&nbsp;[&nbsp;
-		   	  			<a href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}&type=${payload.encodedType}">${group}</a>
+		   	  			<a href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}&reportType=${payload.reportType}&type=${payload.encodedType}">${group}</a>
 		   	 		&nbsp;]&nbsp;
 	   	 		</c:otherwise></c:choose>
 			 </c:forEach>
