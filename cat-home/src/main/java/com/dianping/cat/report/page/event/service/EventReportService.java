@@ -3,7 +3,6 @@ package com.dianping.cat.report.page.event.service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
@@ -165,8 +164,6 @@ public class EventReportService extends AbstractReportService<EventReport> {
 		eventReport.setStartTime(start);
 		eventReport.setEndTime(new Date(end.getTime() - 1));
 
-		Set<String> domains = queryAllDomainNames(start, end, EventAnalyzer.ID);
-		eventReport.getDomainNames().addAll(domains);
 		return convert(eventReport);
 	}
 

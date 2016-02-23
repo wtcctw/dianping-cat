@@ -3,6 +3,7 @@ package com.dianping.cat.consumer.transaction;
 import org.apache.commons.lang.StringUtils;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.GraphTrendUtil;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Graph;
 import com.dianping.cat.consumer.transaction.model.entity.Graph2;
@@ -15,8 +16,6 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultMerger;
 
 public class TransactionReportMerger extends DefaultMerger {
-
-	public static final String GRAPH_SPLITTER = ";";
 
 	public TransactionReportMerger(TransactionReport transactionReport) {
 		super(transactionReport);
@@ -134,17 +133,17 @@ public class TransactionReportMerger extends DefaultMerger {
 		String toCount = to.getCount();
 		String fromCount = from.getCount();
 		Integer[] count = mergeIntegerValue(toCount, fromCount);
-		to.setCount(StringUtils.join(count, GRAPH_SPLITTER));
+		to.setCount(StringUtils.join(count, GraphTrendUtil.GRAPH_SPLITTER));
 
 		String toSum = to.getSum();
 		String fromSum = from.getSum();
 		Double[] sum = mergeDoubleValue(toSum, fromSum);
-		to.setSum(StringUtils.join(sum, GRAPH_SPLITTER));
+		to.setSum(StringUtils.join(sum, GraphTrendUtil.GRAPH_SPLITTER));
 
 		String toFails = to.getFails();
 		String fromFails = from.getFails();
 		Integer[] fails = mergeIntegerValue(toFails, fromFails);
-		to.setFails(StringUtils.join(fails, GRAPH_SPLITTER));
+		to.setFails(StringUtils.join(fails, GraphTrendUtil.GRAPH_SPLITTER));
 
 		int length = count.length;
 		Double[] avg = new Double[length];
@@ -161,7 +160,7 @@ public class TransactionReportMerger extends DefaultMerger {
 				avg[i] = 0.0;
 			}
 		}
-		to.setAvg(StringUtils.join(avg, GRAPH_SPLITTER));
+		to.setAvg(StringUtils.join(avg, GraphTrendUtil.GRAPH_SPLITTER));
 	}
 
 	@Override
@@ -169,17 +168,17 @@ public class TransactionReportMerger extends DefaultMerger {
 		String toCount = to.getCount();
 		String fromCount = from.getCount();
 		Integer[] count = mergeIntegerValue(toCount, fromCount);
-		to.setCount(StringUtils.join(count, GRAPH_SPLITTER));
+		to.setCount(StringUtils.join(count, GraphTrendUtil.GRAPH_SPLITTER));
 
 		String toSum = to.getSum();
 		String fromSum = from.getSum();
 		Double[] sum = mergeDoubleValue(toSum, fromSum);
-		to.setSum(StringUtils.join(sum, GRAPH_SPLITTER));
+		to.setSum(StringUtils.join(sum, GraphTrendUtil.GRAPH_SPLITTER));
 
 		String toFails = to.getFails();
 		String fromFails = from.getFails();
 		Integer[] fails = mergeIntegerValue(toFails, fromFails);
-		to.setFails(StringUtils.join(fails, GRAPH_SPLITTER));
+		to.setFails(StringUtils.join(fails, GraphTrendUtil.GRAPH_SPLITTER));
 
 		int length = count.length;
 		Double[] avg = new Double[length];
@@ -196,7 +195,7 @@ public class TransactionReportMerger extends DefaultMerger {
 				avg[i] = 0.0;
 			}
 		}
-		to.setAvg(StringUtils.join(avg, GRAPH_SPLITTER));
+		to.setAvg(StringUtils.join(avg, GraphTrendUtil.GRAPH_SPLITTER));
 	}
 	
 	@Override
@@ -204,17 +203,17 @@ public class TransactionReportMerger extends DefaultMerger {
 		String toCount = to.getCount();
 		String fromCount = from.getCount();
 		Integer[] count = mergeIntegerValue(toCount, fromCount);
-		to.setCount(StringUtils.join(count, GRAPH_SPLITTER));
+		to.setCount(StringUtils.join(count, GraphTrendUtil.GRAPH_SPLITTER));
 
 		String toSum = to.getSum();
 		String fromSum = from.getSum();
 		Double[] sum = mergeDoubleValue(toSum, fromSum);
-		to.setSum(StringUtils.join(sum, GRAPH_SPLITTER));
+		to.setSum(StringUtils.join(sum, GraphTrendUtil.GRAPH_SPLITTER));
 
 		String toFails = to.getFails();
 		String fromFails = from.getFails();
 		Integer[] fails = mergeIntegerValue(toFails, fromFails);
-		to.setFails(StringUtils.join(fails, GRAPH_SPLITTER));
+		to.setFails(StringUtils.join(fails, GraphTrendUtil.GRAPH_SPLITTER));
 
 		int length = count.length;
 		Double[] avg = new Double[length];
@@ -231,7 +230,7 @@ public class TransactionReportMerger extends DefaultMerger {
 				avg[i] = 0.0;
 			}
 		}
-		to.setAvg(StringUtils.join(avg, GRAPH_SPLITTER));
+		to.setAvg(StringUtils.join(avg, GraphTrendUtil.GRAPH_SPLITTER));
 	}
 
 	private Double[] mergeDoubleValue(String to, String from) {
@@ -239,11 +238,11 @@ public class TransactionReportMerger extends DefaultMerger {
 		Double[] source = null;
 
 		if (StringUtils.isNotBlank(from)) {
-			source = strToDoubleValue(from.split(GRAPH_SPLITTER));
+			source = strToDoubleValue(from.split(GraphTrendUtil.GRAPH_SPLITTER));
 		}
 
 		if (StringUtils.isNotBlank(to)) {
-			result = strToDoubleValue(to.split(GRAPH_SPLITTER));
+			result = strToDoubleValue(to.split(GraphTrendUtil.GRAPH_SPLITTER));
 		} else if (source != null) {
 			result = new Double[source.length];
 			for (int i = 0; i < source.length; i++) {
@@ -282,11 +281,11 @@ public class TransactionReportMerger extends DefaultMerger {
 		Integer[] source = null;
 
 		if (StringUtils.isNotBlank(from)) {
-			source = strToIntegerValue(from.split(GRAPH_SPLITTER));
+			source = strToIntegerValue(from.split(GraphTrendUtil.GRAPH_SPLITTER));
 		}
 
 		if (StringUtils.isNotBlank(to)) {
-			result = strToIntegerValue(to.split(GRAPH_SPLITTER));
+			result = strToIntegerValue(to.split(GraphTrendUtil.GRAPH_SPLITTER));
 		} else if (source != null) {
 			result = new Integer[source.length];
 			for (int i = 0; i < source.length; i++) {

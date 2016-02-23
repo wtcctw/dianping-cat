@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.transaction.transform;
+package com.dianping.cat.report.page.event.transform;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,28 +8,25 @@ import java.util.List;
 import java.util.Map;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.page.transaction.Model;
-import com.dianping.cat.report.page.transaction.Payload;
 import com.dianping.cat.consumer.GraphTrendUtil;
-import com.dianping.cat.consumer.transaction.model.entity.GraphTrend;
-import com.dianping.cat.consumer.transaction.model.entity.Machine;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
+import com.dianping.cat.consumer.event.model.entity.EventName;
+import com.dianping.cat.consumer.event.model.entity.EventReport;
+import com.dianping.cat.consumer.event.model.entity.EventType;
+import com.dianping.cat.consumer.event.model.entity.GraphTrend;
+import com.dianping.cat.consumer.event.model.entity.Machine;
+import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.page.event.Model;
+import com.dianping.cat.report.page.event.Payload;
 import com.site.lookup.util.StringUtils;
 
-public class TransactionTrendGraphBuilder {
-
+public class EventTrendGraphBuilder {
 	private int m_duration = 1;
 
 	public static final String COUNT = "count";
 
 	public static final String FAIL = "fail";
-
-	public static final String AVG = "avg";
 
 	private LineChart buildLineChart(Date start, Date end, long step, int size) {
 		LineChart item = new LineChart();
@@ -40,7 +37,7 @@ public class TransactionTrendGraphBuilder {
 		item.setSubTitles(buildSubTitles(start, end));
 		return item;
 	}
-
+	
 	private String buildSubTitle(Date start, Date end) {
 		SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat to = new SimpleDateFormat("MM-dd");
@@ -49,7 +46,7 @@ public class TransactionTrendGraphBuilder {
 		sb.append(from.format(start)).append("~").append(to.format(end));
 		return sb.toString();
 	}
-
+	
 	private List<String> buildSubTitles(Date start, Date end) {
 		List<String> subTitles = new ArrayList<String>();
 
@@ -57,7 +54,7 @@ public class TransactionTrendGraphBuilder {
 		return subTitles;
 	}
 
-	public void buildTrendGraph(Model model, Payload payload, TransactionReport report) {
+	public void buildTrendGraph(Model model, Payload payload, EventReport report) {
 		String name = payload.getName();
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
@@ -82,16 +79,14 @@ public class TransactionTrendGraphBuilder {
 
 		fail.addValue(data.get(FAIL));
 		count.addValue(data.get(COUNT));
-		avg.addValue(data.get(AVG));
 
-		model.setErrorTrend(fail.getJsonString());
+		model.setFailureTrend(fail.getJsonString());
 		model.setHitTrend(count.getJsonString());
-		model.setResponseTrend(avg.getJsonString());
 	}
 
-	private Map<String, double[]> getDatas(TransactionReport report, String ip, String type, String name) {
-		TransactionReportVisitor visitor = new TransactionReportVisitor(ip, type, name);
-		visitor.visitTransactionReport(report);
+	private Map<String, double[]> getDatas(EventReport report, String ip, String type, String name) {
+		EventReportVisitor visitor = new EventReportVisitor(ip, type, name);
+		visitor.visitEventReport(report);
 
 		return visitor.getDatas();
 	}
@@ -186,7 +181,7 @@ public class TransactionTrendGraphBuilder {
 		abstract String getSumTitle();
 	}
 
-	public class TransactionReportVisitor extends BaseVisitor {
+	public class EventReportVisitor extends BaseVisitor {
 
 		private String m_ip;
 
@@ -196,7 +191,7 @@ public class TransactionTrendGraphBuilder {
 
 		private Map<String, double[]> m_datas;
 
-		public TransactionReportVisitor(String ip, String type, String name) {
+		public EventReportVisitor(String ip, String type, String name) {
 			m_ip = ip;
 			m_type = type;
 			m_name = name;
@@ -228,7 +223,6 @@ public class TransactionTrendGraphBuilder {
 		private void resolveGraphTrend(GraphTrend graph) {
 			m_duration = graph.getDuration();
 			m_datas = new HashMap<String, double[]>();
-			m_datas.put(AVG, parseToDouble(graph.getAvg()));
 			m_datas.put(COUNT, parseToDouble(graph.getCount()));
 			m_datas.put(FAIL, parseToDouble(graph.getFails()));
 		}
@@ -241,7 +235,7 @@ public class TransactionTrendGraphBuilder {
 		}
 
 		@Override
-		public void visitName(TransactionName name) {
+		public void visitName(EventName name) {
 			String id = name.getId();
 
 			if (StringUtils.isNotEmpty(id) && id.equalsIgnoreCase(m_name)) {
@@ -250,7 +244,7 @@ public class TransactionTrendGraphBuilder {
 		}
 
 		@Override
-		public void visitType(TransactionType type) {
+		public void visitType(EventType type) {
 			String id = type.getId();
 
 			if (id.equalsIgnoreCase(m_type)) {

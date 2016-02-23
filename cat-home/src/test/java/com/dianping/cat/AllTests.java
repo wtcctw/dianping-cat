@@ -29,7 +29,6 @@ import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
 import com.dianping.cat.report.page.transaction.TransactionReportFilterTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
-import com.dianping.cat.report.task.event.EventDailyGraphMergerTest;
 import com.dianping.cat.report.task.event.EventGraphCreatorTest;
 import com.dianping.cat.report.task.event.HistoryEventMergerTest;
 import com.dianping.cat.report.task.heartbeat.HeartbeatDailyMergerTest;
@@ -83,8 +82,6 @@ ProblemCreateGraphDataTest.class,
 ProblemGraphCreatorTest.class,
 
 EventGraphCreatorTest.class,
-
-EventDailyGraphMergerTest.class,
 
 ProblemDailyGraphMergerTest.class,
 

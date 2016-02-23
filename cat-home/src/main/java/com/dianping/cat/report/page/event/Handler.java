@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.event;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -30,6 +31,7 @@ import com.dianping.cat.report.page.event.DisplayNames.EventNameModel;
 import com.dianping.cat.report.page.event.service.EventReportService;
 import com.dianping.cat.report.page.event.transform.DistributionDetailVisitor;
 import com.dianping.cat.report.page.event.transform.EventMergeHelper;
+import com.dianping.cat.report.page.event.transform.EventTrendGraphBuilder;
 import com.dianping.cat.report.page.event.transform.PieGraphChartVisitor;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
@@ -204,12 +206,12 @@ public class Handler implements PageHandler<Context> {
 
 			if (report != null) {
 				model.setReport(report);
-
 				buildEventMetaInfo(model, payload, report);
 			}
 			break;
 		case HISTORY_REPORT:
 			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
+			report = m_mergeHelper.mergeAllIps(report, ipAddress);
 
 			if (report != null) {
 				model.setReport(report);
@@ -217,15 +219,24 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case HISTORY_GRAPH:
+			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
+
 			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
-				report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
 				buildDistributionInfo(model, type, name, report);
 			}
 
-			m_historyGraphs.buildTrendGraph(model, payload);
+			report = m_mergeHelper.mergeAllIps(report, ipAddress);
+			boolean isOld = checkIfOldReport(report);
+
+			if (isOld) {
+				m_historyGraphs.buildTrendGraph(model, payload);
+			} else {
+				new EventTrendGraphBuilder().buildTrendGraph(model, payload, report);
+			}
 			break;
 		case GRAPHS:
 			report = getHourlyGraphReport(model, payload);
+
 			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
 				buildDistributionInfo(model, type, name, report);
 			}
@@ -278,12 +289,36 @@ public class Handler implements PageHandler<Context> {
 			report = filterReportByGroup(report, domain, group);
 
 			buildDistributionInfo(model, type, name, report);
-			List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
 
-			m_historyGraphs.buildGroupTrendGraph(model, payload, ips);
+			report = m_mergeHelper.mergeAllIps(report, ip);
+			isOld = checkIfOldReport(report);
+
+			if (isOld) {
+				List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
+				m_historyGraphs.buildGroupTrendGraph(model, payload, ips);
+			} else {
+				new EventTrendGraphBuilder().buildTrendGraph(model, payload, report);
+			}
 			break;
 		}
 		m_jspViewer.view(ctx, model);
+	}
+
+	private boolean checkIfOldReport(EventReport report) {
+		Map<String, Machine> machines = report.getMachines();
+
+		if (machines != null && machines.size() > 0) {
+			Map<String, EventType> types = machines.entrySet().iterator().next().getValue().getTypes();
+
+			if (types != null && types.size() > 0) {
+				EventType type = types.entrySet().iterator().next().getValue();
+
+				if (type.getGraphTrend() == null) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private void normalize(Model model, Payload payload) {

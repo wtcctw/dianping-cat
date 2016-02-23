@@ -1111,16 +1111,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.event.task.EventGraphCreator</role>
-			<implementation>com.dianping.cat.report.page.event.task.EventGraphCreator</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.problem.task.ProblemGraphCreator</role>
 			<implementation>com.dianping.cat.report.page.problem.task.ProblemGraphCreator</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.event.task.EventMerger</role>
-			<implementation>com.dianping.cat.report.page.event.task.EventMerger</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.problem.task.ProblemMerger</role>
@@ -1191,22 +1183,7 @@
 			<implementation>com.dianping.cat.report.page.event.task.EventReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.event.service.EventReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.event.service.EventReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.event.task.EventGraphCreator</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.event.task.EventMerger</role>
 				</requirement>
 			</requirements>
 		</component>
