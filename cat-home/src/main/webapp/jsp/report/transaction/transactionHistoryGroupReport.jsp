@@ -17,12 +17,19 @@
 <table class="machines">
 	<tr style="text-align: left">
 		<th>
+		<c:forEach items="${model.ips}" var="value">
+    		<c:if test="${value == 'All'}">
+        		<c:set var="found" value="true" scope="request" />
+    		</c:if>
+		</c:forEach>
+		<c:if test="${found != true}">
 			&nbsp;[ &nbsp;<a href="?op=history&domain=${model.domain}&date=${model.date}&type=${payload.encodedType}&queryname=${model.queryName}&reportType=${payload.reportType}${model.customDate}">All</a>
 			&nbsp;]&nbsp;
-   	  		 <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
+		</c:if>
+   	  	<c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
 						<a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&type=${payload.encodedType}&queryname=${model.queryName}&reportType=${payload.reportType}${model.customDate}">${ip}</a>
    	 		&nbsp;]&nbsp;
-			 </c:forEach>
+		</c:forEach>
 		</th>
 	</tr>
 </table>
