@@ -16,6 +16,7 @@ import com.dianping.cat.home.service.client.entity.ClientReport;
 import com.dianping.cat.home.service.client.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.statistics.service.ClientReportService;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
+import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.service.ProjectService;
 
@@ -34,6 +35,9 @@ public class ClientReportBuilder implements TaskBuilder {
 
 	@Inject
 	private ProjectService m_projectService;
+	
+	@Inject
+	private TransactionMergeHelper m_mergeHelper;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -60,7 +64,8 @@ public class ClientReportBuilder implements TaskBuilder {
 			try {
 				if (m_configManger.validateDomain(domain)) {
 					TransactionReport r = m_transactionReportService.queryReport(domain, startTime, endTime);
-
+					r = m_mergeHelper.mergeAllMachines(r, Constants.ALL);
+					
 					if (r != null) {
 						statistics.visitTransactionReport(r);
 					}

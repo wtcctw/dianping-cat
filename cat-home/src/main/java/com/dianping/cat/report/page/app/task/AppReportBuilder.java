@@ -32,6 +32,7 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.page.app.service.AppReportService;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
+import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 
@@ -54,6 +55,9 @@ public class AppReportBuilder implements TaskBuilder {
 
 	@Inject
 	private AppRuleConfigManager m_appRuleConfigManager;
+	
+	@Inject
+	private TransactionMergeHelper m_mergeHelper;
 
 	public static final String ID = Constants.APP;
 
@@ -193,6 +197,9 @@ public class AppReportBuilder implements TaskBuilder {
 	private void processTransactionInfo(com.dianping.cat.home.app.entity.Command command, String domain, Date period) {
 		Date end = TimeHelper.addDays(period, 1);
 		TransactionReport report = m_transactionReportService.queryDailyReport(domain, period, end);
+		
+		report = m_mergeHelper.mergeAllMachines(report, Constants.ALL);
+
 		TransactionReportVisitor visitor = new TransactionReportVisitor(command.getName());
 
 		visitor.visitTransactionReport(report);
