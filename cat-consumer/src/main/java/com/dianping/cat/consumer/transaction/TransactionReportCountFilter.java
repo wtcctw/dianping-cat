@@ -40,6 +40,10 @@ public class TransactionReportCountFilter extends BaseVisitor {
 		}
 	}
 
+	public void setMaxItems(int item) {
+		m_maxItems = item;
+	}
+
 	@Override
 	public void visitType(TransactionType type) {
 		Map<String, TransactionName> transactionNames = type.getNames();

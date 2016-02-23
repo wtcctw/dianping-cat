@@ -88,10 +88,6 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		m_logger = logger;
 	}
 
-	private HeartbeatReport findOrCreateReport(String domain) {
-		return m_reportManager.getHourlyReport(getStartTime(), domain, true);
-	}
-
 	@Override
 	public HeartbeatReport getReport(String domain) {
 		HeartbeatReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
@@ -115,7 +111,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		String domain = tree.getDomain();
 
 		if (m_serverFilterConfigManager.validateDomain(domain)) {
-			HeartbeatReport report = findOrCreateReport(domain);
+			HeartbeatReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
 			report.addIp(tree.getIpAddress());
 
 			List<Heartbeat> heartbeats = tree.getHeartbeats();

@@ -1402,6 +1402,9 @@
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1682,6 +1685,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.app.AppRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
 				</requirement>
 			</requirements>
 		</component>
