@@ -1,5 +1,7 @@
 package com.dianping.cat.report.alert;
 
+import java.util.Map;
+
 import org.unidal.helper.Threads;
 import org.unidal.lookup.ContainerHolder;
 
@@ -24,9 +26,11 @@ import com.dianping.cat.report.alert.transaction.TransactionAlert;
 public class AlarmManager extends ContainerHolder {
 
 	public void startAlarm() {
-		ServerAlarm consumerTask = lookup(ServerAlarm.class);
+		Map<String, ServerAlarm> serverAlarms = lookupMap(ServerAlarm.class);
 
-		Threads.forGroup("cat").start(consumerTask);
+		for (ServerAlarm serverAlarm : serverAlarms.values()) {
+			Threads.forGroup("cat").start(serverAlarm);
+		}
 
 		BusinessAlert metricAlert = lookup(BusinessAlert.class);
 		NetworkAlert networkAlert = lookup(NetworkAlert.class);
@@ -62,5 +66,4 @@ public class AlarmManager extends ContainerHolder {
 		Threads.forGroup("cat").start(jsAlert);
 		Threads.forGroup("cat").start(ajaxAlert);
 	}
-
 }

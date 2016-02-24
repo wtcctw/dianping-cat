@@ -34,7 +34,11 @@ public enum AlertType {
 
 	STORAGE_RPC("RPC", "服务大盘告警"),
 
-	SERVER("Server", "服务端告警");
+	SERVER_NETWORK("ServerNetwork", "网络告警"),
+
+	SERVER_SYSTEM("ServerSystem", "系统告警"),
+
+	SERVER_DATABASE("ServerDatabase", "数据库告警");
 
 	private String m_name;
 

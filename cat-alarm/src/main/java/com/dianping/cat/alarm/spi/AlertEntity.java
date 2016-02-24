@@ -28,6 +28,11 @@ public class AlertEntity {
 
 	private Map<String, Object> m_paras = new HashMap<String, Object>();
 
+	public AlertEntity addPara(String key, Object value) {
+		m_paras.put(key, value);
+		return this;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		AlertEntity other = (AlertEntity) obj;
@@ -77,6 +82,10 @@ public class AlertEntity {
 
 	public String getMetric() {
 		return m_metric;
+	}
+
+	public Object getPara(String key) {
+		return m_paras.get(key);
 	}
 
 	public Map<String, Object> getParas() {

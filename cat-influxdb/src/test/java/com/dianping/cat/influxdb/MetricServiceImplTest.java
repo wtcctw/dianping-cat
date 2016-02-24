@@ -25,8 +25,8 @@ public class MetricServiceImplTest extends ComponentTestCase {
 
 	@Test
 	public void test() throws Exception {
-		Date start = m_sdf.parse("2015111107");
-		Date end = m_sdf.parse("2015111207");
+		Date start = m_sdf.parse("2016021307");
+		Date end = m_sdf.parse("2016021308");
 		QueryParameter parameter = new QueryParameter();
 
 		parameter.setCategory("system").setStart(start).setEnd(end).setMeasurement("userCpu").setType(MetricType.AVG)

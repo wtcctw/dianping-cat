@@ -8,13 +8,9 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.alarm.AlertDao;
-import com.dianping.cat.alarm.ServerAlarmRuleDao;
 import com.dianping.cat.alarm.server.AlarmTask;
-import com.dianping.cat.alarm.server.ServerAlarm;
 import com.dianping.cat.alarm.server.ServerDataChecker;
 import com.dianping.cat.alarm.service.AlertService;
-import com.dianping.cat.alarm.service.ServerAlarmRuleService;
-import com.dianping.cat.alarm.service.ServerAlarmRuleServiceImpl;
 import com.dianping.cat.alarm.spi.AlertManager;
 import com.dianping.cat.alarm.spi.config.AlertConfigManager;
 import com.dianping.cat.alarm.spi.config.AlertPolicyManager;
@@ -36,7 +32,6 @@ import com.dianping.cat.alarm.spi.spliter.WeixinSpliter;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.core.config.ConfigDao;
-import com.dianping.cat.influxdb.InfluxDB;
 import com.dianping.cat.metric.MetricService;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
@@ -50,9 +45,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 
-		all.add(C(ServerAlarmRuleService.class, ServerAlarmRuleServiceImpl.class).req(ServerAlarmRuleDao.class));
-
-		all.add(C(ServerAlarm.class).req(ServerAlarmRuleService.class).req(MetricService.class, InfluxDB.ID));
+		all.addAll(new AlarmComponentConfigurator().defineComponents());
 
 		all.add(C(AlertService.class).req(AlertDao.class));
 		all.add(C(AlertConfigManager.class).req(ConfigDao.class, ContentFetcher.class));

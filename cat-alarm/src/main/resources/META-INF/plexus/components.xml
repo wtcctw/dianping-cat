@@ -19,21 +19,21 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>user-define-rule</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>user-define-rule</logical-table-name>
-				<physical-table-name>user_define_rule</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>server-alarm-rule</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>server-alarm-rule</logical-table-name>
 				<physical-table-name>server_alarm_rule</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>user-define-rule</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>user-define-rule</logical-table-name>
+				<physical-table-name>user_define_rule</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -47,8 +47,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.alarm.UserDefineRuleDao</role>
-			<implementation>com.dianping.cat.alarm.UserDefineRuleDao</implementation>
+			<role>com.dianping.cat.alarm.ServerAlarmRuleDao</role>
+			<implementation>com.dianping.cat.alarm.ServerAlarmRuleDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -56,8 +56,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.alarm.ServerAlarmRuleDao</role>
-			<implementation>com.dianping.cat.alarm.ServerAlarmRuleDao</implementation>
+			<role>com.dianping.cat.alarm.UserDefineRuleDao</role>
+			<implementation>com.dianping.cat.alarm.UserDefineRuleDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -75,7 +75,8 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.alarm.server.ServerAlarm</role>
-			<implementation>com.dianping.cat.alarm.server.ServerAlarm</implementation>
+			<role-hint>system</role-hint>
+			<implementation>com.dianping.cat.alarm.server.SystemAlarm</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.alarm.service.ServerAlarmRuleService</role>
@@ -85,6 +86,82 @@
 					<role-hint>Influx</role-hint>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.server.ServerAlarm</role>
+			<role-hint>ServerNetwork</role-hint>
+			<implementation>com.dianping.cat.alarm.server.network.ServerNetworkAlarm</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.alarm.service.ServerAlarmRuleService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.metric.MetricService</role>
+					<role-hint>Influx</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.server.ServerAlarm</role>
+			<role-hint>database</role-hint>
+			<implementation>com.dianping.cat.alarm.server.DatabaseAlarm</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.alarm.service.ServerAlarmRuleService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.metric.MetricService</role>
+					<role-hint>Influx</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.receiver.Contactor</role>
+			<role-hint>ServerDatabase</role-hint>
+			<implementation>com.dianping.cat.alarm.server.database.ServerDatabaseContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.receiver.Contactor</role>
+			<role-hint>ServerNetwork</role-hint>
+			<implementation>com.dianping.cat.alarm.server.network.ServerNetworkContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.receiver.Contactor</role>
+			<role-hint>ServerSystem</role-hint>
+			<implementation>com.dianping.cat.alarm.server.system.ServerSystemContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.config.AlertConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.decorator.Decorator</role>
+			<role-hint>ServerNetwork</role-hint>
+			<implementation>com.dianping.cat.alarm.server.network.ServerNetworkDecorator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.decorator.Decorator</role>
+			<role-hint>ServerNetwork</role-hint>
+			<implementation>com.dianping.cat.alarm.server.database.ServerDatabaseDecorator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.decorator.Decorator</role>
+			<role-hint>ServerSystem</role-hint>
+			<implementation>com.dianping.cat.alarm.server.system.ServerSystemDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.alarm.service.AlertService</role>
