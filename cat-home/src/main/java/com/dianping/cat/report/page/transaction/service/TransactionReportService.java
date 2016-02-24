@@ -8,6 +8,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.Graph;
@@ -53,6 +54,10 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 			Cat.logError(e);
 		}
 
+		// for old report, can be removed later.
+		AllMachineRemover remover = new AllMachineRemover();
+		report.accept(remover);
+		
 		GraphTrendParser graphTrendParser = new GraphTrendParser();
 		report.accept(graphTrendParser);
 
@@ -243,7 +248,7 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 				graphTrend.setFails(graph2.getFails());
 				graphTrend.setSum(graph2.getSum());
 				type.setGraphTrend(graphTrend);
-				
+
 				graph2s.clear();
 			}
 			super.visitType(type);
@@ -263,9 +268,17 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 				graphTrend.setFails(graph.getFails());
 				graphTrend.setSum(graph.getSum());
 				name.setGraphTrend(graphTrend);
-				
+
 				graphs.clear();
 			}
+		}
+	}
+
+	public class AllMachineRemover extends BaseVisitor {
+
+		@Override
+		public void visitTransactionReport(TransactionReport transactionReport) {
+			transactionReport.removeMachine(Constants.ALL);
 		}
 	}
 
