@@ -105,6 +105,5 @@ public class ProblemReportMerger extends DefaultMerger {
 		super.visitProblemReport(problemReport);
 
 		getProblemReport().getIps().addAll(problemReport.getIps());
-		getProblemReport().getDomainNames().addAll(problemReport.getDomainNames());
 	}
 }

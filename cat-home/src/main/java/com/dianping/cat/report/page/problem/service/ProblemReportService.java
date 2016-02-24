@@ -2,7 +2,6 @@ package com.dianping.cat.report.page.problem.service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
@@ -145,9 +144,6 @@ public class ProblemReportService extends AbstractReportService<ProblemReport> {
 
 		problemReport.setStartTime(start);
 		problemReport.setEndTime(new Date(end.getTime() - 1));
-
-		Set<String> domains = queryAllDomainNames(start, end, ProblemAnalyzer.ID);
-		problemReport.getDomainNames().addAll(domains);
 
 		ProblemReportConvertor convertor = new ProblemReportConvertor();
 		problemReport.accept(convertor);

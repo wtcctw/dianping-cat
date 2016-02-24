@@ -5,7 +5,6 @@ package com.dianping.cat.report.page.problem.task;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import com.dianping.cat.consumer.problem.ProblemReportMerger;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -24,14 +23,13 @@ public class ProblemMerger {
 		return merger.getProblemReport();
 	}
 
-	public ProblemReport mergeForDaily(String reportDomain, List<ProblemReport> reports, Set<String> domains) {
+	public ProblemReport mergeForDaily(String reportDomain, List<ProblemReport> reports) {
 		ProblemReport report = merge(reportDomain, reports);
 		Date date = report.getStartTime();
 		Date end = new Date(TaskHelper.tomorrowZero(date).getTime() - 1000);
 
 		report.setStartTime(TaskHelper.todayZero(date));
 		report.setEndTime(end);
-		report.getDomainNames().addAll(domains);
 		return report;
 	}
 }

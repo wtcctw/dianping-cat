@@ -3,7 +3,6 @@ package com.dianping.cat.report.page.problem.task;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -193,7 +192,6 @@ public class ProblemReportBuilder implements TaskBuilder ,Initializable{
 
 	private ProblemReport queryHourlyReportsByDuration(String name, String domain, Date start, Date end)
 	      throws DalException {
-		Set<String> domainSet = m_reportService.queryAllDomainNames(start, end, ProblemAnalyzer.ID);
 		List<ProblemReport> reports = new ArrayList<ProblemReport>();
 		long startTime = start.getTime();
 		long endTime = end.getTime();
@@ -204,6 +202,6 @@ public class ProblemReportBuilder implements TaskBuilder ,Initializable{
 
 			reports.add(report);
 		}
-		return m_problemMerger.mergeForDaily(domain, reports, domainSet);
+		return m_problemMerger.mergeForDaily(domain, reports);
 	}
 }

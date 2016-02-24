@@ -3,7 +3,6 @@ package com.dianping.cat.consumer.problem;
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -31,13 +30,6 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 
 	@Override
 	public void beforeSave(Map<String, ProblemReport> reports) {
-		for (ProblemReport report : reports.values()) {
-			Set<String> domainNames = report.getDomainNames();
-
-			domainNames.clear();
-			domainNames.addAll(reports.keySet());
-		}
-
 		try {
 			ProblemReportFilter problemReportURLFilter = new ProblemReportFilter();
 
