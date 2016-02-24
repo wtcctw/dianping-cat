@@ -98,7 +98,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(UrlPatternConfigManager.class).req(ConfigDao.class, UrlPatternHandler.class, ContentFetcher.class));
 
 		all.add(C(Module.class, CatCoreModule.ID, CatCoreModule.class));
-
+		
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
@@ -109,7 +109,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.addAll(new CodecComponentConfigurator().defineComponents());
 		all.addAll(new StorageComponentConfigurator().defineComponents());
-
+		
 		return all;
 	}
 }

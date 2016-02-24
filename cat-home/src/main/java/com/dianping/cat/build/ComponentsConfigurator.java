@@ -159,7 +159,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
-
+		
 		all.add(C(TableProvider.class, "app-command-data", AppCommandTableProvider.class));
 		all.add(C(TableProvider.class, "app-command-data-daily", AppCmdDailyTableProvider.class));
 		all.add(C(TableProvider.class, "app-connection-data", AppConnectionTableProvider.class));
@@ -171,7 +171,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
-		all.addAll(new AppDatabaseConfigurator().defineComponents());
 
 		// for alarm module
 		all.addAll(new AlarmComponentConfigurator().defineComponents());
