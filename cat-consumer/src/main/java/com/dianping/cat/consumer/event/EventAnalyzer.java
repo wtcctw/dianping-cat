@@ -62,7 +62,6 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 			long current = timestamp - remainder;
 			EventReport report = m_reportManager.getHourlyReport(period, domain, false);
 
-			report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 			if (period == current) {
 				report.accept(m_computer.setDuration(remainder / 1000));
 			} else if (period < current) {

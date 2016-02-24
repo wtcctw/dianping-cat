@@ -66,9 +66,8 @@
 		$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
 		$('.position').hide();
 		$('.switch').hide();
-		$('#Dashboard_report').addClass("open active");
-		$('#dashbord_application').addClass("active");
-		$('#Dependency_report').removeClass("open active");
+		$('#Dependency_report').addClass("open active");
+		$('#dependency_dashboard').addClass("active");
 
 		var data = ${model.dashboardGraph};
 		var format = ${model.format};

@@ -2,7 +2,6 @@ package com.dianping.cat.consumer.event;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -37,12 +36,6 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 
 	@Override
 	public void beforeSave(Map<String, EventReport> reports) {
-		for (EventReport report : reports.values()) {
-			Set<String> domainNames = report.getDomainNames();
-
-			domainNames.clear();
-			domainNames.addAll(reports.keySet());
-		}
 		if (reports.size() > 0) {
 			EventReport all = createAggregatedReport(reports);
 
@@ -59,7 +52,7 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 	public String buildXml(EventReport report) {
 		report.accept(m_computer);
 
-		new EventReportCountFilter().visitEventReport(report);;
+		new EventReportCountFilter().visitEventReport(report);
 
 		return report.toString();
 	}
@@ -76,7 +69,6 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 
 					if (!domain.equals(Constants.ALL)) {
 						all.getIps().add(domain);
-						all.getDomainNames().add(domain);
 
 						visitor.visitEventReport(report);
 					}
@@ -94,11 +86,9 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 	public boolean createHourlyTask(EventReport report) {
 		String domain = report.getDomain();
 
-		if (domain.equals(Constants.ALL)) {
+		if (domain.equals(Constants.ALL) || m_configManager.validateDomain(domain)) {
 			return m_taskManager.createTask(report.getStartTime(), domain, EventAnalyzer.ID,
 			      TaskProlicy.ALL_EXCLUED_HOURLY);
-		} else if (m_configManager.validateDomain(domain)) {
-			return m_taskManager.createTask(report.getStartTime(), report.getDomain(), EventAnalyzer.ID, TaskProlicy.ALL);
 		} else {
 			return true;
 		}

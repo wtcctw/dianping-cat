@@ -27,7 +27,6 @@ import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.web.AjaxDataTableProvider;
 import com.dianping.cat.config.web.WebSpeedDataTableProvider;
-import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
@@ -123,8 +122,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TopologyGraphManager.class)
 		      .req(TopologyGraphBuilder.class, DependencyItemBuilder.class, ServerConfigManager.class,
-		            ServerFilterConfigManager.class) //
-		      .req(ProductLineConfigManager.class, TopologyGraphDao.class)//
+		            ServerFilterConfigManager.class)
+		      .req(TopoGraphFormatConfigManager.class, TopologyGraphDao.class, ProjectService.class)
 		      .req(ModelService.class, DependencyAnalyzer.ID));
 
 		// update project database

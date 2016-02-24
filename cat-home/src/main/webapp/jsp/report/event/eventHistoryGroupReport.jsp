@@ -12,8 +12,20 @@
 	<jsp:body>
 <table class="machines">
 	<tr style="text-align: left">
-		<th> <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp; 
-						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&reportType=${payload.reportType}${model.customDate}"
+		<th>
+		<c:forEach items="${model.ips}" var="value">
+    		<c:if test="${value == 'All'}">
+        	<c:set var="found" value="true" scope="request" />
+    		</c:if>
+		</c:forEach>
+		<c:if test="${found != true}">
+		&nbsp;[&nbsp; 
+			<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&reportType=${payload.reportType}${model.customDate}&type=${payload.encodedType}"
+									>All</a>
+   	 	&nbsp;]&nbsp;
+   	 	</c:if>
+		 <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp; 
+						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&reportType=${payload.reportType}${model.customDate}&type=${payload.encodedType}"
 									>${ip}</a>
    	 		&nbsp;]&nbsp;
 			 </c:forEach>
@@ -27,12 +39,12 @@
    	 		<c:forEach var="group" items="${model.groups}">
 				<c:choose><c:when test="${payload.group eq group}">
 		   	  		&nbsp;[&nbsp;
-		   	  			<a class="current" href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}">${group}</a>
+		   	  			<a class="current" href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}&reportType=${payload.reportType}&type=${payload.encodedType}">${group}</a>
 		   	 		&nbsp;]&nbsp;
 	   	 		</c:when>
 	   	 		<c:otherwise>
 		   	  		&nbsp;[&nbsp;
-		   	  			<a href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}">${group}</a>
+		   	  			<a href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}&reportType=${payload.reportType}&type=${payload.encodedType}">${group}</a>
 		   	 		&nbsp;]&nbsp;
 	   	 		</c:otherwise></c:choose>
 			 </c:forEach>

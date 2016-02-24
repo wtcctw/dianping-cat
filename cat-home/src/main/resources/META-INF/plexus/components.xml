@@ -73,10 +73,13 @@
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
+					<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
@@ -1087,16 +1090,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.event.task.EventGraphCreator</role>
-			<implementation>com.dianping.cat.report.page.event.task.EventGraphCreator</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.problem.task.ProblemGraphCreator</role>
 			<implementation>com.dianping.cat.report.page.problem.task.ProblemGraphCreator</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.event.task.EventMerger</role>
-			<implementation>com.dianping.cat.report.page.event.task.EventMerger</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.problem.task.ProblemMerger</role>
@@ -1167,22 +1162,7 @@
 			<implementation>com.dianping.cat.report.page.event.task.EventReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.event.service.EventReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.event.service.EventReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.event.task.EventGraphCreator</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.event.task.EventMerger</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1400,6 +1380,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1681,6 +1664,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.app.AppRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4427,6 +4413,9 @@
 				<requirement>
 					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4442,13 +4431,16 @@
 					<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
+					<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
@@ -4467,6 +4459,18 @@
 		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
+			<implementation>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -6296,18 +6300,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
-			<implementation>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -27,8 +27,8 @@ public class TransactionReportGraphCreatorTest {
 
 		TransactionReportHourlyGraphCreator creator = new TransactionReportHourlyGraphCreator(result, 10);
 
-		creator.creatorGraph(report1);
-		creator.creatorGraph(report2);
+		creator.createGraph(report1);
+		creator.createGraph(report2);
 
 		String actual = new DefaultXmlBuilder().buildXml(result);
 		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), actual.replace("\r", ""));
@@ -51,8 +51,8 @@ public class TransactionReportGraphCreatorTest {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		TransactionReportDailyGraphCreator creator = new TransactionReportDailyGraphCreator(result, 7, sdf.parse("2016-01-23 00:00:00"));
 
-		creator.creatorGraph(report1);
-		creator.creatorGraph(report2);
+		creator.createGraph(report1);
+		creator.createGraph(report2);
 
 		String actual = new DefaultXmlBuilder().buildXml(result);
 

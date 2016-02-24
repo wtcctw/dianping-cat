@@ -45,8 +45,6 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.service.DependencyReportService;
 import com.dianping.cat.report.page.dependency.task.DependencyReportBuilder;
 import com.dianping.cat.report.page.event.service.EventReportService;
-import com.dianping.cat.report.page.event.task.EventGraphCreator;
-import com.dianping.cat.report.page.event.task.EventMerger;
 import com.dianping.cat.report.page.event.task.EventReportBuilder;
 import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
 import com.dianping.cat.report.page.heartbeat.task.HeartbeatReportBuilder;
@@ -120,10 +118,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DefaultTaskConsumer.class) //
 		      .req(TaskDao.class, ReportFacade.class));
 
-		all.add(C(EventGraphCreator.class));
 		all.add(C(ProblemGraphCreator.class));
 
-		all.add(C(EventMerger.class));
 		all.add(C(ProblemMerger.class));
 
 		all.add(C(MetricPointParser.class));
@@ -140,8 +136,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(TransactionReportService.class));
 
 		all.add(C(TaskBuilder.class, EventReportBuilder.ID, EventReportBuilder.class) //
-		      .req(GraphDao.class, DailyGraphDao.class, EventReportService.class)//
-		      .req(EventReportService.class).req(EventGraphCreator.class, EventMerger.class));//
+		      .req(EventReportService.class)); 
 
 		all.add(C(TaskBuilder.class, ProblemReportBuilder.ID, ProblemReportBuilder.class) //
 		      .req(GraphDao.class, DailyGraphDao.class, ProblemReportService.class)//
@@ -182,7 +177,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      JarReportService.class, ServerFilterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, ClientReportBuilder.ID, ClientReportBuilder.class).req(ClientReportService.class,
-		      TransactionReportService.class, ServerFilterConfigManager.class, ProjectService.class));
+		      TransactionReportService.class, ServerFilterConfigManager.class, ProjectService.class,
+		      TransactionMergeHelper.class));
 
 		all.add(C(TaskBuilder.class, CurrentReportBuilder.ID, CurrentReportBuilder.class).req(ProjectService.class,
 		      ServerFilterConfigManager.class));
@@ -231,7 +227,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TaskBuilder.class, AppReportBuilder.ID, AppReportBuilder.class).req(AppCommandDataDao.class,
 		      AppConfigManager.class, AppReportService.class, TransactionReportService.class, CommandAutoCompleter.class,
-		      AppRuleConfigManager.class));
+		      AppRuleConfigManager.class, TransactionMergeHelper.class));
 
 		all.add(C(ReportFacade.class));
 

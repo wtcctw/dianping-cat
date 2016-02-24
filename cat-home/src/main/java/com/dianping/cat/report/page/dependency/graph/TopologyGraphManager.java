@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.dependency.graph;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -18,26 +19,26 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.Constants;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
-import com.dianping.cat.consumer.company.model.entity.Domain;
-import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.TopologyGraphEntity;
+import com.dianping.cat.home.dependency.format.entity.Domain;
+import com.dianping.cat.home.dependency.format.entity.ProductLine;
 import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.home.dependency.graph.transform.DefaultNativeParser;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
+import com.dianping.cat.service.ProjectService;
 
 public class TopologyGraphManager implements Initializable, LogEnabled {
 
@@ -48,13 +49,16 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	private DependencyItemBuilder m_itemBuilder;
 
 	@Inject
-	private ProductLineConfigManager m_productLineConfigManger;
+	private TopoGraphFormatConfigManager m_configManager;
 
 	@Inject
 	private ServerConfigManager m_manager;
 
 	@Inject
 	private ServerFilterConfigManager m_serverFilterConfigManager;
+	
+	@Inject
+	private ProjectService m_projectService;
 
 	@Inject
 	private TopologyGraphDao m_topologyGraphDao;
@@ -99,19 +103,19 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		Set<String> allDomains = new HashSet<String>();
 
 		if (topologyGraph != null) {
-			Map<String, ProductLine> groups = m_productLineConfigManger.queryApplicationProductLines();
+			List<ProductLine> productlines = m_configManager.queryProduct();
 
-			for (Entry<String, ProductLine> entry : groups.entrySet()) {
-				String realName = entry.getValue().getTitle();
+			for (ProductLine entry : productlines) {
+				String productId = entry.getId();
+				List<Domain> domains = entry.getDomains();
 
-				Map<String, Domain> domains = entry.getValue().getDomains();
-				for (Domain domain : domains.values()) {
+				for (Domain domain : domains) {
 					String nodeName = domain.getId();
 					TopologyNode node = topologyGraph.findTopologyNode(nodeName);
 
 					allDomains.add(nodeName);
 					if (node != null) {
-						dashboardGraph.addNode(realName, m_currentBuilder.cloneNode(node));
+						dashboardGraph.addNode(productId, m_currentBuilder.cloneNode(node));
 					}
 				}
 			}
@@ -257,19 +261,6 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			return "TopologyGraphReload";
 		}
 
-		private Collection<String> queryAllDomains() {
-			ModelRequest request = new ModelRequest(Constants.CAT, ModelPeriod.CURRENT.getStartTime());
-
-			if (m_service.isEligable(request)) {
-				ModelResponse<DependencyReport> response = m_service.invoke(request);
-				DependencyReport report = response.getModel();
-
-				return report.getDomainNames();
-			}
-
-			return new HashSet<String>();
-		}
-
 		@Override
 		public void run() {
 			boolean active = TimeHelper.sleepToNextMinute();
@@ -279,8 +270,8 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 				long current = System.currentTimeMillis();
 				try {
 					TopologyGraphBuilder builder = new TopologyGraphBuilder().setItemBuilder(m_itemBuilder);
-					Collection<String> domains = queryAllDomains();
-
+					Collection<String> domains = m_projectService.findAllDomains();
+					
 					for (String domain : domains) {
 						try {
 							buildDependencyInfo(builder, domain);
@@ -289,7 +280,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 						}
 					}
 					Map<Long, TopologyGraph> graphs = builder.getGraphs();
-
+					
 					for (Entry<Long, TopologyGraph> entry : graphs.entrySet()) {
 						m_topologyGraphs.put(entry.getKey(), entry.getValue());
 

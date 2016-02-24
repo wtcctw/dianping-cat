@@ -151,7 +151,7 @@ public class TransactionReportBuilder implements Initializable, TaskBuilder, Log
 				TransactionReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
 				      + TimeHelper.ONE_DAY));
 
-				creator.creatorGraph(reportModel);
+				creator.createGraph(reportModel);
 				reportModel.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -180,7 +180,7 @@ public class TransactionReportBuilder implements Initializable, TaskBuilder, Log
 			TransactionReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
 			      + TimeHelper.ONE_HOUR));
 
-			graphCreator.creatorGraph(report);
+			graphCreator.createGraph(report);
 			report.accept(dailyMerger);
 		}
 

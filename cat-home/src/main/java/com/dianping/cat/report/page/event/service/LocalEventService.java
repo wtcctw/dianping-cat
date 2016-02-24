@@ -79,8 +79,6 @@ public class LocalEventService extends LocalModelService<EventReport> {
 					EventReport tmp = DefaultSaxParser.parse(xml);
 
 					tmp.accept(merger);
-				} else {
-					report.getDomainNames().addAll(bucket.getIds());
 				}
 			} finally {
 				if (bucket != null) {
