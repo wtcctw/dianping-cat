@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager;
-import org.unidal.dal.jdbc.mapping.TableProvider;
 import org.unidal.initialization.DefaultModuleManager;
 import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleManager;
@@ -15,16 +14,10 @@ import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppConnectionDataDao;
 import com.dianping.cat.app.AppSpeedDataDao;
-import com.dianping.cat.config.app.AppCmdDailyTableProvider;
-import com.dianping.cat.config.app.AppCommandTableProvider;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.config.app.AppConnectionTableProvider;
-import com.dianping.cat.config.app.AppSpeedTableProvider;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
-import com.dianping.cat.config.web.AjaxDataTableProvider;
-import com.dianping.cat.config.web.WebSpeedDataTableProvider;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
@@ -159,13 +152,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
-
-		all.add(C(TableProvider.class, "app-command-data", AppCommandTableProvider.class));
-		all.add(C(TableProvider.class, "app-command-data-daily", AppCmdDailyTableProvider.class));
-		all.add(C(TableProvider.class, "app-connection-data", AppConnectionTableProvider.class));
-		all.add(C(TableProvider.class, "app-speed-data", AppSpeedTableProvider.class));
-		all.add(C(TableProvider.class, "ajax-data", AjaxDataTableProvider.class));
-		all.add(C(TableProvider.class, "web-speed-data", WebSpeedDataTableProvider.class));
 
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
