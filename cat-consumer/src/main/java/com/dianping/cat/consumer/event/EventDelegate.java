@@ -53,7 +53,6 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 		report.accept(m_computer);
 
 		new EventReportCountFilter().visitEventReport(report);
-		;
 
 		return report.toString();
 	}
