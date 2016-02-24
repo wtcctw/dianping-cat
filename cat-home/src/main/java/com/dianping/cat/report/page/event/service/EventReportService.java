@@ -8,6 +8,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventName;
@@ -51,6 +52,11 @@ public class EventReportService extends AbstractReportService<EventReport> {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
+		
+		// for old report, can be removed later.
+		AllMachineRemover remover = new AllMachineRemover();
+		report.accept(remover);
+
 		return report;
 	}
 
@@ -174,7 +180,7 @@ public class EventReportService extends AbstractReportService<EventReport> {
 		try {
 			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, EventAnalyzer.ID,
 			      MonthlyReportEntity.READSET_FULL);
-		
+
 			eventReport = queryFromMonthlyBinary(entity.getId(), domain);
 		} catch (DalNotFoundException e) {
 			// ignore
@@ -222,6 +228,14 @@ public class EventReportService extends AbstractReportService<EventReport> {
 				type.setTps(type.getTotalCount() * 1.0 / m_duration);
 				super.visitType(type);
 			}
+		}
+	}
+
+	public class AllMachineRemover extends BaseVisitor {
+
+		@Override
+		public void visitEventReport(EventReport eventReport) {
+			eventReport.removeMachine(Constants.ALL);
 		}
 	}
 }
