@@ -75,7 +75,8 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 						List<String> endpoints = entry.getValue().getEndpoints();
 						AlarmTask task = lookup(AlarmTask.class);
 
-						task.setCategory(rule.getCategory());
+						task.setCategory(getCategory());
+						task.setAlarmId(getID());
 						buildQueries(endpoints, rule, task, pair.getValue());
 						tasks.add(task);
 						m_times.put(ruleId, current + pair.getKey());
@@ -194,11 +195,6 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 		return rule;
 	}
 
-	@Override
-	public String getName() {
-		return "server-alarm";
-	}
-
 	private Pair<Integer, Integer> parseHourMinute(String startTime) {
 		String[] times = startTime.split(":");
 		int hour = Integer.parseInt(times[0]);
@@ -245,6 +241,11 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 				active = false;
 			}
 		}
+	}
+
+	@Override
+	public String getName() {
+		return getID() + "-Alarm";
 	}
 
 	@Override

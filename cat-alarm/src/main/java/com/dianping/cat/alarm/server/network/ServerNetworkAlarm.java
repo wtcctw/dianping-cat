@@ -9,6 +9,11 @@ public class ServerNetworkAlarm extends AbstractServerAlarm {
 
 	@Override
 	public String getCategory() {
+		return "network";
+	}
+
+	@Override
+	public String getID() {
 		return ID;
 	}
 

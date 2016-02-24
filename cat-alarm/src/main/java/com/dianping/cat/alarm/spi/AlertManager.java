@@ -64,10 +64,10 @@ public class AlertManager implements Initializable {
 	private Map<String, AlertEntity> m_sendedAlerts = new ConcurrentHashMap<String, AlertEntity>(1000);
 
 	private ConcurrentHashMap<AlertEntity, Long> m_alertMap = new ConcurrentHashMap<AlertEntity, Long>();
-	
+
 	public boolean addAlert(AlertEntity entity) {
 		m_alertMap.put(entity, entity.getDate().getTime());
-		
+
 		String group = entity.getGroup();
 		Cat.logEvent("Alert:" + entity.getType().getName(), group, Event.SUCCESS, entity.toString());
 
@@ -109,7 +109,7 @@ public class AlertManager implements Initializable {
 				keys.add(entry.getKey());
 			}
 		}
-		
+
 		return keys;
 	}
 
@@ -160,7 +160,7 @@ public class AlertManager implements Initializable {
 		m_alertService.insert(alert, message);
 		return result;
 	}
-	
+
 	private boolean sendRecoveryMessage(AlertEntity alert, String currentMinute) {
 		AlertType alterType = alert.getType();
 		String type = alterType.getName();
@@ -262,6 +262,7 @@ public class AlertManager implements Initializable {
 					}
 				} catch (Exception e) {
 					Cat.logError(e);
+					e.printStackTrace();
 				}
 			}
 		}

@@ -33,8 +33,14 @@ public class AlarmTask implements Task {
 
 	private String m_category;
 
+	private String m_alarmId;
+
 	public void addParameter(AlarmParameter parameter) {
 		m_paramters.add(parameter);
+	}
+
+	public String getAlarmId() {
+		return m_alarmId;
 	}
 
 	public String getCategory() {
@@ -81,11 +87,15 @@ public class AlarmTask implements Task {
 
 					entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
 					      .setLevel(alertResult.getAlertLevel());
-					entity.setMetric(p.getMeasurement()).setType(m_category).setGroup(p.getTags());
+					entity.setMetric(p.getMeasurement()).setType(m_alarmId).setGroup(p.getTags());
 					m_sendManager.addAlert(entity);
 				}
 			}
 		}
+	}
+
+	public void setAlarmId(String alarmId) {
+		m_alarmId = alarmId;
 	}
 
 	public void setCategory(String category) {

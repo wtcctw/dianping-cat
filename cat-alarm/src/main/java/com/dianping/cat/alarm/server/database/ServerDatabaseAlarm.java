@@ -9,6 +9,11 @@ public class ServerDatabaseAlarm extends AbstractServerAlarm {
 
 	@Override
 	public String getCategory() {
+		return "database";
+	}
+
+	@Override
+	public String getID() {
 		return ID;
 	}
 
