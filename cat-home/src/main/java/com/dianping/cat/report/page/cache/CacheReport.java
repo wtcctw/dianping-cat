@@ -23,10 +23,6 @@ public class CacheReport {
 
 	private String m_domain;
 
-	private Set<String> m_domainNames = new LinkedHashSet<String>();
-
-	private Set<String> m_domains;
-
 	private java.util.Date m_endTime;
 
 	private Set<String> m_ips = new LinkedHashSet<String>();
@@ -89,14 +85,6 @@ public class CacheReport {
 		return m_domain;
 	}
 
-	public Set<String> getDomainNames() {
-		return m_domainNames;
-	}
-
-	public Set<String> getDomains() {
-		return m_domains;
-	}
-
 	public java.util.Date getEndTime() {
 		return m_endTime;
 	}
@@ -127,14 +115,6 @@ public class CacheReport {
 
 	public void setDomain(String domain) {
 		m_domain = domain;
-	}
-
-	public void setDomainNames(Set<String> domainNames) {
-		m_domainNames = domainNames;
-	}
-
-	public void setDomains(Set<String> domains) {
-		m_domains = domains;
 	}
 
 	public void setEndTime(java.util.Date endTime) {
