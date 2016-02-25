@@ -81,7 +81,7 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 						tasks.add(task);
 						m_times.put(ruleId, current + pair.getKey());
 					} catch (Exception e) {
-						Cat.logError(e);
+						Cat.logError(rule.getContent(), e);
 					}
 				}
 			} else {
@@ -101,10 +101,15 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 			if (checkTime(r)) {
 				for (Condition c : r.getConditions()) {
 					Interval interval = Interval.findByInterval(c.getInterval());
-					long time = interval.getTime();
 
-					if (time < sleeptime) {
-						sleeptime = time;
+					if (interval != null) {
+						long time = interval.getTime();
+
+						if (time < sleeptime) {
+							sleeptime = time;
+						}
+					} else {
+						Cat.logError(c.toString(), new RuntimeException("Unrecognized interval: " + c.getInterval()));
 					}
 				}
 				rets.add(r);

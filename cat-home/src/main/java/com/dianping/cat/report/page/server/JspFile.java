@@ -21,6 +21,10 @@ public enum JspFile {
 
 	SERVER_METRIC_CONFIG_UPDATE("/jsp/report/server/serverMetricConfig.jsp"),
 
+	SERVER_ALARM_RULE("/jsp/report/server/serverRuleConfig.jsp"),
+
+	SERVER_ALARM_RULE_UPDATE("/jsp/report/server/serverRuleUpdate.jsp"),
+
 	;
 
 	private String m_path;

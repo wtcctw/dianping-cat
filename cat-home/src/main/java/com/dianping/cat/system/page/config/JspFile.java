@@ -120,7 +120,7 @@ public enum JspFile {
 	APP_COMMAND_FORMAT_CONFIG("/jsp/system/appConfig/appCommandFormatConfig.jsp"),
 
 	ROUTER_CONFIG_UPDATE("/jsp/system/router/routerConfig.jsp"),
-	
+
 	SAMPLE_CONFIG_UPDATE("/jsp/system/sample/sampleConfig.jsp"),
 
 	SENDER_CONFIG_UPDATE("/jsp/system/sender/senderConfig.jsp"),

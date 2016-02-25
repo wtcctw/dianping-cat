@@ -5843,6 +5843,12 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.server.config.ServerMetricConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.alarm.service.ServerAlarmRuleService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.decorator.ServerRuleFTLDecorator</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5943,6 +5949,10 @@
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.decorator.ServerRuleFTLDecorator</role>
+			<implementation>com.dianping.cat.alarm.spi.decorator.ServerRuleFTLDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.eslog.Handler</role>

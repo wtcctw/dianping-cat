@@ -479,7 +479,7 @@ CREATE TABLE `server_alarm_rule` (
   `tags` varchar(200) NOT NULL COMMENT '监控指标标签',
   `content` varchar(200) NOT NULL COMMENT '配置的具体内容',
   `type` longtext COMMENT '数据聚合方式',
-  `creator` varchar(100) NOT NULL COMMENT '创建人',
+  `creator` varchar(100) COMMENT '创建人',
   `creation_date` datetime NOT NULL COMMENT '配置创建时间',
   `updatetime` datetime NOT NULL COMMENT '配置修改时间',
   PRIMARY KEY (`id`),

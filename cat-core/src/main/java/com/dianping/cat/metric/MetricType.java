@@ -2,21 +2,19 @@ package com.dianping.cat.metric;
 
 public enum MetricType {
 
-	AVG("mean"),
+	AVG("mean", "平均值"),
 
-	SUM("sum"),
+	SUM("sum", "总和"),
 
-	MAX("max"),
+	MAX("max", "最大值"),
 
-	MIN("min"),
+	MIN("min", "最小值"),
 
-	COUNT("count");
+	COUNT("count", "个数");
 
 	private String m_name;
 
-	MetricType(String name) {
-		m_name = name;
-	}
+	private String m_title;
 
 	public static MetricType getByName(String name, MetricType defaultType) {
 		for (MetricType action : MetricType.values()) {
@@ -28,12 +26,25 @@ public enum MetricType {
 		return defaultType;
 	}
 
+	private MetricType(String name, String title) {
+		m_name = name;
+		m_title = title;
+	}
+
 	public String getName() {
 		return m_name;
 	}
 
+	public String getTitle() {
+		return m_title;
+	}
+
 	public void setName(String name) {
 		m_name = name;
+	}
+
+	public void setTitle(String title) {
+		m_title = title;
 	}
 
 }

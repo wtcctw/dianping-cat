@@ -6,7 +6,7 @@ import com.dianping.cat.alarm.spi.decorator.Decorator;
 
 public class ServerDatabaseDecorator extends Decorator {
 
-	public static final String ID = AlertType.SERVER_NETWORK.getName();
+	public static final String ID = AlertType.SERVER_DATABASE.getName();
 
 	@Override
 	public String generateContent(AlertEntity alert) {

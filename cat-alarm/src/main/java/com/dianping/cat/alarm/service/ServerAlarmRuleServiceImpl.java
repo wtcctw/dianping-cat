@@ -1,9 +1,9 @@
 package com.dianping.cat.alarm.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -21,12 +21,13 @@ public class ServerAlarmRuleServiceImpl implements ServerAlarmRuleService, Initi
 	@Inject
 	private ServerAlarmRuleDao m_dao;
 
-	private Map<String, List<ServerAlarmRule>> m_alarmRules = new HashMap<String, List<ServerAlarmRule>>();
+	private Map<String, List<ServerAlarmRule>> m_alarmRules = new ConcurrentHashMap<String, List<ServerAlarmRule>>();
 
 	@Override
 	public boolean delete(ServerAlarmRule rule) {
 		try {
 			m_dao.deleteByPK(rule);
+			refresh();
 			return true;
 		} catch (DalException e) {
 			Cat.logError(e);
@@ -34,44 +35,17 @@ public class ServerAlarmRuleServiceImpl implements ServerAlarmRuleService, Initi
 		return false;
 	}
 
-	private List<ServerAlarmRule> findOrCreate(String category) {
-		List<ServerAlarmRule> rules = m_alarmRules.get(category);
-
-		if (rules == null) {
-			rules = new ArrayList<ServerAlarmRule>();
-
-			m_alarmRules.put(category, rules);
-		}
-		return rules;
-	}
-
 	@Override
 	public void initialize() throws InitializationException {
-		try {
-			List<ServerAlarmRule> entities = m_dao.findAll(ServerAlarmRuleEntity.READSET_FULL);
-
-			for (ServerAlarmRule entity : entities) {
-				String category = entity.getCategory();
-				List<ServerAlarmRule> rules = findOrCreate(category);
-
-				rules.add(entity);
-			}
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
+		refresh();
 	}
 
 	@Override
 	public boolean insert(ServerAlarmRule rule) {
 		try {
-			int count = m_dao.insert(rule);
-
-			if (count > 0) {
-				List<ServerAlarmRule> rules = findOrCreate(rule.getCategory());
-
-				rules.add(rule);
-				return true;
-			}
+			m_dao.insert(rule);
+			refresh();
+			return true;
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
@@ -96,40 +70,43 @@ public class ServerAlarmRuleServiceImpl implements ServerAlarmRuleService, Initi
 	}
 
 	@Override
+	public List<ServerAlarmRule> queryRules(String category) {
+		return m_alarmRules.get(category);
+	}
+
+	@Override
 	public void refresh() {
-		// TODO
+		try {
+			Map<String, List<ServerAlarmRule>> alarmRules = new ConcurrentHashMap<String, List<ServerAlarmRule>>();
+			List<ServerAlarmRule> entities = m_dao.findAll(ServerAlarmRuleEntity.READSET_FULL);
+
+			for (ServerAlarmRule entity : entities) {
+				String category = entity.getCategory();
+				List<ServerAlarmRule> rules = alarmRules.get(category);
+
+				if (rules == null) {
+					rules = new ArrayList<ServerAlarmRule>();
+
+					alarmRules.put(category, rules);
+				}
+				rules.add(entity);
+			}
+			m_alarmRules = alarmRules;
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
 	}
 
 	@Override
 	public boolean update(ServerAlarmRule rule) {
 		try {
-			int count = m_dao.updateByPK(rule, ServerAlarmRuleEntity.UPDATESET_FULL);
-
-			if (count > 0) {
-				List<ServerAlarmRule> rules = findOrCreate(rule.getCategory());
-
-				for (ServerAlarmRule r : rules) {
-					if (r.getId() == rule.getId()) {
-						r.setCategory(rule.getCategory());
-						r.setMeasurement(rule.getMeasurement());
-						r.setContent(rule.getContent());
-						r.setEndPoint(rule.getEndPoint());
-						r.setType(rule.getType());
-
-						break;
-					}
-				}
-			}
+			m_dao.updateByPK(rule, ServerAlarmRuleEntity.UPDATESET_FULL);
+			refresh();
 			return true;
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
 		return false;
-	}
-
-	@Override
-	public List<ServerAlarmRule> queryRules(String category) {
-		return m_alarmRules.get(category);
 	}
 
 }

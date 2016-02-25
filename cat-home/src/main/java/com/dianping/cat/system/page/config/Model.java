@@ -11,6 +11,7 @@ import org.unidal.lookup.ContainerLoader;
 import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.rule.entity.Rule;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
@@ -33,7 +34,6 @@ import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
 import com.dianping.cat.home.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
 import com.dianping.cat.home.group.entity.DomainGroup;
-import com.dianping.cat.alarm.rule.entity.Rule;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.processor.BaseProcesser.RuleItem;
 
