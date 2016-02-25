@@ -2,7 +2,6 @@ package com.dianping.cat.report.page.cross.service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
@@ -143,8 +142,6 @@ public class CrossReportService extends AbstractReportService<CrossReport> {
 		crossReport.setStartTime(start);
 		crossReport.setEndTime(new Date(end.getTime() - 1));
 
-		Set<String> domains = queryAllDomainNames(start, end, CrossAnalyzer.ID);
-		crossReport.getDomainNames().addAll(domains);
 		return crossReport;
 	}
 
