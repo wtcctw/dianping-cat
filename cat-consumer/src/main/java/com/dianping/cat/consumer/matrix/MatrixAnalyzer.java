@@ -43,7 +43,6 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 	public MatrixReport getReport(String domain) {
 		MatrixReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 
-		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 		return report;
 	}
 

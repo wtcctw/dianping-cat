@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.matrix.task;
 
 import java.util.Date;
-import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -127,7 +126,6 @@ public class MatrixReportBuilder implements TaskBuilder, Initializable {
 	}
 
 	private MatrixReport queryHourlyReportByDuration(String name, String domain, Date start, Date end) {
-		Set<String> domainSet = m_reportService.queryAllDomainNames(start, end, MatrixAnalyzer.ID);
 		long startTime = start.getTime();
 		long endTime = end.getTime();
 		MatrixReportMerger merger = new MatrixReportMerger(new MatrixReport(domain));
@@ -142,7 +140,6 @@ public class MatrixReportBuilder implements TaskBuilder, Initializable {
 		MatrixReport matrixReport = merger.getMatrixReport();
 		new MatrixReportFilter().visitMatrixReport(matrixReport);
 
-		matrixReport.getDomainNames().addAll(domainSet);
 		matrixReport.setStartTime(start);
 		matrixReport.setEndTime(end);
 		return matrixReport;

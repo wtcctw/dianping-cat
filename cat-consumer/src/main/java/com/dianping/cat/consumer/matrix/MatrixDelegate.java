@@ -2,7 +2,6 @@ package com.dianping.cat.consumer.matrix;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -29,14 +28,6 @@ public class MatrixDelegate implements ReportDelegate<MatrixReport> {
 
 	@Override
 	public void beforeSave(Map<String, MatrixReport> reports) {
-		for (MatrixReport report : reports.values()) {
-			Set<String> domainNames = report.getDomainNames();
-
-			domainNames.clear();
-			domainNames.addAll(reports.keySet());
-
-			new MatrixReportFilter().visitMatrixReport(report);
-		}
 	}
 
 	@Override
