@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.cross.task;
 
 import java.util.Date;
-import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -123,7 +122,6 @@ public class CrossReportBuilder implements TaskBuilder, Initializable {
 	}
 
 	private CrossReport queryHourlyReportsByDuration(String name, String domain, Date period, Date endDate) {
-		Set<String> domainSet = m_reportService.queryAllDomainNames(period, endDate, CrossAnalyzer.ID);
 		long startTime = period.getTime();
 		long endTime = endDate.getTime();
 		CrossReportMerger merger = new CrossReportMerger(new CrossReport(domain));
@@ -136,7 +134,6 @@ public class CrossReportBuilder implements TaskBuilder, Initializable {
 			reportModel.accept(merger);
 		}
 		CrossReport crossReport = merger.getCrossReport();
-		crossReport.getDomainNames().addAll(domainSet);
 		crossReport.setStartTime(period);
 		crossReport.setEndTime(endDate);
 

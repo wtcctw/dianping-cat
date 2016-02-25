@@ -1,5 +1,8 @@
 package com.dianping.cat.report.page.app.service;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,6 +15,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.zip.GZIPInputStream;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
@@ -34,6 +38,8 @@ import com.dianping.cat.report.page.app.display.CrashLogDisplayInfo;
 public class CrashLogService {
 
 	private final int LIMIT = 10000;
+
+	private final int BUFFER = 1024;
 
 	@Inject
 	private CrashLogContentDao m_crashLogContentDao;
@@ -70,7 +76,7 @@ public class CrashLogService {
 			info.setDeviceBrand(crashLog.getDeviceBrand());
 			info.setDeviceModel(crashLog.getDeviceModel());
 			info.setCrashTime(crashLog.getCrashTime());
-			info.setDetail(new String(detail.getContent()).replace("\n", "<br/>"));
+			info.setDetail(buildContent(detail.getContent()));
 			info.setDpid(crashLog.getDpid());
 		} catch (DalException e) {
 			Cat.logError(e);
@@ -79,11 +85,54 @@ public class CrashLogService {
 		return info;
 	}
 
+	private String buildContent(byte[] content) {
+		ByteArrayInputStream bais = new ByteArrayInputStream(content);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		GZIPInputStream gis = null;
+
+		try {
+			gis = new GZIPInputStream(bais);
+		} catch (IOException ex) {
+			try {
+				baos.close();
+				bais.close();
+			} catch (IOException e) {
+				Cat.logError(e);
+			}
+			return new String(content).replace("\n", "<br/>");
+		}
+
+		try {
+			int count;
+			byte data[] = new byte[BUFFER];
+
+			while ((count = gis.read(data, 0, BUFFER)) != -1) {
+				baos.write(data, 0, count);
+			}
+
+			byte[] result = baos.toByteArray();
+
+			baos.flush();
+			return new String(result).replace("\n", "<br/>");
+		} catch (IOException e) {
+			Cat.logError(e);
+			return new String(content).replace("\n", "<br/>");
+		} finally {
+			try {
+				gis.close();
+				baos.close();
+				bais.close();
+			} catch (IOException e) {
+				Cat.logError(e);
+			}
+		}
+	}
+
 	public CrashLogDisplayInfo buildCrashLogDisplayInfo(CrashLogQueryEntity entity) {
 		CrashLogDisplayInfo info = new CrashLogDisplayInfo();
 
 		buildCrashLogData(entity, info);
-		info.setAppNames( m_appConfigManager.queryConfigItem(AppConfigManager.APP_NAME).values());
+		info.setAppNames(m_appConfigManager.queryConfigItem(AppConfigManager.APP_NAME).values());
 
 		return info;
 	}

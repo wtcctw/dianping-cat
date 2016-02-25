@@ -2,7 +2,6 @@ package com.dianping.cat.consumer.cross;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -29,12 +28,6 @@ public class CrossDelegate implements ReportDelegate<CrossReport> {
 
 	@Override
 	public void beforeSave(Map<String, CrossReport> reports) {
-		for (CrossReport report : reports.values()) {
-			Set<String> domainNames = report.getDomainNames();
-
-			domainNames.clear();
-			domainNames.addAll(reports.keySet());
-		}
 	}
 
 	@Override
