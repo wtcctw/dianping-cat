@@ -2,7 +2,6 @@ package com.dianping.cat.report.page.heartbeat.service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
@@ -17,14 +16,14 @@ import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.consumer.heartbeat.model.transform.BaseVisitor;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultNativeParser;
 import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.DailyReportContent;
+import com.dianping.cat.core.dal.DailyReportContentEntity;
 import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.HourlyReportContent;
 import com.dianping.cat.core.dal.HourlyReportContentEntity;
 import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.core.dal.DailyReportContent;
-import com.dianping.cat.core.dal.DailyReportContentEntity;
 import com.dianping.cat.report.service.AbstractReportService;
 
 public class HeartbeatReportService extends AbstractReportService<HeartbeatReport> {
@@ -62,9 +61,6 @@ public class HeartbeatReportService extends AbstractReportService<HeartbeatRepor
 
 		heartbeatReport.setStartTime(start);
 		heartbeatReport.setEndTime(new Date(end.getTime() - 1));
-
-		Set<String> domains = queryAllDomainNames(start, end, HeartbeatAnalyzer.ID);
-		heartbeatReport.getDomainNames().addAll(domains);
 
 		new HeartbeatConvertor().visitHeartbeatReport(heartbeatReport);
 		return heartbeatReport;
@@ -123,8 +119,6 @@ public class HeartbeatReportService extends AbstractReportService<HeartbeatRepor
 		heartbeatReport.setStartTime(start);
 		heartbeatReport.setEndTime(new Date(end.getTime() - 1));
 
-		Set<String> domains = queryAllDomainNames(start, end, HeartbeatAnalyzer.ID);
-		heartbeatReport.getDomainNames().addAll(domains);
 		new HeartbeatConvertor().visitHeartbeatReport(heartbeatReport);
 		return heartbeatReport;
 	}

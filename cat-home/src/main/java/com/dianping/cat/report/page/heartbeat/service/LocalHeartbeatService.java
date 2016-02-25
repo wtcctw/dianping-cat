@@ -87,8 +87,6 @@ public class LocalHeartbeatService extends LocalModelService<HeartbeatReport> {
 					HeartbeatReport tmp = DefaultSaxParser.parse(xml);
 
 					tmp.accept(merger);
-				} else {
-					report.getDomainNames().addAll(bucket.getIds());
 				}
 			} finally {
 				if (bucket != null) {
