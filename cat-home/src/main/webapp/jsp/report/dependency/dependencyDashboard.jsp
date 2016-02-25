@@ -64,8 +64,7 @@
 	$(document).ready(function() {
 		$('#minute'+${model.minute}).addClass('disabled');
 		$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
-		$('.position').hide();
-		$('.switch').hide();
+		$('#warp_search_group').hide();
 		$('#Dependency_report').addClass("open active");
 		$('#dependency_dashboard').addClass("active");
 
