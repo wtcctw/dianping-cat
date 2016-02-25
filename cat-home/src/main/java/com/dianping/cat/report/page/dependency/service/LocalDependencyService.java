@@ -43,7 +43,7 @@ public class LocalDependencyService extends LocalModelService<DependencyReport> 
 			}
 		}
 
-		if ((report == null || report.getDomainNames().isEmpty()) && period.isLast()) {
+		if ((report == null || report.getSegments().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);
 		}
@@ -67,8 +67,6 @@ public class LocalDependencyService extends LocalModelService<DependencyReport> 
 					DependencyReport tmp = DefaultSaxParser.parse(xml);
 
 					tmp.accept(merger);
-				} else {
-					report.getDomainNames().addAll(bucket.getIds());
 				}
 			} finally {
 				if (bucket != null) {
