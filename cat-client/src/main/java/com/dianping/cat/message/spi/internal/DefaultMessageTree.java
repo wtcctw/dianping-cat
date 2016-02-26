@@ -40,6 +40,8 @@ public class DefaultMessageTree implements MessageTree {
 	private String m_threadName;
 
 	private boolean m_sample = true;
+	
+	private boolean m_loss = false;
 
 	private List<Event> events = new ArrayList<Event>();
 
@@ -67,6 +69,23 @@ public class DefaultMessageTree implements MessageTree {
 		tree.setSample(m_sample);
 
 		return tree;
+	}
+
+	public MessageTree copyForTest() {
+		ByteBuf buf = null;
+		try {
+			PlainTextMessageCodec codec = new PlainTextMessageCodec();
+			buf = ByteBufAllocator.DEFAULT.buffer();
+
+			codec.encode(this, buf);
+			buf.readInt(); // get rid of length
+			
+			return codec.decode(buf);
+		} catch (Exception ex) {
+			Cat.logError(ex);
+		}
+
+		return null;
 	}
 
 	public ByteBuf getBuffer() {
@@ -145,6 +164,11 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
+   public boolean isLoss() {
+	   return m_loss;
+   }
+
+	@Override
 	public boolean isSample() {
 		return m_sample;
 	}
@@ -167,6 +191,11 @@ public class DefaultMessageTree implements MessageTree {
 	public void setIpAddress(String ipAddress) {
 		m_ipAddress = ipAddress;
 	}
+
+	@Override
+   public void setLoss(boolean loss) {
+		m_loss= loss;
+   }
 
 	@Override
 	public void setMessage(Message message) {
@@ -208,7 +237,7 @@ public class DefaultMessageTree implements MessageTree {
 	public void setThreadGroupName(String threadGroupName) {
 		m_threadGroupName = threadGroupName;
 	}
-
+	
 	@Override
 	public void setThreadId(String threadId) {
 		m_threadId = threadId;
@@ -238,23 +267,6 @@ public class DefaultMessageTree implements MessageTree {
 			ReferenceCountUtil.release(buf);
 		}
 		return result;
-	}
-	
-	public MessageTree copyForTest() {
-		ByteBuf buf = null;
-		try {
-			PlainTextMessageCodec codec = new PlainTextMessageCodec();
-			buf = ByteBufAllocator.DEFAULT.buffer();
-
-			codec.encode(this, buf);
-			buf.readInt(); // get rid of length
-			
-			return codec.decode(buf);
-		} catch (Exception ex) {
-			Cat.logError(ex);
-		}
-
-		return null;
 	}
 
 }

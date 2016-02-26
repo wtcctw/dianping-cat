@@ -13,6 +13,10 @@ public interface MessageTree extends Cloneable {
 
 	public String getDomain();
 
+	public List<Event> getEvents();
+
+	public List<Heartbeat> getHeartbeats();
+
 	public String getHostName();
 
 	public String getIpAddress();
@@ -20,6 +24,8 @@ public interface MessageTree extends Cloneable {
 	public Message getMessage();
 
 	public String getMessageId();
+
+	public List<Metric> getMetrics();
 
 	public String getParentMessageId();
 
@@ -33,6 +39,10 @@ public interface MessageTree extends Cloneable {
 
 	public String getThreadName();
 
+	public List<Transaction> getTransactions();
+
+	public boolean isLoss();
+
 	public boolean isSample();
 
 	public void setDomain(String domain);
@@ -41,13 +51,17 @@ public interface MessageTree extends Cloneable {
 
 	public void setIpAddress(String ipAddress);
 
+	public void setLoss(boolean loss);
+
 	public void setMessage(Message message);
 
 	public void setMessageId(String messageId);
 
 	public void setParentMessageId(String parentMessageId);
-
+	
 	public void setRootMessageId(String rootMessageId);
+	
+	public void setSample(boolean sample);
 
 	public void setSessionToken(String sessionToken);
 
@@ -56,15 +70,5 @@ public interface MessageTree extends Cloneable {
 	public void setThreadId(String threadId);
 
 	public void setThreadName(String id);
-
-	public void setSample(boolean sample);
-
-	public List<Event> getEvents();
-
-	public List<Transaction> getTransactions();
-
-	public List<Heartbeat> getHeartbeats();
-
-	public List<Metric> getMetrics();
 
 }
