@@ -83,7 +83,7 @@ public class NullMessageTree implements MessageTree {
 	}
 
 	@Override
-	public boolean isSample() {
+	public boolean canDiscard() {
 		return false;
 	}
 

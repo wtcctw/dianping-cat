@@ -61,8 +61,8 @@ public class AlarmTask implements Task {
 		for (AlarmParameter parameter : m_paramters) {
 			List<Condition> conditions = parameter.getCondition();
 
-			for (QueryParameter p : parameter.getQueries()) {
-				Map<Long, Double> results = m_metricService.queryFillNone(p);
+			for (QueryParameter query : parameter.getQueries()) {
+				Map<Long, Double> results = m_metricService.queryFillNone(query);
 
 				if (!results.isEmpty()) {
 					SortHelper.sortMap(results, new Comparator<Entry<Long, Double>>() {
@@ -88,7 +88,7 @@ public class AlarmTask implements Task {
 
 						entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
 						      .setLevel(alertResult.getAlertLevel());
-						entity.setMetric(p.getMeasurement()).setType(m_alarmId).setGroup(p.getTags());
+						entity.setMetric(query.getMeasurement()).setType(m_alarmId).setGroup(query.getTags());
 						m_sendManager.addAlert(entity);
 					}
 				}

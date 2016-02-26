@@ -39,7 +39,7 @@ public class DefaultMessageTree implements MessageTree {
 
 	private String m_threadName;
 
-	private boolean m_sample = true;
+	private boolean m_sample = false;
 
 	private List<Event> events = new ArrayList<Event>();
 
@@ -145,7 +145,7 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
-	public boolean isSample() {
+	public boolean canDiscard() {
 		return m_sample;
 	}
 
@@ -239,7 +239,7 @@ public class DefaultMessageTree implements MessageTree {
 		}
 		return result;
 	}
-	
+
 	public MessageTree copyForTest() {
 		ByteBuf buf = null;
 		try {
@@ -248,7 +248,7 @@ public class DefaultMessageTree implements MessageTree {
 
 			codec.encode(this, buf);
 			buf.readInt(); // get rid of length
-			
+
 			return codec.decode(buf);
 		} catch (Exception ex) {
 			Cat.logError(ex);

@@ -48,4 +48,5 @@ public enum Interval {
 		}
 		return null;
 	}
+
 }

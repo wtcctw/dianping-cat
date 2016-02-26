@@ -169,7 +169,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		if (!m_configManager.isBlock()) {
 			double sampleRatio = m_configManager.getSampleRatio();
 
-			if (tree.isSample() && sampleRatio < 1.0) {
+			if (tree.canDiscard() && sampleRatio < 1.0) {
 				if (sampleRatio > 0) {
 					int count = m_sampleCount.incrementAndGet();
 

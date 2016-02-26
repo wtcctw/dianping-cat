@@ -12,8 +12,8 @@ public class ServerNetworkDecorator extends Decorator {
 	public String generateContent(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("[CAT 网络告警] [设备: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric()).append("]")
-		      .append(alert.getContent());
+		sb.append("[CAT 网络告警] [设备: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric())
+		      .append("]<br/>").append(alert.getContent());
 		return sb.toString();
 	}
 

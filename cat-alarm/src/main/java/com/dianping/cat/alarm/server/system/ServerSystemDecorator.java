@@ -11,15 +11,19 @@ public class ServerSystemDecorator extends Decorator {
 
 	@Override
 	public String generateContent(AlertEntity alert) {
-		return alert.getContent();
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("[CAT 系统告警] [项目: ").append(TagSplitHelper.queryDomain(alert.getGroup())).append("] [机器：")
+		      .append(TagSplitHelper.queryByKey(alert.getGroup(), "endPoint")).append("] [监控项: ")
+		      .append(alert.getMetric()).append("]<br/>").append(alert.getContent());
+		return sb.toString();
 	}
 
 	@Override
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("[CAT 系统告警] [项目: ").append(TagSplitHelper.queryDomain(alert.getGroup())).append("] [监控项: ")
-		      .append(alert.getGroup()).append(" ").append(alert.getMetric()).append("]");
+		sb.append("[CAT 系统告警]");
 		return sb.toString();
 	}
 

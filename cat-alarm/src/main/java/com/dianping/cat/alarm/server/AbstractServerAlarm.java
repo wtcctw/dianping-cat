@@ -100,18 +100,15 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 		for (Rule r : rules) {
 			if (checkTime(r)) {
 				for (Condition c : r.getConditions()) {
-					String intval = c.getInterval();
-					Interval interval = Interval.findByInterval(intval);
-
-					if (interval != null) {
-						int n = Integer.valueOf(intval.substring(0, intval.length() - 1));
-						long time = interval.getTime() * n;
+					try {
+						String intval = c.getInterval();
+						long time = queryInterval(intval);
 
 						if (time < sleeptime) {
 							sleeptime = time;
 						}
-					} else {
-						Cat.logError(c.toString(), new RuntimeException("Unrecognized interval: " + intval));
+					} catch (Exception e) {
+						Cat.logError(c.toString(), e);
 					}
 				}
 				rets.add(r);
@@ -126,20 +123,23 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 			AlarmParameter alarmParameter = new AlarmParameter(conditions);
 
 			for (Condition condition : conditions) {
-				Date end = new Date();
-				int duration = condition.getDuration();
-				String intval = condition.getInterval();
-				Interval interval = Interval.findByInterval(intval);
-				Date start = new Date(end.getTime() - interval.getTime() * duration);
-				MetricType metricType = MetricType.getByName(rule.getType(), MetricType.AVG);
+				try {
+					Date end = new Date();
+					int duration = condition.getDuration();
+					String intval = condition.getInterval();
+					Date start = new Date(end.getTime() - queryInterval(intval) * (duration - 1));
+					MetricType metricType = MetricType.getByName(rule.getType(), MetricType.AVG);
 
-				for (String ep : endPoints) {
-					String tags = "endPoint='" + ep + "';" + rule.getTags();
-					QueryParameter parameter = new QueryParameter();
+					for (String ep : endPoints) {
+						String tags = "endPoint='" + ep + "';" + rule.getTags();
+						QueryParameter parameter = new QueryParameter();
 
-					parameter.setCategory(rule.getCategory()).setType(metricType).setTags(tags).setInterval(intval)
-					      .setStart(start).setEnd(end).setMeasurement(rule.getMeasurement());
-					alarmParameter.addParameter(parameter);
+						parameter.setCategory(rule.getCategory()).setType(metricType).setTags(tags).setInterval(intval)
+						      .setStart(start).setEnd(end).setMeasurement(rule.getMeasurement());
+						alarmParameter.addParameter(parameter);
+					}
+				} catch (Exception e) {
+					Cat.logError(condition.toString(), e);
 				}
 			}
 			task.addParameter(alarmParameter);
@@ -202,12 +202,29 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 		return rule;
 	}
 
+	@Override
+	public String getName() {
+		return getID() + "-Alarm";
+	}
+
 	private Pair<Integer, Integer> parseHourMinute(String startTime) {
 		String[] times = startTime.split(":");
 		int hour = Integer.parseInt(times[0]);
 		int minute = Integer.parseInt(times[1]);
 
 		return new Pair<Integer, Integer>(hour, minute);
+	}
+
+	private long queryInterval(String interval) {
+		Interval intval = Interval.findByInterval(interval);
+
+		if (intval != null) {
+			int n = Integer.valueOf(interval.substring(0, interval.length() - 1));
+
+			return n * intval.getTime();
+		} else {
+			throw new RuntimeException("Unrecognized interval: " + interval);
+		}
 	}
 
 	@Override
@@ -248,11 +265,6 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 				active = false;
 			}
 		}
-	}
-
-	@Override
-	public String getName() {
-		return getID() + "-Alarm";
 	}
 
 	@Override

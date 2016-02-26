@@ -10,14 +10,18 @@ public class ServerDatabaseDecorator extends Decorator {
 
 	@Override
 	public String generateContent(AlertEntity alert) {
-		return alert.getContent();
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("[CAT 数据库告警] [设备: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric())
+		      .append("]<br/>").append(alert.getContent());
+		return sb.toString();
 	}
 
 	@Override
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("[CAT 网络告警] [设备: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric()).append("]");
+		sb.append("[CAT 数据库告警]");
 		return sb.toString();
 	}
 
