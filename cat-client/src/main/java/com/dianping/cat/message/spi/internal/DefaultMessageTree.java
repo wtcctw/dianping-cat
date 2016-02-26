@@ -41,7 +41,7 @@ public class DefaultMessageTree implements MessageTree {
 
 	private boolean m_sample = true;
 	
-	private boolean m_loss = false;
+	private boolean m_processLoss = false;
 
 	private List<Event> events = new ArrayList<Event>();
 
@@ -164,8 +164,8 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
-   public boolean isLoss() {
-	   return m_loss;
+   public boolean isProcessLoss() {
+	   return m_processLoss;
    }
 
 	@Override
@@ -193,11 +193,6 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
-   public void setLoss(boolean loss) {
-		m_loss= loss;
-   }
-
-	@Override
 	public void setMessage(Message message) {
 		m_message = message;
 	}
@@ -215,6 +210,11 @@ public class DefaultMessageTree implements MessageTree {
 			m_parentMessageId = parentMessageId;
 		}
 	}
+
+	@Override
+   public void setProcessLoss(boolean loss) {
+		m_processLoss= loss;
+   }
 
 	@Override
 	public void setRootMessageId(String rootMessageId) {

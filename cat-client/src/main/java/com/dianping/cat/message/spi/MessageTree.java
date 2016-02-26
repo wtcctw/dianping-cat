@@ -41,7 +41,7 @@ public interface MessageTree extends Cloneable {
 
 	public List<Transaction> getTransactions();
 
-	public boolean isLoss();
+	public boolean isProcessLoss();
 
 	public boolean isSample();
 
@@ -51,13 +51,13 @@ public interface MessageTree extends Cloneable {
 
 	public void setIpAddress(String ipAddress);
 
-	public void setLoss(boolean loss);
-
 	public void setMessage(Message message);
 
 	public void setMessageId(String messageId);
 
 	public void setParentMessageId(String parentMessageId);
+
+	public void setProcessLoss(boolean loss);
 	
 	public void setRootMessageId(String rootMessageId);
 	

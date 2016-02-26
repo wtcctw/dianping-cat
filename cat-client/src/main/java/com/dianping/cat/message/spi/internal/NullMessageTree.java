@@ -168,11 +168,11 @@ public class NullMessageTree implements MessageTree {
 	}
 
 	@Override
-   public void setLoss(boolean loss) {
+   public void setProcessLoss(boolean loss) {
    }
 
 	@Override
-   public boolean isLoss() {
+   public boolean isProcessLoss() {
 	   return false;
    }
 }
