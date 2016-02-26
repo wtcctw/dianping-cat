@@ -53,8 +53,6 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	public ProblemReport getReport(String domain) {
 		ProblemReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 
-		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
-
 		return report;
 	}
 

@@ -81,8 +81,6 @@ public class LocalProblemService extends LocalModelService<ProblemReport> {
 					ProblemReport tmp = DefaultSaxParser.parse(xml);
 
 					tmp.accept(merger);
-				} else {
-					report.getDomainNames().addAll(bucket.getIds());
 				}
 			} finally {
 				if (bucket != null) {

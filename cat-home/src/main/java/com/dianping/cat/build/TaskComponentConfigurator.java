@@ -19,7 +19,6 @@ import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.core.config.ConfigDao;
-import com.dianping.cat.core.dal.DailyGraphDao;
 import com.dianping.cat.core.dal.DailyReportContentDao;
 import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.GraphDao;
@@ -71,8 +70,6 @@ import com.dianping.cat.report.page.overload.task.MonthlyCapacityUpdater;
 import com.dianping.cat.report.page.overload.task.TableCapacityService;
 import com.dianping.cat.report.page.overload.task.WeeklyCapacityUpdater;
 import com.dianping.cat.report.page.problem.service.ProblemReportService;
-import com.dianping.cat.report.page.problem.task.ProblemGraphCreator;
-import com.dianping.cat.report.page.problem.task.ProblemMerger;
 import com.dianping.cat.report.page.problem.task.ProblemReportBuilder;
 import com.dianping.cat.report.page.server.service.MetricGraphService;
 import com.dianping.cat.report.page.server.task.MetricGraphPruner;
@@ -118,10 +115,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DefaultTaskConsumer.class) //
 		      .req(TaskDao.class, ReportFacade.class));
 
-		all.add(C(ProblemGraphCreator.class));
-
-		all.add(C(ProblemMerger.class));
-
 		all.add(C(MetricPointParser.class));
 		all.add(C(BaselineCreator.class, DefaultBaselineCreator.class));
 		all.add(C(BaselineService.class, DefaultBaselineService.class).req(BaselineDao.class));
@@ -139,8 +132,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(EventReportService.class)); 
 
 		all.add(C(TaskBuilder.class, ProblemReportBuilder.ID, ProblemReportBuilder.class) //
-		      .req(GraphDao.class, DailyGraphDao.class, ProblemReportService.class)//
-		      .req(ProblemGraphCreator.class, ProblemMerger.class));
+		      .req(ProblemReportService.class));//
 
 		all.add(C(TaskBuilder.class, HeartbeatReportBuilder.ID, HeartbeatReportBuilder.class) //
 		      .req(GraphDao.class, HeartbeatReportService.class));

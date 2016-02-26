@@ -39,7 +39,7 @@ public class DefaultMessageProducer implements MessageProducer {
 	public void logError(String message, Throwable cause) {
 		if (Cat.getManager().isCatEnabled()) {
 			if (shouldLog(cause)) {
-				m_manager.getThreadLocalMessageTree().setSample(false);
+				m_manager.getThreadLocalMessageTree().setDiscard(false);
 
 				StringWriter writer = new StringWriter(2048);
 
@@ -180,7 +180,7 @@ public class DefaultMessageProducer implements MessageProducer {
 
 		DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name, m_manager);
 
-		m_manager.getThreadLocalMessageTree().setSample(false);
+		m_manager.getThreadLocalMessageTree().setDiscard(false);
 		return heartbeat;
 	}
 
@@ -192,7 +192,7 @@ public class DefaultMessageProducer implements MessageProducer {
 
 		DefaultMetric metric = new DefaultMetric(type == null ? "" : type, name, m_manager);
 
-		m_manager.getThreadLocalMessageTree().setSample(false);
+		m_manager.getThreadLocalMessageTree().setDiscard(false);
 		return metric;
 	}
 

@@ -34,13 +34,12 @@ import com.dianping.cat.report.task.event.HistoryEventMergerTest;
 import com.dianping.cat.report.task.heartbeat.HeartbeatDailyMergerTest;
 import com.dianping.cat.report.task.heavy.HeavyReportBuilderTest;
 import com.dianping.cat.report.task.metric.AlertConfigTest;
-import com.dianping.cat.report.task.problem.ProblemCreateGraphDataTest;
-import com.dianping.cat.report.task.problem.ProblemDailyGraphMergerTest;
-import com.dianping.cat.report.task.problem.ProblemDailyGraphTest;
-import com.dianping.cat.report.task.problem.ProblemGraphCreatorTest;
+import com.dianping.cat.report.task.problem.ProblemReportHourlyGraphCreatorTest;
+import com.dianping.cat.report.task.problem.ProblemReportDailyGraphCreatorTest;
 import com.dianping.cat.report.task.service.ServiceReportMergerTest;
 import com.dianping.cat.report.task.storage.HistoryStorageReportMergerTest;
 import com.dianping.cat.report.task.transaction.HistoryTransactionMergerTest;
+import com.dianping.cat.report.task.transaction.TransactionReportGraphCreatorTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -77,17 +76,15 @@ HistoryEventMergerTest.class,
 
 HistoryTransactionMergerTest.class,
 
-ProblemCreateGraphDataTest.class,
+ProblemReportHourlyGraphCreatorTest.class,
 
-ProblemGraphCreatorTest.class,
+ProblemReportDailyGraphCreatorTest.class,
+
+TransactionReportGraphCreatorTest.class,
 
 EventGraphCreatorTest.class,
 
-ProblemDailyGraphMergerTest.class,
-
 StateReportMergerTest.class,
-
-ProblemDailyGraphTest.class,
 
 /* Metric */
 MetricReportParseTest.class,
