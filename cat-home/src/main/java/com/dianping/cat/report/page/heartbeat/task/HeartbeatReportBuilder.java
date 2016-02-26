@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.heartbeat.task;
 
 import java.util.Date;
-import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -65,7 +64,6 @@ public class HeartbeatReportBuilder implements TaskBuilder {
 	}
 
 	private HeartbeatReport queryDailyHeartbeatReport(String name, String domain, Date start, Date end) {
-		Set<String> domains = m_reportService.queryAllDomainNames(start, end, HeartbeatAnalyzer.ID);
 		HeartbeatDailyMerger merger = new HeartbeatDailyMerger(new HeartbeatReport(domain), start.getTime());
 		long startTime = start.getTime();
 		long endTime = end.getTime();
@@ -81,7 +79,6 @@ public class HeartbeatReportBuilder implements TaskBuilder {
 
 		heartbeatReport.setStartTime(start);
 		heartbeatReport.setEndTime(new Date(end.getTime() - 1));
-		heartbeatReport.getDomainNames().addAll(domains);
 
 		return heartbeatReport;
 	}

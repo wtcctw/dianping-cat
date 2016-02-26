@@ -2,7 +2,6 @@ package com.dianping.cat.consumer.heartbeat;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -29,12 +28,6 @@ public class HeartbeatDelegate implements ReportDelegate<HeartbeatReport> {
 
 	@Override
 	public void beforeSave(Map<String, HeartbeatReport> reports) {
-		for (HeartbeatReport report : reports.values()) {
-			Set<String> domainNames = report.getDomainNames();
-
-			domainNames.clear();
-			domainNames.addAll(reports.keySet());
-		}
 	}
 
 	@Override

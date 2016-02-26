@@ -68,7 +68,6 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	public DependencyReport getReport(String domain) {
 		DependencyReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 
-		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 		return report;
 	}
 

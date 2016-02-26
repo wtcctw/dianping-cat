@@ -2,7 +2,6 @@ package com.dianping.cat.report.page.dependency.service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
@@ -78,8 +77,6 @@ public class DependencyReportService extends AbstractReportService<DependencyRep
 		dependencyReport.setStartTime(start);
 		dependencyReport.setEndTime(new Date(end.getTime() - 1));
 
-		Set<String> domains = queryAllDomainNames(start, end, DependencyAnalyzer.ID);
-		dependencyReport.getDomainNames().addAll(domains);
 		return dependencyReport;
 	}
 

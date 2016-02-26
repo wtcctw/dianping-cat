@@ -68,8 +68,6 @@ public class LocalCrossService extends LocalModelService<CrossReport> {
 					CrossReport tmp = DefaultSaxParser.parse(xml);
 
 					tmp.accept(merger);
-				} else {
-					report.getDomainNames().addAll(bucket.getIds());
 				}
 			} finally {
 				if (bucket != null) {
