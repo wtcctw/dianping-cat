@@ -100,16 +100,18 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 		for (Rule r : rules) {
 			if (checkTime(r)) {
 				for (Condition c : r.getConditions()) {
-					Interval interval = Interval.findByInterval(c.getInterval());
+					String intval = c.getInterval();
+					Interval interval = Interval.findByInterval(intval);
 
 					if (interval != null) {
-						long time = interval.getTime();
+						int n = Integer.valueOf(intval.substring(0, intval.length() - 1));
+						long time = interval.getTime() * n;
 
 						if (time < sleeptime) {
 							sleeptime = time;
 						}
 					} else {
-						Cat.logError(c.toString(), new RuntimeException("Unrecognized interval: " + c.getInterval()));
+						Cat.logError(c.toString(), new RuntimeException("Unrecognized interval: " + intval));
 					}
 				}
 				rets.add(r);

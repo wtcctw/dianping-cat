@@ -43,7 +43,7 @@
 	     			<td>${item.endPoint}</td>
 	     			<td>${item.measurement}</td>
 	     			<td>${item.tags}</td>
-	     			<td>${item.type}</td>
+	     			<td>${model.metricTitles[item.type]}</td>
 			     	<td><a href="?op=serverAlarmRuleUpdate&type=${payload.type}&ruleId=${item.id}" class="btn btn-primary btn-xs">
 						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
 						<a href="?op=serverAlarmRuleDelete&type=${payload.type}&ruleId=${item.id}" class="btn btn-danger btn-xs delete" >

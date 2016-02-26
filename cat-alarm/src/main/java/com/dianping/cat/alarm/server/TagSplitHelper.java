@@ -14,7 +14,7 @@ public class TagSplitHelper {
 				if (field.startsWith(key + "=")) {
 					String[] kv = field.split("=");
 
-					return kv[1];
+					return kv[1].replace("'", "");
 				}
 			}
 		}

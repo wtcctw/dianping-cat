@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.server;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -120,6 +121,15 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public List<MetricType> getMetricTypes() {
 		return Arrays.asList(MetricType.values());
+	}
+
+	public Map<String, String> getMetricTitles() {
+		Map<String, String> titles = new HashMap<String, String>();
+
+		for (MetricType type : MetricType.values()) {
+			titles.put(type.getName(), type.getTitle());
+		}
+		return titles;
 	}
 
 	public String getOpState() {

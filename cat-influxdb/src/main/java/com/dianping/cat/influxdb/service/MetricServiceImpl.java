@@ -243,7 +243,7 @@ public class MetricServiceImpl implements MetricService {
 			String format = "SELECT %s(value) FROM \"%s\" WHERE %s TIME >= '%s' AND TIME < '%s' GROUP BY time(%s) fill("
 			      + fill + ")";
 			String query = String.format(format, parameter.getType().getName(), parameter.getMeasurement(),
-			      parameter.getTags(), sdf.format(parameter.getStart()), sdf.format(parameter.getEnd()),
+			      parameter.getSqlTags(), sdf.format(parameter.getStart()), sdf.format(parameter.getEnd()),
 			      parameter.getInterval());
 
 			QueryResult queryResult = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));

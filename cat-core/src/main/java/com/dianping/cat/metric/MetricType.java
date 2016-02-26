@@ -1,5 +1,6 @@
 package com.dianping.cat.metric;
 
+
 public enum MetricType {
 
 	AVG("mean", "平均值"),
@@ -17,9 +18,9 @@ public enum MetricType {
 	private String m_title;
 
 	public static MetricType getByName(String name, MetricType defaultType) {
-		for (MetricType action : MetricType.values()) {
-			if (action.getName().equals(name)) {
-				return action;
+		for (MetricType type : values()) {
+			if (type.getName().equals(name)) {
+				return type;
 			}
 		}
 

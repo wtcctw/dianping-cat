@@ -64,31 +64,33 @@ public class AlarmTask implements Task {
 			for (QueryParameter p : parameter.getQueries()) {
 				Map<Long, Double> results = m_metricService.queryFillNone(p);
 
-				SortHelper.sortMap(results, new Comparator<Entry<Long, Double>>() {
-					@Override
-					public int compare(Entry<Long, Double> o1, Entry<Long, Double> o2) {
-						if (o1.getKey() > o2.getKey()) {
-							return 1;
-						} else if (o1.getKey() < o2.getKey()) {
-							return -1;
-						} else {
-							return 0;
+				if (!results.isEmpty()) {
+					SortHelper.sortMap(results, new Comparator<Entry<Long, Double>>() {
+						@Override
+						public int compare(Entry<Long, Double> o1, Entry<Long, Double> o2) {
+							if (o1.getKey() > o2.getKey()) {
+								return 1;
+							} else if (o1.getKey() < o2.getKey()) {
+								return -1;
+							} else {
+								return 0;
+							}
 						}
+					});
+					Double[] values = new Double[results.size()];
+
+					results.values().toArray(values);
+
+					List<DataCheckEntity> alertResults = m_dataChecker.checkData(ArrayUtils.toPrimitive(values), conditions);
+
+					for (DataCheckEntity alertResult : alertResults) {
+						AlertEntity entity = new AlertEntity();
+
+						entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
+						      .setLevel(alertResult.getAlertLevel());
+						entity.setMetric(p.getMeasurement()).setType(m_alarmId).setGroup(p.getTags());
+						m_sendManager.addAlert(entity);
 					}
-				});
-				Double[] values = new Double[results.size()];
-
-				results.values().toArray(values);
-
-				List<DataCheckEntity> alertResults = m_dataChecker.checkData(ArrayUtils.toPrimitive(values), conditions);
-
-				for (DataCheckEntity alertResult : alertResults) {
-					AlertEntity entity = new AlertEntity();
-
-					entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-					      .setLevel(alertResult.getAlertLevel());
-					entity.setMetric(p.getMeasurement()).setType(m_alarmId).setGroup(p.getTags());
-					m_sendManager.addAlert(entity);
 				}
 			}
 		}
