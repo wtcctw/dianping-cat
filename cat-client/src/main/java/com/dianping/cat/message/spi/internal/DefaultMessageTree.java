@@ -39,8 +39,8 @@ public class DefaultMessageTree implements MessageTree {
 
 	private String m_threadName;
 
-	private boolean m_sample = true;
-	
+	private boolean m_discard = true;
+
 	private boolean m_processLoss = false;
 
 	private List<Event> events = new ArrayList<Event>();
@@ -66,7 +66,7 @@ public class DefaultMessageTree implements MessageTree {
 		tree.setThreadId(m_threadId);
 		tree.setThreadName(m_threadName);
 		tree.setMessage(m_message);
-		tree.setSample(m_sample);
+		tree.setDiscard(m_discard);
 
 		return tree;
 	}
@@ -79,7 +79,7 @@ public class DefaultMessageTree implements MessageTree {
 
 			codec.encode(this, buf);
 			buf.readInt(); // get rid of length
-			
+
 			return codec.decode(buf);
 		} catch (Exception ex) {
 			Cat.logError(ex);
@@ -164,17 +164,12 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean canDiscard() {
-=======
-   public boolean isProcessLoss() {
-	   return m_processLoss;
-   }
+		return m_discard;
+	}
 
-	@Override
-	public boolean isSample() {
->>>>>>> 8ca9dd25863599a93de89f106d95e5a94a8caa39
-		return m_sample;
+	public boolean isProcessLoss() {
+		return m_processLoss;
 	}
 
 	public void setBuffer(ByteBuf buf) {
@@ -216,9 +211,9 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
-   public void setProcessLoss(boolean loss) {
-		m_processLoss= loss;
-   }
+	public void setProcessLoss(boolean loss) {
+		m_processLoss = loss;
+	}
 
 	@Override
 	public void setRootMessageId(String rootMessageId) {
@@ -228,8 +223,8 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
-	public void setSample(boolean sample) {
-		m_sample = sample;
+	public void setDiscard(boolean sample) {
+		m_discard = sample;
 	}
 
 	@Override
@@ -241,7 +236,7 @@ public class DefaultMessageTree implements MessageTree {
 	public void setThreadGroupName(String threadGroupName) {
 		m_threadGroupName = threadGroupName;
 	}
-	
+
 	@Override
 	public void setThreadId(String threadId) {
 		m_threadId = threadId;

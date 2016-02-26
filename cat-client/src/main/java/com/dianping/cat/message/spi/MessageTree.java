@@ -39,15 +39,11 @@ public interface MessageTree extends Cloneable {
 
 	public String getThreadName();
 
-<<<<<<< HEAD
 	public boolean canDiscard();
-=======
+
 	public List<Transaction> getTransactions();
 
 	public boolean isProcessLoss();
-
-	public boolean isSample();
->>>>>>> 8ca9dd25863599a93de89f106d95e5a94a8caa39
 
 	public void setDomain(String domain);
 
@@ -62,10 +58,10 @@ public interface MessageTree extends Cloneable {
 	public void setParentMessageId(String parentMessageId);
 
 	public void setProcessLoss(boolean loss);
-	
+
 	public void setRootMessageId(String rootMessageId);
-	
-	public void setSample(boolean sample);
+
+	public void setDiscard(boolean sample);
 
 	public void setSessionToken(String sessionToken);
 
