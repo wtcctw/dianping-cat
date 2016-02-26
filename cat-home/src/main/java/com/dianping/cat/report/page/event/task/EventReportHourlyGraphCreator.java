@@ -34,15 +34,15 @@ public class EventReportHourlyGraphCreator {
 	public void createGraph(EventReport from) {
 		new EventReportVisitor().visitEventReport(from);
 	}
-	
+
 	class EventReportVisitor extends BaseVisitor {
-		
+
 		private Machine m_currentMachine;
-		
+
 		private EventType m_currentType;
-		
+
 		private EventName m_currentName;
-		
+
 		private Integer[] m_currentNameCount = new Integer[60];
 
 		private Integer[] m_currentNameFails = new Integer[60];
@@ -51,9 +51,10 @@ public class EventReportHourlyGraphCreator {
 
 		private Integer[] m_currentTypeFails = new Integer[60];
 
-		private int m_currentHour;		
-		
+		private int m_currentHour;
+
 		private int m_graphLength;
+
 		private void buildGraphTrend(GraphTrend graph, boolean isType) {
 			Long[] count = GraphTrendUtil.parseToLong(graph.getCount(), m_graphLength);
 			Long[] fails = GraphTrendUtil.parseToLong(graph.getFails(), m_graphLength);
@@ -67,8 +68,8 @@ public class EventReportHourlyGraphCreator {
 
 				if ((i + 1) % m_duration == 0) {
 					int index = m_currentHour * (60 / m_duration) + (i + 1) / m_duration - 1;
-					count[index] = countValue / m_duration;
-					fails[index] = failsValue / m_duration;
+					count[index] = (long) Math.ceil((countValue + 0.0) / m_duration);
+					fails[index] = (long) Math.ceil((failsValue + 0.0) / m_duration);
 
 					countValue = 0;
 					failsValue = 0;

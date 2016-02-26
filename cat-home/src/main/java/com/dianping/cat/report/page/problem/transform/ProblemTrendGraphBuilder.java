@@ -1,32 +1,26 @@
-package com.dianping.cat.report.page.event.transform;
+package com.dianping.cat.report.page.problem.transform;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.GraphTrendUtil;
-import com.dianping.cat.consumer.event.model.entity.EventName;
-import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.event.model.entity.EventType;
-import com.dianping.cat.consumer.event.model.entity.GraphTrend;
-import com.dianping.cat.consumer.event.model.entity.Machine;
-import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
+import com.dianping.cat.consumer.problem.model.entity.GraphTrend;
+import com.dianping.cat.consumer.problem.model.entity.Entity;
+import com.dianping.cat.consumer.problem.model.entity.Machine;
+import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.page.event.Model;
-import com.dianping.cat.report.page.event.Payload;
+import com.dianping.cat.report.page.problem.Model;
+import com.dianping.cat.report.page.problem.Payload;
 import com.site.lookup.util.StringUtils;
 
-public class EventTrendGraphBuilder {
+public class ProblemTrendGraphBuilder {
 	private int m_duration = 1;
-
-	public static final String COUNT = "count";
-
-	public static final String FAIL = "fail";
 
 	private LineChart buildLineChart(Date start, Date end, long step, int size) {
 		LineChart item = new LineChart();
@@ -37,7 +31,7 @@ public class EventTrendGraphBuilder {
 		item.setSubTitles(buildSubTitles(start, end));
 		return item;
 	}
-	
+
 	private String buildSubTitle(Date start, Date end) {
 		SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat to = new SimpleDateFormat("MM-dd");
@@ -46,7 +40,7 @@ public class EventTrendGraphBuilder {
 		sb.append(from.format(start)).append("~").append(to.format(end));
 		return sb.toString();
 	}
-	
+
 	private List<String> buildSubTitles(Date start, Date end) {
 		List<String> subTitles = new ArrayList<String>();
 
@@ -54,37 +48,31 @@ public class EventTrendGraphBuilder {
 		return subTitles;
 	}
 
-	public void buildTrendGraph(Model model, Payload payload, EventReport report) {
-		String name = payload.getName();
+	public void buildTrendGraph(Model model, Payload payload, ProblemReport report) {
+		String name = payload.getStatus();
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 		String reportType = payload.getReportType();
 		String ip = payload.getIpAddress();
 		String type = payload.getType();
-		String display = name != null ? name : type;
 
-		Map<String, double[]> data = getDatas(report, ip, type, name);
+		double[] data = getDatas(report, ip, type, name);
 
 		ReportType queryType = ReportType.findByName(reportType);
 		long step = queryType.getStep() * m_duration;
 		int size = (int) ((start.getTime() - end.getTime()) / step);
 
 		LineChart fail = buildLineChart(start, end, step, size);
-		LineChart count = buildLineChart(start, end, step, size);
 
-		fail.setTitle(display + queryType.getFailTitle());
-		count.setTitle(display + queryType.getSumTitle());
+		fail.setTitle(queryType.getFailTitle());
+		fail.addValue(data);
 
-		fail.addValue(data.get(FAIL));
-		count.addValue(data.get(COUNT));
-
-		model.setFailureTrend(fail.getJsonString());
-		model.setHitTrend(count.getJsonString());
+		model.setErrorsTrend(fail.getJsonString());
 	}
 
-	private Map<String, double[]> getDatas(EventReport report, String ip, String type, String name) {
-		EventReportVisitor visitor = new EventReportVisitor(ip, type, name);
-		visitor.visitEventReport(report);
+	private double[] getDatas(ProblemReport report, String ip, String type, String status) {
+		ProblemReportVisitor visitor = new ProblemReportVisitor(ip, type, status);
+		visitor.visitProblemReport(report);
 
 		return visitor.getDatas();
 	}
@@ -95,26 +83,15 @@ public class EventTrendGraphBuilder {
 
 			@Override
 			String getFailTitle() {
-				return " Error (count/min)";
+				return "错误量 (count/min)";
 			}
-
-			@Override
-			String getSumTitle() {
-				return " Hits (count/min)";
-			}
-
 		},
 
 		WEEK("week", TimeHelper.ONE_DAY) {
 
 			@Override
 			String getFailTitle() {
-				return " Error (count/day)";
-			}
-
-			@Override
-			String getSumTitle() {
-				return " Hits (count/day)";
+				return "错误量 (count/day)";
 			}
 		},
 
@@ -122,13 +99,9 @@ public class EventTrendGraphBuilder {
 
 			@Override
 			String getFailTitle() {
-				return " Error (count/day)";
+				return "错误量 (count/day)";
 			}
 
-			@Override
-			String getSumTitle() {
-				return " Hits (count/day)";
-			}
 		};
 
 		private String m_name;
@@ -158,28 +131,26 @@ public class EventTrendGraphBuilder {
 		public long getStep() {
 			return m_step;
 		}
-
-		abstract String getSumTitle();
 	}
 
-	public class EventReportVisitor extends BaseVisitor {
+	public class ProblemReportVisitor extends BaseVisitor {
 
 		private String m_ip;
 
 		private String m_type;
 
-		private String m_name;
+		private String m_status;
 
-		private Map<String, double[]> m_datas;
+		double[] m_fails;
 
-		public EventReportVisitor(String ip, String type, String name) {
+		public ProblemReportVisitor(String ip, String type, String status) {
 			m_ip = ip;
 			m_type = type;
-			m_name = name;
+			m_status = status;
 		}
 
-		public Map<String, double[]> getDatas() {
-			return m_datas;
+		public double[] getDatas() {
+			return m_fails;
 		}
 
 		private double[] parseToDouble(String str) {
@@ -203,39 +174,41 @@ public class EventTrendGraphBuilder {
 
 		private void resolveGraphTrend(GraphTrend graph) {
 			m_duration = graph.getDuration();
-			m_datas = new HashMap<String, double[]>();
-			m_datas.put(COUNT, parseToDouble(graph.getCount()));
-			m_datas.put(FAIL, parseToDouble(graph.getFails()));
+			double[] tmp = parseToDouble(graph.getFails());
+
+			if (m_fails == null) {
+				m_fails = new double[tmp.length];
+			}
+
+			for (int i = 0; i < m_fails.length; i++) {
+				m_fails[i] += tmp[i];
+			}
 		}
 
 		@Override
 		public void visitMachine(Machine machine) {
-			if (machine.getIp().equalsIgnoreCase(m_ip)) {
+			if (Constants.ALL.equalsIgnoreCase(m_ip)) {
 				super.visitMachine(machine);
+			} else {
+				if (machine.getIp().equalsIgnoreCase(m_ip)) {
+					super.visitMachine(machine);
+				}
 			}
 		}
 
 		@Override
-		public void visitName(EventName name) {
-			String id = name.getId();
-
-			if (StringUtils.isNotEmpty(id) && id.equalsIgnoreCase(m_name)) {
-				resolveGraphTrend(name.getGraphTrend());
-			}
-		}
-
-		@Override
-		public void visitType(EventType type) {
-			String id = type.getId();
-
-			if (id.equalsIgnoreCase(m_type)) {
-				if (StringUtils.isEmpty(m_name)) {
-					resolveGraphTrend(type.getGraphTrend());
-				} else {
-					super.visitType(type);
+		public void visitEntity(Entity entity) {
+			if (StringUtils.isEmpty(m_status)) {
+				if (entity.getType().equalsIgnoreCase(m_type)) {
+					GraphTrend graphTrend = entity.getGraphTrend();
+					resolveGraphTrend(graphTrend);
+				}
+			} else {
+				if (entity.getType().equalsIgnoreCase(m_type) && entity.getStatus().equalsIgnoreCase(m_status)) {
+					GraphTrend graphTrend = entity.getGraphTrend();
+					resolveGraphTrend(graphTrend);
 				}
 			}
 		}
 	}
-
 }
