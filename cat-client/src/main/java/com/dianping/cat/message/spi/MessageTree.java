@@ -61,7 +61,7 @@ public interface MessageTree extends Cloneable {
 
 	public void setRootMessageId(String rootMessageId);
 
-	public void setDiscard(boolean sample);
+	public void setDiscard(boolean discard);
 
 	public void setSessionToken(String sessionToken);
 

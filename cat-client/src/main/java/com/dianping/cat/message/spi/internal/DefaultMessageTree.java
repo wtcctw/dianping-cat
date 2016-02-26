@@ -177,7 +177,6 @@ public class DefaultMessageTree implements MessageTree {
 		m_buf = buf;
 	}
 
-	@Override
 	public void setDiscard(boolean discard) {
 		m_discard = discard;
 	}
