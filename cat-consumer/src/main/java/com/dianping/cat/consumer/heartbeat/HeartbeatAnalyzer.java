@@ -36,7 +36,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 	@Inject
 	private ServerFilterConfigManager m_serverFilterConfigManager;
-
+	
 	private Period buildHeartBeatInfo(Machine machine, Heartbeat heartbeat, long timestamp) {
 		String xml = (String) heartbeat.getData();
 		StatusInfo info = null;
@@ -89,6 +89,11 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	}
 
 	@Override
+   public int getAnanlyzerCount() {
+	   return 2;
+   }
+
+	@Override
 	public HeartbeatReport getReport(String domain) {
 		HeartbeatReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 
@@ -98,6 +103,15 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	@Override
 	public ReportManager<HeartbeatReport> getReportManager() {
 		return m_reportManager;
+	}
+
+	@Override
+	public boolean isEligable(MessageTree tree) {
+		if (tree.getHeartbeats().size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
@@ -196,15 +210,6 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 					Cat.logError("StatusExtension can only be double type", e);
 				}
 			}
-		}
-	}
-
-	@Override
-	public boolean isEligable(MessageTree tree) {
-		if (tree.getHeartbeats().size() > 0) {
-			return true;
-		} else {
-			return false;
 		}
 	}
 

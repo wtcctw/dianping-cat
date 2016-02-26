@@ -98,8 +98,10 @@ public class Period {
 			}
 		}
 
-		if (!success) {
+		if ((!success) && (!tree.isProcessLoss())) {
 			m_serverStateManager.addMessageTotalLoss(tree.getDomain(), 1);
+
+			tree.setProcessLoss(true);
 		}
 	}
 

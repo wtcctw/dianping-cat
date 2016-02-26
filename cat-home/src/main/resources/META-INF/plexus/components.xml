@@ -1114,14 +1114,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.problem.task.ProblemGraphCreator</role>
-			<implementation>com.dianping.cat.report.page.problem.task.ProblemGraphCreator</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.problem.task.ProblemMerger</role>
-			<implementation>com.dianping.cat.report.page.problem.task.ProblemMerger</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.metric.task.MetricPointParser</role>
 			<implementation>com.dianping.cat.report.page.metric.task.MetricPointParser</implementation>
 		</component>
@@ -1196,19 +1188,7 @@
 			<implementation>com.dianping.cat.report.page.problem.task.ProblemReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.problem.service.ProblemReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.problem.task.ProblemGraphCreator</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.problem.task.ProblemMerger</role>
 				</requirement>
 			</requirements>
 		</component>

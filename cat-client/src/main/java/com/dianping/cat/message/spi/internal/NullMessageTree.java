@@ -166,4 +166,13 @@ public class NullMessageTree implements MessageTree {
 	public List<Metric> getMetrics() {
 		return new ArrayList<Metric>();
 	}
+
+	@Override
+   public void setProcessLoss(boolean loss) {
+   }
+
+	@Override
+   public boolean isProcessLoss() {
+	   return false;
+   }
 }

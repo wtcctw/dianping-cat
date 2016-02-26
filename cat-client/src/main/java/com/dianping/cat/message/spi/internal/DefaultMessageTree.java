@@ -40,6 +40,8 @@ public class DefaultMessageTree implements MessageTree {
 	private String m_threadName;
 
 	private boolean m_sample = true;
+	
+	private boolean m_processLoss = false;
 
 	private List<Event> events = new ArrayList<Event>();
 
@@ -67,6 +69,23 @@ public class DefaultMessageTree implements MessageTree {
 		tree.setSample(m_sample);
 
 		return tree;
+	}
+
+	public MessageTree copyForTest() {
+		ByteBuf buf = null;
+		try {
+			PlainTextMessageCodec codec = new PlainTextMessageCodec();
+			buf = ByteBufAllocator.DEFAULT.buffer();
+
+			codec.encode(this, buf);
+			buf.readInt(); // get rid of length
+			
+			return codec.decode(buf);
+		} catch (Exception ex) {
+			Cat.logError(ex);
+		}
+
+		return null;
 	}
 
 	public ByteBuf getBuffer() {
@@ -145,7 +164,16 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public boolean canDiscard() {
+=======
+   public boolean isProcessLoss() {
+	   return m_processLoss;
+   }
+
+	@Override
+	public boolean isSample() {
+>>>>>>> 8ca9dd25863599a93de89f106d95e5a94a8caa39
 		return m_sample;
 	}
 
@@ -188,6 +216,11 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
+   public void setProcessLoss(boolean loss) {
+		m_processLoss= loss;
+   }
+
+	@Override
 	public void setRootMessageId(String rootMessageId) {
 		if (rootMessageId != null && rootMessageId.length() > 0) {
 			m_rootMessageId = rootMessageId;
@@ -208,7 +241,7 @@ public class DefaultMessageTree implements MessageTree {
 	public void setThreadGroupName(String threadGroupName) {
 		m_threadGroupName = threadGroupName;
 	}
-
+	
 	@Override
 	public void setThreadId(String threadId) {
 		m_threadId = threadId;
@@ -238,23 +271,6 @@ public class DefaultMessageTree implements MessageTree {
 			ReferenceCountUtil.release(buf);
 		}
 		return result;
-	}
-	
-	public MessageTree copyForTest() {
-		ByteBuf buf = null;
-		try {
-			PlainTextMessageCodec codec = new PlainTextMessageCodec();
-			buf = ByteBufAllocator.DEFAULT.buffer();
-
-			codec.encode(this, buf);
-			buf.readInt(); // get rid of length
-			
-			return codec.decode(buf);
-		} catch (Exception ex) {
-			Cat.logError(ex);
-		}
-
-		return null;
 	}
 
 }
