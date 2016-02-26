@@ -33,7 +33,7 @@ public interface MessageTree extends Cloneable {
 
 	public String getThreadName();
 
-	public boolean isSample();
+	public boolean canDiscard();
 
 	public void setDomain(String domain);
 

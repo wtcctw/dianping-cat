@@ -145,7 +145,7 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
-	public boolean isSample() {
+	public boolean canDiscard() {
 		return m_sample;
 	}
 
