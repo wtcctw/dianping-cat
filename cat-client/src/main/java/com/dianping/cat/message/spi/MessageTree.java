@@ -9,6 +9,8 @@ import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 
 public interface MessageTree extends Cloneable {
+	public boolean canDiscard();
+
 	public MessageTree copy();
 
 	public String getDomain();
@@ -39,11 +41,11 @@ public interface MessageTree extends Cloneable {
 
 	public String getThreadName();
 
-	public boolean canDiscard();
-
 	public List<Transaction> getTransactions();
 
 	public boolean isProcessLoss();
+
+	public void setDiscard(boolean sample);
 
 	public void setDomain(String domain);
 
@@ -60,8 +62,6 @@ public interface MessageTree extends Cloneable {
 	public void setProcessLoss(boolean loss);
 
 	public void setRootMessageId(String rootMessageId);
-
-	public void setDiscard(boolean sample);
 
 	public void setSessionToken(String sessionToken);
 

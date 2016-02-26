@@ -52,6 +52,11 @@ public class DefaultMessageTree implements MessageTree {
 	private List<Metric> metrics = new ArrayList<Metric>();
 
 	@Override
+	public boolean canDiscard() {
+		return m_discard;
+	}
+
+	@Override
 	public MessageTree copy() {
 		MessageTree tree = new DefaultMessageTree();
 
@@ -163,17 +168,17 @@ public class DefaultMessageTree implements MessageTree {
 		return transactions;
 	}
 
-	@Override
-	public boolean canDiscard() {
-		return m_discard;
-	}
-
 	public boolean isProcessLoss() {
 		return m_processLoss;
 	}
 
 	public void setBuffer(ByteBuf buf) {
 		m_buf = buf;
+	}
+
+	@Override
+	public void setDiscard(boolean sample) {
+		m_discard = sample;
 	}
 
 	@Override
@@ -220,11 +225,6 @@ public class DefaultMessageTree implements MessageTree {
 		if (rootMessageId != null && rootMessageId.length() > 0) {
 			m_rootMessageId = rootMessageId;
 		}
-	}
-
-	@Override
-	public void setDiscard(boolean sample) {
-		m_discard = sample;
 	}
 
 	@Override
