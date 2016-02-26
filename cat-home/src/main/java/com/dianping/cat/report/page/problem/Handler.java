@@ -22,6 +22,7 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.JsonBuilder;
@@ -33,6 +34,7 @@ import com.dianping.cat.report.page.problem.transform.DetailStatistics;
 import com.dianping.cat.report.page.problem.transform.HourlyLineChartVisitor;
 import com.dianping.cat.report.page.problem.transform.PieGraphChartVisitor;
 import com.dianping.cat.report.page.problem.transform.ProblemStatistics;
+import com.dianping.cat.report.page.problem.transform.ProblemTrendGraphBuilder;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
@@ -222,10 +224,15 @@ public class Handler implements PageHandler<Context> {
 			model.setAllStatistics(problemStatistics);
 			break;
 		case HISTORY_GRAPH:
-			m_historyGraphs.buildTrendGraph(model, payload);
-
 			report = showSummarizeReport(model, payload);
 			buildDistributionChart(model, payload, report);
+			boolean isOld = checkIfOldReport(report);
+
+			if (isOld) {
+				m_historyGraphs.buildTrendGraph(model, payload);
+			} else {
+				new ProblemTrendGraphBuilder().buildTrendGraph(model, payload, report);
+			}
 			break;
 		case GROUP:
 			report = showHourlyReport(model, payload);
@@ -284,12 +291,19 @@ public class Handler implements PageHandler<Context> {
 			model.setAllStatistics(problemStatistics);
 			break;
 		case HISTORY_GROUP_GRAPH:
-			List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
-
 			report = showSummarizeReport(model, payload);
 			report = filterReportByGroup(report, domain, group);
-			m_historyGraphs.buildGroupTrendGraph(model, payload, ips);
+
 			buildDistributionChart(model, payload, report);
+
+			isOld = checkIfOldReport(report);
+
+			if (isOld) {
+				List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
+				m_historyGraphs.buildGroupTrendGraph(model, payload, ips);
+			} else {
+				new ProblemTrendGraphBuilder().buildTrendGraph(model, payload, report);
+			}
 			break;
 		case THREAD:
 			report = showHourlyReport(model, payload);
@@ -304,6 +318,23 @@ public class Handler implements PageHandler<Context> {
 			break;
 		}
 		m_jspViewer.view(ctx, model);
+	}
+
+	private boolean checkIfOldReport(ProblemReport report) {
+		Map<String, Machine> machines = report.getMachines();
+
+		if (machines != null && machines.size() > 0) {
+			Map<String, Entity> entities = machines.entrySet().iterator().next().getValue().getEntities();
+
+			if (entities != null && entities.size() > 0) {
+				Entity entity = entities.entrySet().iterator().next().getValue();
+
+				if (entity.getGraphTrend() == null) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private void normalize(Model model, Payload payload) {

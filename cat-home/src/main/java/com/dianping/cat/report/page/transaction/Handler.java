@@ -329,7 +329,8 @@ public class Handler implements PageHandler<Context> {
 			isOld = checkIfOldReport(report);
 
 			if (isOld) {
-				m_historyGraph.buildTrendGraph(model, payload);
+				List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
+				m_historyGraph.buildGroupTrendGraph(model, payload, ips);
 			} else {
 				new TransactionTrendGraphBuilder().buildTrendGraph(model, payload, report);
 			}

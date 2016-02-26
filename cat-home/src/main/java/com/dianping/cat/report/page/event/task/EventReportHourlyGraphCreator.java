@@ -54,6 +54,7 @@ public class EventReportHourlyGraphCreator {
 		private int m_currentHour;		
 		
 		private int m_graphLength;
+		
 		private void buildGraphTrend(GraphTrend graph, boolean isType) {
 			Long[] count = GraphTrendUtil.parseToLong(graph.getCount(), m_graphLength);
 			Long[] fails = GraphTrendUtil.parseToLong(graph.getFails(), m_graphLength);
