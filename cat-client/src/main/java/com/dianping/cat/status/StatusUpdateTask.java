@@ -15,6 +15,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
@@ -155,10 +156,10 @@ public class StatusUpdateTask implements Task, Initializable {
 				StatusInfo status = new StatusInfo();
 
 				t.addData("dumpLocked", m_manager.isDumpLocked());
-				try {
-					StatusInfoCollector statusInfoCollector = new StatusInfoCollector(m_statistics, m_jars);
+				StatusInfoCollector collector = new StatusInfoCollector(m_statistics, m_jars);
 
-					status.accept(statusInfoCollector.setDumpLocked(m_manager.isDumpLocked()));
+				try {
+					status.accept(collector.setDumpLocked(m_manager.isDumpLocked()));
 
 					buildExtensionData(status);
 					h.addData(status.toString());
@@ -169,6 +170,7 @@ public class StatusUpdateTask implements Task, Initializable {
 				} finally {
 					h.complete();
 				}
+				Cat.logEvent("Heartbeat", "jstack", Event.SUCCESS, collector.getJstackInfo());
 				t.setStatus(Message.SUCCESS);
 				t.complete();
 			}

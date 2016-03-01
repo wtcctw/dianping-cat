@@ -36,6 +36,8 @@ public class StatusInfoCollector extends BaseVisitor {
 	private String m_dataPath = "/data";
 
 	private StatusInfo m_statusInfo;
+	
+	private String m_jstackInfo;
 
 	public StatusInfoCollector(MessageStatistics statistics, String jars) {
 		m_statistics = statistics;
@@ -68,6 +70,10 @@ public class StatusInfoCollector extends BaseVisitor {
 		}
 
 		return count;
+	}
+
+	public String getJstackInfo() {
+		return m_jstackInfo;
 	}
 
 	private String getThreadDump(ThreadInfo[] threads) {
@@ -272,7 +278,8 @@ public class StatusInfoCollector extends BaseVisitor {
 		int jbossThreadsCount = countThreadsByPrefix(threads, "http-", "catalina-exec-");
 		int jettyThreadsCount = countThreadsBySubstring(threads, "@qtp");
 
-		thread.setDump(getThreadDump(threads));
+		
+		m_jstackInfo = getThreadDump(threads);
 
 		frameworkThread.findOrCreateExtensionDetail("HttpThread").setValue(jbossThreadsCount + jettyThreadsCount);
 		frameworkThread.findOrCreateExtensionDetail("CatThread").setValue(countThreadsByPrefix(threads, "Cat-"));
@@ -283,5 +290,5 @@ public class StatusInfoCollector extends BaseVisitor {
 
 		m_statusInfo.addExtension(frameworkThread);
 	}
-
+	
 }
