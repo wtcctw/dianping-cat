@@ -7,9 +7,9 @@
   </ul>
   
   <div class="tab-content">
-    <div class="tab-pane active" id="report"><%@ include file="userMonitor/app.jsp"%></div>
-    <div class="tab-pane" id="interface"><%@ include file="interface/mobileInterfaceMonitor.jsp"%></div>
-    <div class="tab-pane" id="appconfig"><%@ include file="interface/appCommand.jsp"%></div>
+    <div class="tab-pane active" id="report"><%@ include file="mobile/app.jsp"%></div>
+    <div class="tab-pane" id="interface"><%@ include file="mobile/dataInterface.jsp"%></div>
+    <div class="tab-pane" id="appconfig"><%@ include file="mobile/configInterface.jsp"%></div>
    </div>
 </div>
 

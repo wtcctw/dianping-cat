@@ -42,6 +42,7 @@
          <table name="crash_log"/>
          <table name="crash_log_content"/>
          <table name="app_command_data_daily"/>
+         <table name="map_file"/>
       </group>
    </jdbc>
    <jdbc package="com.dianping.cat.web" name="web">
