@@ -38,6 +38,7 @@
 				$("#platform2").val($("#platform").val());
 				$("#city2").val($("#city").val());
 				$("#operator2").val($("#operator").val());
+				$("#source2").val($("#source").val());
 				$("#time2").val($("#time").val());
 				$("#endTime2").val($("#endTime").val());
 				commandChange("command2","code2");
@@ -177,7 +178,7 @@
 				var platform2 = $("#platform2").val();
 				var city2 = $("#city2").val();
 				var operator2 = $("#operator2").val();
-				var source2 = $("#operator2").val();
+				var source2 = $("#source2").val();
 				query2 = period2 + split + commandId2 + split + code2 + split
 						+ network2 + split + version2 + split + connectionType2
 						+ split + platform2 + split + city2 + split
