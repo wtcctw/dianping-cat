@@ -11,7 +11,6 @@
     <member name="connect-type" field="connect_type" value-type="int" length="3" nullable="false" />
     <member name="code" field="code" value-type="int" length="5" nullable="false" />
     <member name="platform" field="platform" value-type="int" length="3" nullable="false" />
-    <member name="source" field="source" value-type="int" length="3" nullable="false" />
     <member name="access-number" field="access_number" value-type="long" length="19" nullable="false" />
     <member name="response-sum-time" field="response_sum_time" value-type="long" length="19" nullable="false" />
     <member name="request-package" field="request_package" value-type="long" length="19" nullable="false" />
@@ -20,7 +19,7 @@
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
-    <index name="IX_condition" unique="true" members="period ASC, minute_order ASC, city ASC, operator ASC, network ASC, app_version ASC, connect_type ASC, code ASC, platform ASC, source ASC" />
+    <index name="IX_condition" unique="true" members="period ASC, minute_order ASC, city ASC, operator ASC, network ASC, app_version ASC, connect_type ASC, code ASC, platform ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>

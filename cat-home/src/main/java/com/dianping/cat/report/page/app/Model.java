@@ -51,8 +51,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Map<Integer, Item> m_platforms;
 
-	private Map<Integer, Item> m_sources;
-
 	private Map<Integer, Code> m_globalCodes;
 
 	private List<Command> m_commands;
@@ -245,10 +243,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_problemStatistics;
 	}
 
-	public Map<Integer, Item> getSources() {
-		return m_sources;
-	}
-
 	public Map<Integer, Item> getVersions() {
 		return m_versions;
 	}
@@ -371,10 +365,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setProblemStatistics(ProblemStatistics problemStatistics) {
 		m_problemStatistics = problemStatistics;
-	}
-
-	public void setSources(Map<Integer, Item> sources) {
-		m_sources = sources;
 	}
 
 	public void setVersions(Map<Integer, Item> versions) {

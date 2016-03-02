@@ -199,7 +199,6 @@ public class AppDataService {
 		int connnectType = entity.getConnectType();
 		int code = entity.getCode();
 		int platform = entity.getPlatfrom();
-		int source = entity.getSource();
 		int startMinuteOrder = entity.getStartMinuteOrder();
 		int endMinuteOrder = entity.getEndMinuteOrder();
 
@@ -207,37 +206,31 @@ public class AppDataService {
 			switch (groupByField) {
 			case OPERATOR:
 				datas = m_dao.findDataByOperator(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, source, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_OPERATOR_DATA);
+				      code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_OPERATOR_DATA);
 				break;
 			case NETWORK:
 				datas = m_dao.findDataByNetwork(commandId, period, city, operator, network, appVersion, connnectType, code,
-				      platform, source, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_NETWORK_DATA);
+				      platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_NETWORK_DATA);
 				break;
 			case APP_VERSION:
 				datas = m_dao.findDataByAppVersion(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, source, startMinuteOrder, endMinuteOrder,
-				      AppCommandDataEntity.READSET_APP_VERSION_DATA);
+				      code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_APP_VERSION_DATA);
 				break;
 			case CONNECT_TYPE:
 				datas = m_dao.findDataByConnectType(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, source, startMinuteOrder, endMinuteOrder,
-				      AppCommandDataEntity.READSET_CONNECT_TYPE_DATA);
+				      code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_CONNECT_TYPE_DATA);
 				break;
 			case PLATFORM:
 				datas = m_dao.findDataByPlatform(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, source, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_PLATFORM_DATA);
-				break;
-			case SOURCE:
-				datas = m_dao.findDataBySource(commandId, period, city, operator, network, appVersion, connnectType, code,
-				      platform, source, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_SOURCE_DATA);
+				      code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_PLATFORM_DATA);
 				break;
 			case CITY:
 				datas = m_dao.findDataByCity(commandId, period, city, operator, network, appVersion, connnectType, code,
-				      platform, source, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_CITY_DATA);
+				      platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_CITY_DATA);
 				break;
 			case CODE:
 				datas = m_dao.findDataByCode(commandId, period, city, operator, network, appVersion, connnectType, code,
-				      platform, source, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_CODE_DATA);
+				      platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_CODE_DATA);
 				break;
 			}
 		} catch (Exception e) {
@@ -257,7 +250,6 @@ public class AppDataService {
 		int connnectType = entity.getConnectType();
 		int code = entity.getCode();
 		int platform = entity.getPlatfrom();
-		int source = entity.getSource();
 		int startMinuteOrder = entity.getStartMinuteOrder();
 		int endMinuteOrder = entity.getEndMinuteOrder();
 
@@ -265,42 +257,33 @@ public class AppDataService {
 			switch (groupByField) {
 			case OPERATOR:
 				datas = m_dao.findDataByOperatorCode(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, source, startMinuteOrder, endMinuteOrder,
-				      AppCommandDataEntity.READSET_OPERATOR_CODE_DATA);
+				      code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_OPERATOR_CODE_DATA);
 				break;
 			case NETWORK:
 				datas = m_dao.findDataByNetworkCode(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, source, startMinuteOrder, endMinuteOrder,
-				      AppCommandDataEntity.READSET_NETWORK_CODE_DATA);
+				      code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_NETWORK_CODE_DATA);
 				break;
 			case APP_VERSION:
 				datas = m_dao.findDataByAppVersionCode(commandId, period, city, operator, network, appVersion,
-				      connnectType, code, platform, source, startMinuteOrder, endMinuteOrder,
+				      connnectType, code, platform, startMinuteOrder, endMinuteOrder,
 				      AppCommandDataEntity.READSET_APP_VERSION_CODE__DATA);
 				break;
 			case CONNECT_TYPE:
 				datas = m_dao.findDataByConnectTypeCode(commandId, period, city, operator, network, appVersion,
-				      connnectType, code, platform, source, startMinuteOrder, endMinuteOrder,
+				      connnectType, code, platform, startMinuteOrder, endMinuteOrder,
 				      AppCommandDataEntity.READSET_CONNECT_TYPE_CODE_DATA);
 				break;
 			case PLATFORM:
 				datas = m_dao.findDataByPlatformCode(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, source, startMinuteOrder, endMinuteOrder,
-				      AppCommandDataEntity.READSET_PLATFORM_CODE_DATA);
-				break;
-			case SOURCE:
-				datas = m_dao.findDataBySourceCode(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, source, startMinuteOrder, endMinuteOrder,
-				      AppCommandDataEntity.READSET_SOURCE_CODE_DATA);
+				      code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_PLATFORM_CODE_DATA);
 				break;
 			case CITY:
-				datas = m_dao
-				      .findDataByCityCode(commandId, period, city, operator, network, appVersion, connnectType, code,
-				            platform, source, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_CITY_CODE_DATA);
+				datas = m_dao.findDataByCityCode(commandId, period, city, operator, network, appVersion, connnectType,
+				      code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_CITY_CODE_DATA);
 				break;
 			case CODE:
 				datas = m_dao.findDataByCode(commandId, period, city, operator, network, appVersion, connnectType, code,
-				      platform, source, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_CODE_DATA);
+				      platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_CODE_DATA);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -322,8 +305,6 @@ public class AppDataService {
 			return data.getNetwork();
 		case PLATFORM:
 			return data.getPlatform();
-		case SOURCE:
-			return data.getSource();
 		case CODE:
 		default:
 			return CommandQueryEntity.DEFAULT_VALUE;
@@ -354,7 +335,6 @@ public class AppDataService {
 		int connnectType = entity.getConnectType();
 		int code = entity.getCode();
 		int platform = entity.getPlatfrom();
-		int source = entity.getSource();
 		int start = entity.getStartMinuteOrder();
 		int end = entity.getEndMinuteOrder();
 		List<AppCommandData> datas = new ArrayList<AppCommandData>();
@@ -363,15 +343,15 @@ public class AppDataService {
 			switch (type) {
 			case SUCCESS:
 				datas = m_dao.findDataByMinuteCode(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, source, start, end, AppCommandDataEntity.READSET_SUCCESS_DATA);
+				      code, platform, start, end, AppCommandDataEntity.READSET_SUCCESS_DATA);
 				break;
 			case REQUEST:
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
-				      platform, source, start, end, AppCommandDataEntity.READSET_COUNT_DATA);
+				      platform, start, end, AppCommandDataEntity.READSET_COUNT_DATA);
 				break;
 			case DELAY:
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
-				      platform, source, start, end, AppCommandDataEntity.READSET_AVG_DATA);
+				      platform, start, end, AppCommandDataEntity.READSET_AVG_DATA);
 				break;
 			default:
 				throw new RuntimeException("unexpected query type, type:" + type);
@@ -458,9 +438,6 @@ public class AppDataService {
 			break;
 		case PLATFORM:
 			info.setPlatform(value);
-			break;
-		case SOURCE:
-			info.setSource(value);
 			break;
 		case CODE:
 			break;

@@ -14,8 +14,6 @@ public class AppDataDetail {
 
 	private int m_platform = CommandQueryEntity.DEFAULT_VALUE;
 
-	private int m_source = CommandQueryEntity.DEFAULT_VALUE;
-
 	private int m_city = CommandQueryEntity.DEFAULT_VALUE;
 
 	private double m_successRatio;
@@ -66,10 +64,6 @@ public class AppDataDetail {
 
 	public double getResponseTimeAvg() {
 		return m_responseTimeAvg;
-	}
-
-	public int getSource() {
-		return m_source;
 	}
 
 	public double getSuccessRatio() {
@@ -124,10 +118,6 @@ public class AppDataDetail {
 	public AppDataDetail setResponseTimeAvg(double responseTimeSum) {
 		m_responseTimeAvg = responseTimeSum;
 		return this;
-	}
-
-	public void setSource(int source) {
-		m_source = source;
 	}
 
 	public AppDataDetail setSuccessRatio(double successRatio) {

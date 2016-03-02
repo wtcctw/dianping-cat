@@ -103,10 +103,10 @@
 			var str = document.URL;
 			var result = str.split("&groupByField=");
 			var field = result[1].split("&")[0];
-			query(field,undefined,undefined,undefined,undefined,undefined,undefined,undefined,sort);
+			query(field,undefined,undefined,undefined,undefined,undefined,undefined,sort);
 		}
 
-		function query(field,networkCode,appVersionCode,channelCode,platformCode,cityCode,operatorCode,sourceCode,sort) {
+		function query(field,networkCode,appVersionCode,channelCode,platformCode,cityCode,operatorCode,sort) {
 			var times = $("#time").val().split(" ");
 			var period = times[0];
 			var start = times[1];
@@ -119,7 +119,6 @@
 			var platform = "";
 			var city = "";
 			var operator = "";
-			var source = "";
 			if(typeof(networkCode) == "undefined"){
 				network = $("#network").val();
 			}else{
@@ -150,16 +149,11 @@
 			}else{
 				operator = operatorCode;
 			}
-			if(typeof(sourceCode) == "undefined"){
-				source = $("#source").val();
-			}else{
-				source = sourceCode;
-			}
 			var split = ";";
 			var commandId = ${model.command2IdJson}[command].id;
 			var query1 = period + split + commandId + split + code + split
 					+ network + split + version + split + connectionType
-					+ split + platform + split + city + split + operator + split + source + split + start + split + end;
+					+ split + platform + split + city + split + operator + split + start + split + end;
 			var query2 = "";
 			var value = document.getElementById("checkbox").checked;
 
@@ -177,11 +171,10 @@
 				var platform2 = $("#platform2").val();
 				var city2 = $("#city2").val();
 				var operator2 = $("#operator2").val();
-				var source2 = $("#operator2").val();
 				query2 = period2 + split + commandId2 + split + code2 + split
 						+ network2 + split + version2 + split + connectionType2
 						+ split + platform2 + split + city2 + split
-						+ operator2 + split + source2 + split + start2 + split + end2;
+						+ operator2 + split + start2 + split + end2;
 			}
 
 			var checkboxs = document.getElementsByName("typeCheckbox");
@@ -252,13 +245,13 @@
 					if (typeof(words[0]) != 'undefined' && words[0].length == 0) {
 						$("#time").val(getDate());
 					} else {
-						$("#time").val(words[0] + " " + words[10]);
+						$("#time").val(words[0] + " " + words[9]);
 					}
 					
 					if(words[10] == null || words.length == 1){
 						$("#endTime").val(getTime());
 					}else{
-						$("#endTime").val(words[11]);
+						$("#endTime").val(words[10]);
 					}
 					
 					$("#code").val(words[2]);
@@ -268,7 +261,6 @@
 					$("#platform").val(words[6]);
 					$("#city").val(words[7]);
 					$("#operator").val(words[8]);
-					$("#source").val(words[9]);
 					
 					var datePair = {};
 					datePair["当前值"]=$("#time").val().split(" ")[0];
@@ -281,13 +273,13 @@
 						if (words[0] == null || words[0].length == 0) {
 							$("#time2").val(getDate());
 						} else {
-							$("#time2").val(words[0] + " " + words[10]);
+							$("#time2").val(words[0] + " " + words[9]);
 						}
 						
 						if(words[10] == null || words.length == 1){
 							$("#endTime2").val(getTime());
 						}else{
-							$("#endTime2").val(words[11]);
+							$("#endTime2").val(words[10]);
 						}
 						
 						datePair["对比值"]=$("#time2").val().split(" ")[0];
@@ -308,7 +300,6 @@
 						$("#platform2").val(words[6]);
 						$("#city2").val(words[7]);
 						$("#operator2").val(words[8]);
-						$("#source2").val(words[9]);
 					} else {
 						$("#time2").val(getDate());
 					}
