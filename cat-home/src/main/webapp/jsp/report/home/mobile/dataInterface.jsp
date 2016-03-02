@@ -134,8 +134,21 @@
 		<tr><td>dm</td><td>手机型号</td><td>String</td></tr>
 		<tr><td>id</td><td>dpid</td><td>String</td></tr>
 		<tr><td>t</td><td>crash时间戳</td><td>long</td></tr>
+		<tr><td>mi</td><td>混淆map id</td><td>String</td></tr>
 		<tr><td>d</td><td>详细的错误日志</td><td>String</td></tr>
 	</table>
+<br/>
+
+<h4 class="text-danger">APP Crash日志混淆map上传接口</h4>
+	<pre>	http://{ip}/broker-service/api/crash?op=upload</pre>
+	<p class="text-danger">参数可以post上来，需要对value进行encode。</p>
+	<table class="table table-bordered table-striped table-condensed  ">
+		<tr><th>参数名</th><th>描述</th><th>类型</th></tr>
+		<tr><td>mi</td><td>混淆map ID</td><td>String</td></tr>
+		<tr><td>f</td><td>混淆map内容</td><td>String</td></tr>
+	</table>
+<br/>
+
 <br/>
 
 <h4 class="text-danger">APP Crash日志统计获取接口</h4>
