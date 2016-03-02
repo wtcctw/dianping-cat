@@ -13,8 +13,6 @@ public enum AppDataField {
 
 	PLATFORM("platform", "平台"),
 
-	SOURCE("source", "来源"),
-
 	CITY("city", "城市"),
 
 	CODE("code", "返回码");
