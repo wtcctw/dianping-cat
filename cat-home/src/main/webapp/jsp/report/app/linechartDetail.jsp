@@ -88,6 +88,16 @@
 						</c:forEach>
 					</select>
 	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">来源</span>
+					<select id="source" style="width: 100px;">
+						<option value=''>All</option>
+						<c:forEach var="item" items="${model.sources}"
+							varStatus="status">
+							<option value='${item.value.id}'>${item.value.name}</option>
+						</c:forEach>
+					</select>
+	            </div>
 	            <input class="btn btn-primary btn-sm"
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
 					type="submit" /> <input class="btn btn-primary btn-sm" id="checkbox"
@@ -180,6 +190,16 @@
 						</c:forEach>
 					</select>
 	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">来源</span>
+					<select id="source2" style="width: 100px;">
+						<option value=''>All</option>
+						<c:forEach var="item" items="${model.sources}"
+							varStatus="status">
+							<option value='${item.value.id}'>${item.value.name}</option>
+						</c:forEach>
+					</select>
+	            </div>
 	            </th>
 			</tr>
 		</table>
@@ -231,6 +251,7 @@
 		<th class="right text-success">平台</th>
 		<th class="right text-success">地区</th>
 		<th class="right text-success">运营商</th>
+		<th class="right text-success">来源</th>
 		<th class="right"><a href="javascript:queryGroupBy('success');">成功率</a>(%)</th>
 		<th class="right"><a href="javascript:queryGroupBy('request');">总请求数</a></th>
 		<th class="right"><a href="javascript:queryGroupBy('delay');">成功平均延迟</a>(ms)</th>
@@ -246,16 +267,19 @@
 		<c:set var="platformCode" value="${item.platform eq '-1' ? '' : item.platform}"/>
 		<c:set var="cityCode" value="${item.city eq '-1' ? '' : item.city}"/>
 		<c:set var="operatorCode" value="${item.operator eq '-1' ? '' : item.operator}"/>
+		<c:set var="sourceCode" value="${item.source eq '-1' ? '' : item.source}"/>
+		
 		<c:set var="network" value="${model.networks[networkCode].name}"/>
 		<c:set var="appVersion" value="${model.versions[appVersionCode].name}"/>
 		<c:set var="channel" value="${model.connectionTypes[channelCode].name}"/>
 		<c:set var="platform" value="${model.platforms[platformCode].name}"/>
 		<c:set var="city" value="${model.cities[cityCode].name}"/>
 		<c:set var="operator" value="${model.operators[operatorCode].name}"/>
+		<c:set var="source" value="${model.sources[sourceCode].name}"/>
 		
 		<c:choose>
 			<c:when test="${empty networkCode}">
-				<td><button class="btn btn-xs btn-info" onclick="query('network', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}');">展开⬇</button></td>
+				<td><button class="btn btn-xs btn-info" onclick="query('network', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}','${sourceCode}');">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 				<c:choose>
@@ -271,7 +295,7 @@
 		
 		<c:choose>
 			<c:when test="${empty appVersionCode}">
-				<td><button class="btn btn-xs btn-info" onclick="query('app-version', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}');">展开⬇</button></td>
+				<td><button class="btn btn-xs btn-info" onclick="query('app-version', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}','${sourceCode}');">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 				<c:choose>
@@ -287,7 +311,7 @@
 		
 		<c:choose>
 		<c:when test="${empty channelCode}">
-			<td><button class="btn btn-xs btn-info" onclick="query('connnect-type', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}');">展开⬇</button></td>
+			<td><button class="btn btn-xs btn-info" onclick="query('connnect-type', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}','${sourceCode}');">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<c:choose>
@@ -303,7 +327,7 @@
 		
 		<c:choose>
 		<c:when test="${empty platformCode}">
-			<td><button class="btn btn-xs btn-info" onclick="query('platform', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}');">展开⬇</button></td>
+			<td><button class="btn btn-xs btn-info" onclick="query('platform', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}','${sourceCode}');">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<c:choose>
@@ -319,7 +343,7 @@
 		
 		<c:choose>
 		<c:when test="${empty cityCode}">
-				<td><button class="btn btn-xs btn-info" onclick="query('city', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}');">展开⬇</button></td>
+				<td><button class="btn btn-xs btn-info" onclick="query('city', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}','${sourceCode}');">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<c:choose>
@@ -334,8 +358,8 @@
 		</c:choose>
 		
 		<c:choose>
-		<c:when test="${empty operatorCode}">
-				<td><button class="btn btn-xs btn-info" onclick="query('operator', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}');">展开⬇</button></td>
+			<c:when test="${empty operatorCode}">
+				<td><button class="btn btn-xs btn-info" onclick="query('operator', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}','${sourceCode}');">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<c:choose>
@@ -344,6 +368,22 @@
 			</c:when>
 			<c:otherwise>
 			<td>${operator}</td>
+			</c:otherwise>
+			</c:choose>
+			</c:otherwise>
+		</c:choose>
+		
+		<c:choose>
+			<c:when test="${empty sourceCode}">
+				<td><button class="btn btn-xs btn-info" onclick="query('source', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}','${sourceCode}');">展开⬇</button></td>
+			</c:when>
+			<c:otherwise>
+			<c:choose>
+			<c:when test="${empty source}">
+				<td class="text-danger">Unknown [${sourceCode}]</td>
+			</c:when>
+			<c:otherwise>
+			<td>${source}</td>
 			</c:otherwise>
 			</c:choose>
 			</c:otherwise>
