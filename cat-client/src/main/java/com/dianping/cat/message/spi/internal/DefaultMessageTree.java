@@ -39,7 +39,9 @@ public class DefaultMessageTree implements MessageTree {
 
 	private String m_threadName;
 
-	private boolean m_sample = true;
+	private boolean m_discard = true;
+
+	private boolean m_processLoss = false;
 
 	private List<Event> events = new ArrayList<Event>();
 
@@ -48,6 +50,11 @@ public class DefaultMessageTree implements MessageTree {
 	private List<Heartbeat> heartbeats = new ArrayList<Heartbeat>();
 
 	private List<Metric> metrics = new ArrayList<Metric>();
+
+	@Override
+	public boolean canDiscard() {
+		return m_discard;
+	}
 
 	@Override
 	public MessageTree copy() {
@@ -64,9 +71,26 @@ public class DefaultMessageTree implements MessageTree {
 		tree.setThreadId(m_threadId);
 		tree.setThreadName(m_threadName);
 		tree.setMessage(m_message);
-		tree.setSample(m_sample);
+		tree.setDiscard(m_discard);
 
 		return tree;
+	}
+
+	public MessageTree copyForTest() {
+		ByteBuf buf = null;
+		try {
+			PlainTextMessageCodec codec = new PlainTextMessageCodec();
+			buf = ByteBufAllocator.DEFAULT.buffer();
+
+			codec.encode(this, buf);
+			buf.readInt(); // get rid of length
+
+			return codec.decode(buf);
+		} catch (Exception ex) {
+			Cat.logError(ex);
+		}
+
+		return null;
 	}
 
 	public ByteBuf getBuffer() {
@@ -144,13 +168,17 @@ public class DefaultMessageTree implements MessageTree {
 		return transactions;
 	}
 
-	@Override
-	public boolean isSample() {
-		return m_sample;
+	public boolean isProcessLoss() {
+		return m_processLoss;
 	}
 
 	public void setBuffer(ByteBuf buf) {
 		m_buf = buf;
+	}
+
+	@Override
+	public void setDiscard(boolean sample) {
+		m_discard = sample;
 	}
 
 	@Override
@@ -188,15 +216,15 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
+	public void setProcessLoss(boolean loss) {
+		m_processLoss = loss;
+	}
+
+	@Override
 	public void setRootMessageId(String rootMessageId) {
 		if (rootMessageId != null && rootMessageId.length() > 0) {
 			m_rootMessageId = rootMessageId;
 		}
-	}
-
-	@Override
-	public void setSample(boolean sample) {
-		m_sample = sample;
 	}
 
 	@Override
@@ -238,23 +266,6 @@ public class DefaultMessageTree implements MessageTree {
 			ReferenceCountUtil.release(buf);
 		}
 		return result;
-	}
-	
-	public MessageTree copyForTest() {
-		ByteBuf buf = null;
-		try {
-			PlainTextMessageCodec codec = new PlainTextMessageCodec();
-			buf = ByteBufAllocator.DEFAULT.buffer();
-
-			codec.encode(this, buf);
-			buf.readInt(); // get rid of length
-			
-			return codec.decode(buf);
-		} catch (Exception ex) {
-			Cat.logError(ex);
-		}
-
-		return null;
 	}
 
 }

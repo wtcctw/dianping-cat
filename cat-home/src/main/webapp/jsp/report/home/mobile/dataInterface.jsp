@@ -27,12 +27,14 @@
 		<tr><td>requestbyte</td><td>发送字节数</td><td>int</td></tr>
 		<tr><td>responsebyte</td><td>返回字节数</td><td>int</td></tr>
 		<tr><td>responsetime</td><td>用时 (毫秒）</td><td>int</td></tr>
+		<tr><td>ip</td><td>客户端连接的connection server的ip，长连接的代理ip</td><td>String</td></tr>
+		<tr><td>source</td><td>自定义上传，目前点评主APP=1，团购APP=2</td><td>int</td></tr>
 	</table>
+	目前有三个version，v=2 v=3 v=4
 	
 	<pre>
 	单个请求格式如下
 	timstamp<span class="text-danger">TAB</span>network<span class="text-danger">TAB</span>version<span class="text-danger">TAB</span>tunnel<span class="text-danger">TAB</span>command<span class="text-danger">TAB</span>code<span class="text-danger">TAB</span>platform<span class="text-danger">TAB</span>requestbyte<span class="text-danger">TAB</span>responsebyte<span class="text-danger">TAB</span>responsetime<span class="text-danger">ENTER</span>
-	
 	</pre>
 	<p>POST内容如果有如下5个请求，Sample的POST内容为，</p>
 	<p class="text-danger">v=2&c=不需要做urlencode，后面的批量的content部分需要urlencode。</p>
@@ -43,6 +45,42 @@
 	1400037748174<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>3<span class="text-danger">\t</span>110<span class="text-danger">\t</span>120<span class="text-danger">\t</span>200<span class="text-danger">\n</span> 
 	1400037748185<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>1<span class="text-danger">\t</span>120<span class="text-danger">\t</span>130<span class="text-danger">\t</span>100<span class="text-danger">\n</span> 
 	1400037748196<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>500<span class="text-danger">\t</span>2<span class="text-danger">\t</span>110<span class="text-danger">\t</span>140<span class="text-danger">\t</span>200<span class="text-danger">\n</span>
+	</pre>
+	
+	<br>
+	
+	v=3 在v=2的基础上，最后扩展了一个ip字段，表示当前连接的connection server的ip地址，暂时不做统计
+	<pre>
+	单个请求格式如下
+	timstamp<span class="text-danger">TAB</span>network<span class="text-danger">TAB</span>version<span class="text-danger">TAB</span>tunnel<span class="text-danger">TAB</span>command<span class="text-danger">TAB</span>code<span class="text-danger">TAB</span>platform<span class="text-danger">TAB</span>requestbyte<span class="text-danger">TAB</span>responsebyte<span class="text-danger">TAB</span>responsetime<span class="text-danger">TAB</span>ip<span class="text-danger">ENTER</span>
+	</pre>
+	<p>POST内容如果有如下5个请求，Sample的POST内容为，</p>
+	<p class="text-danger">v=2&c=不需要做urlencode，后面的批量的content部分需要urlencode。</p>
+	<pre>
+	v=3&c=
+	1400037748152<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>1<span class="text-danger">\t</span>100<span class="text-danger">\t</span>100<span class="text-danger">\t</span>200<span class="text-danger">\t</span>10.1.6.128<span class="text-danger">\n</span> 
+	1400037748163<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>2<span class="text-danger">\t</span>120<span class="text-danger">\t</span>110<span class="text-danger">\t</span>300<span class="text-danger">\t</span>10.1.6.128<span class="text-danger">\n</span> 
+	1400037748174<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>3<span class="text-danger">\t</span>110<span class="text-danger">\t</span>120<span class="text-danger">\t</span>200<span class="text-danger">\t</span>10.1.6.128<span class="text-danger">\n</span> 
+	1400037748185<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>1<span class="text-danger">\t</span>120<span class="text-danger">\t</span>130<span class="text-danger">\t</span>100<span class="text-danger">\t</span>10.1.6.128<span class="text-danger">\n</span> 
+	1400037748196<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>500<span class="text-danger">\t</span>2<span class="text-danger">\t</span>110<span class="text-danger">\t</span>140<span class="text-danger">\t</span>200<span class="text-danger">\t</span>10.1.6.128<span class="text-danger">\n</span>
+	</pre>	
+	
+	<br>
+	
+	v=4 在v=3的基础上，最后扩展了一个来源字段，表示当前所属的app的来源，比如点评主app，点评团app等
+	<pre>
+	单个请求格式如下
+	timstamp<span class="text-danger">TAB</span>network<span class="text-danger">TAB</span>version<span class="text-danger">TAB</span>tunnel<span class="text-danger">TAB</span>command<span class="text-danger">TAB</span>code<span class="text-danger">TAB</span>platform<span class="text-danger">TAB</span>requestbyte<span class="text-danger">TAB</span>responsebyte<span class="text-danger">TAB</span>responsetime<span class="text-danger">TAB</span>ip<span class="text-danger">TAB</span>source<span class="text-danger">ENTER</span>
+	</pre>
+	<p>POST内容如果有如下5个请求，Sample的POST内容为，</p>
+	<p class="text-danger">v=2&c=不需要做urlencode，后面的批量的content部分需要urlencode。</p>
+	<pre>
+	v=3&c=
+	1400037748152<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>1<span class="text-danger">\t</span>100<span class="text-danger">\t</span>100<span class="text-danger">\t</span>200<span class="text-danger">\t</span>10.1.6.128<span class="text-danger">\t</span>1<span class="text-danger">\n</span> 
+	1400037748163<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>2<span class="text-danger">\t</span>120<span class="text-danger">\t</span>110<span class="text-danger">\t</span>300<span class="text-danger">\t</span>10.1.6.128<span class="text-danger">\t</span>1<span class="text-danger">\n</span> 
+	1400037748174<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>3<span class="text-danger">\t</span>110<span class="text-danger">\t</span>120<span class="text-danger">\t</span>200<span class="text-danger">\t</span>10.1.6.128<span class="text-danger">\t</span>1<span class="text-danger">\n</span> 
+	1400037748185<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>1<span class="text-danger">\t</span>120<span class="text-danger">\t</span>130<span class="text-danger">\t</span>100<span class="text-danger">\t</span>10.1.6.128<span class="text-danger">\t</span>1<span class="text-danger">\n</span> 
+	1400037748196<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>500<span class="text-danger">\t</span>2<span class="text-danger">\t</span>110<span class="text-danger">\t</span>140<span class="text-danger">\t</span>200<span class="text-danger">\t</span>10.1.6.128<span class="text-danger">\t</span>1<span class="text-danger">\n</span>
 	</pre>	
 <br/>
 

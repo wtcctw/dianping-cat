@@ -7,8 +7,8 @@
   </ul>
   
   <div class="tab-content">
-    <div class="tab-pane active" id="report"><%@ include file="userMonitor/web.jsp"%></div>
-    <div class="tab-pane" id="interface"><%@ include file="interface/webInterfaceMonitor.jsp"%></div>
-    <div class="tab-pane" id="alert"><%@ include file="alertDocument/frontendException.jsp"%></div>
+    <div class="tab-pane active" id="report"><%@ include file="browser/web.jsp"%></div>
+    <div class="tab-pane" id="interface"><%@ include file="browser/interface.jsp"%></div>
+    <div class="tab-pane" id="alert"><%@ include file="browser/jsAlert.jsp"%></div>
    </div>
 </div>

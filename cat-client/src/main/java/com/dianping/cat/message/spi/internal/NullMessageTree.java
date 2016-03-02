@@ -22,6 +22,11 @@ public class NullMessageTree implements MessageTree {
 	public static final String UNKNOWN_MESSAGE_ID = UNKNOWN + "-00000000-000000-0";
 
 	@Override
+	public boolean canDiscard() {
+		return false;
+	}
+
+	@Override
 	public MessageTree copy() {
 		return this;
 	}
@@ -29,6 +34,16 @@ public class NullMessageTree implements MessageTree {
 	@Override
 	public String getDomain() {
 		return UNKNOWN;
+	}
+
+	@Override
+	public List<Event> getEvents() {
+		return new ArrayList<Event>();
+	}
+
+	@Override
+	public List<Heartbeat> getHeartbeats() {
+		return new ArrayList<Heartbeat>();
 	}
 
 	@Override
@@ -50,6 +65,11 @@ public class NullMessageTree implements MessageTree {
 	public String getMessageId() {
 		// cat-0a08722f-399628-8613
 		return UNKNOWN_MESSAGE_ID;
+	}
+
+	@Override
+	public List<Metric> getMetrics() {
+		return new ArrayList<Metric>();
 	}
 
 	@Override
@@ -83,9 +103,14 @@ public class NullMessageTree implements MessageTree {
 	}
 
 	@Override
-	public boolean isSample() {
-		return false;
+	public List<Transaction> getTransactions() {
+		return new ArrayList<Transaction>();
 	}
+
+	@Override
+   public boolean isProcessLoss() {
+	   return false;
+   }
 
 	@Override
 	public void setDomain(String domain) {
@@ -118,7 +143,16 @@ public class NullMessageTree implements MessageTree {
 	}
 
 	@Override
+   public void setProcessLoss(boolean loss) {
+   }
+
+	@Override
 	public void setRootMessageId(String rootMessageId) {
+
+	}
+
+	@Override
+	public void setDiscard(boolean sample) {
 
 	}
 
@@ -140,30 +174,5 @@ public class NullMessageTree implements MessageTree {
 	@Override
 	public void setThreadName(String id) {
 
-	}
-
-	@Override
-	public void setSample(boolean sample) {
-
-	}
-
-	@Override
-	public List<Event> getEvents() {
-		return new ArrayList<Event>();
-	}
-
-	@Override
-	public List<Transaction> getTransactions() {
-		return new ArrayList<Transaction>();
-	}
-
-	@Override
-	public List<Heartbeat> getHeartbeats() {
-		return new ArrayList<Heartbeat>();
-	}
-
-	@Override
-	public List<Metric> getMetrics() {
-		return new ArrayList<Metric>();
 	}
 }

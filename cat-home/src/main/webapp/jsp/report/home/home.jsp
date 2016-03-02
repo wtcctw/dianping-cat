@@ -22,7 +22,7 @@
 	   		<%@ include file="integrating.jsp"%>
 	   	</c:when>
 	   	<c:when test="${payload.docName == 'user'}">
-	   		<%@ include file="userDocument.jsp"%>
+	   		<%@ include file="application.jsp"%>
 	   	</c:when>
 	   	<c:when test="${payload.docName == 'mobileMonitor'}">
 	   		<%@ include file="mobile.jsp"%>
