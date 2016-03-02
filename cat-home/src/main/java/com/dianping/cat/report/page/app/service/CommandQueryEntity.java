@@ -73,8 +73,8 @@ public class CommandQueryEntity extends BaseQueryEntity {
 			m_platfrom = parseValue(strs.get(6));
 			m_city = parseValue(strs.get(7));
 			m_operator = parseValue(strs.get(8));
-			m_startMinuteOrder = convert2MinuteOrder(strs.get(10));
-			m_endMinuteOrder = convert2MinuteOrder(strs.get(11));
+			m_startMinuteOrder = convert2MinuteOrder(strs.get(9));
+			m_endMinuteOrder = convert2MinuteOrder(strs.get(10));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
