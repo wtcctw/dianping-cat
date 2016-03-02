@@ -229,6 +229,16 @@ public class AppGraphCreator {
 				title = platform.getName();
 			}
 			break;
+		case SOURCE:
+			Map<Integer, com.dianping.cat.configuration.app.entity.Item> sources = m_appConfigManager
+			      .queryConfigItem(AppConfigManager.SOURCE);
+			com.dianping.cat.configuration.app.entity.Item source = null;
+			keyValue = data.getSource();
+
+			if (sources != null && (source = sources.get(keyValue)) != null) {
+				title = source.getName();
+			}
+			break;
 		case CODE:
 			Map<Integer, Code> codes = m_appConfigManager.queryCodeByCommand(command);
 			Code code = null;
@@ -244,8 +254,6 @@ public class AppGraphCreator {
 				}
 			}
 			break;
-		default:
-			throw new RuntimeException("Unrecognized groupby field: " + field);
 		}
 		if ("Unknown".equals(title)) {
 			title += " [ " + keyValue + " ]";
