@@ -81,6 +81,7 @@ public class TransactionReportVistor extends BaseVisitor {
 	@Override
 	public void visitName(TransactionName transactionName) {
 		String id = transactionName.getId();
+		
 		if (!StringUtils.isEmpty(m_type)) {
 			if (StringUtils.isEmpty(m_queryName) || isFit(m_queryName, id)) {
 				com.dianping.cat.consumer.event.model.entity.Machine machine = m_eventReport
@@ -117,6 +118,7 @@ public class TransactionReportVistor extends BaseVisitor {
 	@Override
 	public void visitType(TransactionType transactionType) {
 		String id = transactionType.getId();
+		
 		if (id.startsWith("Cache.")) {
 			if (StringUtils.isEmpty(m_type)) {
 				m_currentType = transactionType.getId();
