@@ -223,6 +223,8 @@ public class AppConnectionService {
 				datas = m_dao.findDataByCode(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, startMinuteOrder, endMinuteOrder, AppConnectionDataEntity.READSET_CODE_DATA);
 				break;
+			case SOURCE:
+				throw new RuntimeException("No support for this type: " + groupByField);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -270,6 +272,8 @@ public class AppConnectionService {
 				datas = m_dao.findDataByCityCode(commandId, period, city, operator, network, appVersion, connnectType,
 				      code, platform, AppConnectionDataEntity.READSET_CITY_CODE_DATA);
 				break;
+			case SOURCE:
+				throw new RuntimeException("No support for this type: " + groupByField);
 			case CODE:
 				datas = m_dao.findDataByCode(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, startMinuteOrder, endMinuteOrder, AppConnectionDataEntity.READSET_CODE_DATA);
@@ -376,6 +380,8 @@ public class AppConnectionService {
 			break;
 		case CODE:
 			break;
+		case SOURCE:
+			throw new RuntimeException("No support for this type: " + field);
 		}
 	}
 

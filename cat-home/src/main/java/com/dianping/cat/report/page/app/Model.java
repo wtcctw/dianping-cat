@@ -51,6 +51,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Map<Integer, Item> m_platforms;
 
+	private Map<Integer, Item> m_sources;
+
 	private Map<Integer, Code> m_globalCodes;
 
 	private List<Command> m_commands;
@@ -98,14 +100,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public Model(Context ctx) {
 		super(ctx);
-	}
-
-	public DashBoardInfo getDashBoardInfo() {
-		return m_dashBoardInfo;
-	}
-
-	public void setDashBoardInfo(DashBoardInfo dashBoardInfo) {
-		m_dashBoardInfo = dashBoardInfo;
 	}
 
 	public List<AppDataDetail> getAppDataDetailInfos() {
@@ -188,6 +182,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_crashLogDomains;
 	}
 
+	public DashBoardInfo getDashBoardInfo() {
+		return m_dashBoardInfo;
+	}
+
 	@Override
 	public Action getDefaultAction() {
 		return Action.LINECHART;
@@ -245,6 +243,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public ProblemStatistics getProblemStatistics() {
 		return m_problemStatistics;
+	}
+
+	public Map<Integer, Item> getSources() {
+		return m_sources;
 	}
 
 	public Map<Integer, Item> getVersions() {
@@ -323,6 +325,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_crashLogDomains = crashLogDomains;
 	}
 
+	public void setDashBoardInfo(DashBoardInfo dashBoardInfo) {
+		m_dashBoardInfo = dashBoardInfo;
+	}
+
 	public void setDefaultCommand(String defaultCommand) {
 		m_defaultCommand = defaultCommand;
 	}
@@ -365,6 +371,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setProblemStatistics(ProblemStatistics problemStatistics) {
 		m_problemStatistics = problemStatistics;
+	}
+
+	public void setSources(Map<Integer, Item> sources) {
+		m_sources = sources;
 	}
 
 	public void setVersions(Map<Integer, Item> versions) {

@@ -89,6 +89,16 @@
 						</c:forEach>
 					</select>
 	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">来源</span>
+					<select id="source" style="width: 100px;">
+						<option value=''>All</option>
+						<c:forEach var="item" items="${model.sources}"
+							varStatus="status">
+							<option value='${item.value.id}'>${item.value.name}</option>
+						</c:forEach>
+					</select>
+	            </div>
 	             <div class="input-group" style="float:left;width:120px">
 	              	<span class="input-group-addon">饼图展开</span>
 					<select id="piechartSelect" style="width: 100px;">
@@ -99,6 +109,7 @@
 						<option value='platform'>平台</option>
 						<option value='city'>地区</option>
 						<option value='operator'>运营商</option>
+						<option value='source'>来源</option>
 				</select>
 	            </div>
 	            <input class="btn btn-primary btn-sm"
