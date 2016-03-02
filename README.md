@@ -33,6 +33,7 @@ Requirements
 * Java 6
 * Maven 3
 * MySQL
+* Tomcat
 
 Quick Started
 ---------------------
@@ -46,13 +47,14 @@ Note：
 
 #####3、(Optional)如果安装了hadoop集群，需到/data/appdatas/cat/server.xml中配置对应hadoop信息。将localmode设置为false，默认情况下，CAT在开发模式（localmode=true）下工作。
 
-#####4、运行CAT
-		cd cat-home;mvn jetty:run
-然后打开浏览器，输入http://localhost:2281/cat/。
-
-或者在cat目录下输入
-		mvn eclipse:clean eclipse:eclipse
-然后将项目导入到eclipse中，运行cat-home项目里得‘com.dianping.cat.TestServer’来启动CAT。
+#####4、打包
+		在cat目录下，运行mvn install -DskipTests
+		
+#####4、运行
+		将cat-home targe  目录下 cat-alpha-*.war  重新命名为cat.war
+		并把cat.war 放入到tomcat的webapps目录，启动tomcat
+		
+然后打开浏览器，输入http://localhost:8080/cat/r 访问cat
 
 Copyright and license
 ---------------------
