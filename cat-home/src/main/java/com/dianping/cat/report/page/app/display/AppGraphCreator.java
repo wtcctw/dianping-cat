@@ -244,8 +244,6 @@ public class AppGraphCreator {
 				}
 			}
 			break;
-		default:
-			throw new RuntimeException("Unrecognized groupby field: " + field);
 		}
 		if ("Unknown".equals(title)) {
 			title += " [ " + keyValue + " ]";

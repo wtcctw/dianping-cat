@@ -25,26 +25,6 @@ public class CommandQueryEntity extends BaseQueryEntity {
 		m_id = DEFAULT_COMMAND;
 	}
 
-	public CommandQueryEntity(String query) {
-		List<String> strs = Splitters.by(";").split(query);
-
-		try {
-			m_date = parseDate(strs.get(0));
-			m_id = parseValue(strs.get(1));
-			m_code = parseValue(strs.get(2));
-			m_network = parseValue(strs.get(3));
-			m_version = parseValue(strs.get(4));
-			m_connectType = parseValue(strs.get(5));
-			m_platfrom = parseValue(strs.get(6));
-			m_city = parseValue(strs.get(7));
-			m_operator = parseValue(strs.get(8));
-			m_startMinuteOrder = convert2MinuteOrder(strs.get(9));
-			m_endMinuteOrder = convert2MinuteOrder(strs.get(10));
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
-
 	public CommandQueryEntity(Date date, String conditions, int start, int end) {
 		m_date = date;
 		m_startMinuteOrder = start - start % 5;
@@ -77,6 +57,26 @@ public class CommandQueryEntity extends BaseQueryEntity {
 
 		if (m_startMinuteOrder < 0) {
 			m_startMinuteOrder = DEFAULT_VALUE;
+		}
+	}
+
+	public CommandQueryEntity(String query) {
+		List<String> strs = Splitters.by(";").split(query);
+
+		try {
+			m_date = parseDate(strs.get(0));
+			m_id = parseValue(strs.get(1));
+			m_code = parseValue(strs.get(2));
+			m_network = parseValue(strs.get(3));
+			m_version = parseValue(strs.get(4));
+			m_connectType = parseValue(strs.get(5));
+			m_platfrom = parseValue(strs.get(6));
+			m_city = parseValue(strs.get(7));
+			m_operator = parseValue(strs.get(8));
+			m_startMinuteOrder = convert2MinuteOrder(strs.get(9));
+			m_endMinuteOrder = convert2MinuteOrder(strs.get(10));
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
 	}
 

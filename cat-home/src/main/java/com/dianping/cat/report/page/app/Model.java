@@ -100,14 +100,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		super(ctx);
 	}
 
-	public DashBoardInfo getDashBoardInfo() {
-		return m_dashBoardInfo;
-	}
-
-	public void setDashBoardInfo(DashBoardInfo dashBoardInfo) {
-		m_dashBoardInfo = dashBoardInfo;
-	}
-
 	public List<AppDataDetail> getAppDataDetailInfos() {
 		return m_appDataDetailInfos;
 	}
@@ -186,6 +178,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public Collection<CrashLogDomain> getCrashLogDomains() {
 		return m_crashLogDomains;
+	}
+
+	public DashBoardInfo getDashBoardInfo() {
+		return m_dashBoardInfo;
 	}
 
 	@Override
@@ -321,6 +317,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setCrashLogDomains(Collection<CrashLogDomain> crashLogDomains) {
 		m_crashLogDomains = crashLogDomains;
+	}
+
+	public void setDashBoardInfo(DashBoardInfo dashBoardInfo) {
+		m_dashBoardInfo = dashBoardInfo;
 	}
 
 	public void setDefaultCommand(String defaultCommand) {

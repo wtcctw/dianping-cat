@@ -68,7 +68,7 @@ public class AppConfigManager implements Initializable {
 	public static final String VERSION = "版本";
 
 	public static final String PLATFORM = "平台";
-
+	
 	public static final String CITY = "城市";
 
 	public static final String CONNECT_TYPE = "连接类型";

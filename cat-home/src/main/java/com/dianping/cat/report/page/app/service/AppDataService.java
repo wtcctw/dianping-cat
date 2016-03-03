@@ -265,11 +265,13 @@ public class AppDataService {
 				break;
 			case APP_VERSION:
 				datas = m_dao.findDataByAppVersionCode(commandId, period, city, operator, network, appVersion,
-				      connnectType, code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_APP_VERSION_CODE__DATA);
+				      connnectType, code, platform, startMinuteOrder, endMinuteOrder,
+				      AppCommandDataEntity.READSET_APP_VERSION_CODE__DATA);
 				break;
 			case CONNECT_TYPE:
 				datas = m_dao.findDataByConnectTypeCode(commandId, period, city, operator, network, appVersion,
-				      connnectType, code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_CONNECT_TYPE_CODE_DATA);
+				      connnectType, code, platform, startMinuteOrder, endMinuteOrder,
+				      AppCommandDataEntity.READSET_CONNECT_TYPE_CODE_DATA);
 				break;
 			case PLATFORM:
 				datas = m_dao.findDataByPlatformCode(commandId, period, city, operator, network, appVersion, connnectType,
@@ -457,7 +459,7 @@ public class AppDataService {
 			responsePackageSum += data.getResponsePackageSum();
 			requestPackageSum += data.getRequestPackageSum();
 		}
-		double responseTimeAvg = accessNumberSum == 0 ? 0 :  (double) responseTimeSum / accessNumberSum;
+		double responseTimeAvg = accessNumberSum == 0 ? 0 : (double) responseTimeSum / accessNumberSum;
 		double responsePackageAvg = accessNumberSum == 0 ? 0 : (double) responsePackageSum / accessNumberSum;
 		double requestPackageAvg = accessNumberSum == 0 ? 0 : (double) requestPackageSum / accessNumberSum;
 

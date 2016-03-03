@@ -188,7 +188,7 @@
       	<member name="response-sum-time-sum"/>
       	<member name="request-package-sum"/>
       	<member name="response-package-sum"/>
-      </readset>  
+      </readset>
       <readset name="CITY-CODE-DATA">
       	<member name="code"/>
       	<member name="city"/>

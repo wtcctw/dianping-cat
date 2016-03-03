@@ -15,17 +15,17 @@
     <li><a href="#userDocoument12" data-toggle="tab"><strong>Storage</strong></a></a></li>
   </ul>
   <div class="tab-content">
-    <div class="tab-pane active" id="userDocoument1"><%@ include file="userDocument/overall.jsp"%></div>
-    <div class="tab-pane" id="userDocoument2"><%@ include file="userDocument/logview.jsp"%></div>
-    <div class="tab-pane" id="userDocoument3"><%@ include file="userDocument/report.jsp"%></div>
-    <div class="tab-pane" id="userDocoument4"><%@ include file="userDocument/transaction.jsp"%></div>
-    <div class="tab-pane" id="userDocoument5"><%@ include file="userDocument/event.jsp"%></div>
-    <div class="tab-pane" id="userDocoument6"><%@ include file="userDocument/problem.jsp"%></div>
-    <div class="tab-pane" id="userDocoument7"><%@ include file="userDocument/heartbeat.jsp"%></div>
-    <div class="tab-pane" id="userDocoument8"><%@ include file="userDocument/cross.jsp"%></div>
-    <div class="tab-pane" id="userDocoument9"><%@ include file="userDocument/matrix.jsp"%></div>
-    <div class="tab-pane" id="userDocoument10"><%@ include file="userDocument/metric.jsp"%></div>
-    <div class="tab-pane" id="userDocoument11"><%@ include file="userDocument/dependency.jsp"%></div>
-    <div class="tab-pane" id="userDocoument12"><%@ include file="userDocument/storage.jsp"%></div>
+    <div class="tab-pane active" id="userDocoument1"><%@ include file="application/overall.jsp"%></div>
+    <div class="tab-pane" id="userDocoument2"><%@ include file="application/logview.jsp"%></div>
+    <div class="tab-pane" id="userDocoument3"><%@ include file="application/report.jsp"%></div>
+    <div class="tab-pane" id="userDocoument4"><%@ include file="application/transaction.jsp"%></div>
+    <div class="tab-pane" id="userDocoument5"><%@ include file="application/event.jsp"%></div>
+    <div class="tab-pane" id="userDocoument6"><%@ include file="application/problem.jsp"%></div>
+    <div class="tab-pane" id="userDocoument7"><%@ include file="application/heartbeat.jsp"%></div>
+    <div class="tab-pane" id="userDocoument8"><%@ include file="application/cross.jsp"%></div>
+    <div class="tab-pane" id="userDocoument9"><%@ include file="application/matrix.jsp"%></div>
+    <div class="tab-pane" id="userDocoument10"><%@ include file="application/metric.jsp"%></div>
+    <div class="tab-pane" id="userDocoument11"><%@ include file="application/dependency.jsp"%></div>
+    <div class="tab-pane" id="userDocoument12"><%@ include file="application/storage.jsp"%></div>
     </div>
 </div>
