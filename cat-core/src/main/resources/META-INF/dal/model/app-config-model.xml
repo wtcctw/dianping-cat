@@ -8,7 +8,7 @@
     <entity-ref name="config-item" type="map" names="config-items" method-find-or-create="true"/>
     <entity-ref name="code" type="map" names="codes" method-find-or-create="true"/>
     <entity-ref name="command" type="map" names="commands" method-find-or-create="true"/>
-    <element name="invalidateCommand" value-type="String" type="set" names="invalidateCommands" />
+    <element name="invalidatePattern" value-type="String" type="set" names="invalidatePatterns" />
   </entity>
   <entity name="config-item">
     <attribute name="id" value-type="String" key="true"/>
