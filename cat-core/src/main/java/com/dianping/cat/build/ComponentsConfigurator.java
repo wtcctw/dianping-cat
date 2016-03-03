@@ -16,6 +16,7 @@ import com.dianping.cat.analysis.MessageConsumer;
 import com.dianping.cat.analysis.MessageHandler;
 import com.dianping.cat.analysis.RealtimeConsumer;
 import com.dianping.cat.analysis.TcpSocketReceiver;
+import com.dianping.cat.config.app.AppCommandGroupConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatConfigManager;
@@ -80,8 +81,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(CommandFormatHandler.class, DefaultCommandFormatlHandler.class));
 
-		all.add(C(CommandFormatConfigManager.class)
-		      .req(CommandFormatHandler.class, ConfigDao.class, ContentFetcher.class));
+		all.add(C(CommandFormatConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+
+		all.add(C(AppCommandGroupConfigManager.class).req(CommandFormatHandler.class, ConfigDao.class,
+		      ContentFetcher.class));
 
 		all.add(C(SampleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
@@ -98,7 +101,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(UrlPatternConfigManager.class).req(ConfigDao.class, UrlPatternHandler.class, ContentFetcher.class));
 
 		all.add(C(Module.class, CatCoreModule.ID, CatCoreModule.class));
-		
+
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
@@ -109,7 +112,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.addAll(new CodecComponentConfigurator().defineComponents());
 		all.addAll(new StorageComponentConfigurator().defineComponents());
-		
+
 		return all;
 	}
 }
