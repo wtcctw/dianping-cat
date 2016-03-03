@@ -6540,6 +6540,9 @@
 					<role>com.dianping.cat.config.app.command.CommandFormatConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.config.app.AppCommandGroupConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
 				</requirement>
 				<requirement>
@@ -6559,6 +6562,21 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.AppCommandGroupConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppCommandGroupConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

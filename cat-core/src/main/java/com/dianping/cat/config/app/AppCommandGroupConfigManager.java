@@ -1,6 +1,11 @@
 package com.dianping.cat.config.app;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -11,7 +16,9 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
+import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.group.entity.AppCommandGroupConfig;
+import com.dianping.cat.configuration.group.entity.SubCommand;
 import com.dianping.cat.configuration.group.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
@@ -27,6 +34,9 @@ public class AppCommandGroupConfigManager implements Initializable {
 	@Inject
 	protected ContentFetcher m_fetcher;
 
+	@Inject
+	private AppConfigManager m_appConfigManager;
+
 	private volatile AppCommandGroupConfig m_config;
 
 	private int m_configId;
@@ -34,6 +44,19 @@ public class AppCommandGroupConfigManager implements Initializable {
 	private long m_modifyTime;
 
 	private static final String CONFIG_NAME = "app-command-group";
+
+	private volatile Map<Integer, List<Command>> m_commands = new HashMap<Integer, List<Command>>();
+
+	private List<Command> findOrCreate(int id, Map<Integer, List<Command>> maps) {
+		List<Command> list = maps.get(id);
+
+		if (list == null) {
+			list = new ArrayList<Command>();
+
+			maps.put(id, list);
+		}
+		return list;
+	}
 
 	public AppCommandGroupConfig getConfig() {
 		return m_config;
@@ -67,16 +90,24 @@ public class AppCommandGroupConfigManager implements Initializable {
 		if (m_config == null) {
 			m_config = new AppCommandGroupConfig();
 		}
-		ConfigSyncTask.getInstance().register(new SyncHandler() {
 
-			@Override
-			public void handle() throws Exception {
-				refreshConfig();
-			}
+		try {
+			refreshData();
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+
+		ConfigSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
 			public String getName() {
 				return CONFIG_NAME;
+			}
+
+			@Override
+			public void handle() throws Exception {
+				refreshConfig();
+				refreshData();
 			}
 		});
 	}
@@ -90,6 +121,15 @@ public class AppCommandGroupConfigManager implements Initializable {
 			Cat.logError(e);
 			return false;
 		}
+	}
+
+	public List<Command> queryParentCommands(int id) {
+		List<Command> rets = m_commands.get(id);
+
+		if (rets != null) {
+			rets = new ArrayList<Command>();
+		}
+		return rets;
 	}
 
 	private void refreshConfig() throws DalException, SAXException, IOException {
@@ -107,6 +147,31 @@ public class AppCommandGroupConfigManager implements Initializable {
 		}
 	}
 
+	private void refreshData() throws Exception {
+		Map<Integer, List<Command>> results = new HashMap<Integer, List<Command>>();
+		Map<String, Command> commands = m_appConfigManager.getCommands();
+
+		for (com.dianping.cat.configuration.group.entity.Command cmd : m_config.getCommands().values()) {
+			String id = cmd.getId();
+			Command parent = commands.get(id);
+
+			if (parent != null) {
+				for (Entry<String, SubCommand> entry : cmd.getSubCommands().entrySet()) {
+					SubCommand subCmd = entry.getValue();
+					String name = subCmd.getId();
+					Command c = commands.get(name);
+
+					if (c != null) {
+						List<Command> lst = findOrCreate(c.getId(), results);
+
+						lst.add(parent);
+					}
+				}
+			}
+		}
+		m_commands = results;
+	}
+
 	public boolean storeConfig() {
 		try {
 			Config config = m_configDao.createLocal();
@@ -122,5 +187,4 @@ public class AppCommandGroupConfigManager implements Initializable {
 		}
 		return true;
 	}
-
 }

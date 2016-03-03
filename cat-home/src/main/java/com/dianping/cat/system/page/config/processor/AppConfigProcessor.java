@@ -15,6 +15,7 @@ import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.app.AppCommandGroupConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatConfigManager;
@@ -50,6 +51,9 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 
 	@Inject
 	private CommandFormatConfigManager m_urlConfigManager;
+
+	@Inject
+	private AppCommandGroupConfigManager m_appCommandGroupManager;
 
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;

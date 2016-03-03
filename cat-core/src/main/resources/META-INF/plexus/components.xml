@@ -117,21 +117,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.app.AppCommandGroupConfigManager</role>
-			<implementation>com.dianping.cat.config.app.AppCommandGroupConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.app.command.CommandFormatHandler</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.config.sample.SampleConfigManager</role>
 			<implementation>com.dianping.cat.config.sample.SampleConfigManager</implementation>
 			<requirements>
@@ -152,6 +137,24 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.AppCommandGroupConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppCommandGroupConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.app.command.CommandFormatHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

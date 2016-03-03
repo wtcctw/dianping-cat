@@ -25,6 +25,6 @@
       <sample-model>src/main/resources/config/sampleConfig.xml</sample-model>
    </model>
    <model package="com.dianping.cat.configuration.group" name="app-command-group-config">
-      <sample-model>src/main/resources/config/app-command-group-config.xml</sample-model>
+      <sample-model>src/main/resources/config/app-command-group.xml</sample-model>
    </model>
 </wizard>
