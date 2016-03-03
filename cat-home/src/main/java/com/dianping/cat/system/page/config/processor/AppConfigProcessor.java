@@ -140,6 +140,12 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 		m_invalids.add(".js");
 		m_invalids.add("OTHERS");
 		m_invalids.add("hit-");
+		m_invalids.add("_small");
+		m_invalids.add("_middle");
+		m_invalids.add("_large");
+		m_invalids.add(".png");
+		m_invalids.add("algo_version=0");
+		m_invalids.add(".com");
 	}
 
 	public void process(Action action, Payload payload, Model model) {
