@@ -2136,11 +2136,6 @@
       	</query-defs>
 	</entity>
 	 <entity name="crash-log-content" table="crash_log_content" alias="clc">
-	 	<updatesets>
-			<updateset name="MAPPED">
-				<member name="content-mapped"/>
-			</updateset>
-		</updatesets>
 		<query-defs>	
 			<query name="delete-before-period" type="DELETE">
         	<param name="updatetime" />

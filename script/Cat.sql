@@ -485,6 +485,8 @@ CREATE TABLE `crash_log` (
   `updatetime` datetime NOT NULL COMMENT '数据更新时间',
   `crash_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'crash时间',
   `dpid` varchar(200) DEFAULT NULL COMMENT 'dpid',
+  `map_id` varchar(200) DEFAULT NULL COMMENT '混淆mapid',
+  `tag` tinyint(4) DEFAULT NULL COMMENT 'tag',
   PRIMARY KEY (`id`),
   KEY `IX_CONDITION` (`crash_time`,`app_name`),
   KEY `updatetime` (`updatetime`)
@@ -494,7 +496,14 @@ CREATE TABLE `crash_log_content` (
   `id` int(11) unsigned NOT NULL,
   `content` longblob COMMENT 'crash详细log',
   `updatetime` datetime NOT NULL COMMENT '数据更新时间',
-  `content_mapped` longblob COMMENT '反混淆之后的详细log',
   PRIMARY KEY (`id`),
+  KEY `updatetime` (`updatetime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `map_file` (
+  `map_id` varchar(100) NOT NULL,
+  `content` longblob COMMENT 'mapping文件内容',
+  `updatetime` datetime NOT NULL COMMENT '数据更新时间',
+  PRIMARY KEY (`map_id`),
   KEY `updatetime` (`updatetime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
