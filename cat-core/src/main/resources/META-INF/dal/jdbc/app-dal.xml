@@ -2104,8 +2104,8 @@
       		<member name="level"/>
       	</readset>
       	</readsets>
-      	<query-defs>
-      		<query name="find-data-by-conditions" type="SELECT" multiple="true">
+	<query-defs>
+		<query name="find-data-by-conditions" type="SELECT" multiple="true">
 			<param name="start-time" />
 			<param name="end-time" />
 			<param name="app-name" />
@@ -2129,11 +2129,22 @@
          ]]></statement>
 		</query>
 		<query name="delete-before-period" type="DELETE">
-        <param name="updatetime" />
-        <statement><![CDATA[DELETE FROM <TABLE/>
+			<param name="updatetime" />
+			<statement><![CDATA[DELETE FROM <TABLE/>
         WHERE <FIELD name='updatetime'/> <= ${updatetime}]]></statement>
-      </query>
-      	</query-defs>
+		</query>
+		<query name="find-by-tag" type="SELECT">
+			<param name="tag" />
+			<param name="id" />
+			<statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE 
+        	<FIELD name='tag'/> = ${tag} 
+			AND  <FIELD name='id'/> >= ${id}
+		LIMIT 1
+         ]]></statement>
+		</query>
+	</query-defs>
 	</entity>
 	 <entity name="crash-log-content" table="crash_log_content" alias="clc">
 		<query-defs>	
