@@ -1,4 +1,4 @@
-package com.dianping.cat.system.page.config.processor;
+package com.dianping.cat.system.page.app;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,12 +28,13 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.home.rule.entity.Rule;
+import com.dianping.cat.home.rule.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
+import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
 import com.dianping.cat.report.page.event.service.EventReportService;
-import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.ConfigHtmlParser;
-import com.dianping.cat.system.page.config.Model;
-import com.dianping.cat.system.page.config.Payload;
+import com.dianping.cat.system.page.config.processor.BaseProcesser;
 
 public class AppConfigProcessor extends BaseProcesser implements Initializable {
 
@@ -130,6 +131,27 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 		buildBatchApiConfig(payload, model);
 		model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
 		model.setCodes(m_appConfigManager.getCodes());
+	}
+
+	public void generateRuleConfigContent(String key, BaseRuleConfigManager manager, Model model) {
+		String configsStr = "";
+		String ruleId = "";
+
+		if (StringUtils.isNotEmpty(key)) {
+			Rule rule = manager.queryRule(key);
+
+			if (rule != null) {
+				ruleId = rule.getId();
+				configsStr = new DefaultJsonBuilder(true).buildArray(rule.getConfigs());
+				String configHeader = new DefaultJsonBuilder(true).buildArray(rule.getMetricItems());
+
+				model.setConfigHeader(configHeader);
+			}
+		}
+		String content = m_ruleDecorator.generateConfigsHtml(configsStr);
+
+		model.setContent(content);
+		model.setId(ruleId);
 	}
 
 	@Override
@@ -358,6 +380,9 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 
 			model.setAppItem(item);
 			break;
+		case APP_CONSTATN_DELETE:
+			// TODO
+			break;
 		case APP_CONSTATN_SUBMIT:
 			try {
 				id = payload.getId();
@@ -381,8 +406,6 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			}
 			model.setContent(m_configHtmlParser.parse(m_urlConfigManager.getUrlFormat().toString()));
 			break;
-		default:
-			throw new RuntimeException("Error action name " + action.getName());
 		}
 	}
 

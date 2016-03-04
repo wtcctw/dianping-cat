@@ -6149,9 +6149,6 @@
 					<role>com.dianping.cat.system.page.config.processor.HeartbeatConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.config.processor.AppConfigProcessor</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.system.page.config.processor.AlertConfigProcessor</role>
 				</requirement>
 				<requirement>
@@ -6521,66 +6518,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.config.processor.AppConfigProcessor</role>
-			<implementation>com.dianping.cat.system.page.config.processor.AppConfigProcessor</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.alert.app.AppRuleConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.event.service.EventReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.command.CommandFormatConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppCommandGroupConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.spi.decorator.RuleFTLDecorator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.app.command.CommandFormatConfigManager</role>
-			<implementation>com.dianping.cat.config.app.command.CommandFormatConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.command.CommandFormatHandler</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.app.AppCommandGroupConfigManager</role>
-			<implementation>com.dianping.cat.config.app.AppCommandGroupConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.system.page.config.processor.AlertConfigProcessor</role>
 			<implementation>com.dianping.cat.system.page.config.processor.AlertConfigProcessor</implementation>
 			<requirements>
@@ -6871,6 +6808,90 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.app.Handler</role>
+			<implementation>com.dianping.cat.system.page.app.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.page.app.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.app.AppConfigProcessor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.ConfigModificationDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.app.JspViewer</role>
+			<implementation>com.dianping.cat.system.page.app.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.app.AppConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.app.AppConfigProcessor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.alert.app.AppRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.event.service.EventReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.command.CommandFormatConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppCommandGroupConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.spi.decorator.RuleFTLDecorator</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.command.CommandFormatConfigManager</role>
+			<implementation>com.dianping.cat.config.app.command.CommandFormatConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.command.CommandFormatHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.AppCommandGroupConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppCommandGroupConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

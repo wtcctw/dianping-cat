@@ -67,20 +67,20 @@
 						</ul>
 					</li>
 					<li id="userMonitor_config" class="hsub" >
-						<a href="/cat/s/config?op=aggregations"  class="dropdown-toggle"><i class="menu-icon fa  fa-users"></i><span class="menu-text">Config</span>
+						<a href="#"  class="dropdown-toggle"><i class="menu-icon fa  fa-users"></i><span class="menu-text">Config</span>
 						<b class="arrow fa fa-angle-down"></b>
 						</a><b class="arrow"></b>
 						<ul class="submenu">
-							<li id="appList"><a href="/cat/s/config?op=appList">
+							<li id="appList"><a href="/cat/s/app?op=appList">
 								<i class="menu-icon fa fa-caret-right"></i>App监控</a>
 								<b class="arrow"></b></li>
-							<li id="appCommandFormatConfig"><a href="/cat/s/config?op=appCommandFormatConfig">
+							<li id="appCommandFormatConfig"><a href="/cat/s/app?op=appCommandFormatConfig">
 								<i class="menu-icon fa fa-caret-right"></i>Api规则</a>
 								<b class="arrow"></b></li>
-							<li id="appConfigUpdate"><a href="/cat/s/config?op=appConfigUpdate" style="display:none">
+							<li id="appConfigUpdate"><a href="/cat/s/app?op=appConfigUpdate" style="display:none">
 								<i class="menu-icon fa fa-caret-right"></i>App全局</a>
 								<b class="arrow"></b></li>
-							<li id="appRule"><a href="/cat/s/config?op=appRule">
+							<li id="appRule"><a href="/cat/s/app?op=appRule">
 								<i class="menu-icon fa fa-caret-right"></i>App告警</a>
 								<b class="arrow"></b></li>
 						</ul>

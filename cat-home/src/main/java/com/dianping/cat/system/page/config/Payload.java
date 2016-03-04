@@ -130,18 +130,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("title")
 	private String m_title;
 
-	@FieldMeta("code")
-	private int m_code;
-
-	@FieldMeta("constant")
-	private boolean m_constant = false;
-
-	@FieldMeta("all")
-	private boolean m_all = true;
-
-	@FieldMeta("threshold")
-	private int m_threshold = 30;
-
 	@Override
 	public Action getAction() {
 		if (m_action == null) {
@@ -160,10 +148,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public String getBug() {
 		return m_bug;
-	}
-
-	public int getCode() {
-		return m_code;
 	}
 
 	public String getConfigs() {
@@ -339,22 +323,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public String getType() {
 		return m_type;
 	}
-	
-	public boolean isAll() {
-		return m_all;
-	}
-
-	public boolean isConstant() {
-		return m_constant;
-	}
-
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.PROJECT_ALL);
-	}
-
-	public void setAll(boolean all) {
-		m_all = all;
 	}
 
 	public void setAllOnOrOff(String allOnOrOff) {
@@ -369,16 +340,8 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_bug = bug;
 	}
 
-	public void setCode(int code) {
-		m_code = code;
-	}
-
 	public void setConfigs(String configs) {
 		m_configs = configs;
-	}
-
-	public void setConstant(boolean constant) {
-		m_constant = constant;
 	}
 
 	public void setContent(String content) {
@@ -411,14 +374,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setExceptionLimit(ExceptionLimit exceptionLimit) {
 		m_exceptionLimit = exceptionLimit;
-	}
-
-	public int getThreshold() {
-		return m_threshold;
-	}
-
-	public void setThreshold(int threshold) {
-		m_threshold = threshold;
 	}
 
 	public void setFrom(String from) {

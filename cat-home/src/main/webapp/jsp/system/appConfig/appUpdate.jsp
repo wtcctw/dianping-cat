@@ -4,9 +4,9 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
-<jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
-<jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
+<jsp:useBean id="ctx" type="com.dianping.cat.system.page.app.Context" scope="request"/>
+<jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
+<jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
 
 <a:mobile>
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
@@ -44,7 +44,7 @@
 					async: false,
 					type: "get",
 					dataType: "json",
-					url: "/cat/s/config?op=appNameCheck&name="+name,
+					url: "/cat/s/app?op=appNameCheck&name="+name,
 					success : function(response, textStatus) {
 						if(response['isNameUnique']){
 							if(title==undefined){
@@ -57,7 +57,7 @@
 								id="";
 							}
 							
-							window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id=-1"+"&type=${payload.type}&all="+all+"&threshold="+threshold;
+							window.location.href = "/cat/s/app?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id=-1"+"&type=${payload.type}&all="+all+"&threshold="+threshold;
 						}else{
 							alert("该名称已存在，请修改名称！");
 						}
@@ -73,7 +73,7 @@
 				if(id==undefined){
 					id="";
 				}
-				window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id+"&type=${payload.type}&all="+all+"&threshold="+threshold;
+				window.location.href = "/cat/s/app?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id+"&type=${payload.type}&all="+all+"&threshold="+threshold;
 			}
 		})
 	</script>

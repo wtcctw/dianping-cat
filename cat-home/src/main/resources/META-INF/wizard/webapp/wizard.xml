@@ -103,6 +103,9 @@
          <page name="project" title="Project" path="project" template="default">
             <description>Project</description>
          </page>
+         <page name="app" title="App" path="app" template="default">
+            <description>App</description>
+         </page>
       </module>
    </webapp>
 </wizard>
