@@ -22,7 +22,7 @@ import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.processor.AlertConfigProcessor;
 import com.dianping.cat.system.page.config.processor.AppConfigProcessor;
 import com.dianping.cat.system.page.config.processor.DatabaseConfigProcessor;
-import com.dianping.cat.system.page.config.processor.DisplayConfigProcessor;
+import com.dianping.cat.system.page.config.processor.DependencyConfigProcessor;
 import com.dianping.cat.system.page.config.processor.EventConfigProcessor;
 import com.dianping.cat.system.page.config.processor.ExceptionConfigProcessor;
 import com.dianping.cat.system.page.config.processor.GlobalConfigProcessor;
@@ -32,7 +32,6 @@ import com.dianping.cat.system.page.config.processor.NetworkConfigProcessor;
 import com.dianping.cat.system.page.config.processor.StorageConfigProcessor;
 import com.dianping.cat.system.page.config.processor.SystemConfigProcessor;
 import com.dianping.cat.system.page.config.processor.ThirdPartyConfigProcessor;
-import com.dianping.cat.system.page.config.processor.TopologyConfigProcessor;
 import com.dianping.cat.system.page.config.processor.TransactionConfigProcessor;
 
 public class Handler implements PageHandler<Context> {
@@ -46,7 +45,7 @@ public class Handler implements PageHandler<Context> {
 	private ThirdPartyConfigProcessor m_thirdPartyConfigProcessor;
 
 	@Inject
-	private TopologyConfigProcessor m_topologyConfigProcessor;
+	private DependencyConfigProcessor m_topologyConfigProcessor;
 
 	@Inject
 	private MetricConfigProcessor m_metricConfigProcessor;
@@ -80,9 +79,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private StorageConfigProcessor m_storageConfigProcessor;
-
-	@Inject
-	private DisplayConfigProcessor m_displayConfigProfessor;
 
 	@Inject
 	private ConfigModificationDao m_configModificationDao;
@@ -195,6 +191,7 @@ public class Handler implements PageHandler<Context> {
 		case HEARTBEAT_RULE_ADD_OR_UPDATE:
 		case HEARTBEAT_RULE_ADD_OR_UPDATE_SUBMIT:
 		case HEARTBEAT_RULE_DELETE:
+		case HEARTBEAT_DISPLAY_POLICY:
 			m_heartbeatConfigProcessor.process(action, payload, model);
 			break;
 
@@ -249,10 +246,6 @@ public class Handler implements PageHandler<Context> {
 		case ALERT_DEFAULT_RECEIVERS:
 		case ALERT_POLICY:
 			m_alertConfigProcessor.process(action, payload, model);
-			break;
-
-		case DISPLAY_POLICY:
-			m_displayConfigProfessor.process(action, payload, model);
 			break;
 		}
 		m_jspViewer.view(ctx, model);

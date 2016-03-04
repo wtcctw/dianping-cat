@@ -16,7 +16,7 @@ import com.dianping.cat.system.page.config.ConfigHtmlParser;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
 
-public class TopologyConfigProcessor {
+public class DependencyConfigProcessor {
 
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManger;
