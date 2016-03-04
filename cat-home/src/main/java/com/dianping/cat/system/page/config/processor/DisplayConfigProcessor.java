@@ -19,7 +19,7 @@ public class DisplayConfigProcessor {
 
 	public void process(Action action, Payload payload, Model model) {
 		switch (action) {
-		case DISPLAY_POLICY:
+		case HEARTBEAT_DISPLAY_POLICY:
 			String displayPoicy = payload.getContent();
 
 			if (!StringUtils.isEmpty(displayPoicy)) {
