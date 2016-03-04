@@ -90,7 +90,13 @@ public class TransactionReportCountFilter extends BaseVisitor {
 	private static class TransactionNameCompator implements Comparator<TransactionName> {
 		@Override
 		public int compare(TransactionName o1, TransactionName o2) {
-			return (int) (o2.getTotalCount() - o1.getTotalCount());
+			if (o2.getTotalCount() > o1.getTotalCount()) {
+				return 1;
+			} else if (o2.getTotalCount() < o1.getTotalCount()) {
+				return -1;
+			} else {
+				return 0;
+			}
 		}
 	}
 }

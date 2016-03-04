@@ -59,8 +59,6 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
 
-	private Set<String> m_invalids = new HashSet<String>();
-
 	public void appRuleBatchUpdate(Payload payload, Model model) {
 		String content = payload.getContent();
 		String[] paths = content.split(",");
@@ -156,22 +154,6 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_invalids.add("jpg");
-		m_invalids.add("http");
-		m_invalids.add("file");
-		m_invalids.add("zip");
-		m_invalids.add("patch");
-		m_invalids.add("dianping://");
-		m_invalids.add("data:");
-		m_invalids.add(".js");
-		m_invalids.add("OTHERS");
-		m_invalids.add("hit-");
-		m_invalids.add("_small");
-		m_invalids.add("_middle");
-		m_invalids.add("_large");
-		m_invalids.add(".png");
-		m_invalids.add("algo_version=0");
-		m_invalids.add(".com");
 	}
 
 	public void process(Action action, Payload payload, Model model) {
@@ -423,7 +405,9 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 		}
 
 		private boolean invalidate(String name) {
-			for (String str : m_invalids) {
+			Set<String> invalids = m_appConfigManager.getConfig().getInvalidatePatterns();
+			
+			for (String str : invalids) {
 				if (StringUtils.isEmpty(str) || name.indexOf(str) > -1) {
 					return true;
 				}
