@@ -83,6 +83,9 @@
          <page name="eslog" title="Eslog" path="eslog" template="default">
             <description>Eslog</description>
          </page>
+         <page name="business" title="Business" path="business" template="default">
+            <description>Business</description>
+         </page>
       </module>
       <module name="system" path="s" default="false">
          <page name="login" title="Login" path="login" standalone="false">

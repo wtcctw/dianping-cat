@@ -62,6 +62,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/dependency-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/metric-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/storage-report-manifest.xml,
+								 ${basedir}/src/main/resources/META-INF/dal/model/business-report-manifest.xml,
 							</manifest>
 						</configuration>
 					</execution>
