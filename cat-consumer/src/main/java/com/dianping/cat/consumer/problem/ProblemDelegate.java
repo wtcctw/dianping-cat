@@ -57,7 +57,7 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 	public boolean createHourlyTask(ProblemReport report) {
 		String domain = report.getDomain();
 
-		if (m_configManager.validateDomain(domain) || m_configManager.isCrashLog(domain)) {
+		if (m_configManager.validateDomain(domain)) {
 			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID,
 			      TaskProlicy.ALL_EXCLUED_HOURLY);
 		} else {

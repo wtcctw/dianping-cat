@@ -167,23 +167,18 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	private void processTransaction(DependencyReport report, MessageTree tree, Transaction t) {
 		String type = t.getType();
-		String name = t.getName();
 
-		if (m_serverFilterConfigManager.discardTransaction(type, name)) {
-			return;
-		} else {
-			processTransactionType(report, t, type);
-			processSqlTransaction(report, t, type);
-			processPigeonTransaction(report, tree, t, type);
+		processTransactionType(report, t, type);
+		processSqlTransaction(report, t, type);
+		processPigeonTransaction(report, tree, t, type);
 
-			List<Message> children = t.getChildren();
+		List<Message> children = t.getChildren();
 
-			for (Message child : children) {
-				if (child instanceof Transaction) {
-					processTransaction(report, tree, (Transaction) child);
-				} else if (child instanceof Event) {
-					processEvent(report, tree, (Event) child);
-				}
+		for (Message child : children) {
+			if (child instanceof Transaction) {
+				processTransaction(report, tree, (Transaction) child);
+			} else if (child instanceof Event) {
+				processEvent(report, tree, (Event) child);
 			}
 		}
 	}

@@ -68,7 +68,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 				if (StringUtils.isNotEmpty(path) && !m_appConfigManager.getCommands().containsKey(path)) {
 					Command command = new Command();
 
-					command.setDomain("").setTitle(path).setName(path);
+					command.setDomain("").setTitle(path).setName(path).setAll(false);
 					m_appConfigManager.addCommand(command);
 				}
 			} catch (Exception e) {

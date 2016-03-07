@@ -2,7 +2,6 @@ package com.dianping.cat.config.server;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -15,7 +14,6 @@ import org.xml.sax.SAXException;
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.configuration.server.filter.entity.AtomicTreeConfig;
-import com.dianping.cat.configuration.server.filter.entity.CrashLogDomain;
 import com.dianping.cat.configuration.server.filter.entity.ServerFilterConfig;
 import com.dianping.cat.configuration.server.filter.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
@@ -74,14 +72,9 @@ public class ServerFilterConfigManager implements Initializable {
 		return m_config;
 	}
 
-	public Map<String, CrashLogDomain> getCrashLogDomains() {
-		return m_config.getCrashLogDomains();
-	}
-
 	public Set<String> getUnusedDomains() {
 		Set<String> unusedDomains = new HashSet<String>();
 
-		unusedDomains.addAll(m_config.getCrashLogDomains().keySet());
 		unusedDomains.addAll(m_config.getDomains());
 		return unusedDomains;
 	}
@@ -137,10 +130,6 @@ public class ServerFilterConfigManager implements Initializable {
 			Cat.logError(e);
 			return false;
 		}
-	}
-
-	public boolean isCrashLog(String domain) {
-		return m_config.getCrashLogDomains().containsKey(domain);
 	}
 
 	private void refreshConfig() throws DalException, SAXException, IOException {
