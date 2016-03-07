@@ -72,7 +72,13 @@
 						</a><b class="arrow"></b>
 						<ul class="submenu">
 							<li id="appList"><a href="/cat/s/app?op=appList">
-								<i class="menu-icon fa fa-caret-right"></i>App监控</a>
+								<i class="menu-icon fa fa-caret-right"></i>App命令字</a>
+								<b class="arrow"></b></li>
+							<li id="appSpeedList"><a href="/cat/s/app?op=appSpeedList">
+								<i class="menu-icon fa fa-caret-right"></i>App测速</a>
+								<b class="arrow"></b></li>
+							<li id="appCommandBatch"><a href="/cat/s/app?op=appCommandBatch">
+								<i class="menu-icon fa fa-caret-right"></i>批量添加</a>
 								<b class="arrow"></b></li>
 							<li id="appCommandFormatConfig"><a href="/cat/s/app?op=appCommandFormatConfig">
 								<i class="menu-icon fa fa-caret-right"></i>Api规则</a>

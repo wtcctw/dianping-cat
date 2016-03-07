@@ -5,6 +5,8 @@ public enum JspFile {
 
 	APP_LIST("/jsp/system/appConfig/appList.jsp"),
 
+	APP_SPEED_LIST("/jsp/system/appConfig/appSpeedList.jsp"),
+
 	APP_CODE_UPDATE("/jsp/system/appConfig/codeUpdate.jsp"),
 
 	APP_SPEED_UPDATE("/jsp/system/appConfig/speedUpdate.jsp"),
@@ -17,11 +19,17 @@ public enum JspFile {
 
 	APP_CONFIG_UPDATE("/jsp/system/appConfig/appConfig.jsp"),
 
+	APP_COMMAND_BATCH("/jsp/system/appConfig/appCommandBatch.jsp"),
+
 	APP_RULE_BATCH("/jsp/system/appConfig/appConfigBatch.jsp"),
 
 	APP_CONSTANT_UPDATE("/jsp/system/appConfig/constantUpdate.jsp"),
 
 	APP_COMMAND_FORMAT_CONFIG("/jsp/system/appConfig/appCommandFormatConfig.jsp"),
+
+	APP_COMMAND_GROUP_ADD("/jsp/system/appConfig/appCommandGroupAdd.jsp"),
+
+	APP_COMMAND_GROUP_UPDATE("/jsp/system/appConfig/appCommandGroupUpdate.jsp"),
 
 	;
 

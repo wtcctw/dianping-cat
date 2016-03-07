@@ -1,14 +1,14 @@
 package com.dianping.cat.system.page.app;
 
-import com.dianping.cat.system.SystemPage;
-
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
+import com.dianping.cat.system.SystemPage;
+
 public class Payload implements ActionPayload<SystemPage, Action> {
 	private SystemPage m_page;
-
+	
 	@FieldMeta("op")
 	private Action m_action;
 
@@ -48,6 +48,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("all")
 	private boolean m_all;
 
+	@FieldMeta("parent")
+	private String m_parent;
+	
 	@Override
 	public Action getAction() {
 		return m_action;
@@ -56,7 +59,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public int getCode() {
 		return m_code;
 	}
-	
+
 	public String getConfigs() {
 		return m_configs;
 	}
@@ -80,6 +83,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@Override
 	public SystemPage getPage() {
 		return m_page;
+	}
+
+	public String getParent() {
+		return m_parent;
 	}
 
 	public String getReportType() {
@@ -149,6 +156,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@Override
 	public void setPage(String page) {
 		m_page = SystemPage.getByName(page, SystemPage.APP);
+	}
+
+	public void setParent(String parent) {
+		m_parent = parent;
 	}
 
 	public void setRuleId(String ruleId) {

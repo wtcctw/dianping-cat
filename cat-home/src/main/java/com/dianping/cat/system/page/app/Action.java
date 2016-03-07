@@ -22,6 +22,16 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	APP_CODE_DELETE("appCodeDelete"),
 
+	APP_COMMAND_GROUP_ADD("appCommandGroupAdd"),
+
+	APP_COMMAND_GROUP_DELETE("appCommandGroupDelete"),
+
+	APP_COMMAND_GROUP_SUBMIT("appCommandGroupSubmit"),
+
+	APP_COMMAND_GROUP_UPDATE("appCommandGroupUpdate"),
+
+	APP_SPEED_LIST("appSpeedList"),
+
 	APP_SPEED_UPDATE("appSpeedUpdate"),
 
 	APP_SPEED_SUBMIT("appSpeedSubmit"),
@@ -46,7 +56,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	APP_RULE_DELETE("appRuleDelete"),
 
-	APP_RULE_BATCH_UPDATE("appRuleBatchUpdate"),
+	APP_COMMAND_BATCH("appCommandBatch"),
+
+	APP_COMMAND_BATCH_UPDATE("appCommandBatchUpdate"),
 
 	APP_COMMAND_FORMAT_CONFIG("appCommandFormatConfig");
 

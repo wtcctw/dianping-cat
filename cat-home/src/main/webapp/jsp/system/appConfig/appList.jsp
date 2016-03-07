@@ -37,26 +37,8 @@
 			
 			$("#tab-api-default").addClass('active');
 			$("#tabContent-api-default").addClass('active');
-			$("#tab-activity-default").addClass('active');
-			$("#tabContent-activity-default").addClass('active');
 			$("#tab-constant-版本").addClass('active');
 			$("#tabContent-constant-版本").addClass('active');
-			
-			$('#batchInsert').bind("click",function(e){
-				if (confirm("确认要进行批量添加吗？") == true){
-					var items = document.getElementsByClassName('deleteItem');
-					var content = "";
-					var length = items.length;
-					
-					for(var i=0;i<length;i++){
-						var item = items[i];
-						if(item.checked == true){
-							content = content + item.value + ",";
-						}
-					}
-					window.location.href = "?op=appRuleBatchUpdate&type=batch&content="+content;
-				}		
-			});
 			
 			$(document).delegate('#updateSubmit', 'click', function(e){
 				var name = $("#commandName").val();
@@ -87,10 +69,9 @@
 			<div class="tabbable" id="content"> <!-- Only required for left/right tabs -->
 				<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height:50px;" id="myTab">
 				    <li id="tab-api" class="text-right"><a href="#tabContent-api" data-toggle="tab"> <strong>API命令字</strong></a></li>
-				    <li id="tab-batch" class="text-right"><a href="#tabContent-batch" data-toggle="tab"><strong>批量添加命令字</strong></a></li>
 				    <li id="tab-code" class="text-right"><a href="#tabContent-code" data-toggle="tab"> <strong>返回码</strong></a></li>
-				    <li id="tab-speed" class="text-right"><a href="#tabContent-speed" data-toggle="tab"><strong>测速配置</strong></a></li>
 				    <li id="tab-constant" class="text-right"><a href="#tabContent-constant" data-toggle="tab"><strong>常量配置</strong></a></li>
+				    <li id="tab-group" class="text-right"><a href="#tabContent-group" data-toggle="tab"><strong>数据归并</strong></a></li>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane" id="tabContent-api">
@@ -146,58 +127,10 @@
 						</div>
 						
 					</div>
-					<div class="tab-pane"  id="tabContent-batch">
-						<h4 class="text-center text-danger">合法的命令字&nbsp;&nbsp;${w:size(model.validatePaths)}</h4>
-						<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
-								<tr><td></td><td><button class="btn btn-xs btn-danger" id="batchInsert">批量添加</button></td></tr>
-							<c:forEach var="item" items="${model.validatePaths}">
-								<tr><td width="10%"><input type="checkbox" class="deleteItem" value="${item}" checked></td><td>${item}</td><tr>
-							</c:forEach>
-						</table>
-						
-						<h4 class="text-center text-danger">非法命令字&nbsp;&nbsp;${w:size(model.invalidatePaths)}</h4>
-						
-						<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
-							<c:forEach var="item" items="${model.invalidatePaths}">
-								<tr><td width="10%"><input type="checkbox" class="deleteItem" value="${item}"></td><td>${item}</td><tr>
-							</c:forEach>
-						</table>
-					</div>
 					<div class="tab-pane" id="tabContent-code">
 						<%@include file="code.jsp"%>
 					</div>
-					<div class="tab-pane" id="tabContent-speed">
-						<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
-							<thead>
-							<tr >
-								<th width="20%">页面</th>
-								<th width="20%">加载阶段</th>
-								<th width="20%">说明</th>
-								<th width="20%">延时阈值(毫秒)</th>
-								<th width="8%">操作 <a href="?op=appSpeedAdd&type=speed" class="btn btn-primary btn-xs" >
-						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
-							</tr>
-							</thead>
-							<tbody>
-							<c:forEach var="entry" items="${model.speeds}">
-							<c:set var="item" value="${entry.value}"/>
-								<tr>
-									<td>${item.page}</td>
-									<td>${item.step}</td>
-									<td>${item.title}</td>
-									<td>${item.threshold}</td>
-									<td><a href="?op=appSpeedUpdate&id=${item.id}&type=speed" class="btn btn-primary btn-xs">
-						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
-						<a href="?op=appSpeedDelete&id=${item.id}&type=speed" class="btn btn-danger btn-xs delete" >
-						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
-								</tr>
-							</c:forEach>
-							</tbody>
-						</table>
-					</div>
-					
 					<div class="tab-pane" id="tabContent-constant">
-					
 						<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
 							  <ul class="nav nav-tabs padding-12 ">
 							  	<c:forEach var="entry" items="${model.configItems}" varStatus="status">
@@ -239,7 +172,9 @@
 							  </div>
 							</div>
 					</div>
-					
+					<div class="tab-pane" id="tabContent-group">
+						<%@include file="appCommandGroup.jsp"%>
+					</div>
 				</div>
 			</div>
 </a:mobile>

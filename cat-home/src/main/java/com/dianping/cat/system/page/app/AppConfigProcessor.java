@@ -59,7 +59,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
 
-	public void appRuleBatchUpdate(Payload payload, Model model) {
+	public void appCommandBatchUpdate(Payload payload, Model model) {
 		String content = payload.getContent();
 		String[] paths = content.split(",");
 
@@ -96,7 +96,6 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 		visitor.visitEventReport(report);
 		Set<String> validatePaths = visitor.getPaths();
 		Set<String> invalidatePaths = visitor.getInvalidatePaths();
-
 		Map<String, Command> commands = m_appConfigManager.getCommands();
 
 		for (Entry<String, Command> entry : commands.entrySet()) {
@@ -126,8 +125,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			model.setId(String.valueOf(id));
 		}
 
-		buildBatchApiConfig(payload, model);
-		model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
+		model.setCommandGroupConfig(m_appCommandGroupManager.getConfig());
 		model.setCodes(m_appConfigManager.getCodes());
 	}
 
@@ -288,6 +286,9 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 				Cat.logError(e);
 			}
 			break;
+		case APP_SPEED_LIST:
+			model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
+			return;
 		case APP_SPEED_UPDATE:
 		case APP_SPEED_ADD:
 			id = payload.getId();
@@ -302,7 +303,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 				id = payload.getId();
 
 				m_appSpeedConfigManager.deleteSpeed(id);
-				buildListInfo(model, payload);
+				model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -321,7 +322,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 
 				speed.setPage(page).setStep(step).setTitle(title).setThreshold(threshold);
 				m_appSpeedConfigManager.updateConfig(speed);
-				buildListInfo(model, payload);
+				model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -351,9 +352,12 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			model.setOpState(deleteRule(m_appRuleConfigManager, payload.getRuleId()));
 			model.setRules(m_appRuleConfigManager.getMonitorRules().getRules().values());
 			break;
-		case APP_RULE_BATCH_UPDATE:
-			appRuleBatchUpdate(payload, model);
-			buildListInfo(model, payload);
+		case APP_COMMAND_BATCH:
+			buildBatchApiConfig(payload, model);
+			break;
+		case APP_COMMAND_BATCH_UPDATE:
+			appCommandBatchUpdate(payload, model);
+			buildBatchApiConfig(payload, model);
 			break;
 		case APP_CONSTANT_ADD:
 			break;
@@ -388,6 +392,27 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			}
 			model.setContent(m_configHtmlParser.parse(m_urlConfigManager.getUrlFormat().toString()));
 			break;
+		case APP_COMMAND_GROUP_ADD:
+			break;
+		case APP_COMMAND_GROUP_DELETE:
+			model.setOpState(m_appCommandGroupManager.deleteByName(payload.getParent(), payload.getName()));
+			buildListInfo(model, payload);
+			break;
+		case APP_COMMAND_GROUP_SUBMIT:
+			String parent = payload.getParent();
+			name = payload.getName();
+
+			model.setOpState(m_appCommandGroupManager.insert(parent, name));
+			buildListInfo(model, payload);
+			break;
+		case APP_COMMAND_GROUP_UPDATE:
+			content = payload.getContent();
+
+			if (StringUtils.isNotEmpty(content)) {
+				m_appCommandGroupManager.insert(content);
+			}
+			model.setContent(m_configHtmlParser.parse(m_appCommandGroupManager.getConfig().toString()));
+			break;
 		}
 	}
 
@@ -406,7 +431,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 
 		private boolean invalidate(String name) {
 			Set<String> invalids = m_appConfigManager.getConfig().getInvalidatePatterns();
-			
+
 			for (String str : invalids) {
 				if (StringUtils.isEmpty(str) || name.indexOf(str) > -1) {
 					return true;

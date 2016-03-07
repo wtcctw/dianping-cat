@@ -17,14 +17,18 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		case APP_COMMAND_DELETE:
 		case APP_CODE_SUBMIT:
 		case APP_CODE_DELETE:
-		case APP_SPEED_DELETE:
-		case APP_SPEED_SUBMIT:
 		case APP_CONSTATN_DELETE:
 		case APP_CONSTATN_SUBMIT:
+		case APP_COMMAND_GROUP_DELETE:
+		case APP_COMMAND_GROUP_SUBMIT:
 			return JspFile.APP_LIST.getPath();
 		case APP_CODE_ADD:
 		case APP_CODE_UPDATE:
 			return JspFile.APP_CODE_UPDATE.getPath();
+		case APP_SPEED_LIST:
+		case APP_SPEED_DELETE:
+		case APP_SPEED_SUBMIT:
+			return JspFile.APP_SPEED_LIST.getPath();
 		case APP_SPEED_ADD:
 		case APP_SPEED_UPDATE:
 			return JspFile.APP_SPEED_UPDATE.getPath();
@@ -38,13 +42,18 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.APP_RULE_UPDATE.getPath();
 		case APP_CONFIG_UPDATE:
 			return JspFile.APP_CONFIG_UPDATE.getPath();
-		case APP_RULE_BATCH_UPDATE:
-			return JspFile.APP_LIST.getPath();
+		case APP_COMMAND_BATCH:
+		case APP_COMMAND_BATCH_UPDATE:
+			return JspFile.APP_COMMAND_BATCH.getPath();
 		case APP_CONSTANT_ADD:
 		case APP_CONSTANT_UPDATE:
 			return JspFile.APP_CONSTANT_UPDATE.getPath();
 		case APP_COMMAND_FORMAT_CONFIG:
 			return JspFile.APP_COMMAND_FORMAT_CONFIG.getPath();
+		case APP_COMMAND_GROUP_ADD:
+			return JspFile.APP_COMMAND_GROUP_ADD.getPath();
+		case APP_COMMAND_GROUP_UPDATE:
+			return JspFile.APP_COMMAND_GROUP_UPDATE.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

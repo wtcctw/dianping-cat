@@ -13,7 +13,7 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');
-			$('#appList').addClass('active');
+			$('#appSpeedList').addClass('active');
 		});
 		
 		$(document).delegate('#updateSubmit', 'click', function(e){

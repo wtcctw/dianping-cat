@@ -47,6 +47,24 @@ public class AppCommandGroupConfigManager implements Initializable {
 
 	private volatile Map<Integer, List<Command>> m_commands = new HashMap<Integer, List<Command>>();
 
+	public boolean deleteByName(String parent, String subCommand) {
+		boolean ret = false;
+		com.dianping.cat.configuration.group.entity.Command command = m_config.findCommand(parent);
+
+		if (command != null) {
+			ret = command.removeSubCommand(subCommand);
+
+			if (ret && storeConfig()) {
+				try {
+					refreshData();
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+			}
+		}
+		return ret;
+	}
+
 	private List<Command> findOrCreate(int id, Map<Integer, List<Command>> maps) {
 		List<Command> list = maps.get(id);
 
@@ -121,6 +139,13 @@ public class AppCommandGroupConfigManager implements Initializable {
 			Cat.logError(e);
 			return false;
 		}
+	}
+
+	public boolean insert(String parent, String subCommand) {
+		com.dianping.cat.configuration.group.entity.Command command = m_config.findOrCreateCommand(parent);
+
+		command.findOrCreateSubCommand(subCommand);
+		return storeConfig();
 	}
 
 	public List<Command> queryParentCommands(int id) {

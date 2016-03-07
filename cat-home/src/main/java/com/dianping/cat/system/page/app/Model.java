@@ -14,6 +14,7 @@ import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.ConfigItem;
 import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
+import com.dianping.cat.configuration.group.entity.AppCommandGroupConfig;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.system.SystemPage;
@@ -70,6 +71,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private String m_configHeader;
 
+	private AppCommandGroupConfig m_commandGroupConfig;
+
 	public Model(Context ctx) {
 		super(ctx);
 		try {
@@ -97,6 +100,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public Map<Integer, Code> getCodes() {
 		return m_codes;
+	}
+
+	public AppCommandGroupConfig getCommandGroupConfig() {
+		return m_commandGroupConfig;
 	}
 
 	public String getCommandJson() {
@@ -214,6 +221,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setCodes(Map<Integer, Code> codes) {
 		m_codes = codes;
+	}
+
+	public void setCommandGroupConfig(AppCommandGroupConfig commandGroupConfig) {
+		m_commandGroupConfig = commandGroupConfig;
 	}
 
 	public void setCommands(List<Command> commands) {
