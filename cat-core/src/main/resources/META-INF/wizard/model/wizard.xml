@@ -24,4 +24,7 @@
    <model package="com.dianping.cat.sample" name="sample-config">
       <sample-model>src/main/resources/config/sampleConfig.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.configuration.business" name="business-config">
+      <sample-model>../cat-home/src/main/resources/config/business-config.xml</sample-model>
+   </model>
 </wizard>

@@ -111,4 +111,7 @@
    <model package="com.dianping.cat.home.server" name="server-metric-config">
       <sample-model>src/main/resources/config/server-metric-config.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.home.business" name="business-tag-config">
+      <sample-model>src/main/resources/config/business-tag-config.xml</sample-model>
+   </model>
 </wizard>

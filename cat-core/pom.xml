@@ -70,6 +70,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/web-speed-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/server-filter-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/sample-config-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/business-config-manifest.xml,
 					</manifest>
                   </configuration>
                </execution>
