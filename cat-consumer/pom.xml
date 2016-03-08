@@ -17,7 +17,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.dianping.cat</groupId>
-			<artifactId>cat-hadoop</artifactId>
+			<artifactId>cat-storage</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.unidal.framework</groupId>
