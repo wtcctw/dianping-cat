@@ -11,13 +11,15 @@ public class AppCommandTableProvider implements TableProvider {
 
 	private String m_logicalTableName = "app-command-data";
 
-	private String m_physicalTableName = "app_command_data";
+	private String m_physicalTableName = "app_api_data";
 
 	private String m_dataSourceName = "app";
 
 	@Override
 	public String getDataSourceName(Map<String, Object> hints) {
-		return m_dataSourceName;
+		AppCommandData command = (AppCommandData) hints.get(QueryEngine.HINT_DATA_OBJECT);
+
+		return m_dataSourceName + "_" + command.getId() % 5;
 	}
 
 	@Override
