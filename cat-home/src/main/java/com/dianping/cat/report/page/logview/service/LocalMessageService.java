@@ -8,20 +8,19 @@ import java.nio.charset.Charset;
 import org.unidal.cat.message.storage.Block;
 import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.BucketManager;
+import org.unidal.cat.message.storage.MessageDumper;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
-import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.codec.HtmlMessageCodec;
-import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.codec.WaterfallMessageCodec;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.storage.MessageBucketManager;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.mvc.ApiPayload;
 import com.dianping.cat.report.service.LocalModelService;
 import com.dianping.cat.report.service.ModelPeriod;
@@ -41,9 +40,12 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 
 	@Inject(WaterfallMessageCodec.ID)
 	private MessageCodec m_waterfall;
-	
+
 	@Inject(PlainTextMessageCodec.ID)
 	private MessageCodec m_plainText;
+
+	@Inject
+	private MessageDumper m_dumper;
 
 	public LocalMessageService() {
 		super("logview");
@@ -55,17 +57,15 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 		String messageId = payload.getMessageId();
 		boolean waterfull = payload.isWaterfall();
 		MessageId id = MessageId.parse(messageId);
+		MessageTree tree = m_dumper.find(id);
+
+		if (tree == null) {
+			Bucket bucket = m_localBucketManager.getBucket(id.getDomain(), id.getHour(), true);
+			Block block = bucket.get(id);
 		
-		if(m_localBucketManager==null){
-			System.err.println("m_localBucketManager is null");
+			tree = m_plainText.decode(block.unpack(id));
 		}
-		
-		Bucket bucket = m_localBucketManager.getBucket(id.getDomain(), id.getHour(), true);
-		Block block = bucket.get(id);
-		MessageTree tree=	m_plainText.decode(block.unpack(id));
-		
-		System.err.println(tree);
-		
+
 		if (tree != null) {
 			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(8192);
 
@@ -97,7 +97,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 
 			payload.setMessageId(request.getProperty("messageId"));
 			payload.setWaterfall(Boolean.valueOf(request.getProperty("waterfall", "false")));
-			
+
 			String report = getReport(request, period, domain, payload);
 
 			response.setModel(report);

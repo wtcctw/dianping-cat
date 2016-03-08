@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.dianping.cat.message.internal.MessageId;
+
 import org.unidal.cat.message.storage.Block;
 import org.unidal.cat.message.storage.BlockDumper;
 import org.unidal.cat.message.storage.MessageProcessor;
@@ -63,7 +64,7 @@ public class DefaultMessageProcessor implements MessageProcessor {
 					}
 
 					try {
-						block.pack(id, tree.getBuffer());
+						block.pack(id, tree);
 
 						if (block.isFull()) {
 							block.finish();
@@ -98,5 +99,16 @@ public class DefaultMessageProcessor implements MessageProcessor {
 		}
 
 		m_blocks.clear();
+	}
+
+	@Override
+	public MessageTree findTree(MessageId messageId) {
+		String domain = messageId.getDomain();
+		Block block = m_blocks.get(domain);
+
+		if (block != null) {
+			return block.findTree(messageId);
+		}
+		return null;
 	}
 }

@@ -1,5 +1,7 @@
 package com.dianping.cat.message.spi;
 
+import io.netty.buffer.ByteBuf;
+
 import java.util.List;
 
 import com.dianping.cat.message.Event;
@@ -13,6 +15,8 @@ public interface MessageTree extends Cloneable {
 
 	public MessageTree copy();
 
+	public ByteBuf getBuffer();
+	
 	public String getDomain();
 
 	public List<Event> getEvents();

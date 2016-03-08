@@ -20,6 +20,7 @@ import com.dianping.cat.report.service.BaseHistoricalModelService;
 import com.dianping.cat.report.service.ModelRequest;
 
 public class HistoricalMessageService  extends BaseHistoricalModelService<String> {
+	
 	@Inject(HdfsMessageBucketManager.ID)
 	private MessageBucketManager m_hdfsBucketManager;
 

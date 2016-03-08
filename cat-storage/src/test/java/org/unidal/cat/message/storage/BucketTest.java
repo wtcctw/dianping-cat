@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.message.internal.MessageId;
+import com.dianping.cat.message.spi.MessageTree;
 
 public class BucketTest extends ComponentTestCase {
 	@Before
@@ -100,12 +101,19 @@ public class BucketTest extends ComponentTestCase {
 		}
 
 		@Override
-		public void pack(MessageId id, ByteBuf buf) throws IOException {
-		}
-
-		@Override
 		public ByteBuf unpack(MessageId id) throws IOException {
 			throw new UnsupportedOperationException();
 		}
+
+		@Override
+      public void pack(MessageId id, MessageTree tree) throws IOException {
+	      // TODO Auto-generated method stub
+      }
+
+		@Override
+      public MessageTree findTree(MessageId id) {
+	      // TODO Auto-generated method stub
+	      return null;
+      }
 	}
 }

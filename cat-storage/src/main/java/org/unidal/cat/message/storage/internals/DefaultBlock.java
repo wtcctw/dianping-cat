@@ -17,6 +17,8 @@ import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
 import com.dianping.cat.message.internal.MessageId;
+import com.dianping.cat.message.spi.MessageTree;
+
 import org.unidal.cat.message.storage.Block;
 
 public class DefaultBlock implements Block {
@@ -37,6 +39,8 @@ public class DefaultBlock implements Block {
 	private DeflaterOutputStream m_out;
 
 	private boolean m_gzip = true;
+
+	private Map<MessageId, MessageTree> m_trees = new LinkedHashMap<MessageId, MessageTree>();
 
 	public DefaultBlock(MessageId id, int offset, byte[] data) {
 		m_mappings.put(id, offset);
@@ -102,13 +106,14 @@ public class DefaultBlock implements Block {
 	}
 
 	@Override
-	public void pack(MessageId id, ByteBuf buf) throws IOException {
+	public void pack(MessageId id, MessageTree tree) throws IOException {
+		ByteBuf buf = tree.getBuffer();
 		int len = buf.readableBytes();
 
 		buf.readBytes(m_out, len);
 		m_mappings.put(id, m_offset);
 		m_offset += len;
-
+		m_trees.put(id, tree);
 	}
 
 	@Override
@@ -141,5 +146,10 @@ public class DefaultBlock implements Block {
 		ByteBuf buf = Unpooled.wrappedBuffer(data);
 
 		return buf;
+	}
+
+	@Override
+	public MessageTree findTree(MessageId id) {
+		return m_trees.get(id);
 	}
 }

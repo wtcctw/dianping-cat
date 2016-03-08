@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.unidal.cat.message.storage.BucketManager;
+import org.unidal.cat.message.storage.MessageDumper;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
@@ -11,7 +12,6 @@ import com.dianping.cat.analysis.MessageConsumer;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
-import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
@@ -179,16 +179,11 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(LocalModelService.class, "logview", LocalMessageService.class)
 		      .req(MessageConsumer.class, ServerConfigManager.class)//
 		      .req(BucketManager.class, "local")//
+		      .req(MessageDumper.class)//
 		      .req(MessageCodec.class, HtmlMessageCodec.ID, "m_html")//
 		      .req(MessageCodec.class, WaterfallMessageCodec.ID, "m_waterfall")//
-		      .req(MessageCodec.class, PlainTextMessageCodec.ID, "m_plainText")//
-		);
+		      .req(MessageCodec.class, PlainTextMessageCodec.ID, "m_plainText"));
 
-		all.add(C(ModelService.class, "logview-local", LocalMessageService.class) //
-		      .req(MessageConsumer.class, ServerConfigManager.class) //
-		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID) //
-		      .req(MessageCodec.class, HtmlMessageCodec.ID, "m_html") //
-		      .req(MessageCodec.class, WaterfallMessageCodec.ID, "m_waterfall"));
 		all.add(C(ModelService.class, "logview-historical", HistoricalMessageService.class) //
 		      .req(MessageBucketManager.class, HdfsMessageBucketManager.ID) //
 		      .req(MessageCodec.class, HtmlMessageCodec.ID, "m_html") //

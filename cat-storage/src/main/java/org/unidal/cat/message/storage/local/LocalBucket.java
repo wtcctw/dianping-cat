@@ -178,8 +178,6 @@ public class LocalBucket implements Bucket {
 
 		private File m_path;
 
-		private int m_offset;
-
 		private FileChannel m_channel;
 
 		private Header m_header = new Header();
@@ -274,6 +272,8 @@ public class LocalBucket implements Bucket {
 			private int m_nextSegment;
 
 			private Segment m_segment;
+
+			private int m_offset;
 
 			private Integer findSegment(int ip, int index, boolean createIfNotExists) throws IOException {
 				Map<Integer, Integer> map = m_table.get(ip);

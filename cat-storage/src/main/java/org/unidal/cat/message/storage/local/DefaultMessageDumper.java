@@ -16,6 +16,7 @@ import org.unidal.helper.Threads;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Named;
 
+import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 
 @Named(type = MessageDumper.class, instantiationStrategy = Named.PER_LOOKUP)
@@ -82,5 +83,17 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 
 			last.offer(tree);
 		}
+	}
+
+	@Override
+	public MessageTree find(MessageId id) {
+		for (MessageProcessor process : m_processors) {
+			MessageTree tree = process.findTree(id);
+
+			if (tree != null) {
+				return tree;
+			}
+		}
+		return null;
 	}
 }

@@ -1,5 +1,7 @@
 package com.dianping.cat.message.spi.internal;
 
+import io.netty.buffer.ByteBuf;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -175,4 +177,9 @@ public class NullMessageTree implements MessageTree {
 	public void setThreadName(String id) {
 
 	}
+
+	@Override
+   public ByteBuf getBuffer() {
+	   return null;
+   }
 }
