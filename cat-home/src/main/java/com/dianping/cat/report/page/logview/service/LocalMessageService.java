@@ -5,6 +5,9 @@ import io.netty.buffer.ByteBufAllocator;
 
 import java.nio.charset.Charset;
 
+import org.unidal.cat.message.storage.Block;
+import org.unidal.cat.message.storage.Bucket;
+import org.unidal.cat.message.storage.BucketManager;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -13,6 +16,7 @@ import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.codec.HtmlMessageCodec;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.codec.WaterfallMessageCodec;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
@@ -29,14 +33,17 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 
 	public static final String ID = DumpAnalyzer.ID;
 
-	@Inject(LocalMessageBucketManager.ID)
-	private MessageBucketManager m_bucketManager;
+	@Inject("local")
+	private BucketManager m_localBucketManager;
 
 	@Inject(HtmlMessageCodec.ID)
 	private MessageCodec m_html;
 
 	@Inject(WaterfallMessageCodec.ID)
 	private MessageCodec m_waterfall;
+	
+	@Inject(PlainTextMessageCodec.ID)
+	private MessageCodec m_plainText;
 
 	public LocalMessageService() {
 		super("logview");
@@ -47,8 +54,18 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 	      throws Exception {
 		String messageId = payload.getMessageId();
 		boolean waterfull = payload.isWaterfall();
-		MessageTree tree = m_bucketManager.loadMessage(messageId);
-
+		MessageId id = MessageId.parse(messageId);
+		
+		if(m_localBucketManager==null){
+			System.err.println("m_localBucketManager is null");
+		}
+		
+		Bucket bucket = m_localBucketManager.getBucket(id.getDomain(), id.getHour(), true);
+		Block block = bucket.get(id);
+		MessageTree tree=	m_plainText.decode(block.unpack(id));
+		
+		System.err.println(tree);
+		
 		if (tree != null) {
 			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(8192);
 
@@ -89,6 +106,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 			t.addData("domain", domain);
 			t.setStatus(Message.SUCCESS);
 		} catch (Exception e) {
+			e.printStackTrace();
 			Cat.logError(e);
 			t.setStatus(e);
 			response.setException(e);
@@ -102,13 +120,6 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 	public boolean isEligable(ModelRequest request) {
 		if (m_manager.isHdfsOn()) {
 			boolean eligibale = request.getPeriod().isCurrent();
-
-			if (eligibale) {
-				String messageId = request.getProperty("messageId");
-				MessageId id = MessageId.parse(messageId);
-
-				return id.getVersion() == 2;
-			}
 
 			return eligibale;
 		} else {

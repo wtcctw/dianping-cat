@@ -67,5 +67,65 @@
 				</requirement>
 			</requirements>
 		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.MessageDumper</role>
+			<implementation>org.unidal.cat.message.storage.local.DefaultMessageDumper</implementation>
+		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.MessageProcessor</role>
+			<implementation>org.unidal.cat.message.storage.local.DefaultMessageProcessor</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>org.unidal.cat.message.storage.BlockDumper</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.BlockDumper</role>
+			<implementation>org.unidal.cat.message.storage.local.DefaultBlockDumper</implementation>
+		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.BlockWriter</role>
+			<implementation>org.unidal.cat.message.storage.local.DefaultBlockWriter</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>org.unidal.cat.message.storage.BucketManager</role>
+					<role-hint>local</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.BucketManager</role>
+			<role-hint>local</role-hint>
+			<implementation>org.unidal.cat.message.storage.local.LocalBucketManager</implementation>
+		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.Bucket</role>
+			<role-hint>local</role-hint>
+			<implementation>org.unidal.cat.message.storage.local.LocalBucket</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>org.unidal.cat.message.storage.FileBuilder</role>
+					<role-hint>local</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.FileBuilder</role>
+			<role-hint>local</role-hint>
+			<implementation>org.unidal.cat.message.storage.local.LocalFileBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.cat.message.storage.StorageConfiguration</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.StorageConfiguration</role>
+			<implementation>org.unidal.cat.message.storage.internals.DefaultStorageConfiguration</implementation>
+		</component>
 	</components>
 </plexus>

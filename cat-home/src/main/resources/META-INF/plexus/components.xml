@@ -2217,7 +2217,7 @@
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.storage.MessageBucketManager</role>
+					<role>org.unidal.cat.message.storage.BucketManager</role>
 					<role-hint>local</role-hint>
 				</requirement>
 				<requirement>
@@ -2229,6 +2229,11 @@
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>waterfall</role-hint>
 					<field-name>m_waterfall</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>plain-text</role-hint>
+					<field-name>m_plainText</field-name>
 				</requirement>
 			</requirements>
 		</component>
