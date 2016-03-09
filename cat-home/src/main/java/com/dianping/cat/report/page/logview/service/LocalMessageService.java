@@ -9,6 +9,7 @@ import org.unidal.cat.message.storage.Block;
 import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.BucketManager;
 import org.unidal.cat.message.storage.MessageDumper;
+import org.unidal.cat.message.storage.MessageDumperManager;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -45,7 +46,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 	private MessageCodec m_plainText;
 
 	@Inject
-	private MessageDumper m_dumper;
+	private MessageDumperManager m_dumperManager;
 
 	public LocalMessageService() {
 		super("logview");
@@ -57,13 +58,17 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 		String messageId = payload.getMessageId();
 		boolean waterfull = payload.isWaterfall();
 		MessageId id = MessageId.parse(messageId);
-		MessageTree tree = m_dumper.find(id);
+		MessageDumper dumper = m_dumperManager.findDumper(id.getTimestamp());
+		MessageTree tree = dumper.find(id);
 
 		if (tree == null) {
 			Bucket bucket = m_localBucketManager.getBucket(id.getDomain(), id.getHour(), true);
 			Block block = bucket.get(id);
-		
-			tree = m_plainText.decode(block.unpack(id));
+			ByteBuf data = block.unpack(id);
+
+			if (data != null) {
+				tree = m_plainText.decode(data);
+			}
 		}
 
 		if (tree != null) {

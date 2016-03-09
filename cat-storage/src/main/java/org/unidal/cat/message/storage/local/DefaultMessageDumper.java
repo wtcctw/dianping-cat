@@ -16,6 +16,7 @@ import org.unidal.helper.Threads;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Named;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 
@@ -24,6 +25,8 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 	private List<BlockingQueue<MessageTree>> m_queues = new ArrayList<BlockingQueue<MessageTree>>();
 
 	private List<MessageProcessor> m_processors = new ArrayList<MessageProcessor>();
+
+	private int m_failCount = -1;
 
 	@Override
 	public void awaitTermination() throws InterruptedException {
@@ -81,7 +84,11 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 		if (!queue.offer(tree)) { // overflow
 			BlockingQueue<MessageTree> last = m_queues.get(m_queues.size() - 1);
 
-			last.offer(tree);
+			boolean success = last.offer(tree);
+
+			if (!success && (++m_failCount % 100) == 0) {
+				Cat.logError(new RuntimeException("Error when offer tree to message dumper"));
+			}
 		}
 	}
 

@@ -1,13 +1,10 @@
 package org.unidal.cat.message.storage.local;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.dianping.cat.message.internal.MessageId;
 
 import org.unidal.cat.message.storage.Block;
 import org.unidal.cat.message.storage.BlockDumper;
@@ -16,6 +13,7 @@ import org.unidal.cat.message.storage.internals.DefaultBlock;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
+import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
@@ -28,7 +26,7 @@ public class DefaultMessageProcessor implements MessageProcessor {
 
 	private BlockingQueue<MessageTree> m_queue;
 
-	private Map<String, Block> m_blocks = new HashMap<String, Block>();
+	private ConcurrentHashMap<String, Block> m_blocks = new ConcurrentHashMap<String, Block>();
 
 	private AtomicBoolean m_enabled;
 

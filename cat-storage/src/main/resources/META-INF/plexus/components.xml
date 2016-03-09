@@ -68,8 +68,13 @@
 			</requirements>
 		</component>
 		<component>
+			<role>org.unidal.cat.message.storage.MessageDumperManager</role>
+			<implementation>org.unidal.cat.message.storage.MessageDumperManager</implementation>
+		</component>
+		<component>
 			<role>org.unidal.cat.message.storage.MessageDumper</role>
 			<implementation>org.unidal.cat.message.storage.local.DefaultMessageDumper</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 		<component>
 			<role>org.unidal.cat.message.storage.MessageProcessor</role>

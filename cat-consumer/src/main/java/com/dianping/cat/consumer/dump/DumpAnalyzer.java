@@ -3,6 +3,7 @@ package com.dianping.cat.consumer.dump;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.cat.message.storage.MessageDumper;
+import org.unidal.cat.message.storage.MessageDumperManager;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
@@ -19,19 +20,16 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	private ServerStatisticManager m_serverStateManager;
 
 	@Inject
+	private MessageDumperManager m_dumperManager;
+
 	private MessageDumper m_dumper;
 
 	private Logger m_logger;
 
-	private void checkpointAsyc(final long startTime) {
-	}
-
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
 		try {
-			long startTime = getStartTime();
-
-			checkpointAsyc(startTime);
+			m_dumperManager.closeDumper(m_startTime);
 		} catch (Exception e) {
 			m_logger.error(e.getMessage(), e);
 		}
@@ -73,7 +71,6 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 			if (duration == 0 || duration == ONE_HOUR || duration == -ONE_HOUR) {
 				m_dumper.process(tree);
-				// m_bucketManager.storeMessage(tree, messageId);
 			} else {
 				m_serverStateManager.addPigeonTimeError(1);
 			}
@@ -86,7 +83,14 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 	@Override
 	public int getAnanlyzerCount() {
-		return 2;
+		return 1;
+	}
+
+	@Override
+	public void initialize(long startTime, long duration, long extraTime) {
+		super.initialize(startTime, duration, extraTime);
+
+		m_dumper = m_dumperManager.findOrCreateMessageDumper(startTime);
 	}
 
 }

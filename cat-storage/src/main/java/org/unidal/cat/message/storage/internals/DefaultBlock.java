@@ -9,6 +9,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
@@ -40,7 +41,7 @@ public class DefaultBlock implements Block {
 
 	private boolean m_gzip = true;
 
-	private Map<MessageId, MessageTree> m_trees = new LinkedHashMap<MessageId, MessageTree>();
+	private ConcurrentHashMap<MessageId, MessageTree> m_trees = new ConcurrentHashMap<MessageId, MessageTree>();
 
 	public DefaultBlock(MessageId id, int offset, byte[] data) {
 		m_mappings.put(id, offset);
@@ -150,6 +151,8 @@ public class DefaultBlock implements Block {
 
 	@Override
 	public MessageTree findTree(MessageId id) {
-		return m_trees.get(id);
+		MessageTree tree = m_trees.get(id);
+		
+		return tree;
 	}
 }

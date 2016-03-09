@@ -340,7 +340,7 @@
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>org.unidal.cat.message.storage.MessageDumper</role>
+					<role>org.unidal.cat.message.storage.MessageDumperManager</role>
 				</requirement>
 			</requirements>
 		</component>

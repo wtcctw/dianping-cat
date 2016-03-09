@@ -9,6 +9,7 @@ import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.BucketManager;
 import org.unidal.cat.message.storage.FileBuilder;
 import org.unidal.cat.message.storage.MessageDumper;
+import org.unidal.cat.message.storage.MessageDumperManager;
 import org.unidal.cat.message.storage.MessageProcessor;
 import org.unidal.cat.message.storage.StorageConfiguration;
 import org.unidal.cat.message.storage.internals.DefaultStorageConfiguration;
@@ -78,7 +79,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 		String local = "local";
 
-		all.add(C(MessageDumper.class, DefaultMessageDumper.class));
+		all.add(C(MessageDumperManager.class));
+		all.add(C(MessageDumper.class, DefaultMessageDumper.class).is(PER_LOOKUP));
 		all.add(C(MessageProcessor.class, DefaultMessageProcessor.class).req(BlockDumper.class).is(PER_LOOKUP));
 		all.add(C(BlockDumper.class, DefaultBlockDumper.class));
 		all.add(C(BlockWriter.class, DefaultBlockWriter.class).req(BucketManager.class, local).is(PER_LOOKUP));
