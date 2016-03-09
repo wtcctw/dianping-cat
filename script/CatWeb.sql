@@ -40,7 +40,7 @@ CREATE TABLE `js_error_log_content` (
   KEY `updatetime` (`updatetime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `web_speed_data_0` (
+CREATE TABLE `web_speed_data_1` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
   `period` date NOT NULL COMMENT '时间',
   `minute_order` smallint(6) NOT NULL COMMENT '分钟',
