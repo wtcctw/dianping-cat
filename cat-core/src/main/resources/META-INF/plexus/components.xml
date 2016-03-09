@@ -180,6 +180,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.business.BusinessConfigManager</role>
+			<implementation>com.dianping.cat.config.business.BusinessConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.BusinessConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.config.web.url.UrlPatternHandler</role>
 			<implementation>com.dianping.cat.config.web.url.DefaultUrlPatternHandler</implementation>
 		</component>
@@ -212,6 +221,16 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>business-config</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>business-config</logical-table-name>
+				<physical-table-name>business_config</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>config</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -219,6 +238,15 @@
 				<physical-table-name>config</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.config.BusinessConfigDao</role>
+			<implementation>com.dianping.cat.core.config.BusinessConfigDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.core.config.ConfigDao</role>
