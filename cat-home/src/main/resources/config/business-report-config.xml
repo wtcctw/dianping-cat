@@ -1,4 +1,4 @@
-<business-config id="domain">
+<business-report-config id="domain">
    <business-item-config id="arts-tuangourec-sc" view-order="0.0"  title="团购搜索" show-count="true" show-avg="false" show-sum="false" alarm="true">
    </business-item-config>
   	<business-item-config id="arts-tuangourec-sc" view-order="0.0"  title="团购搜索" show-count="true" show-avg="false" show-sum="false" alarm="true">
@@ -9,4 +9,4 @@
     <custom-config id="arts-tuangourec-sc" view-order="0.0"  title="团购搜索">
         <pattern>${#domain#,#id#,#count#}/${#domain#,#id#,#count#}</pattern>
    </custom-config>
-</business-config>
+</business-report-config>
