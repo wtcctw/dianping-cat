@@ -110,12 +110,8 @@ public class BucketTest extends ComponentTestCase {
       }
 
 		@Override
-      public ByteBuf findTree(MessageId id) {
-	      try {
-	         return unpack(id);
-         } catch (IOException e) {
-         	return null;
-         }
+      public MessageTree findTree(MessageId id) {
+	      return null;
       }
 	}
 }
