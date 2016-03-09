@@ -30,6 +30,7 @@ import com.dianping.cat.message.storage.MessageBucket;
 public class LocalMessageBucketTest extends ComponentTestCase {
 
 	private final String m_baseDir = "target/bucket/hdfs/dump/";
+
 	private final String m_dataDir = "/data/appdatas/cat/";
 
 	public void setup() {
@@ -39,7 +40,7 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 			new File(m_baseDir + file).delete();
 			new File(m_baseDir + file + ".idx").delete();
 		}
-		
+
 		String tmpDir = System.getProperty("java.io.tmpdir");
 		new File(tmpDir, "cat-Test.mark").delete();
 		new File(m_dataDir, "cat-Test.mark").delete();
@@ -79,11 +80,11 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 		bucket.close();
 	}
 
-	private MessageId buildChannelBuffer(MessageIdFactory factory, MessageCodec codec, MessageTree tree,
-	      ByteBuf buf) {
+	private MessageId buildChannelBuffer(MessageIdFactory factory, MessageCodec codec, MessageTree tree, ByteBuf buf) {
 		String messageId = factory.getNextId();
 
 		tree.setMessageId(messageId);
+
 		MessageId id = MessageId.parse(messageId);
 
 		codec.encode(tree, buf);
@@ -156,7 +157,7 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 	static class MockMessageIdFactory extends MessageIdFactory {
 		@Override
 		protected long getTimestamp() {
-			return 1343532130488L;
+			return 1343532130488L / (3600 * 1000L);
 		}
 	}
 }
