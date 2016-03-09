@@ -83,14 +83,13 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 	@Override
 	public int getAnanlyzerCount() {
-		return 1;
+		return 2;
 	}
 
 	@Override
 	public void initialize(long startTime, long duration, long extraTime) {
 		super.initialize(startTime, duration, extraTime);
-
-		m_dumper = m_dumperManager.findOrCreateMessageDumper(startTime);
+		m_dumper = m_dumperManager.findOrCreateMessageDumper(m_startTime);
 	}
 
 }

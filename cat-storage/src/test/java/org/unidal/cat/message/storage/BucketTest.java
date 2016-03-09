@@ -107,13 +107,15 @@ public class BucketTest extends ComponentTestCase {
 
 		@Override
       public void pack(MessageId id, MessageTree tree) throws IOException {
-	      // TODO Auto-generated method stub
       }
 
 		@Override
-      public MessageTree findTree(MessageId id) {
-	      // TODO Auto-generated method stub
-	      return null;
+      public ByteBuf findTree(MessageId id) {
+	      try {
+	         return unpack(id);
+         } catch (IOException e) {
+         	return null;
+         }
       }
 	}
 }

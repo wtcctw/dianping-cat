@@ -1,5 +1,6 @@
 package com.dianping.cat.message.internal;
 
+
 public class MessageId {
 	private String m_domain;
 
@@ -15,34 +16,7 @@ public class MessageId {
 		m_hour = hour;
 		m_index = index;
 	}
-
-	public static long getTimestamp(String messageId) {
-		int hour = -1;
-		int len = messageId == null ? 0 : messageId.length();
-		int part = 4;
-		int end = len;
-
-		for (int i = len - 1; i >= 0; i--) {
-			char ch = messageId.charAt(i);
-
-			if (ch == '-') {
-				if (part == 4) {
-					end = i;
-					part--;
-				} else if (part == 3) {
-					hour = Integer.parseInt(messageId.substring(i + 1, end));
-					break;
-				}
-			}
-		}
-
-		if (hour < 0) {
-			throw new RuntimeException("Invalid message ID format: " + messageId);
-		} else {
-			return hour * 3600 * 1000L;
-		}
-	}
-
+	
 	public static MessageId parse(String messageId) {
 		int index = -1;
 		int hour = -1;
@@ -70,6 +44,7 @@ public class MessageId {
 				case 2:
 					ipAddressInHex = messageId.substring(i + 1, end);
 					domain = messageId.substring(0, i);
+					part--;
 					break;
 				default:
 					break;
@@ -122,7 +97,7 @@ public class MessageId {
 	public int getIndex() {
 		return m_index;
 	}
-
+	
 	public String getIpAddress() {
 		StringBuilder sb = new StringBuilder();
 		String local = m_ipAddressInHex;
@@ -217,5 +192,4 @@ public class MessageId {
 
 		return sb.toString();
 	}
-	
 }

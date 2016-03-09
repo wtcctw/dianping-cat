@@ -12,6 +12,9 @@ import org.unidal.cat.message.storage.BucketManager;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.Transaction;
+
 @Named(type = BlockWriter.class, instantiationStrategy = Named.PER_LOOKUP)
 public class DefaultBlockWriter implements BlockWriter {
 	@Inject
@@ -24,6 +27,8 @@ public class DefaultBlockWriter implements BlockWriter {
 	private AtomicBoolean m_enabled;
 
 	private CountDownLatch m_latch;
+
+	private int m_count;
 
 	@Override
 	public String getName() {
@@ -50,13 +55,26 @@ public class DefaultBlockWriter implements BlockWriter {
 				block = m_queue.poll(5, TimeUnit.MILLISECONDS);
 
 				if (block != null) {
-					try {
-						Bucket bucket = m_manager.getBucket(block.getDomain(), block.getHour(), true);
-
-
-						bucket.put(block);
-					} catch (Exception e) {
-						e.printStackTrace();
+						try {
+							String domain = block.getDomain();
+							Bucket bucket = m_manager.getBucket(domain, block.getHour(), true);
+	
+							if ((++m_count) % 100 == 0) {
+								Transaction t = Cat.newTransaction("Block", domain);
+								
+								try {
+									bucket.put(block);
+								} catch (Exception e) {
+									t.setStatus(e);
+									Cat.logError(e);
+								}
+								t.setStatus(Transaction.SUCCESS);
+								t.complete();
+							} else {
+								bucket.put(block);
+							}
+						} catch (Exception e) {
+						Cat.logError(e);
 					}
 				}
 			}
