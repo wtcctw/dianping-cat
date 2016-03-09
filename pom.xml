@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>parent</artifactId>
-	<version>1.4.1-SNAPSHOT</version>
+	<version>1.4.2-SNAPSHOT</version>
 	<name>parent</name>
 	<description>Central Application Tracking</description>
 	<packaging>pom</packaging>
@@ -198,7 +198,7 @@ org.eclipse.jdt.core.compiler.compliance=1.7
 				<plugin>
 					<groupId>com.dianping.cat</groupId>
 					<artifactId>cat-maven-plugin</artifactId>
-					<version>1.4.1-SNAPSHOT</version>
+					<version>1.4.2-SNAPSHOT</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
