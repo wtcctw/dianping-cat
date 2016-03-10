@@ -29,7 +29,7 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.message.internal.MessageId;
 
 @Named(type = Bucket.class, value = "local", instantiationStrategy = Named.PER_LOOKUP)
-public class LocalBucket implements Bucket {
+public class LocalBucket implements Bucket{
 	private static final int SEGMENT_SIZE = 32 * 1024;
 
 	@Inject("local")
@@ -49,21 +49,25 @@ public class LocalBucket implements Bucket {
 
 	private void ensureOpen(MessageId id) throws IOException {
 		if (!m_index.isOpen()) {
-			String domain = id.getDomain();
-			long timestamp = id.getTimestamp();
-			Date startTime = new Date(timestamp);
-			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-			File dataPath = m_bulider.getFile(domain, startTime, ip, FileType.DATA);
-			File indexPath = m_bulider.getFile(domain, startTime, ip, FileType.INDEX);
-
-			m_data.init(dataPath);
-			m_index.init(indexPath);
+			initBlock(id);
 		}
 	}
 
+	private void initBlock(MessageId id) throws IOException {
+	   String domain = id.getDomain();
+	   long timestamp = id.getTimestamp();
+	   Date startTime = new Date(timestamp);
+	   String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+	   File dataPath = m_bulider.getFile(domain, startTime, ip, FileType.DATA);
+	   File indexPath = m_bulider.getFile(domain, startTime, ip, FileType.INDEX);
+
+	   m_data.init(dataPath);
+	   m_index.init(indexPath);
+   }
+
 	@Override
 	public Block get(MessageId id) throws IOException {
-		ensureOpen(id);
+		initBlock(id);
 
 		long address = m_index.read(id);
 
@@ -93,6 +97,7 @@ public class LocalBucket implements Bucket {
 			m_index.write(id, dataOffset, offset);
 		}
 		m_data.write(data);
+		m_index.flushHeader();
 	}
 
 
@@ -162,6 +167,7 @@ public class LocalBucket implements Bucket {
 			m_out.writeInt(len);
 			data.readBytes(m_out, len);
 			m_offset += len + 4;
+			m_out.flush();
 		}
 	}
 	
@@ -264,6 +270,10 @@ public class LocalBucket implements Bucket {
 			Segment segment = getSegment(address);
 
 			segment.writeLong(offset, (blockAddress << 24) + blockOffset);
+		}
+		
+		private void flushHeader() throws IOException{
+			m_header.m_segment.flush();
 		}
 		
 		private class Header {
@@ -419,4 +429,5 @@ public class LocalBucket implements Bucket {
 			}
 		}
 	}
+
 }

@@ -55,25 +55,25 @@ public class DefaultBlockWriter implements BlockWriter {
 				block = m_queue.poll(5, TimeUnit.MILLISECONDS);
 
 				if (block != null) {
-						try {
-							String domain = block.getDomain();
-							Bucket bucket = m_manager.getBucket(domain, block.getHour(), true);
-	
-							if ((++m_count) % 100 == 0) {
-								Transaction t = Cat.newTransaction("Block", domain);
-								
-								try {
-									bucket.put(block);
-								} catch (Exception e) {
-									t.setStatus(e);
-									Cat.logError(e);
-								}
-								t.setStatus(Transaction.SUCCESS);
-								t.complete();
-							} else {
+					try {
+						String domain = block.getDomain();
+						Bucket bucket = m_manager.getBucket(domain, block.getHour(), true);
+
+						if ((m_count++) % 1 == 0) {
+							Transaction t = Cat.newTransaction("Block", domain);
+
+							try {
 								bucket.put(block);
+							} catch (Exception e) {
+								t.setStatus(e);
+								Cat.logError(e);
 							}
-						} catch (Exception e) {
+							t.setStatus(Transaction.SUCCESS);
+							t.complete();
+						} else {
+							bucket.put(block);
+						}
+					} catch (Exception e) {
 						Cat.logError(e);
 					}
 				}

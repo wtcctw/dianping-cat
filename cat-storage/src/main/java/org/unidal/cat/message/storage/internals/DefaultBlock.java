@@ -9,7 +9,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
@@ -17,10 +16,12 @@ import java.util.zip.GZIPOutputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
+import org.unidal.cat.message.storage.Block;
+
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
-
-import org.unidal.cat.message.storage.Block;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class DefaultBlock implements Block {
 	private static final int MAX_SIZE = 256 * 1024;
@@ -41,7 +42,7 @@ public class DefaultBlock implements Block {
 
 	private boolean m_gzip = true;
 
-	private ConcurrentHashMap<MessageId, MessageTree> m_trees = new ConcurrentHashMap<MessageId, MessageTree>();
+	private boolean m_isFull = false;
 
 	public DefaultBlock(MessageId id, int offset, byte[] data) {
 		m_mappings.put(id, offset);
@@ -59,7 +60,7 @@ public class DefaultBlock implements Block {
 			try {
 				m_out = new GZIPOutputStream(os, BUFFER_SIZE);
 			} catch (IOException e) {
-				e.printStackTrace();
+				Cat.logError(e);
 			}
 		} else {
 			m_out = new DeflaterOutputStream(os, new Deflater(5, true), BUFFER_SIZE);
@@ -74,6 +75,7 @@ public class DefaultBlock implements Block {
 				m_out.flush();
 				m_out.close();
 			} catch (IOException e) {
+				e.printStackTrace();
 				// ignore it
 			}
 
@@ -103,7 +105,7 @@ public class DefaultBlock implements Block {
 
 	@Override
 	public boolean isFull() {
-		return m_offset >= MAX_SIZE;
+		return m_offset >= MAX_SIZE || m_isFull;
 	}
 
 	@Override
@@ -114,7 +116,6 @@ public class DefaultBlock implements Block {
 		buf.readBytes(m_out, len);
 		m_mappings.put(id, m_offset);
 		m_offset += len;
-		m_trees.put(id, tree);
 	}
 
 	@Override
@@ -139,6 +140,7 @@ public class DefaultBlock implements Block {
 		in.skip(offset);
 
 		int len = in.readInt();
+		System.err.println("read length :" + len);
 		byte[] data = new byte[len];
 
 		in.readFully(data);
@@ -151,8 +153,11 @@ public class DefaultBlock implements Block {
 
 	@Override
 	public MessageTree findTree(MessageId id) {
-		MessageTree tree = m_trees.get(id);
-		
-		return tree;
+		if (m_mappings.get(id) != null) {
+			m_isFull = true;
+
+			return new DefaultMessageTree();
+		}
+		return null;
 	}
 }

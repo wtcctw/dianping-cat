@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.dianping.cat.message.internal.MessageId;
 
 public interface Bucket {
+	
 	public void close();
 
 	public Block get(MessageId id) throws IOException;

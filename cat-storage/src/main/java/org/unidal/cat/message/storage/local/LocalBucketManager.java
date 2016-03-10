@@ -62,4 +62,11 @@ public class LocalBucketManager extends ContainerHolder implements BucketManager
 
 		return bucket;
 	}
+
+	@Override
+   public Bucket getReadBucket(String domain, int hour) {
+		Bucket bucket = lookup(Bucket.class, "local");
+		
+	   return bucket;
+   }
 }
