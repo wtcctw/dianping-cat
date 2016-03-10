@@ -1,8 +1,11 @@
 package org.unidal.cat.message.storage.local;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.Unpooled;
 
 import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.File;
@@ -15,6 +18,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
 
 import org.unidal.cat.message.storage.Block;
 import org.unidal.cat.message.storage.Bucket;
@@ -29,7 +35,7 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.message.internal.MessageId;
 
 @Named(type = Bucket.class, value = "local", instantiationStrategy = Named.PER_LOOKUP)
-public class LocalBucket implements Bucket{
+public class LocalBucket implements Bucket {
 	private static final int SEGMENT_SIZE = 32 * 1024;
 
 	@Inject("local")
@@ -54,16 +60,16 @@ public class LocalBucket implements Bucket{
 	}
 
 	private void initBlock(MessageId id) throws IOException {
-	   String domain = id.getDomain();
-	   long timestamp = id.getTimestamp();
-	   Date startTime = new Date(timestamp);
-	   String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-	   File dataPath = m_bulider.getFile(domain, startTime, ip, FileType.DATA);
-	   File indexPath = m_bulider.getFile(domain, startTime, ip, FileType.INDEX);
+		String domain = id.getDomain();
+		long timestamp = id.getTimestamp();
+		Date startTime = new Date(timestamp);
+		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+		File dataPath = m_bulider.getFile(domain, startTime, ip, FileType.DATA);
+		File indexPath = m_bulider.getFile(domain, startTime, ip, FileType.INDEX);
 
-	   m_data.init(dataPath);
-	   m_index.init(indexPath);
-   }
+		m_data.init(dataPath);
+		m_index.init(indexPath);
+	}
 
 	@Override
 	public Block get(MessageId id) throws IOException {
@@ -74,12 +80,29 @@ public class LocalBucket implements Bucket{
 		if (address < 0) {
 			return new DefaultBlock(id, -1, null);
 		} else {
-			int segmentOffset = (int) (address & 0xFFFFFFL);
 			long dataOffset = address >> 24;
+			int segmentOffset = (int) (address & 0xFFFFFFL);
 			byte[] data = m_data.read(dataOffset);
+
+			System.err.println("----" + id.toString() + "-------" + "segmentOffset:" + segmentOffset + " dataOffset"
+			      + dataOffset);
+			
+			//testCode(Unpooled.wrappedBuffer(data),segmentOffset);
 
 			return new DefaultBlock(id, segmentOffset, data);
 		}
+	}
+
+	private void testCode(ByteBuf data,long segmentOffset) throws IOException {
+		ByteBufInputStream is = new ByteBufInputStream(data);
+		DataInputStream in;
+
+		in = new DataInputStream(new GZIPInputStream(is, 1024));
+
+		in.skip(segmentOffset);
+		int len = in.readInt();
+		
+		System.err.println("msg content:" + in.readInt());
 	}
 
 	@Override
@@ -97,9 +120,7 @@ public class LocalBucket implements Bucket{
 			m_index.write(id, dataOffset, offset);
 		}
 		m_data.write(data);
-		m_index.flushHeader();
 	}
-
 
 	@Override
 	public String toString() {
@@ -167,10 +188,12 @@ public class LocalBucket implements Bucket{
 			m_out.writeInt(len);
 			data.readBytes(m_out, len);
 			m_offset += len + 4;
+
+			System.err.println("offset: " + m_offset + " len:" + len);
 			m_out.flush();
 		}
 	}
-	
+
 	private class IndexHelper {
 		private static final int BYTE_PER_MESSAGE = 8;
 
@@ -271,11 +294,7 @@ public class LocalBucket implements Bucket{
 
 			segment.writeLong(offset, (blockAddress << 24) + blockOffset);
 		}
-		
-		private void flushHeader() throws IOException{
-			m_header.m_segment.flush();
-		}
-		
+
 		private class Header {
 			private Map<Integer, Map<Integer, Integer>> m_table = new LinkedHashMap<Integer, Map<Integer, Integer>>();
 

@@ -140,7 +140,6 @@ public class DefaultBlock implements Block {
 		in.skip(offset);
 
 		int len = in.readInt();
-		System.err.println("read length :" + len);
 		byte[] data = new byte[len];
 
 		in.readFully(data);

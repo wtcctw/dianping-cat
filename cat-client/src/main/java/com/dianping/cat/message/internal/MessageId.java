@@ -161,7 +161,7 @@ public class MessageId {
 
 		return ip;
 	}
-
+	
 	public long getTimestamp() {
 		return m_hour * 3600 * 1000L;
 	}
