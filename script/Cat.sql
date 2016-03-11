@@ -452,7 +452,7 @@ CREATE TABLE `user_define_rule` (
 CREATE TABLE `metric_screen` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL COMMENT '配置名称',
-  `grap_name` varchar(50) NOT NULL COMMENT 'Graph名称',
+  `graph_name` varchar(50) NOT NULL COMMENT 'Graph名称',
   `category` varchar(50) NOT NULL COMMENT 'Graph类别',
   `content` longtext COMMENT '配置的具体内容',
   `creation_date` datetime NOT NULL COMMENT '配置创建时间',

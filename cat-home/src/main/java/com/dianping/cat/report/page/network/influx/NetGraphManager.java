@@ -19,6 +19,8 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.alarm.spi.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
@@ -31,8 +33,6 @@ import com.dianping.cat.home.network.entity.NetGraphSet;
 import com.dianping.cat.home.network.entity.NetTopology;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.metric.MetricService;
-import com.dianping.cat.report.alert.spi.AlertEntity;
-import com.dianping.cat.report.alert.spi.AlertManager;
 import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
 import com.dianping.cat.report.page.network.service.NetTopologyReportService;
 import com.dianping.cat.report.service.ModelPeriod;
@@ -130,11 +130,11 @@ public class NetGraphManager implements Initializable, LogEnabled {
 		Map<String, MetricReport> reports = new HashMap<String, MetricReport>();
 
 		for (String group : groups) {
-			ModelRequest request = new ModelRequest(group, period);
-			ModelResponse<MetricReport> response = m_service.invoke(request);
-			MetricReport report = response.getModel();
-
-			reports.put(group, report);
+			// ModelRequest request = new ModelRequest(group, period);
+			// ModelResponse<MetricReport> response = m_service.invoke(request);
+			// MetricReport report = response.getModel();
+			//
+			// reports.put(group, report);
 		}
 		return reports;
 	}

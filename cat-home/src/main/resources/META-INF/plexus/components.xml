@@ -5962,7 +5962,7 @@
 					<role>com.dianping.cat.system.page.config.processor.ThirdPartyConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.config.processor.TopologyConfigProcessor</role>
+					<role>com.dianping.cat.system.page.config.processor.DependencyConfigProcessor</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.config.processor.MetricConfigProcessor</role>
@@ -5996,9 +5996,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.config.processor.StorageConfigProcessor</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.config.processor.DisplayConfigProcessor</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.ConfigModificationDao</role>
@@ -6159,8 +6156,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.config.processor.TopologyConfigProcessor</role>
-			<implementation>com.dianping.cat.system.page.config.processor.TopologyConfigProcessor</implementation>
+			<role>com.dianping.cat.system.page.config.processor.DependencyConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.processor.DependencyConfigProcessor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
@@ -6333,6 +6330,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.decorator.RuleFTLDecorator</role>
@@ -6537,18 +6537,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.config.processor.DisplayConfigProcessor</role>
-			<implementation>com.dianping.cat.system.page.config.processor.DisplayConfigProcessor</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
 				</requirement>
 			</requirements>
 		</component>

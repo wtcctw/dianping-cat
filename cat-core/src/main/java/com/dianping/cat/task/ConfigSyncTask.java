@@ -21,7 +21,17 @@ public class ConfigSyncTask implements Task {
 
 	private static final long DURATION = TimeHelper.ONE_MINUTE;
 
+	private static boolean m_actvie = false;
+
 	public static ConfigSyncTask getInstance() {
+		if (m_actvie == false) {
+			synchronized (ConfigSyncTask.class) {
+				if (m_actvie == false) {
+					Threads.forGroup("cat").start(m_instance);
+					m_actvie = true;
+				}
+			}
+		}
 		return m_instance;
 	}
 
@@ -42,7 +52,7 @@ public class ConfigSyncTask implements Task {
 
 		while (active) {
 			long current = System.currentTimeMillis();
-			
+
 			for (final SyncHandler handler : m_handlers) {
 				s_threadPool.submit(new Runnable() {
 

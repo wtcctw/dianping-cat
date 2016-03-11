@@ -77,7 +77,13 @@ public class EventReportCountFilter extends BaseVisitor {
 	private static class EventNameCompator implements Comparator<EventName> {
 		@Override
 		public int compare(EventName o1, EventName o2) {
-			return (int) (o2.getTotalCount() - o1.getTotalCount());
+			if (o2.getTotalCount() > o1.getTotalCount()) {
+				return 1;
+			} else if (o2.getTotalCount() < o1.getTotalCount()) {
+				return -1;
+			} else {
+				return 0;
+			}
 		}
 	}
 }
