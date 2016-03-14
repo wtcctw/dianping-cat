@@ -28,6 +28,79 @@ import com.dianping.cat.Cat;
 
 @Named(type = Bucket.class, value = "local", instantiationStrategy = Named.PER_LOOKUP)
 public class LocalBucket implements Bucket {
+	private static final int SEGMENT_SIZE = 32 * 1024;
+
+	@Inject("local")
+	private FileBuilder m_bulider;
+
+	private DataHelper m_data = new DataHelper();
+
+	private IndexHelper m_index = new IndexHelper();
+
+	@Override
+	public void close() {
+		if (m_index.isOpen()) {
+			m_index.close();
+			m_data.close();
+		}
+	}
+
+	public void flush() {
+		try {
+			m_data.m_file.getFD().sync();
+			m_index.m_file.getFD().sync();
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
+
+	@Override
+	public ByteBuf get(MessageId id) throws IOException {
+		long address = m_index.read(id);
+
+		if (address < 0) {
+			return null;
+		} else {
+			int segmentOffset = (int) (address & 0xFFFFFFL);
+			long dataOffset = address >> 24;
+			byte[] data = m_data.read(dataOffset);
+
+			DefaultBlock block = new DefaultBlock(id, segmentOffset, data);
+
+			return block.unpack(id);
+		}
+	}
+
+	@Override
+	public void initialize(String domain, String ip, int hour) throws IOException {
+		long timestamp = hour * 3600 * 1000L;
+		Date startTime = new Date(timestamp);
+		File dataPath = m_bulider.getFile(domain, startTime, ip, FileType.DATA);
+		File indexPath = m_bulider.getFile(domain, startTime, ip, FileType.INDEX);
+
+		m_data.init(dataPath);
+		m_index.init(indexPath);
+	}
+
+	@Override
+	public void puts(ByteBuf data, Map<MessageId, Integer> mappings) throws IOException {
+		long dataOffset = m_data.getDataOffset();
+
+		m_data.write(data);
+
+		for (Map.Entry<MessageId, Integer> e : mappings.entrySet()) {
+			MessageId id = e.getKey();
+			int offset = e.getValue();
+
+			m_index.write(id, dataOffset, offset);
+		}
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s[%s]", getClass().getSimpleName(), m_data.getPath());
+	}
+
 	private class DataHelper {
 		private File m_path;
 
@@ -96,6 +169,108 @@ public class LocalBucket implements Bucket {
 	}
 
 	private class IndexHelper {
+		private static final int BYTE_PER_MESSAGE = 8;
+
+		private static final int BYTE_PER_ENTRY = 8;
+
+		private static final int MESSAGE_PER_SEGMENT = SEGMENT_SIZE / BYTE_PER_MESSAGE;
+
+		private static final int ENTRY_PER_SEGMENT = SEGMENT_SIZE / BYTE_PER_ENTRY;
+
+		private RandomAccessFile m_file;
+
+		private File m_path;
+
+		private FileChannel m_channel;
+
+		private Header m_header = new Header();
+
+		private Map<Long, Segment> m_segments = new HashMap<Long, Segment>();
+
+		public void close() {
+			try {
+				m_header.m_segment.flush();
+
+				for (Segment segment : m_segments.values()) {
+					segment.flush();
+				}
+			} catch (IOException e) {
+				Cat.logError(e);
+			}
+
+			try {
+				m_channel.force(false);
+				m_channel.close();
+			} catch (IOException e) {
+				Cat.logError(e);
+			}
+
+			try {
+				m_file.close();
+			} catch (IOException e) {
+				Cat.logError(e);
+			}
+
+			m_file = null;
+		}
+
+		private Segment getSegment(long id) throws IOException {
+			Segment segment = m_segments.get(id);
+
+			if (segment == null) {
+				segment = new Segment(m_channel, id * SEGMENT_SIZE);
+				m_segments.put(id, segment);
+			}
+
+			return segment;
+		}
+
+		public void init(File indexPath) throws IOException {
+			m_path = indexPath;
+			m_path.getParentFile().mkdirs();
+			m_file = new RandomAccessFile(m_path, "rwd"); // read-write without
+			// meta sync
+			m_channel = m_file.getChannel();
+
+			m_header.load();
+		}
+
+		public boolean isOpen() {
+			return m_file != null;
+		}
+
+		public long read(MessageId id) throws IOException {
+			int index = id.getIndex();
+			int position = m_header.getOffset(id.getIpAddressValue(), index, false);
+
+			if (position != -1) {
+				int segmentId = position / SEGMENT_SIZE;
+				int offset = position % SEGMENT_SIZE;
+				Segment segment = getSegment(segmentId);
+
+				if (segment != null) {
+					try {
+						long blockAddress = segment.readLong(offset);
+
+						return blockAddress;
+					} catch (EOFException e) {
+						// ignore it
+					}
+				}
+			}
+
+			return -1;
+		}
+
+		public void write(MessageId id, long blockAddress, int blockOffset) throws IOException {
+			int position = m_header.getOffset(id.getIpAddressValue(), id.getIndex(), true);
+			int address = position / SEGMENT_SIZE;
+			int offset = position % SEGMENT_SIZE;
+			Segment segment = getSegment(address);
+
+			segment.writeLong(offset, (blockAddress << 24) + blockOffset);
+		}
+
 		private class Header {
 			private Map<Integer, Map<Integer, Integer>> m_table = new LinkedHashMap<Integer, Map<Integer, Integer>>();
 
@@ -221,6 +396,7 @@ public class LocalBucket implements Bucket {
 					m_channel.write(m_buf, m_address);
 					m_buf.position(pos);
 					m_dirty = false;
+					m_channel.force(true);
 				}
 			}
 
@@ -253,179 +429,5 @@ public class LocalBucket implements Bucket {
 				}
 			}
 		}
-
-		private static final int BYTE_PER_MESSAGE = 8;
-
-		private static final int BYTE_PER_ENTRY = 8;
-
-		private static final int MESSAGE_PER_SEGMENT = SEGMENT_SIZE / BYTE_PER_MESSAGE;
-
-		private static final int ENTRY_PER_SEGMENT = SEGMENT_SIZE / BYTE_PER_ENTRY;
-
-		private RandomAccessFile m_file;
-
-		private File m_path;
-
-		private FileChannel m_channel;
-
-		private Header m_header = new Header();
-
-		private Map<Long, Segment> m_segments = new HashMap<Long, Segment>();
-
-		public void close() {
-			try {
-				m_header.m_segment.flush();
-
-				for (Segment segment : m_segments.values()) {
-					segment.flush();
-				}
-			} catch (IOException e) {
-				Cat.logError(e);
-			}
-
-			try {
-				m_channel.force(false);
-				m_channel.close();
-			} catch (IOException e) {
-				Cat.logError(e);
-			}
-
-			try {
-				m_file.close();
-			} catch (IOException e) {
-				Cat.logError(e);
-			}
-
-			m_file = null;
-		}
-
-		private Segment getSegment(long id) throws IOException {
-			Segment segment = m_segments.get(id);
-
-			if (segment == null) {
-				segment = new Segment(m_channel, id * SEGMENT_SIZE);
-				m_segments.put(id, segment);
-			}
-
-			return segment;
-		}
-
-		public void init(File indexPath) throws IOException {
-			m_path = indexPath;
-			m_path.getParentFile().mkdirs();
-			m_file = new RandomAccessFile(m_path, "rwd"); // read-write without
-			// meta sync
-			m_channel = m_file.getChannel();
-
-			m_header.load();
-		}
-
-		public boolean isOpen() {
-			return m_file != null;
-		}
-
-		public long read(MessageId id) throws IOException {
-			int index = id.getIndex();
-			int position = m_header.getOffset(id.getIpAddressValue(), index, false);
-
-			if (position != -1) {
-				int segmentId = position / SEGMENT_SIZE;
-				int offset = position % SEGMENT_SIZE;
-				Segment segment = getSegment(segmentId);
-
-				if (segment != null) {
-					try {
-						long blockAddress = segment.readLong(offset);
-
-						return blockAddress;
-					} catch (EOFException e) {
-						// ignore it
-					}
-				}
-			}
-
-			return -1;
-		}
-
-		public void write(MessageId id, long blockAddress, int blockOffset) throws IOException {
-			int position = m_header.getOffset(id.getIpAddressValue(), id.getIndex(), true);
-			int address = position / SEGMENT_SIZE;
-			int offset = position % SEGMENT_SIZE;
-			Segment segment = getSegment(address);
-
-			segment.writeLong(offset, (blockAddress << 24) + blockOffset);
-		}
-	}
-
-	private static final int SEGMENT_SIZE = 32 * 1024;
-
-	@Inject("local")
-	private FileBuilder m_bulider;
-
-	private DataHelper m_data = new DataHelper();
-
-	private IndexHelper m_index = new IndexHelper();
-
-	@Override
-	public void close() {
-		if (m_index.isOpen()) {
-			m_index.close();
-			m_data.close();
-		}
-	}
-
-	public void flush() {
-		try {
-			m_data.m_file.getFD().sync();
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
-
-	@Override
-	public ByteBuf get(MessageId id) throws IOException {
-		long address = m_index.read(id);
-
-		if (address < 0) {
-			return null;
-		} else {
-			int segmentOffset = (int) (address & 0xFFFFFFL);
-			long dataOffset = address >> 24;
-			byte[] data = m_data.read(dataOffset);
-
-			DefaultBlock block = new DefaultBlock(id, segmentOffset, data);
-
-			return block.unpack(id);
-		}
-	}
-
-	@Override
-	public void initialize(String domain, String ip, int hour) throws IOException {
-		long timestamp = hour * 3600 * 1000L;
-		Date startTime = new Date(timestamp);
-		File dataPath = m_bulider.getFile(domain, startTime, ip, FileType.DATA);
-		File indexPath = m_bulider.getFile(domain, startTime, ip, FileType.INDEX);
-
-		m_data.init(dataPath);
-		m_index.init(indexPath);
-	}
-
-	@Override
-	public void puts(ByteBuf data, Map<MessageId, Integer> mappings) throws IOException {
-		long dataOffset = m_data.getDataOffset();
-
-		m_data.write(data);
-
-		for (Map.Entry<MessageId, Integer> e : mappings.entrySet()) {
-			MessageId id = e.getKey();
-			int offset = e.getValue();
-
-			m_index.write(id, dataOffset, offset);
-		}
-	}
-
-	@Override
-	public String toString() {
-		return String.format("%s[%s]", getClass().getSimpleName(), m_data.getPath());
 	}
 }

@@ -67,7 +67,7 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 	@Override
 	public void initialize() throws InitializationException {
 		for (int i = 0; i < 10; i++) {
-			BlockingQueue<Block> queue = new LinkedBlockingQueue<Block>(10000);
+			BlockingQueue<Block> queue = new LinkedBlockingQueue<Block>(2000);
 			BlockWriter writer = lookup(BlockWriter.class);
 
 			m_queues.add(queue);
