@@ -60,7 +60,7 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 		boolean success = queue.offer(block);
 
 		if (!success && (++m_failCount % 100) == 0) {
-			Cat.logError(new RuntimeException("Error when offer tree in block dumper"));
+			Cat.logError(new RuntimeException("Error when offer block in block dumper"));
 		}
 	}
 

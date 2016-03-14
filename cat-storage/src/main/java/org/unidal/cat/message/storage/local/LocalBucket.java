@@ -163,9 +163,7 @@ public class LocalBucket implements Bucket {
 			m_out.writeInt(len);
 			data.readBytes(m_out, len);
 			m_offset += len + 4;
-
 		}
-
 	}
 
 	private class IndexHelper {
@@ -181,7 +179,7 @@ public class LocalBucket implements Bucket {
 
 		private File m_path;
 
-		private FileChannel m_channel;
+		private FileChannel m_indexChannel;
 
 		private Header m_header = new Header();
 
@@ -199,8 +197,8 @@ public class LocalBucket implements Bucket {
 			}
 
 			try {
-				m_channel.force(false);
-				m_channel.close();
+				m_indexChannel.force(false);
+				m_indexChannel.close();
 			} catch (IOException e) {
 				Cat.logError(e);
 			}
@@ -218,7 +216,7 @@ public class LocalBucket implements Bucket {
 			Segment segment = m_segments.get(id);
 
 			if (segment == null) {
-				segment = new Segment(m_channel, id * SEGMENT_SIZE);
+				segment = new Segment(m_indexChannel, id * SEGMENT_SIZE);
 				m_segments.put(id, segment);
 			}
 
@@ -230,7 +228,7 @@ public class LocalBucket implements Bucket {
 			m_path.getParentFile().mkdirs();
 			m_file = new RandomAccessFile(m_path, "rwd"); // read-write without
 			// meta sync
-			m_channel = m_file.getChannel();
+			m_indexChannel = m_file.getChannel();
 
 			m_header.load();
 		}
@@ -300,7 +298,7 @@ public class LocalBucket implements Bucket {
 						// full, create
 						// new one
 						m_segment.flush();
-						m_segment = new Segment(m_channel, segmentId * SEGMENT_SIZE);
+						m_segment = new Segment(m_indexChannel, segmentId * SEGMENT_SIZE);
 						m_offset = 0;
 					}
 
@@ -326,7 +324,7 @@ public class LocalBucket implements Bucket {
 			}
 
 			public void load() throws IOException {
-				Segment segment = new Segment(m_channel, 0);
+				Segment segment = new Segment(m_indexChannel, 0);
 				long magicCode = segment.readLong();
 
 				if (magicCode == 0) {
@@ -368,7 +366,7 @@ public class LocalBucket implements Bucket {
 		}
 
 		private class Segment {
-			private FileChannel m_channel;
+			private FileChannel m_segmentChannel;
 
 			private long m_address;
 
@@ -379,12 +377,12 @@ public class LocalBucket implements Bucket {
 			private boolean m_dirty;
 
 			private Segment(FileChannel channel, long address) throws IOException {
-				m_channel = channel;
+				m_segmentChannel = channel;
 				m_address = address;
 				m_lastAccessTime = System.currentTimeMillis();
 				m_buf = ByteBuffer.allocate(SEGMENT_SIZE);
 				m_buf.mark();
-				m_channel.read(m_buf, address);
+				m_segmentChannel.read(m_buf, address);
 				m_buf.reset();
 			}
 
@@ -393,10 +391,9 @@ public class LocalBucket implements Bucket {
 					int pos = m_buf.position();
 
 					m_buf.position(0);
-					m_channel.write(m_buf, m_address);
+					m_segmentChannel.write(m_buf, m_address);
 					m_buf.position(pos);
 					m_dirty = false;
-					m_channel.force(true);
 				}
 			}
 
@@ -421,10 +418,8 @@ public class LocalBucket implements Bucket {
 				m_buf.putLong(offset, value);
 				m_dirty = true;
 
-				if (m_lastAccessTime + 1000L < System.currentTimeMillis()) { // idle
-					// after
-					// 1
-					// second
+				if (m_lastAccessTime + 1000L < System.currentTimeMillis()) {
+					// idle after 1 second
 					flush();
 				}
 			}
