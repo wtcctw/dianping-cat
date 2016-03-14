@@ -57,7 +57,7 @@ public class DefaultBlockWriter implements BlockWriter {
 					try {
 						Bucket bucket = m_bucketManager.getBucket(block.getDomain(), ip, block.getHour(), true);
 
-						if (m_count % 100 == 0) {
+						if ((++m_count) % 100 == 0) {
 							Transaction t = Cat.newTransaction("Block", block.getDomain());
 
 							bucket.puts(block.getData(), block.getMappings());
