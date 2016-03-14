@@ -17,6 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.dianping.cat.message.internal.MessageId;
+
 import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.FileBuilder;
 import org.unidal.cat.message.storage.FileBuilder.FileType;
@@ -394,6 +395,7 @@ public class LocalBucket implements Bucket {
 					m_segmentChannel.write(m_buf, m_address);
 					m_buf.position(pos);
 					m_dirty = false;
+					m_lastAccessTime = System.currentTimeMillis();
 				}
 			}
 
@@ -421,7 +423,9 @@ public class LocalBucket implements Bucket {
 				if (m_lastAccessTime + 1000L < System.currentTimeMillis()) {
 					// idle after 1 second
 					flush();
+					m_lastAccessTime = System.currentTimeMillis();
 				}
+				
 			}
 		}
 	}
