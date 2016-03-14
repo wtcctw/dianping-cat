@@ -11,6 +11,7 @@ import org.unidal.lookup.annotation.Named;
 
 @Named(type = BucketManager.class, value = "local")
 public class LocalBucketManager extends ContainerHolder implements BucketManager {
+
 	private Map<Integer, Map<String, Bucket>> m_buckets = new LinkedHashMap<Integer, Map<String, Bucket>>();
 
 	@Override
@@ -18,8 +19,6 @@ public class LocalBucketManager extends ContainerHolder implements BucketManager
 		for (Map<String, Bucket> map : m_buckets.values()) {
 			for (Bucket bucket : map.values()) {
 				bucket.close();
-				
-				Thread.yield();
 			}
 		}
 
@@ -45,7 +44,7 @@ public class LocalBucketManager extends ContainerHolder implements BucketManager
 	}
 
 	@Override
-	public Bucket getBucket(String domain, int hour, boolean createIfNotExists) throws IOException {
+	public Bucket getBucket(String domain, String ip, int hour, boolean createIfNotExists) throws IOException {
 		Map<String, Bucket> map = findOrCreateMap(m_buckets, hour, createIfNotExists);
 		Bucket bucket = map == null ? null : map.get(domain);
 
@@ -55,6 +54,7 @@ public class LocalBucketManager extends ContainerHolder implements BucketManager
 
 				if (bucket == null) {
 					bucket = lookup(Bucket.class, "local");
+					bucket.initialize(domain, ip, hour);
 					map.put(domain, bucket);
 				}
 			}
@@ -62,11 +62,4 @@ public class LocalBucketManager extends ContainerHolder implements BucketManager
 
 		return bucket;
 	}
-
-	@Override
-   public Bucket getReadBucket(String domain, int hour) {
-		Bucket bucket = lookup(Bucket.class, "local");
-		
-	   return bucket;
-   }
 }

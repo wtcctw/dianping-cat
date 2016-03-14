@@ -1,10 +1,15 @@
 package org.unidal.cat.message.storage.local;
 
+import io.netty.buffer.ByteBuf;
+
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.internal.MessageId;
 
 import org.unidal.cat.message.storage.Block;
 import org.unidal.cat.message.storage.BlockDumper;
@@ -13,9 +18,7 @@ import org.unidal.cat.message.storage.internals.DefaultBlock;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
-import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 @Named(type = MessageProcessor.class, instantiationStrategy = Named.PER_LOOKUP)
 public class DefaultMessageProcessor implements MessageProcessor {
@@ -31,8 +34,19 @@ public class DefaultMessageProcessor implements MessageProcessor {
 	private AtomicBoolean m_enabled;
 
 	@Override
+	public ByteBuf findTree(MessageId messageId) {
+		String domain = messageId.getDomain();
+		Block block = m_blocks.get(domain);
+
+		if (block != null) {
+			return block.findTree(messageId);
+		}
+		return null;
+	}
+
+	@Override
 	public String getName() {
-		return getClass() + "-" + m_index;
+		return getClass().getSimpleName() + "-" + m_index;
 	}
 
 	@Override
@@ -44,11 +58,11 @@ public class DefaultMessageProcessor implements MessageProcessor {
 
 	@Override
 	public void run() {
-		DefaultMessageTree tree;
+		MessageTree tree;
 
 		try {
 			while (m_enabled.get()) {
-				tree = (DefaultMessageTree) m_queue.poll(5, TimeUnit.MILLISECONDS);
+				tree = m_queue.poll(5, TimeUnit.MILLISECONDS);
 
 				if (tree != null) {
 					MessageId id = MessageId.parse(tree.getMessageId());
@@ -62,23 +76,24 @@ public class DefaultMessageProcessor implements MessageProcessor {
 					}
 
 					try {
-						block.pack(id, tree);
-
 						if (block.isFull()) {
 							block.finish();
 
 							m_dumper.dump(block);
-							m_blocks.put(domain, new DefaultBlock(domain, hour));
+							block = new DefaultBlock(domain, hour);
+							m_blocks.put(domain, block);
 						}
+						block.pack(id, tree.getBuffer());
 
 					} catch (Exception e) {
-						e.printStackTrace();
+						Cat.logError(e);
 					}
 				}
 			}
 		} catch (InterruptedException e) {
 			// ignore it
 		}
+
 		System.out.println(getClass().getSimpleName() + "-" + m_index + " is shutdown");
 	}
 
@@ -97,16 +112,5 @@ public class DefaultMessageProcessor implements MessageProcessor {
 		}
 
 		m_blocks.clear();
-	}
-
-	@Override
-	public MessageTree findTree(MessageId messageId) {
-		String domain = messageId.getDomain();
-		Block block = m_blocks.get(domain);
-
-		if (block != null) {
-			return block.findTree(messageId);
-		}
-		return null;
 	}
 }

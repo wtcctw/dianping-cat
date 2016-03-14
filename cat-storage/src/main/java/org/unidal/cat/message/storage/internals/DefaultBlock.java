@@ -20,8 +20,6 @@ import org.unidal.cat.message.storage.Block;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.internal.MessageId;
-import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class DefaultBlock implements Block {
 	private static final int MAX_SIZE = 256 * 1024;
@@ -42,7 +40,7 @@ public class DefaultBlock implements Block {
 
 	private boolean m_gzip = true;
 
-	private boolean m_isFull = false;
+	private boolean m_isFulsh;
 
 	public DefaultBlock(MessageId id, int offset, byte[] data) {
 		m_mappings.put(id, offset);
@@ -60,7 +58,7 @@ public class DefaultBlock implements Block {
 			try {
 				m_out = new GZIPOutputStream(os, BUFFER_SIZE);
 			} catch (IOException e) {
-				Cat.logError(e);
+				e.printStackTrace();
 			}
 		} else {
 			m_out = new DeflaterOutputStream(os, new Deflater(5, true), BUFFER_SIZE);
@@ -68,14 +66,39 @@ public class DefaultBlock implements Block {
 	}
 
 	@Override
-	public void finish() {
+	public ByteBuf findTree(MessageId id) {
+		Integer offset = m_mappings.get(id);
+		if (offset != null) {
+			finish();
+			m_isFulsh = true;
+
+			try {
+				ByteBuf copyData = Unpooled.copiedBuffer(m_data);
+				@SuppressWarnings("resource")
+				DataInputStream in = new DataInputStream(new GZIPInputStream(new ByteBufInputStream(copyData)));
+
+				in.skip(offset);
+				int length = in.readInt();
+				byte[] result = new byte[length];
+
+				in.readFully(result);
+
+				return Unpooled.wrappedBuffer(result);
+			} catch (IOException e) {
+				Cat.logError(e);
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public synchronized void finish() {
 		if (m_out != null) {
 			try {
 				m_out.finish();
 				m_out.flush();
 				m_out.close();
 			} catch (IOException e) {
-				e.printStackTrace();
 				// ignore it
 			}
 
@@ -105,12 +128,11 @@ public class DefaultBlock implements Block {
 
 	@Override
 	public boolean isFull() {
-		return m_offset >= MAX_SIZE || m_isFull;
+		return m_offset >= MAX_SIZE || m_isFulsh;
 	}
 
 	@Override
-	public void pack(MessageId id, MessageTree tree) throws IOException {
-		ByteBuf buf = tree.getBuffer();
+	public void pack(MessageId id, ByteBuf buf) throws IOException {
 		int len = buf.readableBytes();
 
 		buf.readBytes(m_out, len);
@@ -148,15 +170,5 @@ public class DefaultBlock implements Block {
 		ByteBuf buf = Unpooled.wrappedBuffer(data);
 
 		return buf;
-	}
-
-	@Override
-	public MessageTree findTree(MessageId id) {
-		if (m_mappings.get(id) != null) {
-			m_isFull = true;
-
-			return new DefaultMessageTree();
-		}
-		return null;
 	}
 }

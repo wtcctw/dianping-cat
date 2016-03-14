@@ -5,7 +5,5 @@ import java.io.IOException;
 public interface BucketManager {
 	public void closeBuckets();
 
-	public Bucket getBucket(String domain, int hour, boolean createIfNotExists) throws IOException;
-
-	public Bucket getReadBucket(String domain, int hour);
+	public Bucket getBucket(String domain, String ip, int hour, boolean createIfNotExists) throws IOException;
 }

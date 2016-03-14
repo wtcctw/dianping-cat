@@ -1,5 +1,7 @@
 package org.unidal.cat.message.storage.local;
 
+import io.netty.buffer.ByteBuf;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -8,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import com.dianping.cat.message.internal.MessageId;
 import org.unidal.cat.message.storage.BlockDumper;
 import org.unidal.cat.message.storage.BucketManager;
 import org.unidal.cat.message.storage.MessageDumper;
@@ -17,7 +20,6 @@ import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 
 @Named(type = MessageDumper.class, instantiationStrategy = Named.PER_LOOKUP)
@@ -61,6 +63,18 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 	}
 
 	@Override
+	public ByteBuf find(MessageId id) {
+		for (MessageProcessor process : m_processors) {
+			ByteBuf tree = process.findTree(id);
+
+			if (tree != null) {
+				return tree;
+			}
+		}
+		return null;
+	}
+
+	@Override
 	public void initialize() throws InitializationException {
 		for (int i = 0; i < 10; i++) {
 			BlockingQueue<MessageTree> queue = new LinkedBlockingQueue<MessageTree>(10000);
@@ -73,7 +87,7 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 			Threads.forGroup("Cat").start(processor);
 		}
 	}
-
+	
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
@@ -83,25 +97,11 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 
 		if (!queue.offer(tree)) { // overflow
 			BlockingQueue<MessageTree> last = m_queues.get(m_queues.size() - 1);
-
 			boolean success = last.offer(tree);
 
 			if (!success && (++m_failCount % 100) == 0) {
-				Cat.logEvent("Discard", "MessageDumper");
-				Cat.logError(new RuntimeException("Error when offer tree to message dumper"));
+				Cat.logError(new RuntimeException("Error when adding message to queue, fails: " + m_failCount));
 			}
 		}
-	}
-
-	@Override
-	public MessageTree find(MessageId id) {
-		for (MessageProcessor process : m_processors) {
-			MessageTree tree = process.findTree(id);
-
-			if (tree != null) {
-				return tree;
-			}
-		}
-		return null;
 	}
 }

@@ -4,9 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
 import java.nio.charset.Charset;
-import java.util.concurrent.TimeUnit;
 
-import org.unidal.cat.message.storage.Block;
 import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.BucketManager;
 import org.unidal.cat.message.storage.MessageDumper;
@@ -60,24 +58,18 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 		boolean waterfull = payload.isWaterfall();
 		MessageId id = MessageId.parse(messageId);
 		MessageDumper dumper = m_dumperManager.findDumper(id.getTimestamp());
-		MessageTree inMemory = dumper.find(id);
+		ByteBuf inMemory = dumper.find(id);
+		MessageTree tree = null;
 
 		if (inMemory != null) {
-			// wait for dump to file
-			TimeUnit.SECONDS.sleep(2);
-		}
-
-		MessageTree tree = null;
-		Bucket bucket = m_localBucketManager.getReadBucket(id.getDomain(), id.getHour());
-		try {
-			Block block = bucket.get(id);
-			ByteBuf data = block.unpack(id);
+			tree = m_plainText.decode(inMemory);
+		} else {
+			Bucket bucket = m_localBucketManager.getBucket(id.getDomain(), id.getIpAddress(), id.getHour(), true);
+			ByteBuf data = bucket.get(id);
 
 			if (data != null) {
 				tree = m_plainText.decode(data);
 			}
-		} finally {
-			bucket.close();
 		}
 
 		if (tree != null) {
