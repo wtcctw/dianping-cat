@@ -151,7 +151,7 @@ public class AppCommandGroupConfigManager implements Initializable {
 	public List<Command> queryParentCommands(int id) {
 		List<Command> rets = m_commands.get(id);
 
-		if (rets != null) {
+		if (rets == null) {
 			rets = new ArrayList<Command>();
 		}
 		return rets;

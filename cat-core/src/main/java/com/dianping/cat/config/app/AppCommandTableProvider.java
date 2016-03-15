@@ -19,7 +19,7 @@ public class AppCommandTableProvider implements TableProvider {
 	public String getDataSourceName(Map<String, Object> hints) {
 		AppCommandData command = (AppCommandData) hints.get(QueryEngine.HINT_DATA_OBJECT);
 
-		return m_dataSourceName + "_" + command.getId() % 5;
+		return m_dataSourceName + "_" + command.getCommandId() % 5;
 	}
 
 	@Override
