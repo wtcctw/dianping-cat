@@ -779,7 +779,7 @@
 		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>business</role-hint>
-			<implementation>com.dianping.cat.consumer.transaction.TransactionAnalyzer</implementation>
+			<implementation>com.dianping.cat.consumer.business.BusinessAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>

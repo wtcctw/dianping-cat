@@ -28,8 +28,6 @@ public class BusinessConfigManager implements Initializable {
 
 	public final static String BASE_CONFIG = "base";
 
-	public final static String TAG_CONFIG = "tag";
-
 	public boolean insertBusinessConfigIfNotExist(String domain, String key, ConfigItem item) {
 		try {
 			if (!m_domains.containsKey(domain)) {
@@ -72,6 +70,17 @@ public class BusinessConfigManager implements Initializable {
 			Cat.logError(e);
 		}
 		return false;
+	}
+
+	public BusinessReportConfig queryConfigByDomain(String domain) {
+		try {
+			BusinessConfig config = m_configDao.findByNameDomain(BASE_CONFIG, domain, BusinessConfigEntity.READSET_FULL);
+
+			return DefaultSaxParser.parse(config.getContent());
+		} catch (Exception e) {
+			Cat.logError(e);
+			return null;
+		}
 	}
 
 	private BusinessItemConfig buildBusinessItemConfig(String key, ConfigItem item) {

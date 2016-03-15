@@ -15,7 +15,9 @@ public enum SystemPage implements Page {
 
    WEB("web", "web", "Web", "Web", true),
 
-   PROJECT("project", "project", "Project", "Project", true);
+   PROJECT("project", "project", "Project", "Project", true),
+
+   BUSINESS("business", "business", "Business", "Business", true);
 
    private String m_name;
 

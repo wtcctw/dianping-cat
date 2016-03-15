@@ -145,8 +145,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/js-rule-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/es-server-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/server-metric-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/business-tag-config-manifest.xml,
-					</manifest>
+								${basedir}/src/main/resources/META-INF/dal/model/business-tag-config-manifest.xml,</manifest>
                   </configuration>
                </execution>
                <execution>
@@ -162,9 +161,19 @@
                         ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
                      ,,
                         ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
-                     ,]]><![CDATA[,
+                     ,,
                         ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
                      ,]]></manifest>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>generate plexus component descriptor</id>
+                  <phase>process-classes</phase>
+                  <goals>
+                     <goal>plexus</goal>
+                  </goals>
+                  <configuration>
+                     <className>com.dianping.cat.build.ComponentsConfigurator</className>
                   </configuration>
                </execution>
             </executions>

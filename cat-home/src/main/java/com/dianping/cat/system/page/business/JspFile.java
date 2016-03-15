@@ -1,7 +1,7 @@
-package com.dianping.cat.report.page.business;
+package com.dianping.cat.system.page.business;
 
 public enum JspFile {
-	VIEW("/jsp/report/business/business.jsp"),
+	VIEW("/jsp/system/business.jsp"),
 
 	;
 

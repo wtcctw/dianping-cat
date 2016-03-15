@@ -208,7 +208,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final List<Component> all = new ArrayList<Component>();
 		final String ID = BusinessAnalyzer.ID;
 
-		all.add(C(MessageAnalyzer.class, ID, TransactionAnalyzer.class).is(PER_LOOKUP).req(ReportManager.class, ID)
+		all.add(C(MessageAnalyzer.class, ID, BusinessAnalyzer.class).is(PER_LOOKUP).req(ReportManager.class, ID)
 		      .req(BusinessConfigManager.class, ProductLineConfigManager.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class).is(PER_LOOKUP) //
 		      .req(ReportDelegate.class, ID) //
