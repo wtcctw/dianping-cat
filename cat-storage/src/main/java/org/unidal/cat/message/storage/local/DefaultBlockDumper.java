@@ -7,8 +7,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.cat.message.storage.Block;
 import org.unidal.cat.message.storage.BlockDumper;
 import org.unidal.cat.message.storage.BlockWriter;
@@ -19,7 +17,7 @@ import org.unidal.lookup.annotation.Named;
 import com.dianping.cat.Cat;
 
 @Named(type = BlockDumper.class)
-public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, Initializable {
+public class DefaultBlockDumper extends ContainerHolder implements BlockDumper {
 	private List<BlockingQueue<Block>> m_queues = new ArrayList<BlockingQueue<Block>>();
 
 	private List<BlockWriter> m_writers = new ArrayList<BlockWriter>();
@@ -65,15 +63,15 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 	}
 
 	@Override
-	public void initialize() throws InitializationException {
+	public void initialize(long timestamp) {
 		for (int i = 0; i < 10; i++) {
-			BlockingQueue<Block> queue = new LinkedBlockingQueue<Block>(2000);
+			BlockingQueue<Block> queue = new LinkedBlockingQueue<Block>(1000);
 			BlockWriter writer = lookup(BlockWriter.class);
 
 			m_queues.add(queue);
 			m_writers.add(writer);
 
-			writer.initialize(i, queue);
+			writer.initialize(timestamp, i, queue);
 			Threads.forGroup("Cat").start(writer);
 		}
 	}

@@ -211,6 +211,7 @@ public class LocalBucket implements Bucket {
 			}
 
 			m_file = null;
+			m_segments.clear();
 		}
 
 		private Segment getSegment(long id) throws IOException {

@@ -75,6 +75,15 @@
 			<role>org.unidal.cat.message.storage.MessageDumper</role>
 			<implementation>org.unidal.cat.message.storage.local.DefaultMessageDumper</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>org.unidal.cat.message.storage.BlockDumperManager</role>
+				</requirement>
+				<requirement>
+					<role>org.unidal.cat.message.storage.BucketManager</role>
+					<role-hint>local</role-hint>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>org.unidal.cat.message.storage.MessageProcessor</role>
@@ -82,13 +91,18 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>org.unidal.cat.message.storage.BlockDumper</role>
+					<role>org.unidal.cat.message.storage.BlockDumperManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>org.unidal.cat.message.storage.BlockDumper</role>
 			<implementation>org.unidal.cat.message.storage.local.DefaultBlockDumper</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.BlockDumperManager</role>
+			<implementation>org.unidal.cat.message.storage.BlockDumperManager</implementation>
 		</component>
 		<component>
 			<role>org.unidal.cat.message.storage.BlockWriter</role>

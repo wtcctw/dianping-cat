@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.unidal.cat.message.storage.BlockDumper;
+import org.unidal.cat.message.storage.BlockDumperManager;
 import org.unidal.cat.message.storage.BlockWriter;
 import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.BucketManager;
@@ -80,9 +81,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		String local = "local";
 
 		all.add(C(MessageDumperManager.class));
-		all.add(C(MessageDumper.class, DefaultMessageDumper.class).is(PER_LOOKUP));
-		all.add(C(MessageProcessor.class, DefaultMessageProcessor.class).req(BlockDumper.class).is(PER_LOOKUP));
-		all.add(C(BlockDumper.class, DefaultBlockDumper.class));
+		all.add(C(MessageDumper.class, DefaultMessageDumper.class).req(BlockDumperManager.class)
+		      .req(BucketManager.class, local).is(PER_LOOKUP));
+		all.add(C(MessageProcessor.class, DefaultMessageProcessor.class).req(BlockDumperManager.class).is(PER_LOOKUP));
+		all.add(C(BlockDumper.class, DefaultBlockDumper.class).is(PER_LOOKUP));
+		all.add(C(BlockDumperManager.class));
 		all.add(C(BlockWriter.class, DefaultBlockWriter.class).req(BucketManager.class, local).is(PER_LOOKUP));
 		all.add(C(BucketManager.class, local, LocalBucketManager.class));
 		all.add(C(Bucket.class, local, LocalBucket.class).req(FileBuilder.class, local).is(PER_LOOKUP));

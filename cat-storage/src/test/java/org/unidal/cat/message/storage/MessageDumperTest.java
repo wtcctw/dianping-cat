@@ -12,6 +12,7 @@ import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
@@ -49,7 +50,6 @@ public class MessageDumperTest extends ComponentTestCase {
 				throw new Exception(String.format("Error when loading message(%s)! ", id), e);
 			}
 		}
-
 	}
 
 	@Test
@@ -62,6 +62,6 @@ public class MessageDumperTest extends ComponentTestCase {
 			dumper.process(tree);
 		}
 
-		dumper.awaitTermination();
+		dumper.awaitTermination(404448 * TimeHelper.ONE_HOUR);
 	}
 }
