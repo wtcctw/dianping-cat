@@ -35,6 +35,11 @@ public class LocalBucketManager extends ContainerHolder implements BucketManager
 		m_buckets.remove(hour);
 	}
 
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
 	private Map<String, Bucket> findOrCreateMap(Map<Integer, Map<String, Bucket>> map, int hour,
 	      boolean createIfNotExists) {
 		Map<String, Bucket> m = map.get(hour);
@@ -71,10 +76,5 @@ public class LocalBucketManager extends ContainerHolder implements BucketManager
 		}
 
 		return bucket;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 }

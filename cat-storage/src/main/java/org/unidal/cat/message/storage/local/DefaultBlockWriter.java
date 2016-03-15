@@ -57,7 +57,7 @@ public class DefaultBlockWriter implements BlockWriter {
 		Block block;
 
 		try {
-			while (m_enabled.get()) {
+			while (true) {
 				block = m_queue.poll(5, TimeUnit.MILLISECONDS);
 
 				if (block != null) {
@@ -76,6 +76,8 @@ public class DefaultBlockWriter implements BlockWriter {
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
+				} else if (m_enabled.get() == false) {
+					break;
 				}
 			}
 		} catch (InterruptedException e) {

@@ -16,8 +16,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.dianping.cat.message.internal.MessageId;
-
 import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.FileBuilder;
 import org.unidal.cat.message.storage.FileBuilder.FileType;
@@ -26,6 +24,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.internal.MessageId;
 
 @Named(type = Bucket.class, value = "local", instantiationStrategy = Named.PER_LOOKUP)
 public class LocalBucket implements Bucket {
@@ -184,7 +183,7 @@ public class LocalBucket implements Bucket {
 
 		private Header m_header = new Header();
 
-		private Map<Long, Segment> m_segments = new HashMap<Long, Segment>();
+		private Map<Long, Segment> m_segments = new LinkedHashMap<Long, Segment>();
 
 		public void close() {
 			try {
@@ -426,7 +425,7 @@ public class LocalBucket implements Bucket {
 					flush();
 					m_lastAccessTime = System.currentTimeMillis();
 				}
-				
+
 			}
 		}
 	}

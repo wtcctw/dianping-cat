@@ -10,11 +10,11 @@ import com.dianping.cat.message.internal.MessageId;
 public interface Bucket  {
 	public void close();
 
+	public void flush();
+
 	public ByteBuf get(MessageId id) throws IOException;
 
 	public void initialize(String domain, String ip, int hour) throws IOException;
 
 	public void puts(ByteBuf buf, Map<MessageId, Integer> mappings) throws IOException;
-
-	public void flush();
 }
