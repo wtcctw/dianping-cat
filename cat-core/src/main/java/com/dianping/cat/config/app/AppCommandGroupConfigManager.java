@@ -1,6 +1,5 @@
 package com.dianping.cat.config.app;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,10 +8,8 @@ import java.util.Map.Entry;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
-import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
@@ -125,7 +122,6 @@ public class AppCommandGroupConfigManager implements Initializable {
 			@Override
 			public void handle() throws Exception {
 				refreshConfig();
-				refreshData();
 			}
 		});
 	}
@@ -157,7 +153,7 @@ public class AppCommandGroupConfigManager implements Initializable {
 		return rets;
 	}
 
-	private void refreshConfig() throws DalException, SAXException, IOException {
+	private void refreshConfig() throws Exception {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 
@@ -165,9 +161,10 @@ public class AppCommandGroupConfigManager implements Initializable {
 			if (modifyTime > m_modifyTime) {
 				String content = config.getContent();
 				AppCommandGroupConfig serverConfig = DefaultSaxParser.parse(content);
-
 				m_config = serverConfig;
 				m_modifyTime = modifyTime;
+
+				refreshData();
 			}
 		}
 	}
