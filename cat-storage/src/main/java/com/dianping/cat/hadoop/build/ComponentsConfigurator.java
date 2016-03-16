@@ -87,7 +87,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(BlockDumper.class, DefaultBlockDumper.class).is(PER_LOOKUP));
 		all.add(C(BlockDumperManager.class));
 		all.add(C(BlockWriter.class, DefaultBlockWriter.class).req(BucketManager.class, local).is(PER_LOOKUP));
-		all.add(C(BucketManager.class, local, LocalBucketManager.class));
+		all.add(C(BucketManager.class, local, LocalBucketManager.class).req(FileBuilder.class, local));
 		all.add(C(Bucket.class, local, LocalBucket.class).req(FileBuilder.class, local).is(PER_LOOKUP));
 		all.add(C(FileBuilder.class, local, LocalFileBuilder.class).req(StorageConfiguration.class));
 		all.add(C(StorageConfiguration.class, DefaultStorageConfiguration.class));
