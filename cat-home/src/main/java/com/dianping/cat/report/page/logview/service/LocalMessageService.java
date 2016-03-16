@@ -87,6 +87,12 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 		}
 
 		if (tree != null) {
+			if (!id.toString().equals(tree.getMessageId())) {
+				tree = null;
+			}
+		}
+
+		if (tree != null) {
 			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(8192);
 
 			if (tree.getMessage() instanceof Transaction && waterfull) {

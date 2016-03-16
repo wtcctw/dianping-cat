@@ -37,9 +37,13 @@ public class LocalBucket implements Bucket {
 
 	private IndexHelper m_index = new IndexHelper();
 
+	private boolean m_closed = false;
+
 	@Override
 	public void close() {
 		if (m_index.isOpen()) {
+			m_closed = true;
+
 			m_index.close();
 			m_data.close();
 		}
@@ -84,6 +88,11 @@ public class LocalBucket implements Bucket {
 
 	@Override
 	public void puts(ByteBuf data, Map<MessageId, Integer> mappings) throws IOException {
+		if (m_closed) {
+			for (Map.Entry<MessageId, Integer> e : mappings.entrySet()) {
+				Cat.logEvent("ClosedBucket", e.getKey().toString());
+			}
+		}
 		long dataOffset = m_data.getDataOffset();
 
 		m_data.write(data);
