@@ -29,6 +29,12 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 	}
 
 	@Override
+	public void setStatus(Throwable e) {
+		m_status = e.getClass().getName();
+		m_manager.getThreadLocalMessageTree().setDiscard(false);
+	}
+
+	@Override
 	public DefaultTransaction addChild(Message message) {
 		if (m_children == null) {
 			m_children = new ArrayList<Message>();
