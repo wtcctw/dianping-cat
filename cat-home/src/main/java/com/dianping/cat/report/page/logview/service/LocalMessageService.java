@@ -47,7 +47,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 
 	@Inject
 	private MessageDumperManager m_dumperManager;
-
+	
 	public LocalMessageService() {
 		super("logview");
 	}

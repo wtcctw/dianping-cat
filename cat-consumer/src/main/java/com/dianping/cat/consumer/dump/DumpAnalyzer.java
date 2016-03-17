@@ -22,8 +22,6 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	@Inject
 	private MessageDumperManager m_dumperManager;
 
-	private MessageDumper m_dumper;
-
 	private Logger m_logger;
 
 	@Override
@@ -63,14 +61,11 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 			return;
 		} else {
 			MessageId messageId = MessageId.parse(tree.getMessageId());
+			int hour = messageId.getHour();
+			MessageDumper dumper = m_dumperManager.findDumper(hour * TimeHelper.ONE_HOUR);
 
-			long time = tree.getMessage().getTimestamp();
-			long fixedTime = time - time % (TimeHelper.ONE_HOUR);
-			long idTime = messageId.getTimestamp();
-			long duration = fixedTime - idTime;
-
-			if (duration == 0 || duration == ONE_HOUR || duration == -ONE_HOUR) {
-				m_dumper.process(tree);
+			if (dumper != null) {
+				dumper.process(tree);
 			} else {
 				m_serverStateManager.addPigeonTimeError(1);
 			}
@@ -89,7 +84,8 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	@Override
 	public void initialize(long startTime, long duration, long extraTime) {
 		super.initialize(startTime, duration, extraTime);
-		m_dumper = m_dumperManager.findOrCreateMessageDumper(m_startTime);
+		
+		m_dumperManager.findOrCreateMessageDumper(m_startTime);
 	}
 
 }
