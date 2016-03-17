@@ -320,20 +320,10 @@ public class CatFilter implements Filter {
 					t.setStatus(e);
 					Cat.logError(e);
 					throw e;
-				} catch (RuntimeException e) {
-					t.setStatus(e);
-					Cat.logError(e);
-					throw e;
-				} catch (Exception e) {
-					t.setStatus(e);
-					Cat.logError(e);
-				} catch (Error e) {
-					t.setStatus(e);
-					Cat.logError(e);
-					throw e;
 				} catch (Throwable e) {
 					t.setStatus(e);
 					Cat.logError(e);
+					throw new RuntimeException(e);
 				} finally {
 					customizeUri(t, req);
 					t.complete();
