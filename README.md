@@ -56,6 +56,18 @@ Note：
 		
 然后打开浏览器，输入http://localhost:8080/cat/r 访问cat
 
+
+###如果遇到mvn jetty:run 跑起来出问题，可以使用如下方法启动cat。
+
+* 下载cat依赖的包文件, git clone git@github.com:dianping/cat.git mvn-repo 把mvn-repo放入本地的maven库文件夹中
+* 下载code 编译 mvn eclipse:eclipse 
+* 打包 mvn install -DskipTests 
+* 下载tomcat7 将打出来的war包，命名为cat.war, 并放入tomcat的webapps 
+* 检查下/data/appdatas/cat/ 下面需要的几个配置文件，配置文件在script文件夹下，也可以参考http://unidal.org/cat/r/home?op=view&docName=deploy 进行相关配置修改。 
+* 启动tomcat
+*
+
+
 Copyright and license
 ---------------------
 Copyright 2013 DianPing, Inc.
