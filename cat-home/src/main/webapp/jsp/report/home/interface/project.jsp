@@ -1,5 +1,6 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8"%>
-<h4>HTTP API调用方式</h4>
+
+<h4 class="text-success">1. 项目配置</h4>
 <p>接口调用请求说明</p>
 <pre>
 	http请求方式: GET或POST（请使用http协议）
@@ -26,4 +27,23 @@
 <pre>
 	<span class="text-danger">{"status":500, "info":"internal error"} ——> 失败</span>
 	<span class="text-success">{"status":200, "info":"success"}        ——> 成功</span>
+</pre>
+
+<h4 class="text-success">2. 获取项目名</h4>
+<p>接口调用请求说明</p>
+<pre>
+	http请求方式: GET（请使用http协议）
+	http://cat.dianpingoa.com/cat/s/project?op=domains
+</pre>
+<p>返回Json数据</p>
+<pre>
+	{
+		domains: [
+			"account-all-service",
+			"receipt-verify-service",
+			"tuangou-mapi-web",
+			"pet-server",
+			"cortex-search-web",
+		]
+	}
 </pre>

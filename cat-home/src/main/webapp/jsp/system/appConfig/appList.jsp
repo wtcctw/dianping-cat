@@ -89,7 +89,6 @@
 									    <thead><tr>
 												<th width="30%">名称</th>
 												<th width="32%">标题</th>
-												<th width="10%">加入全量统计</th>
 												<th width="10%">过滤阈值</th>
 												<th width="8%">操作 <a href="?op=appUpdate&type=api&id=-1" class="btn btn-primary btn-xs" >
 												<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
@@ -99,18 +98,6 @@
 								    	<c:forEach var="command" items="${entry.value}">
 									    	<tr><td>${command.name}</td>
 											<td>${command.title}</td>
-											<td class="center">
-												<c:choose>
-												<c:when test="${command.all}">
-													<button class="btn btn-xs btn-success">
-													<i class="ace-icon glyphicon glyphicon-ok bigger-120 btn-success"></i>
-													</button>
-												</c:when>
-												<c:otherwise>
-													<i class="ace-icon glyphicon glyphicon-remove bigger-120"></i>
-												</c:otherwise>
-												</c:choose>
-											</td>
 											<td>${command.threshold}</td>
 											<c:if test="${command.id ne 0 }">
 												<td><a href="?op=appUpdate&id=${command.id}&type=api" class="btn btn-primary btn-xs">

@@ -14,9 +14,6 @@
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');
 			$('#appList').addClass('active');
-			if(${payload.id} >= 0) {
-				$('#all').val('${model.updateCommand.all}');
-			}
 		});
 		
 		$(document).delegate('#updateSubmit', 'click', function(e){
@@ -24,18 +21,11 @@
 			var title = $("#commandTitle").val();
 			var domain = $("#commandDomain").val();
 			var id = $("#commandId").val();
-			var all = $("#all").val();
 			var threshold = $("#threshold").val();
 			
 			if(name == undefined || name == ""){
 				if($("#errorMessage").length == 0){
 					$("#commandName").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
-				}
-				return;
-			}
-			if(all == undefined || all == ""){
-				if($("#errorMessage").length == 0){
-					$("#all").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 				}
 				return;
 			}
@@ -57,7 +47,7 @@
 								id="";
 							}
 							
-							window.location.href = "/cat/s/app?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id=-1"+"&type=${payload.type}&all="+all+"&threshold="+threshold;
+							window.location.href = "/cat/s/app?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id=-1"+"&type=${payload.type}&threshold="+threshold;
 						}else{
 							alert("该名称已存在，请修改名称！");
 						}
@@ -73,7 +63,7 @@
 				if(id==undefined){
 					id="";
 				}
-				window.location.href = "/cat/s/app?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id+"&type=${payload.type}&all="+all+"&threshold="+threshold;
+				window.location.href = "/cat/s/app?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id+"&type=${payload.type}&threshold="+threshold;
 			}
 		})
 	</script>
@@ -90,11 +80,6 @@
 		<tr><td>标题</td><td><input name="title" value="${model.updateCommand.title}" id="commandTitle" /><span class="text-danger">（支持数字、字符）</span><br/>
 			</td>
 		</tr>
-		<tr><td>是否加入全量统计</td><td><select id="all" />
-									<option value='true'>是</option>
-									<option value='false'>否</option>
-									</select><br/>
-		</td></tr>
 		<tr><td>默认过滤时间</td><td><input name="threshold" value="${model.updateCommand.threshold}" id="threshold" /><span class="text-danger">（支持数字）</span><br/>
 			</td>
 		</tr>

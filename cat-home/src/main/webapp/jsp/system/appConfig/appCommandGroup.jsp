@@ -8,6 +8,9 @@
 			domain = '${payload.domain}';
 			id = '${payload.id}';
 		}
+		
+		$("#tab-group-all").addClass('active');
+		$("#tabContent-group-0").addClass('active');
 	})
 </script>
 		<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
