@@ -4685,6 +4685,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.network.influx.InfluxNetGraphManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4792,6 +4795,36 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.network.influx.InfluxNetGraphManager</role>
+			<implementation>com.dianping.cat.report.page.network.influx.InfluxNetGraphManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.metric.MetricService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.network.influx.InfluxNetGraphBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.AlertManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.network.config.NetGraphConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.network.influx.InfluxNetGraphBuilder</role>
+			<implementation>com.dianping.cat.report.page.network.influx.InfluxNetGraphBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.metric.MetricService</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -22,6 +22,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.page.network.influx.InfluxNetGraphManager;
 import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
 import com.dianping.cat.report.service.ModelPeriod;
 
@@ -40,6 +41,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private NetGraphManager m_netGraphManager;
+
+	@Inject
+	private InfluxNetGraphManager m_influxNetGraphManager;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -68,6 +72,9 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case NETTOPOLOGY:
 			model.setNetGraphData(m_netGraphManager.getNetGraphData(model.getStartTime(), model.getMinute()));
+			break;
+		case DASHBOARD:
+			model.setNetGraphData(m_influxNetGraphManager.getNetGraphData(model.getStartTime(), model.getMinute()));
 			break;
 		}
 
