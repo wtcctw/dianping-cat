@@ -132,12 +132,17 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 		m_durationInMicro = duration * 1000L;
 	}
 
-	public void setStandalone(boolean standalone) {
-		m_standalone = standalone;
-	}
-
 	public void setDurationStart(long durationStart) {
 		m_durationStart = durationStart;
 	}
 
+	public void setStandalone(boolean standalone) {
+		m_standalone = standalone;
+	}
+
+	@Override
+	public void setStatus(Throwable e) {
+		m_status = e.getClass().getName();
+		m_manager.getThreadLocalMessageTree().setDiscard(false);
+	}
 }
