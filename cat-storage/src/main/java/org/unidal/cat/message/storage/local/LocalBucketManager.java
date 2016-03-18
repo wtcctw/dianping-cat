@@ -69,11 +69,10 @@ public class LocalBucketManager extends ContainerHolder implements BucketManager
 		m_logger = logger;
 	}
 
-	private Map<String, Bucket> findOrCreateMap(Map<Integer, Map<String, Bucket>> map, int hour,
-	      boolean createIfNotExists) {
+	private Map<String, Bucket> findOrCreateMap(Map<Integer, Map<String, Bucket>> map, int hour) {
 		Map<String, Bucket> m = map.get(hour);
 
-		if (m == null && createIfNotExists) {
+		if (m == null) {
 			synchronized (map) {
 				m = map.get(hour);
 
@@ -89,8 +88,8 @@ public class LocalBucketManager extends ContainerHolder implements BucketManager
 
 	@Override
 	public Bucket getBucket(String domain, String ip, int hour, boolean createIfNotExists) throws IOException {
-		Map<String, Bucket> map = findOrCreateMap(m_buckets, hour, createIfNotExists);
-		Bucket bucket = map == null ? null : map.get(domain);
+		Map<String, Bucket> map = findOrCreateMap(m_buckets, hour);
+		Bucket bucket = map.get(domain);
 
 		if (bucket == null && createIfNotExists) {
 			synchronized (map) {
