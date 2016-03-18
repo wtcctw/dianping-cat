@@ -5,19 +5,23 @@ public enum Type {
 
 	Tag("tag");
 
-	private String m_type;
+	private String m_name;
 
 	private Type(String type) {
-		m_type = type;
+		m_name = type;
 	}
 
-	public static Type getType(String str) {
+	public static Type getType(String str, Type defaultType) {
 		for (Type type : Type.values()) {
-			if (type.m_type.equalsIgnoreCase(str)) {
+			if (type.getName().equalsIgnoreCase(str)) {
 				return type;
 			}
 		}
 
-		throw new RuntimeException("Illegal business search type");
+		return defaultType;
+	}
+
+	public String getName() {
+		return m_name;
 	}
 }

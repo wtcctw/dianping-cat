@@ -26,7 +26,7 @@ public class BusinessReportService extends AbstractReportService<BusinessReport>
 		
 		report.setStartTime(start);
 		report.setEndTime(end);
-		return null;
+		return report;
    }
 
 	@Override
@@ -81,12 +81,12 @@ public class BusinessReportService extends AbstractReportService<BusinessReport>
 
 	@Override
    public BusinessReport queryMonthlyReport(String domain, Date start) {
-		throw new UnsupportedOperationException("Dependency report don't support monthly report");
+		throw new UnsupportedOperationException("Business report don't support monthly report");
    }
 
 	@Override
    public BusinessReport queryWeeklyReport(String domain, Date start) {
-		throw new UnsupportedOperationException("Dependency report don't support weekly report");
+		throw new UnsupportedOperationException("Business report don't support weekly report");
    }
 
 }

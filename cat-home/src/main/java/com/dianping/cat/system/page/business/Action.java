@@ -1,7 +1,19 @@
 package com.dianping.cat.system.page.business;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	VIEW("view");
+	LIST("list"),
+
+	ADD("add"),
+	
+	AddSubmit("addSubmit"),
+
+	DELETE("delete"),
+	
+	TagConfig("tagConfig"),
+
+	AlertRuleAdd("alertRuleAdd"),
+	
+	AlertRuleAddSubmit("alertRuleAddSubmit");
 
 	private String m_name;
 

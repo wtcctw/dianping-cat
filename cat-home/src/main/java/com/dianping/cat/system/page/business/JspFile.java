@@ -1,7 +1,13 @@
 package com.dianping.cat.system.page.business;
 
 public enum JspFile {
-	VIEW("/jsp/system/business.jsp"),
+	VIEW("/jsp/system/business/list.jsp"),
+	
+	ADD("/jsp/system/business/add.jsp"),
+	
+	TAG("/jsp/system/business/tag.jsp"),
+	
+	AlertAdd("/jsp/system/business/alertAdd.jsp"),
 
 	;
 

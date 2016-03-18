@@ -1,6 +1,6 @@
-package com.dianping.cat.report.page.business.graph;
+package com.dianping.cat.report.page.business.task;
 
-public class BusinessGraphKeyHelper {
+public class BusinessKeyHelper {
 	
 	public final String SPLITTER = ":";
 

@@ -4,6 +4,8 @@ public enum AlertType {
 
 	Business("Business", "业务告警"),
 
+	Business2("Business2", "业务告警2"),
+
 	Network("Network", "网络告警"),
 
 	DataBase("Database", "数据库告警"),
@@ -21,7 +23,7 @@ public enum AlertType {
 	JS("Js", "JS错误告警"),
 
 	App("App", "APP接口告警"),
-	
+
 	Ajax("Ajax", "Ajax访问告警"),
 
 	Transaction("Transaction", "Transacation告警"),

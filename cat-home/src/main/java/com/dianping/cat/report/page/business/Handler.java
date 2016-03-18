@@ -77,7 +77,8 @@ public class Handler implements PageHandler<Context> {
 
 	private Map<String, LineChart> buildLineCharts(Payload payload, Date start, Date end) {
 		Map<String, LineChart> allCharts = null;
-		Type type = Type.getType(payload.getType());
+		Type type = Type.getType(payload.getType(), Type.Domain);
+		
 		String name = payload.getDomain();
 
 		if (type == Type.Tag) {

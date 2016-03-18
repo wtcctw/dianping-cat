@@ -214,7 +214,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ReportDelegate.class, ID) //
 		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class, DomainValidator.class) //
 		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, BusinessDelegate.class));
+		all.add(C(ReportDelegate.class, ID, BusinessDelegate.class).req(TaskManager.class));
 		return all;
 	}
 

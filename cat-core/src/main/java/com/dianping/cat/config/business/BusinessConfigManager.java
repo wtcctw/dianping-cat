@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -29,6 +30,8 @@ public class BusinessConfigManager implements Initializable {
 	public final static String BASE_CONFIG = "base";
 
 	public boolean insertBusinessConfigIfNotExist(String domain, String key, ConfigItem item) {
+		// TODO: 多线程可能造成的问题
+
 		try {
 			if (!m_domains.containsKey(domain)) {
 				BusinessReportConfig config = new BusinessReportConfig();
@@ -83,6 +86,41 @@ public class BusinessConfigManager implements Initializable {
 		}
 	}
 
+	public boolean deleteConfig(String domain, String key) {
+		try {
+			BusinessConfig config = m_configDao.findByNameDomain(BASE_CONFIG, domain, BusinessConfigEntity.READSET_FULL);
+			BusinessReportConfig businessReportConfig = DefaultSaxParser.parse(config.getContent());
+
+			businessReportConfig.removeBusinessItemConfig(key);
+			config.setContent(businessReportConfig.toString());
+
+			m_configDao.updateByPK(config, BusinessConfigEntity.UPDATESET_FULL);
+
+			Set<String> itemIds = m_domains.get(domain);
+			itemIds.remove(key);
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+		return true;
+	}
+
+	public boolean updateConfigByDomain(BusinessReportConfig config) {
+		BusinessConfig proto = m_configDao.createLocal();
+
+		proto.setDomain(config.getId());
+		proto.setName(BASE_CONFIG);
+		proto.setContent(config.toString());
+
+		try {
+			m_configDao.updateBaseConfigByDomain(proto, BusinessConfigEntity.UPDATESET_FULL);
+			return true;
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+		return false;
+	}
+
 	private BusinessItemConfig buildBusinessItemConfig(String key, ConfigItem item) {
 		BusinessItemConfig config = new BusinessItemConfig();
 
@@ -91,6 +129,7 @@ public class BusinessConfigManager implements Initializable {
 		config.setShowAvg(item.isShowAvg());
 		config.setShowCount(item.isShowCount());
 		config.setShowSum(item.isShowSum());
+		config.setViewOrder(item.getViewOrder());
 		return config;
 	}
 

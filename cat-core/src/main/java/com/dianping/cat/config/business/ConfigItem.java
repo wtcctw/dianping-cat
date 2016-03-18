@@ -12,7 +12,9 @@ public class ConfigItem {
 	private boolean m_showSum = false;
 
 	private String m_title;
-
+	
+	private double viewOrder = 0;
+	
 	public int getCount() {
 		return m_count;
 	}
@@ -35,6 +37,14 @@ public class ConfigItem {
 
 	public boolean isShowSum() {
 		return m_showSum;
+	}
+
+	public double getViewOrder() {
+		return viewOrder;
+	}
+
+	public void setViewOrder(double viewOrder) {
+		this.viewOrder = viewOrder;
 	}
 
 	public ConfigItem setCount(int count) {

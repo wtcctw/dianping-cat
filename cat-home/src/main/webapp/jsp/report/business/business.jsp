@@ -37,8 +37,6 @@
 					$('#endTime').val("${w:format(model.endTime,'yyyy-MM-dd HH:mm')}");
 					$('#type').val('${payload.type}');
 					$('#domain').val('${payload.domain}');
-					$('#System_report').addClass('active open');
-					$('#system_paas').addClass('active');
 					
 					$.widget( "custom.catcomplete", $.ui.autocomplete, {
 						_renderMenu: function( ul, items ) {

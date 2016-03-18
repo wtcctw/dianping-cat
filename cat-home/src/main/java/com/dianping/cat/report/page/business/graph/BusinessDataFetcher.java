@@ -10,11 +10,12 @@ import com.dianping.cat.consumer.business.model.entity.BusinessReport;
 import com.dianping.cat.consumer.business.model.entity.Segment;
 import com.dianping.cat.consumer.business.model.transform.BaseVisitor;
 import com.dianping.cat.report.alert.spi.data.MetricType;
+import com.dianping.cat.report.page.business.task.BusinessKeyHelper;
 
 public class BusinessDataFetcher {
 
 	@Inject
-	private BusinessGraphKeyHelper m_keyHelper;
+	private BusinessKeyHelper m_keyHelper;
 
 	public Map<String, double[]> buildGraphData(BusinessReport businessReport) {
 		BusinessDataBuilder builder = new BusinessDataBuilder();

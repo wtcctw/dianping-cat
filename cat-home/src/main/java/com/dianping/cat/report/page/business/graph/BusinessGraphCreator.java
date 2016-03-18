@@ -16,6 +16,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.business.BusinessConfigManager;
 import com.dianping.cat.configuration.business.entity.BusinessItemConfig;
 import com.dianping.cat.configuration.business.entity.BusinessReportConfig;
+import com.dianping.cat.consumer.business.BusinessAnalyzer;
 import com.dianping.cat.consumer.business.model.entity.BusinessReport;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.Chinese;
@@ -27,6 +28,7 @@ import com.dianping.cat.report.alert.spi.data.MetricType;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.metric.AbstractGraphCreator;
 import com.dianping.cat.report.page.business.service.CachedBusinessReportService;
+import com.dianping.cat.report.page.business.task.BusinessKeyHelper;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.page.business.config.BusinessTagConfigManager;
 
@@ -48,7 +50,7 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 	private BusinessTagConfigManager m_tagManager;
 
 	@Inject
-	private BusinessGraphKeyHelper m_keyHelper;
+	private BusinessKeyHelper m_keyHelper;
 
 	public Map<String, LineChart> buildDashboardByTag(Date start, Date end, String tag) {
 		Tag tagConfig = m_tagManager.findTag(tag);
@@ -112,7 +114,7 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 			lineChart.setStart(start);
 			lineChart.setSize(value.length);
 			lineChart.setStep(step * TimeHelper.ONE_MINUTE);
-			double[] baselines = queryBaseline(key, start, end);
+			double[] baselines = queryBaseline(BusinessAnalyzer.ID, key, start, end);
 			Map<Long, Double> all = convertToMap(datas.get(key), start, 1);
 			Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), start, step);
 

@@ -112,6 +112,10 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
+			<implementation>com.dianping.cat.report.alert.config.BaseRuleHelper</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 			<implementation>com.dianping.cat.report.alert.config.UserDefinedRuleManager</implementation>
 			<requirements>
@@ -167,6 +171,9 @@
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
@@ -185,7 +192,19 @@
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.business2.BusinessRuleConfigManager2</role>
+			<implementation>com.dianping.cat.report.alert.business2.BusinessRuleConfigManager2</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.BusinessConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -198,6 +217,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
@@ -215,6 +237,9 @@
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
@@ -228,6 +253,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
@@ -245,6 +273,9 @@
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
@@ -260,6 +291,9 @@
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
@@ -273,6 +307,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
@@ -302,6 +339,9 @@
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
@@ -315,6 +355,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
@@ -1148,6 +1191,14 @@
 			<implementation>com.dianping.cat.report.page.metric.task.MetricPointParser</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.business.task.BusinessPointParser</role>
+			<implementation>com.dianping.cat.report.page.business.task.BusinessPointParser</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.business.task.BusinessKeyHelper</role>
+			<implementation>com.dianping.cat.report.page.business.task.BusinessKeyHelper</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.metric.task.BaselineCreator</role>
 			<implementation>com.dianping.cat.report.page.metric.task.DefaultBaselineCreator</implementation>
 		</component>
@@ -1180,6 +1231,34 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.metric.task.BaselineCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.metric.service.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.metric.task.BaselineConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role-hint>business</role-hint>
+			<implementation>com.dianping.cat.report.page.business.task.BusinessBaselineReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.business.service.BusinessReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.business.task.BusinessPointParser</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.business.BusinessConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.business.task.BusinessKeyHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.metric.task.BaselineCreator</role>
@@ -2601,9 +2680,32 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.alert.business2.BusinessReportGroupService</role>
+			<implementation>com.dianping.cat.report.alert.business2.BusinessReportGroupService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>business</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.alert.spi.receiver.Contactor</role>
 			<role-hint>Business</role-hint>
 			<implementation>com.dianping.cat.report.alert.business.BusinessContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.spi.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.spi.receiver.Contactor</role>
+			<role-hint>Business2</role-hint>
+			<implementation>com.dianping.cat.report.alert.business2.BusinessContactor2</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2807,6 +2909,16 @@
 				<requirement>
 					<role>com.dianping.cat.report.alert.summary.AlertSummaryExecutor</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.spi.decorator.Decorator</role>
+			<role-hint>Business2</role-hint>
+			<implementation>com.dianping.cat.report.alert.business2.BusinessDecorator2</implementation>
+			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
@@ -3020,6 +3132,42 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.metric.service.BaselineService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.business2.BusinessAlert2</role>
+			<implementation>com.dianping.cat.report.alert.business2.BusinessAlert2</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.alert.business2.BusinessRuleConfigManager2</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.business.BusinessConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.business.config.BusinessTagConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.business2.BusinessReportGroupService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.spi.AlertManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.business.task.BusinessKeyHelper</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.metric.service.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.spi.rule.DataChecker</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5294,6 +5442,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5313,6 +5464,10 @@
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
+			<implementation>com.dianping.cat.report.alert.config.BaseRuleHelper</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.app.service.CrashLogService</role>
@@ -6178,7 +6333,7 @@
 					<role>com.dianping.cat.system.page.business.config.BusinessTagConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.business.graph.BusinessGraphKeyHelper</role>
+					<role>com.dianping.cat.report.page.business.task.BusinessKeyHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.metric.service.BaselineService</role>
@@ -6270,13 +6425,13 @@
 			<implementation>com.dianping.cat.report.page.business.graph.BusinessDataFetcher</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.business.graph.BusinessGraphKeyHelper</role>
+					<role>com.dianping.cat.report.page.business.task.BusinessKeyHelper</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.business.graph.BusinessGraphKeyHelper</role>
-			<implementation>com.dianping.cat.report.page.business.graph.BusinessGraphKeyHelper</implementation>
+			<role>com.dianping.cat.report.page.business.task.BusinessKeyHelper</role>
+			<implementation>com.dianping.cat.report.page.business.task.BusinessKeyHelper</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.business.config.BusinessTagConfigManager</role>
@@ -6620,6 +6775,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -6669,6 +6827,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -6696,6 +6857,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -6722,6 +6886,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6752,6 +6919,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6849,6 +7019,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -6875,6 +7048,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6909,6 +7085,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -6924,6 +7103,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -6938,6 +7120,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -7068,6 +7253,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -7098,6 +7286,24 @@
 				<requirement>
 					<role>com.dianping.cat.system.page.business.JspViewer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.business.BusinessConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.business.config.BusinessTagConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.business2.BusinessRuleConfigManager2</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.spi.decorator.RuleFTLDecorator</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -7106,6 +7312,15 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.business2.BusinessRuleConfigManager2</role>
+			<implementation>com.dianping.cat.report.alert.business2.BusinessRuleConfigManager2</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.BusinessConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>

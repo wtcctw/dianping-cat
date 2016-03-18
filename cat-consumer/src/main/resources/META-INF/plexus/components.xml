@@ -825,6 +825,11 @@
 			<role>com.dianping.cat.report.ReportDelegate</role>
 			<role-hint>business</role-hint>
 			<implementation>com.dianping.cat.consumer.business.BusinessDelegate</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.task.TaskManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>

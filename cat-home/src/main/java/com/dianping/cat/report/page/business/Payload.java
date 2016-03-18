@@ -18,8 +18,8 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private Action m_action;
 
 	@FieldMeta("type")
-	private String m_type;
-	
+	private String m_type = Type.Domain.getName();
+
 	private SimpleDateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	public Payload() {
@@ -66,13 +66,13 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 				return m_format.parse(m_customStart);
 			} else {
-				return TimeHelper.getCurrentHour(-2);
+				return TimeHelper.getCurrentHour(-3);
 			}
 		} catch (Exception e) {
 			return TimeHelper.getCurrentHour(-2);
 		}
 	}
-	
+
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.BUSINESS);
