@@ -69,6 +69,7 @@ public class BucketTest extends ComponentTestCase {
 
 	@Test
 	public void testWritePerf() throws IOException {
+		long start = System.currentTimeMillis();
 		BucketManager manager = lookup(BucketManager.class, "local");
 
 		for (int i = 0; i < 100000; i++) {
@@ -85,12 +86,16 @@ public class BucketTest extends ComponentTestCase {
 				break;
 			}
 		}
+		long duration = System.currentTimeMillis() - start;
+		System.err.println("duration:" + duration);
 
 		manager.closeBuckets(404448 * TimeHelper.ONE_HOUR);
 	}
 
 	@Test
 	public void batchWriteBlockWithManyIp() throws IOException {
+		long start = System.currentTimeMillis();
+		
 		String domain = "cat3";
 		BucketManager manager = lookup(BucketManager.class, "local");
 		Bucket bucket = manager.getBucket(domain, "0a010203", 404448, true);
@@ -107,6 +112,9 @@ public class BucketTest extends ComponentTestCase {
 				}
 			}
 		}
+		long duration = System.currentTimeMillis() - start;
+		System.err.println("duration:" + duration);
+
 		manager.closeBuckets(404448 * TimeHelper.ONE_HOUR);
 	}
 
