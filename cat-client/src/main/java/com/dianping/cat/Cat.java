@@ -39,6 +39,8 @@ public class Cat {
 
 	private static volatile boolean s_init = false;
 
+	private static int m_errorCount;
+
 	private MessageProducer m_producer;
 
 	private MessageManager m_manager;
@@ -80,7 +82,9 @@ public class Cat {
 	}
 
 	private static void errorHandler(Exception e) {
-		e.printStackTrace();
+		if (m_errorCount++ % 100 == 0 || m_errorCount <= 10) {
+			e.printStackTrace();
+		}
 	}
 
 	public static String getCatHome() {
@@ -117,7 +121,7 @@ public class Cat {
 	public static MessageManager getManager() {
 		try {
 			checkAndInitialize();
-			
+
 			return s_instance.m_manager;
 		} catch (Exception e) {
 			errorHandler(e);
@@ -128,7 +132,7 @@ public class Cat {
 	public static MessageProducer getProducer() {
 		try {
 			checkAndInitialize();
-			
+
 			return s_instance.m_producer;
 		} catch (Exception e) {
 			errorHandler(e);
