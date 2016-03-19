@@ -25,6 +25,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.internal.MessageId;
 
 @Named(type = Bucket.class, value = "local", instantiationStrategy = Named.PER_LOOKUP)
@@ -283,6 +284,7 @@ public class LocalBucket implements Bucket {
 			if (segment != null) {
 				segment.writeLong(offset, value);
 			} else {
+				Cat.logEvent("Block", "Abnormal", Event.SUCCESS, null);
 				m_indexChannel.position(position);
 
 				ByteBuffer buf = ByteBuffer.allocate(8);
