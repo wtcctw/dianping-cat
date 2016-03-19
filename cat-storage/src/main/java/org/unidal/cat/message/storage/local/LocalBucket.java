@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.FileBuilder;
@@ -28,7 +29,7 @@ import com.dianping.cat.message.internal.MessageId;
 
 @Named(type = Bucket.class, value = "local", instantiationStrategy = Named.PER_LOOKUP)
 public class LocalBucket implements Bucket {
-	private static final int SEGMENT_SIZE = 32 * 1024;
+	public static final int SEGMENT_SIZE = 32 * 1024;
 
 	@Inject("local")
 	private FileBuilder m_bulider;
@@ -37,13 +38,9 @@ public class LocalBucket implements Bucket {
 
 	private IndexHelper m_index = new IndexHelper();
 
-	private boolean m_closed = false;
-
 	@Override
 	public void close() {
 		if (m_index.isOpen()) {
-			m_closed = true;
-
 			m_index.close();
 			m_data.close();
 		}
@@ -88,11 +85,6 @@ public class LocalBucket implements Bucket {
 
 	@Override
 	public void puts(ByteBuf data, Map<MessageId, Integer> mappings) throws IOException {
-		if (m_closed) {
-			for (Map.Entry<MessageId, Integer> e : mappings.entrySet()) {
-				Cat.logEvent("ClosedBucket", e.getKey().toString());
-			}
-		}
 		long dataOffset = m_data.getDataOffset();
 
 		m_data.write(data);
@@ -192,14 +184,14 @@ public class LocalBucket implements Bucket {
 
 		private Header m_header = new Header();
 
-		private Map<Long, Segment> m_segments = new LinkedHashMap<Long, Segment>();
+		private Map<String, SegmentCache> m_caches = new LinkedHashMap<String, SegmentCache>();
 
 		public void close() {
 			try {
 				m_header.m_segment.flush();
 
-				for (Segment segment : m_segments.values()) {
-					segment.flush();
+				for (SegmentCache cache : m_caches.values()) {
+					cache.flush();
 				}
 			} catch (IOException e) {
 				Cat.logError(e);
@@ -219,18 +211,18 @@ public class LocalBucket implements Bucket {
 			}
 
 			m_file = null;
-			m_segments.clear();
+			m_caches.clear();
 		}
 
-		private Segment getSegment(long id) throws IOException {
-			Segment segment = m_segments.get(id);
+		private Segment getSegment(String ip, long id) throws IOException {
+			SegmentCache cache = m_caches.get(ip);
 
-			if (segment == null) {
-				segment = new Segment(m_indexChannel, id * SEGMENT_SIZE);
-				m_segments.put(id, segment);
+			if (cache == null) {
+				cache = new SegmentCache();
+				m_caches.put(ip, cache);
 			}
 
-			return segment;
+			return cache.findOrCreateNextSegment(id);
 		}
 
 		public void init(File indexPath) throws IOException {
@@ -240,7 +232,15 @@ public class LocalBucket implements Bucket {
 			// meta sync
 			m_indexChannel = m_file.getChannel();
 
-			m_header.load();
+			long size = m_file.length();
+			int totalHeaders = (int) Math.ceil((size * 1.0 / (ENTRY_PER_SEGMENT * SEGMENT_SIZE)));
+
+			if (totalHeaders == 0) {
+				totalHeaders = 1;
+			}
+			for (int i = 0; i < totalHeaders; i++) {
+				m_header.load(i);
+			}
 		}
 
 		public boolean isOpen() {
@@ -249,34 +249,47 @@ public class LocalBucket implements Bucket {
 
 		public long read(MessageId id) throws IOException {
 			int index = id.getIndex();
-			int position = m_header.getOffset(id.getIpAddressValue(), index, false);
+			long position = m_header.getOffset(id.getIpAddressValue(), index, false);
 
-			if (position != -1) {
-				int segmentId = position / SEGMENT_SIZE;
-				int offset = position % SEGMENT_SIZE;
-				Segment segment = getSegment(segmentId);
+			int segmentId = (int) (position / SEGMENT_SIZE);
+			int offset = (int) (position % SEGMENT_SIZE);
+			Segment segment = getSegment(id.getIpAddress(), segmentId);
 
-				if (segment != null) {
-					try {
-						long blockAddress = segment.readLong(offset);
+			if (segment != null) {
+				try {
+					long blockAddress = segment.readLong(offset);
 
-						return blockAddress;
-					} catch (EOFException e) {
-						// ignore it
-					}
+					return blockAddress;
+				} catch (EOFException e) {
+					// ignore it
 				}
+			} else {
+				m_file.seek(position);
+				long address = m_file.readLong();
+
+				return address;
 			}
 
 			return -1;
 		}
 
 		public void write(MessageId id, long blockAddress, int blockOffset) throws IOException {
-			int position = m_header.getOffset(id.getIpAddressValue(), id.getIndex(), true);
-			int address = position / SEGMENT_SIZE;
-			int offset = position % SEGMENT_SIZE;
-			Segment segment = getSegment(address);
+			long position = m_header.getOffset(id.getIpAddressValue(), id.getIndex(), true);
+			long address = position / SEGMENT_SIZE;
+			int offset = (int) (position % SEGMENT_SIZE);
+			Segment segment = getSegment(id.getIpAddress(), address);
+			long value = (blockAddress << 24) + blockOffset;
 
-			segment.writeLong(offset, (blockAddress << 24) + blockOffset);
+			if (segment != null) {
+				segment.writeLong(offset, value);
+			} else {
+				m_indexChannel.position(position);
+
+				ByteBuffer buf = ByteBuffer.allocate(8);
+				buf.putLong(value);
+				buf.flip();
+				m_indexChannel.write(buf);
+			}
 		}
 
 		private class Header {
@@ -301,31 +314,35 @@ public class LocalBucket implements Bucket {
 				if (segmentId == null && createIfNotExists) {
 					long value = (((long) ip) << 32) + index;
 
-					segmentId = m_nextSegment++;
+					segmentId = m_nextSegment;
 					map.put(index, segmentId);
-
-					if (segmentId % ENTRY_PER_SEGMENT == 0) { // last segment is
-						// full, create
-						// new one
-						m_segment.flush();
-						m_segment = new Segment(m_indexChannel, segmentId * SEGMENT_SIZE);
-						m_offset = 0;
-					}
 
 					m_segment.writeLong(m_offset, value);
 					m_offset += 8;
+
+					m_nextSegment++;
+
+					if (m_nextSegment % (ENTRY_PER_SEGMENT) == 0) {
+						// last segment is full, create new one
+						m_segment.flush();
+						m_segment = new Segment(m_indexChannel, m_nextSegment * SEGMENT_SIZE);
+
+						m_nextSegment++; // skip self head data
+						m_segment.writeLong(0, -1);
+						m_offset = 8;
+					}
 				}
 
 				return segmentId;
 			}
 
-			public int getOffset(int ip, int seq, boolean createIfNotExists) throws IOException {
+			public long getOffset(int ip, int seq, boolean createIfNotExists) throws IOException {
 				int segmentIndex = seq / MESSAGE_PER_SEGMENT;
 				int segmentOffset = (seq % MESSAGE_PER_SEGMENT) * BYTE_PER_MESSAGE;
 				Integer segmentId = findSegment(ip, segmentIndex, createIfNotExists);
 
 				if (segmentId != null) {
-					int offset = segmentId.intValue() * SEGMENT_SIZE + segmentOffset;
+					long offset = segmentId.intValue() * SEGMENT_SIZE + segmentOffset;
 
 					return offset;
 				} else {
@@ -333,8 +350,8 @@ public class LocalBucket implements Bucket {
 				}
 			}
 
-			public void load() throws IOException {
-				Segment segment = new Segment(m_indexChannel, 0);
+			public void load(int headBlockIndex) throws IOException {
+				Segment segment = new Segment(m_indexChannel, headBlockIndex * ENTRY_PER_SEGMENT * SEGMENT_SIZE);
 				long magicCode = segment.readLong();
 
 				if (magicCode == 0) {
@@ -343,10 +360,13 @@ public class LocalBucket implements Bucket {
 					throw new IOException("Invalid index file: " + m_path);
 				}
 
-				m_nextSegment = 1;
+				m_nextSegment = 1 + ENTRY_PER_SEGMENT * headBlockIndex;
 				m_offset = 8;
 
-				while (true) {
+				int readerIndex = 1;
+
+				while (true && readerIndex < ENTRY_PER_SEGMENT) {
+					readerIndex++;
 					int ip = segment.readInt();
 					int index = segment.readInt();
 
@@ -362,15 +382,14 @@ public class LocalBucket implements Bucket {
 
 						if (segmentNo == null) {
 							segmentNo = m_nextSegment++;
+
 							map.put(index, segmentNo);
 						}
-
 						m_offset += 8;
 					} else {
 						break;
 					}
 				}
-
 				m_segment = segment;
 			}
 		}
@@ -431,10 +450,49 @@ public class LocalBucket implements Bucket {
 
 				if (m_lastAccessTime + 1000L < System.currentTimeMillis()) {
 					// idle after 1 second
-					flush();
+					// flush();
 					m_lastAccessTime = System.currentTimeMillis();
 				}
+			}
+		}
 
+		private class SegmentCache {
+			private long m_maxSegmentId;
+
+			private Map<Long, Segment> m_latestSegments = new LinkedHashMap<Long, Segment>();
+
+			private final static int CACHE_SIZE = 2;
+
+			public Segment findOrCreateNextSegment(long segmentId) throws IOException {
+				Segment segment = m_latestSegments.get(segmentId);
+
+				if (segment == null && segmentId > m_maxSegmentId) {
+					if (m_latestSegments.size() >= CACHE_SIZE) {
+						removeOldSegment();
+					}
+
+					segment = new Segment(m_indexChannel, segmentId * SEGMENT_SIZE);
+
+					m_latestSegments.put(segmentId, segment);
+					m_maxSegmentId = segmentId;
+				}
+
+				return segment;
+			}
+
+			public void flush() throws IOException {
+				for (Segment segment : m_latestSegments.values()) {
+					segment.flush();
+				}
+				m_latestSegments.clear();
+			}
+
+			private void removeOldSegment() throws IOException {
+				Entry<Long, Segment> first = m_latestSegments.entrySet().iterator().next();
+
+				first.getValue().flush();
+
+				m_latestSegments.remove(first.getKey());
 			}
 		}
 	}
