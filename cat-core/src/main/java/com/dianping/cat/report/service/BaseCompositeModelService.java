@@ -3,14 +3,12 @@ package com.dianping.cat.report.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.helper.Splitters;
-import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -21,18 +19,16 @@ import com.dianping.cat.message.Transaction;
 
 public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>,
       Initializable {
-	private static ExecutorService s_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 100);
-
-	// introduce another list is due to a bug inside Plexus ComponentList
-	private List<ModelService<T>> m_allServices = new ArrayList<ModelService<T>>();
 
 	@Inject
 	protected ServerConfigManager m_configManager;
 
-	private String m_name;
-
 	@Inject
 	private List<ModelService<T>> m_services;
+
+	private List<ModelService<T>> m_allServices = new ArrayList<ModelService<T>>();
+
+	private String m_name;
 
 	public BaseCompositeModelService(String name) {
 		m_name = name;
@@ -87,7 +83,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 			}
 			requireSize++;
 
-			s_threadPool.submit(new Runnable() {
+			m_configManager.getModelServiceExecutorService().submit(new Runnable() {
 				@Override
 				public void run() {
 					try {
