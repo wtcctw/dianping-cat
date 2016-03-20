@@ -27,7 +27,7 @@ public class MessageIdFactory {
 
 	private RandomAccessFile m_markFile;
 
-	private static final long HOUR = 3600 * 1000L;
+	public static final long HOUR = 3600 * 1000L;
 
 	private BlockingQueue<String> m_reusedIds = new LinkedBlockingQueue<String>(100000);
 
@@ -66,18 +66,19 @@ public class MessageIdFactory {
 	}
 
 	public String getNextId() {
+		long timestamp = getTimestamp();
+
+		if (timestamp != m_timestamp) {
+			m_index = new AtomicInteger(0);
+			m_timestamp = timestamp;
+			m_reusedIds.clear();
+		}
+
 		String id = m_reusedIds.poll();
 
 		if (id != null) {
 			return id;
 		} else {
-			long timestamp = getTimestamp();
-
-			if (timestamp != m_timestamp) {
-				m_index = new AtomicInteger(0);
-				m_timestamp = timestamp;
-			}
-
 			int index = m_index.getAndIncrement();
 
 			StringBuilder sb = new StringBuilder(m_domain.length() + 32);
