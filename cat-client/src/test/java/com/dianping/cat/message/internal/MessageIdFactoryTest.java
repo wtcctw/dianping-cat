@@ -1,9 +1,11 @@
 package com.dianping.cat.message.internal;
 
+import java.io.File;
 import java.io.IOException;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class MessageIdFactoryTest {
@@ -14,10 +16,15 @@ public class MessageIdFactoryTest {
 	private MessageIdFactory m_factory = new MessageIdFactory() {
 		@Override
 		protected long getTimestamp() {
-			return m_timestamp;
+			return m_timestamp / MessageIdFactory.HOUR;
 		}
 	};
 
+	@Before
+	public void before(){
+		new File("/data/appdatas/cat/cat-cat.mark").delete();
+	}
+	
 	@Test
 	public void test() {
 		String id = "UNKNOWN-c0a82050-376665-314";
@@ -56,20 +63,20 @@ public class MessageIdFactoryTest {
 	public void testNextId() throws Exception {
 		m_factory.initialize("test");
 
-		check("domain1", "domain1-c0a83f99-1330327814748-0");
-		check("domain1", "domain1-c0a83f99-1330327814748-1");
-		check("domain1", "domain1-c0a83f99-1330327814748-2");
-		check("domain1", "domain1-c0a83f99-1330327814748-3");
+		check("domain1", "domain1-c0a83f99-814748-0");
+		check("domain1", "domain1-c0a83f99-814748-1");
+		check("domain1", "domain1-c0a83f99-814748-2");
+		check("domain1", "domain1-c0a83f99-814748-3");
 
 		m_timestamp++;
-		check("domain1", "domain1-c0a83f99-1330327814749-0");
-		check("domain1", "domain1-c0a83f99-1330327814749-1");
-		check("domain1", "domain1-c0a83f99-1330327814749-2");
+		check("domain1", "domain1-c0a83f99-814749-0");
+		check("domain1", "domain1-c0a83f99-814749-1");
+		check("domain1", "domain1-c0a83f99-814749-2");
 
 		m_timestamp++;
-		check("domain1", "domain1-c0a83f99-1330327814750-0");
-		check("domain1", "domain1-c0a83f99-1330327814750-1");
-		check("domain1", "domain1-c0a83f99-1330327814750-2");
+		check("domain1", "domain1-c0a83f99-814750-0");
+		check("domain1", "domain1-c0a83f99-814750-1");
+		check("domain1", "domain1-c0a83f99-814750-2");
 	}
 
 	@Test
@@ -108,28 +115,6 @@ public class MessageIdFactoryTest {
 		for (int i = 0; i < 10000; i++) {
 			f1.getNextId();
 		}
-	}
-
-	@Test
-	public void testToHexString() {
-		checkHexString(0, "0");
-		checkHexString(m_timestamp++, "135bdb7825c");
-		checkHexString(m_timestamp++, "135bdb7825d");
-		checkHexString(m_timestamp++, "135bdb7825e");
-		checkHexString(m_timestamp++, "135bdb7825f");
-		checkHexString(m_timestamp++, "135bdb78260");
-	}
-
-
-	private void checkHexString(long value, String expected) {
-		StringBuilder sb = new StringBuilder();
-
-		toHexString(sb, value);
-
-		String hex = sb.toString();
-
-		Assert.assertEquals(Long.toHexString(value), hex);
-		Assert.assertEquals(expected, hex);
 	}
 
 	void toHexString(StringBuilder sb, long value) {
