@@ -284,7 +284,7 @@ public class LocalBucket implements Bucket {
 			if (segment != null) {
 				segment.writeLong(offset, value);
 			} else {
-				Cat.logEvent("Block", "Abnormal", Event.SUCCESS, null);
+				Cat.logEvent("Block", "Abnormal:" + id.getDomain(), Event.SUCCESS, id.toString());
 				m_indexChannel.position(position);
 
 				ByteBuffer buf = ByteBuffer.allocate(8);
