@@ -99,6 +99,8 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 						m_blocks.put(domain, block);
 					}
 
+					ByteBuf buffer = tree.getBuffer();
+
 					try {
 						if (block.isFull()) {
 							block.finish();
@@ -108,13 +110,11 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 							m_blocks.put(domain, block);
 						}
 
-						ByteBuf buffer = tree.getBuffer();
-						
 						block.pack(id, buffer);
-						
-						buffer.release();
 					} catch (Exception e) {
 						Cat.logError(e);
+					} finally {
+						buffer.release();
 					}
 				}
 			}
