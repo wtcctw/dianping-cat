@@ -40,10 +40,6 @@ public class ServerConfigManager implements LogEnabled {
 
 	public ExecutorService m_threadPool;
 
-	public ExecutorService getModelServiceExecutorService() {
-		return m_threadPool;
-	}
-
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -263,6 +259,10 @@ public class ServerConfigManager implements LogEnabled {
 		}
 
 		return 1000; // 1 second
+	}
+
+	public ExecutorService getModelServiceExecutorService() {
+		return m_threadPool;
 	}
 
 	public ServerConfig getServerConfig() {
