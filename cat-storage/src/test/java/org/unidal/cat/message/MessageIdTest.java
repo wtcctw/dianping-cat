@@ -21,8 +21,8 @@ public class MessageIdTest extends ComponentTestCase {
 		Assert.assertEquals(403899, id.getHour());
 		Assert.assertEquals(1454036400000L, id.getTimestamp());
 		Assert.assertEquals(12345, id.getIndex());
+
 	}
-	
 	
 	@Test
 	public void testDomain() throws IOException {

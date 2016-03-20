@@ -1,13 +1,15 @@
 package com.dianping.cat.consumer.dump;
 
+import java.util.concurrent.TimeUnit;
+
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.cat.message.storage.MessageDumper;
 import org.unidal.cat.message.storage.MessageDumperManager;
+import org.unidal.cat.message.storage.MessageFinderManager;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
-import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.ReportManager;
@@ -22,12 +24,18 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	@Inject
 	private MessageDumperManager m_dumperManager;
 
+	@Inject
+	private MessageFinderManager m_finderManager;
+
 	private Logger m_logger;
 
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
 		try {
-			m_dumperManager.closeDumper(m_startTime);
+			int hour = (int) TimeUnit.MILLISECONDS.toHours(m_startTime);
+
+			m_dumperManager.close(hour);
+			m_finderManager.close(hour);
 		} catch (Exception e) {
 			m_logger.error(e.getMessage(), e);
 		}
@@ -62,7 +70,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 		} else {
 			MessageId messageId = MessageId.parse(tree.getMessageId());
 			int hour = messageId.getHour();
-			MessageDumper dumper = m_dumperManager.findDumper(hour * TimeHelper.ONE_HOUR);
+			MessageDumper dumper = m_dumperManager.find(hour);
 
 			if (dumper != null) {
 				dumper.process(tree);
@@ -77,15 +85,12 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	}
 
 	@Override
-	public int getAnanlyzerCount() {
-		return 2;
-	}
-
-	@Override
 	public void initialize(long startTime, long duration, long extraTime) {
 		super.initialize(startTime, duration, extraTime);
-		
-		m_dumperManager.findOrCreateMessageDumper(m_startTime);
+
+		int hour = (int) TimeUnit.MILLISECONDS.toHours(startTime);
+
+		m_dumperManager.findOrCreate(hour);
 	}
 
 }

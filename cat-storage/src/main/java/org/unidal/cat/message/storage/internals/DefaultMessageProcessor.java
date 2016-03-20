@@ -1,4 +1,4 @@
-package org.unidal.cat.message.storage.local;
+package org.unidal.cat.message.storage.internals;
 
 import io.netty.buffer.ByteBuf;
 
@@ -14,8 +14,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.unidal.cat.message.storage.Block;
 import org.unidal.cat.message.storage.BlockDumper;
 import org.unidal.cat.message.storage.BlockDumperManager;
+import org.unidal.cat.message.storage.MessageFinder;
+import org.unidal.cat.message.storage.MessageFinderManager;
 import org.unidal.cat.message.storage.MessageProcessor;
-import org.unidal.cat.message.storage.internals.DefaultBlock;
+import org.unidal.cat.metric.BenchmarkManager;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
@@ -24,9 +26,15 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 
 @Named(type = MessageProcessor.class, instantiationStrategy = Named.PER_LOOKUP)
-public class DefaultMessageProcessor implements MessageProcessor {
+public class DefaultMessageProcessor implements MessageProcessor, MessageFinder {
 	@Inject
-	private BlockDumperManager m_dumperManager;
+	private BlockDumperManager m_blockDumperManager;
+
+	@Inject
+	private BenchmarkManager m_benchmarkManager;
+
+	@Inject
+	private MessageFinderManager m_finderManager;
 
 	private BlockDumper m_dumper;
 
@@ -36,38 +44,40 @@ public class DefaultMessageProcessor implements MessageProcessor {
 
 	private ConcurrentHashMap<String, Block> m_blocks = new ConcurrentHashMap<String, Block>();
 
-	private AtomicBoolean m_enabled;
+	private int m_hour;
 
-	private long m_timestamp;
+	private AtomicBoolean m_enabled;
 
 	private CountDownLatch m_latch;
 
 	@Override
-	public ByteBuf findTree(MessageId messageId) {
-		String domain = messageId.getDomain();
+	public ByteBuf find(MessageId id) {
+		String domain = id.getDomain();
 		Block block = m_blocks.get(domain);
 
 		if (block != null) {
-			return block.findTree(messageId);
+			return block.find(id);
 		}
+
 		return null;
 	}
 
 	@Override
 	public String getName() {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-		return getClass().getSimpleName() + " " + sdf.format(new Date(m_timestamp)) + "-" + m_index;
+		return getClass().getSimpleName() + " " + sdf.format(new Date(TimeUnit.HOURS.toMillis(m_hour))) + "-" + m_index;
 	}
 
 	@Override
-	public void initialize(long timestamp, int index, BlockingQueue<MessageTree> queue) {
+	public void initialize(int hour, int index, BlockingQueue<MessageTree> queue) {
 		m_index = index;
 		m_queue = queue;
 		m_enabled = new AtomicBoolean(true);
-		m_dumper = m_dumperManager.findOrCreateBlockDumper(timestamp);
-		m_timestamp = timestamp;
+		m_dumper = m_blockDumperManager.findOrCreate(hour);
+		m_hour = hour;
 		m_latch = new CountDownLatch(1);
+		m_finderManager.register(hour, this);
 	}
 
 	@Override
@@ -75,7 +85,7 @@ public class DefaultMessageProcessor implements MessageProcessor {
 		MessageTree tree;
 
 		try {
-			while (true) {
+			while (m_enabled.get() || !m_queue.isEmpty()) {
 				tree = m_queue.poll(5, TimeUnit.MILLISECONDS);
 
 				if (tree != null) {
@@ -97,13 +107,11 @@ public class DefaultMessageProcessor implements MessageProcessor {
 							block = new DefaultBlock(domain, hour);
 							m_blocks.put(domain, block);
 						}
-						block.pack(id, tree.getBuffer());
 
+						block.pack(id, tree.getBuffer());
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
-				} else if (m_enabled.get() == false) {
-					break;
 				}
 			}
 		} catch (InterruptedException e) {
@@ -121,10 +129,7 @@ public class DefaultMessageProcessor implements MessageProcessor {
 		}
 
 		m_blocks.clear();
-
 		m_latch.countDown();
-
-		System.out.println(getName() + " is shutdown");
 	}
 
 	@Override
@@ -137,5 +142,4 @@ public class DefaultMessageProcessor implements MessageProcessor {
 			// ignore it
 		}
 	}
-	
 }

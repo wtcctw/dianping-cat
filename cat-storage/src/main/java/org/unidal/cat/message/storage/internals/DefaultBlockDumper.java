@@ -1,4 +1,4 @@
-package org.unidal.cat.message.storage.local;
+package org.unidal.cat.message.storage.internals;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,6 +7,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import org.unidal.cat.message.QueueFullException;
 import org.unidal.cat.message.storage.Block;
 import org.unidal.cat.message.storage.BlockDumper;
 import org.unidal.cat.message.storage.BlockWriter;
@@ -16,7 +17,7 @@ import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 
-@Named(type = BlockDumper.class)
+@Named(type = BlockDumper.class, instantiationStrategy = Named.PER_LOOKUP)
 public class DefaultBlockDumper extends ContainerHolder implements BlockDumper {
 	private List<BlockingQueue<Block>> m_queues = new ArrayList<BlockingQueue<Block>>();
 
@@ -45,6 +46,7 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper {
 
 		for (BlockWriter writer : m_writers) {
 			writer.shutdown();
+			super.release(writer);
 		}
 	}
 
@@ -54,24 +56,23 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper {
 		int hash = Math.abs(domain.hashCode());
 		int index = hash % m_writers.size();
 		BlockingQueue<Block> queue = m_queues.get(index);
-
 		boolean success = queue.offer(block);
 
 		if (!success && (++m_failCount % 100) == 0) {
-			Cat.logError(new QueueFullException("Error when offer block in block dumper"));
+			Cat.logError(new QueueFullException("Error when adding block to queue, fails: " + m_failCount));
 		}
 	}
 
 	@Override
-	public void initialize(long timestamp) {
+	public void initialize(int hour) {
 		for (int i = 0; i < 10; i++) {
-			BlockingQueue<Block> queue = new LinkedBlockingQueue<Block>(1000);
+			BlockingQueue<Block> queue = new LinkedBlockingQueue<Block>(10000);
 			BlockWriter writer = lookup(BlockWriter.class);
 
 			m_queues.add(queue);
 			m_writers.add(writer);
 
-			writer.initialize(timestamp, i, queue);
+			writer.initialize(hour, i, queue);
 			Threads.forGroup("Cat").start(writer);
 		}
 	}

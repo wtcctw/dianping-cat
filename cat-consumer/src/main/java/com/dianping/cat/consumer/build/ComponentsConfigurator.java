@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.unidal.cat.message.storage.MessageDumperManager;
+import org.unidal.cat.message.storage.MessageFinderManager;
 import org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager;
 import org.unidal.initialization.Module;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
@@ -132,7 +133,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	private Collection<Component> defineDumpComponents() {
 		final List<Component> all = new ArrayList<Component>();
 		all.add(C(MessageAnalyzer.class, DumpAnalyzer.ID, DumpAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ServerStatisticManager.class, ServerConfigManager.class, MessageDumperManager.class));
+		      .req(ServerStatisticManager.class, ServerConfigManager.class, MessageDumperManager.class,
+		            MessageFinderManager.class));
 
 		all.add(C(MessageBucketManager.class, LocalMessageBucketManager.ID, LocalMessageBucketManager.class) //
 		      .req(ServerConfigManager.class, PathBuilder.class, ServerStatisticManager.class)//
