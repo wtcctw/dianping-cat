@@ -6,12 +6,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.regex.Pattern;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Files;
 import org.unidal.helper.Splitters;
+import org.unidal.helper.Threads;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Constants;
@@ -35,6 +37,12 @@ public class ServerConfigManager implements LogEnabled {
 	private Logger m_logger;
 
 	public static final String DUMP_DIR = "dump";
+
+	public ExecutorService m_threadPool;
+
+	public ExecutorService getModelServiceExecutorService() {
+		return m_threadPool;
+	}
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -290,6 +298,12 @@ public class ServerConfigManager implements LogEnabled {
 		m_logger.info("CAT server is running with alert," + isAlertMachine());
 		m_logger.info("CAT server is running with job," + isJobMachine());
 		m_logger.info(m_config.toString());
+
+		if (isLocalMode()) {
+			m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 5);
+		} else {
+			m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 100);
+		}
 	}
 
 	public boolean isAlertMachine() {
