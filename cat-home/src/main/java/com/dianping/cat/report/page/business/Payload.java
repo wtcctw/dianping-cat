@@ -3,9 +3,11 @@ package com.dianping.cat.report.page.business;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
+import com.site.lookup.util.StringUtils;
 
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
@@ -19,6 +21,9 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	@FieldMeta("type")
 	private String m_type = Type.Domain.getName();
+
+	@FieldMeta("name")
+	private String m_name;
 
 	private SimpleDateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
@@ -76,6 +81,18 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.BUSINESS);
+	}
+
+	public String getName() {
+		if (StringUtils.isEmpty(m_name)) {
+			return Constants.CAT;
+		} else {
+			return m_name;
+		}
+	}
+
+	public void setName(String name) {
+		m_name = name;
 	}
 
 	@Override

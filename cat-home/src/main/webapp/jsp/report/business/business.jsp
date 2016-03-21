@@ -10,12 +10,12 @@
 <a:application>
 	<script type="text/javascript">
 		function query() {
-			var domain = $("#search").val();
+			var name = $("#search").val();
 			var type = $("#type").val();
 			var start = $("#startTime").val();
 			var end = $("#endTime").val();
 			
-			window.location.href = "?domain=" + domain + "&type=" + type 
+			window.location.href = "?name=" + name + "&type=" + type 
 					+ "&startDate=" + start + "&endDate="
 					+ end; 
 		}
@@ -36,7 +36,7 @@
 					$('#startTime').val("${w:format(model.startTime,'yyyy-MM-dd HH:mm')}");
 					$('#endTime').val("${w:format(model.endTime,'yyyy-MM-dd HH:mm')}");
 					$('#type').val('${payload.type}');
-					$('#domain').val('${payload.domain}');
+					$('#domain').val('${payload.name}');
 					
 					$.widget( "custom.catcomplete", $.ui.autocomplete, {
 						_renderMenu: function( ul, items ) {
@@ -83,7 +83,7 @@
 					);
 					
 					
-					var domain = '${payload.domain}';
+					var domain = '${payload.name}';
 					if(domain != ''){
 						$('#search').val(domain);
 					}

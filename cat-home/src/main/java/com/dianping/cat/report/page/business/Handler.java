@@ -79,7 +79,7 @@ public class Handler implements PageHandler<Context> {
 		Map<String, LineChart> allCharts = null;
 		Type type = Type.getType(payload.getType(), Type.Domain);
 		
-		String name = payload.getDomain();
+		String name = payload.getName();
 
 		if (type == Type.Tag) {
 			allCharts = m_graphCreator.buildDashboardByTag(start, end, name);
