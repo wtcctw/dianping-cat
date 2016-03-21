@@ -6,7 +6,7 @@ import org.unidal.web.mvc.ViewModel;
 public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private String m_content;
-
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -17,7 +17,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	@Override
 	public Action getDefaultAction() {
-		return Action.VIEW;
+		return Action.DOMAINS;
 	}
 
 	public void setContent(String content) {

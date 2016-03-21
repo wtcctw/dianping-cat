@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.dianping.cat</groupId>
 		<artifactId>parent</artifactId>
-		<version>1.4.1-SNAPSHOT</version>
+		<version>1.4.2-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-consumer</artifactId>
@@ -62,6 +62,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/dependency-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/metric-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/storage-report-manifest.xml,
+								 ${basedir}/src/main/resources/META-INF/dal/model/business-report-manifest.xml,
 							</manifest>
 						</configuration>
 					</execution>

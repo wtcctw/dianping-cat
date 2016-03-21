@@ -16,11 +16,13 @@ import com.dianping.cat.analysis.MessageConsumer;
 import com.dianping.cat.analysis.MessageHandler;
 import com.dianping.cat.analysis.RealtimeConsumer;
 import com.dianping.cat.analysis.TcpSocketReceiver;
+import com.dianping.cat.config.app.AppCommandGroupConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatHandler;
 import com.dianping.cat.config.app.command.DefaultCommandFormatlHandler;
+import com.dianping.cat.config.business.BusinessConfigManager;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.LocalResourceContentFetcher;
 import com.dianping.cat.config.sample.SampleConfigManager;
@@ -33,6 +35,7 @@ import com.dianping.cat.config.web.js.DefaultAggregationHandler;
 import com.dianping.cat.config.web.url.DefaultUrlPatternHandler;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternHandler;
+import com.dianping.cat.core.config.BusinessConfigDao;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.TaskDao;
@@ -80,12 +83,14 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(CommandFormatHandler.class, DefaultCommandFormatlHandler.class));
 
-		all.add(C(CommandFormatConfigManager.class)
-		      .req(CommandFormatHandler.class, ConfigDao.class, ContentFetcher.class));
+		all.add(C(CommandFormatConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(SampleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(AppConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+
+		all.add(C(AppCommandGroupConfigManager.class).req(CommandFormatHandler.class, ConfigDao.class,
+		      ContentFetcher.class, AppConfigManager.class));
 
 		all.add(C(WebConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
@@ -93,12 +98,14 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AppSpeedConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
+		all.add(C(BusinessConfigManager.class).req(BusinessConfigDao.class));
+
 		all.add(C(UrlPatternHandler.class, DefaultUrlPatternHandler.class));
 
 		all.add(C(UrlPatternConfigManager.class).req(ConfigDao.class, UrlPatternHandler.class, ContentFetcher.class));
 
 		all.add(C(Module.class, CatCoreModule.ID, CatCoreModule.class));
-		
+
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
@@ -109,7 +116,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.addAll(new CodecComponentConfigurator().defineComponents());
 		all.addAll(new StorageComponentConfigurator().defineComponents());
-		
+
 		return all;
 	}
 }

@@ -172,7 +172,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	public boolean insertIfNotExsit(String product, String domain) {
-		ProductLineConfig productLineConfig = queryProductLineConfig(product, domain);
+		ProductLineConfig productLineConfig = queryProductLineConfig(product);
 		Company company = productLineConfig.getCompany();
 
 		if (company != null) {
@@ -275,7 +275,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		return null;
 	}
 
-	private ProductLineConfig queryProductLineConfig(String line, String domain) {
+	public ProductLineConfig queryProductLineConfig(String line) {
 		if (ProductLineConfig.NETWORK.isTypeOf(line)) {
 			return ProductLineConfig.NETWORK;
 		} else if (ProductLineConfig.SYSTEM.isTypeOf(line)) {

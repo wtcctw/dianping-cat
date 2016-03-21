@@ -110,9 +110,9 @@ public class NullMessageTree implements MessageTree {
 	}
 
 	@Override
-   public boolean isProcessLoss() {
-	   return false;
-   }
+	public boolean isProcessLoss() {
+		return false;
+	}
 
 	@Override
 	public void setDomain(String domain) {
@@ -145,8 +145,8 @@ public class NullMessageTree implements MessageTree {
 	}
 
 	@Override
-   public void setProcessLoss(boolean loss) {
-   }
+	public void setProcessLoss(boolean loss) {
+	}
 
 	@Override
 	public void setRootMessageId(String rootMessageId) {

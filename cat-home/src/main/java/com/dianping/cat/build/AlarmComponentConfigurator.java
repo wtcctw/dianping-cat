@@ -6,11 +6,18 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dianping.cat.alarm.AlertDao;
+import com.dianping.cat.alarm.spi.AlertManager;
+import com.dianping.cat.alarm.spi.config.AlertConfigManager;
+import com.dianping.cat.alarm.spi.decorator.Decorator;
+import com.dianping.cat.alarm.spi.receiver.Contactor;
+import com.dianping.cat.alarm.spi.rule.DataChecker;
+import com.dianping.cat.alarm.spi.sender.SenderManager;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.business.BusinessConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
+import com.dianping.cat.consumer.business.BusinessAnalyzer;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
@@ -20,10 +27,9 @@ import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.core.config.ConfigDao;
-import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.AlertSummaryDao;
 import com.dianping.cat.home.dal.report.AlterationDao;
+import com.dianping.cat.report.alert.AlarmManager;
 import com.dianping.cat.report.alert.app.AppAlert;
 import com.dianping.cat.report.alert.app.AppContactor;
 import com.dianping.cat.report.alert.app.AppDecorator;
@@ -40,6 +46,12 @@ import com.dianping.cat.report.alert.business.BusinessAlert;
 import com.dianping.cat.report.alert.business.BusinessContactor;
 import com.dianping.cat.report.alert.business.BusinessDecorator;
 import com.dianping.cat.report.alert.business.BusinessRuleConfigManager;
+import com.dianping.cat.report.alert.business2.BusinessAlert2;
+import com.dianping.cat.report.alert.business2.BusinessContactor2;
+import com.dianping.cat.report.alert.business2.BusinessDecorator2;
+import com.dianping.cat.report.alert.business2.BusinessReportGroupService;
+import com.dianping.cat.report.alert.business2.BusinessRuleConfigManager2;
+import com.dianping.cat.report.alert.config.BaseRuleHelper;
 import com.dianping.cat.report.alert.database.DatabaseAlert;
 import com.dianping.cat.report.alert.database.DatabaseContactor;
 import com.dianping.cat.report.alert.database.DatabaseDecorator;
@@ -61,28 +73,7 @@ import com.dianping.cat.report.alert.network.NetworkAlert;
 import com.dianping.cat.report.alert.network.NetworkContactor;
 import com.dianping.cat.report.alert.network.NetworkDecorator;
 import com.dianping.cat.report.alert.network.NetworkRuleConfigManager;
-import com.dianping.cat.report.alert.service.AlertService;
-import com.dianping.cat.report.alert.spi.AlertManager;
-import com.dianping.cat.report.alert.spi.config.AlertConfigManager;
-import com.dianping.cat.report.alert.spi.config.AlertPolicyManager;
-import com.dianping.cat.report.alert.spi.config.SenderConfigManager;
 import com.dianping.cat.report.alert.spi.data.MetricReportGroupService;
-import com.dianping.cat.report.alert.spi.decorator.Decorator;
-import com.dianping.cat.report.alert.spi.decorator.DecoratorManager;
-import com.dianping.cat.report.alert.spi.receiver.Contactor;
-import com.dianping.cat.report.alert.spi.receiver.ContactorManager;
-import com.dianping.cat.report.alert.spi.rule.DataChecker;
-import com.dianping.cat.report.alert.spi.rule.DefaultDataChecker;
-import com.dianping.cat.report.alert.spi.sender.MailSender;
-import com.dianping.cat.report.alert.spi.sender.Sender;
-import com.dianping.cat.report.alert.spi.sender.SenderManager;
-import com.dianping.cat.report.alert.spi.sender.SmsSender;
-import com.dianping.cat.report.alert.spi.sender.WeixinSender;
-import com.dianping.cat.report.alert.spi.spliter.MailSpliter;
-import com.dianping.cat.report.alert.spi.spliter.SmsSpliter;
-import com.dianping.cat.report.alert.spi.spliter.Spliter;
-import com.dianping.cat.report.alert.spi.spliter.SpliterManager;
-import com.dianping.cat.report.alert.spi.spliter.WeixinSpliter;
 import com.dianping.cat.report.alert.storage.cache.StorageCacheAlert;
 import com.dianping.cat.report.alert.storage.cache.StorageCacheContactor;
 import com.dianping.cat.report.alert.storage.cache.StorageCacheDecorator;
@@ -118,6 +109,7 @@ import com.dianping.cat.report.alert.transaction.TransactionDecorator;
 import com.dianping.cat.report.alert.transaction.TransactionRuleConfigManager;
 import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.browser.service.AjaxDataService;
+import com.dianping.cat.report.page.business.task.BusinessKeyHelper;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.event.transform.EventMergeHelper;
 import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager;
@@ -127,6 +119,7 @@ import com.dianping.cat.report.page.storage.transform.StorageMergeHelper;
 import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ProjectService;
+import com.dianping.cat.system.page.business.config.BusinessTagConfigManager;
 import com.dianping.cat.web.JsErrorLogDao;
 
 public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
@@ -135,9 +128,13 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(DataChecker.class, DefaultDataChecker.class));
+		all.add(C(AlarmManager.class));
+
 		all.add(C(MetricReportGroupService.class).req(ModelService.class, MetricAnalyzer.ID));
+		all.add(C(BusinessReportGroupService.class).req(ModelService.class, BusinessAnalyzer.ID));
 		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class).req(ProjectService.class,
+		      AlertConfigManager.class));
+		all.add(C(Contactor.class, BusinessContactor2.ID, BusinessContactor2.class).req(ProjectService.class,
 		      AlertConfigManager.class));
 
 		all.add(C(Contactor.class, NetworkContactor.ID, NetworkContactor.class).req(ProjectService.class,
@@ -165,10 +162,10 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Contactor.class, StorageSQLContactor.ID, StorageSQLContactor.class).req(AlertConfigManager.class));
 		all.add(C(Contactor.class, StorageCacheContactor.ID, StorageCacheContactor.class).req(AlertConfigManager.class));
 		all.add(C(Contactor.class, StorageRPCContactor.ID, StorageRPCContactor.class).req(AlertConfigManager.class));
-		all.add(C(ContactorManager.class));
 
 		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProductLineConfigManager.class,
 		      AlertSummaryExecutor.class, ProjectService.class));
+		all.add(C(Decorator.class, BusinessDecorator2.ID, BusinessDecorator2.class).req(ProjectService.class));
 		all.add(C(Decorator.class, NetworkDecorator.ID, NetworkDecorator.class));
 		all.add(C(Decorator.class, DatabaseDecorator.ID, DatabaseDecorator.class));
 		all.add(C(Decorator.class, HeartbeatDecorator.ID, HeartbeatDecorator.class));
@@ -185,32 +182,13 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Decorator.class, StorageCacheDecorator.ID, StorageCacheDecorator.class));
 		all.add(C(Decorator.class, StorageRPCDecorator.ID, StorageRPCDecorator.class));
 
-		all.add(C(DecoratorManager.class));
-
-		all.add(C(AlertPolicyManager.class).req(ConfigDao.class, ContentFetcher.class));
-
-		all.add(C(Spliter.class, MailSpliter.ID, MailSpliter.class));
-
-		all.add(C(Spliter.class, SmsSpliter.ID, SmsSpliter.class));
-
-		all.add(C(Spliter.class, WeixinSpliter.ID, WeixinSpliter.class));
-
-		all.add(C(SpliterManager.class));
-
-		all.add(C(Sender.class, MailSender.ID, MailSender.class).req(SenderConfigManager.class));
-
-		all.add(C(Sender.class, SmsSender.ID, SmsSender.class).req(SenderConfigManager.class));
-
-		all.add(C(Sender.class, WeixinSender.ID, WeixinSender.class).req(SenderConfigManager.class));
-
-		all.add(C(SenderManager.class).req(ServerConfigManager.class));
-
-		all.add(C(AlertManager.class).req(AlertPolicyManager.class, DecoratorManager.class, ContactorManager.class,
-		      AlertService.class, SpliterManager.class, SenderManager.class, ServerConfigManager.class));
-
 		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class).req(
 		      MetricReportGroupService.class, BusinessRuleConfigManager.class, DataChecker.class, AlertManager.class,
 		      BaselineService.class));
+
+		all.add((C(BusinessAlert2.class).req(BusinessRuleConfigManager2.class, BusinessConfigManager.class,
+		      BusinessTagConfigManager.class, BusinessReportGroupService.class, ProjectService.class, AlertManager.class,
+		      BusinessKeyHelper.class, BaselineService.class, DataChecker.class, BaseRuleHelper.class)));
 
 		all.add(C(NetworkAlert.class).req(ProductLineConfigManager.class).req(MetricReportGroupService.class,
 		      NetworkRuleConfigManager.class, DataChecker.class, AlertManager.class));
@@ -264,8 +242,6 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ThirdPartyAlertBuilder.class).req(HttpConnector.class, ThirdPartyAlert.class,
 		      ThirdPartyConfigManager.class));
-
-		all.add(C(AlertService.class).req(AlertDao.class));
 
 		all.add(C(AlertInfoBuilder.class).req(AlertDao.class, TopologyGraphManager.class));
 

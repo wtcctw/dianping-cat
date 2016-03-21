@@ -24,13 +24,13 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.home.dal.report.Alert;
-import com.dianping.cat.home.dal.report.AlertDao;
-import com.dianping.cat.home.dal.report.AlertEntity;
+import com.dianping.cat.alarm.Alert;
+import com.dianping.cat.alarm.AlertDao;
+import com.dianping.cat.alarm.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertChannel;
+import com.dianping.cat.alarm.spi.sender.SendMessageEntity;
+import com.dianping.cat.alarm.spi.sender.SenderManager;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.alert.spi.AlertChannel;
-import com.dianping.cat.report.alert.spi.sender.SendMessageEntity;
-import com.dianping.cat.report.alert.spi.sender.SenderManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject

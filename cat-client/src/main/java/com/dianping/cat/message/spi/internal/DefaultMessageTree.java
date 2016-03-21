@@ -168,6 +168,7 @@ public class DefaultMessageTree implements MessageTree {
 		return transactions;
 	}
 
+	@Override
 	public boolean isProcessLoss() {
 		return m_processLoss;
 	}
@@ -176,9 +177,8 @@ public class DefaultMessageTree implements MessageTree {
 		m_buf = buf;
 	}
 
-	@Override
-	public void setDiscard(boolean sample) {
-		m_discard = sample;
+	public void setDiscard(boolean discard) {
+		m_discard = discard;
 	}
 
 	@Override

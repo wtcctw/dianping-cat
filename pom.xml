@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>parent</artifactId>
-	<version>1.4.1-SNAPSHOT</version>
+	<version>1.4.2-SNAPSHOT</version>
 	<name>parent</name>
 	<description>Central Application Tracking</description>
 	<packaging>pom</packaging>
@@ -12,10 +12,17 @@
 		<module>cat-client</module>
 		<module>cat-core</module>
 		<module>cat-consumer</module>
+<<<<<<< HEAD
 		<module>cat-storage</module>
 		<module>cat-home</module>
 		<module>cat-log</module>
+=======
+		<module>cat-hadoop</module>
+>>>>>>> e1abaedaec97cb5c009bc267bf574b7cd537562f
 		<module>cat-influxdb</module>
+		<module>cat-alarm</module>
+		<module>cat-log</module>
+		<module>cat-home</module>
 		<module>cat-maven-plugin</module>
 	</modules>
 	<dependencyManagement>
@@ -43,6 +50,11 @@
 			<dependency>
 				<groupId>com.dianping.cat</groupId>
 				<artifactId>cat-influxdb</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.dianping.cat</groupId>
+				<artifactId>cat-alarm</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -131,6 +143,11 @@
 				<artifactId>log4j</artifactId>
 				<version>1.2.14</version>
 			</dependency>
+			<dependency>
+         		<groupId>org.freemarker</groupId>
+         		<artifactId>freemarker</artifactId>
+         		<version>2.3.9</version>
+      		</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<build>
@@ -198,7 +215,7 @@ org.eclipse.jdt.core.compiler.compliance=1.7
 				<plugin>
 					<groupId>com.dianping.cat</groupId>
 					<artifactId>cat-maven-plugin</artifactId>
-					<version>1.4.1-SNAPSHOT</version>
+					<version>1.4.2-SNAPSHOT</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>

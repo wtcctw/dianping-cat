@@ -10,9 +10,9 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.report.alert.spi.AlertEntity;
-import com.dianping.cat.report.alert.spi.AlertType;
-import com.dianping.cat.report.alert.spi.decorator.Decorator;
+import com.dianping.cat.alarm.spi.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertType;
+import com.dianping.cat.alarm.spi.decorator.Decorator;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
