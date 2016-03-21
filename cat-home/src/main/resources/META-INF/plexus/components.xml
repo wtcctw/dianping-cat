@@ -112,17 +112,12 @@
 			</requirements>
 		</component>
 		<component>
-<<<<<<< HEAD
-			<role>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</role>
-			<implementation>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</implementation>
-=======
 			<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
 			<implementation>com.dianping.cat.report.alert.config.BaseRuleHelper</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
-			<implementation>com.dianping.cat.report.alert.config.UserDefinedRuleManager</implementation>
->>>>>>> web
+			<role>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</role>
+			<implementation>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.alarm.UserDefineRuleDao</role>
@@ -359,10 +354,7 @@
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
-<<<<<<< HEAD
 					<role>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</role>
-=======
-					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
@@ -373,12 +365,11 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.spi.config.AlertConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.spi.config.AlertConfigManager</implementation>
+			<role>com.dianping.cat.alarm.spi.config.AlertConfigManager</role>
+			<implementation>com.dianping.cat.alarm.spi.config.AlertConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
->>>>>>> web
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
@@ -2606,6 +2597,105 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.alarm.service.ServerAlarmRuleService</role>
+			<implementation>com.dianping.cat.alarm.service.ServerAlarmRuleServiceImpl</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.alarm.ServerAlarmRuleDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.server.ServerAlarm</role>
+			<role-hint>ServerSystem</role-hint>
+			<implementation>com.dianping.cat.alarm.server.system.ServerSystemAlarm</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.alarm.service.ServerAlarmRuleService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.metric.MetricService</role>
+					<role-hint>Influx</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.server.ServerAlarm</role>
+			<role-hint>ServerNetwork</role-hint>
+			<implementation>com.dianping.cat.alarm.server.network.ServerNetworkAlarm</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.alarm.service.ServerAlarmRuleService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.metric.MetricService</role>
+					<role-hint>Influx</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.server.ServerAlarm</role>
+			<role-hint>ServerDatabase</role-hint>
+			<implementation>com.dianping.cat.alarm.server.database.ServerDatabaseAlarm</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.alarm.service.ServerAlarmRuleService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.metric.MetricService</role>
+					<role-hint>Influx</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.receiver.Contactor</role>
+			<role-hint>ServerDatabase</role-hint>
+			<implementation>com.dianping.cat.alarm.server.database.ServerDatabaseContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.receiver.Contactor</role>
+			<role-hint>ServerNetwork</role-hint>
+			<implementation>com.dianping.cat.alarm.server.network.ServerNetworkContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.receiver.Contactor</role>
+			<role-hint>ServerSystem</role-hint>
+			<implementation>com.dianping.cat.alarm.server.system.ServerSystemContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.config.AlertConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.decorator.Decorator</role>
+			<role-hint>ServerNetwork</role-hint>
+			<implementation>com.dianping.cat.alarm.server.network.ServerNetworkDecorator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.decorator.Decorator</role>
+			<role-hint>ServerDatabase</role-hint>
+			<implementation>com.dianping.cat.alarm.server.database.ServerDatabaseDecorator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.decorator.Decorator</role>
+			<role-hint>ServerSystem</role-hint>
+			<implementation>com.dianping.cat.alarm.server.system.ServerSystemDecorator</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.alert.AlarmManager</role>
 			<implementation>com.dianping.cat.report.alert.AlarmManager</implementation>
 		</component>
@@ -2620,9 +2710,6 @@
 			</requirements>
 		</component>
 		<component>
-<<<<<<< HEAD
-			<role>com.dianping.cat.alarm.spi.receiver.Contactor</role>
-=======
 			<role>com.dianping.cat.report.alert.business2.BusinessReportGroupService</role>
 			<implementation>com.dianping.cat.report.alert.business2.BusinessReportGroupService</implementation>
 			<requirements>
@@ -2633,8 +2720,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.spi.receiver.Contactor</role>
->>>>>>> web
+			<role>com.dianping.cat.alarm.spi.receiver.Contactor</role>
 			<role-hint>Business</role-hint>
 			<implementation>com.dianping.cat.report.alert.business.BusinessContactor</implementation>
 			<requirements>
@@ -2647,10 +2733,7 @@
 			</requirements>
 		</component>
 		<component>
-<<<<<<< HEAD
 			<role>com.dianping.cat.alarm.spi.receiver.Contactor</role>
-=======
-			<role>com.dianping.cat.report.alert.spi.receiver.Contactor</role>
 			<role-hint>Business2</role-hint>
 			<implementation>com.dianping.cat.report.alert.business2.BusinessContactor2</implementation>
 			<requirements>
@@ -2658,13 +2741,12 @@
 					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.spi.config.AlertConfigManager</role>
+					<role>com.dianping.cat.alarm.spi.config.AlertConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.spi.receiver.Contactor</role>
->>>>>>> web
+			<role>com.dianping.cat.alarm.spi.receiver.Contactor</role>
 			<role-hint>Network</role-hint>
 			<implementation>com.dianping.cat.report.alert.network.NetworkContactor</implementation>
 			<requirements>
@@ -2859,10 +2941,7 @@
 			</requirements>
 		</component>
 		<component>
-<<<<<<< HEAD
 			<role>com.dianping.cat.alarm.spi.decorator.Decorator</role>
-=======
-			<role>com.dianping.cat.report.alert.spi.decorator.Decorator</role>
 			<role-hint>Business2</role-hint>
 			<implementation>com.dianping.cat.report.alert.business2.BusinessDecorator2</implementation>
 			<requirements>
@@ -2872,8 +2951,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.spi.decorator.Decorator</role>
->>>>>>> web
+			<role>com.dianping.cat.alarm.spi.decorator.Decorator</role>
 			<role-hint>Network</role-hint>
 			<implementation>com.dianping.cat.report.alert.network.NetworkDecorator</implementation>
 		</component>
@@ -3002,7 +3080,7 @@
 					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.spi.AlertManager</role>
+					<role>com.dianping.cat.alarm.spi.AlertManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.business.task.BusinessKeyHelper</role>
@@ -3011,7 +3089,7 @@
 					<role>com.dianping.cat.report.page.metric.service.BaselineService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.spi.rule.DataChecker</role>
+					<role>com.dianping.cat.alarm.spi.rule.DataChecker</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
@@ -6235,7 +6313,7 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.spi.AlertManager</role>
+					<role>com.dianping.cat.alarm.spi.AlertManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6796,56 +6874,10 @@
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
-<<<<<<< HEAD
 					<role>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</role>
-=======
-					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.config.processor.AppConfigProcessor</role>
-			<implementation>com.dianping.cat.system.page.config.processor.AppConfigProcessor</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.alert.app.AppRuleConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.event.service.EventReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.command.CommandFormatConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.spi.decorator.RuleFTLDecorator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.app.command.CommandFormatConfigManager</role>
-			<implementation>com.dianping.cat.config.app.command.CommandFormatConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.command.CommandFormatHandler</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
->>>>>>> web
 				</requirement>
 			</requirements>
 		</component>
@@ -7001,26 +7033,10 @@
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
-<<<<<<< HEAD
 					<role>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</role>
-=======
-					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.config.processor.DisplayConfigProcessor</role>
-			<implementation>com.dianping.cat.system.page.config.processor.DisplayConfigProcessor</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
->>>>>>> web
 				</requirement>
 			</requirements>
 		</component>
@@ -7166,7 +7182,6 @@
 			</requirements>
 		</component>
 		<component>
-<<<<<<< HEAD
 			<role>com.dianping.cat.system.page.app.Handler</role>
 			<implementation>com.dianping.cat.system.page.app.Handler</implementation>
 			<requirements>
@@ -7211,7 +7226,46 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppCommandGroupConfigManager</role>
-=======
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.decorator.RuleFTLDecorator</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.command.CommandFormatConfigManager</role>
+			<implementation>com.dianping.cat.config.app.command.CommandFormatConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.command.CommandFormatHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.AppCommandGroupConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppCommandGroupConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.page.business.Handler</role>
 			<implementation>com.dianping.cat.system.page.business.Handler</implementation>
 			<requirements>
@@ -7229,63 +7283,30 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.business2.BusinessRuleConfigManager2</role>
->>>>>>> web
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
 				</requirement>
 				<requirement>
-<<<<<<< HEAD
 					<role>com.dianping.cat.alarm.spi.decorator.RuleFTLDecorator</role>
-=======
-					<role>com.dianping.cat.report.alert.spi.decorator.RuleFTLDecorator</role>
->>>>>>> web
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-<<<<<<< HEAD
-			<role>com.dianping.cat.config.app.command.CommandFormatConfigManager</role>
-			<implementation>com.dianping.cat.config.app.command.CommandFormatConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.command.CommandFormatHandler</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-=======
 			<role>com.dianping.cat.system.page.business.JspViewer</role>
 			<implementation>com.dianping.cat.system.page.business.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
->>>>>>> web
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-<<<<<<< HEAD
-			<role>com.dianping.cat.config.app.AppCommandGroupConfigManager</role>
-			<implementation>com.dianping.cat.config.app.AppCommandGroupConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
-=======
 			<role>com.dianping.cat.report.alert.business2.BusinessRuleConfigManager2</role>
 			<implementation>com.dianping.cat.report.alert.business2.BusinessRuleConfigManager2</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.BusinessConfigDao</role>
->>>>>>> web
 				</requirement>
 			</requirements>
 		</component>

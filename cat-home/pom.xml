@@ -154,36 +154,7 @@
                      <goal>dal-jdbc</goal>
                   </goals>
                   <configuration>
-<<<<<<< HEAD
-                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,,
-                        ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
-                     ,,
-                        ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
-                     ,,
-                        ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
-                     ,]]><![CDATA[,
-                        ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
-=======
-                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,,
-                        ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
-                     ,,
-                        ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
-                     ,,
-                        ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
-                     ,,
-                        ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
->>>>>>> e1abaedaec97cb5c009bc267bf574b7cd537562f
-                     ,]]></manifest>
-                  </configuration>
-               </execution>
-               <execution>
-                  <id>generate plexus component descriptor</id>
-                  <phase>process-classes</phase>
-                  <goals>
-                     <goal>plexus</goal>
-                  </goals>
-                  <configuration>
-                     <className>com.dianping.cat.build.ComponentsConfigurator</className>
+                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,]]></manifest>
                   </configuration>
                </execution>
             </executions>

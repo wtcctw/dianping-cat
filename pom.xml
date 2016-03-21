@@ -12,17 +12,11 @@
 		<module>cat-client</module>
 		<module>cat-core</module>
 		<module>cat-consumer</module>
-<<<<<<< HEAD
 		<module>cat-storage</module>
 		<module>cat-home</module>
 		<module>cat-log</module>
-=======
-		<module>cat-hadoop</module>
->>>>>>> e1abaedaec97cb5c009bc267bf574b7cd537562f
 		<module>cat-influxdb</module>
 		<module>cat-alarm</module>
-		<module>cat-log</module>
-		<module>cat-home</module>
 		<module>cat-maven-plugin</module>
 	</modules>
 	<dependencyManagement>

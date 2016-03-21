@@ -111,7 +111,7 @@
                      <goal>plexus</goal>
                   </goals>
                   <configuration>
-                     <className>com.dianping.cat.build.ComponentsConfigurator</className>
+                     <className>com.dianping.cat.alarm.build.ComponentsConfigurator</className>
                   </configuration>
                </execution>
             </executions>

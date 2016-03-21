@@ -1,4 +1,4 @@
-package com.dianping.cat.build;
+package com.dianping.cat.alarm.build;
 
 import java.util.ArrayList;
 import java.util.List;
