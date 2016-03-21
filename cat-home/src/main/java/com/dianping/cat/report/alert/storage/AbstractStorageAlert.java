@@ -213,11 +213,14 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 	private void processStorage(String id) {
 		StorageReport currentReport = fetchStorageReport(id, ModelPeriod.CURRENT);
-		Set<String> machines = currentReport.getMachines().keySet();
 
 		if (currentReport != null) {
-			for (String ip : machines) {
-				processMachine(id, currentReport, ip);
+			Set<String> machines = currentReport.getMachines().keySet();
+
+			if (currentReport != null) {
+				for (String ip : machines) {
+					processMachine(id, currentReport, ip);
+				}
 			}
 		}
 	}

@@ -69,7 +69,7 @@ public class LocalMessageBucket implements MessageBucket {
 	public MessageTree findByIndex(int index) throws IOException {
 		File file = new File(m_baseDir, m_dataFile);
 		MessageBlockReader reader = new MessageBlockReader(file);
-		
+
 		try {
 			m_lastAccessTime = System.currentTimeMillis();
 
@@ -83,7 +83,7 @@ public class LocalMessageBucket implements MessageBucket {
 		} catch (EOFException e) {
 			Cat.logError(e);
 			return null;
-		} finally{
+		} finally {
 			reader.close();
 		}
 	}
@@ -141,18 +141,22 @@ public class LocalMessageBucket implements MessageBucket {
 
 	public MessageBlock storeMessage(final ByteBuf buf, final MessageId id) throws IOException {
 		synchronized (this) {
-			int size = buf.readableBytes();
+			try {
+				int size = buf.readableBytes();
 
-			m_dirty.set(true);
-			m_lastAccessTime = System.currentTimeMillis();
-			m_blockSize += size;
-			m_block.addIndex(id.getIndex(), size);
-			buf.getBytes(0, m_out, size); // write buffer and compress it
+				m_dirty.set(true);
+				m_lastAccessTime = System.currentTimeMillis();
+				m_blockSize += size;
+				m_block.addIndex(id.getIndex(), size);
+				buf.getBytes(0, m_out, size); // write buffer and compress it
 
-			if (m_blockSize >= MAX_BLOCK_SIZE) {
-				return flushBlock();
-			} else {
-				return null;
+				if (m_blockSize >= MAX_BLOCK_SIZE) {
+					return flushBlock();
+				} else {
+					return null;
+				}
+			} finally {
+				buf.release();
 			}
 		}
 	}
