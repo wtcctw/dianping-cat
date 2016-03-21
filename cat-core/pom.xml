@@ -87,7 +87,6 @@
 								${basedir}/src/main/resources/META-INF/dal/jdbc/web-manifest.xml, <![CDATA[,
                         ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
                         ${basedir}/src/main/resources/META-INF/dal/jdbc/config-manifest.xml,
-                     ,]]><![CDATA[,
                         ${basedir}/src/main/resources/META-INF/dal/jdbc/web-manifest.xml,
                      ,]]></manifest>
                   </configuration>

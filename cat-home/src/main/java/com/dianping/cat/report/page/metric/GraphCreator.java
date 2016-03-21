@@ -13,6 +13,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.spi.AlertEntity;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.config.ProductLineConfig;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
@@ -20,9 +21,8 @@ import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.Chinese;
+import com.dianping.cat.helper.MetricType;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.alert.spi.AlertEntity;
-import com.dianping.cat.report.alert.spi.data.MetricType;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.metric.AbstractGraphCreator;
 import com.dianping.cat.service.ProjectService;

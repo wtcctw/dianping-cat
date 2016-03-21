@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.unidal.web.mvc.ViewModel;
 
+import com.dianping.cat.alarm.rule.entity.Rule;
 import com.dianping.cat.configuration.web.js.entity.AggregationRule;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
@@ -24,7 +25,6 @@ import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
 import com.dianping.cat.home.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
 import com.dianping.cat.home.group.entity.DomainGroup;
-import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.processor.BaseProcesser.RuleItem;
 

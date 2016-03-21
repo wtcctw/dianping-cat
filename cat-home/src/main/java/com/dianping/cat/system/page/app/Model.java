@@ -8,6 +8,7 @@ import org.unidal.lookup.ContainerLoader;
 import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.rule.entity.Rule;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
@@ -16,7 +17,6 @@ import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.configuration.group.entity.AppCommandGroupConfig;
 import com.dianping.cat.helper.JsonBuilder;
-import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.system.SystemPage;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {

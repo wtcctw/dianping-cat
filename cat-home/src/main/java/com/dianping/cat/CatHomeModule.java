@@ -11,22 +11,7 @@ import com.dianping.cat.analysis.MessageConsumer;
 import com.dianping.cat.analysis.TcpSocketReceiver;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.CatConsumerModule;
-import com.dianping.cat.report.alert.app.AppAlert;
-import com.dianping.cat.report.alert.browser.AjaxAlert;
-import com.dianping.cat.report.alert.browser.JsAlert;
-import com.dianping.cat.report.alert.business.BusinessAlert;
-import com.dianping.cat.report.alert.database.DatabaseAlert;
-import com.dianping.cat.report.alert.event.EventAlert;
-import com.dianping.cat.report.alert.exception.ExceptionAlert;
-import com.dianping.cat.report.alert.heartbeat.HeartbeatAlert;
-import com.dianping.cat.report.alert.network.NetworkAlert;
-import com.dianping.cat.report.alert.storage.cache.StorageCacheAlert;
-import com.dianping.cat.report.alert.storage.rpc.StorageRPCAlert;
-import com.dianping.cat.report.alert.storage.sql.StorageSQLAlert;
-import com.dianping.cat.report.alert.system.SystemAlert;
-import com.dianping.cat.report.alert.thirdParty.ThirdPartyAlert;
-import com.dianping.cat.report.alert.thirdParty.ThirdPartyAlertBuilder;
-import com.dianping.cat.report.alert.transaction.TransactionAlert;
+import com.dianping.cat.report.alert.AlarmManager;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 
 public class CatHomeModule extends AbstractModule {
@@ -44,40 +29,10 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("cat").start(taskConsumer);
 		}
 
-		if (serverConfigManager.isAlertMachine()) {
-			BusinessAlert metricAlert = ctx.lookup(BusinessAlert.class);
-			NetworkAlert networkAlert = ctx.lookup(NetworkAlert.class);
-			DatabaseAlert databaseAlert = ctx.lookup(DatabaseAlert.class);
-			SystemAlert systemAlert = ctx.lookup(SystemAlert.class);
-			ExceptionAlert exceptionAlert = ctx.lookup(ExceptionAlert.class);
-			HeartbeatAlert heartbeatAlert = ctx.lookup(HeartbeatAlert.class);
-			ThirdPartyAlert thirdPartyAlert = ctx.lookup(ThirdPartyAlert.class);
-			ThirdPartyAlertBuilder alertBuildingTask = ctx.lookup(ThirdPartyAlertBuilder.class);
-			AppAlert appAlert = ctx.lookup(AppAlert.class);
-			TransactionAlert transactionAlert = ctx.lookup(TransactionAlert.class);
-			EventAlert eventAlert = ctx.lookup(EventAlert.class);
-			StorageSQLAlert storageDatabaseAlert = ctx.lookup(StorageSQLAlert.class);
-			StorageCacheAlert storageCacheAlert = ctx.lookup(StorageCacheAlert.class);
-			StorageRPCAlert storageRpcAlert = ctx.lookup(StorageRPCAlert.class);
-			JsAlert jsAlert = ctx.lookup(JsAlert.class);
-			AjaxAlert ajaxAlert = ctx.lookup(AjaxAlert.class);
+		AlarmManager alarmManager = ctx.lookup(AlarmManager.class);
 
-			Threads.forGroup("cat").start(networkAlert);
-			Threads.forGroup("cat").start(databaseAlert);
-			Threads.forGroup("cat").start(systemAlert);
-			Threads.forGroup("cat").start(metricAlert);
-			Threads.forGroup("cat").start(exceptionAlert);
-			Threads.forGroup("cat").start(heartbeatAlert);
-			Threads.forGroup("cat").start(thirdPartyAlert);
-			Threads.forGroup("cat").start(alertBuildingTask);
-			Threads.forGroup("cat").start(appAlert);
-			Threads.forGroup("cat").start(transactionAlert);
-			Threads.forGroup("cat").start(eventAlert);
-			Threads.forGroup("cat").start(storageDatabaseAlert);
-			Threads.forGroup("cat").start(storageCacheAlert);
-			Threads.forGroup("cat").start(storageRpcAlert);
-			Threads.forGroup("cat").start(jsAlert);
-			Threads.forGroup("cat").start(ajaxAlert);
+		if (serverConfigManager.isAlertMachine()) {
+			alarmManager.startAlarm();
 		}
 
 		final MessageConsumer consumer = ctx.lookup(MessageConsumer.class);

@@ -12,11 +12,11 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.alarm.spi.AlertManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.alert.spi.AlertManager;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.metric.service.BaselineService;
 

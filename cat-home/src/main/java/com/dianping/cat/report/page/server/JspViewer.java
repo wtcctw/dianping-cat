@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.server;
 
 import com.dianping.cat.report.ReportPage;
+
 import org.unidal.web.mvc.view.BaseJspViewer;
 
 public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model> {
@@ -37,6 +38,12 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.INFLUX_CONFIG_UPDATE.getPath();
 		case SERVER_METRIC_CONFIG_UPDATE:
 			return JspFile.SERVER_METRIC_CONFIG_UPDATE.getPath();
+		case SERVER_ALARM_RULE:
+		case SERVER_ALARM_RULE_DELETE:
+		case SERVER_ALARM_RULE_SUBMIT:
+			return JspFile.SERVER_ALARM_RULE.getPath();
+		case SERVER_ALARM_RULE_UPDATE:
+			return JspFile.SERVER_ALARM_RULE_UPDATE.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

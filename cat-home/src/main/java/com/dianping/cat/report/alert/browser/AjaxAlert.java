@@ -15,19 +15,19 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.rule.entity.Condition;
+import com.dianping.cat.alarm.rule.entity.Config;
+import com.dianping.cat.alarm.rule.entity.MonitorRules;
+import com.dianping.cat.alarm.rule.entity.Rule;
+import com.dianping.cat.alarm.spi.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertManager;
+import com.dianping.cat.alarm.spi.AlertType;
+import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
+import com.dianping.cat.alarm.spi.rule.DataChecker;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.home.rule.entity.Condition;
-import com.dianping.cat.home.rule.entity.Config;
-import com.dianping.cat.home.rule.entity.MonitorRules;
-import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.alert.spi.AlertEntity;
-import com.dianping.cat.report.alert.spi.AlertManager;
-import com.dianping.cat.report.alert.spi.AlertType;
-import com.dianping.cat.report.alert.spi.rule.DataCheckEntity;
-import com.dianping.cat.report.alert.spi.rule.DataChecker;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
 import com.dianping.cat.report.page.browser.service.AjaxDataService;
 import com.dianping.cat.report.page.browser.service.AjaxQueryType;
@@ -66,7 +66,7 @@ public class AjaxAlert implements Task {
 		Pair<Date, Integer> dayAndMinute = new Pair<Date, Integer>();
 		Date day = TimeHelper.getCurrentDay(time);
 		int minute = (int) ((time - day.getTime()) / TimeHelper.ONE_MINUTE);
-		
+
 		dayAndMinute.setKey(day);
 		dayAndMinute.setValue(minute);
 		return dayAndMinute;

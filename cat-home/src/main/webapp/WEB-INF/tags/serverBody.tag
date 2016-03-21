@@ -53,6 +53,18 @@
 								<i class="menu-icon fa fa-caret-right"></i>influxDB配置</a>
 								<b class="arrow"></b>
 						</li>
+						<li id="server_network"><a href="/cat/r/server?op=serverAlarmRule&type=network">
+								<i class="menu-icon fa fa-caret-right"></i>网络告警规则</a>
+								<b class="arrow"></b>
+						</li>
+						<li id="server_system"><a href="/cat/r/server?op=serverAlarmRule&type=system">
+								<i class="menu-icon fa fa-caret-right"></i>系统告警规则</a>
+								<b class="arrow"></b>
+						</li>
+						<li id="server_database"><a href="/cat/r/server?op=serverAlarmRule&type=database">
+								<i class="menu-icon fa fa-caret-right"></i>数据库告警规则</a>
+								<b class="arrow"></b>
+						</li>
 					</ul>
 				</li>
 			</ul>
