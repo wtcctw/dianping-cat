@@ -1,4 +1,4 @@
-package com.dianping.cat.system.page.config.processor;
+package com.dianping.cat.system.page.app;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +15,7 @@ import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.app.AppCommandGroupConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatConfigManager;
@@ -27,12 +28,13 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.home.rule.entity.Rule;
+import com.dianping.cat.home.rule.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
+import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
 import com.dianping.cat.report.page.event.service.EventReportService;
-import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.ConfigHtmlParser;
-import com.dianping.cat.system.page.config.Model;
-import com.dianping.cat.system.page.config.Payload;
+import com.dianping.cat.system.page.config.processor.BaseProcesser;
 
 public class AppConfigProcessor extends BaseProcesser implements Initializable {
 
@@ -52,9 +54,12 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 	private CommandFormatConfigManager m_urlConfigManager;
 
 	@Inject
+	private AppCommandGroupConfigManager m_appCommandGroupManager;
+
+	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
 
-	public void appRuleBatchUpdate(Payload payload, Model model) {
+	public void appCommandBatchUpdate(Payload payload, Model model) {
 		String content = payload.getContent();
 		String[] paths = content.split(",");
 
@@ -91,7 +96,6 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 		visitor.visitEventReport(report);
 		Set<String> validatePaths = visitor.getPaths();
 		Set<String> invalidatePaths = visitor.getInvalidatePaths();
-
 		Map<String, Command> commands = m_appConfigManager.getCommands();
 
 		for (Entry<String, Command> entry : commands.entrySet()) {
@@ -121,9 +125,29 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			model.setId(String.valueOf(id));
 		}
 
-		buildBatchApiConfig(payload, model);
-		model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
+		model.setCommandGroupConfig(m_appCommandGroupManager.getConfig());
 		model.setCodes(m_appConfigManager.getCodes());
+	}
+
+	public void generateRuleConfigContent(String key, BaseRuleConfigManager manager, Model model) {
+		String configsStr = "";
+		String ruleId = "";
+
+		if (StringUtils.isNotEmpty(key)) {
+			Rule rule = manager.queryRule(key);
+
+			if (rule != null) {
+				ruleId = rule.getId();
+				configsStr = new DefaultJsonBuilder(true).buildArray(rule.getConfigs());
+				String configHeader = new DefaultJsonBuilder(true).buildArray(rule.getMetricItems());
+
+				model.setConfigHeader(configHeader);
+			}
+		}
+		String content = m_ruleDecorator.generateConfigsHtml(configsStr);
+
+		model.setContent(content);
+		model.setId(ruleId);
 	}
 
 	@Override
@@ -262,6 +286,9 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 				Cat.logError(e);
 			}
 			break;
+		case APP_SPEED_LIST:
+			model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
+			return;
 		case APP_SPEED_UPDATE:
 		case APP_SPEED_ADD:
 			id = payload.getId();
@@ -276,7 +303,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 				id = payload.getId();
 
 				m_appSpeedConfigManager.deleteSpeed(id);
-				buildListInfo(model, payload);
+				model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -295,7 +322,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 
 				speed.setPage(page).setStep(step).setTitle(title).setThreshold(threshold);
 				m_appSpeedConfigManager.updateConfig(speed);
-				buildListInfo(model, payload);
+				model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -325,9 +352,12 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			model.setOpState(deleteRule(m_appRuleConfigManager, payload.getRuleId()));
 			model.setRules(m_appRuleConfigManager.getMonitorRules().getRules().values());
 			break;
-		case APP_RULE_BATCH_UPDATE:
-			appRuleBatchUpdate(payload, model);
-			buildListInfo(model, payload);
+		case APP_COMMAND_BATCH:
+			buildBatchApiConfig(payload, model);
+			break;
+		case APP_COMMAND_BATCH_UPDATE:
+			appCommandBatchUpdate(payload, model);
+			buildBatchApiConfig(payload, model);
 			break;
 		case APP_CONSTANT_ADD:
 			break;
@@ -335,6 +365,9 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			Item item = m_appConfigManager.queryItem(payload.getType(), payload.getId());
 
 			model.setAppItem(item);
+			break;
+		case APP_CONSTATN_DELETE:
+			// TODO
 			break;
 		case APP_CONSTATN_SUBMIT:
 			try {
@@ -359,8 +392,27 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			}
 			model.setContent(m_configHtmlParser.parse(m_urlConfigManager.getUrlFormat().toString()));
 			break;
-		default:
-			throw new RuntimeException("Error action name " + action.getName());
+		case APP_COMMAND_GROUP_ADD:
+			break;
+		case APP_COMMAND_GROUP_DELETE:
+			model.setOpState(m_appCommandGroupManager.deleteByName(payload.getParent(), payload.getName()));
+			buildListInfo(model, payload);
+			break;
+		case APP_COMMAND_GROUP_SUBMIT:
+			String parent = payload.getParent();
+			name = payload.getName();
+
+			model.setOpState(m_appCommandGroupManager.insert(parent, name));
+			buildListInfo(model, payload);
+			break;
+		case APP_COMMAND_GROUP_UPDATE:
+			content = payload.getContent();
+
+			if (StringUtils.isNotEmpty(content)) {
+				m_appCommandGroupManager.insert(content);
+			}
+			model.setContent(m_configHtmlParser.parse(m_appCommandGroupManager.getConfig().toString()));
+			break;
 		}
 	}
 
@@ -379,7 +431,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 
 		private boolean invalidate(String name) {
 			Set<String> invalids = m_appConfigManager.getConfig().getInvalidatePatterns();
-			
+
 			for (String str : invalids) {
 				if (StringUtils.isEmpty(str) || name.indexOf(str) > -1) {
 					return true;

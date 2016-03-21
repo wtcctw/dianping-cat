@@ -7,22 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.unidal.lookup.ContainerLoader;
 import org.unidal.web.mvc.ViewModel;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.configuration.app.entity.Code;
-import com.dianping.cat.configuration.app.entity.Command;
-import com.dianping.cat.configuration.app.entity.ConfigItem;
-import com.dianping.cat.configuration.app.entity.Item;
-import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.configuration.web.js.entity.AggregationRule;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.alert.thirdparty.entity.Http;
 import com.dianping.cat.home.alert.thirdparty.entity.Socket;
 import com.dianping.cat.home.alert.thirdparty.entity.ThirdPartyConfig;
@@ -97,39 +88,13 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public static final String FAIL = "Fail";
 
-	private Map<Integer, Item> m_cities;
-
-	private Map<Integer, Item> m_versions;
-
-	private Map<Integer, Item> m_connectionTypes;
-
-	private Map<Integer, Item> m_operators;
-
-	private Map<Integer, Item> m_networks;
-
-	private Map<Integer, Item> m_platforms;
-
-	private List<Command> m_commands;
-
 	private String m_duplicateDomains;
 
 	private List<String> m_tags;
 
 	private String m_configHeader;
 
-	private Command m_updateCommand;
-
-	private Map<Integer, Code> m_codes;
-
-	private Code m_code;
-
 	private String m_domain;
-
-	private Map<Integer, Speed> m_speeds;
-
-	private Speed m_speed;
-
-	private String m_nameUniqueResult;
 
 	private ThirdPartyConfig m_thirdPartyConfig;
 
@@ -143,21 +108,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private com.dianping.cat.home.group.entity.Domain m_groupDomain;
 
-	private List<String> m_validatePaths;
-
-	private List<String> m_invalidatePaths;
-
-	private AppConfigManager m_appConfigManager;
-
-	private Item m_appItem;
-
 	public Model(Context ctx) {
 		super(ctx);
-		try {
-			m_appConfigManager = ContainerLoader.getDefaultContainer().lookup(AppConfigManager.class);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
 	}
 
 	public void buildEdgeInfo() {
@@ -184,36 +136,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_aggregationRules;
 	}
 
-	public Map<String, List<Command>> getApiCommands() {
-		return m_appConfigManager.queryDomain2Commands();
-	}
-
-	public Item getAppItem() {
-		return m_appItem;
-	}
-
 	public String getBug() {
 		return m_bug;
-	}
-
-	public Map<Integer, Item> getCities() {
-		return m_cities;
-	}
-
-	public Code getCode() {
-		return m_code;
-	}
-
-	public Map<Integer, Code> getCodes() {
-		return m_codes;
-	}
-
-	public String getCommandJson() {
-		return new JsonBuilder().toJson(m_appConfigManager.queryCommand2Codes());
-	}
-
-	public List<Command> getCommands() {
-		return m_commands;
 	}
 
 	public TopologyGraphConfig getConfig() {
@@ -222,14 +146,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public String getConfigHeader() {
 		return m_configHeader;
-	}
-
-	public Map<String, ConfigItem> getConfigItems() {
-		return m_appConfigManager.getConfig().getConfigItems();
-	}
-
-	public Map<Integer, Item> getConnectionTypes() {
-		return m_connectionTypes;
 	}
 
 	public String getContent() {
@@ -247,10 +163,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public String getDomain() {
 		return m_domain;
-	}
-
-	public String getDomain2CommandsJson() {
-		return new JsonBuilder().toJson(m_appConfigManager.queryDomain2Commands());
 	}
 
 	public DomainConfig getDomainConfig() {
@@ -317,10 +229,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_id;
 	}
 
-	public List<String> getInvalidatePaths() {
-		return m_invalidatePaths;
-	}
-
 	public String getIpAddress() {
 		return "";
 	}
@@ -333,24 +241,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_metricItemConfigRule;
 	}
 
-	public String getNameUniqueResult() {
-		return m_nameUniqueResult;
-	}
-
-	public Map<Integer, Item> getNetworks() {
-		return m_networks;
-	}
-
-	public Map<Integer, Item> getOperators() {
-		return m_operators;
-	}
-
 	public String getOpState() {
 		return m_opState;
-	}
-
-	public Map<Integer, Item> getPlatforms() {
-		return m_platforms;
 	}
 
 	public ProductLine getProductLine() {
@@ -393,14 +285,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_socket;
 	}
 
-	public Speed getSpeed() {
-		return m_speed;
-	}
-
-	public Map<Integer, Speed> getSpeeds() {
-		return m_speeds;
-	}
-
 	public List<String> getTags() {
 		return m_tags;
 	}
@@ -413,18 +297,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_typeToProductLines;
 	}
 
-	public Command getUpdateCommand() {
-		return m_updateCommand;
-	}
-
-	public List<String> getValidatePaths() {
-		return m_validatePaths;
-	}
-
-	public Map<Integer, Item> getVersions() {
-		return m_versions;
-	}
-
 	public void setAggregationRule(AggregationRule aggregationRule) {
 		m_aggregationRule = aggregationRule;
 	}
@@ -433,28 +305,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_aggregationRules = aggregationRules;
 	}
 
-	public void setAppItem(Item appItem) {
-		m_appItem = appItem;
-	}
-
 	public void setBug(String bug) {
 		m_bug = bug;
-	}
-
-	public void setCities(Map<Integer, Item> cities) {
-		m_cities = cities;
-	}
-
-	public void setCode(Code code) {
-		m_code = code;
-	}
-
-	public void setCodes(Map<Integer, Code> codes) {
-		m_codes = codes;
-	}
-
-	public void setCommands(List<Command> commands) {
-		m_commands = commands;
 	}
 
 	public void setConfig(TopologyGraphConfig config) {
@@ -463,10 +315,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setConfigHeader(String configHeader) {
 		m_configHeader = configHeader;
-	}
-
-	public void setConnectionTypes(Map<Integer, Item> connectionTypes) {
-		m_connectionTypes = connectionTypes;
 	}
 
 	public void setContent(String content) {
@@ -537,10 +385,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_id = id;
 	}
 
-	public void setInvalidatePaths(List<String> invalidatePaths) {
-		m_invalidatePaths = invalidatePaths;
-	}
-
 	public void setMetricItemConfig(MetricItemConfig metricItemConfig) {
 		m_metricItemConfig = metricItemConfig;
 	}
@@ -549,28 +393,12 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_metricItemConfigRule = metricItemConfigRule;
 	}
 
-	public void setNameUniqueResult(String nameUniqueResult) {
-		m_nameUniqueResult = nameUniqueResult;
-	}
-
-	public void setNetworks(Map<Integer, Item> networks) {
-		m_networks = networks;
-	}
-
-	public void setOperators(Map<Integer, Item> operators) {
-		m_operators = operators;
-	}
-
 	public void setOpState(boolean result) {
 		if (result) {
 			m_opState = SUCCESS;
 		} else {
 			m_opState = FAIL;
 		}
-	}
-
-	public void setPlatforms(Map<Integer, Item> platforms) {
-		m_platforms = platforms;
 	}
 
 	public void setProductLine(ProductLine productLine) {
@@ -609,14 +437,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_socket = socket;
 	}
 
-	public void setSpeed(Speed speed) {
-		m_speed = speed;
-	}
-
-	public void setSpeeds(Map<Integer, Speed> speeds) {
-		m_speeds = speeds;
-	}
-
 	public void setTags(List<String> tags) {
 		m_tags = tags;
 	}
@@ -627,18 +447,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setTypeToProductLines(Map<String, List<ProductLine>> typeToProductLines) {
 		m_typeToProductLines = typeToProductLines;
-	}
-
-	public void setUpdateCommand(Command updateCommand) {
-		m_updateCommand = updateCommand;
-	}
-
-	public void setValidatePaths(List<String> validatePaths) {
-		m_validatePaths = validatePaths;
-	}
-
-	public void setVersions(Map<Integer, Item> versions) {
-		m_versions = versions;
 	}
 
 	public static class Edge {
