@@ -215,7 +215,11 @@ public class InfluxNetGraphBuilder {
 
 		Map<Long, Double> value = m_metricService.query(p);
 
-		return value.values().iterator().next();
+		if (!value.isEmpty()) {
+			return value.values().iterator().next();
+		} else {
+			return 0;
+		}
 	}
 
 	private void updateInterface(Interface inter, Date minute) {
