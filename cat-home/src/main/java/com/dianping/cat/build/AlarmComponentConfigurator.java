@@ -14,8 +14,10 @@ import com.dianping.cat.alarm.spi.receiver.Contactor;
 import com.dianping.cat.alarm.spi.rule.DataChecker;
 import com.dianping.cat.alarm.spi.sender.SenderManager;
 import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.business.BusinessConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
+import com.dianping.cat.consumer.business.BusinessAnalyzer;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
@@ -44,6 +46,12 @@ import com.dianping.cat.report.alert.business.BusinessAlert;
 import com.dianping.cat.report.alert.business.BusinessContactor;
 import com.dianping.cat.report.alert.business.BusinessDecorator;
 import com.dianping.cat.report.alert.business.BusinessRuleConfigManager;
+import com.dianping.cat.report.alert.business2.BusinessAlert2;
+import com.dianping.cat.report.alert.business2.BusinessContactor2;
+import com.dianping.cat.report.alert.business2.BusinessDecorator2;
+import com.dianping.cat.report.alert.business2.BusinessReportGroupService;
+import com.dianping.cat.report.alert.business2.BusinessRuleConfigManager2;
+import com.dianping.cat.report.alert.config.BaseRuleHelper;
 import com.dianping.cat.report.alert.database.DatabaseAlert;
 import com.dianping.cat.report.alert.database.DatabaseContactor;
 import com.dianping.cat.report.alert.database.DatabaseDecorator;
@@ -101,6 +109,7 @@ import com.dianping.cat.report.alert.transaction.TransactionDecorator;
 import com.dianping.cat.report.alert.transaction.TransactionRuleConfigManager;
 import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.browser.service.AjaxDataService;
+import com.dianping.cat.report.page.business.task.BusinessKeyHelper;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.event.transform.EventMergeHelper;
 import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager;
@@ -110,6 +119,7 @@ import com.dianping.cat.report.page.storage.transform.StorageMergeHelper;
 import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ProjectService;
+import com.dianping.cat.system.page.business.config.BusinessTagConfigManager;
 import com.dianping.cat.web.JsErrorLogDao;
 
 public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
@@ -121,8 +131,10 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AlarmManager.class));
 
 		all.add(C(MetricReportGroupService.class).req(ModelService.class, MetricAnalyzer.ID));
-
+		all.add(C(BusinessReportGroupService.class).req(ModelService.class, BusinessAnalyzer.ID));
 		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class).req(ProjectService.class,
+		      AlertConfigManager.class));
+		all.add(C(Contactor.class, BusinessContactor2.ID, BusinessContactor2.class).req(ProjectService.class,
 		      AlertConfigManager.class));
 
 		all.add(C(Contactor.class, NetworkContactor.ID, NetworkContactor.class).req(ProjectService.class,
@@ -153,6 +165,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProductLineConfigManager.class,
 		      AlertSummaryExecutor.class, ProjectService.class));
+		all.add(C(Decorator.class, BusinessDecorator2.ID, BusinessDecorator2.class).req(ProjectService.class));
 		all.add(C(Decorator.class, NetworkDecorator.ID, NetworkDecorator.class));
 		all.add(C(Decorator.class, DatabaseDecorator.ID, DatabaseDecorator.class));
 		all.add(C(Decorator.class, HeartbeatDecorator.ID, HeartbeatDecorator.class));
@@ -172,6 +185,10 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class).req(
 		      MetricReportGroupService.class, BusinessRuleConfigManager.class, DataChecker.class, AlertManager.class,
 		      BaselineService.class));
+
+		all.add((C(BusinessAlert2.class).req(BusinessRuleConfigManager2.class, BusinessConfigManager.class,
+		      BusinessTagConfigManager.class, BusinessReportGroupService.class, ProjectService.class, AlertManager.class,
+		      BusinessKeyHelper.class, BaselineService.class, DataChecker.class, BaseRuleHelper.class)));
 
 		all.add(C(NetworkAlert.class).req(ProductLineConfigManager.class).req(MetricReportGroupService.class,
 		      NetworkRuleConfigManager.class, DataChecker.class, AlertManager.class));

@@ -8,6 +8,7 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.analysis.MessageConsumer;
 import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.consumer.business.BusinessAnalyzer;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
@@ -26,6 +27,10 @@ import com.dianping.cat.message.codec.WaterfallMessageCodec;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.storage.MessageBucketManager;
 import com.dianping.cat.report.ReportBucketManager;
+import com.dianping.cat.report.page.business.service.BusinessReportService;
+import com.dianping.cat.report.page.business.service.CompositeBusinessService;
+import com.dianping.cat.report.page.business.service.HistoricalBusinessService;
+import com.dianping.cat.report.page.business.service.LocalBusinessService;
 import com.dianping.cat.report.page.cross.service.CompositeCrossService;
 import com.dianping.cat.report.page.cross.service.CrossReportService;
 import com.dianping.cat.report.page.cross.service.HistoricalCrossService;
@@ -169,6 +174,14 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, MetricAnalyzer.ID, CompositeMetricService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "metric-historical" }, "m_services"));
+		
+		all.add(C(LocalModelService.class, BusinessAnalyzer.ID, LocalBusinessService.class) //
+		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
+		all.add(C(ModelService.class, "business-historical", HistoricalBusinessService.class) //
+		      .req(BusinessReportService.class, ServerConfigManager.class));
+		all.add(C(ModelService.class, BusinessAnalyzer.ID, CompositeBusinessService.class) //
+		      .req(ServerConfigManager.class) //
+		      .req(ModelService.class, new String[] { "business-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "logview", CompositeLogViewService.class) //
 		      .req(ServerConfigManager.class) //

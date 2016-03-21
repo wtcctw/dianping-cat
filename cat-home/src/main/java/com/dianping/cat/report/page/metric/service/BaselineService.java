@@ -17,4 +17,6 @@ public interface BaselineService {
 
 	public boolean hasDailyBaseline(String reportName, String key, Date reportPeriod);
 
+	public double[] queryBaseline(int currentMinute, int ruleMinute, String metricKey, String name);
+
 }

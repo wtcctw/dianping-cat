@@ -19,7 +19,9 @@ com.dianping.cat.system.page.web.Handler.class,
 
 com.dianping.cat.system.page.project.Handler.class,
 
-com.dianping.cat.system.page.app.Handler.class
+com.dianping.cat.system.page.app.Handler.class,
+
+com.dianping.cat.system.page.business.Handler.class
 })
 public class SystemModule extends AbstractModule {
 

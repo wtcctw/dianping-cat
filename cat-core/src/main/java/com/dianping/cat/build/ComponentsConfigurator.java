@@ -22,6 +22,7 @@ import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatHandler;
 import com.dianping.cat.config.app.command.DefaultCommandFormatlHandler;
+import com.dianping.cat.config.business.BusinessConfigManager;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.LocalResourceContentFetcher;
 import com.dianping.cat.config.sample.SampleConfigManager;
@@ -34,6 +35,7 @@ import com.dianping.cat.config.web.js.DefaultAggregationHandler;
 import com.dianping.cat.config.web.url.DefaultUrlPatternHandler;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternHandler;
+import com.dianping.cat.core.config.BusinessConfigDao;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.TaskDao;
@@ -95,6 +97,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(WebSpeedConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(AppSpeedConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+
+		all.add(C(BusinessConfigManager.class).req(BusinessConfigDao.class));
 
 		all.add(C(UrlPatternHandler.class, DefaultUrlPatternHandler.class));
 

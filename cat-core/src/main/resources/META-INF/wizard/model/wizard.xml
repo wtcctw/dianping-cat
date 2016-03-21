@@ -27,4 +27,7 @@
    <model package="com.dianping.cat.configuration.group" name="app-command-group-config">
       <sample-model>src/main/resources/config/app-command-group.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.configuration.business" name="business-report-config">
+      <sample-model>../cat-home/src/main/resources/config/business-report-config.xml</sample-model>
+   </model>
 </wizard>

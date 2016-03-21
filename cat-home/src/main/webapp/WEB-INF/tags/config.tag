@@ -86,6 +86,12 @@
 							<li id="storageGroupConfigUpdate"><a href="/cat/s/config?op=storageGroupConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>存储分组配置</a>
 								<b class="arrow"></b></li>
+							<li id="businessConfig"><a href="/cat/s/business?op=list">
+								<i class="menu-icon fa fa-caret-right"></i>业务监控配置</a>
+								<b class="arrow"></b></li>
+							<li id="businessTag"><a href="/cat/s/business?op=tagConfig">
+								<i class="menu-icon fa fa-caret-right"></i>业务标签配置</a>
+								<b class="arrow"></b></li>
 						</ul>
 					</li>
 					<li id="alert_config" class="hsub">

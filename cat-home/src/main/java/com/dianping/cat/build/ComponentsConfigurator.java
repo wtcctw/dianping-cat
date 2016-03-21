@@ -14,6 +14,7 @@ import org.unidal.lookup.configuration.Component;
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.alarm.UserDefineRuleDao;
 import com.dianping.cat.alarm.service.AlertService;
+import com.dianping.cat.alarm.spi.config.AlertConfigManager;
 import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppConnectionDataDao;
 import com.dianping.cat.app.AppSpeedDataDao;
@@ -30,6 +31,7 @@ import com.dianping.cat.config.web.WebSpeedDataTableProvider;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
+import com.dianping.cat.core.config.BusinessConfigDao;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.DailyReportContentDao;
 import com.dianping.cat.core.dal.DailyReportDao;
@@ -43,6 +45,8 @@ import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.alert.browser.JsRuleConfigManager;
 import com.dianping.cat.report.alert.business.BusinessRuleConfigManager;
+import com.dianping.cat.report.alert.business2.BusinessRuleConfigManager2;
+import com.dianping.cat.report.alert.config.BaseRuleHelper;
 import com.dianping.cat.report.alert.event.EventRuleConfigManager;
 import com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager;
 import com.dianping.cat.report.alert.heartbeat.HeartbeatRuleConfigManager;
@@ -157,7 +161,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
-		
+
 		all.add(C(TableProvider.class, "app-command-data", AppCommandTableProvider.class));
 		all.add(C(TableProvider.class, "app-command-data-daily", AppCmdDailyTableProvider.class));
 		all.add(C(TableProvider.class, "app-connection-data", AppConnectionTableProvider.class));
@@ -182,28 +186,34 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	private List<Component> defineConfigComponents() {
 		List<Component> all = new ArrayList<Component>();
 
+		all.add(C(BaseRuleHelper.class));
 		all.add(C(UserDefinedRuleManager.class).req(UserDefineRuleDao.class));
 		all.add(C(TopologyGraphConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ExceptionRuleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(DomainGroupConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(NetworkRuleConfigManager.class)
-		      .req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
+		all.add(C(NetworkRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
+		      BaseRuleHelper.class, ContentFetcher.class));
 		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class, MetricConfigManager.class,
-		      UserDefinedRuleManager.class, ContentFetcher.class));
-		all.add(C(AppRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
+		      UserDefinedRuleManager.class, BaseRuleHelper.class, ContentFetcher.class));
+		all.add(C(BusinessRuleConfigManager2.class).req(BusinessConfigDao.class));
+		all.add(C(AppRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, BaseRuleHelper.class,
+		      ContentFetcher.class));
 		all.add(C(TransactionRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
+		      BaseRuleHelper.class, ContentFetcher.class));
+		all.add(C(EventRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, BaseRuleHelper.class,
 		      ContentFetcher.class));
-		all.add(C(EventRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
 		all.add(C(HeartbeatRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
+		      BaseRuleHelper.class, ContentFetcher.class));
+		all.add(C(SystemRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, BaseRuleHelper.class,
 		      ContentFetcher.class));
-		all.add(C(SystemRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
 		all.add(C(StorageSQLRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
-		      ContentFetcher.class));
+		      BaseRuleHelper.class, ContentFetcher.class));
 		all.add(C(StorageGroupConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(StorageCacheRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
-		      ContentFetcher.class));
+		      BaseRuleHelper.class, ContentFetcher.class));
 		all.add(C(StorageRPCRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
-		      ContentFetcher.class));
+		      BaseRuleHelper.class, ContentFetcher.class));
+		all.add(C(AlertConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(JsRuleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class, ContentFetcher.class));

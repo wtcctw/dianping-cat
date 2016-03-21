@@ -131,6 +131,12 @@
 						<span class="menu-text">State</span>
 					</a>
 				</li>
+				<li id="Business_report" >
+					<a href="/cat/r/business?domain=${model.domain}&date=${model.date}">
+						<i class="menu-icon fa fa-bar-chart-o"></i>
+						<span class="menu-text">Business</span>
+					</a>
+				</li>
 				<li id="Offline_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-film"></i> <span class="menu-text">Offline</span>
 						<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
