@@ -8,17 +8,20 @@ import java.util.Map.Entry;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.matrix.model.entity.Matrix;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.entity.Ratio;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.report.ReportManager;
 
+@Named(type = MessageAnalyzer.class, value = MatrixAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implements LogEnabled {
 	public static final String ID = "matrix";
 

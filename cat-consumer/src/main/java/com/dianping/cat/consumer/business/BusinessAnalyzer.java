@@ -3,9 +3,11 @@ package com.dianping.cat.consumer.business;
 import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.config.business.BusinessConfigManager;
 import com.dianping.cat.config.business.ConfigItem;
 import com.dianping.cat.consumer.business.model.entity.BusinessItem;
@@ -15,9 +17,10 @@ import com.dianping.cat.consumer.config.ProductLineConfig;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.report.ReportManager;
 
+@Named(type = MessageAnalyzer.class, value = BusinessAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport> {
 	public static final String ID = "business";
 

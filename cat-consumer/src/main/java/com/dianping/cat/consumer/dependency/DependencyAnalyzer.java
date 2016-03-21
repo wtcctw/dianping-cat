@@ -8,8 +8,10 @@ import java.util.Set;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.DatabaseParser;
 import com.dianping.cat.consumer.DatabaseParser.Database;
@@ -24,6 +26,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportManager;
 
+@Named(type = MessageAnalyzer.class, value = DependencyAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport> implements LogEnabled {
 	public static final String ID = "dependency";
 
