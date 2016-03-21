@@ -40,39 +40,6 @@ public class BusinessTagConfigManager implements Initializable {
 		return m_tagConfig.findTag(id);
 	}
 
-	public boolean store(String xml) {
-		try {
-			m_tagConfig = DefaultSaxParser.parse(xml);
-
-			return storeConfig();
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
-		}
-	}
-
-	private boolean storeConfig() {
-		synchronized (this) {
-			try {
-				BusinessConfig config = m_configDao.createLocal();
-
-				config.setId(m_configId);
-				config.setKeyId(m_configId);
-				config.setName(TAG_CONFIG);
-				config.setContent(m_tagConfig.toString());
-				m_configDao.updateByPK(config, BusinessConfigEntity.UPDATESET_FULL);
-			} catch (Exception e) {
-				Cat.logError(e);
-				return false;
-			}
-		}
-		return true;
-	}
-
-	public BusinessTagConfig getConfig() {
-		return m_tagConfig;
-	}
-
 	public Map<String, Set<String>> findTagByDomain(String domain) {
 		Map<String, Set<String>> domainTags = new HashMap<String, Set<String>>();
 		Map<String, Tag> tags = m_tagConfig.getTags();
@@ -97,6 +64,10 @@ public class BusinessTagConfigManager implements Initializable {
 		return domainTags;
 	}
 
+	public BusinessTagConfig getConfig() {
+		return m_tagConfig;
+	}
+
 	@Override
 	public void initialize() throws InitializationException {
 		try {
@@ -110,16 +81,49 @@ public class BusinessTagConfigManager implements Initializable {
 				m_tagConfig = new BusinessTagConfig();
 
 				BusinessConfig config = m_configDao.createLocal();
+
 				config.setName(TAG_CONFIG);
 				config.setDomain(Constants.CAT);
 				config.setContent(m_tagConfig.toString());
 				config.setUpdatetime(new Date());
+				m_configDao.insert(config);
 
 				m_configId = config.getId();
 			}
+
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
+	}
+
+	public boolean store(String xml) {
+		try {
+			m_tagConfig = DefaultSaxParser.parse(xml);
+
+			return storeConfig();
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
+	private boolean storeConfig() {
+		synchronized (this) {
+			try {
+				BusinessConfig config = m_configDao.createLocal();
+
+				config.setId(m_configId);
+				config.setKeyId(m_configId);
+				config.setName(TAG_CONFIG);
+				config.setContent(m_tagConfig.toString());
+				config.setUpdatetime(new Date());
+				m_configDao.updateByPK(config, BusinessConfigEntity.UPDATESET_FULL);
+			} catch (Exception e) {
+				Cat.logError(e);
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

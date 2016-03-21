@@ -46,41 +46,40 @@ public class CatHomeModule extends AbstractModule {
 		}
 
 		if (serverConfigManager.isAlertMachine()) {
-			// BusinessAlert metricAlert = ctx.lookup(BusinessAlert.class);
-			// NetworkAlert networkAlert = ctx.lookup(NetworkAlert.class);
-			// DatabaseAlert databaseAlert = ctx.lookup(DatabaseAlert.class);
-			// SystemAlert systemAlert = ctx.lookup(SystemAlert.class);
-			// ExceptionAlert exceptionAlert = ctx.lookup(ExceptionAlert.class);
-			// HeartbeatAlert heartbeatAlert = ctx.lookup(HeartbeatAlert.class);
-			// ThirdPartyAlert thirdPartyAlert = ctx.lookup(ThirdPartyAlert.class);
-			// ThirdPartyAlertBuilder alertBuildingTask = ctx.lookup(ThirdPartyAlertBuilder.class);
-			// AppAlert appAlert = ctx.lookup(AppAlert.class);
-			// TransactionAlert transactionAlert = ctx.lookup(TransactionAlert.class);
-			// EventAlert eventAlert = ctx.lookup(EventAlert.class);
-			// StorageSQLAlert storageDatabaseAlert = ctx.lookup(StorageSQLAlert.class);
-			// StorageCacheAlert storageCacheAlert = ctx.lookup(StorageCacheAlert.class);
-			// StorageRPCAlert storageRpcAlert = ctx.lookup(StorageRPCAlert.class);
-			// JsAlert jsAlert = ctx.lookup(JsAlert.class);
-			// AjaxAlert ajaxAlert = ctx.lookup(AjaxAlert.class);
-			//
-			// Threads.forGroup("cat").start(networkAlert);
-			// Threads.forGroup("cat").start(databaseAlert);
-			// Threads.forGroup("cat").start(systemAlert);
-			// Threads.forGroup("cat").start(metricAlert);
-			// Threads.forGroup("cat").start(exceptionAlert);
-			// Threads.forGroup("cat").start(heartbeatAlert);
-			// Threads.forGroup("cat").start(thirdPartyAlert);
-			// Threads.forGroup("cat").start(alertBuildingTask);
-			// Threads.forGroup("cat").start(appAlert);
-			// Threads.forGroup("cat").start(transactionAlert);
-			// Threads.forGroup("cat").start(eventAlert);
-			// Threads.forGroup("cat").start(storageDatabaseAlert);
-			// Threads.forGroup("cat").start(storageCacheAlert);
-			// Threads.forGroup("cat").start(storageRpcAlert);
-			// Threads.forGroup("cat").start(jsAlert);
-			// Threads.forGroup("cat").start(ajaxAlert);
-
+			BusinessAlert metricAlert = ctx.lookup(BusinessAlert.class);
+			NetworkAlert networkAlert = ctx.lookup(NetworkAlert.class);
+			DatabaseAlert databaseAlert = ctx.lookup(DatabaseAlert.class);
+			SystemAlert systemAlert = ctx.lookup(SystemAlert.class);
+			ExceptionAlert exceptionAlert = ctx.lookup(ExceptionAlert.class);
+			HeartbeatAlert heartbeatAlert = ctx.lookup(HeartbeatAlert.class);
+			ThirdPartyAlert thirdPartyAlert = ctx.lookup(ThirdPartyAlert.class);
+			ThirdPartyAlertBuilder alertBuildingTask = ctx.lookup(ThirdPartyAlertBuilder.class);
+			AppAlert appAlert = ctx.lookup(AppAlert.class);
+			TransactionAlert transactionAlert = ctx.lookup(TransactionAlert.class);
+			EventAlert eventAlert = ctx.lookup(EventAlert.class);
+			StorageSQLAlert storageDatabaseAlert = ctx.lookup(StorageSQLAlert.class);
+			StorageCacheAlert storageCacheAlert = ctx.lookup(StorageCacheAlert.class);
+			StorageRPCAlert storageRpcAlert = ctx.lookup(StorageRPCAlert.class);
+			JsAlert jsAlert = ctx.lookup(JsAlert.class);
+			AjaxAlert ajaxAlert = ctx.lookup(AjaxAlert.class);
 			BusinessAlert2 businessAlert2 = ctx.lookup(BusinessAlert2.class);
+
+			Threads.forGroup("cat").start(networkAlert);
+			Threads.forGroup("cat").start(databaseAlert);
+			Threads.forGroup("cat").start(systemAlert);
+			Threads.forGroup("cat").start(metricAlert);
+			Threads.forGroup("cat").start(exceptionAlert);
+			Threads.forGroup("cat").start(heartbeatAlert);
+			Threads.forGroup("cat").start(thirdPartyAlert);
+			Threads.forGroup("cat").start(alertBuildingTask);
+			Threads.forGroup("cat").start(appAlert);
+			Threads.forGroup("cat").start(transactionAlert);
+			Threads.forGroup("cat").start(eventAlert);
+			Threads.forGroup("cat").start(storageDatabaseAlert);
+			Threads.forGroup("cat").start(storageCacheAlert);
+			Threads.forGroup("cat").start(storageRpcAlert);
+			Threads.forGroup("cat").start(jsAlert);
+			Threads.forGroup("cat").start(ajaxAlert);
 			Threads.forGroup("cat").start(businessAlert2);
 		}
 

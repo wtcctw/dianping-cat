@@ -15,6 +15,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.business.BusinessConfigManager;
 import com.dianping.cat.configuration.business.entity.BusinessItemConfig;
 import com.dianping.cat.configuration.business.entity.BusinessReportConfig;
+import com.dianping.cat.consumer.business.BusinessAnalyzer;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
@@ -53,7 +54,7 @@ public class BusinessAlert2 implements Task {
 	private AlertManager m_sendManager;
 
 	@Inject
-	private BusinessKeyHelper m_helper;
+	private BusinessKeyHelper m_keyHelper;
 
 	@Inject
 	private BaselineService m_baselineService;
@@ -129,24 +130,24 @@ public class BusinessAlert2 implements Task {
 	private List<DataCheckEntity> processBusinessItem(BusinessReportGroup reportGroup,
 	      Map<MetricType, List<Config>> alertConfig, BusinessItemConfig config, int minute, String domain) {
 		List<DataCheckEntity> results = new ArrayList<DataCheckEntity>();
-		String key = config.getId();
+		String id = config.getId();
 
 		if (config.isShowAvg()) {
-			String metricKey = m_helper.generateKey(key, domain, MetricType.AVG.getName());
+			String metricKey = m_keyHelper.generateKey(id, domain, MetricType.AVG.getName());
 			List<DataCheckEntity> tmpResults = processMetricType(minute, alertConfig.get(MetricType.AVG), reportGroup,
 			      metricKey, MetricType.AVG);
 
 			results.addAll(tmpResults);
 		}
 		if (config.isShowCount()) {
-			String metricKey = m_helper.generateKey(key, domain, MetricType.COUNT.getName());
+			String metricKey = m_keyHelper.generateKey(id, domain, MetricType.COUNT.getName());
 			List<DataCheckEntity> tmpResults = processMetricType(minute, alertConfig.get(MetricType.COUNT), reportGroup,
 			      metricKey, MetricType.COUNT);
 
 			results.addAll(tmpResults);
 		}
 		if (config.isShowSum()) {
-			String metricKey = m_helper.generateKey(key, domain, MetricType.SUM.getName());
+			String metricKey = m_keyHelper.generateKey(id, domain, MetricType.SUM.getName());
 			List<DataCheckEntity> tmpResults = processMetricType(minute, alertConfig.get(MetricType.SUM), reportGroup,
 			      metricKey, MetricType.SUM);
 
@@ -187,8 +188,8 @@ public class BusinessAlert2 implements Task {
 
 		if (conditionPair != null) {
 			int ruleMinute = conditionPair.getKey();
-			double[] value = reportGroup.extractData(minute, ruleMinute, metricKey, type);
-			double[] baseline = m_baselineService.queryBaseline(minute, ruleMinute, metricKey, type);
+			double[] value = reportGroup.extractData(minute, ruleMinute, m_keyHelper.getBusinessItemId(metricKey), type);
+			double[] baseline = m_baselineService.queryBaseline(minute, ruleMinute, metricKey, BusinessAnalyzer.ID);
 			List<Condition> conditions = conditionPair.getValue();
 
 			return m_dataChecker.checkData(value, baseline, conditions);
@@ -241,7 +242,7 @@ public class BusinessAlert2 implements Task {
 
 			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
 			      .setLevel(alertResult.getAlertLevel());
-			entity.setMetric(metricName).setType(getName()).setDomain(domain);
+			entity.setMetric(metricName).setType(getName()).setDomain(domain).setGroup(domain);
 			entity.setContactGroup(domain);
 			m_sendManager.addAlert(entity);
 		}
