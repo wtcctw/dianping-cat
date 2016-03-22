@@ -92,9 +92,9 @@ public class LocalBucket implements Bucket, BenchmarkEnabled {
 	}
 
 	@Override
-   public Benchmark getBechmark() {
+	public Benchmark getBechmark() {
 		return m_benchmark;
-   }
+	}
 
 	@Override
 	public void initialize(String domain, String ip, int hour) throws IOException {
@@ -513,7 +513,9 @@ public class LocalBucket implements Bucket, BenchmarkEnabled {
 						m_latestSegments.put(segmentId, segment);
 						m_maxSegmentId = segmentId;
 					} else {
-						Cat.logEvent("OldSegment", String.valueOf(segmentId) + ",max:" + String.valueOf(m_maxSegmentId));
+						int duration = (int) (m_maxSegmentId - segmentId);
+						Cat.logEvent("OldSegment", String.valueOf(duration), Event.SUCCESS, String.valueOf(segmentId)
+						      + ",max:" + String.valueOf(m_maxSegmentId));
 					}
 				}
 
