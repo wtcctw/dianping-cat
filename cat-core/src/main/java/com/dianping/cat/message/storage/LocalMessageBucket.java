@@ -156,7 +156,7 @@ public class LocalMessageBucket implements MessageBucket {
 					return null;
 				}
 			} finally {
-				buf.release();
+				// buf.release();
 			}
 		}
 	}
