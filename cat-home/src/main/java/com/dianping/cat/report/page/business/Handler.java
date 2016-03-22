@@ -82,9 +82,9 @@ public class Handler implements PageHandler<Context> {
 		String name = payload.getName();
 
 		if (type == Type.Tag) {
-			allCharts = m_graphCreator.buildDashboardByTag(start, end, name);
+			allCharts = m_graphCreator.buildGraphByTag(start, end, name);
 		} else {
-			allCharts = m_graphCreator.buildDashboardByDomain(start, end, name);
+			allCharts = m_graphCreator.buildGraphByDomain(start, end, name);
 		}
 
 		return allCharts;
