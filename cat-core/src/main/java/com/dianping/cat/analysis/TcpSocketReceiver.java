@@ -137,6 +137,7 @@ public final class TcpSocketReceiver implements LogEnabled {
 			try {
 				if (length > 0) {
 					ByteBuf readBytes = buffer.readBytes(length + 4);
+					
 					readBytes.markReaderIndex();
 					readBytes.readInt();
 
