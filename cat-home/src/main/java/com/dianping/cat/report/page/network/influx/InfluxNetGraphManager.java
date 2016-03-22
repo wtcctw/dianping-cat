@@ -70,14 +70,7 @@ public class InfluxNetGraphManager implements Initializable, LogEnabled {
 		List<Pair<String, String>> netGraphData = new ArrayList<Pair<String, String>>();
 		long startTime = start.getTime();
 		long current = startTime + TimeHelper.ONE_MINUTE * minute;
-		System.out.println("current: " + new Date(current));
 		NetGraph graph = m_netGraphs.get(current);
-
-		for (Long key : m_netGraphs.keySet()) {
-			System.out.println(new Date(key));
-		}
-
-		System.out.println("graph: " + graph);
 
 		if (graph == null) {
 			graph = buildGraph(new Date(current));
