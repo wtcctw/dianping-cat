@@ -13,8 +13,6 @@ import com.dianping.cat.config.business.ConfigItem;
 import com.dianping.cat.consumer.business.model.entity.BusinessItem;
 import com.dianping.cat.consumer.business.model.entity.BusinessReport;
 import com.dianping.cat.consumer.business.model.entity.Segment;
-import com.dianping.cat.consumer.config.ProductLineConfig;
-import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
@@ -29,9 +27,6 @@ public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport> {
 
 	@Inject
 	private BusinessConfigManager m_configManager;
-
-	@Inject
-	private ProductLineConfigManager m_productLineConfigManager;
 
 	@Override
 	public ReportManager<BusinessReport> getReportManager() {
@@ -73,30 +68,28 @@ public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport> {
 		String name = metric.getName();
 		String data = (String) metric.getData();
 		String status = metric.getStatus();
-		ProductLineConfig productLine = m_productLineConfigManager.queryProductLineConfig(metric.getType());
 
-		if (ProductLineConfig.METRIC.equals(productLine)) {
-			ConfigItem config = parseValue(status, data);
+		ConfigItem config = parseValue(status, data);
 
-			if (config != null) {
-				long current = metric.getTimestamp() / 1000 / 60;
-				int min = (int) (current % 60);
-				BusinessItem businessItem = report.findOrCreateBusinessItem(name);
-				Segment seg = businessItem.findOrCreateSegment(min);
+		if (config != null) {
+			long current = metric.getTimestamp() / 1000 / 60;
+			int min = (int) (current % 60);
+			BusinessItem businessItem = report.findOrCreateBusinessItem(name);
+			Segment seg = businessItem.findOrCreateSegment(min);
 
-				businessItem.setType(status);
-				seg.setCount(seg.getCount() + config.getCount());
-				seg.setSum(seg.getSum() + config.getValue());
-				seg.setAvg(seg.getSum() / seg.getCount());
+			businessItem.setType(status);
 
-				config.setTitle(name);
+			seg.incCount(config.getCount());
+			seg.incSum(config.getValue());
+			seg.setAvg(seg.getSum() / seg.getCount());
 
-				boolean result = m_configManager.insertBusinessConfigIfNotExist(domain, name, config);
+			config.setTitle(name);
 
-				if (!result) {
-					m_logger.error(String.format("error when insert metric config info, domain %s, metricName %s", domain,
-					      name));
-				}
+			boolean result = m_configManager.insertBusinessConfigIfNotExist(domain, name, config);
+
+			if (!result) {
+				m_logger.error(String
+				      .format("error when insert metric config info, domain %s, metricName %s", domain, name));
 			}
 		}
 	}

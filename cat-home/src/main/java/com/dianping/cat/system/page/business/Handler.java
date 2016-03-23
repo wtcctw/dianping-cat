@@ -1,6 +1,10 @@
 package com.dianping.cat.system.page.business;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,9 +29,10 @@ import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
+import org.unidal.web.mvc.annotation.PreInboundActionMeta;
 
 public class Handler implements PageHandler<Context> {
-	
+
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -50,6 +55,7 @@ public class Handler implements PageHandler<Context> {
 	protected RuleFTLDecorator m_ruleDecorator;
 
 	@Override
+	@PreInboundActionMeta("login")
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "business")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
@@ -57,6 +63,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	@Override
+	@PreInboundActionMeta("login")
 	@OutboundActionMeta(name = "business")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
@@ -88,7 +95,7 @@ public class Handler implements PageHandler<Context> {
 		case DELETE:
 			String key = payload.getKey();
 
-			m_configManager.deleteConfig(domain, key);
+			m_configManager.deleteBusinessItem(domain, key);
 			listConfigs(domain, model);
 			break;
 		case TagConfig:
@@ -118,36 +125,43 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		String key = payload.getKey();
 		String configs = payload.getContent();
-		String attributes = payload.getAttribtues();
+		String type = payload.getAttributes();
 
-		m_alertConfigManager.updateRule(domain, key, configs, attributes);
+		m_alertConfigManager.updateRule(domain, key, configs, type);
 	}
+
 
 	private void alertRuleAdd(Payload payload, Model model) {
 		String ruleId = "";
 		String configsStr = "";
 		String key = payload.getKey();
 		String domain = payload.getDomain();
-		Rule rule = m_alertConfigManager.queryRule(domain, key);
-		String attributes = null;
+		String type = payload.getAttributes();
+		Rule rule = m_alertConfigManager.queryRule(domain, key, type);
 
 		if (rule != null) {
 			ruleId = rule.getId();
-			attributes = StringUtils.join(rule.getDynamicAttributes().keySet(), ";");
 			configsStr = new DefaultJsonBuilder(true).buildArray(rule.getConfigs());
 		}
 		String content = m_ruleDecorator.generateConfigsHtml(configsStr);
 
 		model.setId(ruleId);
-		model.setAttributes(attributes);
 		model.setContent(content);
 	}
 
 	private void listConfigs(String domain, Model model) {
 		BusinessReportConfig config = m_configManager.queryConfigByDomain(domain);
 		Map<String, Set<String>> tags = m_tagConfigManger.findTagByDomain(domain);
+		List<BusinessItemConfig> configs = new ArrayList<BusinessItemConfig>(config.getBusinessItemConfigs().values());
 
-		model.setConfig(config);
+		Collections.sort(configs, new Comparator<BusinessItemConfig>() {
+
+			@Override
+			public int compare(BusinessItemConfig m1, BusinessItemConfig m2) {
+				return (int) ((m1.getViewOrder() - m2.getViewOrder()) * 100);
+			}
+		});
+		model.setConfigs(configs);
 		model.setTags(tags);
 	}
 

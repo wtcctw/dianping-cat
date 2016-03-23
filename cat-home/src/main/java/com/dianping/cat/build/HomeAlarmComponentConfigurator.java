@@ -134,8 +134,7 @@ public class HomeAlarmComponentConfigurator extends AbstractResourceConfigurator
 		all.add(C(BusinessReportGroupService.class).req(ModelService.class, BusinessAnalyzer.ID));
 		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
-		all.add(C(Contactor.class, BusinessContactor2.ID, BusinessContactor2.class).req(ProjectService.class,
-		      AlertConfigManager.class));
+		all.add(C(Contactor.class, BusinessContactor2.ID, BusinessContactor2.class).req(AlertConfigManager.class));
 
 		all.add(C(Contactor.class, NetworkContactor.ID, NetworkContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
