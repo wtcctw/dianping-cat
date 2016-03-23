@@ -182,21 +182,27 @@ public class BusinessConfigManager extends ContainerHolder implements Initializa
 	}
 
 	public BusinessReportConfig queryConfigByDomain(String domain) {
+		BusinessReportConfig businessReportConfig = null;
+
 		try {
 			if (m_alertMachine) {
-				return m_configs.get(domain);
+				businessReportConfig = m_configs.get(domain);
 			} else {
 				BusinessConfig config = m_configDao
 				      .findByNameDomain(BASE_CONFIG, domain, BusinessConfigEntity.READSET_FULL);
 
-				return DefaultSaxParser.parse(config.getContent());
+				businessReportConfig = DefaultSaxParser.parse(config.getContent());
 			}
 		} catch (DalNotFoundException notFound) {
 			// Ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return new BusinessReportConfig();
+
+		if (businessReportConfig == null) {
+			businessReportConfig = new BusinessReportConfig();
+		}
+		return businessReportConfig;
 	}
 
 	public boolean updateConfigByDomain(BusinessReportConfig config) {
