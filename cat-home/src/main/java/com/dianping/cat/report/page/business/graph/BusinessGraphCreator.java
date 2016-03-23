@@ -1,5 +1,8 @@
 package com.dianping.cat.report.page.business.graph;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +20,7 @@ import com.dianping.cat.alarm.spi.AlertEntity;
 import com.dianping.cat.config.business.BusinessConfigManager;
 import com.dianping.cat.configuration.business.entity.BusinessItemConfig;
 import com.dianping.cat.configuration.business.entity.BusinessReportConfig;
+import com.dianping.cat.configuration.business.entity.CustomConfig;
 import com.dianping.cat.consumer.business.BusinessAnalyzer;
 import com.dianping.cat.consumer.business.model.entity.BusinessReport;
 import com.dianping.cat.core.dal.Project;
@@ -52,13 +56,17 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 	@Inject
 	private BusinessKeyHelper m_keyHelper;
 
-	public Map<String, LineChart> buildDashboardByTag(Date start, Date end, String tag) {
+	@Inject
+	private CustomDataCalculator m_customDataCalculator;
+
+	public Map<String, LineChart> buildGraphByTag(Date start, Date end, String tag) {
 		Tag tagConfig = m_tagManager.findTag(tag);
 
 		if (tagConfig != null) {
 			List<BusinessItem> items = tagConfig.getBusinessItems();
-			Map<String, LineChart> allCharts = new LinkedHashMap<String, LineChart>();
-			Map<String, LineChart> result = new LinkedHashMap<String, LineChart>();
+			Map<String, double[]> all = new LinkedHashMap<String, double[]>();
+			Map<String, double[]> needed = new LinkedHashMap<String, double[]>();
+			Map<String, BusinessReportConfig> configs = new HashMap<String, BusinessReportConfig>();
 			Set<String> domains = new HashSet<String>();
 
 			for (BusinessItem item : items) {
@@ -66,41 +74,55 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 			}
 
 			for (String domain : domains) {
-				allCharts.putAll(buildDashboardByDomain(start, end, domain));
+				BusinessReportConfig config = m_configManager.queryConfigByDomain(domain);
+
+				if (config != null) {
+					Map<String, double[]> datas = prepareDataByDomain(start, end, domain, config);
+
+					all.putAll(datas);
+					configs.put(domain, config);
+				}
 			}
 
 			for (BusinessItem item : items) {
 				String domain = item.getDomain();
-				String key = item.getId();
+				String key = item.getItemId();
 
 				for (MetricType metricType : MetricType.values()) {
 					String id = m_keyHelper.generateKey(key, domain, metricType.getName());
-					put(allCharts, result, id);
+					double[] data = all.get(id);
+
+					if (data != null) {
+						needed.put(id, data);
+					}
 				}
 			}
 
-			return result;
+			return buildChartData(needed, start, end, configs);
 		} else {
 			return new HashMap<String, LineChart>();
 		}
 	}
 
-	public Map<String, LineChart> buildDashboardByDomain(Date start, Date end, String domain) {
+	public Map<String, LineChart> buildGraphByDomain(Date start, Date end, String domain) {
+		Map<String, BusinessReportConfig> configs = new HashMap<String, BusinessReportConfig>();
 		BusinessReportConfig config = m_configManager.queryConfigByDomain(domain);
 
 		if (config != null) {
-			Map<String, double[]> oldCurrentValues = prepareAllData(start, end, domain, config);
-			Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
-			Map<String, double[]> dataWithOutFutures = removeFutureData(end, allCurrentValues);
+			Map<String, double[]> datas = prepareDataByDomain(start, end, domain, config);
 
-			return buildChartData(domain, oldCurrentValues, start, end, dataWithOutFutures, config);
+			configs.put(domain, config);
+			return buildChartData(datas, start, end, configs);
 		} else {
 			return new HashMap<String, LineChart>();
 		}
 	}
 
-	private Map<String, LineChart> buildChartData(String domain, final Map<String, double[]> datas, Date start,
-	      Date end, Map<String, double[]> dataWithOutFutures, BusinessReportConfig config) {
+	private Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date start, Date end,
+	      Map<String, BusinessReportConfig> configs) {
+		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(datas);
+		Map<String, double[]> dataWithOutFutures = removeFutureData(end, allCurrentValues);
+
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
 		List<AlertEntity> alertKeys = m_alertManager.queryLastestAlarmKey(5);
 		int step = m_dataExtractor.getStep();
@@ -109,6 +131,8 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 			String key = entry.getKey();
 			double[] value = entry.getValue();
 			LineChart lineChart = new LineChart();
+			String domain = m_keyHelper.getDomain(key);
+			BusinessReportConfig config = configs.get(domain);
 
 			buildLineChartTitle(alertKeys, lineChart, key, config);
 			lineChart.setStart(start);
@@ -126,7 +150,8 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 		return charts;
 	}
 
-	private Map<String, double[]> prepareAllData(Date startDate, Date endDate, String domain, BusinessReportConfig config) {
+	private Map<String, double[]> prepareDataByDomain(Date startDate, Date endDate, String domain,
+	      BusinessReportConfig config) {
 		long start = startDate.getTime(), end = endDate.getTime();
 		int totalSize = (int) ((end - start) / TimeHelper.ONE_MINUTE);
 		Map<String, double[]> oldCurrentValues = new LinkedHashMap<String, double[]>();
@@ -146,8 +171,17 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
 		Map<String, double[]> datas = m_dataFetcher.buildGraphData(report);
 		Map<String, BusinessItemConfig> businessItemConfigs = config.getBusinessItemConfigs();
+		List<BusinessItemConfig> items = new ArrayList<BusinessItemConfig>(businessItemConfigs.values());
 
-		for (BusinessItemConfig itemConfig : businessItemConfigs.values()) {
+		Collections.sort(items, new Comparator<BusinessItemConfig>() {
+
+			@Override
+			public int compare(BusinessItemConfig m1, BusinessItemConfig m2) {
+				return (int) ((m1.getViewOrder() - m2.getViewOrder()) * 100);
+			}
+		});
+
+		for (BusinessItemConfig itemConfig : items) {
 			String key = itemConfig.getId();
 
 			if (itemConfig.getShowAvg()) {
@@ -164,7 +198,13 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 			}
 		}
 
-		// TODO: config.getCustomConfigs()
+		Map<String, CustomConfig> customConfigs = config.getCustomConfigs();
+
+		for (CustomConfig customConfig : customConfigs.values()) {
+			String key = m_keyHelper.generateKey(customConfig.getId(), report.getDomain(), MetricType.AVG.name());
+			double[] value = m_customDataCalculator.calculate(customConfig.getPattern(), datas);
+			values.put(key, value);
+		}
 
 		return values;
 	}
@@ -198,7 +238,6 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 				return true;
 			}
 		}
-
 		return false;
 	}
 

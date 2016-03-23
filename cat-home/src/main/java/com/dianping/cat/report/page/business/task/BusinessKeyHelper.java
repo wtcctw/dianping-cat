@@ -17,7 +17,7 @@ public class BusinessKeyHelper {
 	public String getDomain(String key) {
 		int first = key.indexOf(SPLITTER);
 		int last = key.lastIndexOf(SPLITTER);
-		return key.substring(first, last - 1);
+		return key.substring(first+1, last);
 	}
 
 	public String generateKey(String id, String domain, String type) {

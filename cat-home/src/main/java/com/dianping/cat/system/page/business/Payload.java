@@ -25,7 +25,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	private String m_content;
 
 	@FieldMeta("attributes")
-	private String m_attribtues;
+	private String m_attributes;
 
 	@ObjectMeta("businessItemConfig")
 	private BusinessItemConfig m_businessItemConfig = new BusinessItemConfig();
@@ -61,12 +61,12 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_domain = domain;
 	}
 
-	public String getAttribtues() {
-		return m_attribtues;
+	public String getAttributes() {
+		return m_attributes;
 	}
 
-	public void setAttribtues(String attribtues) {
-		m_attribtues = attribtues;
+	public void setAttributes(String attributes) {
+		m_attributes = attributes;
 	}
 
 	public String getContent() {

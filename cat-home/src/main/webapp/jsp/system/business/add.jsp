@@ -41,7 +41,7 @@
 				<tr>
 					<td  style="text-align:right" class="text-success">显示标题</td>
 					<td ><input name="businessItemConfig.title" value="${model.businessItemConfig.title}" required/></td>
-					<td  style="text-align:right" class="text-success">产品线内显示顺序（数字）</td>
+					<td  style="text-align:right" class="text-success">显示顺序（数字）</td>
 					<td ><input  name="businessItemConfig.viewOrder" value="${model.businessItemConfig.viewOrder}" required/></td>
 				</tr>
 				<tr>

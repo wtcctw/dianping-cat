@@ -9,11 +9,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.codehaus.plexus.util.StringUtils;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.business.entity.BusinessItemConfig;
 import com.dianping.cat.configuration.business.entity.BusinessReportConfig;
 import com.dianping.cat.configuration.business.transform.DefaultSaxParser;
@@ -23,14 +27,22 @@ import com.dianping.cat.core.config.BusinessConfigEntity;
 import com.dianping.cat.task.ConfigSyncTask;
 import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
-public class BusinessConfigManager implements Initializable {
+public class BusinessConfigManager extends ContainerHolder implements Initializable {
+
+	private static final String MYSQL = "mysql_";
+
+	private static final String SYSTEM = "system_";
 
 	@Inject
 	private BusinessConfigDao m_configDao;
 
 	private Map<String, Set<String>> m_domains = new ConcurrentHashMap<String, Set<String>>();
 
+	private Map<String, BusinessReportConfig> m_configs = new ConcurrentHashMap<String, BusinessReportConfig>();
+
 	public final static String BASE_CONFIG = "base";
+
+	private boolean m_alertMachine;
 
 	private BusinessItemConfig buildBusinessItemConfig(String key, ConfigItem item) {
 		BusinessItemConfig config = new BusinessItemConfig();
@@ -44,7 +56,7 @@ public class BusinessConfigManager implements Initializable {
 		return config;
 	}
 
-	public boolean deleteConfig(String domain, String key) {
+	public boolean deleteBusinessItem(String domain, String key) {
 		try {
 			BusinessConfig config = m_configDao.findByNameDomain(BASE_CONFIG, domain, BusinessConfigEntity.READSET_FULL);
 			BusinessReportConfig businessReportConfig = DefaultSaxParser.parse(config.getContent());
@@ -52,11 +64,12 @@ public class BusinessConfigManager implements Initializable {
 			businessReportConfig.removeBusinessItemConfig(key);
 			config.setContent(businessReportConfig.toString());
 			config.setUpdatetime(new Date());
-
 			m_configDao.updateByPK(config, BusinessConfigEntity.UPDATESET_FULL);
 
 			Set<String> itemIds = m_domains.get(domain);
+
 			itemIds.remove(key);
+			cacheConfigs(businessReportConfig, domain);
 		} catch (Exception e) {
 			Cat.logError(e);
 			return false;
@@ -66,6 +79,9 @@ public class BusinessConfigManager implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
+		ServerConfigManager serverConfigManager = lookup(ServerConfigManager.class);
+		m_alertMachine = serverConfigManager.isAlertMachine();
+
 		loadData();
 
 		ConfigSyncTask.getInstance().register(new SyncHandler() {
@@ -95,12 +111,20 @@ public class BusinessConfigManager implements Initializable {
 
 					domains.put(domain, itemIds);
 					m_domains = domains;
+
+					cacheConfigs(businessReportConfig, domain);
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
+		}
+	}
+
+	private void cacheConfigs(BusinessReportConfig businessReportConfig, String domain) {
+		if (m_alertMachine) {
+			m_configs.put(domain, businessReportConfig);
 		}
 	}
 
@@ -123,21 +147,22 @@ public class BusinessConfigManager implements Initializable {
 				Set<String> itemIds = new HashSet<String>();
 				itemIds.add(key);
 				m_domains.put(domain, itemIds);
+				cacheConfigs(config, domain);
 			} else {
 				Set<String> itemIds = m_domains.get(domain);
 
-				if (!itemIds.contains(key)) {
+				if (!itemIds.contains(key) && !filter(domain, key)) {
 					BusinessConfig businessConfig = m_configDao.findByNameDomain(BASE_CONFIG, domain,
 					      BusinessConfigEntity.READSET_FULL);
-
 					BusinessReportConfig config = DefaultSaxParser.parse(businessConfig.getContent());
 					BusinessItemConfig businessItemConfig = buildBusinessItemConfig(key, item);
-					config.addBusinessItemConfig(businessItemConfig);
 
+					config.addBusinessItemConfig(businessItemConfig);
 					businessConfig.setContent(config.toString());
 					m_configDao.updateByPK(businessConfig, BusinessConfigEntity.UPDATESET_FULL);
 
 					itemIds.add(key);
+					cacheConfigs(config, domain);
 				}
 			}
 
@@ -148,28 +173,49 @@ public class BusinessConfigManager implements Initializable {
 		return false;
 	}
 
-	public BusinessReportConfig queryConfigByDomain(String domain) {
-		try {
-			BusinessConfig config = m_configDao.findByNameDomain(BASE_CONFIG, domain, BusinessConfigEntity.READSET_FULL);
+	private boolean filter(String domain, String key) {
+		if (Constants.CAT.equalsIgnoreCase(domain) && StringUtils.isNotBlank(key)
+		      && (key.startsWith(SYSTEM) || key.startsWith(MYSQL))) {
+			return true;
+		}
+		return false;
+	}
 
-			return DefaultSaxParser.parse(config.getContent());
+	public BusinessReportConfig queryConfigByDomain(String domain) {
+		BusinessReportConfig businessReportConfig = null;
+
+		try {
+			if (m_alertMachine) {
+				businessReportConfig = m_configs.get(domain);
+			} else {
+				BusinessConfig config = m_configDao
+				      .findByNameDomain(BASE_CONFIG, domain, BusinessConfigEntity.READSET_FULL);
+
+				businessReportConfig = DefaultSaxParser.parse(config.getContent());
+			}
 		} catch (DalNotFoundException notFound) {
 			// Ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return new BusinessReportConfig();
+
+		if (businessReportConfig == null) {
+			businessReportConfig = new BusinessReportConfig();
+		}
+		return businessReportConfig;
 	}
 
 	public boolean updateConfigByDomain(BusinessReportConfig config) {
 		BusinessConfig proto = m_configDao.createLocal();
+		String domain = config.getId();
 
-		proto.setDomain(config.getId());
+		proto.setDomain(domain);
 		proto.setName(BASE_CONFIG);
 		proto.setContent(config.toString());
 
 		try {
 			m_configDao.updateBaseConfigByDomain(proto, BusinessConfigEntity.UPDATESET_FULL);
+			cacheConfigs(config, domain);
 			return true;
 		} catch (DalException e) {
 			Cat.logError(e);

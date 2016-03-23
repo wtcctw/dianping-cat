@@ -790,9 +790,6 @@
 					<role>com.dianping.cat.config.business.BusinessConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>

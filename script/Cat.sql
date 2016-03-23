@@ -487,6 +487,17 @@ CREATE TABLE `server_alarm_rule` (
   KEY `updatetime` (`updatetime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统告警的配置';
 
+CREATE TABLE `business_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL DEFAULT '' COMMENT '配置名称',
+  `domain` varchar(50) NOT NULL DEFAULT '' COMMENT '项目',
+  `content` longtext COMMENT '配置内容',
+  `updatetime` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `updatetime` (`updatetime`),
+  KEY `name_domain` (`name`,`domain`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `crash_log` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `app_name` varchar(100) NOT NULL DEFAULT '' COMMENT 'app名称',
