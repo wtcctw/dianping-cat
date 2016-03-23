@@ -2658,9 +2658,6 @@
 			<implementation>com.dianping.cat.report.alert.business2.BusinessContactor2</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.alarm.spi.config.AlertConfigManager</role>
 				</requirement>
 			</requirements>
@@ -6215,6 +6212,9 @@
 					<role>com.dianping.cat.report.page.business.task.BusinessKeyHelper</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.business.graph.CustomDataCalculator</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.metric.service.BaselineService</role>
 				</requirement>
 				<requirement>
@@ -6320,6 +6320,10 @@
 					<role>com.dianping.cat.core.config.BusinessConfigDao</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.business.graph.CustomDataCalculator</role>
+			<implementation>com.dianping.cat.report.page.business.graph.CustomDataCalculator</implementation>
 		</component>
 		<component>
 			<role>org.unidal.web.mvc.Module</role>

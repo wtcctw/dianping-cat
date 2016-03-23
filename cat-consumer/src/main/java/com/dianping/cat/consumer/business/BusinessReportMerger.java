@@ -12,8 +12,8 @@ public class BusinessReportMerger extends DefaultMerger {
 
 	@Override
 	protected void mergeSegment(Segment old, Segment segment) {
-		old.setCount(old.getCount() + segment.getCount());
-		old.setSum(old.getSum() + segment.getSum());
+		old.incCount(segment.getCount());
+		old.incSum(segment.getSum());
 
 		if (old.getCount() > 0) {
 			old.setAvg(old.getSum() / old.getCount());

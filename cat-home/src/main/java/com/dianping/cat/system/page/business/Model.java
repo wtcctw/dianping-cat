@@ -1,10 +1,10 @@
 package com.dianping.cat.system.page.business;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.dianping.cat.configuration.business.entity.BusinessItemConfig;
-import com.dianping.cat.configuration.business.entity.BusinessReportConfig;
 import com.dianping.cat.system.SystemPage;
 
 import org.unidal.web.mvc.ViewModel;
@@ -23,7 +23,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private Map<String, Set<String>> m_tags;
 
-	private BusinessReportConfig m_config;
+	private List<BusinessItemConfig> m_configs;
 
 	private BusinessItemConfig m_businessItemConfig;
 
@@ -86,12 +86,12 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_domains = domains;
 	}
 
-	public BusinessReportConfig getConfig() {
-		return m_config;
+	public List<BusinessItemConfig> getConfigs() {
+		return m_configs;
 	}
 
-	public void setConfig(BusinessReportConfig config) {
-		m_config = config;
+	public void setConfigs(List<BusinessItemConfig> configs) {
+		m_configs = configs;
 	}
 
 	public Map<String, Set<String>> getTags() {

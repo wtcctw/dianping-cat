@@ -13,7 +13,7 @@ public class ConfigItem {
 
 	private String m_title;
 	
-	private double viewOrder = 0;
+	private double viewOrder = 1;
 	
 	public int getCount() {
 		return m_count;

@@ -53,28 +53,37 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		m_type = type;
 	}
 
-	public Date getHistoryEndDate() {
-		try {
-			if (m_customEnd != null && m_customEnd.length() > 0) {
-				return m_format.parse(m_customEnd);
-			} else {
-				return TimeHelper.getCurrentHour(1);
-			}
-		} catch (Exception e) {
-			return TimeHelper.getCurrentHour(1);
-		}
-	}
-
-	public Date getHistoryStartDate() {
+	public Date getStartDate() {
+		Date start = null;
 		try {
 			if (m_customStart != null && m_customStart.length() > 0) {
-
-				return m_format.parse(m_customStart);
+				start = m_format.parse(m_customStart);
 			} else {
-				return TimeHelper.getCurrentHour(-3);
+				start = TimeHelper.getCurrentHour(-3);
 			}
+			return buildDate(start);
 		} catch (Exception e) {
-			return TimeHelper.getCurrentHour(-2);
+			return TimeHelper.getCurrentHour(-3);
+		}
+
+	}
+
+	private Date buildDate(Date date) {
+		long time = date.getTime();
+		return new Date(time - time % TimeHelper.ONE_HOUR);
+	}
+
+	public Date getEndDate() {
+		Date end = null;
+		try {
+			if (m_customEnd != null && m_customEnd.length() > 0) {
+				end = m_format.parse(m_customEnd);
+			} else {
+				end = TimeHelper.getCurrentHour(1);
+			}
+			return buildDate(end);
+		} catch (Exception e) {
+			return TimeHelper.getCurrentHour(1);
 		}
 	}
 
