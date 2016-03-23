@@ -26,7 +26,7 @@
 						<li id="dashbord_metric"><a href="/cat/r/metric?op=dashboard&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>业务大盘</a>
 							<b class="arrow"></b></li>
-						<li id="dashbord_network"><a href="/cat/r/network?op=dashboard&domain=${model.domain}">
+						<li id="dashbord_network"><a href="/cat/r/network?op=view&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>网络大盘</a>
 							<b class="arrow"></b></li>
 						<li id="dashbord_rpc"><a href="/cat/r/storage?op=dashboard&domain=${model.domain}&type=RPC">
