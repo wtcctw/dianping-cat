@@ -10,6 +10,7 @@ import com.dianping.cat.report.alert.app.AppAlert;
 import com.dianping.cat.report.alert.browser.AjaxAlert;
 import com.dianping.cat.report.alert.browser.JsAlert;
 import com.dianping.cat.report.alert.business.BusinessAlert;
+import com.dianping.cat.report.alert.business2.BusinessAlert2;
 import com.dianping.cat.report.alert.database.DatabaseAlert;
 import com.dianping.cat.report.alert.event.EventAlert;
 import com.dianping.cat.report.alert.exception.ExceptionAlert;
@@ -33,6 +34,7 @@ public class AlarmManager extends ContainerHolder {
 		}
 
 		BusinessAlert metricAlert = lookup(BusinessAlert.class);
+		BusinessAlert2 businessAlert = lookup(BusinessAlert2.class);
 		NetworkAlert networkAlert = lookup(NetworkAlert.class);
 		DatabaseAlert databaseAlert = lookup(DatabaseAlert.class);
 		SystemAlert systemAlert = lookup(SystemAlert.class);
@@ -49,6 +51,7 @@ public class AlarmManager extends ContainerHolder {
 		JsAlert jsAlert = lookup(JsAlert.class);
 		AjaxAlert ajaxAlert = lookup(AjaxAlert.class);
 
+		Threads.forGroup("cat").start(businessAlert);
 		Threads.forGroup("cat").start(networkAlert);
 		Threads.forGroup("cat").start(databaseAlert);
 		Threads.forGroup("cat").start(systemAlert);

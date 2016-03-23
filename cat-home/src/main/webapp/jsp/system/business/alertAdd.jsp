@@ -27,11 +27,11 @@
 					</h4>
 					<div id="metricItem" class="metric config">
 						监控类型： <label class="checkbox inline"> <input name="metricType" value="COUNT"
-							id="count" type="checkbox">count
-						</label> <label class="checkbox inline"> <input name="metricType" value="SUM"
-							id="sum" type="checkbox">sum
+							id="COUNT" type="radio">count
 						</label> <label class="checkbox inline"> <input name="metricType" value="AVG"
-							id="avg" type="checkbox">avg
+							id="AVG" type="radio">avg
+						</label> <label class="checkbox inline"> <input name="metricType" value="SUM"
+							id="SUM" type="radio">sum
 						</label>
 					</div>
 				</div>
@@ -39,43 +39,24 @@
 				<div style='text-align: center'>
 					<input class="btn btn-primary btn-sm" id="ruleSubmitButton" type="text"
 						name="submit" value="提交">
-					</button>
 				</div>
 			</form>
 	
 	<script type="text/javascript">
-		function drawMetricItems(attributes) {
-		    if (attributes == undefined || attributes == "") {
-	            return;
-	        }
-		    
-		    var strs= new Array(); 
-		    strs=attributes.split(";"); 
-		    for (i=0; i<strs.length; i++) { 
-		    	document.getElementById(strs[i].toLowerCase()).checked= true;
-		    } 
-	    }
-		
 		$(document).ready(function() {
 			initRuleConfigs();
 			$('#application_config').addClass('active open');
 			$('#businessConfig').addClass('active');
-			var newMetric = $('#metricItem').clone();
+			var attributes = '${payload.attributes}';
 			
-			var attributes = '${model.attributes}';
-			drawMetricItems(attributes);
+			if (attributes != null && attributes != '') {
+				document.getElementById(attributes).checked = true;
+			}
 			
 			$(document).delegate("#ruleSubmitButton","click",function(){
 				var domain = '${payload.domain}';
 				var key = '${payload.key}';
-				var metrics = '';
-				var obj = document.getElementsByName('metricType'); 
-				
-				for(var i=0; i<obj.length; i++) {
-					if(obj[i].checked){
-						metrics += obj[i].value + ";"
-					}
-				}
+				var metrics = $('input:radio[name="metricType"]:checked').val(); 
 				
 				var configStr = generateConfigsJsonString();
 			    window.location.href = "?op=alertRuleAddSubmit&content=" + configStr + "&key=" + key +"&attributes=" + metrics + "&domain="+domain;

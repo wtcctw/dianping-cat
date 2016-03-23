@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
-import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
@@ -53,12 +52,8 @@ public class Handler implements PageHandler<Context> {
 
 		normalize(model, payload);
 
-		long start = payload.getHistoryStartDate().getTime();
-		long end = payload.getHistoryEndDate().getTime();
-		start = start - start % TimeHelper.ONE_HOUR;
-		end = end - end % TimeHelper.ONE_HOUR;
-		Date startDate = new Date(start);
-		Date endDate = new Date(end);
+		Date startDate = payload.getStartDate();
+		Date endDate = payload.getEndDate();
 
 		model.setStartTime(startDate);
 		model.setEndTime(endDate);
@@ -78,7 +73,7 @@ public class Handler implements PageHandler<Context> {
 	private Map<String, LineChart> buildLineCharts(Payload payload, Date start, Date end) {
 		Map<String, LineChart> allCharts = null;
 		Type type = Type.getType(payload.getType(), Type.Domain);
-		
+
 		String name = payload.getName();
 
 		if (type == Type.Tag) {

@@ -9,7 +9,7 @@
   </entity>
   <entity name="business-item">
     <attribute name="domain" value-type="String" />
-    <attribute name="id" value-type="String" />
+    <attribute name="item-id" value-type="String" />
   </entity>
 </model>
 

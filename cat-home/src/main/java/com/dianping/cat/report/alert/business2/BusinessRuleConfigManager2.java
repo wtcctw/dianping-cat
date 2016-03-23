@@ -10,7 +10,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.rule.entity.Condition;
@@ -32,9 +31,9 @@ public class BusinessRuleConfigManager2 implements Initializable {
 
 	private static final String ALERT_CONFIG = "alert";
 
-	private static final String SPLITTER = ";";
+	private static final String TYPE = "type";
 
-	private static final String TRUE = "true";
+	private static final String SPLITTER = ":";
 
 	Map<String, MonitorRules> m_rules = new ConcurrentHashMap<String, MonitorRules>();
 
@@ -57,6 +56,10 @@ public class BusinessRuleConfigManager2 implements Initializable {
 		return config;
 	}
 
+	private String generateRuleId(String key, String type) {
+		return new StringBuilder().append(key).append(SPLITTER).append(type).toString();
+	}
+
 	@Override
 	public void initialize() throws InitializationException {
 		try {
@@ -77,10 +80,11 @@ public class BusinessRuleConfigManager2 implements Initializable {
 	}
 
 	public List<Config> queryConfigs(String domain, String key, MetricType type) {
-		Rule rule = queryRule(domain, key);
+		String typeName = type.getName();
+		Rule rule = queryRule(domain, key, typeName);
 		List<Config> configs = new ArrayList<Config>();
 
-		if (rule != null && TRUE.equals(rule.getDynamicAttribute(type.getName()))) {
+		if (rule != null && rule.getDynamicAttribute(TYPE).equals(typeName)) {
 			configs.addAll(rule.getConfigs());
 		}
 
@@ -94,32 +98,26 @@ public class BusinessRuleConfigManager2 implements Initializable {
 		return m_rules.get(domain);
 	}
 
-	public Rule queryRule(String domain, String key) {
+	public Rule queryRule(String domain, String key, String type) {
 		MonitorRules rule = m_rules.get(domain);
 
 		if (rule != null) {
-			return rule.findRule(key);
+			return rule.findRule(generateRuleId(key, type));
 		} else {
 			return null;
 		}
 	}
 
-	public void updateRule(String domain, String key, String configsStr, String attributesStr) {
+	public void updateRule(String domain, String key, String configsStr, String type) {
 		try {
-			Rule rule = new Rule(key);
+			Rule rule = new Rule(generateRuleId(key, type));
 			List<Config> configs = DefaultJsonParser.parseArray(Config.class, configsStr);
 
 			for (Config config : configs) {
 				rule.addConfig(config);
 			}
 
-			if (StringUtils.isNotEmpty(attributesStr)) {
-				String[] attrs = attributesStr.split(SPLITTER);
-
-				for (int i = 0; i < attrs.length; i++) {
-					rule.setDynamicAttribute(attrs[i], TRUE);
-				}
-			}
+			rule.setDynamicAttribute(TYPE, type);
 
 			boolean isExist = true;
 			MonitorRules domainRule = m_rules.get(domain);
@@ -130,7 +128,7 @@ public class BusinessRuleConfigManager2 implements Initializable {
 				isExist = false;
 			}
 
-			domainRule.getRules().put(key, rule);
+			domainRule.getRules().put(rule.getId(), rule);
 
 			BusinessConfig proto = m_configDao.createLocal();
 			proto.setDomain(domain);

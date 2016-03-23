@@ -1,5 +1,8 @@
 package com.dianping.cat.report.page.business.graph;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -83,7 +86,7 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 
 			for (BusinessItem item : items) {
 				String domain = item.getDomain();
-				String key = item.getId();
+				String key = item.getItemId();
 
 				for (MetricType metricType : MetricType.values()) {
 					String id = m_keyHelper.generateKey(key, domain, metricType.getName());
@@ -168,8 +171,17 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
 		Map<String, double[]> datas = m_dataFetcher.buildGraphData(report);
 		Map<String, BusinessItemConfig> businessItemConfigs = config.getBusinessItemConfigs();
+		List<BusinessItemConfig> items = new ArrayList<BusinessItemConfig>(businessItemConfigs.values());
 
-		for (BusinessItemConfig itemConfig : businessItemConfigs.values()) {
+		Collections.sort(items, new Comparator<BusinessItemConfig>() {
+
+			@Override
+			public int compare(BusinessItemConfig m1, BusinessItemConfig m2) {
+				return (int) ((m1.getViewOrder() - m2.getViewOrder()) * 100);
+			}
+		});
+
+		for (BusinessItemConfig itemConfig : items) {
 			String key = itemConfig.getId();
 
 			if (itemConfig.getShowAvg()) {

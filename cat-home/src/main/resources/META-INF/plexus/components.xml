@@ -2658,9 +2658,6 @@
 			<implementation>com.dianping.cat.report.alert.business2.BusinessContactor2</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.alarm.spi.config.AlertConfigManager</role>
 				</requirement>
 			</requirements>

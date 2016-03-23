@@ -49,7 +49,7 @@ public class BusinessTagConfigManager implements Initializable {
 
 			for (BusinessItem item : items) {
 				if (item.getDomain().equals(domain)) {
-					String id = item.getId();
+					String id = item.getItemId();
 					Set<String> itemTags = domainTags.get(id);
 
 					if (itemTags == null) {
