@@ -7,11 +7,13 @@ import java.net.URLConnection;
 
 import org.junit.Test;
 
+import com.dianping.cat.Cat;
+
 public class MetricMonitorTest {
 
 	@Test
 	public void test() throws Exception {
-		String host = "cat.qa.dianpingoa.com";
+		String host = "localhost:2281";
 		String group = "db-mysql-tg01s6.nh[10.1.1.136]";
 		for (int i = 0; i < 1000; i++) {
 			SendData(host, group, "Load", 100);
@@ -22,6 +24,22 @@ public class MetricMonitorTest {
 			SendData(host, group, "Innodb_buffer_pool_pages_dirty", 100);
 			SendData(host, group, "Innodb_deadlocks", 100);
 			Thread.sleep(5000);
+		}
+	}
+	
+	@Test
+	public void test1() {
+		while (true) {
+			Cat.logMetricForCount("OneCount");
+			Cat.logMetricForCount("MultiCount", 3);
+			Cat.logMetricForDuration("Duration", 7);
+			Cat.logMetricForSum("Sum", 11);
+			Cat.logMetricForSum("MultiSum", 100, 10);
+			System.out.println("ee");
+			try {
+				Thread.sleep(5000L);
+			} catch (InterruptedException e) {
+			}
 		}
 	}
 
