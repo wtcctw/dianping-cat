@@ -110,13 +110,13 @@ public class BusinessConfigManager extends ContainerHolder implements Initializa
 					Set<String> itemIds = new HashSet<String>(businessReportConfig.getBusinessItemConfigs().keySet());
 
 					domains.put(domain, itemIds);
-					m_domains = domains;
-
 					cacheConfigs(businessReportConfig, domain);
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
 			}
+
+			m_domains = domains;
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -130,7 +130,7 @@ public class BusinessConfigManager extends ContainerHolder implements Initializa
 
 	public boolean insertBusinessConfigIfNotExist(String domain, String key, ConfigItem item) {
 		try {
-			if (!m_domains.containsKey(domain)) {
+			if (!m_domains.containsKey(domain) && !filter(domain, key)) {
 				BusinessReportConfig config = new BusinessReportConfig();
 				config.setId(domain);
 
