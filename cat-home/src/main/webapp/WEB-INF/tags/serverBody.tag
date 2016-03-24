@@ -35,6 +35,10 @@
 							<i class="menu-icon fa fa-caret-right"></i>系统指标</a>
 							<b class="arrow"></b>
 						</li>
+						<li id="networkTopology"><a href="/cat/r/network?op=dashboard&domain=cat">
+							<i class="menu-icon fa fa-caret-right"></i>网络大盘</a>
+							<b class="arrow"></b>
+						</li>
 					</ul>
 				</li>
 				<li id="serverConfig" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-cogs"></i> <span class="menu-text">Config</span>

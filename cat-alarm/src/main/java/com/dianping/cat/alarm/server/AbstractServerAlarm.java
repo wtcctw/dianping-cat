@@ -239,7 +239,7 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 				List<AlarmTask> tasks = buildAlarmTasks(ruleEndpoints);
 
 				for (AlarmTask task : tasks) {
-					Transaction t = Cat.newTransaction("Alert", task.getCategory());
+					Transaction t = Cat.newTransaction("AlertServer", task.getCategory());
 
 					try {
 						s_threadPool.submit(task);

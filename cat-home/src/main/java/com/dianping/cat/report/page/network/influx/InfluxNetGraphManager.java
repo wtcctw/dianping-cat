@@ -73,7 +73,7 @@ public class InfluxNetGraphManager implements Initializable, LogEnabled {
 		NetGraph graph = m_netGraphs.get(current);
 
 		if (graph == null) {
-			graph = new NetGraph();
+			graph = buildGraph(new Date(current));
 
 			m_netGraphs.put(current, graph);
 		}
@@ -94,6 +94,14 @@ public class InfluxNetGraphManager implements Initializable, LogEnabled {
 		}
 	}
 
+	private NetGraph buildGraph(Date minute) {
+		NetGraph netGraphTemplate = m_netGraphConfigManager.getConfig().getNetGraphs().get(0);
+		List<AlertEntity> alertKeys = m_alertManager.queryLastestAlarmKey(5);
+		NetGraph graph = m_netGraphBuilder.buildGraphSet(netGraphTemplate, minute, alertKeys);
+
+		return graph;
+	}
+
 	private class NetGraphReloader implements Task {
 
 		@Override
@@ -112,14 +120,12 @@ public class InfluxNetGraphManager implements Initializable, LogEnabled {
 					Transaction t = Cat.newTransaction("ReloadTask", "networkGraph");
 
 					try {
-						NetGraph netGraphTemplate = m_netGraphConfigManager.getConfig().getNetGraphs().get(0);
-						List<AlertEntity> alertKeys = m_alertManager.queryLastestAlarmKey(5);
 						Date minute = TimeHelper.getCurrentMinute();
 						long time = minute.getTime();
 						NetGraph netGraph = m_netGraphs.get(time);
 
 						if (netGraph == null) {
-							NetGraph graph = m_netGraphBuilder.buildGraphSet(netGraphTemplate, minute, alertKeys);
+							NetGraph graph = buildGraph(minute);
 
 							m_netGraphs.put(time, graph);
 						}
