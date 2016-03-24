@@ -4,19 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
+import com.dianping.cat.report.page.business.task.BusinessKeyHelper;
+
 public class CustomDataCalculator {
+
+	@Inject
+	private BusinessKeyHelper m_keyHelper;
 
 	private static final String START = "${";
 
 	private static final String END = "}";
 
 	private static final String SPLITTER = ",";
-
-	public double[] calculate(String pattern, Map<String, double[]> datas) {
-		return null;
-	}
 
 	public Pair<Boolean, List<CustomInfo>> translatePattern(String pattern) {
 		List<CustomInfo> infos = new ArrayList<CustomInfo>();
@@ -38,9 +40,9 @@ public class CustomDataCalculator {
 				if (strs != null && strs.length == 3) {
 					customInfo.setDomain(strs[0]);
 					customInfo.setKey(strs[1]);
-					customInfo.setType(strs[2]);
-					customInfo.setStart(start);
-					customInfo.setEnd(end);
+					customInfo.setType(strs[2].toUpperCase());
+					customInfo.setPattern(pattern.substring(start, end + 1));
+
 					infos.add(customInfo);
 				} else {
 					result = false;
@@ -55,4 +57,28 @@ public class CustomDataCalculator {
 		return new Pair<Boolean, List<CustomInfo>>(result, infos);
 	}
 
+	public double[] calculate(String pattern, List<CustomInfo> customInfos, Map<String, double[]> businessItemDataCache,
+	      int totalSize) {
+		double[] result = new double[totalSize];
+
+		for (int i = 0; i < totalSize; i++) {
+			for (CustomInfo customInfo : customInfos) {
+				String customPattern = customInfo.getPattern();
+				String itemId = m_keyHelper.generateKey(customInfo.getKey(), customInfo.getDomain(), customInfo.getType());
+				double[] sourceData = businessItemDataCache.get(itemId);
+
+				if (sourceData != null) {
+					pattern.replace(customPattern, Double.toString(sourceData[i]));
+				}
+			}
+			
+			result[i] = calculate(pattern);
+		}
+		return result;
+	}
+
+	private double calculate(String pattern) {
+	   // TODO Auto-generated method stub
+	   return 0;
+   }
 }

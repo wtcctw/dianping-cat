@@ -14,6 +14,7 @@ import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.spi.AlertEntity;
@@ -77,7 +78,7 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 				BusinessReportConfig config = m_configManager.queryConfigByDomain(domain);
 
 				if (config != null) {
-					Map<String, double[]> datas = prepareDataByDomain(start, end, domain, config);
+					Map<String, double[]> datas = prepareBusinessItemDatas(start, end, domain, config);
 
 					all.putAll(datas);
 					configs.put(domain, config);
@@ -109,12 +110,51 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 		BusinessReportConfig config = m_configManager.queryConfigByDomain(domain);
 
 		if (config != null) {
-			Map<String, double[]> datas = prepareDataByDomain(start, end, domain, config);
+			Map<String, double[]> datas = prepareBusinessItemDatas(start, end, domain, config);
 
+			prepareCustomData(start, end, domain, config, datas);
 			configs.put(domain, config);
+
 			return buildChartData(datas, start, end, configs);
 		} else {
 			return new HashMap<String, LineChart>();
+		}
+	}
+
+	private void prepareCustomData(Date start, Date end, String currentDomain, BusinessReportConfig currentConfig,
+	      Map<String, double[]> datas) {
+		Map<String, double[]> businessItemDataCache = new LinkedHashMap<String, double[]>();
+		Map<String, CustomConfig> customConfigs = currentConfig.getCustomConfigs();
+		Set<String> domains = new HashSet<String>();
+		int totalSize = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_MINUTE);
+
+		domains.add(currentDomain);
+		businessItemDataCache.putAll(datas);
+
+		for (CustomConfig customConfig : customConfigs.values()) {
+			String pattern = customConfig.getPattern();
+			Pair<Boolean, List<CustomInfo>> translate = m_customDataCalculator.translatePattern(pattern);
+
+			if (translate.getKey()) {
+				List<CustomInfo> customInfos = translate.getValue();
+
+				for (CustomInfo customInfo : customInfos) {
+					String domain = customInfo.getDomain();
+
+					if (!domains.contains(domain)) {
+						BusinessReportConfig config = m_configManager.queryConfigByDomain(domain);
+
+						domains.add(domain);
+						businessItemDataCache.putAll(prepareBusinessItemDatas(start, end, domain, config));
+					}
+				}
+				double[] result = m_customDataCalculator.calculate(pattern, customInfos, businessItemDataCache, totalSize);
+				String key = m_keyHelper.generateKey(customConfig.getId(), currentDomain, MetricType.AVG.getName());
+
+				datas.put(key, result);
+			} else {
+				Cat.logEvent("BusinessPatternWrong", pattern);
+			}
 		}
 	}
 
@@ -150,7 +190,7 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 		return charts;
 	}
 
-	private Map<String, double[]> prepareDataByDomain(Date startDate, Date endDate, String domain,
+	private Map<String, double[]> prepareBusinessItemDatas(Date startDate, Date endDate, String domain,
 	      BusinessReportConfig config) {
 		long start = startDate.getTime(), end = endDate.getTime();
 		int totalSize = (int) ((end - start) / TimeHelper.ONE_MINUTE);
@@ -198,38 +238,43 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 			}
 		}
 
-		Map<String, CustomConfig> customConfigs = config.getCustomConfigs();
-
-		for (CustomConfig customConfig : customConfigs.values()) {
-			String key = m_keyHelper.generateKey(customConfig.getId(), report.getDomain(), MetricType.AVG.name());
-			double[] value = m_customDataCalculator.calculate(customConfig.getPattern(), datas);
-			values.put(key, value);
-		}
-
 		return values;
 	}
 
 	private void buildLineChartTitle(List<AlertEntity> alertKeys, LineChart chart, String key,
 	      BusinessReportConfig businessReportConfig) {
-		String metricId = m_keyHelper.getBusinessItemId(key);
+		String itemId = m_keyHelper.getBusinessItemId(key);
 		String type = m_keyHelper.getType(key);
-		BusinessItemConfig config = businessReportConfig.findBusinessItemConfig(metricId);
+		String title = buidlTitle(businessReportConfig, itemId, type);
+
+		chart.setTitle(title);
+		chart.setId(itemId + ":" + type);
+
+		if (containMetric(alertKeys, itemId)) {
+			String domain = businessReportConfig.getId();
+			String contactInfo = buildContactInfo(domain);
+
+			chart.setHtmlTitle("<span style='color:red'>" + title + "<br><small>" + contactInfo + "</small></span>");
+		} else {
+			chart.setHtmlTitle(title);
+		}
+	}
+
+	private String buidlTitle(BusinessReportConfig businessReportConfig, String itemId, String type) {
+		String title = null;
+		String des = MetricType.getDesByName(type);
+		BusinessItemConfig config = businessReportConfig.findBusinessItemConfig(itemId);
 
 		if (config != null) {
-			String des = MetricType.getDesByName(type);
-			String title = config.getTitle() + des;
+			title = config.getTitle() + des;
+		} else {
+			CustomConfig customConfig = businessReportConfig.findCustomConfig(itemId);
 
-			chart.setTitle(title);
-			chart.setId(metricId + ":" + type);
-
-			if (containMetric(alertKeys, metricId)) {
-				String contactInfo = buildContactInfo(businessReportConfig.getId());
-
-				chart.setHtmlTitle("<span style='color:red'>" + title + "<br><small>" + contactInfo + "</small></span>");
-			} else {
-				chart.setHtmlTitle(title);
+			if (customConfig != null) {
+				title = customConfig.getTitle() + des;
 			}
 		}
+		return title;
 	}
 
 	private boolean containMetric(List<AlertEntity> alertKeys, String metricId) {
