@@ -23,23 +23,33 @@
 						</span>
 					</form>
 	            </div>
+	             <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">来源</span>
+					<select id="source" style="width: 100px;">
+						<option value=''>All</option>
+						<c:forEach var="item" items="${model.sources}"
+							varStatus="status">
+							<option value='${item.value.id}'>${item.value.name}</option>
+						</c:forEach>
+					</select>
+	            </div>
 	            <div class="input-group" style="float:left;width:120px">
 	              	<span class="input-group-addon">返回码</span>
 					<select id="code" style="width:120px"><option value=''>All</option></select>
 	            </div>
-	            <div class="input-group" style="float:left;width:120px">
+				</th>
+				</tr>
+			<tr>
+				<th align=left>
+			 	<div class="input-group" style="float:left;width:120px">
 	              	<span class="input-group-addon">网络类型</span>
 					<select id="network">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>
-				</select>
+					</select>
 	            </div>
-				</th>
-				</tr>
-			<tr>
-				<th align=left>
 				<div class="input-group" style="float:left;width:120px">
 	              	<span class="input-group-addon">版本</span>
 					<select id="version" style="width: 100px;">
@@ -88,16 +98,6 @@
 						</c:forEach>
 					</select>
 	            </div>
-	            <div class="input-group" style="float:left;width:120px">
-	              	<span class="input-group-addon">来源</span>
-					<select id="source" style="width: 100px;">
-						<option value=''>All</option>
-						<c:forEach var="item" items="${model.sources}"
-							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
-						</c:forEach>
-					</select>
-	            </div>
 	            <input class="btn btn-primary btn-sm"
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
 					type="submit" /> <input class="btn btn-primary btn-sm" id="checkbox"
@@ -129,19 +129,29 @@
 	              	<span class="input-group-addon">返回码</span>
 					<select id="code2" style="width:120px"><option value=''>All</option></select>
 	            </div>
-	            <div class="input-group" style="float:left;width:120px">
+	             <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">来源</span>
+					<select id="source2" style="width: 100px;">
+						<option value=''>All</option>
+						<c:forEach var="item" items="${model.sources}"
+							varStatus="status">
+							<option value='${item.value.id}'>${item.value.name}</option>
+						</c:forEach>
+					</select>
+	            </div>
+				</th>
+				</tr>
+				<tr>
+			<th align=left>
+			 	<div class="input-group" style="float:left;width:120px">
 	              	<span class="input-group-addon">网络类型</span>
 					<select id="network2">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>
-				</select>
+					</select>
 	            </div>
-				</th>
-				</tr>
-				<tr>
-			<th align=left>
 				<div class="input-group" style="float:left;width:120px">
 	              	<span class="input-group-addon">版本</span>
 					<select id="version2" style="width: 100px;">
@@ -185,16 +195,6 @@
 					<select id="operator2" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.operators}"
-							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
-						</c:forEach>
-					</select>
-	            </div>
-	            <div class="input-group" style="float:left;width:120px">
-	              	<span class="input-group-addon">来源</span>
-					<select id="source2" style="width: 100px;">
-						<option value=''>All</option>
-						<c:forEach var="item" items="${model.sources}"
 							varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>
