@@ -25,6 +25,7 @@ import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
@@ -45,6 +46,7 @@ import com.dianping.cat.message.storage.MessageBucket;
 import com.dianping.cat.message.storage.MessageBucketManager;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
+@Named(type = MessageBucketManager.class, value = LocalMessageBucketManager.ID)
 public class LocalMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable,
       LogEnabled {
 
@@ -303,7 +305,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	}
 
 	public class CloseBucketChecker implements Task {
-		
+
 		private void closeBuckets(final List<String> paths) {
 			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 

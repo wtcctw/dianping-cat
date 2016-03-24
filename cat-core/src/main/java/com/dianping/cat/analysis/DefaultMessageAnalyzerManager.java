@@ -99,13 +99,14 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 	@Override
 	public void initialize() throws InitializationException {
 		Map<String, MessageAnalyzer> map = lookupMap(MessageAnalyzer.class);
+		System.err.println(map.keySet().size());
 
 		for (MessageAnalyzer analyzer : map.values()) {
 			analyzer.destroy();
 		}
 
 		m_analyzerNames = new ArrayList<String>(map.keySet());
-		
+
 		Collections.sort(m_analyzerNames, new Comparator<String>() {
 			@Override
 			public int compare(String str1, String str2) {
