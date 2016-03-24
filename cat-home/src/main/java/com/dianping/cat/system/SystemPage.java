@@ -5,79 +5,83 @@ import org.unidal.web.mvc.annotation.ModuleMeta;
 
 public enum SystemPage implements Page {
 
-	LOGIN("login", "login", "Login", "Login", false),
+   LOGIN("login", "login", "Login", "Login", false),
 
-	CONFIG("config", "config", "Config", "Config", false),
+   CONFIG("config", "config", "Config", "Config", false),
 
-	PLUGIN("plugin", "plugin", "Plugin", "Plugin", true),
+   PLUGIN("plugin", "plugin", "Plugin", "Plugin", true),
 
-	ROUTER("router", "router", "Router", "Router", true),
+   ROUTER("router", "router", "Router", "Router", true),
 
-	WEB("web", "web", "Web", "Web", true),
+   WEB("web", "web", "Web", "Web", true),
 
-	PROJECT("project", "project", "Project", "Project", true);
+   PROJECT("project", "project", "Project", "Project", true),
 
-	private String m_name;
+   APP("app", "app", "App", "App", true),
+   
+   BUSINESS("business", "business", "Business", "Business", true);
 
-	private String m_path;
+   private String m_name;
 
-	private String m_title;
+   private String m_path;
 
-	private String m_description;
+   private String m_title;
 
-	private boolean m_standalone;
+   private String m_description;
 
-	private SystemPage(String name, String path, String title, String description, boolean standalone) {
-		m_name = name;
-		m_path = path;
-		m_title = title;
-		m_description = description;
-		m_standalone = standalone;
-	}
+   private boolean m_standalone;
 
-	public static SystemPage getByName(String name, SystemPage defaultPage) {
-		for (SystemPage action : SystemPage.values()) {
-			if (action.getName().equals(name)) {
-				return action;
-			}
-		}
+   private SystemPage(String name, String path, String title, String description, boolean standalone) {
+      m_name = name;
+      m_path = path;
+      m_title = title;
+      m_description = description;
+      m_standalone = standalone;
+   }
 
-		return defaultPage;
-	}
+   public static SystemPage getByName(String name, SystemPage defaultPage) {
+      for (SystemPage action : SystemPage.values()) {
+         if (action.getName().equals(name)) {
+            return action;
+         }
+      }
 
-	public String getDescription() {
-		return m_description;
-	}
+      return defaultPage;
+   }
 
-	public String getModuleName() {
-		ModuleMeta meta = SystemModule.class.getAnnotation(ModuleMeta.class);
+   public String getDescription() {
+      return m_description;
+   }
 
-		if (meta != null) {
-			return meta.name();
-		} else {
-			return null;
-		}
-	}
+   public String getModuleName() {
+      ModuleMeta meta = SystemModule.class.getAnnotation(ModuleMeta.class);
 
-	@Override
-	public String getName() {
-		return m_name;
-	}
+      if (meta != null) {
+         return meta.name();
+      } else {
+         return null;
+      }
+   }
 
-	@Override
-	public String getPath() {
-		return m_path;
-	}
+   @Override
+   public String getName() {
+      return m_name;
+   }
 
-	public String getTitle() {
-		return m_title;
-	}
+   @Override
+   public String getPath() {
+      return m_path;
+   }
 
-	public boolean isStandalone() {
-		return m_standalone;
-	}
+   public String getTitle() {
+      return m_title;
+   }
 
-	public SystemPage[] getValues() {
-		return SystemPage.values();
-	}
+   public boolean isStandalone() {
+      return m_standalone;
+   }
+
+   public SystemPage[] getValues() {
+      return SystemPage.values();
+   }
 }

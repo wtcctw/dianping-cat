@@ -25,6 +25,7 @@
       </group>
       <group name="config" package="com.dianping.cat.core.config">
          <table name="config"/>
+         <table name="business_config"/>
       </group>
    </jdbc>
    <jdbc package="com.dianping.cat.app" name="app">

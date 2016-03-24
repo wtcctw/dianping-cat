@@ -11,14 +11,26 @@
 					<role-hint>transaction</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.ReportDelegate</role>
-					<role-hint>transaction</role-hint>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportDelegate</role>
+			<role-hint>transaction</role-hint>
+			<implementation>com.dianping.cat.consumer.transaction.TransactionDelegate</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.task.TaskManager</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -50,22 +62,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.ReportDelegate</role>
-			<role-hint>transaction</role-hint>
-			<implementation>com.dianping.cat.consumer.transaction.TransactionDelegate</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.task.TaskManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>event</role-hint>
 			<implementation>com.dianping.cat.consumer.event.EventAnalyzer</implementation>
@@ -76,14 +72,26 @@
 					<role-hint>event</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.ReportDelegate</role>
-					<role-hint>event</role-hint>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportDelegate</role>
+			<role-hint>event</role-hint>
+			<implementation>com.dianping.cat.consumer.event.EventDelegate</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.task.TaskManager</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -111,22 +119,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.DomainValidator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.ReportDelegate</role>
-			<role-hint>event</role-hint>
-			<implementation>com.dianping.cat.consumer.event.EventDelegate</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.task.TaskManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -227,7 +219,20 @@
 					<role-hint>heartbeat</role-hint>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportDelegate</role>
+			<role-hint>heartbeat</role-hint>
+			<implementation>com.dianping.cat.consumer.heartbeat.HeartbeatDelegate</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
@@ -262,19 +267,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.ReportDelegate</role>
-			<role-hint>heartbeat</role-hint>
-			<implementation>com.dianping.cat.consumer.heartbeat.HeartbeatDelegate</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.task.TaskManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>top</role-hint>
 			<implementation>com.dianping.cat.consumer.top.TopAnalyzer</implementation>
@@ -288,12 +280,17 @@
 					<role-hint>top</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportDelegate</role>
+			<role-hint>top</role-hint>
+			<implementation>com.dianping.cat.consumer.top.TopDelegate</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.ReportManager</role>
@@ -321,11 +318,6 @@
 					<role>com.dianping.cat.report.DomainValidator</role>
 				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.ReportDelegate</role>
-			<role-hint>top</role-hint>
-			<implementation>com.dianping.cat.consumer.top.TopDelegate</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
@@ -367,18 +359,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ProjectService</role>
-			<implementation>com.dianping.cat.service.ProjectService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>state</role-hint>
 			<implementation>com.dianping.cat.consumer.state.StateAnalyzer</implementation>
@@ -392,10 +372,35 @@
 					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportDelegate</role>
+			<role-hint>state</role-hint>
+			<implementation>com.dianping.cat.consumer.state.StateDelegate</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.task.TaskManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.ReportBucketManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.ProjectService</role>
+			<implementation>com.dianping.cat.service.ProjectService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -427,23 +432,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.ReportDelegate</role>
-			<role-hint>state</role-hint>
-			<implementation>com.dianping.cat.consumer.state.StateDelegate</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.task.TaskManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.cross.IpConvertManager</role>
-			<implementation>com.dianping.cat.consumer.cross.IpConvertManager</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>cross</role-hint>
 			<implementation>com.dianping.cat.consumer.cross.CrossAnalyzer</implementation>
@@ -454,12 +442,29 @@
 					<role-hint>cross</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.consumer.cross.IpConvertManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportDelegate</role>
+			<role-hint>cross</role-hint>
+			<implementation>com.dianping.cat.consumer.cross.CrossDelegate</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.task.TaskManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.cross.IpConvertManager</role>
+			<implementation>com.dianping.cat.consumer.cross.IpConvertManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.ReportManager</role>
@@ -489,19 +494,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.ReportDelegate</role>
-			<role-hint>cross</role-hint>
-			<implementation>com.dianping.cat.consumer.cross.CrossDelegate</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.task.TaskManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>matrix</role-hint>
 			<implementation>com.dianping.cat.consumer.matrix.MatrixAnalyzer</implementation>
@@ -513,6 +505,19 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportDelegate</role>
+			<role-hint>matrix</role-hint>
+			<implementation>com.dianping.cat.consumer.matrix.MatrixDelegate</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.task.TaskManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -544,23 +549,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.ReportDelegate</role>
-			<role-hint>matrix</role-hint>
-			<implementation>com.dianping.cat.consumer.matrix.MatrixDelegate</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.task.TaskManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.DatabaseParser</role>
-			<implementation>com.dianping.cat.consumer.DatabaseParser</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>dependency</role-hint>
 			<implementation>com.dianping.cat.consumer.dependency.DependencyAnalyzer</implementation>
@@ -571,15 +559,29 @@
 					<role-hint>dependency</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.DatabaseParser</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportDelegate</role>
+			<role-hint>dependency</role-hint>
+			<implementation>com.dianping.cat.consumer.dependency.DependencyDelegate</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.task.TaskManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.DatabaseParser</role>
+			<implementation>com.dianping.cat.consumer.DatabaseParser</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.ReportManager</role>
@@ -609,12 +611,28 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.ReportDelegate</role>
-			<role-hint>dependency</role-hint>
-			<implementation>com.dianping.cat.consumer.dependency.DependencyDelegate</implementation>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
+			<role-hint>metric</role-hint>
+			<implementation>com.dianping.cat.consumer.metric.MetricAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.ReportBucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.dal.BusinessReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.task.TaskManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -642,32 +660,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
-			<role-hint>metric</role-hint>
-			<implementation>com.dianping.cat.consumer.metric.MetricAnalyzer</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.dal.BusinessReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.task.TaskManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -714,14 +706,26 @@
 					<role-hint>storage</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.ReportDelegate</role>
-					<role-hint>storage</role-hint>
+					<role>com.dianping.cat.consumer.DatabaseParser</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.storage.StorageReportUpdater</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportDelegate</role>
+			<role-hint>storage</role-hint>
+			<implementation>com.dianping.cat.consumer.storage.StorageDelegate</implementation>
+			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.DatabaseParser</role>
+					<role>com.dianping.cat.task.TaskManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.storage.StorageReportUpdater</role>
@@ -756,27 +760,59 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.ReportDelegate</role>
-			<role-hint>storage</role-hint>
-			<implementation>com.dianping.cat.consumer.storage.StorageDelegate</implementation>
+			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
+			<role-hint>business</role-hint>
+			<implementation>com.dianping.cat.consumer.business.BusinessAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.task.TaskManager</role>
+					<role>com.dianping.cat.report.ReportManager</role>
+					<role-hint>business</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+					<role>com.dianping.cat.config.business.BusinessConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.storage.StorageReportUpdater</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
-			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</implementation>
+			<role>com.dianping.cat.report.ReportDelegate</role>
+			<role-hint>business</role-hint>
+			<implementation>com.dianping.cat.consumer.business.BusinessDelegate</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.task.TaskManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportManager</role>
+			<role-hint>business</role-hint>
+			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
-				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
+				<name>business</name>
 			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.ReportDelegate</role>
+					<role-hint>business</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.ReportBucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.DomainValidator</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>

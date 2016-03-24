@@ -1,7 +1,9 @@
 package com.dianping.cat.report.page.server;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -9,8 +11,10 @@ import java.util.Set;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 
+import com.dianping.cat.alarm.ServerAlarmRule;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.server.entity.ServerMetricConfig;
+import com.dianping.cat.metric.MetricType;
 import com.dianping.cat.mvc.AbstractReportModel;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
@@ -46,6 +50,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private ServerMetricConfig m_serverMetricConfig;
 
+	private List<ServerAlarmRule> m_serverAlarmRules;
+
+	private ServerAlarmRule m_serverAlarmRule;
+
+	private String m_content;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -56,6 +66,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public String getConfig() {
 		return m_config;
+	}
+
+	public String getContent() {
+		return m_content;
 	}
 
 	@Override
@@ -105,8 +119,29 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_metricScreenInfos;
 	}
 
+	public List<MetricType> getMetricTypes() {
+		return Arrays.asList(MetricType.values());
+	}
+
+	public Map<String, String> getMetricTitles() {
+		Map<String, String> titles = new HashMap<String, String>();
+
+		for (MetricType type : MetricType.values()) {
+			titles.put(type.getName(), type.getTitle());
+		}
+		return titles;
+	}
+
 	public String getOpState() {
 		return m_opState;
+	}
+
+	public ServerAlarmRule getServerAlarmRule() {
+		return m_serverAlarmRule;
+	}
+
+	public List<ServerAlarmRule> getServerAlarmRules() {
+		return m_serverAlarmRules;
 	}
 
 	public ServerMetricConfig getServerMetricConfig() {
@@ -123,6 +158,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setConfig(String config) {
 		m_config = config;
+	}
+
+	public void setContent(String content) {
+		m_content = content;
 	}
 
 	public void setEndPoints(Map<String, List<String>> endPoints) {
@@ -163,6 +202,14 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setOpState(String opState) {
 		m_opState = opState;
+	}
+
+	public void setServerAlarmRule(ServerAlarmRule serverAlarmRule) {
+		m_serverAlarmRule = serverAlarmRule;
+	}
+
+	public void setServerAlarmRules(List<ServerAlarmRule> serverAlarmRules) {
+		m_serverAlarmRules = serverAlarmRules;
 	}
 
 	public void setServerMetricConfig(ServerMetricConfig serverMetricConfig) {

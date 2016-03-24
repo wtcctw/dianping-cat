@@ -10,10 +10,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.spi.AlertEntity;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
+import com.dianping.cat.helper.MetricType;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.alert.spi.AlertEntity;
-import com.dianping.cat.report.alert.spi.data.MetricType;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.metric.AbstractGraphCreator;
 

@@ -8,11 +8,13 @@ import java.util.Map;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.config.ProductLineConfig;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
@@ -34,6 +36,7 @@ import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 
+@Named(type = MessageAnalyzer.class, value = MetricAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implements LogEnabled {
 	public static final String ID = "metric";
 

@@ -241,9 +241,11 @@
 				var loginInfo=document.getElementById('loginInfo');
 				loginInfo.innerHTML ='<a href="/cat/s/login" data-toggle="modal">登录</a>';
 			}
-			var page = '${model.page.title}';
-			$('#'+page+"_report").addClass("active open");
 			
+			if("${model.moduleUri}" != "/cat/s") {
+				var page = '${model.page.title}';
+				$('#'+page+"_report").addClass("active open");
+			}
 			
 			//custom autocomplete (category selection)
 			$.widget( "custom.catcomplete", $.ui.autocomplete, {

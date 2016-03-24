@@ -5,9 +5,9 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
-<jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
-<jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
+<jsp:useBean id="ctx" type="com.dianping.cat.system.page.app.Context" scope="request"/>
+<jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
+<jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
 
 <a:mobile>
 			<h3 class="text-center text-success">编辑APP监控规则</h3>

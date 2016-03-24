@@ -95,32 +95,8 @@ public enum JspFile {
 
 	STORAGE_RULE_UPDATE("/jsp/system/storageRule/storageRuleUpdate.jsp"),
 
-	APP_NAME_CHECK("/jsp/system/appConfig/appNameCheck.jsp"),
-
-	APP_LIST("/jsp/system/appConfig/appList.jsp"),
-
-	APP_CODE_UPDATE("/jsp/system/appConfig/codeUpdate.jsp"),
-
-	APP_SPEED_UPDATE("/jsp/system/appConfig/speedUpdate.jsp"),
-
-	APP_UPDATE("/jsp/system/appConfig/appUpdate.jsp"),
-
-	APP_RULE("/jsp/system/appRule/appRule.jsp"),
-
-	APP_RULE_UPDATE("/jsp/system/appRule/appRuleUpdate.jsp"),
-
-	APP_CONFIG_UPDATE("/jsp/system/appConfig/appConfig.jsp"),
-
-	APP_RULE_BATCH("/jsp/system/appConfig/appConfigBatch.jsp"),
-
-	APP_CONSTANT_UPDATE("/jsp/system/appConfig/constantUpdate.jsp"),
-
-	APP_COMPARISON_CONFIG_UPDATE("/jsp/system/appComparison/appComparison.jsp"),
-
-	APP_COMMAND_FORMAT_CONFIG("/jsp/system/appConfig/appCommandFormatConfig.jsp"),
-
 	ROUTER_CONFIG_UPDATE("/jsp/system/router/routerConfig.jsp"),
-	
+
 	SAMPLE_CONFIG_UPDATE("/jsp/system/sample/sampleConfig.jsp"),
 
 	SENDER_CONFIG_UPDATE("/jsp/system/sender/senderConfig.jsp"),

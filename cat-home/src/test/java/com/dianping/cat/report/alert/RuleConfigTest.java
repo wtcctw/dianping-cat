@@ -11,14 +11,14 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.home.rule.entity.Condition;
-import com.dianping.cat.home.rule.entity.Config;
-import com.dianping.cat.home.rule.entity.MonitorRules;
-import com.dianping.cat.home.rule.entity.Rule;
-import com.dianping.cat.home.rule.transform.DefaultSaxParser;
-import com.dianping.cat.report.alert.spi.rule.DataCheckEntity;
-import com.dianping.cat.report.alert.spi.rule.DataChecker;
-import com.dianping.cat.report.alert.spi.rule.DefaultDataChecker;
+import com.dianping.cat.alarm.rule.entity.Condition;
+import com.dianping.cat.alarm.rule.entity.Config;
+import com.dianping.cat.alarm.rule.entity.MonitorRules;
+import com.dianping.cat.alarm.rule.entity.Rule;
+import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
+import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
+import com.dianping.cat.alarm.spi.rule.DataChecker;
+import com.dianping.cat.alarm.spi.rule.DefaultDataChecker;
 
 public class RuleConfigTest {
 

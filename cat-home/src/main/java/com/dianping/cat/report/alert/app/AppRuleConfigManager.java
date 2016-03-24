@@ -12,16 +12,16 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.rule.entity.Condition;
+import com.dianping.cat.alarm.rule.entity.MonitorRules;
+import com.dianping.cat.alarm.rule.entity.Rule;
+import com.dianping.cat.alarm.rule.entity.SubCondition;
+import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
+import com.dianping.cat.alarm.spi.AlertLevel;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.rule.entity.Condition;
-import com.dianping.cat.home.rule.entity.MonitorRules;
-import com.dianping.cat.home.rule.entity.Rule;
-import com.dianping.cat.home.rule.entity.SubCondition;
-import com.dianping.cat.home.rule.transform.DefaultSaxParser;
-import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
-import com.dianping.cat.report.alert.spi.AlertLevel;
+import com.dianping.cat.report.alert.spi.config.BaseRuleConfigManager;
 
 public class AppRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 	@Inject
@@ -40,8 +40,8 @@ public class AppRuleConfigManager extends BaseRuleConfigManager implements Initi
 		}
 	}
 
-	private com.dianping.cat.home.rule.entity.Config buildDefaultConfig() {
-		com.dianping.cat.home.rule.entity.Config config = new com.dianping.cat.home.rule.entity.Config();
+	private com.dianping.cat.alarm.rule.entity.Config buildDefaultConfig() {
+		com.dianping.cat.alarm.rule.entity.Config config = new com.dianping.cat.alarm.rule.entity.Config();
 		config.setStarttime("00:00");
 		config.setEndtime("24:00");
 

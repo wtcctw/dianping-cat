@@ -1,0 +1,10 @@
+<business-tag-config>
+      <tag id="团购搜索">
+            <business-item domain="domain" id="arts-tuangourec-sc"></business-item>
+            <business-item  domain="domain" id="arts-tuangourec-sc"></business-item>
+      </tag>
+      <tag id="团购搜索2">
+            <business-item domain="domain" id="arts-tuangourec-sc"></business-item>
+            <business-item  domain="domain" id="arts-tuangourec-sc"></business-item>
+      </tag>
+</business-tag-config>

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.spi.AlertEntity;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.home.network.entity.Anchor;
@@ -14,7 +15,6 @@ import com.dianping.cat.home.network.entity.NetGraph;
 import com.dianping.cat.home.network.entity.NetGraphSet;
 import com.dianping.cat.home.network.entity.NetTopology;
 import com.dianping.cat.home.network.entity.Switch;
-import com.dianping.cat.report.alert.spi.AlertEntity;
 
 public class NetGraphBuilder {
 

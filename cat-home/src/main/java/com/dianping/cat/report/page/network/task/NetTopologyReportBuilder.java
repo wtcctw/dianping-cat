@@ -10,6 +10,7 @@ import java.util.Set;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.alarm.spi.AlertEntity;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.core.dal.HourlyReport;
@@ -20,7 +21,6 @@ import com.dianping.cat.home.network.entity.NetGraph;
 import com.dianping.cat.home.network.entity.NetGraphSet;
 import com.dianping.cat.home.network.entity.NetTopology;
 import com.dianping.cat.home.network.transform.DefaultNativeBuilder;
-import com.dianping.cat.report.alert.spi.AlertEntity;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
 import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
 import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;

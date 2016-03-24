@@ -7,9 +7,11 @@ import java.util.Map.Entry;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
@@ -28,6 +30,7 @@ import com.dianping.cat.status.model.entity.OsInfo;
 import com.dianping.cat.status.model.entity.StatusInfo;
 import com.dianping.cat.status.model.entity.ThreadsInfo;
 
+@Named(type = MessageAnalyzer.class, value = HeartbeatAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> implements LogEnabled {
 	public static final String ID = "heartbeat";
 
@@ -36,7 +39,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 	@Inject
 	private ServerFilterConfigManager m_serverFilterConfigManager;
-	
+
 	private Period buildHeartBeatInfo(Machine machine, Heartbeat heartbeat, long timestamp) {
 		String xml = (String) heartbeat.getData();
 		StatusInfo info = null;
@@ -89,9 +92,9 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	}
 
 	@Override
-   public int getAnanlyzerCount() {
-	   return 2;
-   }
+	public int getAnanlyzerCount() {
+		return 2;
+	}
 
 	@Override
 	public HeartbeatReport getReport(String domain) {

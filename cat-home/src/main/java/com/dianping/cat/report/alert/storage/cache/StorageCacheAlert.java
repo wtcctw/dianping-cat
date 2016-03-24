@@ -2,7 +2,7 @@ package com.dianping.cat.report.alert.storage.cache;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.report.alert.spi.AlertType;
+import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.report.alert.storage.AbstractStorageAlert;
 import com.dianping.cat.report.alert.storage.StorageRuleConfigManager;
 

@@ -26,7 +26,7 @@
 						<li id="dashbord_metric"><a href="/cat/r/metric?op=dashboard&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>业务大盘</a>
 							<b class="arrow"></b></li>
-						<li id="dashbord_network"><a href="/cat/r/network?op=dashboard&domain=${model.domain}">
+						<li id="dashbord_network"><a href="/cat/r/network?op=view&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>网络大盘</a>
 							<b class="arrow"></b></li>
 						<li id="dashbord_rpc"><a href="/cat/r/storage?op=dashboard&domain=${model.domain}&type=RPC">
@@ -68,6 +68,12 @@
 					<a href="/cat/r/cross?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
 						<i class="menu-icon  glyphicon glyphicon-random"></i>
 						<span class="menu-text">Cross</span>
+					</a>
+				</li>
+				<li id="Business_report" >
+					<a href="/cat/r/business?domain=${model.domain}&date=${model.date}">
+						<i class="menu-icon fa fa-list-alt"></i>
+						<span class="menu-text">Business</span>
 					</a>
 				</li>
 				<li id="RPC_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-cloud"></i> <span class="menu-text">Service</span>
