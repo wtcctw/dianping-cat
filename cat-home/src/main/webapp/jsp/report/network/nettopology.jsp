@@ -49,7 +49,7 @@
 				<c:forEach var="nav" items="${model.navs}">
 						&nbsp;[ <a
 							href="${model.baseUri}?date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&timeRange=${payload.timeRange}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
-					</c:forEach> &nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&product=${payload.product}&timeRange=${payload.timeRange}">now</a>
+					</c:forEach> &nbsp;[ <a href="${model.baseUri}?op=${payload.action.name}&timeRange=${payload.timeRange}">now</a>
 					]&nbsp;
 			</div></div>
 			<%@ include file="TimeNavTab.jsp"%>

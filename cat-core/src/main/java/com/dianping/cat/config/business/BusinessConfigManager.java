@@ -9,12 +9,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.codehaus.plexus.util.StringUtils;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.business.entity.BusinessItemConfig;
 import com.dianping.cat.configuration.business.entity.BusinessReportConfig;
@@ -26,6 +28,10 @@ import com.dianping.cat.task.ConfigSyncTask;
 import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
 public class BusinessConfigManager extends ContainerHolder implements Initializable {
+
+	private static final String MYSQL = "mysql_";
+
+	private static final String SYSTEM = "system_";
 
 	@Inject
 	private BusinessConfigDao m_configDao;
@@ -104,13 +110,13 @@ public class BusinessConfigManager extends ContainerHolder implements Initializa
 					Set<String> itemIds = new HashSet<String>(businessReportConfig.getBusinessItemConfigs().keySet());
 
 					domains.put(domain, itemIds);
-					m_domains = domains;
-
 					cacheConfigs(businessReportConfig, domain);
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
 			}
+
+			m_domains = domains;
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -124,7 +130,7 @@ public class BusinessConfigManager extends ContainerHolder implements Initializa
 
 	public boolean insertBusinessConfigIfNotExist(String domain, String key, ConfigItem item) {
 		try {
-			if (!m_domains.containsKey(domain)) {
+			if (!m_domains.containsKey(domain) && !filter(domain, key)) {
 				BusinessReportConfig config = new BusinessReportConfig();
 				config.setId(domain);
 
@@ -145,7 +151,7 @@ public class BusinessConfigManager extends ContainerHolder implements Initializa
 			} else {
 				Set<String> itemIds = m_domains.get(domain);
 
-				if (!itemIds.contains(key)) {
+				if (!itemIds.contains(key) && !filter(domain, key)) {
 					BusinessConfig businessConfig = m_configDao.findByNameDomain(BASE_CONFIG, domain,
 					      BusinessConfigEntity.READSET_FULL);
 					BusinessReportConfig config = DefaultSaxParser.parse(businessConfig.getContent());
@@ -167,22 +173,36 @@ public class BusinessConfigManager extends ContainerHolder implements Initializa
 		return false;
 	}
 
+	private boolean filter(String domain, String key) {
+		if (Constants.CAT.equalsIgnoreCase(domain) && StringUtils.isNotBlank(key)
+		      && (key.startsWith(SYSTEM) || key.startsWith(MYSQL))) {
+			return true;
+		}
+		return false;
+	}
+
 	public BusinessReportConfig queryConfigByDomain(String domain) {
+		BusinessReportConfig businessReportConfig = null;
+
 		try {
 			if (m_alertMachine) {
-				return m_configs.get(domain);
+				businessReportConfig = m_configs.get(domain);
 			} else {
 				BusinessConfig config = m_configDao
 				      .findByNameDomain(BASE_CONFIG, domain, BusinessConfigEntity.READSET_FULL);
 
-				return DefaultSaxParser.parse(config.getContent());
+				businessReportConfig = DefaultSaxParser.parse(config.getContent());
 			}
 		} catch (DalNotFoundException notFound) {
 			// Ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return new BusinessReportConfig();
+
+		if (businessReportConfig == null) {
+			businessReportConfig = new BusinessReportConfig();
+		}
+		return businessReportConfig;
 	}
 
 	public boolean updateConfigByDomain(BusinessReportConfig config) {
