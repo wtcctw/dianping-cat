@@ -2,9 +2,12 @@ package com.dianping.cat.consumer.business;
 
 import java.util.List;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.config.business.BusinessConfigManager;
 import com.dianping.cat.config.business.ConfigItem;
@@ -16,7 +19,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 
-public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport> {
+public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport> implements LogEnabled {
 	public static final String ID = "business";
 
 	@Inject(ID)
@@ -24,11 +27,6 @@ public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport> {
 
 	@Inject
 	private BusinessConfigManager m_configManager;
-
-	@Override
-	public ReportManager<BusinessReport> getReportManager() {
-		return m_reportManager;
-	}
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
@@ -40,55 +38,24 @@ public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport> {
 	}
 
 	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
 	public BusinessReport getReport(String domain) {
 		long period = getStartTime();
 		return m_reportManager.getHourlyReport(period, domain, false);
 	}
 
 	@Override
-	protected void loadReports() {
-		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
+	public ReportManager<BusinessReport> getReportManager() {
+		return m_reportManager;
 	}
 
 	@Override
-	protected void process(MessageTree tree) {
-		String domain = tree.getDomain();
-		BusinessReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
-		List<Metric> metrics = tree.getMetrics();
-
-		for (Metric metric : metrics) {
-			processMetric(report, metric, domain);
-		}
-	}
-
-	private void processMetric(BusinessReport report, Metric metric, String domain) {
-		String name = metric.getName();
-		String data = (String) metric.getData();
-		String status = metric.getStatus();
-
-		ConfigItem config = parseValue(status, data);
-
-		if (config != null) {
-			long current = metric.getTimestamp() / 1000 / 60;
-			int min = (int) (current % 60);
-			BusinessItem businessItem = report.findOrCreateBusinessItem(name);
-			Segment seg = businessItem.findOrCreateSegment(min);
-
-			businessItem.setType(status);
-
-			seg.incCount(config.getCount());
-			seg.incSum(config.getValue());
-			seg.setAvg(seg.getSum() / seg.getCount());
-
-			config.setTitle(name);
-
-			boolean result = m_configManager.insertBusinessConfigIfNotExist(domain, name, config);
-
-			if (!result) {
-				m_logger.error(String
-				      .format("error when insert metric config info, domain %s, metricName %s", domain, name));
-			}
-		}
+	protected void loadReports() {
+		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 	}
 
 	private ConfigItem parseValue(String status, String data) {
@@ -126,6 +93,50 @@ public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport> {
 		}
 
 		return config;
+	}
+
+	@Override
+	protected void process(MessageTree tree) {
+		String domain = tree.getDomain();
+		BusinessReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
+		List<Metric> metrics = tree.getMetrics();
+
+		for (Metric metric : metrics) {
+			processMetric(report, metric, domain);
+		}
+	}
+
+	private void processMetric(BusinessReport report, Metric metric, String domain) {
+		boolean isMonitor = Constants.CAT.equals(domain) && StringUtils.isNotEmpty(metric.getType());
+
+		if (!isMonitor) {
+			String name = metric.getName();
+			String data = (String) metric.getData();
+			String status = metric.getStatus();
+			ConfigItem config = parseValue(status, data);
+
+			if (config != null) {
+				long current = metric.getTimestamp() / 1000 / 60;
+				int min = (int) (current % 60);
+				BusinessItem businessItem = report.findOrCreateBusinessItem(name);
+				Segment seg = businessItem.findOrCreateSegment(min);
+
+				businessItem.setType(status);
+
+				seg.incCount(config.getCount());
+				seg.incSum(config.getValue());
+				seg.setAvg(seg.getSum() / seg.getCount());
+
+				config.setTitle(name);
+
+				boolean result = m_configManager.insertBusinessConfigIfNotExist(domain, name, config);
+
+				if (!result) {
+					m_logger.error(String.format("error when insert business config info, domain %s, metricName %s", domain,
+					      name));
+				}
+			}
+		}
 	}
 
 }
