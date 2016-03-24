@@ -130,24 +130,26 @@ public class BusinessConfigManager extends ContainerHolder implements Initializa
 
 	public boolean insertBusinessConfigIfNotExist(String domain, String key, ConfigItem item) {
 		try {
-			if (!m_domains.containsKey(domain) && !filter(domain, key)) {
-				BusinessReportConfig config = new BusinessReportConfig();
-				config.setId(domain);
+			if (!m_domains.containsKey(domain)) {
+				if (!filter(domain, key)) {
+					BusinessReportConfig config = new BusinessReportConfig();
+					config.setId(domain);
 
-				BusinessItemConfig businessItemConfig = buildBusinessItemConfig(key, item);
-				config.addBusinessItemConfig(businessItemConfig);
+					BusinessItemConfig businessItemConfig = buildBusinessItemConfig(key, item);
+					config.addBusinessItemConfig(businessItemConfig);
 
-				BusinessConfig businessConfig = m_configDao.createLocal();
-				businessConfig.setName(BASE_CONFIG);
-				businessConfig.setDomain(domain);
-				businessConfig.setContent(config.toString());
-				businessConfig.setUpdatetime(new Date());
-				m_configDao.insert(businessConfig);
+					BusinessConfig businessConfig = m_configDao.createLocal();
+					businessConfig.setName(BASE_CONFIG);
+					businessConfig.setDomain(domain);
+					businessConfig.setContent(config.toString());
+					businessConfig.setUpdatetime(new Date());
+					m_configDao.insert(businessConfig);
 
-				Set<String> itemIds = new HashSet<String>();
-				itemIds.add(key);
-				m_domains.put(domain, itemIds);
-				cacheConfigs(config, domain);
+					Set<String> itemIds = new HashSet<String>();
+					itemIds.add(key);
+					m_domains.put(domain, itemIds);
+					cacheConfigs(config, domain);
+				}
 			} else {
 				Set<String> itemIds = m_domains.get(domain);
 
