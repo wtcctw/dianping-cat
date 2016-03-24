@@ -2,6 +2,8 @@ package com.dianping.cat.consumer.business;
 
 import java.util.List;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
@@ -19,7 +21,8 @@ import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportManager;
 
 @Named(type = MessageAnalyzer.class, value = BusinessAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
-public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport> {
+public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport>  implements LogEnabled {
+	
 	public static final String ID = "business";
 
 	@Inject(ID)
@@ -27,11 +30,6 @@ public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport> {
 
 	@Inject
 	private BusinessConfigManager m_configManager;
-
-	@Override
-	public ReportManager<BusinessReport> getReportManager() {
-		return m_reportManager;
-	}
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
@@ -43,14 +41,61 @@ public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport> {
 	}
 
 	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
 	public BusinessReport getReport(String domain) {
 		long period = getStartTime();
 		return m_reportManager.getHourlyReport(period, domain, false);
 	}
 
 	@Override
+	public ReportManager<BusinessReport> getReportManager() {
+		return m_reportManager;
+	}
+
+	@Override
 	protected void loadReports() {
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
+	}
+
+	private ConfigItem parseValue(String status, String data) {
+		ConfigItem config = new ConfigItem();
+
+		if ("C".equals(status)) {
+			if (StringUtils.isEmpty(data)) {
+				data = "1";
+			}
+			int count = (int) Double.parseDouble(data);
+
+			config.setCount(count);
+			config.setValue((double) count);
+			config.setShowCount(true);
+		} else if ("T".equals(status)) {
+			double duration = Double.parseDouble(data);
+
+			config.setCount(1);
+			config.setValue(duration);
+			config.setShowAvg(true);
+		} else if ("S".equals(status)) {
+			double sum = Double.parseDouble(data);
+
+			config.setCount(1);
+			config.setValue(sum);
+			config.setShowSum(true);
+		} else if ("S,C".equals(status)) {
+			String[] datas = data.split(",");
+
+			config.setCount(Integer.parseInt(datas[0]));
+			config.setValue(Double.parseDouble(datas[1]));
+			config.setShowSum(true);
+		} else {
+			return null;
+		}
+
+		return config;
 	}
 
 	@Override
@@ -89,46 +134,9 @@ public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport> {
 
 			if (!result) {
 				m_logger.error(String
-				      .format("error when insert metric config info, domain %s, metricName %s", domain, name));
+				      .format("error when insert business config info, domain %s, metricName %s", domain, name));
 			}
 		}
-	}
-
-	private ConfigItem parseValue(String status, String data) {
-		ConfigItem config = new ConfigItem();
-
-		if ("C".equals(status)) {
-			if (StringUtils.isEmpty(data)) {
-				data = "1";
-			}
-			int count = (int) Double.parseDouble(data);
-
-			config.setCount(count);
-			config.setValue((double) count);
-			config.setShowCount(true);
-		} else if ("T".equals(status)) {
-			double duration = Double.parseDouble(data);
-
-			config.setCount(1);
-			config.setValue(duration);
-			config.setShowAvg(true);
-		} else if ("S".equals(status)) {
-			double sum = Double.parseDouble(data);
-
-			config.setCount(1);
-			config.setValue(sum);
-			config.setShowSum(true);
-		} else if ("S,C".equals(status)) {
-			String[] datas = data.split(",");
-
-			config.setCount(Integer.parseInt(datas[0]));
-			config.setValue(Double.parseDouble(datas[1]));
-			config.setShowSum(true);
-		} else {
-			return null;
-		}
-
-		return config;
 	}
 
 }
