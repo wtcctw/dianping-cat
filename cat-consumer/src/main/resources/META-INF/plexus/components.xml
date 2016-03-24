@@ -342,6 +342,9 @@
 				<requirement>
 					<role>org.unidal.cat.message.storage.MessageDumperManager</role>
 				</requirement>
+				<requirement>
+					<role>org.unidal.cat.message.storage.MessageFinderManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

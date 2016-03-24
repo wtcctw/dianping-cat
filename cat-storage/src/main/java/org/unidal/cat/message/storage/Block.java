@@ -8,7 +8,7 @@ import java.util.Map;
 import com.dianping.cat.message.internal.MessageId;
 
 public interface Block {
-	public ByteBuf findTree(MessageId id);
+	public ByteBuf find(MessageId id);
 
 	public void finish();
 

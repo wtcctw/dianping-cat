@@ -1,4 +1,4 @@
-package org.unidal.cat.message.storage.local;
+package org.unidal.cat.message.storage.internals;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,6 +11,7 @@ import org.unidal.cat.message.storage.Block;
 import org.unidal.cat.message.storage.BlockWriter;
 import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.BucketManager;
+import org.unidal.cat.metric.BenchmarkManager;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
@@ -23,28 +24,31 @@ public class DefaultBlockWriter implements BlockWriter {
 	@Inject
 	private BucketManager m_bucketManager;
 
+	@Inject
+	private BenchmarkManager m_benchmarkManager;
+
 	private int m_index;
 
 	private BlockingQueue<Block> m_queue;
+
+	private long m_hour;
+
+	private int m_count;
 
 	private AtomicBoolean m_enabled;
 
 	private CountDownLatch m_latch;
 
-	private int m_count = -1;
-
-	private long m_timestamp;
-
 	@Override
 	public String getName() {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-		return getClass().getSimpleName() + " " + sdf.format(new Date(m_timestamp)) + "-" + m_index;
+		return getClass().getSimpleName() + " " + sdf.format(new Date(TimeUnit.HOURS.toMillis(m_hour))) + "-" + m_index;
 	}
 
 	@Override
-	public void initialize(long timestamp, int index, BlockingQueue<Block> queue) {
-		m_timestamp = timestamp;
+	public void initialize(int hour, int index, BlockingQueue<Block> queue) {
+		m_hour = hour;
 		m_index = index;
 		m_queue = queue;
 		m_enabled = new AtomicBoolean(true);
@@ -57,7 +61,7 @@ public class DefaultBlockWriter implements BlockWriter {
 		Block block;
 
 		try {
-			while (true) {
+			while (m_enabled.get() || !m_queue.isEmpty()) {
 				block = m_queue.poll(5, TimeUnit.MILLISECONDS);
 
 				if (block != null) {
@@ -76,15 +80,12 @@ public class DefaultBlockWriter implements BlockWriter {
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
-				} else if (m_enabled.get() == false) {
-					break;
 				}
 			}
 		} catch (InterruptedException e) {
 			// ignore it
 		}
 
-		System.out.println(getName() + " is shutdown");
 		m_latch.countDown();
 	}
 

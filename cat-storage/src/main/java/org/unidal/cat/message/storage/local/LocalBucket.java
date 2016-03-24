@@ -21,6 +21,9 @@ import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.FileBuilder;
 import org.unidal.cat.message.storage.FileBuilder.FileType;
 import org.unidal.cat.message.storage.internals.DefaultBlock;
+import org.unidal.cat.metric.Benchmark;
+import org.unidal.cat.metric.BenchmarkEnabled;
+import org.unidal.cat.metric.Metric;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
@@ -29,28 +32,38 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.internal.MessageId;
 
 @Named(type = Bucket.class, value = "local", instantiationStrategy = Named.PER_LOOKUP)
-public class LocalBucket implements Bucket {
-	public static final int SEGMENT_SIZE = 32 * 1024;
+public class LocalBucket implements Bucket, BenchmarkEnabled {
+	private static final int SEGMENT_SIZE = 32 * 1024;
 
 	@Inject("local")
 	private FileBuilder m_bulider;
+
+	private Metric m_indexMetric;
+
+	private Metric m_dataMetric;
 
 	private DataHelper m_data = new DataHelper();
 
 	private IndexHelper m_index = new IndexHelper();
 
+	private Benchmark m_benchmark;
+
 	@Override
 	public void close() {
 		if (m_index.isOpen()) {
+			m_indexMetric.start();
 			m_index.close();
+			m_indexMetric.end();
+
+			m_dataMetric.start();
 			m_data.close();
+			m_dataMetric.end();
 		}
 	}
 
 	public void flush() {
 		try {
 			m_data.m_file.getFD().sync();
-			m_index.m_file.getFD().sync();
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -58,19 +71,29 @@ public class LocalBucket implements Bucket {
 
 	@Override
 	public ByteBuf get(MessageId id) throws IOException {
+		m_indexMetric.start();
 		long address = m_index.read(id);
+		m_indexMetric.end();
 
 		if (address < 0) {
 			return null;
 		} else {
 			int segmentOffset = (int) (address & 0xFFFFFFL);
 			long dataOffset = address >> 24;
+
+			m_dataMetric.start();
 			byte[] data = m_data.read(dataOffset);
+			m_dataMetric.end();
 
 			DefaultBlock block = new DefaultBlock(id, segmentOffset, data);
 
 			return block.unpack(id);
 		}
+	}
+
+	@Override
+	public Benchmark getBechmark() {
+		return m_benchmark;
 	}
 
 	@Override
@@ -80,22 +103,38 @@ public class LocalBucket implements Bucket {
 		File dataPath = m_bulider.getFile(domain, startTime, ip, FileType.DATA);
 		File indexPath = m_bulider.getFile(domain, startTime, ip, FileType.INDEX);
 
+		m_dataMetric.start();
 		m_data.init(dataPath);
+		m_dataMetric.end();
+
+		m_indexMetric.start();
 		m_index.init(indexPath);
+		m_indexMetric.end();
 	}
 
 	@Override
 	public void puts(ByteBuf data, Map<MessageId, Integer> mappings) throws IOException {
 		long dataOffset = m_data.getDataOffset();
 
+		m_dataMetric.start();
 		m_data.write(data);
+		m_dataMetric.end();
 
 		for (Map.Entry<MessageId, Integer> e : mappings.entrySet()) {
 			MessageId id = e.getKey();
 			int offset = e.getValue();
 
+			m_indexMetric.start();
 			m_index.write(id, dataOffset, offset);
+			m_indexMetric.end();
 		}
+	}
+
+	@Override
+	public void setBenchmark(Benchmark benchmark) {
+		m_benchmark = benchmark;
+		m_indexMetric = benchmark.get("index");
+		m_dataMetric = benchmark.get("data");
 	}
 
 	@Override
@@ -229,8 +268,9 @@ public class LocalBucket implements Bucket {
 		public void init(File indexPath) throws IOException {
 			m_path = indexPath;
 			m_path.getParentFile().mkdirs();
-			m_file = new RandomAccessFile(m_path, "rwd"); // read-write without
-			// meta sync
+
+			// read-write without meta sync
+			m_file = new RandomAccessFile(m_path, "rwd");
 			m_indexChannel = m_file.getChannel();
 
 			long size = m_file.length();
@@ -239,6 +279,7 @@ public class LocalBucket implements Bucket {
 			if (totalHeaders == 0) {
 				totalHeaders = 1;
 			}
+
 			for (int i = 0; i < totalHeaders; i++) {
 				m_header.load(i);
 			}
@@ -266,6 +307,7 @@ public class LocalBucket implements Bucket {
 				}
 			} else {
 				m_file.seek(position);
+
 				long address = m_file.readLong();
 
 				return address;
@@ -284,7 +326,7 @@ public class LocalBucket implements Bucket {
 			if (segment != null) {
 				segment.writeLong(offset, value);
 			} else {
-				Cat.logEvent("Block", "Abnormal", Event.SUCCESS, null);
+				Cat.logEvent("Block", "Abnormal:" + id.getDomain(), Event.SUCCESS, id.toString());
 				m_indexChannel.position(position);
 
 				ByteBuffer buf = ByteBuffer.allocate(8);
@@ -362,15 +404,17 @@ public class LocalBucket implements Bucket {
 					throw new IOException("Invalid index file: " + m_path);
 				}
 
+				m_segment = segment;
 				m_nextSegment = 1 + ENTRY_PER_SEGMENT * headBlockIndex;
 				m_offset = 8;
 
 				int readerIndex = 1;
 
-				while (true && readerIndex < ENTRY_PER_SEGMENT) {
-					readerIndex++;
+				while (readerIndex < ENTRY_PER_SEGMENT) {
 					int ip = segment.readInt();
 					int index = segment.readInt();
+
+					readerIndex++;
 
 					if (ip != 0) {
 						Map<Integer, Integer> map = m_table.get(ip);
@@ -387,12 +431,12 @@ public class LocalBucket implements Bucket {
 
 							map.put(index, segmentNo);
 						}
+
 						m_offset += 8;
 					} else {
 						break;
 					}
 				}
-				m_segment = segment;
 			}
 		}
 
@@ -403,14 +447,11 @@ public class LocalBucket implements Bucket {
 
 			private ByteBuffer m_buf;
 
-			private long m_lastAccessTime;
-
 			private boolean m_dirty;
 
 			private Segment(FileChannel channel, long address) throws IOException {
 				m_segmentChannel = channel;
 				m_address = address;
-				m_lastAccessTime = System.currentTimeMillis();
 				m_buf = ByteBuffer.allocate(SEGMENT_SIZE);
 				m_buf.mark();
 				m_segmentChannel.read(m_buf, address);
@@ -425,7 +466,6 @@ public class LocalBucket implements Bucket {
 					m_segmentChannel.write(m_buf, m_address);
 					m_buf.position(pos);
 					m_dirty = false;
-					m_lastAccessTime = System.currentTimeMillis();
 				}
 			}
 
@@ -449,12 +489,6 @@ public class LocalBucket implements Bucket {
 			public void writeLong(int offset, long value) throws IOException {
 				m_buf.putLong(offset, value);
 				m_dirty = true;
-
-				if (m_lastAccessTime + 1000L < System.currentTimeMillis()) {
-					// idle after 1 second
-					// flush();
-					m_lastAccessTime = System.currentTimeMillis();
-				}
 			}
 		}
 
@@ -468,15 +502,21 @@ public class LocalBucket implements Bucket {
 			public Segment findOrCreateNextSegment(long segmentId) throws IOException {
 				Segment segment = m_latestSegments.get(segmentId);
 
-				if (segment == null && segmentId > m_maxSegmentId) {
-					if (m_latestSegments.size() >= CACHE_SIZE) {
-						removeOldSegment();
+				if (segment == null) {
+					if (segmentId > m_maxSegmentId) {
+						if (m_latestSegments.size() >= CACHE_SIZE) {
+							removeOldSegment();
+						}
+
+						segment = new Segment(m_indexChannel, segmentId * SEGMENT_SIZE);
+
+						m_latestSegments.put(segmentId, segment);
+						m_maxSegmentId = segmentId;
+					} else {
+						int duration = (int) (m_maxSegmentId - segmentId);
+						Cat.logEvent("OldSegment", String.valueOf(duration), Event.SUCCESS, String.valueOf(segmentId)
+						      + ",max:" + String.valueOf(m_maxSegmentId));
 					}
-
-					segment = new Segment(m_indexChannel, segmentId * SEGMENT_SIZE);
-
-					m_latestSegments.put(segmentId, segment);
-					m_maxSegmentId = segmentId;
 				}
 
 				return segment;

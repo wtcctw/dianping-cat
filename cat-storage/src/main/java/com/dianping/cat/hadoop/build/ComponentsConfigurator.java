@@ -3,24 +3,22 @@ package com.dianping.cat.hadoop.build;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.unidal.cat.message.storage.BlockDumper;
-import org.unidal.cat.message.storage.BlockDumperManager;
-import org.unidal.cat.message.storage.BlockWriter;
-import org.unidal.cat.message.storage.Bucket;
-import org.unidal.cat.message.storage.BucketManager;
-import org.unidal.cat.message.storage.FileBuilder;
-import org.unidal.cat.message.storage.MessageDumper;
-import org.unidal.cat.message.storage.MessageDumperManager;
-import org.unidal.cat.message.storage.MessageProcessor;
-import org.unidal.cat.message.storage.StorageConfiguration;
+import org.unidal.cat.message.storage.internals.DefaultBlockDumper;
+import org.unidal.cat.message.storage.internals.DefaultBlockDumperManager;
+import org.unidal.cat.message.storage.internals.DefaultBlockWriter;
+import org.unidal.cat.message.storage.internals.DefaultMessageDumper;
+import org.unidal.cat.message.storage.internals.DefaultMessageDumperManager;
+import org.unidal.cat.message.storage.internals.DefaultMessageFinderManager;
+import org.unidal.cat.message.storage.internals.DefaultMessageProcessor;
 import org.unidal.cat.message.storage.internals.DefaultStorageConfiguration;
-import org.unidal.cat.message.storage.local.DefaultBlockDumper;
-import org.unidal.cat.message.storage.local.DefaultBlockWriter;
-import org.unidal.cat.message.storage.local.DefaultMessageDumper;
-import org.unidal.cat.message.storage.local.DefaultMessageProcessor;
 import org.unidal.cat.message.storage.local.LocalBucket;
 import org.unidal.cat.message.storage.local.LocalBucketManager;
 import org.unidal.cat.message.storage.local.LocalFileBuilder;
+import org.unidal.cat.message.storage.local.LocalIndex;
+import org.unidal.cat.message.storage.local.LocalIndexManager;
+import org.unidal.cat.message.storage.local.LocalTokenMapping;
+import org.unidal.cat.message.storage.local.LocalTokenMappingManager;
+import org.unidal.cat.metric.DefaultBenchmarkManager;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
@@ -78,20 +76,27 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 	public List<Component> defineLocalComponents() {
 		List<Component> all = new ArrayList<Component>();
-		String local = "local";
 
-		all.add(C(MessageDumperManager.class));
-		all.add(C(MessageDumper.class, DefaultMessageDumper.class).req(BlockDumperManager.class)
-		      .req(BucketManager.class, local).is(PER_LOOKUP));
-		all.add(C(MessageProcessor.class, DefaultMessageProcessor.class).req(BlockDumperManager.class).is(PER_LOOKUP));
-		all.add(C(BlockDumper.class, DefaultBlockDumper.class).is(PER_LOOKUP));
-		all.add(C(BlockDumperManager.class));
-		all.add(C(BlockWriter.class, DefaultBlockWriter.class).req(BucketManager.class, local).is(PER_LOOKUP));
-		all.add(C(BucketManager.class, local, LocalBucketManager.class).req(FileBuilder.class, local));
-		all.add(C(Bucket.class, local, LocalBucket.class).req(FileBuilder.class, local).is(PER_LOOKUP));
-		all.add(C(FileBuilder.class, local, LocalFileBuilder.class).req(StorageConfiguration.class));
-		all.add(C(StorageConfiguration.class, DefaultStorageConfiguration.class));
+		all.add(A(DefaultMessageDumperManager.class));
+		all.add(A(DefaultMessageFinderManager.class));
+		all.add(A(DefaultMessageDumper.class));
+		all.add(A(DefaultMessageProcessor.class));
+		all.add(A(DefaultBlockDumperManager.class));
+		all.add(A(DefaultBlockDumper.class));
+		all.add(A(DefaultBlockWriter.class));
 
+		all.add(A(DefaultBenchmarkManager.class));
+		
+		all.add(A(LocalBucketManager.class));
+		all.add(A(LocalBucket.class));
+		all.add(A(LocalIndexManager.class));
+		all.add(A(LocalIndex.class));
+
+		all.add(A(LocalFileBuilder.class));
+		all.add(A(LocalTokenMapping.class));
+		all.add(A(LocalTokenMappingManager.class));
+
+		all.add(A(DefaultStorageConfiguration.class));
 		return all;
 	}
 

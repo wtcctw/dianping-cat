@@ -55,7 +55,7 @@
 	timstamp<span class="text-danger">TAB</span>network<span class="text-danger">TAB</span>version<span class="text-danger">TAB</span>tunnel<span class="text-danger">TAB</span>command<span class="text-danger">TAB</span>code<span class="text-danger">TAB</span>platform<span class="text-danger">TAB</span>requestbyte<span class="text-danger">TAB</span>responsebyte<span class="text-danger">TAB</span>responsetime<span class="text-danger">TAB</span>ip<span class="text-danger">ENTER</span>
 	</pre>
 	<p>POST内容如果有如下5个请求，Sample的POST内容为，</p>
-	<p class="text-danger">v=2&c=不需要做urlencode，后面的批量的content部分需要urlencode。</p>
+	<p class="text-danger">v=3&c=不需要做urlencode，后面的批量的content部分需要urlencode。</p>
 	<pre>
 	v=3&p=1&c=
 	1400037748152<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>1<span class="text-danger">\t</span>100<span class="text-danger">\t</span>100<span class="text-danger">\t</span>200<span class="text-danger">\t</span>10.1.6.128<span class="text-danger">\n</span> 

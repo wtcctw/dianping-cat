@@ -69,11 +69,15 @@
 		</component>
 		<component>
 			<role>org.unidal.cat.message.storage.MessageDumperManager</role>
-			<implementation>org.unidal.cat.message.storage.MessageDumperManager</implementation>
+			<implementation>org.unidal.cat.message.storage.internals.DefaultMessageDumperManager</implementation>
+		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.MessageFinderManager</role>
+			<implementation>org.unidal.cat.message.storage.internals.DefaultMessageFinderManager</implementation>
 		</component>
 		<component>
 			<role>org.unidal.cat.message.storage.MessageDumper</role>
-			<implementation>org.unidal.cat.message.storage.local.DefaultMessageDumper</implementation>
+			<implementation>org.unidal.cat.message.storage.internals.DefaultMessageDumper</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
@@ -81,45 +85,59 @@
 				</requirement>
 				<requirement>
 					<role>org.unidal.cat.message.storage.BucketManager</role>
-					<role-hint>local</role-hint>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>org.unidal.cat.message.storage.MessageProcessor</role>
-			<implementation>org.unidal.cat.message.storage.local.DefaultMessageProcessor</implementation>
+			<implementation>org.unidal.cat.message.storage.internals.DefaultMessageProcessor</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
 					<role>org.unidal.cat.message.storage.BlockDumperManager</role>
 				</requirement>
+				<requirement>
+					<role>org.unidal.cat.metric.BenchmarkManager</role>
+				</requirement>
+				<requirement>
+					<role>org.unidal.cat.message.storage.MessageFinderManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
+			<role>org.unidal.cat.message.storage.BlockDumperManager</role>
+			<implementation>org.unidal.cat.message.storage.internals.DefaultBlockDumperManager</implementation>
+		</component>
+		<component>
 			<role>org.unidal.cat.message.storage.BlockDumper</role>
-			<implementation>org.unidal.cat.message.storage.local.DefaultBlockDumper</implementation>
+			<implementation>org.unidal.cat.message.storage.internals.DefaultBlockDumper</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 		<component>
-			<role>org.unidal.cat.message.storage.BlockDumperManager</role>
-			<implementation>org.unidal.cat.message.storage.BlockDumperManager</implementation>
-		</component>
-		<component>
 			<role>org.unidal.cat.message.storage.BlockWriter</role>
-			<implementation>org.unidal.cat.message.storage.local.DefaultBlockWriter</implementation>
+			<implementation>org.unidal.cat.message.storage.internals.DefaultBlockWriter</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
 					<role>org.unidal.cat.message.storage.BucketManager</role>
-					<role-hint>local</role-hint>
+				</requirement>
+				<requirement>
+					<role>org.unidal.cat.metric.BenchmarkManager</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.cat.metric.BenchmarkManager</role>
+			<implementation>org.unidal.cat.metric.DefaultBenchmarkManager</implementation>
 		</component>
 		<component>
 			<role>org.unidal.cat.message.storage.BucketManager</role>
 			<role-hint>local</role-hint>
 			<implementation>org.unidal.cat.message.storage.local.LocalBucketManager</implementation>
 			<requirements>
+				<requirement>
+					<role>org.unidal.cat.metric.BenchmarkManager</role>
+				</requirement>
 				<requirement>
 					<role>org.unidal.cat.message.storage.FileBuilder</role>
 					<role-hint>local</role-hint>
@@ -139,6 +157,27 @@
 			</requirements>
 		</component>
 		<component>
+			<role>org.unidal.cat.message.storage.IndexManager</role>
+			<role-hint>local</role-hint>
+			<implementation>org.unidal.cat.message.storage.local.LocalIndexManager</implementation>
+		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.Index</role>
+			<role-hint>local</role-hint>
+			<implementation>org.unidal.cat.message.storage.local.LocalIndex</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>org.unidal.cat.message.storage.FileBuilder</role>
+					<role-hint>local</role-hint>
+				</requirement>
+				<requirement>
+					<role>org.unidal.cat.message.storage.TokenMappingManager</role>
+					<role-hint>local</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.cat.message.storage.FileBuilder</role>
 			<role-hint>local</role-hint>
 			<implementation>org.unidal.cat.message.storage.local.LocalFileBuilder</implementation>
@@ -147,6 +186,23 @@
 					<role>org.unidal.cat.message.storage.StorageConfiguration</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.TokenMapping</role>
+			<role-hint>local</role-hint>
+			<implementation>org.unidal.cat.message.storage.local.LocalTokenMapping</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>org.unidal.cat.message.storage.FileBuilder</role>
+					<role-hint>local</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.TokenMappingManager</role>
+			<role-hint>local</role-hint>
+			<implementation>org.unidal.cat.message.storage.local.LocalTokenMappingManager</implementation>
 		</component>
 		<component>
 			<role>org.unidal.cat.message.storage.StorageConfiguration</role>
