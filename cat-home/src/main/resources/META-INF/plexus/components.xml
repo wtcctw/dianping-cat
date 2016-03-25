@@ -6324,6 +6324,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.business.graph.CustomDataCalculator</role>
 			<implementation>com.dianping.cat.report.page.business.graph.CustomDataCalculator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.business.task.BusinessKeyHelper</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>org.unidal.web.mvc.Module</role>

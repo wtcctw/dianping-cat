@@ -4,12 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.jexl3.JexlBuilder;
+import org.apache.commons.jexl3.JexlEngine;
+import org.apache.commons.jexl3.JexlExpression;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.report.page.business.task.BusinessKeyHelper;
 
 public class CustomDataCalculator {
+
+	private static final JexlEngine jexl = new JexlBuilder().cache(512).strict(true).silent(false).create();
 
 	@Inject
 	private BusinessKeyHelper m_keyHelper;
@@ -62,23 +67,28 @@ public class CustomDataCalculator {
 		double[] result = new double[totalSize];
 
 		for (int i = 0; i < totalSize; i++) {
+			String expression = pattern;
+
 			for (CustomInfo customInfo : customInfos) {
 				String customPattern = customInfo.getPattern();
 				String itemId = m_keyHelper.generateKey(customInfo.getKey(), customInfo.getDomain(), customInfo.getType());
 				double[] sourceData = businessItemDataCache.get(itemId);
 
 				if (sourceData != null) {
-					pattern.replace(customPattern, Double.toString(sourceData[i]));
+					expression = expression.replace(customPattern, Double.toString(sourceData[i]));
 				}
 			}
 			
-			result[i] = calculate(pattern);
+			result[i] = calculate(expression);
 		}
 		return result;
 	}
 
 	private double calculate(String pattern) {
-	   // TODO Auto-generated method stub
-	   return 0;
-   }
+		JexlExpression e = jexl.createExpression(pattern);
+		Number result = (Number) e.evaluate(null);
+		double aa = result.doubleValue();
+		return aa;
+	}
+	
 }
