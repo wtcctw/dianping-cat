@@ -10,6 +10,7 @@ import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.internal.NullMessage;
 import com.dianping.cat.message.spi.MessageTree;
 
@@ -182,4 +183,14 @@ public class NullMessageTree implements MessageTree {
    public ByteBuf getBuffer() {
 	   return null;
    }
+
+	@Override
+   public MessageId getFormatMessageId() {
+	   return null;
+   }
+
+	@Override
+   public void setFormatMessageId(MessageId messageId) {
+   }
+	
 }

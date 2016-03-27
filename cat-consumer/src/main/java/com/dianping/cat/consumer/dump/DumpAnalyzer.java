@@ -72,6 +72,8 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 			int hour = messageId.getHour();
 			MessageDumper dumper = m_dumperManager.find(hour);
 
+			tree.setFormatMessageId(messageId);
+
 			if (dumper != null) {
 				dumper.process(tree);
 			} else {

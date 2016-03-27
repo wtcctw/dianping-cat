@@ -9,6 +9,7 @@ import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.MessageId;
 
 public interface MessageTree extends Cloneable {
 	public boolean canDiscard();
@@ -20,6 +21,8 @@ public interface MessageTree extends Cloneable {
 	public String getDomain();
 
 	public List<Event> getEvents();
+
+	public MessageId getFormatMessageId();
 
 	public List<Heartbeat> getHeartbeats();
 
@@ -53,6 +56,8 @@ public interface MessageTree extends Cloneable {
 
 	public void setDomain(String domain);
 
+	public void setFormatMessageId(MessageId messageId);
+
 	public void setHostName(String hostName);
 
 	public void setIpAddress(String ipAddress);
@@ -72,7 +77,7 @@ public interface MessageTree extends Cloneable {
 	public void setThreadGroupName(String name);
 
 	public void setThreadId(String threadId);
-
+	
 	public void setThreadName(String id);
 
 }

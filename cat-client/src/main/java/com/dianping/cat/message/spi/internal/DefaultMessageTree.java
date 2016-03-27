@@ -2,6 +2,7 @@ package com.dianping.cat.message.spi.internal;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.*;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
@@ -9,8 +10,10 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
+
 import io.netty.util.ReferenceCountUtil;
 
 public class DefaultMessageTree implements MessageTree {
@@ -38,6 +41,8 @@ public class DefaultMessageTree implements MessageTree {
 	private String m_threadId;
 
 	private String m_threadName;
+	
+	private MessageId m_formatMessageId;
 
 	private boolean m_discard = true;
 
@@ -104,6 +109,10 @@ public class DefaultMessageTree implements MessageTree {
 
 	public List<Event> getEvents() {
 		return events;
+	}
+
+	public MessageId getFormatMessageId() {
+		return m_formatMessageId;
 	}
 
 	public List<Heartbeat> getHeartbeats() {
@@ -184,6 +193,10 @@ public class DefaultMessageTree implements MessageTree {
 	@Override
 	public void setDomain(String domain) {
 		m_domain = domain;
+	}
+
+	public void setFormatMessageId(MessageId formatMessageId) {
+		m_formatMessageId = formatMessageId;
 	}
 
 	@Override
