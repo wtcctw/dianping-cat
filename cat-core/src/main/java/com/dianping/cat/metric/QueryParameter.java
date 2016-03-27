@@ -42,7 +42,7 @@ public class QueryParameter {
 		return m_start;
 	}
 
-	public String getTags() {
+	public String getSqlTags() {
 		String tag = "";
 		List<String> tags = Splitters.by(";").noEmptyItem().split(m_tags);
 
@@ -51,6 +51,10 @@ public class QueryParameter {
 		}
 
 		return tag;
+	}
+
+	public String getTags() {
+		return m_tags;
 	}
 
 	public MetricType getType() {

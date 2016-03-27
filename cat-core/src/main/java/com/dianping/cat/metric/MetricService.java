@@ -9,6 +9,8 @@ public interface MetricService {
 
 	public Map<Long, Double> query(QueryParameter parameter);
 
+	public Map<Long, Double> queryFillNone(QueryParameter parameter);
+
 	public List<String> queryEndPoints(String category);
 
 	public List<String> queryEndPoints(String category, String tag, List<String> keywords);

@@ -20,7 +20,6 @@ import com.dianping.cat.home.dal.report.ConfigModification;
 import com.dianping.cat.home.dal.report.ConfigModificationDao;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.processor.AlertConfigProcessor;
-import com.dianping.cat.system.page.config.processor.AppConfigProcessor;
 import com.dianping.cat.system.page.config.processor.DatabaseConfigProcessor;
 import com.dianping.cat.system.page.config.processor.DependencyConfigProcessor;
 import com.dianping.cat.system.page.config.processor.EventConfigProcessor;
@@ -64,9 +63,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private HeartbeatConfigProcessor m_heartbeatConfigProcessor;
-
-	@Inject
-	private AppConfigProcessor m_appConfigProcessor;
 
 	@Inject
 	private AlertConfigProcessor m_alertConfigProcessor;
@@ -200,33 +196,6 @@ public class Handler implements PageHandler<Context> {
 		case STORAGE_RULE_ADD_OR_UPDATE_SUBMIT:
 		case STORAGE_RULE_DELETE:
 			m_storageConfigProcessor.process(action, payload, model);
-			break;
-
-		case APP_NAME_CHECK:
-		case APP_LIST:
-		case APP_COMMMAND_UPDATE:
-		case APP_COMMAND_SUBMIT:
-		case APP_COMMAND_DELETE:
-		case APP_CODE_UPDATE:
-		case APP_CODE_SUBMIT:
-		case APP_CODE_ADD:
-		case APP_CODE_DELETE:
-		case APP_SPEED_UPDATE:
-		case APP_SPEED_ADD:
-		case APP_SPEED_DELETE:
-		case APP_SPEED_SUBMIT:
-		case APP_CONFIG_UPDATE:
-		case APP_RULE:
-		case APP_RULE_ADD_OR_UPDATE:
-		case APP_RULE_ADD_OR_UPDATE_SUBMIT:
-		case APP_RULE_DELETE:
-		case APP_RULE_BATCH_UPDATE:
-		case APP_CONSTANT_ADD:
-		case APP_CONSTANT_UPDATE:
-		case APP_CONSTATN_DELETE:
-		case APP_CONSTATN_SUBMIT:
-		case APP_COMMAND_FORMAT_CONFIG:
-			m_appConfigProcessor.process(action, payload, model);
 			break;
 
 		case TRANSACTION_RULE:

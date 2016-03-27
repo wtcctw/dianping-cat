@@ -14,7 +14,7 @@ import com.dianping.cat.configuration.web.entity.ConfigItem;
 import com.dianping.cat.configuration.web.entity.Item;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.js.entity.ExceptionLimit;
-import com.dianping.cat.home.rule.entity.Rule;
+import com.dianping.cat.alarm.rule.entity.Rule;
 import com.dianping.cat.system.SystemPage;
 
 import org.unidal.lookup.ContainerLoader;

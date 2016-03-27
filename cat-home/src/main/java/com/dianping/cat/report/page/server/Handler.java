@@ -24,6 +24,14 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.alarm.ServerAlarmRule;
+import com.dianping.cat.alarm.server.entity.Rule;
+import com.dianping.cat.alarm.server.entity.ServerAlarmRuleConfig;
+import com.dianping.cat.alarm.server.transform.DefaultJsonBuilder;
+import com.dianping.cat.alarm.server.transform.DefaultJsonParser;
+import com.dianping.cat.alarm.server.transform.DefaultSaxParser;
+import com.dianping.cat.alarm.service.ServerAlarmRuleService;
+import com.dianping.cat.alarm.spi.decorator.ServerRuleFTLDecorator;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.graph.entity.Graph;
@@ -79,6 +87,12 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ServerMetricConfigManager m_serverMetricConfigManager;
+
+	@Inject
+	private ServerAlarmRuleService m_ruleService;
+
+	@Inject
+	private ServerRuleFTLDecorator m_ftlDecorator;
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
@@ -166,6 +180,22 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		return graph;
+	}
+
+	private String generateRuleConfigContent(ServerAlarmRule rule) {
+		String configsStr = "";
+
+		if (rule != null) {
+			try {
+				ServerAlarmRuleConfig config = DefaultSaxParser.parse(rule.getContent());
+				configsStr = new DefaultJsonBuilder(true).buildArray(config.getRules());
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+		String content = m_ftlDecorator.generateConfigsHtml(configsStr);
+
+		return content;
 	}
 
 	@Override
@@ -314,6 +344,29 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setConfig(m_configHtmlParser.parse(m_serverMetricConfigManager.getConfig().toString()));
 			break;
+		case SERVER_ALARM_RULE:
+			String type = payload.getType();
+			List<ServerAlarmRule> rules = m_ruleService.queryRules(type);
+
+			model.setServerAlarmRules(rules);
+			break;
+		case SERVER_ALARM_RULE_UPDATE:
+			int id = payload.getRuleId();
+			ServerAlarmRule rule = m_ruleService.queryById(id);
+
+			model.setServerAlarmRule(rule);
+			model.setContent(generateRuleConfigContent(rule));
+			break;
+		case SERVER_ALARM_RULE_DELETE:
+			rule = new ServerAlarmRule();
+
+			rule.setId(payload.getRuleId());
+			model.setOpState(m_ruleService.delete(rule));
+			break;
+		case SERVER_ALARM_RULE_SUBMIT:
+			model.setOpState(submitServerRule(payload));
+			model.setServerAlarmRules(m_ruleService.queryRules(payload.getType()));
+			break;
 		}
 
 		if (!ctx.isProcessStopped()) {
@@ -410,5 +463,32 @@ public class Handler implements PageHandler<Context> {
 
 		Collections.sort(measurements);
 		return measurements;
+	}
+
+	private boolean submitServerRule(Payload payload) {
+		try {
+			ServerAlarmRule rule = payload.getRule();
+			List<Rule> ruleConfigs = DefaultJsonParser.parseArray(Rule.class, payload.getContent());
+			ServerAlarmRuleConfig ruleConfig = new ServerAlarmRuleConfig();
+
+			ruleConfig.setId(rule.getMeasurement());
+
+			for (Rule config : ruleConfigs) {
+				ruleConfig.addRule(config);
+			}
+			rule.setCategory(payload.getType());
+			rule.setContent(ruleConfig.toString());
+
+			ServerAlarmRule r = m_ruleService.queryById(rule.getId());
+
+			if (r != null) {
+				return m_ruleService.update(rule);
+			} else {
+				return m_ruleService.insert(rule);
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
 	}
 }

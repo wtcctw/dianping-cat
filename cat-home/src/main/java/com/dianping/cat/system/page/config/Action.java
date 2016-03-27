@@ -105,52 +105,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	NET_GRAPH_CONFIG_UPDATE("netGraphConfigUpdate"),
 
-	APP_NAME_CHECK("appNameCheck"),
-
-	APP_LIST("appList"),
-
-	APP_COMMMAND_UPDATE("appUpdate"),
-
-	APP_COMMAND_SUBMIT("appSubmit"),
-
-	APP_COMMAND_DELETE("appPageDelete"),
-
-	APP_CODE_UPDATE("appCodeUpdate"),
-
-	APP_CODE_SUBMIT("appCodeSubmit"),
-
-	APP_CODE_ADD("appCodeAdd"),
-
-	APP_CODE_DELETE("appCodeDelete"),
-
-	APP_SPEED_UPDATE("appSpeedUpdate"),
-
-	APP_SPEED_SUBMIT("appSpeedSubmit"),
-
-	APP_SPEED_ADD("appSpeedAdd"),
-
-	APP_SPEED_DELETE("appSpeedDelete"),
-
-	APP_CONSTANT_ADD("appConstantAdd"),
-
-	APP_CONSTANT_UPDATE("appConstantUpdate"),
-
-	APP_CONSTATN_DELETE("appConstantDelete"),
-
-	APP_CONSTATN_SUBMIT("appConstantSubmit"),
-
-	APP_RULE("appRule"),
-
-	APP_RULE_ADD_OR_UPDATE("appRuleUpdate"),
-
-	APP_RULE_ADD_OR_UPDATE_SUBMIT("appRuleSubmit"),
-
-	APP_RULE_DELETE("appRuleDelete"),
-
-	APP_RULE_BATCH_UPDATE("appRuleBatchUpdate"),
-
-	APP_COMMAND_FORMAT_CONFIG("appCommandFormatConfig"),
-
 	TRANSACTION_RULE("transactionRule"),
 
 	TRANSACTION_RULE_ADD_OR_UPDATE("transactionRuleUpdate"),
@@ -177,8 +131,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	STORAGE_GROUP_CONFIG_UPDATE("storageGroupConfigUpdate"),
 
-	APP_CONFIG_UPDATE("appConfigUpdate"),
-
 	THIRD_PARTY_RULE_CONFIGS("thirdPartyRuleConfigs"),
 
 	THIRD_PARTY_RULE_UPDATE("thirdPartyRuleUpdate"),
@@ -196,7 +148,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	DOMAIN_GROUP_CONFIG_DELETE("domainGroupConfigDelete"),
 
 	ROUTER_CONFIG_UPDATE("routerConfigUpdate"),
-	
+
 	SAMPLE_CONFIG_UPDATE("sampleConfigUpdate"),
 
 	ALERT_SENDER_CONFIG_UPDATE("alertSenderConfigUpdate"),

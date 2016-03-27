@@ -12,6 +12,7 @@ import com.dianping.cat.app.CrashLogContentDao;
 import com.dianping.cat.app.CrashLogDao;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
+import com.dianping.cat.config.business.BusinessConfigManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.web.WebSpeedConfigManager;
@@ -38,6 +39,10 @@ import com.dianping.cat.report.page.app.task.AppDatabasePruner;
 import com.dianping.cat.report.page.app.task.AppReportBuilder;
 import com.dianping.cat.report.page.app.task.CommandAutoCompleter;
 import com.dianping.cat.report.page.browser.task.WebDatabasePruner;
+import com.dianping.cat.report.page.business.service.BusinessReportService;
+import com.dianping.cat.report.page.business.task.BusinessBaselineReportBuilder;
+import com.dianping.cat.report.page.business.task.BusinessKeyHelper;
+import com.dianping.cat.report.page.business.task.BusinessPointParser;
 import com.dianping.cat.report.page.cross.service.CrossReportService;
 import com.dianping.cat.report.page.cross.task.CrossReportBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
@@ -116,6 +121,9 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(TaskDao.class, ReportFacade.class));
 
 		all.add(C(MetricPointParser.class));
+		all.add(C(BusinessPointParser.class));
+		all.add(C(BusinessKeyHelper.class));
+	
 		all.add(C(BaselineCreator.class, DefaultBaselineCreator.class));
 		all.add(C(BaselineService.class, DefaultBaselineService.class).req(BaselineDao.class));
 		all.add(C(BaselineConfigManager.class, BaselineConfigManager.class));
@@ -124,6 +132,12 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MetricReportService.class, MetricPointParser.class)//
 		      .req(MetricConfigManager.class, ProductLineConfigManager.class)//
 		      .req(BaselineCreator.class, BaselineService.class, BaselineConfigManager.class));
+		
+		all.add(C(TaskBuilder.class, BusinessBaselineReportBuilder.ID, BusinessBaselineReportBuilder.class)
+		      .req(BusinessReportService.class, BusinessPointParser.class)//
+		      .req(BusinessConfigManager.class, BusinessKeyHelper.class)//
+		      .req(BaselineCreator.class, BaselineService.class, BaselineConfigManager.class));
+
 
 		all.add(C(TaskBuilder.class, TransactionReportBuilder.ID, TransactionReportBuilder.class) //
 		      .req(TransactionReportService.class));

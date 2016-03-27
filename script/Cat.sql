@@ -254,6 +254,7 @@ CREATE TABLE `app_command_data_1` (
   `connect_type` tinyint NOT NULL COMMENT '访问类型，是否长连接',
   `code` smallint NOT NULL COMMENT '返回码',
   `platform` tinyint NOT NULL COMMENT '平台',
+  `source` tinyint NOT NULL COMMENT 'APP来源',
   `access_number` bigint NOT NULL COMMENT '访问量',
   `response_sum_time` bigint NOT NULL COMMENT '响应时间大小',
   `request_package` bigint NOT NULL COMMENT '请求包大小',
@@ -261,7 +262,7 @@ CREATE TABLE `app_command_data_1` (
   `status` smallint NOT NULL COMMENT '数据状态',
   `creation_date` datetime NOT NULL COMMENT '数据插入时间',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `IX_condition` (`period`,`minute_order`,`city`,`operator`,`network`,`app_version`,`connect_type`,`code`,`platform`)
+  UNIQUE KEY `IX_condition` (`period`,`minute_order`,`city`,`operator`,`network`,`app_version`,`connect_type`,`code`,`platform`,`source`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='app基本数据';
 
 CREATE TABLE `app_speed_data_1` (
@@ -470,6 +471,32 @@ CREATE TABLE `metric_graph` (
   PRIMARY KEY (`id`),
   UNIQUE `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统监控的graph配置';
+
+CREATE TABLE `server_alarm_rule` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `category` varchar(50) NOT NULL COMMENT '监控分类',
+  `endPoint` varchar(200) NOT NULL COMMENT '监控对象ID',
+  `measurement` varchar(200) NOT NULL COMMENT '监控指标',
+  `tags` varchar(200) NOT NULL DEFAULT '' COMMENT '监控指标标签',
+  `content` longtext NOT NULL COMMENT '配置的具体内容',
+  `type` varchar(20) NOT NULL DEFAULT '' COMMENT '数据聚合方式',
+  `creator` varchar(100) DEFAULT '' COMMENT '创建人',
+  `creation_date` datetime NOT NULL COMMENT '配置创建时间',
+  `updatetime` datetime NOT NULL COMMENT '配置修改时间',
+  PRIMARY KEY (`id`),
+  KEY `updatetime` (`updatetime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统告警的配置';
+
+CREATE TABLE `business_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL DEFAULT '' COMMENT '配置名称',
+  `domain` varchar(50) NOT NULL DEFAULT '' COMMENT '项目',
+  `content` longtext COMMENT '配置内容',
+  `updatetime` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `updatetime` (`updatetime`),
+  KEY `name_domain` (`name`,`domain`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `crash_log` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,

@@ -12,11 +12,10 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.alarm.spi.AlertManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
-import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.alert.spi.AlertManager;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.metric.service.BaselineService;
 
@@ -200,7 +199,7 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 		values.put(key, value);
 	}
 
-	protected double[] queryBaseline(String key, Date start, Date end) {
+	protected double[] queryBaseline(String name, String key, Date start, Date end) {
 		int size = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_MINUTE);
 		double[] result = new double[size];
 		int index = 0;
@@ -208,7 +207,7 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 		long endLong = end.getTime();
 
 		for (; startLong < endLong; startLong += TimeHelper.ONE_HOUR) {
-			double[] values = m_baselineService.queryHourlyBaseline(MetricAnalyzer.ID, key, new Date(startLong));
+			double[] values = m_baselineService.queryHourlyBaseline(name, key, new Date(startLong));
 
 			if (values != null) {
 				for (int j = 0; j < values.length; j++) {

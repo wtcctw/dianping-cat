@@ -83,6 +83,9 @@
          <page name="eslog" title="Eslog" path="eslog" template="default">
             <description>Eslog</description>
          </page>
+         <page name="business" title="Business" path="business" template="default">
+            <description>Business</description>
+         </page>
       </module>
       <module name="system" path="s" default="false">
          <page name="login" title="Login" path="login" standalone="false">
@@ -102,6 +105,14 @@
          </page>
          <page name="project" title="Project" path="project" template="default">
             <description>Project</description>
+         </page>
+<<<<<<< HEAD
+         <page name="app" title="App" path="app" template="default">
+            <description>App</description>
+=======
+         <page name="business" title="Business" path="business" template="default">
+            <description>Business</description>
+>>>>>>> web
          </page>
       </module>
    </webapp>

@@ -1,7 +1,7 @@
 package com.dianping.cat.system.page.project;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	VIEW("view"),
+	DOMAINS("domains"),
 
 	PROJECT_UPDATE("projectUpdate");
 

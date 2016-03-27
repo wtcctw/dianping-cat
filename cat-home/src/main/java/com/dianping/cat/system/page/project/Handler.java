@@ -1,12 +1,16 @@
 package com.dianping.cat.system.page.project;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.SystemPage;
 
@@ -38,7 +42,13 @@ public class Handler implements PageHandler<Context> {
 		Action action = payload.getAction();
 
 		switch (action) {
-		case VIEW:
+		case DOMAINS:
+			JsonBuilder jb = new JsonBuilder();
+			Set<String> domains = m_projectService.findAllDomains();
+			Map<String, Object> jsons = new HashMap<String, Object>();
+
+			jsons.put("domains", domains);
+			model.setContent(jb.toJson(jsons));
 			break;
 		case PROJECT_UPDATE:
 			try {

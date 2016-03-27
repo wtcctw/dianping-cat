@@ -5,9 +5,9 @@ import java.util.Map;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
-import com.dianping.cat.report.alert.spi.AlertType;
 import com.dianping.cat.report.alert.spi.BaseAlert;
+import com.dianping.cat.report.alert.spi.config.BaseRuleConfigManager;
+import com.dianping.cat.alarm.spi.AlertType;
 
 public class SystemAlert extends BaseAlert {
 

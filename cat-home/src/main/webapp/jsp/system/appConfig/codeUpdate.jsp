@@ -4,9 +4,9 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
-<jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
-<jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
+<jsp:useBean id="ctx" type="com.dianping.cat.system.page.app.Context" scope="request"/>
+<jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
+<jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
 
 <a:mobile>
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
@@ -43,7 +43,7 @@
 				return;
 			}
 			
-			window.location.href = "/cat/s/config?op=appCodeSubmit&type=code&constant=${payload.constant}&id="+${payload.id}+"&domain=${payload.domain}&content="+codeId.trim()+":"+codeName.trim()+":"+codeStatus;
+			window.location.href = "/cat/s/app?op=appCodeSubmit&type=code&constant=${payload.constant}&id="+${payload.id}+"&domain=${payload.domain}&content="+codeId.trim()+":"+codeName.trim()+":"+codeStatus;
 		}) 
 	</script>
 	

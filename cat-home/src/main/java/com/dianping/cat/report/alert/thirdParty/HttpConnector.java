@@ -18,14 +18,14 @@ public class HttpConnector {
 		BufferedReader reader = null;
 
 		try {
-			URL address_url = new URL(url);
-			connection = (HttpURLConnection) address_url.openConnection();
+			URL conUrl = new URL(url);
+			connection = (HttpURLConnection) conUrl.openConnection();
 			connection.setRequestMethod("GET");
 			connection.setConnectTimeout(5000);
 			connection.setReadTimeout(5000);
-			int response_code = connection.getResponseCode();
+			int respCode = connection.getResponseCode();
 
-			if (response_code == HttpURLConnection.HTTP_OK) {
+			if (respCode == HttpURLConnection.HTTP_OK) {
 				result = true;
 			}
 		} catch (Exception e) {
@@ -70,9 +70,9 @@ public class HttpConnector {
 				writer.write(content);
 				writer.flush();
 			}
-			int response_code = connection.getResponseCode();
+			int respCode = connection.getResponseCode();
 
-			if (response_code == HttpURLConnection.HTTP_OK) {
+			if (respCode == HttpURLConnection.HTTP_OK) {
 				result = true;
 			}
 		} catch (Exception e) {

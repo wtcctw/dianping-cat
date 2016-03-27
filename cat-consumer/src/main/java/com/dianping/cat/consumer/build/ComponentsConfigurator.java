@@ -10,11 +10,14 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.analysis.MessageAnalyzer;
+import com.dianping.cat.config.business.BusinessConfigManager;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.consumer.DatabaseParser;
+import com.dianping.cat.consumer.business.BusinessAnalyzer;
+import com.dianping.cat.consumer.business.BusinessDelegate;
 import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
@@ -89,6 +92,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(defineDependencyComponents());
 		all.addAll(defineMetricComponents());
 		all.addAll(defineStorageComponents());
+		all.addAll(defineBusinessComponents());
 
 		all.add(C(AllReportConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(Module.class, CatConsumerModule.ID, CatConsumerModule.class));
@@ -197,6 +201,20 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ReportBucketManager.class, BusinessReportDao.class, MetricConfigManager.class)//
 		      .req(ProductLineConfigManager.class, TaskManager.class, ServerConfigManager.class));
 
+		return all;
+	}
+
+	private Collection<Component> defineBusinessComponents() {
+		final List<Component> all = new ArrayList<Component>();
+		final String ID = BusinessAnalyzer.ID;
+
+		all.add(C(MessageAnalyzer.class, ID, BusinessAnalyzer.class).is(PER_LOOKUP).req(ReportManager.class, ID)
+		      .req(BusinessConfigManager.class, ServerConfigManager.class));
+		all.add(C(ReportManager.class, ID, DefaultReportManager.class).is(PER_LOOKUP) //
+		      .req(ReportDelegate.class, ID) //
+		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class, DomainValidator.class) //
+		      .config(E("name").value(ID)));
+		all.add(C(ReportDelegate.class, ID, BusinessDelegate.class).req(TaskManager.class));
 		return all;
 	}
 

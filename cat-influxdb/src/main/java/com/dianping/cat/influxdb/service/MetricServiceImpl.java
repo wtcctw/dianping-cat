@@ -99,45 +99,7 @@ public class MetricServiceImpl implements MetricService {
 
 	@Override
 	public Map<Long, Double> query(QueryParameter parameter) {
-		InfluxDBConnection conn = m_dataSourceService.getConnection(parameter.getCategory());
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-
-		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-		if (conn != null) {
-			String format = "SELECT %s(value) FROM \"%s\" WHERE %s TIME >= '%s' AND TIME < '%s' GROUP BY time(%s) fill(0)";
-			String query = String.format(format, parameter.getType().getName(), parameter.getMeasurement(),
-			      parameter.getTags(), sdf.format(parameter.getStart()), sdf.format(parameter.getEnd()),
-			      parameter.getInterval());
-
-			QueryResult queryResult = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
-			Map<Long, Double> datas = new LinkedHashMap<Long, Double>();
-
-			for (Result r : queryResult.getResults()) {
-				List<Series> series = r.getSeries();
-
-				if (series != null) {
-					for (Series s : series) {
-						if (s != null && s.getValues() != null) {
-							for (List<Object> v : s.getValues()) {
-								try {
-									Date date = sdf.parse(String.valueOf(v.get(0)));
-									double data = (double) (v.get(1));
-
-									datas.put(date.getTime(), data);
-								} catch (Exception e) {
-									Cat.logError(e);
-									System.out.println(v.get(0) + ":" + v.get(1));
-								}
-							}
-						}
-					}
-				}
-			}
-			return datas;
-		} else {
-			return Collections.emptyMap();
-		}
+		return queryWithFillParameter(parameter, "0");
 	}
 
 	@Override
@@ -186,6 +148,11 @@ public class MetricServiceImpl implements MetricService {
 		} else {
 			return Collections.emptyList();
 		}
+	}
+
+	@Override
+	public Map<Long, Double> queryFillNone(QueryParameter parameter) {
+		return queryWithFillParameter(parameter, "none");
 	}
 
 	@Override
@@ -263,6 +230,49 @@ public class MetricServiceImpl implements MetricService {
 			return results;
 		} else {
 			return Collections.emptyList();
+		}
+	}
+
+	private Map<Long, Double> queryWithFillParameter(QueryParameter parameter, String fill) {
+		InfluxDBConnection conn = m_dataSourceService.getConnection(parameter.getCategory());
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+		if (conn != null) {
+			String format = "SELECT %s(value) FROM \"%s\" WHERE %s TIME >= '%s' AND TIME < '%s' GROUP BY time(%s) fill("
+			      + fill + ")";
+			String query = String.format(format, parameter.getType().getName(), parameter.getMeasurement(),
+			      parameter.getSqlTags(), sdf.format(parameter.getStart()), sdf.format(parameter.getEnd()),
+			      parameter.getInterval());
+
+			QueryResult queryResult = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
+			Map<Long, Double> datas = new LinkedHashMap<Long, Double>();
+
+			for (Result r : queryResult.getResults()) {
+				List<Series> series = r.getSeries();
+
+				if (series != null) {
+					for (Series s : series) {
+						if (s != null && s.getValues() != null) {
+							for (List<Object> v : s.getValues()) {
+								try {
+									Date date = sdf.parse(String.valueOf(v.get(0)));
+									double data = (double) (v.get(1));
+
+									datas.put(date.getTime(), data);
+								} catch (Exception e) {
+									Cat.logError(e);
+									System.out.println(v.get(0) + ":" + v.get(1));
+								}
+							}
+						}
+					}
+				}
+			}
+			return datas;
+		} else {
+			return Collections.emptyMap();
 		}
 	}
 }
