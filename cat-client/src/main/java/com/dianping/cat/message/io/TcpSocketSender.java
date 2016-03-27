@@ -60,6 +60,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	private AtomicInteger m_sampleCount = new AtomicInteger();
 
 	private static final int MAX_CHILD_NUMBER = 200;
+	
+	private static final int MAX_DURATION = 1000 * 30;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -213,9 +215,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 		if (tree != null) {
 			long firstTime = tree.getMessage().getTimestamp();
-			int maxDuration = 1000 * 30;
 
-			if (System.currentTimeMillis() - firstTime > maxDuration || handler.size() >= MAX_CHILD_NUMBER) {
+			if (System.currentTimeMillis() - firstTime > MAX_DURATION || handler.size() >= MAX_CHILD_NUMBER) {
 				return true;
 			}
 		}
