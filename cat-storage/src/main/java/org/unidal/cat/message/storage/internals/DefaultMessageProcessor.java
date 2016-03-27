@@ -89,7 +89,11 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 				tree = m_queue.poll(5, TimeUnit.MILLISECONDS);
 
 				if (tree != null) {
-					MessageId id = MessageId.parse(tree.getMessageId());
+					MessageId id = tree.getFormatMessageId();
+
+					if (id == null) {
+						id = MessageId.parse(tree.getMessageId());
+					}
 					String domain = id.getDomain();
 					int hour = id.getHour();
 					Block block = m_blocks.get(domain);
