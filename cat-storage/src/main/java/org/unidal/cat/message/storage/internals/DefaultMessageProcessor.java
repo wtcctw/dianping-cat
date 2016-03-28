@@ -22,6 +22,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 
@@ -89,7 +90,11 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 				tree = m_queue.poll(5, TimeUnit.MILLISECONDS);
 
 				if (tree != null) {
-					MessageId id = MessageId.parse(tree.getMessageId());
+					MessageId id = tree.getFormatMessageId();
+
+					if (id == null) {
+						id = MessageId.parse(tree.getMessageId());
+					}
 					String domain = id.getDomain();
 					int hour = id.getHour();
 					Block block = m_blocks.get(domain);
@@ -106,6 +111,7 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 							block.finish();
 
 							m_dumper.dump(block);
+							
 							block = new DefaultBlock(domain, hour);
 							m_blocks.put(domain, block);
 						}
@@ -121,6 +127,8 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 		} catch (InterruptedException e) {
 			// ignore it
 		}
+
+		Cat.logEvent("BlockSize", String.valueOf(m_blocks.size()), Event.SUCCESS, m_blocks.keySet().toString());
 
 		for (Block block : m_blocks.values()) {
 			try {
