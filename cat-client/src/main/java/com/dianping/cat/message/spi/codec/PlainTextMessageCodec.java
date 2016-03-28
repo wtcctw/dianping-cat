@@ -40,12 +40,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 	private DateHelper m_dateHelper = new DateHelper();
 
-	private ThreadLocal<Context> m_ctx = new ThreadLocal<Context>() {
-		@Override
-		protected Context initialValue() {
-			return new Context();
-		}
-	};
+	private ThreadLocal<Context> m_ctx;
 
 	private Logger m_logger;
 
@@ -59,6 +54,15 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 	@Override
 	public void decode(ByteBuf buf, MessageTree tree) {
+		if (m_ctx == null) {
+			m_ctx = new ThreadLocal<Context>() {
+				@Override
+				protected Context initialValue() {
+					return new Context();
+				}
+			};
+		}
+		
 		Context ctx = m_ctx.get().setBuffer(buf);
 
 		try {
@@ -68,7 +72,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				decodeMessage(ctx, tree);
 			}
 		} finally {
-			m_ctx.remove();
+			ctx.removeBuf();
 		}
 	}
 
@@ -514,7 +518,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		private char[] m_data;
 
 		public Context() {
-			m_data = new char[4 * 1024 * 1024];
+			m_data = new char[1024 * 1024];
 		}
 
 		public ByteBuf getBuffer() {
@@ -528,6 +532,10 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		public Context setBuffer(ByteBuf buffer) {
 			m_buffer = buffer;
 			return this;
+		}
+
+		public void removeBuf() {
+			m_buffer = null;
 		}
 	}
 
