@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.codehaus.plexus.util.StringUtils;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.ContainerHolder;
@@ -17,7 +16,6 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.Constants;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.business.entity.BusinessItemConfig;
 import com.dianping.cat.configuration.business.entity.BusinessReportConfig;
@@ -30,10 +28,6 @@ import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
 @Named
 public class BusinessConfigManager extends ContainerHolder implements Initializable {
-
-	private static final String MYSQL = "mysql_";
-
-	private static final String SYSTEM = "system_";
 
 	@Inject
 	private BusinessConfigDao m_configDao;
@@ -133,29 +127,27 @@ public class BusinessConfigManager extends ContainerHolder implements Initializa
 	public boolean insertBusinessConfigIfNotExist(String domain, String key, ConfigItem item) {
 		try {
 			if (!m_domains.containsKey(domain)) {
-				if (!filter(domain, key)) {
-					BusinessReportConfig config = new BusinessReportConfig();
-					config.setId(domain);
+				BusinessReportConfig config = new BusinessReportConfig();
+				config.setId(domain);
 
-					BusinessItemConfig businessItemConfig = buildBusinessItemConfig(key, item);
-					config.addBusinessItemConfig(businessItemConfig);
+				BusinessItemConfig businessItemConfig = buildBusinessItemConfig(key, item);
+				config.addBusinessItemConfig(businessItemConfig);
 
-					BusinessConfig businessConfig = m_configDao.createLocal();
-					businessConfig.setName(BASE_CONFIG);
-					businessConfig.setDomain(domain);
-					businessConfig.setContent(config.toString());
-					businessConfig.setUpdatetime(new Date());
-					m_configDao.insert(businessConfig);
+				BusinessConfig businessConfig = m_configDao.createLocal();
+				businessConfig.setName(BASE_CONFIG);
+				businessConfig.setDomain(domain);
+				businessConfig.setContent(config.toString());
+				businessConfig.setUpdatetime(new Date());
+				m_configDao.insert(businessConfig);
 
-					Set<String> itemIds = new HashSet<String>();
-					itemIds.add(key);
-					m_domains.put(domain, itemIds);
-					cacheConfigs(config, domain);
-				}
+				Set<String> itemIds = new HashSet<String>();
+				itemIds.add(key);
+				m_domains.put(domain, itemIds);
+				cacheConfigs(config, domain);
 			} else {
 				Set<String> itemIds = m_domains.get(domain);
 
-				if (!itemIds.contains(key) && !filter(domain, key)) {
+				if (!itemIds.contains(key)) {
 					BusinessConfig businessConfig = m_configDao.findByNameDomain(BASE_CONFIG, domain,
 					      BusinessConfigEntity.READSET_FULL);
 					BusinessReportConfig config = DefaultSaxParser.parse(businessConfig.getContent());
@@ -173,14 +165,6 @@ public class BusinessConfigManager extends ContainerHolder implements Initializa
 			return true;
 		} catch (Exception e) {
 			Cat.logError(e);
-		}
-		return false;
-	}
-
-	private boolean filter(String domain, String key) {
-		if (Constants.CAT.equalsIgnoreCase(domain) && StringUtils.isNotBlank(key)
-		      && (key.startsWith(SYSTEM) || key.startsWith(MYSQL))) {
-			return true;
 		}
 		return false;
 	}

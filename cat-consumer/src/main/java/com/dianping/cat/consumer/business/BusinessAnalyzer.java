@@ -8,6 +8,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.config.business.BusinessConfigManager;
@@ -110,31 +111,34 @@ public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport>  i
 	}
 
 	private void processMetric(BusinessReport report, Metric metric, String domain) {
-		String name = metric.getName();
-		String data = (String) metric.getData();
-		String status = metric.getStatus();
+		boolean isMonitor = Constants.CAT.equals(domain) && StringUtils.isNotEmpty(metric.getType());
 
-		ConfigItem config = parseValue(status, data);
+		if (!isMonitor) {
+			String name = metric.getName();
+			String data = (String) metric.getData();
+			String status = metric.getStatus();
+			ConfigItem config = parseValue(status, data);
 
-		if (config != null) {
-			long current = metric.getTimestamp() / 1000 / 60;
-			int min = (int) (current % 60);
-			BusinessItem businessItem = report.findOrCreateBusinessItem(name);
-			Segment seg = businessItem.findOrCreateSegment(min);
+			if (config != null) {
+				long current = metric.getTimestamp() / 1000 / 60;
+				int min = (int) (current % 60);
+				BusinessItem businessItem = report.findOrCreateBusinessItem(name);
+				Segment seg = businessItem.findOrCreateSegment(min);
 
-			businessItem.setType(status);
+				businessItem.setType(status);
 
-			seg.incCount(config.getCount());
-			seg.incSum(config.getValue());
-			seg.setAvg(seg.getSum() / seg.getCount());
+				seg.incCount(config.getCount());
+				seg.incSum(config.getValue());
+				seg.setAvg(seg.getSum() / seg.getCount());
 
-			config.setTitle(name);
+				config.setTitle(name);
 
-			boolean result = m_configManager.insertBusinessConfigIfNotExist(domain, name, config);
+				boolean result = m_configManager.insertBusinessConfigIfNotExist(domain, name, config);
 
-			if (!result) {
-				m_logger.error(String
-				      .format("error when insert business config info, domain %s, metricName %s", domain, name));
+				if (!result) {
+					m_logger.error(String.format("error when insert business config info, domain %s, metricName %s", domain,
+					      name));
+				}
 			}
 		}
 	}
