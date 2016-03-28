@@ -4,12 +4,16 @@ import java.util.Map;
 
 import org.unidal.dal.jdbc.QueryEngine;
 import org.unidal.dal.jdbc.mapping.TableProvider;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.app.AppConnectionData;
 
+@Named(type = TableProvider.class, value = AppConnectionTableProvider.LOGIC_TABLE_NAME)
 public class AppConnectionTableProvider implements TableProvider {
 
-	private String m_logicalTableName = "app-connection-data";
+	public final static String LOGIC_TABLE_NAME = "app-connection-data";
+
+	private String m_logicalTableName = LOGIC_TABLE_NAME;
 
 	private String m_physicalTableName = "app_connection_data";
 

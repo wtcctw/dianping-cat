@@ -16,6 +16,7 @@ import org.unidal.helper.Files;
 import org.unidal.helper.Threads.Task;
 import org.unidal.helper.Urls;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.webres.json.JsonArray;
 import org.unidal.webres.json.JsonObject;
@@ -32,6 +33,7 @@ import com.dianping.cat.report.page.transaction.service.TransactionReportService
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
 
+@Named
 public class ProjectUpdateTask implements Task, LogEnabled {
 
 	@Inject

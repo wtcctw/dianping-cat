@@ -664,10 +664,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.DatabaseParser</role>
-			<implementation>com.dianping.cat.consumer.DatabaseParser</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.consumer.storage.StorageReportUpdater</role>
 			<implementation>com.dianping.cat.consumer.storage.StorageReportUpdater</implementation>
 		</component>

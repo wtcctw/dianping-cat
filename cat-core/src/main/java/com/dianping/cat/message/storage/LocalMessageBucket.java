@@ -12,19 +12,22 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
+@Named(type = MessageBucket.class, value = LocalMessageBucket.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class LocalMessageBucket implements MessageBucket {
 	public static final String ID = "local";
 
 	private static final int MAX_BLOCK_SIZE = 1 << 16; // 64K
 
-	@Inject
+	@Inject(PlainTextMessageCodec.ID)
 	private MessageCodec m_codec;
 
 	private File m_baseDir = new File(".");

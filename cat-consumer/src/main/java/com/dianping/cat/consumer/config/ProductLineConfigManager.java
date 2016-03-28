@@ -19,6 +19,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 import org.xml.sax.SAXException;
@@ -35,6 +36,7 @@ import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.task.ConfigSyncTask;
 import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
+@Named
 public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 	@Inject
@@ -135,9 +137,9 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 			}
 
 			@Override
-         public String getName() {
-	         return CONFIG_NAME;
-         }
+			public String getName() {
+				return CONFIG_NAME;
+			}
 		});
 	}
 

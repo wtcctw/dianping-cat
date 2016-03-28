@@ -17,6 +17,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
@@ -40,6 +41,7 @@ import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ProjectService;
 
+@Named
 public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	@Inject(type = ModelService.class, value = DependencyAnalyzer.ID)
@@ -56,7 +58,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	@Inject
 	private ServerFilterConfigManager m_serverFilterConfigManager;
-	
+
 	@Inject
 	private ProjectService m_projectService;
 
@@ -271,7 +273,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 				try {
 					TopologyGraphBuilder builder = new TopologyGraphBuilder().setItemBuilder(m_itemBuilder);
 					Collection<String> domains = m_projectService.findAllDomains();
-					
+
 					for (String domain : domains) {
 						try {
 							buildDependencyInfo(builder, domain);
@@ -280,7 +282,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 						}
 					}
 					Map<Long, TopologyGraph> graphs = builder.getGraphs();
-					
+
 					for (Entry<Long, TopologyGraph> entry : graphs.entrySet()) {
 						m_topologyGraphs.put(entry.getKey(), entry.getValue());
 

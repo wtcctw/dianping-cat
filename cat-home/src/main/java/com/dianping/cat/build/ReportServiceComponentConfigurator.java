@@ -6,15 +6,6 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.consumer.dal.BusinessReportDao;
-import com.dianping.cat.core.dal.DailyReportDao;
-import com.dianping.cat.core.dal.HourlyReportContentDao;
-import com.dianping.cat.core.dal.HourlyReportDao;
-import com.dianping.cat.core.dal.MonthlyReportDao;
-import com.dianping.cat.core.dal.WeeklyReportDao;
-import com.dianping.cat.core.dal.DailyReportContentDao;
-import com.dianping.cat.core.dal.MonthlyReportContentDao;
-import com.dianping.cat.core.dal.WeeklyReportContentDao;
 import com.dianping.cat.report.page.app.service.AppReportService;
 import com.dianping.cat.report.page.business.service.BusinessReportService;
 import com.dianping.cat.report.page.cross.service.CrossReportService;
@@ -33,8 +24,9 @@ import com.dianping.cat.report.page.statistics.service.ServiceReportService;
 import com.dianping.cat.report.page.statistics.service.UtilizationReportService;
 import com.dianping.cat.report.page.storage.task.StorageReportService;
 import com.dianping.cat.report.page.top.service.TopReportService;
+import com.dianping.cat.report.page.transaction.HistoryGraphs;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
-import com.dianping.cat.system.page.router.config.RouterConfigManager;
+import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
 
 public class ReportServiceComponentConfigurator extends AbstractResourceConfigurator {
@@ -42,62 +34,31 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(TransactionReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
-		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
-		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
-		all.add(C(EventReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
-		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
-		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
-		all.add(C(ProblemReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
-		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
-		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
-		all.add(C(MatrixReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
-		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
-		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
-		all.add(C(CrossReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
-		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
-		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
-		all.add(C(StateReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
-		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
-		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
-		all.add(C(StorageReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
-		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
-		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
+		all.add(A(TransactionMergeHelper.class));
+		all.add(A(TransactionReportService.class));
+		all.add(A(HistoryGraphs.class));
+		all.add(A(EventReportService.class));
+		all.add(A(ProblemReportService.class));
+		all.add(A(MatrixReportService.class));
+		all.add(A(CrossReportService.class));
+		all.add(A(StateReportService.class));
+		all.add(A(StorageReportService.class));
 
-		all.add(C(UtilizationReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
-		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
-		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
-		all.add(C(ServiceReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
-		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
-		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
-		all.add(C(HeavyReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
-		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
-		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
-		all.add(C(NetTopologyReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
-		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
-		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
-		all.add(C(RouterConfigService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
-		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
-		      WeeklyReportContentDao.class, MonthlyReportContentDao.class, RouterConfigManager.class));
-		all.add(C(JarReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
-		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
-		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
-		all.add(C(ClientReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
-				MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
-				WeeklyReportContentDao.class, MonthlyReportContentDao.class));
+		all.add(A(UtilizationReportService.class));
+		all.add(A(ServiceReportService.class));
+		all.add(A(HeavyReportService.class));
+		all.add(A(NetTopologyReportService.class));
+		all.add(A(RouterConfigService.class));
+		all.add(A(JarReportService.class));
+		all.add(A(ClientReportService.class));
 
-		all.add(C(TopReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class));
-		all.add(C(DependencyReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class));
-		all.add(C(HeartbeatReportService.class).req(HourlyReportDao.class, HourlyReportContentDao.class,
-		      DailyReportDao.class, DailyReportContentDao.class));
-		all.add(C(MetricReportService.class).req(HourlyReportDao.class, BusinessReportDao.class));
-		all.add(C(BusinessReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
-		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
-		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
-		
-		all.add(C(AppReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
-		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
-		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
+		all.add(A(TopReportService.class));
+		all.add(A(DependencyReportService.class));
+		all.add(A(HeartbeatReportService.class));
+		all.add(A(MetricReportService.class));
+		all.add(A(BusinessReportService.class));
+
+		all.add(A(AppReportService.class));
 
 		return all;
 	}

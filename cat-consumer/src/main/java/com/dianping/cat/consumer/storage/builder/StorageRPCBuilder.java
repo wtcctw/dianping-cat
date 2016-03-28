@@ -3,10 +3,13 @@ package com.dianping.cat.consumer.storage.builder;
 import java.util.Arrays;
 import java.util.List;
 
+import org.unidal.lookup.annotation.Named;
+
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 
+@Named(type = StorageBuilder.class, value = StorageRPCBuilder.ID)
 public class StorageRPCBuilder implements StorageBuilder {
 
 	public final static String ID = "RPC";

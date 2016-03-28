@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
@@ -24,6 +25,7 @@ import com.dianping.cat.report.page.BaseHistoryGraphs;
 import com.dianping.cat.report.page.transaction.Handler.DetailOrder;
 import com.dianping.cat.report.page.transaction.Handler.SummaryOrder;
 
+@Named
 public class HistoryGraphs extends BaseHistoryGraphs {
 
 	public static final double NOTEXIST = 0;

@@ -9,7 +9,6 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.analysis.MessageAnalyzer;
-import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.consumer.DatabaseParser;
@@ -42,7 +41,6 @@ import com.dianping.cat.consumer.state.StateDelegate;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.storage.StorageDelegate;
 import com.dianping.cat.consumer.storage.StorageReportUpdater;
-import com.dianping.cat.consumer.storage.builder.StorageBuilder;
 import com.dianping.cat.consumer.storage.builder.StorageBuilderManager;
 import com.dianping.cat.consumer.storage.builder.StorageCacheBuilder;
 import com.dianping.cat.consumer.storage.builder.StorageRPCBuilder;
@@ -51,7 +49,6 @@ import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.TopDelegate;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionDelegate;
-import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.ProjectDao;
@@ -85,7 +82,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(defineStorageComponents());
 		all.addAll(defineBusinessComponents());
 
-		all.add(C(AllReportConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(A(AllReportConfigManager.class));
 		all.add(C(Module.class, CatConsumerModule.ID, CatConsumerModule.class));
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 
@@ -181,9 +178,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final List<Component> all = new ArrayList<Component>();
 
 		all.add(A(MetricAnalyzer.class));
-
-		all.add(C(ProductLineConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(MetricConfigManager.class).req(ConfigDao.class, ContentFetcher.class, ProductLineConfigManager.class));
+		all.add(A(ProductLineConfigManager.class));
+		all.add(A(MetricConfigManager.class));
 
 		return all;
 	}
@@ -276,12 +272,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final List<Component> all = new ArrayList<Component>();
 		final String ID = StorageAnalyzer.ID;
 
-		all.add(C(DatabaseParser.class));
 		all.add(C(StorageReportUpdater.class));
 		all.add(C(StorageBuilderManager.class));
-		all.add(C(StorageBuilder.class, StorageSQLBuilder.ID, StorageSQLBuilder.class).req(DatabaseParser.class));
-		all.add(C(StorageBuilder.class, StorageCacheBuilder.ID, StorageCacheBuilder.class));
-		all.add(C(StorageBuilder.class, StorageRPCBuilder.ID, StorageRPCBuilder.class));
+		all.add(A(StorageSQLBuilder.class));
+		all.add(A(StorageCacheBuilder.class));
+		all.add(A(StorageRPCBuilder.class));
 
 		all.add(A(StorageAnalyzer.class));
 		all.add(A(StorageDelegate.class));

@@ -6,12 +6,14 @@ import java.util.Date;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.report.page.server.service.MetricGraphService;
 import com.dianping.cat.report.task.TaskBuilder;
 
+@Named(type = TaskBuilder.class, value = MetricGraphPruner.ID)
 public class MetricGraphPruner implements TaskBuilder {
 
 	public static final String ID = Constants.METRIC_GRAPH_PRUNER;

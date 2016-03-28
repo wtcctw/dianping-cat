@@ -4,6 +4,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
@@ -13,6 +14,7 @@ import com.dianping.cat.report.alert.spi.config.BaseRuleConfigManager;
 import com.dianping.cat.alarm.rule.entity.MonitorRules;
 import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
 
+@Named
 public class TransactionRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 
 	@Inject

@@ -99,7 +99,6 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 	@Override
 	public void initialize() throws InitializationException {
 		Map<String, MessageAnalyzer> map = lookupMap(MessageAnalyzer.class);
-		System.err.println(map.keySet().size());
 
 		for (MessageAnalyzer analyzer : map.values()) {
 			analyzer.destroy();

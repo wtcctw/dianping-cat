@@ -61,10 +61,14 @@
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>dependency</role-hint>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
@@ -73,17 +77,10 @@
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>dependency</role-hint>
+					<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -92,10 +89,10 @@
 			<implementation>com.dianping.cat.report.task.cmdb.ProjectUpdateTask</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
+					<role>com.dianping.cat.service.HostinfoService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.service.HostinfoService</role>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
@@ -165,6 +162,9 @@
 			<implementation>com.dianping.cat.report.alert.network.NetworkRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
@@ -172,9 +172,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -183,19 +180,19 @@
 			<implementation>com.dianping.cat.report.alert.business.BusinessRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -209,28 +206,13 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.app.AppRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.app.AppRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.alert.transaction.TransactionRuleConfigManager</role>
 			<implementation>com.dianping.cat.report.alert.transaction.TransactionRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
@@ -238,9 +220,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -249,6 +228,9 @@
 			<implementation>com.dianping.cat.report.alert.event.EventRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
@@ -256,9 +238,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -267,6 +246,9 @@
 			<implementation>com.dianping.cat.report.alert.heartbeat.HeartbeatRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
@@ -274,9 +256,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -285,6 +264,9 @@
 			<implementation>com.dianping.cat.report.alert.system.SystemRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
@@ -292,9 +274,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -303,6 +282,9 @@
 			<implementation>com.dianping.cat.report.alert.storage.sql.StorageSQLRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
@@ -310,9 +292,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -333,6 +312,9 @@
 			<implementation>com.dianping.cat.report.alert.storage.cache.StorageCacheRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
@@ -340,9 +322,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -351,6 +330,9 @@
 			<implementation>com.dianping.cat.report.alert.storage.rpc.StorageRPCRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
@@ -358,9 +340,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -413,18 +392,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.thirdParty.ThirdPartyConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.thirdParty.ThirdPartyConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
 			<implementation>com.dianping.cat.system.page.router.config.RouterConfigManager</implementation>
 			<requirements>
@@ -450,10 +417,10 @@
 					<role>com.dianping.cat.report.page.state.service.StateReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
+					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
+					<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportDao</role>
@@ -501,11 +468,11 @@
 			<implementation>com.dianping.cat.report.graph.metric.impl.CachedMetricReportServiceImpl</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>metric</role-hint>
+					<role>com.dianping.cat.report.page.metric.service.MetricReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.service.MetricReportService</role>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>metric</role-hint>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.service.IpService</role>
@@ -569,10 +536,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.graph.svg.GraphBuilder</role>
-			<implementation>com.dianping.cat.report.graph.svg.GraphBuilder</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.server.display.MetricScreenTransformer</role>
 			<implementation>com.dianping.cat.report.page.server.display.MetricScreenTransformer</implementation>
 		</component>
@@ -606,7 +569,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.metric.MetricService</role>
-					<role-hint>Influx</role-hint>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.server.service.MetricGraphBuilder</role>
@@ -626,6 +588,10 @@
 			</configuration>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
+			<implementation>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
 			<implementation>com.dianping.cat.report.page.transaction.service.TransactionReportService</implementation>
 			<requirements>
@@ -633,25 +599,37 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.transaction.HistoryGraphs</role>
+			<implementation>com.dianping.cat.report.page.transaction.HistoryGraphs</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -663,22 +641,22 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
@@ -693,22 +671,22 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
@@ -723,22 +701,22 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
@@ -753,22 +731,22 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
@@ -783,22 +761,22 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
@@ -813,22 +791,22 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
@@ -843,22 +821,22 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
@@ -873,22 +851,22 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
@@ -903,22 +881,22 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
@@ -933,22 +911,22 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
@@ -960,31 +938,31 @@
 			<implementation>com.dianping.cat.system.page.router.service.RouterConfigService</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
+					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -996,22 +974,22 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
@@ -1026,22 +1004,22 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
@@ -1058,6 +1036,24 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1069,6 +1065,24 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1088,6 +1102,18 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1095,10 +1121,31 @@
 			<implementation>com.dianping.cat.report.page.metric.service.MetricReportService</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.consumer.dal.BusinessReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.dal.BusinessReportDao</role>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1110,22 +1157,22 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
@@ -1140,22 +1187,22 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
@@ -1163,20 +1210,12 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.DefaultTaskConsumer</role>
-			<implementation>com.dianping.cat.report.task.DefaultTaskConsumer</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.TaskDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.ReportFacade</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.metric.task.MetricPointParser</role>
 			<implementation>com.dianping.cat.report.page.metric.task.MetricPointParser</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.metric.task.BaselineConfigManager</role>
+			<implementation>com.dianping.cat.report.page.metric.task.BaselineConfigManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.business.task.BusinessPointParser</role>
@@ -1200,19 +1239,12 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.metric.task.BaselineConfigManager</role>
-			<implementation>com.dianping.cat.report.page.metric.task.BaselineConfigManager</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>metric</role-hint>
 			<implementation>com.dianping.cat.report.page.metric.task.MetricBaselineReportBuilder</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.metric.service.MetricReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.metric.task.MetricPointParser</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
@@ -1224,10 +1256,13 @@
 					<role>com.dianping.cat.report.page.metric.task.BaselineCreator</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.metric.task.BaselineConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.metric.service.BaselineService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.task.BaselineConfigManager</role>
+					<role>com.dianping.cat.report.page.metric.task.MetricPointParser</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1240,13 +1275,13 @@
 					<role>com.dianping.cat.report.page.business.service.BusinessReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.business.task.BusinessPointParser</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.config.business.BusinessConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.business.task.BusinessKeyHelper</role>
+					<role>com.dianping.cat.report.page.metric.task.BaselineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.business.task.BusinessPointParser</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.metric.task.BaselineCreator</role>
@@ -1255,7 +1290,7 @@
 					<role>com.dianping.cat.report.page.metric.service.BaselineService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.task.BaselineConfigManager</role>
+					<role>com.dianping.cat.report.page.business.task.BusinessKeyHelper</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1308,10 +1343,10 @@
 			<implementation>com.dianping.cat.report.page.statistics.task.service.ServiceReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.cross.service.CrossReportService</role>
+					<role>com.dianping.cat.report.page.statistics.service.ServiceReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.statistics.service.ServiceReportService</role>
+					<role>com.dianping.cat.report.page.cross.service.CrossReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
@@ -1344,19 +1379,19 @@
 			<implementation>com.dianping.cat.report.page.state.task.StateReportBuilder</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.page.state.service.StateReportService</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.service.HostinfoService</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.state.service.StateReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+					<role>com.dianping.cat.service.HostinfoService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1366,10 +1401,10 @@
 			<implementation>com.dianping.cat.system.page.router.task.RouterConfigBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
+					<role>com.dianping.cat.system.page.router.config.RouterConfigHandler</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.router.config.RouterConfigHandler</role>
+					<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1379,10 +1414,10 @@
 			<implementation>com.dianping.cat.report.page.statistics.task.heavy.HeavyReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.matrix.service.MatrixReportService</role>
+					<role>com.dianping.cat.report.page.statistics.service.HeavyReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.statistics.service.HeavyReportService</role>
+					<role>com.dianping.cat.report.page.matrix.service.MatrixReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
@@ -1455,10 +1490,10 @@
 			<implementation>com.dianping.cat.report.page.statistics.task.jar.JarReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService</role>
+					<role>com.dianping.cat.report.page.statistics.service.JarReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.statistics.service.JarReportService</role>
+					<role>com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
@@ -1501,8 +1536,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
-			<role-hint>storage</role-hint>
+			<role>com.dianping.cat.report.page.storage.task.StorageReportBuilder</role>
 			<implementation>com.dianping.cat.report.page.storage.task.StorageReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -1528,10 +1562,10 @@
 			<implementation>com.dianping.cat.report.page.overload.task.CapacityUpdateStatusManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
+					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1541,13 +1575,13 @@
 			<implementation>com.dianping.cat.report.page.overload.task.HourlyCapacityUpdater</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.overload.task.CapacityUpdateStatusManager</role>
@@ -1560,13 +1594,13 @@
 			<implementation>com.dianping.cat.report.page.overload.task.DailyCapacityUpdater</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.overload.task.CapacityUpdateStatusManager</role>
@@ -1579,13 +1613,13 @@
 			<implementation>com.dianping.cat.report.page.overload.task.WeeklyCapacityUpdater</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.overload.task.CapacityUpdateStatusManager</role>
@@ -1598,13 +1632,13 @@
 			<implementation>com.dianping.cat.report.page.overload.task.MonthlyCapacityUpdater</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.overload.task.CapacityUpdateStatusManager</role>
@@ -1616,6 +1650,9 @@
 			<implementation>com.dianping.cat.report.page.overload.task.TableCapacityService</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
@@ -1626,9 +1663,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1677,22 +1711,22 @@
 			<implementation>com.dianping.cat.report.page.app.task.AppDatabasePruner</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.app.AppCommandDataDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.app.AppSpeedDataDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
+					<role>com.dianping.cat.app.AppCommandDataDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.app.CrashLogDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.app.CrashLogContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1702,22 +1736,22 @@
 			<implementation>com.dianping.cat.report.page.browser.task.WebDatabasePruner</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.web.AjaxDataDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.web.WebSpeedDataDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.web.WebSpeedConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
+					<role>com.dianping.cat.web.AjaxDataDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.web.JsErrorLogDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.web.JsErrorLogContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.WebSpeedConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1736,10 +1770,10 @@
 			<implementation>com.dianping.cat.report.page.app.task.CommandAutoCompleter</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
+					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1774,6 +1808,18 @@
 		<component>
 			<role>com.dianping.cat.report.task.ReportFacade</role>
 			<implementation>com.dianping.cat.report.task.ReportFacade</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.DefaultTaskConsumer</role>
+			<implementation>com.dianping.cat.report.task.DefaultTaskConsumer</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.ReportFacade</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.TaskDao</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.service.LocalModelService</role>
@@ -2244,13 +2290,13 @@
 					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.service.IpService</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.analysis.MessageConsumer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.IpService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2285,8 +2331,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.service.LocalModelService</role>
-			<role-hint>business</role-hint>
+			<role>com.dianping.cat.report.page.business.service.LocalBusinessService</role>
 			<implementation>com.dianping.cat.report.page.business.service.LocalBusinessService</implementation>
 			<requirements>
 				<requirement>
@@ -2331,40 +2376,16 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.service.ModelService</role>
-			<role-hint>logview</role-hint>
-			<implementation>com.dianping.cat.report.page.logview.service.CompositeLogViewService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hints>
-						<role-hint>logview-historical</role-hint>
-						<role-hint>logview-local</role-hint>
-					</role-hints>
-					<field-name>m_services</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.service.LocalModelService</role>
 			<role-hint>logview</role-hint>
 			<implementation>com.dianping.cat.report.page.logview.service.LocalMessageService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.analysis.MessageConsumer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>org.unidal.cat.message.storage.MessageFinderManager</role>
 				</requirement>
 				<requirement>
 					<role>org.unidal.cat.message.storage.BucketManager</role>
 					<role-hint>local</role-hint>
-				</requirement>
-				<requirement>
-					<role>org.unidal.cat.message.storage.MessageFinderManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
@@ -2380,6 +2401,12 @@
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>plain-text</role-hint>
 					<field-name>m_plainText</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.analysis.MessageConsumer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2408,34 +2435,22 @@
 			</requirements>
 		</component>
 		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>app-command-data</role-hint>
-			<implementation>com.dianping.cat.config.app.AppCommandTableProvider</implementation>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>app-command-data-daily</role-hint>
-			<implementation>com.dianping.cat.config.app.AppCmdDailyTableProvider</implementation>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>app-connection-data</role-hint>
-			<implementation>com.dianping.cat.config.app.AppConnectionTableProvider</implementation>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>app-speed-data</role-hint>
-			<implementation>com.dianping.cat.config.app.AppSpeedTableProvider</implementation>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>ajax-data</role-hint>
-			<implementation>com.dianping.cat.config.web.AjaxDataTableProvider</implementation>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>web-speed-data</role-hint>
-			<implementation>com.dianping.cat.config.web.WebSpeedDataTableProvider</implementation>
+			<role>com.dianping.cat.report.service.ModelService</role>
+			<role-hint>logview</role-hint>
+			<implementation>com.dianping.cat.report.page.logview.service.CompositeLogViewService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hints>
+						<role-hint>logview-historical</role-hint>
+						<role-hint>logview-local</role-hint>
+					</role-hints>
+					<field-name>m_services</field-name>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
@@ -3038,22 +3053,22 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.alert.business.BusinessRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.metric.service.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.rule.DataChecker</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.business.BusinessRuleConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.alarm.spi.rule.DataChecker</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.alarm.spi.AlertManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.metric.service.BaselineService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3098,16 +3113,16 @@
 			<implementation>com.dianping.cat.report.alert.network.NetworkAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.alert.network.NetworkRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.rule.DataChecker</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.AlertManager</role>
@@ -3119,16 +3134,16 @@
 			<implementation>com.dianping.cat.report.alert.database.DatabaseAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.alert.database.DatabaseRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.rule.DataChecker</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.AlertManager</role>
@@ -3140,7 +3155,14 @@
 			<implementation>com.dianping.cat.report.alert.heartbeat.HeartbeatAlert</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>heartbeat</role-hint>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.heartbeat.HeartbeatRuleConfigManager</role>
@@ -3149,18 +3171,10 @@
 					<role>com.dianping.cat.alarm.spi.rule.DataChecker</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.alarm.spi.AlertManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>heartbeat</role-hint>
-					<field-name>m_heartbeatService</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -3169,16 +3183,16 @@
 			<implementation>com.dianping.cat.report.alert.system.SystemAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.alert.system.SystemRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.rule.DataChecker</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.spi.data.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.AlertManager</role>
@@ -3232,20 +3246,20 @@
 			<implementation>com.dianping.cat.report.alert.transaction.TransactionAlert</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>transaction</role-hint>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.transaction.TransactionRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.rule.DataChecker</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.AlertManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>transaction</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.transaction.TransactionRuleConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3254,20 +3268,20 @@
 			<implementation>com.dianping.cat.report.alert.event.EventAlert</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>event</role-hint>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.event.transform.EventMergeHelper</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.event.EventRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.rule.DataChecker</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.AlertManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>event</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.event.EventRuleConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3276,6 +3290,13 @@
 			<implementation>com.dianping.cat.report.alert.storage.sql.StorageSQLAlert</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.alert.storage.sql.StorageSQLRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>storage</role-hint>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
 				</requirement>
 				<requirement>
@@ -3283,13 +3304,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.AlertManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>storage</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.storage.sql.StorageSQLRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
@@ -3301,6 +3315,13 @@
 			<implementation>com.dianping.cat.report.alert.storage.cache.StorageCacheAlert</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.alert.storage.cache.StorageCacheRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>storage</role-hint>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
 				</requirement>
 				<requirement>
@@ -3308,13 +3329,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.AlertManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>storage</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.storage.cache.StorageCacheRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
@@ -3326,6 +3340,13 @@
 			<implementation>com.dianping.cat.report.alert.storage.rpc.StorageRPCAlert</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.alert.storage.rpc.StorageRPCRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>storage</role-hint>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
 				</requirement>
 				<requirement>
@@ -3333,13 +3354,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.AlertManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>storage</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.storage.rpc.StorageRPCRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
@@ -3366,11 +3380,11 @@
 					<role>com.dianping.cat.report.alert.exception.AlertExceptionBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.alarm.spi.AlertManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>top</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.AlertManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3477,9 +3491,6 @@
 			<implementation>com.dianping.cat.report.alert.summary.AlertSummaryExecutor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.alarm.spi.sender.SenderManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.alert.summary.build.SummaryBuilder</role>
 					<role-hint>AlertSummaryContentGenerator</role-hint>
 					<field-name>m_relatedBuilder</field-name>
@@ -3493,6 +3504,9 @@
 					<role>com.dianping.cat.report.alert.summary.build.SummaryBuilder</role>
 					<role-hint>AlterationSummaryContentGenerator</role-hint>
 					<field-name>m_alterationBuilder</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.sender.SenderManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3529,46 +3543,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.analysis.TcpSocketReceiver</role>
-			<implementation>com.dianping.cat.analysis.TcpSocketReceiver</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>plain-text</role-hint>
-					<field-name>m_codec</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.analysis.MessageHandler</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.server.ServerConfigManager</role>
-			<implementation>com.dianping.cat.config.server.ServerConfigManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.statistic.ServerStatisticManager</role>
-			<implementation>com.dianping.cat.statistic.ServerStatisticManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.analysis.RealtimeConsumer</role>
-			<implementation>com.dianping.cat.analysis.RealtimeConsumer</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.analysis.MessageAnalyzerManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3644,138 +3618,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.problem.service.ProblemReportService</role>
-			<implementation>com.dianping.cat.report.page.problem.service.ProblemReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-			<implementation>com.dianping.cat.core.dal.HourlyReportDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-			<implementation>com.dianping.cat.core.dal.HourlyReportContentDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.DailyReportDao</role>
-			<implementation>com.dianping.cat.core.dal.DailyReportDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-			<implementation>com.dianping.cat.core.dal.DailyReportContentDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-			<implementation>com.dianping.cat.core.dal.WeeklyReportDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-			<implementation>com.dianping.cat.core.dal.WeeklyReportContentDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-			<implementation>com.dianping.cat.core.dal.MonthlyReportDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-			<implementation>com.dianping.cat.core.dal.MonthlyReportContentDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.DomainGroupConfigManager</role>
-			<implementation>com.dianping.cat.report.page.DomainGroupConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.config.ConfigDao</role>
-			<implementation>com.dianping.cat.core.config.ConfigDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.mvc.PayloadNormalizer</role>
-			<implementation>com.dianping.cat.mvc.PayloadNormalizer</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.helper.JsonBuilder</role>
 			<implementation>com.dianping.cat.helper.JsonBuilder</implementation>
 		</component>
@@ -3815,18 +3657,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.transaction.HistoryGraphs</role>
-			<implementation>com.dianping.cat.report.page.transaction.HistoryGraphs</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.transaction.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.transaction.JspViewer</implementation>
 			<requirements>
@@ -3838,40 +3668,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.transaction.XmlViewer</role>
 			<implementation>com.dianping.cat.report.page.transaction.XmlViewer</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
-			<implementation>com.dianping.cat.report.page.transaction.service.TransactionReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
-			<implementation>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.event.Handler</role>
@@ -3927,36 +3723,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.event.service.EventReportService</role>
-			<implementation>com.dianping.cat.report.page.event.service.EventReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.event.transform.EventMergeHelper</role>
 			<implementation>com.dianping.cat.report.page.event.transform.EventMergeHelper</implementation>
 		</component>
@@ -4002,36 +3768,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService</role>
-			<implementation>com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager</role>
 			<implementation>com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager</implementation>
 			<requirements>
@@ -4040,6 +3776,15 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.config.ConfigDao</role>
+			<implementation>com.dianping.cat.core.config.ConfigDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4103,36 +3848,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.matrix.service.MatrixReportService</role>
-			<implementation>com.dianping.cat.report.page.matrix.service.MatrixReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.matrix.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.matrix.JspViewer</implementation>
 			<requirements>
@@ -4170,57 +3885,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.cross.service.CrossReportService</role>
-			<implementation>com.dianping.cat.report.page.cross.service.CrossReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.service.HostinfoService</role>
-			<implementation>com.dianping.cat.service.HostinfoService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HostinfoDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.HostinfoDao</role>
-			<implementation>com.dianping.cat.core.dal.HostinfoDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4300,60 +3964,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.state.service.StateReportService</role>
-			<implementation>com.dianping.cat.report.page.state.service.StateReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.state.StateGraphBuilder</role>
-			<implementation>com.dianping.cat.report.page.state.StateGraphBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.state.service.StateReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
-			<implementation>com.dianping.cat.config.server.ServerFilterConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.state.StateBuilder</role>
 			<implementation>com.dianping.cat.report.page.state.StateBuilder</implementation>
 			<requirements>
@@ -4364,24 +3974,6 @@
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>state</role-hint>
 					<field-name>m_stateService</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
-			<implementation>com.dianping.cat.system.page.router.config.RouterConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4412,18 +4004,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
-			<implementation>com.dianping.cat.consumer.config.ProductLineConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4475,21 +4055,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
-			<implementation>com.dianping.cat.consumer.metric.MetricConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4598,77 +4163,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
-			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>dependency</role-hint>
-					<field-name>m_service</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
-			<implementation>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
-			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
-			<implementation>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
-			<implementation>com.dianping.cat.home.dal.report.TopologyGraphDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</role>
 			<implementation>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</implementation>
 			<requirements>
@@ -4682,36 +4176,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.dependency.service.DependencyReportService</role>
-			<implementation>com.dianping.cat.report.page.dependency.service.DependencyReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4763,180 +4227,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.statistics.service.HeavyReportService</role>
-			<implementation>com.dianping.cat.report.page.statistics.service.HeavyReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.statistics.service.UtilizationReportService</role>
-			<implementation>com.dianping.cat.report.page.statistics.service.UtilizationReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.statistics.service.ServiceReportService</role>
-			<implementation>com.dianping.cat.report.page.statistics.service.ServiceReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.statistics.service.ClientReportService</role>
-			<implementation>com.dianping.cat.report.page.statistics.service.ClientReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.statistics.service.JarReportService</role>
-			<implementation>com.dianping.cat.report.page.statistics.service.JarReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.summary.AlertSummaryExecutor</role>
-			<implementation>com.dianping.cat.report.alert.summary.AlertSummaryExecutor</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.alert.summary.build.SummaryBuilder</role>
-					<role-hint>AlertSummaryContentGenerator</role-hint>
-					<field-name>m_relatedBuilder</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.summary.build.SummaryBuilder</role>
-					<role-hint>FailureDecorator</role-hint>
-					<field-name>m_failureBuilder</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.summary.build.SummaryBuilder</role>
-					<role-hint>AlterationSummaryContentGenerator</role-hint>
-					<field-name>m_alterationBuilder</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.alarm.spi.sender.SenderManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5066,50 +4356,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.network.service.NetTopologyReportService</role>
-			<implementation>com.dianping.cat.report.page.network.service.NetTopologyReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
 			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.network.config.NetGraphConfigManager</role>
-			<implementation>com.dianping.cat.report.page.network.config.NetGraphConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.network.influx.InfluxNetGraphManager</role>
@@ -5253,89 +4501,11 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.app.AppConfigManager</role>
-			<implementation>com.dianping.cat.config.app.AppConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
-			<implementation>com.dianping.cat.config.app.AppSpeedConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.app.display.AppGraphCreator</role>
 			<implementation>com.dianping.cat.report.page.app.display.AppGraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.app.service.AppDataService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.app.service.AppDataService</role>
-			<implementation>com.dianping.cat.report.page.app.service.AppDataService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.app.AppCommandDataDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.app.AppCommandDataDao</role>
-			<implementation>com.dianping.cat.app.AppCommandDataDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.app.service.AppSpeedService</role>
-			<implementation>com.dianping.cat.report.page.app.service.AppSpeedService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.app.AppSpeedDataDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.app.service.AppSpeedDataBuilder</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.app.AppSpeedDataDao</role>
-			<implementation>com.dianping.cat.app.AppSpeedDataDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.app.service.AppSpeedDataBuilder</role>
-			<implementation>com.dianping.cat.report.page.app.service.AppSpeedDataBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.app.AppSpeedDataDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
@@ -5355,27 +4525,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.app.service.AppConnectionService</role>
-			<implementation>com.dianping.cat.report.page.app.service.AppConnectionService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.app.AppConnectionDataDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.app.AppConnectionDataDao</role>
-			<implementation>com.dianping.cat.app.AppConnectionDataDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.alert.app.AppRuleConfigManager</role>
 			<implementation>com.dianping.cat.report.alert.app.AppRuleConfigManager</implementation>
 			<requirements>
@@ -5390,24 +4539,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</role>
-			<implementation>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.alarm.UserDefineRuleDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.alarm.UserDefineRuleDao</role>
-			<implementation>com.dianping.cat.alarm.UserDefineRuleDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5445,36 +4576,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.app.service.AppReportService</role>
-			<implementation>com.dianping.cat.report.page.app.service.AppReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5559,36 +4660,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.overload.task.TableCapacityService</role>
-			<implementation>com.dianping.cat.report.page.overload.task.TableCapacityService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.report.OverloadDao</role>
-			<implementation>com.dianping.cat.home.dal.report.OverloadDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5697,59 +4768,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.storage.task.StorageReportService</role>
-			<implementation>com.dianping.cat.report.page.storage.task.StorageReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
 			<implementation>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
-			<implementation>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.storage.display.StorageAlertInfoBuilder</role>
-			<implementation>com.dianping.cat.report.page.storage.display.StorageAlertInfoBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.alarm.service.AlertService</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.storage.builder.StorageBuilderManager</role>
@@ -5806,48 +4826,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.top.service.TopReportService</role>
-			<implementation>com.dianping.cat.report.page.top.service.TopReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5915,21 +4893,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
-			<implementation>com.dianping.cat.config.web.url.UrlPatternConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.web.url.UrlPatternHandler</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.browser.service.AjaxGraphCreator</role>
 			<implementation>com.dianping.cat.report.page.browser.service.AjaxGraphCreator</implementation>
 			<requirements>
@@ -5948,35 +4911,11 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.web.WebConfigManager</role>
-			<implementation>com.dianping.cat.config.web.WebConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.browser.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.browser.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.web.WebSpeedConfigManager</role>
-			<implementation>com.dianping.cat.config.web.WebSpeedConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6110,86 +5049,16 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.server.service.MetricScreenService</role>
-			<implementation>com.dianping.cat.report.page.server.service.MetricScreenService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.MetricScreenDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.server.service.MetricGraphBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.server.display.MetricScreenTransformer</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.report.MetricScreenDao</role>
-			<implementation>com.dianping.cat.home.dal.report.MetricScreenDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
+			<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
+			<implementation>com.dianping.cat.system.page.config.ConfigHtmlParser</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.server.service.MetricGraphBuilder</role>
 			<implementation>com.dianping.cat.report.page.server.service.MetricGraphBuilder</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.server.display.MetricScreenTransformer</role>
-			<implementation>com.dianping.cat.report.page.server.display.MetricScreenTransformer</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.server.service.MetricGraphService</role>
-			<implementation>com.dianping.cat.report.page.server.service.MetricGraphService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.MetricGraphDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.report.MetricGraphDao</role>
-			<implementation>com.dianping.cat.home.dal.report.MetricGraphDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
-			<implementation>com.dianping.cat.system.page.config.ConfigHtmlParser</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.server.display.LineChartBuilder</role>
-			<implementation>com.dianping.cat.report.page.server.display.LineChartBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.metric.MetricService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.server.service.MetricGraphBuilder</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>
 			<implementation>com.dianping.cat.influxdb.config.InfluxDBConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.server.config.ServerMetricConfigManager</role>
-			<implementation>com.dianping.cat.report.page.server.config.ServerMetricConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -6224,18 +5093,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.eslog.EsServerConfigManager</role>
-			<implementation>com.dianping.cat.report.page.eslog.EsServerConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6332,54 +5189,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.business.service.BusinessReportService</role>
-			<implementation>com.dianping.cat.report.page.business.service.BusinessReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.business.BusinessConfigManager</role>
-			<implementation>com.dianping.cat.config.business.BusinessConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.BusinessConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.config.BusinessConfigDao</role>
-			<implementation>com.dianping.cat.core.config.BusinessConfigDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.business.graph.BusinessDataFetcher</role>
 			<implementation>com.dianping.cat.report.page.business.graph.BusinessDataFetcher</implementation>
 			<requirements>
@@ -6398,6 +5207,15 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.BusinessConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.config.BusinessConfigDao</role>
+			<implementation>com.dianping.cat.core.config.BusinessConfigDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6576,98 +5394,11 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>
-			<implementation>com.dianping.cat.consumer.config.AllReportConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.router.config.RouterConfigHandler</role>
-			<implementation>com.dianping.cat.system.page.router.config.RouterConfigHandler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.state.service.StateReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
-			<implementation>com.dianping.cat.system.page.router.service.RouterConfigService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.sample.SampleConfigManager</role>
-			<implementation>com.dianping.cat.config.sample.SampleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.system.page.config.processor.ThirdPartyConfigProcessor</role>
 			<implementation>com.dianping.cat.system.page.config.processor.ThirdPartyConfigProcessor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.alert.thirdParty.ThirdPartyConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.thirdParty.ThirdPartyConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.thirdParty.ThirdPartyConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6717,27 +5448,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.business.BusinessRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.business.BusinessRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.alarm.spi.decorator.RuleFTLDecorator</role>
 			<implementation>com.dianping.cat.alarm.spi.decorator.RuleFTLDecorator</implementation>
 		</component>
@@ -6768,24 +5478,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.decorator.RuleFTLDecorator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.network.NetworkRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.network.NetworkRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6832,24 +5524,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.system.SystemRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.system.SystemRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.system.page.config.processor.HeartbeatConfigProcessor</role>
 			<implementation>com.dianping.cat.system.page.config.processor.HeartbeatConfigProcessor</implementation>
 			<requirements>
@@ -6864,24 +5538,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.decorator.RuleFTLDecorator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.heartbeat.HeartbeatRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.heartbeat.HeartbeatRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6901,18 +5557,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.alarm.spi.config.AlertConfigManager</role>
-			<implementation>com.dianping.cat.alarm.spi.config.AlertConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.system.page.config.processor.TransactionConfigProcessor</role>
 			<implementation>com.dianping.cat.system.page.config.processor.TransactionConfigProcessor</implementation>
 			<requirements>
@@ -6925,24 +5569,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.transaction.TransactionRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.transaction.TransactionRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.system.page.config.processor.EventConfigProcessor</role>
 			<implementation>com.dianping.cat.system.page.config.processor.EventConfigProcessor</implementation>
 			<requirements>
@@ -6951,24 +5577,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.decorator.RuleFTLDecorator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.event.EventRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.event.EventRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6987,60 +5595,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.decorator.RuleFTLDecorator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.storage.sql.StorageSQLRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.storage.sql.StorageSQLRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.storage.rpc.StorageRPCRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.storage.rpc.StorageRPCRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.storage.cache.StorageCacheRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.storage.cache.StorageCacheRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -7131,18 +5685,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.browser.JsRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.browser.JsRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -7240,36 +5782,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.app.command.CommandFormatConfigManager</role>
-			<implementation>com.dianping.cat.config.app.command.CommandFormatConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.command.CommandFormatHandler</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.app.AppCommandGroupConfigManager</role>
-			<implementation>com.dianping.cat.config.app.AppCommandGroupConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.system.page.business.Handler</role>
 			<implementation>com.dianping.cat.system.page.business.Handler</implementation>
 			<requirements>
@@ -7302,15 +5814,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.business2.BusinessRuleConfigManager2</role>
-			<implementation>com.dianping.cat.report.alert.business2.BusinessRuleConfigManager2</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.BusinessConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.alarm.spi.AlertEntity;
@@ -27,6 +28,7 @@ import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
 import com.dianping.cat.report.page.network.service.NetTopologyReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 
+@Named(type = TaskBuilder.class, value = NetTopologyReportBuilder.ID)
 public class NetTopologyReportBuilder implements TaskBuilder {
 
 	public static final String ID = Constants.REPORT_NET_TOPOLOGY;

@@ -9,13 +9,17 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.QueryEngine;
 import org.unidal.dal.jdbc.mapping.TableProvider;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppCommandData;
 
+@Named(type = TableProvider.class, value = AppCommandTableProvider.LOGIC_TABLE_NAME)
 public class AppCommandTableProvider implements TableProvider, Initializable {
 
-	private String m_logicalTableName = "app-command-data";
+	public final static String LOGIC_TABLE_NAME = "app-command-data";
+
+	private String m_logicalTableName = LOGIC_TABLE_NAME;
 
 	private String m_physicalTableName = "app_command_data";
 

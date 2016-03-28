@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -15,6 +16,7 @@ import com.dianping.cat.core.dal.DailyReportContent;
 import com.dianping.cat.core.dal.DailyReportContentEntity;
 import com.dianping.cat.report.service.AbstractReportService;
 
+@Named
 public class AppReportService extends AbstractReportService<AppReport> {
 
 	@Override

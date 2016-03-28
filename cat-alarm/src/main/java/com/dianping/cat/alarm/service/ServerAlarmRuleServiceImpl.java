@@ -10,12 +10,14 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.ServerAlarmRule;
 import com.dianping.cat.alarm.ServerAlarmRuleDao;
 import com.dianping.cat.alarm.ServerAlarmRuleEntity;
 
+@Named(type = ServerAlarmRuleService.class)
 public class ServerAlarmRuleServiceImpl implements ServerAlarmRuleService, Initializable {
 
 	@Inject

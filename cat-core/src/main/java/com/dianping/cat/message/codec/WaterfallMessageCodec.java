@@ -11,6 +11,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
@@ -22,12 +23,13 @@ import com.dianping.cat.message.spi.codec.BufferWriter;
 /**
  * Local use only, do not use it over network since it only supports one-way encoding
  */
+@Named(type = MessageCodec.class, value = WaterfallMessageCodec.ID)
 public class WaterfallMessageCodec implements MessageCodec, Initializable {
 	public static final String ID = "waterfall";
 
 	private static final String VERSION = "WF2"; // Waterfall version 2
 
-	@Inject
+	@Inject(HtmlEncodingBufferWriter.ID)
 	private BufferWriter m_writer;
 
 	private BufferHelper m_bufferHelper;
@@ -123,8 +125,8 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		int width = ruler.getWidth();
 
 		b.add("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\r\n");
-		b.tag1("svg", "x", 0, "y", 0, "width", width, "height", height, "viewBox", "0,0," + width + "," + height, "xmlns",
-		      "http://www.w3.org/2000/svg", "version", "1.1");
+		b.tag1("svg", "x", 0, "y", 0, "width", width, "height", height, "viewBox", "0,0," + width + "," + height,
+		      "xmlns", "http://www.w3.org/2000/svg", "version", "1.1");
 		b.tag1("g", "font-size", "12", "stroke", "gray");
 
 		return helper.write(buf, sb.toString());
@@ -140,7 +142,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 
 		return count;
 	}
-	
+
 	protected int encodeRemoteCallLine(MessageTree tree, Event event, ByteBuf buf, Locator locator, Ruler ruler) {
 		BufferHelper helper = m_bufferHelper;
 		XmlBuilder b = new XmlBuilder();
@@ -153,8 +155,8 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 
 		b.branch(locator, x, y, width, height);
 		x += locator.getLevel() * width;
-		b.tagWithText("text", "<a href='#'>[:: show ::]</a>", "x", x + 2, "y", y - 5, "font-size", "16", "stroke-width", "0", "fill",
-		      "blue", "onclick", "popup('" + logviewId + "');");
+		b.tagWithText("text", "<a href='#'>[:: show ::]</a>", "x", x + 2, "y", y - 5, "font-size", "16", "stroke-width",
+		      "0", "fill", "blue", "onclick", "popup('" + logviewId + "');");
 
 		return helper.write(buf, sb.toString());
 	}
@@ -258,7 +260,8 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 
 			for (int segment : segments) {
 				int w = ruler.calcWidth(segment);
-				String durationInMillis = String.format("%.2f %s", segment / 1000.0 / 1000.0, index == 0 ? t.getName() : "");
+				String durationInMillis = String
+				      .format("%.2f %s", segment / 1000.0 / 1000.0, index == 0 ? t.getName() : "");
 				String color = m_colors[index % m_colors.length];
 
 				b.tag("rect", "x", rx + 1, "y", y - 15, "width", w, "height", height - 2, "fill", color, "opacity", "0.5");
@@ -269,8 +272,8 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 			}
 		}
 
-		b.tag("rect", "id", tid, "x", ruler.getOffsetX() + 1, "y", y - 15, "width", ruler.getWidth(), "height", height, "fill",
-		      "#ffffff", "stroke-width", "0", "opacity", "0.01");
+		b.tag("rect", "id", tid, "x", ruler.getOffsetX() + 1, "y", y - 15, "width", ruler.getWidth(), "height", height,
+		      "fill", "#ffffff", "stroke-width", "0", "opacity", "0.01");
 
 		return helper.write(buf, b.getResult().toString());
 	}

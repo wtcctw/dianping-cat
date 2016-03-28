@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
@@ -23,6 +24,7 @@ import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.service.IpService;
 
+@Named(type = LocalModelService.class, value = LocalMetricService.ID)
 public class LocalMetricService extends LocalModelService<MetricReport> {
 
 	public static final String ID = MetricAnalyzer.ID;
@@ -77,7 +79,7 @@ public class LocalMetricService extends LocalModelService<MetricReport> {
 
 			convert.visitMetricReport(report);
 			report = convert.getReport();
-		} 
+		}
 		MetricReportFilter filter = new MetricReportFilter(payload.getMin(), payload.getMax());
 
 		return filter.buildXml(report);

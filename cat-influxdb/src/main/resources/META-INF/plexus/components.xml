@@ -316,15 +316,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.influxdb.service.DataSourceServiceImpl</role>
-			<implementation>com.dianping.cat.influxdb.service.DataSourceServiceImpl</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.metric.DataSourceService</role>
 			<role-hint>Influx</role-hint>
 			<implementation>com.dianping.cat.influxdb.service.DataSourceServiceImpl</implementation>

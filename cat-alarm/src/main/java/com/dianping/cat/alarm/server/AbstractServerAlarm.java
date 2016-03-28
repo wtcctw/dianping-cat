@@ -28,6 +28,7 @@ import com.dianping.cat.alarm.server.entity.ServerAlarmRuleConfig;
 import com.dianping.cat.alarm.server.transform.DefaultSaxParser;
 import com.dianping.cat.alarm.service.ServerAlarmRuleService;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.influxdb.InfluxDB;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.metric.MetricService;
 import com.dianping.cat.metric.MetricType;
@@ -38,7 +39,7 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 	@Inject
 	private ServerAlarmRuleService m_ruleService;
 
-	@Inject
+	@Inject(InfluxDB.ID)
 	private MetricService m_metricService;
 
 	private Map<Integer, Long> m_times = new ConcurrentHashMap<Integer, Long>();

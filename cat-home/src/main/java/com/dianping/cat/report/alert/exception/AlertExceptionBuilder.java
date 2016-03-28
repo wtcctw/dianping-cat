@@ -7,12 +7,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
 import com.dianping.cat.alarm.spi.AlertLevel;
 import com.dianping.cat.report.page.dependency.TopMetric.Item;
 
+@Named
 public class AlertExceptionBuilder {
 
 	@Inject

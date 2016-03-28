@@ -7,6 +7,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -24,6 +25,7 @@ import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.TaskBuilder;
 
+@Named(type = TaskBuilder.class, value = AppDatabasePruner.ID)
 public class AppDatabasePruner implements TaskBuilder {
 
 	public static final String ID = Constants.APP_DATABASE_PRUNER;
