@@ -8,8 +8,10 @@ import java.util.Map;
 import com.dianping.cat.message.internal.MessageId;
 
 public interface Block {
-	public ByteBuf find(MessageId id);
+	public void clear();
 
+	public ByteBuf find(MessageId id);
+	
 	public void finish();
 
 	public ByteBuf getData() throws IOException;

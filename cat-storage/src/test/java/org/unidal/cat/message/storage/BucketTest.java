@@ -458,5 +458,9 @@ public class BucketTest extends ComponentTestCase {
 		public ByteBuf unpack(MessageId id) throws IOException {
 			throw new UnsupportedOperationException();
 		}
+
+		@Override
+      public void clear() {
+      }
 	}
 }

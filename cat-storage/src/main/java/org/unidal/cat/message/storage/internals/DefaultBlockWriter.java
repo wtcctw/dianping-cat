@@ -72,6 +72,9 @@ public class DefaultBlockWriter implements BlockWriter {
 							Transaction t = Cat.newTransaction("Block", block.getDomain());
 
 							bucket.puts(block.getData(), block.getMappings());
+							
+							block.clear(); // for gc
+							
 							t.setStatus(Transaction.SUCCESS);
 							t.complete();
 						} else {
