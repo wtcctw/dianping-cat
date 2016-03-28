@@ -2,6 +2,7 @@ package com.dianping.cat.message.spi.codec;
 
 import com.dianping.cat.message.*;
 import com.dianping.cat.message.internal.*;
+
 import io.netty.buffer.ByteBuf;
 
 import java.io.UnsupportedEncodingException;
@@ -60,10 +61,14 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	public void decode(ByteBuf buf, MessageTree tree) {
 		Context ctx = m_ctx.get().setBuffer(buf);
 
-		decodeHeader(ctx, tree);
+		try {
+			decodeHeader(ctx, tree);
 
-		if (buf.readableBytes() > 0) {
-			decodeMessage(ctx, tree);
+			if (buf.readableBytes() > 0) {
+				decodeMessage(ctx, tree);
+			}
+		} finally {
+			m_ctx.remove();
 		}
 	}
 
