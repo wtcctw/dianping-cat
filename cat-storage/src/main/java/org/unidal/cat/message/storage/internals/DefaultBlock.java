@@ -66,6 +66,12 @@ public class DefaultBlock implements Block {
 	}
 
 	@Override
+	public void clear() {
+		m_data = null;
+		m_mappings.clear();
+	}
+
+	@Override
 	public ByteBuf find(MessageId id) {
 		Integer offset = m_mappings.get(id);
 
