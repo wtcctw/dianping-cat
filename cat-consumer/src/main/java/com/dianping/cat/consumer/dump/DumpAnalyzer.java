@@ -65,6 +65,11 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	}
 
 	@Override
+	public int getAnanlyzerCount() {
+		return 2;
+	}
+
+	@Override
 	public Object getReport(String domain) {
 		throw new UnsupportedOperationException("This should not be called!");
 	}
@@ -72,6 +77,10 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	@Override
 	public ReportManager<?> getReportManager() {
 		return null;
+	}
+
+	private boolean invalid(String domain) {
+		return "PhoenixAgent".equals(domain) || "phoenix-agent".equals(domain) || "UNKNOWN".equals(domain);
 	}
 
 	@Override
@@ -83,7 +92,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 
-		if ("PhoenixAgent".equals(domain)) {
+		if (invalid(domain)) {
 			return;
 		} else {
 			MessageId messageId = MessageId.parse(tree.getMessageId());
@@ -109,11 +118,6 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 	public void setServerStateManager(ServerStatisticManager serverStateManager) {
 		m_serverStateManager = serverStateManager;
-	}
-
-	@Override
-	public int getAnanlyzerCount() {
-		return 2;
 	}
 
 }
