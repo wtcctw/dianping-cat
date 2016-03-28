@@ -57,6 +57,19 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	}
 
 	@Override
+	public void initialize(long startTime, long duration, long extraTime) {
+		super.initialize(startTime, duration, extraTime);
+
+		int hour = (int) TimeUnit.MILLISECONDS.toHours(startTime);
+
+		m_dumperManager.findOrCreate(hour);
+	}
+
+	private boolean invalid(String domain) {
+		return "PhoenixAgent".equals(domain) || "phoenix-agent".equals(domain) || "UNKNOWN".equals(domain);
+	}
+
+	@Override
 	protected void loadReports() {
 		// do nothing
 	}
@@ -65,7 +78,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 
-		if ("PhoenixAgent".equals(domain)) {
+		if (invalid(domain)) {
 			return;
 		} else {
 			MessageId messageId = MessageId.parse(tree.getMessageId());
@@ -84,15 +97,6 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 	public void setServerStateManager(ServerStatisticManager serverStateManager) {
 		m_serverStateManager = serverStateManager;
-	}
-
-	@Override
-	public void initialize(long startTime, long duration, long extraTime) {
-		super.initialize(startTime, duration, extraTime);
-
-		int hour = (int) TimeUnit.MILLISECONDS.toHours(startTime);
-
-		m_dumperManager.findOrCreate(hour);
 	}
 
 }
