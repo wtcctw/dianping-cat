@@ -189,6 +189,14 @@
       	<member name="request-package-sum"/>
       	<member name="response-package-sum"/>
       </readset>
+      <readset name="SOURCE-CODE-DATA">
+      	<member name="code"/>
+      	<member name="source"/>
+      	<member name="access-number-sum"/>
+      	<member name="response-sum-time-sum"/>
+      	<member name="request-package-sum"/>
+      	<member name="response-package-sum"/>
+      </readset>   
       <readset name="CITY-CODE-DATA">
       	<member name="code"/>
       	<member name="city"/>
@@ -227,6 +235,11 @@
       	<member name="response-sum-time-sum"/>
       	<member name="access-number-sum"/>
       </readset>
+       <readset name="SOURCE-DATA">
+      	<member name="source"/>
+      	<member name="response-sum-time-sum"/>
+      	<member name="access-number-sum"/>
+      </readset>
     </readsets>
     <query-defs>
 	  <query name="insert" type="INSERT"  batch="true">
@@ -257,6 +270,7 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="source" />
         <param name="start-minute-order" />
         <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -289,6 +303,9 @@
 		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
 		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
+		</IF>
         group by  <FIELD name='minute-order'/>  ]]></statement>
       </query>
       <query name="find-daily-data-by-code" type="SELECT" multiple="true">
@@ -309,6 +326,7 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="source" />
         <param name="start-minute-order" />
         <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -341,6 +359,9 @@
 		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
 		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
+		</IF>
         group by  <FIELD name='minute-order'/>,<FIELD name='code'/>  ]]></statement>
       </query>
       <query name="find-data-by-code" type="SELECT" multiple="true">
@@ -353,6 +374,7 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="source" />
         <param name="start-minute-order" />
         <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -385,6 +407,9 @@
 		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
 		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
+		</IF>
         group by  <FIELD name='code'/> ]]></statement>
       </query>
       <query name="find-data-by-operator-code" type="SELECT" multiple="true">
@@ -397,6 +422,7 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="source" />
   		<param name="start-minute-order" />
         <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -429,6 +455,9 @@
 		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
 		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
+		</IF>
         group by <FIELD name='operator'/>, <FIELD name='code'/>]]></statement>
       </query>
       <query name="find-data-by-network-code" type="SELECT" multiple="true">
@@ -441,6 +470,7 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="source" />
         <param name="start-minute-order" />
         <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -472,6 +502,9 @@
 		</IF>
 		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
 		</IF>
         group by <FIELD name='network'/>, <FIELD name='code'/>]]></statement>
       </query>
@@ -485,6 +518,7 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="source" />
         <param name="start-minute-order" />
         <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -516,6 +550,9 @@
 		</IF>
 		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
 		</IF>
         group by <FIELD name='app-version'/>, <FIELD name='code'/>]]></statement>
       </query>
@@ -529,6 +566,7 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="source" />
         <param name="start-minute-order" />
         <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -560,6 +598,9 @@
 		</IF>
 		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
 		</IF>
         group by <FIELD name='connect-type'/>, <FIELD name='code'/>]]></statement>
       </query>
@@ -573,6 +614,7 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="source" />
         <param name="start-minute-order" />
         <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -605,6 +647,9 @@
 		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
 		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
+		</IF>
         group by <FIELD name='platform'/>, <FIELD name='code'/>]]></statement>
       </query>
       <query name="find-data-by-city-code" type="SELECT" multiple="true">
@@ -617,6 +662,7 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="source" />
         <param name="start-minute-order" />
         <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -649,7 +695,58 @@
 		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
 		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
+		</IF>
         group by <FIELD name='city'/>, <FIELD name='code'/>]]></statement>
+      </query>
+       <query name="find-data-by-source-code" type="SELECT" multiple="true">
+        <param name="command-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="connect-type" />
+        <param name="code" />
+        <param name="platform" />
+        <param name="source" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+         <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF> 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NE' field='app-version' value='-1'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+        <IF type='NE' field='connect-type' value='-1'>
+			AND  <FIELD name='connect-type'/> = ${connect-type}
+		</IF>
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
+		</IF>
+        group by <FIELD name='source'/>, <FIELD name='code'/>]]></statement>
       </query>
       <query name="find-data-by-operator" type="SELECT" multiple="true">
         <param name="command-id" />
@@ -661,6 +758,7 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="source" />
         <param name="start-minute-order" />
         <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -693,6 +791,9 @@
 		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
 		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
+		</IF>
         group by  <FIELD name='operator'/>  ]]></statement>
       </query>
       <query name="find-data-by-network" type="SELECT" multiple="true">
@@ -705,6 +806,7 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="source" />
         <param name="start-minute-order" />
         <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -736,6 +838,9 @@
 		</IF>
 		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
 		</IF>
         group by  <FIELD name='network'/>  ]]></statement>
       </query>
@@ -749,6 +854,7 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="source" />
         <param name="start-minute-order" />
         <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -780,6 +886,9 @@
 		</IF>
 		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
 		</IF>
         group by  <FIELD name='app-version'/>  ]]></statement>
       </query>
@@ -793,6 +902,7 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="source" />
         <param name="start-minute-order" />
         <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -824,6 +934,9 @@
 		</IF>
 		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
 		</IF>
         group by  <FIELD name='connect-type'/>  ]]></statement>
       </query>
@@ -837,6 +950,7 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="source" />
         <param name="start-minute-order" />
         <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -868,6 +982,9 @@
 		</IF>
 		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
 		</IF>
         group by  <FIELD name='platform'/>  ]]></statement>
       </query>
@@ -881,6 +998,7 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
+        <param name="source" />
         <param name="start-minute-order" />
         <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -913,7 +1031,58 @@
 		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
 		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
+		</IF>
         group by  <FIELD name='city'/>  ]]></statement>
+      </query>
+      <query name="find-data-by-source" type="SELECT" multiple="true">
+        <param name="command-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="connect-type" />
+        <param name="code" />
+        <param name="platform" />
+        <param name="source" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF>
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NE' field='app-version' value='-1'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+        <IF type='NE' field='connect-type' value='-1'>
+			AND  <FIELD name='connect-type'/> = ${connect-type}
+		</IF>
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+		<IF type='NE' field='source' value='-1'>
+			AND  <FIELD name='source'/> = ${source}
+		</IF>
+        group by  <FIELD name='source'/>  ]]></statement>
       </query>
     </query-defs>
   </entity>

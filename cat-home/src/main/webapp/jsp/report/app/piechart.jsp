@@ -94,11 +94,12 @@
 			var platform = $("#platform").val();
 			var city = $("#city").val();
 			var operator = $("#operator").val();
+			var source = $("#source").val();
 			var group = $("#group").val();
 			var split = ";";
 			var query1 = period + split + commandId + split + code + split
 					+ network + split + version + split + connectionType
-					+ split + platform + split + city + split + operator + split + times[1] + split + $("#time2").val();
+					+ split + platform + split + city + split + operator + split + source + split + times[1] + split + $("#time2").val();
 			
 			var field = $("#piechartSelect").val();
 			var href = "?op=piechart&query1=" + query1 + "&groupByField=" + field+"&commandId="+$("#command").val() + "&sort=" + sort;
@@ -113,6 +114,7 @@
 			document.getElementById("platform").disabled = false;
 			document.getElementById("city").disabled = false;
 			document.getElementById("operator").disabled = false;
+			document.getElementById("source").disabled = false;
 			document.getElementById($("#piechartSelect").val()).disabled = true;
 		}
 
@@ -140,13 +142,13 @@
 					if (words[0] == null || words.length == 1) {
 						$("#time").val(getDate());
 					} else {
-						$("#time").val(words[0] + " " + words[9]);
+						$("#time").val(words[0] + " " + words[10]);
 					}
 					
 					if(words[10] == null || words.length == 1){
 						$("#time2").val(getTime());
 					}else{
-						$("#time2").val(words[10]);
+						$("#time2").val(words[11]);
 					}
 					
 					if(typeof(words[1]) != 'undefined' && words[1].length > 0){
@@ -163,6 +165,7 @@
 					$("#platform").val(words[6]);
 					$("#city").val(words[7]);
 					$("#operator").val(words[8]);
+					$("#source").val(words[9]);
 					$("#piechartSelect").val('${payload.groupByField.name}');
 					refreshDisabled();
 					

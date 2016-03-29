@@ -16,6 +16,8 @@ public class CommandQueryEntity extends BaseQueryEntity {
 
 	protected int m_connectType = DEFAULT_VALUE;
 
+	protected int m_source = DEFAULT_VALUE;
+
 	private int m_startMinuteOrder = DEFAULT_VALUE;
 
 	private int m_endMinuteOrder = DEFAULT_VALUE;
@@ -41,6 +43,10 @@ public class CommandQueryEntity extends BaseQueryEntity {
 			m_platfrom = parseValue(strs.get(5));
 			m_city = parseValue(strs.get(6));
 			m_operator = parseValue(strs.get(7));
+
+			if (strs.size() > 8) {
+				m_source = parseValue(strs.get(8));
+			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -73,8 +79,9 @@ public class CommandQueryEntity extends BaseQueryEntity {
 			m_platfrom = parseValue(strs.get(6));
 			m_city = parseValue(strs.get(7));
 			m_operator = parseValue(strs.get(8));
-			m_startMinuteOrder = convert2MinuteOrder(strs.get(9));
-			m_endMinuteOrder = convert2MinuteOrder(strs.get(10));
+			m_source = parseValue(strs.get(9));
+			m_startMinuteOrder = convert2MinuteOrder(strs.get(10));
+			m_endMinuteOrder = convert2MinuteOrder(strs.get(11));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -94,6 +101,10 @@ public class CommandQueryEntity extends BaseQueryEntity {
 
 	public int getId() {
 		return m_id;
+	}
+
+	public int getSource() {
+		return m_source;
 	}
 
 	public int getStartMinuteOrder() {

@@ -7,8 +7,8 @@ import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.transform.BaseVisitor;
+import com.dianping.cat.helper.MetricType;
 import com.dianping.cat.report.graph.metric.MetricDataFetcher;
-import com.dianping.cat.report.alert.spi.data.MetricType;
 
 public class MetricDataFetcherImpl implements MetricDataFetcher {
 
@@ -53,7 +53,7 @@ public class MetricDataFetcherImpl implements MetricDataFetcher {
 		@Override
 		public void visitMetricItem(MetricItem metricItem) {
 			m_metricKey = metricItem.getId();
-			
+
 			double[] sum = findOrCreateStatistic(m_metricKey + ":" + SUM);
 			double[] count = findOrCreateStatistic(m_metricKey + ":" + COUNT);
 			double[] avg = findOrCreateStatistic(m_metricKey + ":" + AVG);

@@ -4,9 +4,9 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
-<jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
-<jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
+<jsp:useBean id="ctx" type="com.dianping.cat.system.page.app.Context" scope="request"/>
+<jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
+<jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
 
 <a:mobile>
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
@@ -14,9 +14,6 @@
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');
 			$('#appList').addClass('active');
-			if(${payload.id} >= 0) {
-				$('#all').val('${model.updateCommand.all}');
-			}
 		});
 		
 		$(document).delegate('#updateSubmit', 'click', function(e){
@@ -24,7 +21,6 @@
 			var title = $("#commandTitle").val();
 			var domain = $("#commandDomain").val();
 			var id = $("#commandId").val();
-			var all = $("#all").val();
 			var threshold = $("#threshold").val();
 			
 			if(name == undefined || name == ""){
@@ -33,18 +29,12 @@
 				}
 				return;
 			}
-			if(all == undefined || all == ""){
-				if($("#errorMessage").length == 0){
-					$("#all").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
-				}
-				return;
-			}
 			if(${payload.id} <= 0) {
 				$.ajax({
 					async: false,
 					type: "get",
 					dataType: "json",
-					url: "/cat/s/config?op=appNameCheck&name="+name,
+					url: "/cat/s/app?op=appNameCheck&name="+name,
 					success : function(response, textStatus) {
 						if(response['isNameUnique']){
 							if(title==undefined){
@@ -57,7 +47,7 @@
 								id="";
 							}
 							
-							window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id=-1"+"&type=${payload.type}&all="+all+"&threshold="+threshold;
+							window.location.href = "/cat/s/app?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id=-1"+"&type=${payload.type}&threshold="+threshold;
 						}else{
 							alert("该名称已存在，请修改名称！");
 						}
@@ -73,7 +63,7 @@
 				if(id==undefined){
 					id="";
 				}
-				window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id+"&type=${payload.type}&all="+all+"&threshold="+threshold;
+				window.location.href = "/cat/s/app?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id+"&type=${payload.type}&threshold="+threshold;
 			}
 		})
 	</script>
@@ -90,11 +80,6 @@
 		<tr><td>标题</td><td><input name="title" value="${model.updateCommand.title}" id="commandTitle" /><span class="text-danger">（支持数字、字符）</span><br/>
 			</td>
 		</tr>
-		<tr><td>是否加入全量统计</td><td><select id="all" />
-									<option value='true'>是</option>
-									<option value='false'>否</option>
-									</select><br/>
-		</td></tr>
 		<tr><td>默认过滤时间</td><td><input name="threshold" value="${model.updateCommand.threshold}" id="threshold" /><span class="text-danger">（支持数字）</span><br/>
 			</td>
 		</tr>

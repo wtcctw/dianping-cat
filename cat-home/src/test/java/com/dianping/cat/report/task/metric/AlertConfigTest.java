@@ -11,25 +11,25 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.home.rule.entity.Condition;
-import com.dianping.cat.home.rule.entity.Config;
-import com.dianping.cat.home.rule.entity.MonitorRules;
-import com.dianping.cat.home.rule.entity.Rule;
-import com.dianping.cat.home.rule.transform.DefaultSaxParser;
-import com.dianping.cat.report.alert.spi.rule.DataCheckEntity;
-import com.dianping.cat.report.alert.spi.rule.DataChecker;
-import com.dianping.cat.report.alert.spi.rule.DefaultDataChecker;
+import com.dianping.cat.alarm.rule.entity.Condition;
+import com.dianping.cat.alarm.rule.entity.Config;
+import com.dianping.cat.alarm.rule.entity.MonitorRules;
+import com.dianping.cat.alarm.rule.entity.Rule;
+import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
+import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
+import com.dianping.cat.alarm.spi.rule.DataChecker;
+import com.dianping.cat.alarm.spi.rule.DefaultDataChecker;
 
 public class AlertConfigTest {
 
 	private DataChecker m_checker = new DefaultDataChecker();
 
-	private Map<String, List<com.dianping.cat.home.rule.entity.Config>> buildConfigMap(MonitorRules monitorRules) {
+	private Map<String, List<com.dianping.cat.alarm.rule.entity.Config>> buildConfigMap(MonitorRules monitorRules) {
 		if (monitorRules == null || monitorRules.getRules().size() == 0) {
 			return null;
 		}
 
-		Map<String, List<com.dianping.cat.home.rule.entity.Config>> map = new HashMap<String, List<com.dianping.cat.home.rule.entity.Config>>();
+		Map<String, List<com.dianping.cat.alarm.rule.entity.Config>> map = new HashMap<String, List<com.dianping.cat.alarm.rule.entity.Config>>();
 
 		for (Rule rule : monitorRules.getRules().values()) {
 			map.put(rule.getId(), rule.getConfigs());
@@ -60,7 +60,7 @@ public class AlertConfigTest {
 
 	@Test
 	public void testMinute() {
-		Map<String, List<com.dianping.cat.home.rule.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/test-minute-monitor.xml"));
+		Map<String, List<com.dianping.cat.alarm.rule.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/test-minute-monitor.xml"));
 
 		Assert.assertNotNull(configMap);
 
@@ -73,7 +73,7 @@ public class AlertConfigTest {
 
 	@Test
 	public void testRule() {
-		Map<String, List<com.dianping.cat.home.rule.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/test-rule-monitor.xml"));
+		Map<String, List<com.dianping.cat.alarm.rule.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/test-rule-monitor.xml"));
 
 		Assert.assertNotNull(configMap);
 

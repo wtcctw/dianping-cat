@@ -3,7 +3,7 @@ package com.dianping.cat.report.page.server;
 public enum Action implements org.unidal.web.mvc.Action {
 
 	VIEW("view"),
-	
+
 	VIEW_JSON("viewJson"),
 
 	GRAPH("graph"),
@@ -37,6 +37,14 @@ public enum Action implements org.unidal.web.mvc.Action {
 	INFLUX_CONFIG_UPDATE("influxConfigUpdate"),
 
 	SERVER_METRIC_CONFIG_UPDATE("serverMetricConfigUpdate"),
+
+	SERVER_ALARM_RULE("serverAlarmRule"),
+
+	SERVER_ALARM_RULE_UPDATE("serverAlarmRuleUpdate"),
+
+	SERVER_ALARM_RULE_SUBMIT("serverAlarmRuleSubmit"),
+
+	SERVER_ALARM_RULE_DELETE("serverAlarmRuleDelete"),
 
 	;
 

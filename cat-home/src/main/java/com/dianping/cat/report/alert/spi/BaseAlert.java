@@ -11,20 +11,22 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.rule.entity.Condition;
+import com.dianping.cat.alarm.rule.entity.Config;
+import com.dianping.cat.alarm.spi.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertManager;
+import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
+import com.dianping.cat.alarm.spi.rule.DataChecker;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
+import com.dianping.cat.helper.MetricType;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.home.rule.entity.Condition;
-import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
+import com.dianping.cat.report.alert.spi.config.BaseRuleConfigManager;
 import com.dianping.cat.report.alert.spi.data.MetricReportGroup;
 import com.dianping.cat.report.alert.spi.data.MetricReportGroupService;
-import com.dianping.cat.report.alert.spi.data.MetricType;
-import com.dianping.cat.report.alert.spi.rule.DataCheckEntity;
-import com.dianping.cat.report.alert.spi.rule.DataChecker;
 
 public abstract class BaseAlert implements Task, LogEnabled {
 

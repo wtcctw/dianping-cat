@@ -1,9 +1,7 @@
 package com.dianping.cat.system.page.project;
 
 public enum JspFile {
-	VIEW("/jsp/system/project.jsp"),
-
-	PROJECT_UPDATE("/jsp/system/project/api.jsp"),
+	JSON("/jsp/system/project/json.jsp"),
 
 	;
 

@@ -6,10 +6,10 @@ import java.util.Map.Entry;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.alarm.spi.AlertType;
+import com.dianping.cat.alarm.spi.receiver.ProjectContactor;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.app.entity.Command;
-import com.dianping.cat.report.alert.spi.AlertType;
-import com.dianping.cat.report.alert.spi.receiver.ProjectContactor;
 
 public class AppContactor extends ProjectContactor {
 

@@ -52,8 +52,6 @@ public interface MessageTree extends Cloneable {
 
 	public boolean isProcessLoss();
 
-	public void setDiscard(boolean sample);
-
 	public void setDomain(String domain);
 
 	public void setFormatMessageId(MessageId messageId);
@@ -71,6 +69,8 @@ public interface MessageTree extends Cloneable {
 	public void setProcessLoss(boolean loss);
 
 	public void setRootMessageId(String rootMessageId);
+
+	public void setDiscard(boolean discard);
 
 	public void setSessionToken(String sessionToken);
 

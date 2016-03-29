@@ -68,11 +68,13 @@ public class AppConfigManager implements Initializable {
 	public static final String VERSION = "版本";
 
 	public static final String PLATFORM = "平台";
-	
+
 	public static final String CITY = "城市";
 
+	public static final String SOURCE = "来源";
+
 	public static final String CONNECT_TYPE = "连接类型";
-	
+
 	public static final String APP_NAME = "APP类型";
 
 	public static final int ALL_COMMAND_ID = 0;
@@ -106,7 +108,7 @@ public class AppConfigManager implements Initializable {
 			return false;
 		}
 	}
-	
+
 	private Map<String, List<Command>> buildSortedCommands(Map<String, List<Command>> commands) {
 		Map<String, List<Command>> results = new LinkedHashMap<String, List<Command>>();
 		List<String> domains = new ArrayList<String>(commands.keySet());

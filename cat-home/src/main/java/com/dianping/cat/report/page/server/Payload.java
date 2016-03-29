@@ -11,6 +11,7 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import org.unidal.web.mvc.payload.annotation.ObjectMeta;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.alarm.ServerAlarmRule;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.metric.MetricType;
 import com.dianping.cat.mvc.AbstractReportPayload;
@@ -66,6 +67,12 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	@FieldMeta("group")
 	private String m_group;
+
+	@FieldMeta("ruleId")
+	private int m_ruleId;
+
+	@ObjectMeta("rule")
+	private ServerAlarmRule m_rule;
 
 	private ReportPage m_page;
 
@@ -171,6 +178,14 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_page;
 	}
 
+	public ServerAlarmRule getRule() {
+		return m_rule;
+	}
+
+	public int getRuleId() {
+		return m_ruleId;
+	}
+
 	public String getScreen() {
 		return m_screen;
 	}
@@ -240,6 +255,14 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.SERVER);
+	}
+
+	public void setRule(ServerAlarmRule rule) {
+		m_rule = rule;
+	}
+
+	public void setRuleId(int ruleId) {
+		m_ruleId = ruleId;
 	}
 
 	public void setScreen(String screen) {
