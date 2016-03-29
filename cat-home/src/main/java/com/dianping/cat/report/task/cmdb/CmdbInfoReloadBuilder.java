@@ -19,7 +19,7 @@ public class CmdbInfoReloadBuilder implements TaskBuilder {
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
-		throw new RuntimeException("router builder don't support hourly task");
+		throw new RuntimeException("project builder don't support hourly task");
 	}
 
 	@Override
@@ -30,12 +30,12 @@ public class CmdbInfoReloadBuilder implements TaskBuilder {
 
 	@Override
 	public boolean buildMonthlyTask(String name, String domain, Date period) {
-		throw new RuntimeException("router builder don't support monthly task");
+		throw new RuntimeException("project builder don't support monthly task");
 	}
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		throw new RuntimeException("router builder don't support weekly task");
+		throw new RuntimeException("project builder don't support weekly task");
 	}
 
 }

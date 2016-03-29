@@ -55,7 +55,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 	private static final String CMDB_PRODUCT_URL = "http://api.cmdb.dp/api/v0.1/projects/%s/product";
 
-	private static final String CMDB_HOSTNAME_URL = "http://api.cmdb.dp/api/v0.1/ci/s?q=_type:(vserver;server),private_ip:%s&fl=hostname";
+	private static final String CMDB_HOSTNAME_URL = "http://api.cmdb.dp/api/v0.1/ci/s?q=_type:(vserver;server;tx-vserver),private_ip:%s&fl=hostname";
 
 	private boolean checkIfNullOrEqual(String source, int target) {
 		if (source == null || source.equals("null")) {
@@ -303,15 +303,16 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 	@Override
 	public void run() {
-		Transaction t1 = Cat.newTransaction("CMDB", "DeleteUnusedDomain");
-		try {
-			deleteUnusedDomainInfo();
-			t1.setStatus(Transaction.SUCCESS);
-		} catch (Exception e) {
-			t1.setStatus(e);
-		} finally {
-			t1.complete();
-		}
+		// TODO
+		// Transaction t1 = Cat.newTransaction("CMDB", "DeleteUnusedDomain");
+		// try {
+		// deleteUnusedDomainInfo();
+		// t1.setStatus(Transaction.SUCCESS);
+		// } catch (Exception e) {
+		// t1.setStatus(e);
+		// } finally {
+		// t1.complete();
+		// }
 
 		Transaction t2 = Cat.newTransaction("CMDB", "UpdateHostname");
 		try {

@@ -60,6 +60,7 @@ public class ProjectService implements Initializable {
 		try {
 			m_projectDao.deleteByPK(project);
 			m_domainToProjects.remove(domainName);
+			m_domains.remove(domainName);
 			m_cmdbToProjects.remove(project.getCmdbDomain());
 			return true;
 		} catch (Exception e) {

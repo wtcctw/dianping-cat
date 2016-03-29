@@ -28,11 +28,13 @@ import org.unidal.lookup.annotation.Named;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.internal.MessageId;
 
-@Named(type = Bucket.class, value = "hdfs", instantiationStrategy = Named.PER_LOOKUP)
+@Named(type = Bucket.class, value = HdfsBucket.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class HdfsBucket implements Bucket, BenchmarkEnabled {
 	private static final int SEGMENT_SIZE = 32 * 1024;
 
-	@Inject("local")
+	public static final String ID = "hdfs";
+
+	@Inject(HdfsBucket.ID)
 	private FileBuilder m_bulider;
 
 	private Metric m_indexMetric;

@@ -25,7 +25,7 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 	@Inject
 	private BlockDumperManager m_blockDumperManager;
 
-	@Inject
+	@Inject("local")
 	private BucketManager m_bucketManager;
 
 	private List<BlockingQueue<MessageTree>> m_queues = new ArrayList<BlockingQueue<MessageTree>>();
