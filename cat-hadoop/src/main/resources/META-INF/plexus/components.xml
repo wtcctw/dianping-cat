@@ -85,6 +85,7 @@
 				</requirement>
 				<requirement>
 					<role>org.unidal.cat.message.storage.BucketManager</role>
+					<role-hint>local</role-hint>
 				</requirement>
 			</requirements>
 		</component>

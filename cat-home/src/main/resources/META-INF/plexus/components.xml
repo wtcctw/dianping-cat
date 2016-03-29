@@ -5057,18 +5057,6 @@
 			<implementation>com.dianping.cat.report.page.server.service.MetricGraphBuilder</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.influxdb.config.InfluxDBConfigManager</role>
-			<implementation>com.dianping.cat.influxdb.config.InfluxDBConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.alarm.spi.decorator.ServerRuleFTLDecorator</role>
 			<implementation>com.dianping.cat.alarm.spi.decorator.ServerRuleFTLDecorator</implementation>
 		</component>
