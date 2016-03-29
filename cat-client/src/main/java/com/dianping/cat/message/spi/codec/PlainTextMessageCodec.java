@@ -52,8 +52,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		return tree;
 	}
 
-	@Override
-	public void decode(ByteBuf buf, MessageTree tree) {
+	private void decode(ByteBuf buf, MessageTree tree) {
 		if (m_ctx == null) {
 			m_ctx = new ThreadLocal<Context>() {
 				@Override
@@ -62,7 +61,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				}
 			};
 		}
-		
+
 		Context ctx = m_ctx.get().setBuffer(buf);
 
 		try {
@@ -394,7 +393,9 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	}
 
 	public void reset() {
-		m_ctx.remove();
+		if (m_ctx != null) {
+			m_ctx.remove();
+		}
 	}
 
 	protected void setBufferWriter(BufferWriter writer) {
