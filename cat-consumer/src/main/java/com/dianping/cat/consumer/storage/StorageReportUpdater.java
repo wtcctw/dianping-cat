@@ -2,12 +2,15 @@ package com.dianping.cat.consumer.storage;
 
 import java.util.Set;
 
+import org.unidal.lookup.annotation.Named;
+
 import com.dianping.cat.consumer.storage.model.entity.Domain;
 import com.dianping.cat.consumer.storage.model.entity.Operation;
 import com.dianping.cat.consumer.storage.model.entity.Segment;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.message.Transaction;
 
+@Named
 public class StorageReportUpdater {
 
 	public void updateStorageIds(String id, Set<String> ids, StorageReport report) {

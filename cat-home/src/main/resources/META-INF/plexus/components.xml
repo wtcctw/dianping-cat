@@ -3606,10 +3606,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.helper.JsonBuilder</role>
-			<implementation>com.dianping.cat.helper.JsonBuilder</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.transaction.Handler</role>
 			<implementation>com.dianping.cat.report.page.transaction.Handler</implementation>
 			<requirements>
@@ -4022,27 +4018,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.AlertManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.service.ProjectService</role>
-			<implementation>com.dianping.cat.service.ProjectService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.ProjectDao</role>
-			<implementation>com.dianping.cat.core.dal.ProjectDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4531,10 +4506,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-			<implementation>com.dianping.cat.report.alert.config.BaseRuleHelper</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.app.service.CrashLogService</role>
 			<implementation>com.dianping.cat.report.page.app.service.CrashLogService</implementation>
 			<requirements>
@@ -4758,10 +4729,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
 			<implementation>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.storage.builder.StorageBuilderManager</role>
-			<implementation>com.dianping.cat.consumer.storage.builder.StorageBuilderManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.top.Handler</role>

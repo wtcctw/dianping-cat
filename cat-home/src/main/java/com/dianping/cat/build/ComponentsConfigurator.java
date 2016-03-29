@@ -30,14 +30,11 @@ import com.dianping.cat.report.alert.storage.sql.StorageSQLRuleConfigManager;
 import com.dianping.cat.report.alert.system.SystemRuleConfigManager;
 import com.dianping.cat.report.alert.thirdParty.ThirdPartyConfigManager;
 import com.dianping.cat.report.alert.transaction.TransactionRuleConfigManager;
-import com.dianping.cat.report.graph.metric.DataExtractor;
-import com.dianping.cat.report.graph.metric.MetricDataFetcher;
 import com.dianping.cat.report.graph.metric.impl.CachedMetricReportServiceImpl;
 import com.dianping.cat.report.graph.metric.impl.DataExtractorImpl;
 import com.dianping.cat.report.graph.metric.impl.MetricDataFetcherImpl;
 import com.dianping.cat.report.graph.svg.DefaultGraphBuilder;
 import com.dianping.cat.report.graph.svg.DefaultValueTranslater;
-import com.dianping.cat.report.graph.svg.ValueTranslater;
 import com.dianping.cat.report.page.DomainGroupConfigManager;
 import com.dianping.cat.report.page.app.service.AppConnectionService;
 import com.dianping.cat.report.page.app.service.AppDataService;
@@ -70,9 +67,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	private List<Component> defineCommonComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(JsonBuilder.class));
+		all.add(A(JsonBuilder.class));
 
-		all.add(C(ValueTranslater.class, DefaultValueTranslater.class));
+		all.add(A(DefaultValueTranslater.class));
 		all.add(A(DefaultGraphBuilder.class));
 
 		all.add(A(PayloadNormalizer.class));
@@ -135,7 +132,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	private List<Component> defineConfigComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(BaseRuleHelper.class));
+		all.add(A(BaseRuleHelper.class));
 		all.add(A(UserDefinedRuleManager.class));
 		all.add(A(TopologyGraphConfigManager.class));
 		all.add(A(ExceptionRuleConfigManager.class));
@@ -168,8 +165,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(A(CachedMetricReportServiceImpl.class));
-		all.add(C(DataExtractor.class, DataExtractorImpl.class));
-		all.add(C(MetricDataFetcher.class, MetricDataFetcherImpl.class));
+		all.add(A(DataExtractorImpl.class));
+		all.add(A(MetricDataFetcherImpl.class));
 
 		all.add(A(AppSpeedDataBuilder.class));
 		all.add(A(AppSpeedService.class));
@@ -177,7 +174,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(AppDataService.class));
 		all.add(A(AppConnectionService.class));
 
-		all.add(C(MetricScreenTransformer.class));
+		all.add(A(MetricScreenTransformer.class));
 		all.add(A(MetricScreenService.class));
 		all.add(A(MetricGraphService.class));
 		all.add(A(LineChartBuilder.class));

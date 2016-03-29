@@ -16,6 +16,7 @@ import com.dianping.cat.hadoop.hdfs.MessageBlockReader;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.storage.MessageBucket;
 
 public abstract class AbstractHdfsMessageBucket implements MessageBucket {
@@ -23,7 +24,7 @@ public abstract class AbstractHdfsMessageBucket implements MessageBucket {
 	@Inject
 	protected FileSystemManager m_manager;
 
-	@Inject
+	@Inject(PlainTextMessageCodec.ID)
 	protected MessageCodec m_codec;
 
 	protected MessageBlockReader m_reader;
@@ -54,7 +55,7 @@ public abstract class AbstractHdfsMessageBucket implements MessageBucket {
 		} catch (EOFException e) {
 			Cat.logError(e);
 			return null;
-		} finally{
+		} finally {
 			m_codec.reset();
 		}
 	}

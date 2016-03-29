@@ -5,10 +5,13 @@ import java.util.Date;
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
 import com.dianping.cat.hadoop.hdfs.MessageBlockReader;
+import com.dianping.cat.message.storage.MessageBucket;
 
+@Named(type = MessageBucket.class, value = HarfsMessageBucket.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class HarfsMessageBucket extends AbstractHdfsMessageBucket {
 
 	public static final String ID = HdfsMessageBucketManager.HARFS_BUCKET;

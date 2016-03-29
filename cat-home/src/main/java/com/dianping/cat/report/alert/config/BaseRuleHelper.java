@@ -5,12 +5,14 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
+import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.rule.entity.Condition;
 import com.dianping.cat.alarm.rule.entity.Config;
 
+@Named
 public class BaseRuleHelper {
 
 	public Pair<Integer, List<Condition>> convertConditions(List<Config> configs) {

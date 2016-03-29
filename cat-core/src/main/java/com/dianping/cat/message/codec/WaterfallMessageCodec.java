@@ -351,8 +351,8 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 	}
 
 	@Override
-   public void reset() {
-   }
+	public void reset() {
+	}
 
 	public void setBufferWriter(BufferWriter writer) {
 		m_writer = writer;

@@ -2,6 +2,9 @@ package com.dianping.cat.report;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.unidal.lookup.annotation.Named;
+
+@Named
 public class DomainValidator {
 
 	private ConcurrentHashMap<String, String> m_valids = new ConcurrentHashMap<String, String>();

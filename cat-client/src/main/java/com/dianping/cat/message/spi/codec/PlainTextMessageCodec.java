@@ -20,11 +20,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
+@Named(type = MessageCodec.class, value = PlainTextMessageCodec.ID)
 public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	public static final String ID = "plain-text";
 

@@ -8,12 +8,14 @@ import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.config.AggregationMessageFormat;
 import com.dianping.cat.config.CompositeFormat;
 import com.dianping.cat.config.TrieTreeNode;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
 
+@Named(type = UrlPatternHandler.class)
 public class DefaultUrlPatternHandler implements UrlPatternHandler, LogEnabled {
 
 	private TrieTreeNode m_formatTree;

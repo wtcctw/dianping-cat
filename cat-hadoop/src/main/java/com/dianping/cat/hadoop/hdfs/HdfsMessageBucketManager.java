@@ -18,6 +18,7 @@ import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
@@ -31,6 +32,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.storage.MessageBucket;
 import com.dianping.cat.message.storage.MessageBucketManager;
 
+@Named(type = MessageBucketManager.class, value = HdfsMessageBucketManager.ID)
 public class HdfsMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable {
 
 	public static final String ID = "hdfs";

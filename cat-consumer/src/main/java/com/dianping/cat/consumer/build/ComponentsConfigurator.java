@@ -51,7 +51,6 @@ import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionDelegate;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
-import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.report.DefaultReportManager;
 import com.dianping.cat.report.DomainValidator;
 import com.dianping.cat.report.ReportBucketManager;
@@ -229,7 +228,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(StateAnalyzer.class));
 		all.add(A(StateDelegate.class));
 
-		all.add(C(ProjectService.class).req(ProjectDao.class, ServerConfigManager.class));
+		all.add(A(ProjectService.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class).is(PER_LOOKUP) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class, DomainValidator.class) //
@@ -272,8 +271,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final List<Component> all = new ArrayList<Component>();
 		final String ID = StorageAnalyzer.ID;
 
-		all.add(C(StorageReportUpdater.class));
-		all.add(C(StorageBuilderManager.class));
+		all.add(A(StorageReportUpdater.class));
+		all.add(A(StorageBuilderManager.class));
 		all.add(A(StorageSQLBuilder.class));
 		all.add(A(StorageCacheBuilder.class));
 		all.add(A(StorageRPCBuilder.class));

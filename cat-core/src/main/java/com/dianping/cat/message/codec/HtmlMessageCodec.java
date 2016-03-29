@@ -40,7 +40,6 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 	@Inject(HtmlEncodingBufferWriter.ID)
 	private BufferWriter m_writer;
 
-	@Inject
 	private String m_logViewPrefix = "/cat/r/m/";
 
 	private BufferHelper m_bufferHelper;
@@ -329,8 +328,8 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 	}
 
 	@Override
-   public void reset() {
-   }
+	public void reset() {
+	}
 
 	public void setBufferWriter(BufferWriter writer) {
 		m_writer = writer;

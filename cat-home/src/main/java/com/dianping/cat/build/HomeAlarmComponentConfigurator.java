@@ -11,9 +11,7 @@ import com.dianping.cat.alarm.spi.decorator.Decorator;
 import com.dianping.cat.alarm.spi.receiver.Contactor;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
-import com.dianping.cat.consumer.business.BusinessAnalyzer;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
-import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.report.alert.AlarmManager;
 import com.dianping.cat.report.alert.app.AppAlert;
 import com.dianping.cat.report.alert.app.AppContactor;
@@ -75,7 +73,6 @@ import com.dianping.cat.report.alert.thirdParty.ThirdpartyDecorator;
 import com.dianping.cat.report.alert.transaction.TransactionAlert;
 import com.dianping.cat.report.alert.transaction.TransactionContactor;
 import com.dianping.cat.report.alert.transaction.TransactionDecorator;
-import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ProjectService;
 
 public class HomeAlarmComponentConfigurator extends AbstractResourceConfigurator {
@@ -86,8 +83,8 @@ public class HomeAlarmComponentConfigurator extends AbstractResourceConfigurator
 
 		all.add(C(AlarmManager.class));
 
-		all.add(C(MetricReportGroupService.class).req(ModelService.class, MetricAnalyzer.ID));
-		all.add(C(BusinessReportGroupService.class).req(ModelService.class, BusinessAnalyzer.ID));
+		all.add(A(MetricReportGroupService.class));
+		all.add(A(BusinessReportGroupService.class));
 		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
 		all.add(C(Contactor.class, BusinessContactor2.ID, BusinessContactor2.class).req(AlertConfigManager.class));

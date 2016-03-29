@@ -9,12 +9,14 @@ import org.unidal.initialization.AbstractModule;
 import org.unidal.initialization.DefaultModuleContext;
 import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.internal.MilliSecondTimer;
 import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.status.StatusUpdateTask;
 
+@Named(type = Module.class, value = CatClientModule.ID)
 public class CatClientModule extends AbstractModule {
 	public static final String ID = "cat-client";
 
@@ -35,7 +37,7 @@ public class CatClientModule extends AbstractModule {
 		ctx.lookup(TransportManager.class);
 
 		ClientConfigManager clientConfigManager = ctx.lookup(ClientConfigManager.class);
-		
+
 		if (clientConfigManager.isCatEnabled()) {
 			// start status update task
 			StatusUpdateTask statusUpdateTask = ctx.lookup(StatusUpdateTask.class);

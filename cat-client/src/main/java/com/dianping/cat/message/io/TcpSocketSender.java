@@ -14,6 +14,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.Transaction;
@@ -23,15 +24,17 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
+@Named
 public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	public static final String ID = "tcp-socket-sender";
 
 	public static final int SIZE = 5000;
 
-	@Inject
+	@Inject(PlainTextMessageCodec.ID)
 	private MessageCodec m_codec;
 
 	@Inject
@@ -60,7 +63,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	private AtomicInteger m_sampleCount = new AtomicInteger();
 
 	private static final int MAX_CHILD_NUMBER = 200;
-	
+
 	private static final int MAX_DURATION = 1000 * 30;
 
 	@Override
