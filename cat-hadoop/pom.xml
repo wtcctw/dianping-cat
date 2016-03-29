@@ -7,7 +7,7 @@
 		<version>1.4.1-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>cat-storage</artifactId>
+	<artifactId>cat-hadoop</artifactId>
 	<name>cat-hadoop</name>
 	<packaging>jar</packaging>
 	<dependencies>
