@@ -7,6 +7,7 @@ import java.util.List;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -15,6 +16,7 @@ import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.service.ProjectService;
 
+@Named(type = TaskBuilder.class, value = CurrentReportBuilder.ID)
 public class CurrentReportBuilder implements TaskBuilder {
 
 	public static final String ID = Constants.CURRENT_REPORT;

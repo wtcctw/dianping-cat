@@ -4,11 +4,16 @@ import java.util.Map;
 
 import org.unidal.dal.jdbc.QueryEngine;
 import org.unidal.dal.jdbc.mapping.TableProvider;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.web.WebSpeedData;
 
+@Named(type = TableProvider.class, value = WebSpeedDataTableProvider.LOGIC_TABLE_NAME)
 public class WebSpeedDataTableProvider implements TableProvider {
-	private String m_logicalTableName = "web-speed-data";
+	
+	public final static String LOGIC_TABLE_NAME = "web-speed-data";
+
+	private String m_logicalTableName = LOGIC_TABLE_NAME;
 
 	private String m_physicalTableName = "web_speed_data";
 

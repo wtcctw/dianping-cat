@@ -5,12 +5,14 @@ import java.util.Date;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.core.dal.Task;
 import com.dianping.cat.core.dal.TaskDao;
 
+@Named
 public class TaskManager {
 
 	@Inject

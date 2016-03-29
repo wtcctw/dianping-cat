@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.Level;
@@ -20,6 +21,7 @@ import com.dianping.cat.web.JsErrorLog;
 import com.dianping.cat.web.JsErrorLogDao;
 import com.dianping.cat.web.JsErrorLogEntity;
 
+@Named
 public class JsAlert implements Task {
 
 	protected static final long DURATION = TimeHelper.ONE_MINUTE;

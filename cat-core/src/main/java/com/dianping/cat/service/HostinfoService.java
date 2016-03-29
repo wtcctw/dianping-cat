@@ -14,6 +14,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
@@ -22,6 +23,7 @@ import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.HostinfoEntity;
 
+@Named(type = HostinfoService.class)
 public class HostinfoService implements Initializable, LogEnabled {
 
 	@Inject

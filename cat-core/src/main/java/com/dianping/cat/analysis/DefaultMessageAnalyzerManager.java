@@ -105,7 +105,7 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 		}
 
 		m_analyzerNames = new ArrayList<String>(map.keySet());
-		
+
 		Collections.sort(m_analyzerNames, new Comparator<String>() {
 			@Override
 			public int compare(String str1, String str2) {

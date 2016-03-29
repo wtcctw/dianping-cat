@@ -8,6 +8,7 @@ import java.util.concurrent.locks.LockSupport;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
@@ -16,6 +17,7 @@ import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.core.dal.TaskEntity;
 import com.dianping.cat.message.Transaction;
 
+@Named
 public class DefaultTaskConsumer extends TaskConsumer {
 
 	@Inject

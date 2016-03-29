@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -20,6 +21,7 @@ import com.dianping.cat.report.page.app.QueryType;
 import com.dianping.cat.report.page.app.display.AppSpeedDetail;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 
+@Named
 public class AppSpeedService {
 
 	@Inject

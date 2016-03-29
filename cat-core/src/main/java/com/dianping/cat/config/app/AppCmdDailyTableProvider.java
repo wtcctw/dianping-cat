@@ -4,12 +4,16 @@ import java.util.Map;
 
 import org.unidal.dal.jdbc.QueryEngine;
 import org.unidal.dal.jdbc.mapping.TableProvider;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.app.AppCommandDataDaily;
 
+@Named(type = TableProvider.class, value = AppCmdDailyTableProvider.LOGIC_TABLE_NAME)
 public class AppCmdDailyTableProvider implements TableProvider {
 
-	private String m_logicalTableName = "app-command-data-daily";
+	public final static String LOGIC_TABLE_NAME = "app-command-data-daily";
+
+	private String m_logicalTableName = LOGIC_TABLE_NAME;
 
 	private String m_physicalTableName = "app_command_data_daily";
 

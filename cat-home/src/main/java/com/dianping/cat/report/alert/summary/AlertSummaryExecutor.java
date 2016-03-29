@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeHelper;
@@ -20,6 +21,7 @@ import com.dianping.cat.report.alert.summary.build.AlterationSummaryBuilder;
 import com.dianping.cat.report.alert.summary.build.FailureSummaryBuilder;
 import com.dianping.cat.report.alert.summary.build.SummaryBuilder;
 
+@Named
 public class AlertSummaryExecutor {
 
 	@Inject(type = SummaryBuilder.class, value = RelatedSummaryBuilder.ID)
@@ -81,7 +83,7 @@ public class AlertSummaryExecutor {
 
 	public String execute(String domain, Date date, String receiverStr) {
 		String content = execute(domain, date);
-		
+
 		if (content == null || "".equals(content)) {
 			return null;
 		} else {

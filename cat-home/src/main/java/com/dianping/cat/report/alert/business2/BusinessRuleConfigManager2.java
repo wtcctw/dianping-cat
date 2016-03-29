@@ -10,6 +10,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.rule.entity.Condition;
@@ -24,6 +25,7 @@ import com.dianping.cat.core.config.BusinessConfigDao;
 import com.dianping.cat.core.config.BusinessConfigEntity;
 import com.dianping.cat.helper.MetricType;
 
+@Named
 public class BusinessRuleConfigManager2 implements Initializable {
 
 	@Inject

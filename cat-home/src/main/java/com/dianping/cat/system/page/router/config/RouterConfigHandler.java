@@ -12,6 +12,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -33,6 +34,7 @@ import com.dianping.cat.report.page.state.service.StateReportService;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
 import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
 
+@Named
 public class RouterConfigHandler implements LogEnabled {
 
 	@Inject

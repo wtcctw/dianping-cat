@@ -6,6 +6,7 @@ import java.util.Set;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -30,6 +31,7 @@ import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask.Curre
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
 
+@Named(type = TaskBuilder.class, value = StateReportBuilder.ID)
 public class StateReportBuilder implements TaskBuilder, Initializable {
 
 	public static final String ID = StateAnalyzer.ID;

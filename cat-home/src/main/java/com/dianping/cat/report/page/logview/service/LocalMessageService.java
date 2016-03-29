@@ -9,6 +9,7 @@ import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.BucketManager;
 import org.unidal.cat.message.storage.MessageFinderManager;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
@@ -28,6 +29,7 @@ import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
 
+@Named(type = LocalModelService.class, value = "logview")
 public class LocalMessageService extends LocalModelService<String> implements ModelService<String> {
 	public static final String ID = DumpAnalyzer.ID;
 

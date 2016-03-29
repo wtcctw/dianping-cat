@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyReportMerger;
@@ -17,6 +18,7 @@ import com.dianping.cat.report.service.LocalModelService;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 
+@Named(type = LocalModelService.class, value = LocalDependencyService.ID)
 public class LocalDependencyService extends LocalModelService<DependencyReport> {
 
 	public static final String ID = DependencyAnalyzer.ID;

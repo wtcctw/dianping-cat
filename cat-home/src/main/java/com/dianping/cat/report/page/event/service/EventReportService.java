@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -35,6 +36,7 @@ import com.dianping.cat.core.dal.WeeklyReportContent;
 import com.dianping.cat.core.dal.WeeklyReportContentEntity;
 import com.dianping.cat.report.service.AbstractReportService;
 
+@Named
 public class EventReportService extends AbstractReportService<EventReport> {
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");

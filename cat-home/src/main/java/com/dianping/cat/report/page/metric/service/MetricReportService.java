@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.dal.BusinessReport;
@@ -16,6 +17,7 @@ import com.dianping.cat.consumer.metric.model.transform.DefaultNativeParser;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.service.AbstractReportService;
 
+@Named
 public class MetricReportService extends AbstractReportService<MetricReport> {
 
 	@Inject

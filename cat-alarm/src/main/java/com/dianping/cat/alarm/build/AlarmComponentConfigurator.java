@@ -6,7 +6,6 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.alarm.ServerAlarmRuleDao;
 import com.dianping.cat.alarm.server.ServerAlarm;
 import com.dianping.cat.alarm.server.database.ServerDatabaseAlarm;
 import com.dianping.cat.alarm.server.database.ServerDatabaseContactor;
@@ -33,7 +32,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(ServerAlarmRuleService.class, ServerAlarmRuleServiceImpl.class).req(ServerAlarmRuleDao.class));
+		all.add(A(ServerAlarmRuleServiceImpl.class));
 
 		all.add(C(ServerAlarm.class, ServerSystemAlarm.ID, ServerSystemAlarm.class).req(ServerAlarmRuleService.class)
 		      .req(MetricService.class, InfluxDB.ID));

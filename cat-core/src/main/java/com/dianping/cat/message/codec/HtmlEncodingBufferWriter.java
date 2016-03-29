@@ -1,9 +1,12 @@
 package com.dianping.cat.message.codec;
 
+import org.unidal.lookup.annotation.Named;
+
 import io.netty.buffer.ByteBuf;
 
 import com.dianping.cat.message.spi.codec.BufferWriter;
 
+@Named(type = BufferWriter.class, value = HtmlEncodingBufferWriter.ID)
 public class HtmlEncodingBufferWriter implements BufferWriter {
 	public static final String ID = "html";
 

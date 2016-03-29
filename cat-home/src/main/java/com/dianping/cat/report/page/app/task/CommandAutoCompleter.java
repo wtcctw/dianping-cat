@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppConfigManager;
@@ -21,6 +22,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.site.lookup.util.StringUtils;
 
+@Named
 public class CommandAutoCompleter {
 
 	@Inject

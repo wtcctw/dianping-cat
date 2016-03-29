@@ -10,6 +10,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
@@ -23,6 +24,7 @@ import com.dianping.cat.home.storage.entity.StorageGroup;
 import com.dianping.cat.home.storage.entity.StorageGroupConfig;
 import com.dianping.cat.home.storage.transform.DefaultSaxParser;
 
+@Named
 public class StorageGroupConfigManager implements Initializable {
 
 	@Inject

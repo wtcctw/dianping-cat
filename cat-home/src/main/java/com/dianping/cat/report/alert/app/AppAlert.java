@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
@@ -31,6 +32,7 @@ import com.dianping.cat.report.page.app.QueryType;
 import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 
+@Named
 public class AppAlert implements Task {
 
 	@Inject

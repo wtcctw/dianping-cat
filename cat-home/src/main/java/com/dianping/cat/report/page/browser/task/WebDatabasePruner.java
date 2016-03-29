@@ -7,6 +7,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -23,6 +24,7 @@ import com.dianping.cat.web.JsErrorLogDao;
 import com.dianping.cat.web.WebSpeedData;
 import com.dianping.cat.web.WebSpeedDataDao;
 
+@Named(type = TaskBuilder.class, value = WebDatabasePruner.ID)
 public class WebDatabasePruner implements TaskBuilder {
 
 	public static final String ID = Constants.WEB_DATABASE_PRUNER;
@@ -134,7 +136,7 @@ public class WebDatabasePruner implements TaskBuilder {
 		ajaxData.setApiId(id);
 		ajaxData.setPeriod(period);
 		m_ajaxDataDao.deleteBeforePeriod(ajaxData);
-   }
+	}
 
 	private boolean pruneSpeedData(Date period) {
 		boolean success = true;
@@ -158,11 +160,11 @@ public class WebDatabasePruner implements TaskBuilder {
 
 	public void pruneSpeedDataTable(Date period, int id) throws DalException {
 		WebSpeedData webSpeedData = m_webSpeedDataDao.createLocal();
-	
+
 		webSpeedData.setSpeedId(id);
 		webSpeedData.setPeriod(period);
 		m_webSpeedDataDao.deleteBeforePeriod(webSpeedData);
-   }
+	}
 
 	private class DeleteTask implements Task {
 

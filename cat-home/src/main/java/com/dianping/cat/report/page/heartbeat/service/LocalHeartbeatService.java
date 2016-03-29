@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Constants;
@@ -22,6 +23,7 @@ import com.dianping.cat.report.service.LocalModelService;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 
+@Named(type = LocalModelService.class, value = LocalHeartbeatService.ID)
 public class LocalHeartbeatService extends LocalModelService<HeartbeatReport> {
 
 	public static final String ID = HeartbeatAnalyzer.ID;

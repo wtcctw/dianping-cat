@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.alert.summary.entity.AlertSummary;
@@ -23,6 +24,7 @@ import com.dianping.cat.alarm.AlertEntity;
 import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
 
+@Named
 public class AlertInfoBuilder {
 
 	@Inject

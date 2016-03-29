@@ -1,11 +1,13 @@
 package com.dianping.cat.report.alert.storage.sql;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.report.alert.storage.AbstractStorageAlert;
 import com.dianping.cat.report.alert.storage.StorageRuleConfigManager;
 
+@Named
 public class StorageSQLAlert extends AbstractStorageAlert {
 
 	@Inject

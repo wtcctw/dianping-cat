@@ -83,7 +83,7 @@ public class CommandQueryEntity extends BaseQueryEntity {
 			m_startMinuteOrder = convert2MinuteOrder(strs.get(10));
 			m_endMinuteOrder = convert2MinuteOrder(strs.get(11));
 		} catch (Exception e) {
-			Cat.logError(e);
+			Cat.logError(query, e);
 		}
 	}
 

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.Alert;
@@ -22,6 +23,7 @@ import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.home.storage.alert.entity.Target;
 import com.dianping.cat.report.page.storage.StorageConstants;
 
+@Named
 public class StorageAlertInfoBuilder {
 
 	@Inject
@@ -33,8 +35,8 @@ public class StorageAlertInfoBuilder {
 		return level > other ? level : other;
 	}
 
-	public Map<String, StorageAlertInfo> buildStorageAlertInfos(Date start, Date end, int minuteCounts,
-	      String type, List<Alert> alerts) {
+	public Map<String, StorageAlertInfo> buildStorageAlertInfos(Date start, Date end, int minuteCounts, String type,
+	      List<Alert> alerts) {
 		Map<String, StorageAlertInfo> results = prepareBlankAlert(start.getTime(), end.getTime(), minuteCounts, type);
 
 		for (Alert alert : alerts) {

@@ -2,11 +2,13 @@ package com.dianping.cat.report.alert.spi.config;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.alarm.UserDefineRule;
 import com.dianping.cat.alarm.UserDefineRuleDao;
 import com.dianping.cat.alarm.UserDefineRuleEntity;
 
+@Named
 public class UserDefinedRuleManager {
 
 	@Inject
@@ -18,7 +20,7 @@ public class UserDefinedRuleManager {
 		if (item != null) {
 			id = item.getMaxId() + 1;
 		}
-		
+
 		UserDefineRule userDefineRule = m_dao.createLocal();
 
 		userDefineRule.setContent(userDefinedText);

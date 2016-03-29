@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
@@ -23,6 +24,7 @@ import com.dianping.cat.home.dal.report.BaselineEntity;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.task.TaskHelper;
 
+@Named(type = BaselineService.class)
 public class DefaultBaselineService implements BaselineService {
 
 	@Inject

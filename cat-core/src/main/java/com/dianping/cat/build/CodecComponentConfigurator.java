@@ -17,12 +17,12 @@ class CodecComponentConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(BufferWriter.class, HtmlEncodingBufferWriter.ID, HtmlEncodingBufferWriter.class));
+		all.add(A(HtmlEncodingBufferWriter.class));
 
 		all.add(C(MessageCodec.class, HtmlMessageCodec.ID, HtmlMessageCodec.class) //
 		      .req(BufferWriter.class, HtmlEncodingBufferWriter.ID));
 		all.add(C(MessageCodec.class, WaterfallMessageCodec.ID, WaterfallMessageCodec.class) //
-				.req(BufferWriter.class, HtmlEncodingBufferWriter.ID));
+		      .req(BufferWriter.class, HtmlEncodingBufferWriter.ID));
 
 		return all;
 	}

@@ -192,6 +192,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 			report = findOrCreateReport(group);
 		}
+		
 		if (config != null && report != null) {
 			long current = metric.getTimestamp() / 1000 / 60;
 			int min = (int) (current % (60));

@@ -13,6 +13,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
@@ -25,6 +26,7 @@ import com.dianping.cat.core.config.BusinessConfigEntity;
 import com.dianping.cat.task.ConfigSyncTask;
 import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
+@Named
 public class BusinessConfigManager extends ContainerHolder implements Initializable {
 
 	@Inject
