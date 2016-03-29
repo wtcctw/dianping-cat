@@ -122,7 +122,7 @@ import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.page.business.config.BusinessTagConfigManager;
 import com.dianping.cat.web.JsErrorLogDao;
 
-public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
+public class HomeAlarmComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 

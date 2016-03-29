@@ -13,6 +13,7 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.alarm.UserDefineRuleDao;
+import com.dianping.cat.alarm.build.AlarmComponentConfigurator;
 import com.dianping.cat.alarm.service.AlertService;
 import com.dianping.cat.alarm.spi.config.AlertConfigManager;
 import com.dianping.cat.app.AppCommandDataDao;
@@ -176,6 +177,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		// for alarm module
 		all.addAll(new AlarmComponentConfigurator().defineComponents());
+
+		// form alarm module
+		all.addAll(new HomeAlarmComponentConfigurator().defineComponents());
 
 		// web, please keep it last
 		all.addAll(new WebComponentConfigurator().defineComponents());
