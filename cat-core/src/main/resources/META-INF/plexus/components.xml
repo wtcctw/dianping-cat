@@ -114,6 +114,9 @@
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.command.CommandFormatHandler</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

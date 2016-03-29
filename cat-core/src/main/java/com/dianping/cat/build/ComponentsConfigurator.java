@@ -83,7 +83,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(CommandFormatHandler.class, DefaultCommandFormatlHandler.class));
 
-		all.add(C(CommandFormatConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(CommandFormatConfigManager.class)
+		      .req(ConfigDao.class, ContentFetcher.class, CommandFormatHandler.class));
 
 		all.add(C(SampleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
