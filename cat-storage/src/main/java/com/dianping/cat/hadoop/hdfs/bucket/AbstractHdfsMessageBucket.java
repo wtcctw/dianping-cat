@@ -16,7 +16,6 @@ import com.dianping.cat.hadoop.hdfs.MessageBlockReader;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.message.storage.MessageBucket;
 
 public abstract class AbstractHdfsMessageBucket implements MessageBucket {
@@ -45,15 +44,18 @@ public abstract class AbstractHdfsMessageBucket implements MessageBucket {
 		try {
 			byte[] data = m_reader.readMessage(index);
 			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(data.length);
-			MessageTree tree = new DefaultMessageTree();
 
 			buf.writeBytes(data);
-			m_codec.decode(buf, tree);
+
+			MessageTree tree = m_codec.decode(buf);
+
 			m_lastAccessTime = System.currentTimeMillis();
 			return tree;
 		} catch (EOFException e) {
 			Cat.logError(e);
 			return null;
+		} finally{
+			m_codec.reset();
 		}
 	}
 
