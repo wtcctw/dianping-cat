@@ -224,11 +224,6 @@ public class MessageTest extends ComponentTestCase {
 		}
 
 		@Override
-		public void decode(ByteBuf buf, MessageTree tree) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
 		public void encode(MessageTree tree, ByteBuf buf) {
 			encodeMessage(tree.getMessage(), buf);
 		}
@@ -294,6 +289,12 @@ public class MessageTest extends ComponentTestCase {
 				m_sb.append('\n');
 			}
 		}
+
+		@Override
+      public void reset() {
+	      // TODO Auto-generated method stub
+	      
+      }
 	}
 
 	public static class MockTransportManager implements TransportManager {
