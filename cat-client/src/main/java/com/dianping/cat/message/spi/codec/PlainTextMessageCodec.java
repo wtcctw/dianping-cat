@@ -2,6 +2,7 @@ package com.dianping.cat.message.spi.codec;
 
 import com.dianping.cat.message.*;
 import com.dianping.cat.message.internal.*;
+
 import io.netty.buffer.ByteBuf;
 
 import java.io.UnsupportedEncodingException;
@@ -39,12 +40,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 	private DateHelper m_dateHelper = new DateHelper();
 
-	private ThreadLocal<Context> m_ctx = new ThreadLocal<Context>() {
-		@Override
-		protected Context initialValue() {
-			return new Context();
-		}
-	};
+	private ThreadLocal<Context> m_ctx;
 
 	private Logger m_logger;
 
@@ -56,14 +52,26 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		return tree;
 	}
 
-	@Override
-	public void decode(ByteBuf buf, MessageTree tree) {
+	private void decode(ByteBuf buf, MessageTree tree) {
+		if (m_ctx == null) {
+			m_ctx = new ThreadLocal<Context>() {
+				@Override
+				protected Context initialValue() {
+					return new Context();
+				}
+			};
+		}
+
 		Context ctx = m_ctx.get().setBuffer(buf);
 
-		decodeHeader(ctx, tree);
+		try {
+			decodeHeader(ctx, tree);
 
-		if (buf.readableBytes() > 0) {
-			decodeMessage(ctx, tree);
+			if (buf.readableBytes() > 0) {
+				decodeMessage(ctx, tree);
+			}
+		} finally {
+			ctx.removeBuf();
 		}
 	}
 
@@ -385,7 +393,9 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	}
 
 	public void reset() {
-		m_ctx.remove();
+		if (m_ctx != null) {
+			m_ctx.remove();
+		}
 	}
 
 	protected void setBufferWriter(BufferWriter writer) {
@@ -509,7 +519,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		private char[] m_data;
 
 		public Context() {
-			m_data = new char[4 * 1024 * 1024];
+			m_data = new char[1024 * 1024];
 		}
 
 		public ByteBuf getBuffer() {
@@ -523,6 +533,10 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		public Context setBuffer(ByteBuf buffer) {
 			m_buffer = buffer;
 			return this;
+		}
+
+		public void removeBuf() {
+			m_buffer = null;
 		}
 	}
 
