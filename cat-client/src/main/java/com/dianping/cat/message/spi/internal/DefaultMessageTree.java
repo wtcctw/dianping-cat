@@ -14,8 +14,6 @@ import java.util.List;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 
-import io.netty.util.ReferenceCountUtil;
-
 public class DefaultMessageTree implements MessageTree {
 
 	private ByteBuf m_buf;
