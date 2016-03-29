@@ -61,23 +61,27 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 		ByteBuf buf = m_finderManager.find(id);
 		MessageTree tree = null;
 
-		if (buf != null) {
-			tree = m_plainText.decode(buf);
-		}
+		try {
+			if (buf != null) {
+				tree = m_plainText.decode(buf);
+			}
 
-		if (tree == null) {
-			Bucket bucket = m_localBucketManager.getBucket(id.getDomain(),
-			      NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), id.getHour(), false);
+			if (tree == null) {
+				Bucket bucket = m_localBucketManager.getBucket(id.getDomain(),
+				      NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), id.getHour(), false);
 
-			if (bucket != null) {
-				bucket.flush();
+				if (bucket != null) {
+					bucket.flush();
 
-				ByteBuf data = bucket.get(id);
+					ByteBuf data = bucket.get(id);
 
-				if (data != null) {
-					tree = m_plainText.decode(data);
+					if (data != null) {
+						tree = m_plainText.decode(data);
+					}
 				}
 			}
+		} finally {
+			m_plainText.reset();
 		}
 
 		if (tree != null) {
