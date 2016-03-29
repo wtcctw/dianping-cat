@@ -12,11 +12,8 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class PlainTextPerformanceCodecTest {
-
-	private int count = 100000;
 
 	@Test
 	public void test() throws InterruptedException {
@@ -27,53 +24,9 @@ public class PlainTextPerformanceCodecTest {
 		codec.encode(tree, buf);
 
 		buf.readInt();
-		MessageTree tree2 = new DefaultMessageTree();
-		codec.decode(buf, tree2);
+		MessageTree tree2 = codec.decode(buf);
 
-		Thread.sleep(1000);
-	}
-
-	@Test
-	public void testMany() throws InterruptedException {
-		MessageTree tree = buildMessages();
-
-		PlainTextMessageCodec codec = new PlainTextMessageCodec();
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(8192);
-		codec.encode(tree, buf);
-
-		buf.readInt();
-		buf.markReaderIndex();
-
-		long current = System.currentTimeMillis();
-		for (int i = 0; i < count; i++) {
-			MessageTree tree2 = new DefaultMessageTree();
-			codec.decode(buf, tree2);
-			buf.resetReaderIndex();
-		}
-		System.out.println("Cost:" + (System.currentTimeMillis() - current));
-
-		Thread.sleep(1000);
-	}
-
-	@Test
-	public void testManyOld() throws InterruptedException {
-		MessageTree tree = buildMessages();
-		PlainTextMessageCodec codec = new PlainTextMessageCodec();
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(8192);
-
-		codec.encode(tree, buf);
-
-		buf.readInt();
-		buf.markReaderIndex();
-
-		long current = System.currentTimeMillis();
-		for (int i = 0; i < count; i++) {
-			MessageTree tree2 = new DefaultMessageTree();
-			codec.decode(buf, tree2);
-			buf.resetReaderIndex();
-		}
-		System.out.println("Cost:" + (System.currentTimeMillis() - current));
-
+		System.out.println(tree2);
 		Thread.sleep(1000);
 	}
 

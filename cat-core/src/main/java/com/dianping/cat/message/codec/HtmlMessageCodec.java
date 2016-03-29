@@ -53,11 +53,6 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 	}
 
 	@Override
-	public void decode(ByteBuf buf, MessageTree tree) {
-		throw new UnsupportedOperationException("HtmlMessageCodec only supports one-way encoding!");
-	}
-
-	@Override
 	public void encode(MessageTree tree, ByteBuf buf) {
 		int count = 0;
 		int index = buf.writerIndex();
@@ -332,6 +327,10 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 		return links;
 	}
+
+	@Override
+   public void reset() {
+   }
 
 	public void setBufferWriter(BufferWriter writer) {
 		m_writer = writer;

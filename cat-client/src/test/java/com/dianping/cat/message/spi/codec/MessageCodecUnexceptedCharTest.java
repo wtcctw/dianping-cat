@@ -21,10 +21,9 @@ public class MessageCodecUnexceptedCharTest extends CatTestCase {
 		MessageCodec codec = lookup(MessageCodec.class, ID);
 		MessageTree tree = buildMessage();
 		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(10240);
-		
+
 		codec.encode(tree, buf);
-		MessageTree result = new DefaultMessageTree();
-		codec.decode(buf, result);
+		MessageTree result = codec.decode(buf);
 		Assert.assertEquals(tree.toString(), result.toString());
 	}
 

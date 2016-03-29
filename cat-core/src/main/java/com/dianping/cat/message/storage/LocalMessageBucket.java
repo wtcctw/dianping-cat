@@ -19,7 +19,6 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 @Named(type = MessageBucket.class, value = LocalMessageBucket.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class LocalMessageBucket implements MessageBucket {
@@ -78,16 +77,15 @@ public class LocalMessageBucket implements MessageBucket {
 
 			byte[] data = reader.readMessage(index);
 			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(data.length);
-			MessageTree tree = new DefaultMessageTree();
 
 			buf.writeBytes(data);
-			m_codec.decode(buf, tree);
-			return tree;
+			return m_codec.decode(buf);
 		} catch (EOFException e) {
 			Cat.logError(e);
 			return null;
 		} finally {
 			reader.close();
+			m_codec.reset();
 		}
 	}
 

@@ -1,20 +1,22 @@
 package com.dianping.cat.message.spi.internal;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.*;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.Unpooled;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.Event;
+import com.dianping.cat.message.Heartbeat;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Metric;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
-
-import io.netty.util.ReferenceCountUtil;
 
 public class DefaultMessageTree implements MessageTree {
 
@@ -266,7 +268,7 @@ public class DefaultMessageTree implements MessageTree {
 		String result = "";
 		try {
 			PlainTextMessageCodec codec = new PlainTextMessageCodec();
-			buf = ByteBufAllocator.DEFAULT.buffer();
+			buf = Unpooled.buffer();
 
 			codec.encode(this, buf);
 			buf.readInt(); // get rid of length
@@ -275,9 +277,6 @@ public class DefaultMessageTree implements MessageTree {
 			Cat.logError(ex);
 		}
 
-		if (null != buf) {
-			ReferenceCountUtil.release(buf);
-		}
 		return result;
 	}
 

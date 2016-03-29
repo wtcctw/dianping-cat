@@ -58,11 +58,6 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 	}
 
 	@Override
-	public void decode(ByteBuf buf, MessageTree tree) {
-		throw new UnsupportedOperationException("HtmlMessageCodec only supports one-way encoding!");
-	}
-
-	@Override
 	public void encode(MessageTree tree, ByteBuf buf) {
 		Message message = tree.getMessage();
 
@@ -354,6 +349,10 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 	public void initialize() throws InitializationException {
 		m_bufferHelper = new BufferHelper(m_writer);
 	}
+
+	@Override
+   public void reset() {
+   }
 
 	public void setBufferWriter(BufferWriter writer) {
 		m_writer = writer;
