@@ -85,7 +85,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(A(TopologyGraphManager.class));
 
-		// update project database
 		all.add(A(ProjectUpdateTask.class));
 
 		all.add(A(StorageAlertInfoBuilder.class));

@@ -6,8 +6,6 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.app.AppCommandDataDao;
-import com.dianping.cat.app.AppSpeedDataDao;
 import com.dianping.cat.report.page.app.task.AppDatabasePruner;
 import com.dianping.cat.report.page.app.task.AppReportBuilder;
 import com.dianping.cat.report.page.app.task.CommandAutoCompleter;
@@ -116,8 +114,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(A(TableCapacityService.class));
 
 		all.add(A(CapacityUpdateTask.class));
-
-		all.add(C(AppDatabaseConfigurator.class).req(AppCommandDataDao.class, AppSpeedDataDao.class));
 
 		all.add(A(AppDatabasePruner.class));
 

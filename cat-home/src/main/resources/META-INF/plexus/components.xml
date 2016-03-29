@@ -1694,18 +1694,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.build.AppDatabaseConfigurator</role>
-			<implementation>com.dianping.cat.build.AppDatabaseConfigurator</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.app.AppCommandDataDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.app.AppSpeedDataDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>appDatabasePruner</role-hint>
 			<implementation>com.dianping.cat.report.page.app.task.AppDatabasePruner</implementation>
