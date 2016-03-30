@@ -20,7 +20,6 @@ import com.dianping.cat.report.page.heartbeat.task.HeartbeatReportBuilder;
 import com.dianping.cat.report.page.matrix.task.MatrixReportBuilder;
 import com.dianping.cat.report.page.metric.service.DefaultBaselineService;
 import com.dianping.cat.report.page.metric.task.BaselineConfigManager;
-import com.dianping.cat.report.page.metric.task.BaselineCreator;
 import com.dianping.cat.report.page.metric.task.DefaultBaselineCreator;
 import com.dianping.cat.report.page.metric.task.MetricBaselineReportBuilder;
 import com.dianping.cat.report.page.metric.task.MetricPointParser;
@@ -53,80 +52,50 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(MetricPointParser.class));
-		all.add(C(BaselineConfigManager.class));
-		all.add(C(BusinessPointParser.class));
-		all.add(C(BusinessKeyHelper.class));
-
-		all.add(C(BaselineCreator.class, DefaultBaselineCreator.class));
+		all.add(A(MetricPointParser.class));
+		all.add(A(BaselineConfigManager.class));
+		all.add(A(BusinessPointParser.class));
+		all.add(A(BusinessKeyHelper.class));
+		all.add(A(DefaultBaselineCreator.class));
 		all.add(A(DefaultBaselineService.class));
-
 		all.add(A(MetricBaselineReportBuilder.class));
-
 		all.add(A(BusinessBaselineReportBuilder.class));
 
 		all.add(A(TransactionReportBuilder.class));
-
 		all.add(A(EventReportBuilder.class));
-
 		all.add(A(ProblemReportBuilder.class));
-
 		all.add(A(HeartbeatReportBuilder.class));
-
 		all.add(A(ServiceReportBuilder.class));
-
 		all.add(A(MatrixReportBuilder.class));
-
 		all.add(A(CrossReportBuilder.class));
-
 		all.add(A(StateReportBuilder.class));
-
 		all.add(A(RouterConfigBuilder.class));
-
 		all.add(A(HeavyReportBuilder.class));
-
 		all.add(A(UtilizationReportBuilder.class));
-
 		all.add(A(DependencyReportBuilder.class));
-
 		all.add(A(NetTopologyReportBuilder.class));
-
 		all.add(A(JarReportBuilder.class));
-
 		all.add(A(ClientReportBuilder.class));
-
 		all.add(A(CurrentReportBuilder.class));
-
 		all.add(A(StorageReportBuilder.class));
-
 		all.add(A(CmdbInfoReloadBuilder.class));
 
+		
 		all.add(A(CapacityUpdateStatusManager.class));
-
 		all.add(A(HourlyCapacityUpdater.class));
-
 		all.add(A(DailyCapacityUpdater.class));
-
 		all.add(A(WeeklyCapacityUpdater.class));
-
 		all.add(A(MonthlyCapacityUpdater.class));
-
 		all.add(A(TableCapacityService.class));
-
 		all.add(A(CapacityUpdateTask.class));
 
 		all.add(A(AppDatabasePruner.class));
-
 		all.add(A(WebDatabasePruner.class));
-
 		all.add(A(MetricGraphPruner.class));
 
 		all.add(A(CommandAutoCompleter.class));
-
 		all.add(A(AppReportBuilder.class));
-
-		all.add(C(ReportFacade.class));
-
+		all.add(A(ReportFacade.class));
 		all.add(A(DefaultTaskConsumer.class));
 
 		return all;

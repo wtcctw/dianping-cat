@@ -9,11 +9,13 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.Task;
 import com.dianping.cat.task.TaskManager;
 
+@Named
 public class ReportFacade extends ContainerHolder implements LogEnabled, Initializable {
 
 	private Logger m_logger;

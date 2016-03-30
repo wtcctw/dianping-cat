@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.unidal.lookup.annotation.Named;
+
 import com.dianping.cat.consumer.business.model.entity.BusinessItem;
 import com.dianping.cat.consumer.business.model.entity.Segment;
 import com.dianping.cat.helper.MetricType;
 
+@Named
 public class BusinessPointParser {
 
 	private static final int POINT_NUMBER = 60;

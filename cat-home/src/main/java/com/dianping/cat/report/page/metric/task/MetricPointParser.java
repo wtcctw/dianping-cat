@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.unidal.lookup.annotation.Named;
+
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.helper.MetricType;
 
+@Named
 public class MetricPointParser {
 
 	private static final int POINT_NUMBER = 60;

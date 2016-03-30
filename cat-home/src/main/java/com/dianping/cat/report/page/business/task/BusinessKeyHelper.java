@@ -1,7 +1,10 @@
 package com.dianping.cat.report.page.business.task;
 
+import org.unidal.lookup.annotation.Named;
+
+@Named
 public class BusinessKeyHelper {
-	
+
 	public final String SPLITTER = ":";
 
 	public String getType(String key) {
@@ -17,7 +20,7 @@ public class BusinessKeyHelper {
 	public String getDomain(String key) {
 		int first = key.indexOf(SPLITTER);
 		int last = key.lastIndexOf(SPLITTER);
-		return key.substring(first+1, last);
+		return key.substring(first + 1, last);
 	}
 
 	public String generateKey(String id, String domain, String type) {
