@@ -6,6 +6,7 @@ import org.unidal.helper.Threads;
 import org.unidal.initialization.AbstractModule;
 import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.analysis.MessageConsumer;
 import com.dianping.cat.analysis.TcpSocketReceiver;
@@ -14,6 +15,7 @@ import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.report.alert.AlarmManager;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 
+@Named(type = Module.class, value = CatHomeModule.ID)
 public class CatHomeModule extends AbstractModule {
 	public static final String ID = "cat-home";
 

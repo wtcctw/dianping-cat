@@ -8,7 +8,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.codehaus.plexus.util.StringUtils;
+import org.unidal.lookup.annotation.Named;
 
+@Named
 public class HttpConnector {
 
 	public boolean readFromGet(String url) {

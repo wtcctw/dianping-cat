@@ -53,7 +53,7 @@ public class AppReportBuilder implements TaskBuilder {
 	private TransactionReportService m_transactionReportService;
 
 	@Inject
-	private CommandAutoCompleter m_autoCompleter;
+	private AppCommandAutoCompleter m_autoCompleter;
 
 	@Inject
 	private AppRuleConfigManager m_appRuleConfigManager;

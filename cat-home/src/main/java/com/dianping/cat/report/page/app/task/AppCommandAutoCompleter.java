@@ -23,7 +23,7 @@ import com.dianping.cat.report.page.transaction.service.TransactionReportService
 import com.site.lookup.util.StringUtils;
 
 @Named
-public class CommandAutoCompleter {
+public class AppCommandAutoCompleter {
 
 	@Inject
 	private AppConfigManager m_configManager;
