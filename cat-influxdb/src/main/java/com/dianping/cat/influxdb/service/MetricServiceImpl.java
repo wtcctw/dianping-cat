@@ -81,14 +81,16 @@ public class MetricServiceImpl implements MetricService {
 	private List<String> parseData(QueryResult result, int index) {
 		List<String> results = new ArrayList<String>();
 
-		for (Result r : result.getResults()) {
-			List<Series> series = r.getSeries();
+		if (result != null && result.getResults() != null) {
+			for (Result r : result.getResults()) {
+				List<Series> series = r.getSeries();
 
-			if (series != null) {
-				for (Series s : series) {
-					if (s != null && s.getValues() != null) {
-						for (List<Object> v : s.getValues()) {
-							results.add(String.valueOf(v.get(index)));
+				if (series != null) {
+					for (Series s : series) {
+						if (s != null && s.getValues() != null) {
+							for (List<Object> v : s.getValues()) {
+								results.add(String.valueOf(v.get(index)));
+							}
 						}
 					}
 				}

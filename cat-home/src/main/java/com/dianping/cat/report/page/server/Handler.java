@@ -387,7 +387,10 @@ public class Handler implements PageHandler<Context> {
 			Entry<String, List<String>> catgy = eps.entrySet().iterator().next();
 
 			payload.setCategory(catgy.getKey());
-			payload.setEndPoint(catgy.getValue().get(0));
+
+			if (!catgy.getValue().isEmpty()) {
+				payload.setEndPoint(catgy.getValue().get(0));
+			}
 		}
 		model.setEndPoints(eps);
 	}
