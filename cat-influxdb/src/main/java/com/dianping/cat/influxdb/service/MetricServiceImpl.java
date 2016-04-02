@@ -249,21 +249,23 @@ public class MetricServiceImpl implements MetricService {
 			QueryResult queryResult = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
 			Map<Long, Double> datas = new LinkedHashMap<Long, Double>();
 
-			for (Result r : queryResult.getResults()) {
-				List<Series> series = r.getSeries();
+			if (queryResult != null && queryResult.getResults() != null) {
+				for (Result r : queryResult.getResults()) {
+					List<Series> series = r.getSeries();
 
-				if (series != null) {
-					for (Series s : series) {
-						if (s != null && s.getValues() != null) {
-							for (List<Object> v : s.getValues()) {
-								try {
-									Date date = sdf.parse(String.valueOf(v.get(0)));
-									double data = (double) (v.get(1));
+					if (series != null) {
+						for (Series s : series) {
+							if (s != null && s.getValues() != null) {
+								for (List<Object> v : s.getValues()) {
+									try {
+										Date date = sdf.parse(String.valueOf(v.get(0)));
+										double data = (double) (v.get(1));
 
-									datas.put(date.getTime(), data);
-								} catch (Exception e) {
-									Cat.logError(e);
-									System.out.println(v.get(0) + ":" + v.get(1));
+										datas.put(date.getTime(), data);
+									} catch (Exception e) {
+										Cat.logError(e);
+										System.out.println(v.get(0) + ":" + v.get(1));
+									}
 								}
 							}
 						}
