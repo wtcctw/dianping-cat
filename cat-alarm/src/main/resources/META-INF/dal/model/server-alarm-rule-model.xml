@@ -17,7 +17,7 @@
   </entity>
   <entity name="sub-condition">
     <attribute name="type" value-type="String" />
-    <attribute name="value" value-type="double" primitive="true" />
+    <attribute name="value" value-type="String" />
   </entity>
 </model>
 

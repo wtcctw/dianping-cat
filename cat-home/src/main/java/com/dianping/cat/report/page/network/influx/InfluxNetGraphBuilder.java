@@ -108,7 +108,7 @@ public class InfluxNetGraphBuilder {
 		}
 	}
 
-	public NetGraph buildGraphSet(NetGraph netGraphTemplate, Date minute, List<AlertEntity> alertKeys) {
+	public NetGraph buildGraphSet(NetGraph netGraphTemplate, Date minute, List<AlertEntity> alerts) {
 		NetGraph netGraph = copyBaseInfoFromTemplate(netGraphTemplate);
 
 		for (NetTopology netTopology : netGraph.getNetTopologies()) {
@@ -116,7 +116,7 @@ public class InfluxNetGraphBuilder {
 
 			for (Connection connection : netTopology.getConnections()) {
 				try {
-					buildConnectionInfo(alertKeys, minute, alertSwitchs, connection);
+					buildConnectionInfo(alerts, minute, alertSwitchs, connection);
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
