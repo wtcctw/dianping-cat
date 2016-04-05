@@ -4,11 +4,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Splitters;
 
 import com.dianping.cat.Cat;
 
-public class CommandQueryEntity extends BaseQueryEntity {
+public class CommandQueryEntity extends BaseQueryEntity implements LogEnabled {
 
 	public static final int DEFAULT_COMMAND = 1;
 
@@ -21,6 +23,8 @@ public class CommandQueryEntity extends BaseQueryEntity {
 	private int m_startMinuteOrder = DEFAULT_VALUE;
 
 	private int m_endMinuteOrder = DEFAULT_VALUE;
+
+	private Logger m_logger;
 
 	public CommandQueryEntity() {
 		super();
@@ -83,7 +87,7 @@ public class CommandQueryEntity extends BaseQueryEntity {
 			m_startMinuteOrder = convert2MinuteOrder(strs.get(10));
 			m_endMinuteOrder = convert2MinuteOrder(strs.get(11));
 		} catch (Exception e) {
-			Cat.logError(e);
+			m_logger.error(query, e);
 		}
 	}
 
@@ -109,6 +113,11 @@ public class CommandQueryEntity extends BaseQueryEntity {
 
 	public int getStartMinuteOrder() {
 		return m_startMinuteOrder;
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 }

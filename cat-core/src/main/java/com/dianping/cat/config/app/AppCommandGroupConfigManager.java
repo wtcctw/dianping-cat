@@ -150,7 +150,7 @@ public class AppCommandGroupConfigManager implements Initializable {
 		Set<String> rets = new HashSet<String>();
 		List<Command> commands = m_commands.get(id);
 
-		if (rets != null) {
+		if (commands != null) {
 			for (Command command : commands) {
 				rets.add(command.getName());
 			}
