@@ -116,8 +116,13 @@ public class Cat {
 	public static MessageManager getManager() {
 		try {
 			checkAndInitialize();
+			MessageManager manager = s_instance.m_manager;
 
-			return s_instance.m_manager;
+			if (manager != null) {
+				return manager;
+			} else {
+				return NullMessageManager.NULL_MESSAGE_MANAGER;
+			}
 		} catch (Exception e) {
 			errorHandler(e);
 			return NullMessageManager.NULL_MESSAGE_MANAGER;
@@ -128,7 +133,13 @@ public class Cat {
 		try {
 			checkAndInitialize();
 
-			return s_instance.m_producer;
+			MessageProducer producer = s_instance.m_producer;
+
+			if (producer != null) {
+				return producer;
+			} else {
+				return NullMessageProducer.NULL_MESSAGE_PRODUCER;
+			}
 		} catch (Exception e) {
 			errorHandler(e);
 			return NullMessageProducer.NULL_MESSAGE_PRODUCER;
@@ -160,7 +171,7 @@ public class Cat {
 			errorHandler(e);
 		}
 	}
-	
+
 	public static void initialize(PlexusContainer container, File configFile) {
 		ModuleContext ctx = new DefaultModuleContext(container);
 		Module module = ctx.lookup(Module.class, CatClientModule.ID);
