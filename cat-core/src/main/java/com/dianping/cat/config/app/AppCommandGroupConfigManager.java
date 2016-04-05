@@ -2,9 +2,11 @@ package com.dianping.cat.config.app;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -42,7 +44,7 @@ public class AppCommandGroupConfigManager implements Initializable {
 
 	private static final String CONFIG_NAME = "app-command-group";
 
-	private volatile Map<Integer, List<Command>> m_commands = new HashMap<Integer, List<Command>>();
+	private volatile Map<String, List<Command>> m_commands = new HashMap<String, List<Command>>();
 
 	public boolean deleteByName(String parent, String subCommand) {
 		boolean ret = false;
@@ -62,7 +64,7 @@ public class AppCommandGroupConfigManager implements Initializable {
 		return ret;
 	}
 
-	private List<Command> findOrCreate(int id, Map<Integer, List<Command>> maps) {
+	private List<Command> findOrCreate(String id, Map<String, List<Command>> maps) {
 		List<Command> list = maps.get(id);
 
 		if (list == null) {
@@ -144,11 +146,14 @@ public class AppCommandGroupConfigManager implements Initializable {
 		return storeConfig();
 	}
 
-	public List<Command> queryParentCommands(int id) {
-		List<Command> rets = m_commands.get(id);
+	public Set<String> queryParentCommands(String id) {
+		Set<String> rets = new HashSet<String>();
+		List<Command> commands = m_commands.get(id);
 
-		if (rets == null) {
-			rets = new ArrayList<Command>();
+		if (rets != null) {
+			for (Command command : commands) {
+				rets.add(command.getName());
+			}
 		}
 		return rets;
 	}
@@ -170,7 +175,7 @@ public class AppCommandGroupConfigManager implements Initializable {
 	}
 
 	private void refreshData() throws Exception {
-		Map<Integer, List<Command>> results = new HashMap<Integer, List<Command>>();
+		Map<String, List<Command>> results = new HashMap<String, List<Command>>();
 		Map<String, Command> commands = m_appConfigManager.getCommands();
 
 		for (com.dianping.cat.configuration.group.entity.Command cmd : m_config.getCommands().values()) {
@@ -184,7 +189,7 @@ public class AppCommandGroupConfigManager implements Initializable {
 					Command c = commands.get(name);
 
 					if (c != null) {
-						List<Command> lst = findOrCreate(c.getId(), results);
+						List<Command> lst = findOrCreate(c.getName(), results);
 
 						lst.add(parent);
 					}
