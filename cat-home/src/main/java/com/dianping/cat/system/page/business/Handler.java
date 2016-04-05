@@ -17,6 +17,7 @@ import com.dianping.cat.config.business.BusinessConfigManager;
 import com.dianping.cat.config.business.ConfigItem;
 import com.dianping.cat.configuration.business.entity.BusinessItemConfig;
 import com.dianping.cat.configuration.business.entity.BusinessReportConfig;
+import com.dianping.cat.configuration.business.entity.CustomConfig;
 import com.dianping.cat.report.alert.business2.BusinessRuleConfigManager2;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.SystemPage;
@@ -98,6 +99,12 @@ public class Handler implements PageHandler<Context> {
 			m_configManager.deleteBusinessItem(domain, key);
 			listConfigs(domain, model);
 			break;
+		case CustomDelete:
+			key = payload.getKey();
+
+			m_configManager.deleteCustomItem(domain, key);
+			listConfigs(domain, model);
+			break;
 		case TagConfig:
 			String tagConfig = payload.getContent();
 
@@ -113,7 +120,19 @@ public class Handler implements PageHandler<Context> {
 			alertRuleAddSubmit(payload, model);
 			listConfigs(domain, model);
 			break;
+		case CustomAdd:
+			config = m_configManager.queryConfigByDomain(domain);
 
+			if (config != null) {
+				CustomConfig itemConfig = config.findCustomConfig(payload.getKey());
+				if (itemConfig != null) {
+					model.setCustomConfig(itemConfig);
+				}
+			}
+			break;
+		case CustomAddSubmit:
+			updateCustomConfig(model, payload, domain);
+			break;
 		}
 
 		if (!ctx.isProcessStopped()) {
@@ -129,7 +148,6 @@ public class Handler implements PageHandler<Context> {
 
 		m_alertConfigManager.updateRule(domain, key, configs, type);
 	}
-
 
 	private void alertRuleAdd(Payload payload, Model model) {
 		String ruleId = "";
@@ -161,7 +179,19 @@ public class Handler implements PageHandler<Context> {
 				return (int) ((m1.getViewOrder() - m2.getViewOrder()) * 100);
 			}
 		});
+
+		List<CustomConfig> customConfigs = new ArrayList<CustomConfig>(config.getCustomConfigs().values());
+
+		Collections.sort(customConfigs, new Comparator<CustomConfig>() {
+
+			@Override
+			public int compare(CustomConfig m1, CustomConfig m2) {
+				return (int) ((m1.getViewOrder() - m2.getViewOrder()) * 100);
+			}
+		});
+
 		model.setConfigs(configs);
+		model.setCustomConfigs(customConfigs);
 		model.setTags(tags);
 	}
 
@@ -198,4 +228,23 @@ public class Handler implements PageHandler<Context> {
 		model.setBusinessItemConfig(itemConfig);
 		model.setOpState(result);
 	}
+
+	private void updateCustomConfig(Model model, Payload payload, String domain) {
+		CustomConfig itemConfig = payload.getCustomConfig();
+		BusinessReportConfig config = m_configManager.queryConfigByDomain(domain);
+		boolean result = false;
+
+		if (config.getId() != null) {
+			config.addCustomConfig(itemConfig);
+			result = m_configManager.updateConfigByDomain(config);
+		} else {
+			config.setId(domain);
+			config.addCustomConfig(itemConfig);
+			result = m_configManager.insertConfigByDomain(config);
+		}
+
+		model.setCustomConfig(itemConfig);
+		model.setOpState(result);
+	}
+
 }

@@ -8,6 +8,8 @@ public enum JspFile {
 	TAG("/jsp/system/business/tag.jsp"),
 	
 	AlertAdd("/jsp/system/business/alertAdd.jsp"),
+	
+	CustomAdd("/jsp/system/business/customAdd.jsp")
 
 	;
 

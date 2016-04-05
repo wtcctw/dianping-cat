@@ -10,6 +10,7 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 
 		switch (action) {
 		case DELETE:
+		case CustomDelete:
 		case LIST:
 		case AlertRuleAddSubmit:
 			return JspFile.VIEW.getPath();
@@ -20,6 +21,9 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.AlertAdd.getPath();
 		case TagConfig:
 			return JspFile.TAG.getPath();
+		case CustomAdd:
+		case CustomAddSubmit:
+			return JspFile.CustomAdd.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

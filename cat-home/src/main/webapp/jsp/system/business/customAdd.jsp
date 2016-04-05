@@ -18,9 +18,9 @@
 	
 		<h4 class="text-success text-center">修改业务监控规则</h4>
 		<h4 class="text-center text-danger" id="state">&nbsp;</h4>
-		<form name="addSubmit" id="form" method="post" action="${model.pageUri}?op=addSubmit&domain=${payload.domain}">
+		<form name="customAddSubmit" id="form" method="post" action="${model.pageUri}?op=customAddSubmit&domain=${payload.domain}">
 			<span class="text-center text-danger" id="state">&nbsp;</span>
-			<table class="table table-striped table-condensed  ">
+			<table class="table table-striped table-condensed">
 				<tr>
 					<td width="20%" style="text-align:right"  class="text-success">项目名称</td>
 					<td width="20%" >
@@ -30,21 +30,21 @@
 					</td>
 					<td width="25%" style="text-align:right" class="text-success">BusinessKey</td>
 					<td width="35%" >
-						<c:if test="${not empty model.businessItemConfig.id}">
-							<input name="businessItemConfig.id" value="${model.businessItemConfig.id}" readonly required/>
+						<c:if test="${not empty model.customConfig.id}">
+							<input name="customConfig.id" value="${model.customConfig.id}" readonly required/>
 						</c:if>
-						<c:if test="${empty  model.businessItemConfig.id}">
-							<input name="businessItemConfig.id" value="${model.businessItemConfig.id}" required/>
+						<c:if test="${empty model.customConfig.id}">
+							<input name="customConfig.id" value="${model.customConfig.id}" required/>
 						</c:if>
 					</td>
 				</tr>
 				<tr>
 					<td  style="text-align:right" class="text-success">显示标题</td>
-					<td ><input name="businessItemConfig.title" value="${model.businessItemConfig.title}" required/></td>
+					<td><input name="customConfig.title" value="${model.customConfig.title}" required/></td>
 					<td  style="text-align:right" class="text-success">显示顺序（数字）</td>
-					<td ><input  name="businessItemConfig.viewOrder" value="${model.businessItemConfig.viewOrder}" required/></td>
+					<td><input  name="customConfig.viewOrder" value="${model.customConfig.viewOrder}" required/></td>
 				</tr>
-				<tr>
+			<%-- 	<tr>
 					<td style="text-align:right" class="text-success">是否告警</td>
 					<td >
 						<c:choose>
@@ -58,50 +58,19 @@
 							</c:otherwise>
 						</c:choose>
 					</td>
-					<td style="text-align:right" class="text-success" >显示次数曲线</td>
+				</tr> --%>
+				<tr>
+					<td style="text-align:right"  class="text-success">规则配置</td>
 					<td>
-						<c:choose>
-							<c:when test="${model.businessItemConfig.showCount}">
-								<input type="radio" name="businessItemConfig.showCount" value="true" checked />是&nbsp;&nbsp;&nbsp;	
-								<input type="radio" name="businessItemConfig.showCount" value="false" />否
-							</c:when>
-							<c:otherwise>
-						    	<input type="radio" name="businessItemConfig.showCount" value="true" />是&nbsp;&nbsp;&nbsp;
-								<input type="radio" name="businessItemConfig.showCount" value="false" checked />否
-							</c:otherwise>
-						</c:choose>
+						<textarea style="width:200px;height:80px;" name="customConfig.pattern" required>${model.customConfig.pattern}</textarea>
 					</td>
+					<td></td>	
+					<td></td>
 				</tr>
 				<tr>
-					<td style="text-align:right" class="text-success" >显示平均曲线</td>
-					<td>
-						<c:choose>
-							<c:when test="${model.businessItemConfig.showAvg}">
-								<input type="radio" name="businessItemConfig.showAvg" value="true" checked />是	&nbsp;&nbsp;&nbsp;
-								<input type="radio" name="businessItemConfig.showAvg" value="false" />否
-							</c:when>
-							<c:otherwise>
-						    	<input type="radio" name="businessItemConfig.showAvg" value="true" />是&nbsp;&nbsp;&nbsp;
-								<input type="radio" name="businessItemConfig.showAvg" value="false" checked />否
-							</c:otherwise>
-						</c:choose>
+					<td style="text-align:center" colspan='4'>
+						<input class='btn btn-primary btn-xs' id="addOrUpdateNodeSubmit" type="submit" name="submit" value="提交" />
 					</td>
-					<td style="text-align:right" class="text-success">显示求和曲线</td>
-					<td>
-						<c:choose>
-							<c:when test="${model.businessItemConfig.showSum}">
-								<input type="radio" name="businessItemConfig.showSum" value="true" checked />是	&nbsp;&nbsp;&nbsp;
-								<input type="radio" name="businessItemConfig.showSum" value="false" />否
-							</c:when>
-							<c:otherwise>
-						    	<input type="radio" name="businessItemConfig.showSum" value="true" />是&nbsp;&nbsp;&nbsp;
-								<input type="radio" name="businessItemConfig.showSum" value="false" checked />否
-							</c:otherwise>
-						</c:choose>
-					</td>
-				</tr>
-				<tr>
-					<td style="text-align:center" colspan='4'><input class='btn btn-primary btn-xs' id="addOrUpdateNodeSubmit" type="submit" name="submit" value="提交" /></td>
 				</tr>
 			</table>
 		</form>

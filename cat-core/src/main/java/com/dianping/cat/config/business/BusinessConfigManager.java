@@ -71,6 +71,25 @@ public class BusinessConfigManager extends ContainerHolder implements Initializa
 		return true;
 	}
 
+	public boolean deleteCustomItem(String domain, String key) {
+		try {
+			BusinessConfig config = m_configDao.findByNameDomain(BASE_CONFIG, domain, BusinessConfigEntity.READSET_FULL);
+			BusinessReportConfig businessReportConfig = DefaultSaxParser.parse(config.getContent());
+
+			businessReportConfig.removeCustomConfig(key);
+			config.setContent(businessReportConfig.toString());
+			config.setUpdatetime(new Date());
+
+			m_configDao.updateByPK(config, BusinessConfigEntity.UPDATESET_FULL);
+			cacheConfigs(businessReportConfig, domain);
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+
+		return true;
+	}
+
 	@Override
 	public void initialize() throws InitializationException {
 		ServerConfigManager serverConfigManager = lookup(ServerConfigManager.class);
@@ -206,7 +225,26 @@ public class BusinessConfigManager extends ContainerHolder implements Initializa
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
+
 		return false;
 	}
 
+	public boolean insertConfigByDomain(BusinessReportConfig config) {
+		BusinessConfig proto = m_configDao.createLocal();
+		String domain = config.getId();
+
+		proto.setDomain(domain);
+		proto.setName(BASE_CONFIG);
+		proto.setContent(config.toString());
+
+		try {
+			m_configDao.insert(proto);
+			cacheConfigs(config, domain);
+			return true;
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+
+		return false;
+	}
 }
