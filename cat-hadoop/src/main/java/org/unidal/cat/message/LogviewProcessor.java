@@ -110,7 +110,7 @@ public class LogviewProcessor implements Task, Initializable {
 		long currentTimeMillis = System.currentTimeMillis();
 
 		for (int i = 0; i < storageDays; i++) {
-			Date date = new Date(currentTimeMillis - i * 24 * 60 * 60 * 1000L);
+			Date date = new Date(currentTimeMillis - i * TimeHelper.ONE_DAY);
 
 			strs.add(sdf.format(date));
 		}
