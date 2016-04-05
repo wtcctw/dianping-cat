@@ -160,6 +160,18 @@ public class Cat {
 			errorHandler(e);
 		}
 	}
+	
+	public static void initialize(PlexusContainer container, File configFile) {
+		ModuleContext ctx = new DefaultModuleContext(container);
+		Module module = ctx.lookup(Module.class, CatClientModule.ID);
+
+		if (!module.isInitialized()) {
+			ModuleInitializer initializer = ctx.lookup(ModuleInitializer.class);
+
+			ctx.setAttribute("cat-client-config-file", configFile);
+			initializer.execute(ctx, module);
+		}
+	}
 
 	public static void initialize(String... servers) {
 		File configFile = null;
