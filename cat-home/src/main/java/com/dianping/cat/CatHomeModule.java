@@ -1,7 +1,5 @@
 package com.dianping.cat;
 
-import java.io.File;
-
 import org.unidal.helper.Threads;
 import org.unidal.initialization.AbstractModule;
 import org.unidal.initialization.Module;
@@ -54,11 +52,8 @@ public class CatHomeModule extends AbstractModule {
 
 	@Override
 	protected void setup(ModuleContext ctx) throws Exception {
-		File serverConfigFile = ctx.getAttribute("cat-server-config-file");
-		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
 		final TcpSocketReceiver messageReceiver = ctx.lookup(TcpSocketReceiver.class);
 
-		serverConfigManager.initialize(serverConfigFile);
 		messageReceiver.init();
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
