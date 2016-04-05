@@ -68,7 +68,7 @@ public class Cat {
 			return Cat.getProducer().createMessageId();
 		} catch (Exception e) {
 			errorHandler(e);
-			return null;
+			return NullMessageProducer.NULL_MESSAGE_PRODUCER.createMessageId();
 		}
 	}
 
@@ -110,7 +110,7 @@ public class Cat {
 			}
 		} catch (Exception e) {
 			errorHandler(e);
-			return null;
+			return NullMessageProducer.NULL_MESSAGE_PRODUCER.createMessageId();
 		}
 	}
 
