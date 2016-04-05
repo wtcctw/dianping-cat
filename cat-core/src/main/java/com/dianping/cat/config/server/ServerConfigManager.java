@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.helper.Files;
 import org.unidal.helper.Splitters;
 import org.unidal.helper.Threads;
@@ -28,17 +30,19 @@ import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.configuration.server.entity.StorageConfig;
 import com.dianping.cat.configuration.server.transform.DefaultSaxParser;
 
-public class ServerConfigManager implements LogEnabled {
-
-	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
+public class ServerConfigManager implements LogEnabled, Initializable {
 
 	private volatile ServerConfig m_config;
 
 	private Logger m_logger;
 
-	public static final String DUMP_DIR = "dump";
-
 	public ExecutorService m_threadPool;
+
+	private static final String CONFIG_FILE = "/data/appdatas/cat/server.xml";
+
+	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
+
+	public static final String DUMP_DIR = "dump";
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -267,6 +271,15 @@ public class ServerConfigManager implements LogEnabled {
 
 	public ServerConfig getServerConfig() {
 		return m_config;
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		try {
+			initialize(new File(CONFIG_FILE));
+		} catch (Exception e) {
+			throw new InitializationException(e.getMessage(), e);
+		}
 	}
 
 	public void initialize(File configFile) throws Exception {

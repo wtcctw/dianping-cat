@@ -41,7 +41,7 @@ public class DataSourceServiceImpl implements DataSourceService<InfluxDBConnecti
 				influxDB.createDatabase(database);
 				connections.put(entry.getKey(), new InfluxDBConnection(influxDB, database));
 			} catch (Exception e) {
-				Cat.logError(e);
+				throw new RuntimeException("Create database error: " + entry.getValue().toString(), e);
 			}
 		}
 		return connections;
@@ -86,7 +86,12 @@ public class DataSourceServiceImpl implements DataSourceService<InfluxDBConnecti
 
 		if (!oldxml.equals(config.toString())) {
 			m_influxdbConfig = config;
-			m_connections = buildConnections(m_influxdbConfig);
+
+			try {
+				m_connections = buildConnections(m_influxdbConfig);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 		}
 	}
 }
