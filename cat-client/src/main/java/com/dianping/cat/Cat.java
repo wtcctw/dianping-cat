@@ -35,11 +35,6 @@ import com.dianping.cat.message.spi.MessageTree;
  * This is the main entry point to the system.
  */
 public class Cat {
-	private static Cat s_instance = new Cat();
-
-	private static volatile boolean s_init = false;
-
-	private static int m_errorCount;
 
 	private MessageProducer m_producer;
 
@@ -47,16 +42,16 @@ public class Cat {
 
 	private PlexusContainer m_container;
 
+	private static Cat s_instance = new Cat();
+
+	private static volatile boolean s_init = false;
+
+	private static int m_errorCount;
+
 	private static void checkAndInitialize() {
 		try {
 			if (!s_init) {
-				synchronized (s_instance) {
-					if (!s_init) {
-						initialize(new File(getCatHome(), "client.xml"));
-						log("WARN", "Cat is lazy initialized!");
-						s_init = true;
-					}
-				}
+				initialize(new File(getCatHome(), "client.xml"));
 			}
 		} catch (Exception e) {
 			errorHandler(e);
@@ -68,7 +63,7 @@ public class Cat {
 			return Cat.getProducer().createMessageId();
 		} catch (Exception e) {
 			errorHandler(e);
-			return null;
+			return NullMessageProducer.NULL_MESSAGE_PRODUCER.createMessageId();
 		}
 	}
 
@@ -110,7 +105,7 @@ public class Cat {
 			}
 		} catch (Exception e) {
 			errorHandler(e);
-			return null;
+			return NullMessageProducer.NULL_MESSAGE_PRODUCER.createMessageId();
 		}
 	}
 
@@ -143,27 +138,38 @@ public class Cat {
 	// this should be called during application initialization time
 	public static void initialize(File configFile) {
 		try {
-			PlexusContainer container = ContainerLoader.getDefaultContainer();
+			if (!s_init) {
+				synchronized (s_instance) {
+					if (!s_init) {
+						PlexusContainer container = ContainerLoader.getDefaultContainer();
+						ModuleContext ctx = new DefaultModuleContext(container);
+						Module module = ctx.lookup(Module.class, CatClientModule.ID);
 
-			initialize(container, configFile);
+						if (!module.isInitialized()) {
+							ModuleInitializer initializer = ctx.lookup(ModuleInitializer.class);
+
+							ctx.setAttribute("cat-client-config-file", configFile);
+							initializer.execute(ctx, module);
+						}
+						log("INFO", "Cat is lazy initialized!");
+						s_init = true;
+					}
+				}
+			}
 		} catch (Exception e) {
 			errorHandler(e);
 		}
 	}
-
+	
 	public static void initialize(PlexusContainer container, File configFile) {
-		try {
-			ModuleContext ctx = new DefaultModuleContext(container);
-			Module module = ctx.lookup(Module.class, CatClientModule.ID);
+		ModuleContext ctx = new DefaultModuleContext(container);
+		Module module = ctx.lookup(Module.class, CatClientModule.ID);
 
-			if (!module.isInitialized()) {
-				ModuleInitializer initializer = ctx.lookup(ModuleInitializer.class);
+		if (!module.isInitialized()) {
+			ModuleInitializer initializer = ctx.lookup(ModuleInitializer.class);
 
-				ctx.setAttribute("cat-client-config-file", configFile);
-				initializer.execute(ctx, module);
-			}
-		} catch (Exception e) {
-			errorHandler(e);
+			ctx.setAttribute("cat-client-config-file", configFile);
+			initializer.execute(ctx, module);
 		}
 	}
 
