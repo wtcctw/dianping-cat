@@ -21,6 +21,8 @@ import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
+import com.dianping.cat.Cat;
+
 @Named(type = BucketManager.class, value = "local")
 public class LocalBucketManager extends ContainerHolder implements BucketManager, LogEnabled {
 	@Inject
@@ -58,14 +60,17 @@ public class LocalBucketManager extends ContainerHolder implements BucketManager
 			Map<String, Bucket> buckets = m_buckets.remove(h);
 
 			for (Bucket bucket : buckets.values()) {
-				bucket.close();
+				try {
+					bucket.close();
 
-				Benchmark benchmark = bucket.getBechmark();
-				m_benchmarkManager.remove(benchmark.getType());
-
-				super.release(bucket);
-
-				m_logger.info("Close bucket " + bucket);
+					Benchmark benchmark = bucket.getBechmark();
+					m_benchmarkManager.remove(benchmark.getType());
+					m_logger.info("Close bucket " + bucket);
+				} catch (Exception e) {
+					Cat.logError(e);
+				} finally {
+					super.release(bucket);
+				}
 			}
 		}
 	}
