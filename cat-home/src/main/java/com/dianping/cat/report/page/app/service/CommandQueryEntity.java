@@ -4,13 +4,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Splitters;
 
 import com.dianping.cat.Cat;
 
-public class CommandQueryEntity extends BaseQueryEntity implements LogEnabled {
+public class CommandQueryEntity extends BaseQueryEntity {
 
 	public static final int DEFAULT_COMMAND = 1;
 
@@ -23,8 +21,6 @@ public class CommandQueryEntity extends BaseQueryEntity implements LogEnabled {
 	private int m_startMinuteOrder = DEFAULT_VALUE;
 
 	private int m_endMinuteOrder = DEFAULT_VALUE;
-
-	private Logger m_logger;
 
 	public CommandQueryEntity() {
 		super();
@@ -72,6 +68,7 @@ public class CommandQueryEntity extends BaseQueryEntity implements LogEnabled {
 
 	public CommandQueryEntity(String query) {
 		List<String> strs = Splitters.by(";").split(query);
+		int size = strs.size();
 
 		try {
 			m_date = parseDate(strs.get(0));
@@ -83,11 +80,14 @@ public class CommandQueryEntity extends BaseQueryEntity implements LogEnabled {
 			m_platfrom = parseValue(strs.get(6));
 			m_city = parseValue(strs.get(7));
 			m_operator = parseValue(strs.get(8));
-			m_source = parseValue(strs.get(9));
-			m_startMinuteOrder = convert2MinuteOrder(strs.get(10));
-			m_endMinuteOrder = convert2MinuteOrder(strs.get(11));
+
+			if (size == 12) {
+				m_source = parseValue(strs.get(9));
+			}
+			m_startMinuteOrder = convert2MinuteOrder(strs.get(size - 2));
+			m_endMinuteOrder = convert2MinuteOrder(strs.get(size - 1));
 		} catch (Exception e) {
-			m_logger.error(query, e);
+			Cat.logError(e);
 		}
 	}
 
@@ -113,11 +113,6 @@ public class CommandQueryEntity extends BaseQueryEntity implements LogEnabled {
 
 	public int getStartMinuteOrder() {
 		return m_startMinuteOrder;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 }
