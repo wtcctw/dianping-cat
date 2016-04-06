@@ -3,8 +3,9 @@ package com.dianping.cat;
 import org.unidal.initialization.AbstractModule;
 import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;
+import org.unidal.lookup.annotation.Named;
 
-
+@Named(type = Module.class, value = CatCoreModule.ID)
 public class CatCoreModule extends AbstractModule {
 	public static final String ID = "cat-core";
 

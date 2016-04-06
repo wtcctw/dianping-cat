@@ -226,6 +226,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.app.BrokerConfigManager</role>
+			<implementation>com.dianping.cat.config.app.BrokerConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-core</role-hint>
 			<implementation>com.dianping.cat.CatCoreModule</implementation>
