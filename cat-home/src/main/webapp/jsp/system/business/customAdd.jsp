@@ -41,31 +41,20 @@
 				<tr>
 					<td  style="text-align:right" class="text-success">显示标题</td>
 					<td><input name="customConfig.title" value="${model.customConfig.title}" required/></td>
-					<td  style="text-align:right" class="text-success">显示顺序（数字）</td>
+					<td  style="text-align:right" class="text-success">显示顺序(数字)</td>
 					<td><input  name="customConfig.viewOrder" value="${model.customConfig.viewOrder}" required/></td>
 				</tr>
-			<%-- 	<tr>
-					<td style="text-align:right" class="text-success">是否告警</td>
-					<td >
-						<c:choose>
-							<c:when test="${model.businessItemConfig.alarm}">
-								<input type="radio" name="businessItemConfig.alarm" value="true" checked />是&nbsp;&nbsp;&nbsp;	
-								<input type="radio" name="businessItemConfig.alarm" value="false" />否
-							</c:when>
-							<c:otherwise>
-						    	<input type="radio" name="businessItemConfig.alarm" value="true" />是&nbsp;&nbsp;&nbsp;
-								<input type="radio" name="businessItemConfig.alarm" value="false" checked />否
-							</c:otherwise>
-						</c:choose>
-					</td>
-				</tr> --%>
 				<tr>
 					<td style="text-align:right"  class="text-success">规则配置</td>
-					<td>
+					<td colspan='3'>
 						<textarea style="width:200px;height:80px;" name="customConfig.pattern" required>${model.customConfig.pattern}</textarea>
 					</td>
-					<td></td>	
-					<td></td>
+				</tr>
+				<tr>
+					<td style="text-align:right;color:red">填写提示:</td>
+					<td colspan='3'>						
+						<span style="color:red">支持跨项目的指标进行四则运算。使用 \${domain,key,type} 来表示一个特定指标，例如 \${cat,test,COUNT}表示cat项目下，BusinessKey为test的指标的次数。type种类包括COUNT,AVG,SUM。</span>
+					</td>
 				</tr>
 				<tr>
 					<td style="text-align:center" colspan='4'>

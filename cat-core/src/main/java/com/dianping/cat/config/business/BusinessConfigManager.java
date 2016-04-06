@@ -236,6 +236,7 @@ public class BusinessConfigManager extends ContainerHolder implements Initializa
 		proto.setDomain(domain);
 		proto.setName(BASE_CONFIG);
 		proto.setContent(config.toString());
+		proto.setUpdatetime(new Date());
 
 		try {
 			m_configDao.insert(proto);

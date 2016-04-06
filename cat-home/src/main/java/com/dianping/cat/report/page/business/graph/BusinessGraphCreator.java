@@ -248,7 +248,7 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 		String title = buidlTitle(businessReportConfig, itemId, type);
 
 		chart.setTitle(title);
-		chart.setId(itemId + ":" + type);
+		chart.setId(key);
 
 		if (containMetric(alertKeys, itemId)) {
 			String domain = businessReportConfig.getId();
