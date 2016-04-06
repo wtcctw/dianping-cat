@@ -234,13 +234,15 @@ public class Handler implements PageHandler<Context> {
 		BusinessReportConfig config = m_configManager.queryConfigByDomain(domain);
 		boolean result = false;
 
-		if (config.getId() != null) {
-			config.addCustomConfig(itemConfig);
-			result = m_configManager.updateConfigByDomain(config);
-		} else {
-			config.setId(domain);
-			config.addCustomConfig(itemConfig);
-			result = m_configManager.insertConfigByDomain(config);
+		if (StringUtils.isNotEmpty(itemConfig.getId())) {
+			if (config.getId() != null) {
+				config.addCustomConfig(itemConfig);
+				result = m_configManager.updateConfigByDomain(config);
+			} else {
+				config.setId(domain);
+				config.addCustomConfig(itemConfig);
+				result = m_configManager.insertConfigByDomain(config);
+			}
 		}
 
 		model.setCustomConfig(itemConfig);

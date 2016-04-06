@@ -10,6 +10,7 @@ import org.apache.commons.jexl3.JexlExpression;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.report.page.business.task.BusinessKeyHelper;
 
 public class CustomDataCalculator {
@@ -67,19 +68,24 @@ public class CustomDataCalculator {
 		double[] result = new double[totalSize];
 
 		for (int i = 0; i < totalSize; i++) {
-			String expression = pattern;
+			try {
+				String expression = pattern;
 
-			for (CustomInfo customInfo : customInfos) {
-				String customPattern = customInfo.getPattern();
-				String itemId = m_keyHelper.generateKey(customInfo.getKey(), customInfo.getDomain(), customInfo.getType());
-				double[] sourceData = businessItemDataCache.get(itemId);
+				for (CustomInfo customInfo : customInfos) {
+					String customPattern = customInfo.getPattern();
+					String itemId = m_keyHelper.generateKey(customInfo.getKey(), customInfo.getDomain(),
+					      customInfo.getType());
+					double[] sourceData = businessItemDataCache.get(itemId);
 
-				if (sourceData != null) {
-					expression = expression.replace(customPattern, Double.toString(sourceData[i]));
+					if (sourceData != null) {
+						expression = expression.replace(customPattern, Double.toString(sourceData[i]));
+					}
 				}
+
+				result[i] = calculate(expression);
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
-			
-			result[i] = calculate(expression);
 		}
 		return result;
 	}
@@ -87,8 +93,7 @@ public class CustomDataCalculator {
 	private double calculate(String pattern) {
 		JexlExpression e = jexl.createExpression(pattern);
 		Number result = (Number) e.evaluate(null);
-		double aa = result.doubleValue();
-		return aa;
+		return result.doubleValue();
 	}
-	
+
 }

@@ -168,24 +168,28 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 		int step = m_dataExtractor.getStep();
 
 		for (Entry<String, double[]> entry : dataWithOutFutures.entrySet()) {
-			String key = entry.getKey();
-			double[] value = entry.getValue();
-			LineChart lineChart = new LineChart();
-			String domain = m_keyHelper.getDomain(key);
-			BusinessReportConfig config = configs.get(domain);
+			try {
+				String key = entry.getKey();
+				double[] value = entry.getValue();
+				LineChart lineChart = new LineChart();
+				String domain = m_keyHelper.getDomain(key);
+				BusinessReportConfig config = configs.get(domain);
 
-			buildLineChartTitle(alertKeys, lineChart, key, config);
-			lineChart.setStart(start);
-			lineChart.setSize(value.length);
-			lineChart.setStep(step * TimeHelper.ONE_MINUTE);
-			double[] baselines = queryBaseline(BusinessAnalyzer.ID, key, start, end);
-			Map<Long, Double> all = convertToMap(datas.get(key), start, 1);
-			Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), start, step);
+				buildLineChartTitle(alertKeys, lineChart, key, config);
+				lineChart.setStart(start);
+				lineChart.setSize(value.length);
+				lineChart.setStep(step * TimeHelper.ONE_MINUTE);
+				double[] baselines = queryBaseline(BusinessAnalyzer.ID, key, start, end);
+				Map<Long, Double> all = convertToMap(datas.get(key), start, 1);
+				Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), start, step);
 
-			addLastMinuteData(current, all, m_lastMinute, end);
-			lineChart.add(Chinese.CURRENT_VALUE, current);
-			lineChart.add(Chinese.BASELINE_VALUE, convertToMap(m_dataExtractor.extract(baselines), start, step));
-			charts.put(key, lineChart);
+				addLastMinuteData(current, all, m_lastMinute, end);
+				lineChart.add(Chinese.CURRENT_VALUE, current);
+				lineChart.add(Chinese.BASELINE_VALUE, convertToMap(m_dataExtractor.extract(baselines), start, step));
+				charts.put(key, lineChart);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 		}
 		return charts;
 	}
