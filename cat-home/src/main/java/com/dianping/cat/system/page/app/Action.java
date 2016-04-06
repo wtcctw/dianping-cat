@@ -4,6 +4,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	APP_CONFIG_UPDATE("appConfigUpdate"),
 
+	BROKER_CONFIG_UPDATE("brokerConfigUpdate"),
+
 	APP_NAME_CHECK("appNameCheck"),
 
 	APP_LIST("appList"),

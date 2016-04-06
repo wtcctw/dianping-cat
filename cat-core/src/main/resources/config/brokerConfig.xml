@@ -1,0 +1,15 @@
+<broker-config group-statistics-enabled="true" remote-ip-service-enabled="true" dev-mode="false">
+	<storge>
+		<local-access-log path="/data/applogs/broker-service/logs" duration-in-hour="3">
+			<type id="app" enabled="true"/>
+			<type id="app-speed" enabled="true"/>
+		</local-access-log>
+		<local-error-log path="/data/appdatas/cat/app-error-log" duration-in-day="15" enabled="true">
+		</local-error-log>
+		
+		<checkpoint local-flush-enabled="true">
+			<local-flush path="/data/appdatas/cat/app-data-save"></local-flush>
+		</checkpoint>
+	</storge>
+	<too-long-command id="toolongurl.bin"/>
+</broker-config>

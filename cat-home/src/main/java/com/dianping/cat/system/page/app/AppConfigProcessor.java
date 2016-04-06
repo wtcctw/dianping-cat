@@ -20,6 +20,7 @@ import com.dianping.cat.alarm.rule.transform.DefaultJsonBuilder;
 import com.dianping.cat.config.app.AppCommandGroupConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
+import com.dianping.cat.config.app.BrokerConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
@@ -55,6 +56,9 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 
 	@Inject
 	private AppCommandGroupConfigManager m_appCommandGroupManager;
+
+	@Inject
+	private BrokerConfigManager m_brokerConfigManager;
 
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
@@ -333,6 +337,13 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 				model.setOpState(m_appConfigManager.insert(appConfig));
 			}
 			model.setContent(m_configHtmlParser.parse(m_appConfigManager.getConfig().toString()));
+			break;
+		case BROKER_CONFIG_UPDATE:
+			String brokerConfig = payload.getContent();
+			if (!StringUtils.isEmpty(brokerConfig)) {
+				model.setOpState(m_brokerConfigManager.insert(brokerConfig));
+			}
+			model.setContent(m_configHtmlParser.parse(m_brokerConfigManager.getConfig().toString()));
 			break;
 		case APP_RULE:
 			buildAppConfigInfo(m_appConfigManager, model);

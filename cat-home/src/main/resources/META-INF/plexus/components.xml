@@ -7152,6 +7152,9 @@
 					<role>com.dianping.cat.config.app.AppCommandGroupConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.config.app.BrokerConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
 				</requirement>
 				<requirement>

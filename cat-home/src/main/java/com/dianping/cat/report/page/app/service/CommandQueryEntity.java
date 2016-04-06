@@ -68,6 +68,7 @@ public class CommandQueryEntity extends BaseQueryEntity {
 
 	public CommandQueryEntity(String query) {
 		List<String> strs = Splitters.by(";").split(query);
+		int size = strs.size();
 
 		try {
 			m_date = parseDate(strs.get(0));
@@ -79,9 +80,12 @@ public class CommandQueryEntity extends BaseQueryEntity {
 			m_platfrom = parseValue(strs.get(6));
 			m_city = parseValue(strs.get(7));
 			m_operator = parseValue(strs.get(8));
-			m_source = parseValue(strs.get(9));
-			m_startMinuteOrder = convert2MinuteOrder(strs.get(10));
-			m_endMinuteOrder = convert2MinuteOrder(strs.get(11));
+
+			if (size == 12) {
+				m_source = parseValue(strs.get(9));
+			}
+			m_startMinuteOrder = convert2MinuteOrder(strs.get(size - 2));
+			m_endMinuteOrder = convert2MinuteOrder(strs.get(size - 1));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
