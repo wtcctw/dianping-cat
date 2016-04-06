@@ -32,30 +32,34 @@ public class BrokerConfigManager implements Initializable {
 
 	private volatile BrokerConfig m_config;
 
-	private static final String CONFIG_NAME = "brokerConfig";
-
-	public int getAccessLogDurationInHours() {
-		return m_config.getStorge().getLocalAccessLog().getDurationInHour();
-	}
-
-	public String getAccessLogPath() {
-		return m_config.getStorge().getLocalAccessLog().getPath();
-	}
+	private static final String CONFIG_NAME = "broker-config";
 
 	public BrokerConfig getConfig() {
 		return m_config;
 	}
 
-	public int getErrorLogDurationInDays() {
-		return m_config.getStorge().getLocalErrorLog().getDurationInDay();
-	}
-
-	public String getErrorLogPath() {
-		return m_config.getStorge().getLocalErrorLog().getPath();
-	}
-
 	public String getLocalFlushPath() {
-		return m_config.getStorge().getCheckpoint().getLocalFlush().getPath();
+		return m_config.getCheckpoint().getLocalFlush().getPath();
+	}
+
+	public String getLogPath(String logType) {
+		Type type = m_config.findType(logType);
+
+		if (type != null) {
+			return type.getPath();
+		} else {
+			return null;
+		}
+	}
+
+	public int getLogReservceDuration(String logType) {
+		Type type = m_config.findType(logType);
+
+		if (type != null) {
+			return type.getDurationInHours();
+		} else {
+			return 3;
+		}
 	}
 
 	public String getTooLongCommand() {
@@ -125,7 +129,7 @@ public class BrokerConfigManager implements Initializable {
 	}
 
 	public boolean isLocalFlushEnabled() {
-		return m_config.getStorge().getCheckpoint().isLocalFlushEnabled();
+		return m_config.getCheckpoint().isLocalFlushEnabled();
 	}
 
 	public boolean isRemteIpServiceEnabled() {
@@ -147,18 +151,14 @@ public class BrokerConfigManager implements Initializable {
 		}
 	}
 
-	public boolean shouldLogAccess(String logType) {
-		Type type = m_config.getStorge().getLocalAccessLog().findType(logType);
+	public boolean shouldLog(String logType) {
+		Type type = m_config.findType(logType);
 
 		if (type != null) {
 			return type.isEnabled();
 		} else {
 			return false;
 		}
-	}
-
-	public boolean shouldLogError() {
-		return m_config.getStorge().getLocalErrorLog().isEnabled();
 	}
 
 	private boolean storeConfig() {

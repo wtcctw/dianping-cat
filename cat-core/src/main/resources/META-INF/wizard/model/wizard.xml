@@ -31,6 +31,6 @@
       <sample-model>../cat-home/src/main/resources/config/business-report-config.xml</sample-model>
    </model>
    <model package="com.dianping.cat.configuration.app.broker" name="broker-config">
-      <sample-model>src/main/resources/config/brokerConfig.xml</sample-model>
+      <sample-model>src/main/resources/config/broker-config.xml</sample-model>
    </model>
 </wizard>

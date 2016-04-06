@@ -1,0 +1,11 @@
+<broker-config group-statistics-enabled="true" remote-ip-service-enabled="true" dev-mode="false">
+	<logs>
+		<type id="app"  path="/data/applogs/broker-service/logs" duration-in-hours="3" enabled="true"/>
+		<type id="app-speed"  path="/data/applogs/broker-service/logs" duration-in-hours="3" enabled="true"/>
+		<type id="error"  path="/data/appdatas/cat/app-error-log" duration-in-hours="360" enabled="true"/>
+  	</logs>
+  	<checkpoint local-flush-enabled="true">
+     	<local-flush path="/data/appdatas/cat/app-data-save"/>
+  	</checkpoint>
+	<too-long-command id="toolongurl.bin"/>
+</broker-config>
