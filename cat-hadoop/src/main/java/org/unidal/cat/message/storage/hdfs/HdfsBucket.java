@@ -2,34 +2,34 @@ package org.unidal.cat.message.storage.hdfs;
 
 import io.netty.buffer.ByteBuf;
 
-import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.net.URI;
 import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.FileBuilder;
-import org.unidal.cat.message.storage.FileBuilder.FileType;
 import org.unidal.cat.message.storage.internals.DefaultBlock;
 import org.unidal.cat.metric.Benchmark;
-import org.unidal.cat.metric.BenchmarkEnabled;
-import org.unidal.cat.metric.Metric;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.message.internal.MessageId;
 
 @Named(type = Bucket.class, value = HdfsBucket.ID, instantiationStrategy = Named.PER_LOOKUP)
-public class HdfsBucket implements Bucket, BenchmarkEnabled {
+public class HdfsBucket implements Bucket, Initializable {
 	private static final int SEGMENT_SIZE = 32 * 1024;
 
 	public static final String ID = "hdfs";
@@ -37,26 +37,18 @@ public class HdfsBucket implements Bucket, BenchmarkEnabled {
 	@Inject(HdfsBucket.ID)
 	private FileBuilder m_bulider;
 
-	private Metric m_indexMetric;
-
-	private Metric m_dataMetric;
+	@Inject
+	protected FileSystemManager m_manager;
 
 	private DataHelper m_data = new DataHelper();
 
 	private IndexHelper m_index = new IndexHelper();
 
-	private Benchmark m_benchmark;
-
 	@Override
 	public void close() {
 		if (m_index.isOpen()) {
-			m_indexMetric.start();
 			m_index.close();
-			m_indexMetric.end();
-
-			m_dataMetric.start();
 			m_data.close();
-			m_dataMetric.end();
 		}
 	}
 
@@ -66,9 +58,7 @@ public class HdfsBucket implements Bucket, BenchmarkEnabled {
 
 	@Override
 	public ByteBuf get(MessageId id) throws IOException {
-		m_indexMetric.start();
 		long address = m_index.read(id);
-		m_indexMetric.end();
 
 		if (address < 0) {
 			return null;
@@ -76,9 +66,7 @@ public class HdfsBucket implements Bucket, BenchmarkEnabled {
 			int segmentOffset = (int) (address & 0xFFFFFFL);
 			long dataOffset = address >> 24;
 
-			m_dataMetric.start();
 			byte[] data = m_data.read(dataOffset);
-			m_dataMetric.end();
 
 			DefaultBlock block = new DefaultBlock(id, segmentOffset, data);
 
@@ -87,36 +75,26 @@ public class HdfsBucket implements Bucket, BenchmarkEnabled {
 	}
 
 	@Override
-	public Benchmark getBechmark() {
-		return m_benchmark;
-	}
-
-	@Override
 	public void initialize(String domain, String ip, int hour) throws IOException {
 		long timestamp = hour * 3600 * 1000L;
-		Date startTime = new Date(timestamp);
-		File dataPath = m_bulider.getFile(domain, startTime, ip, FileType.DATA);
-		File indexPath = m_bulider.getFile(domain, startTime, ip, FileType.INDEX);
 
-		m_dataMetric.start();
-		m_data.init(dataPath);
-		m_dataMetric.end();
+		String basePath = domain + '-' + ip;
+		String dataFile = "";
 
-		m_indexMetric.start();
-		m_index.init(indexPath);
-		m_indexMetric.end();
+		// TODO
+		StringBuilder sb = new StringBuilder();
+		FileSystem fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
+
+		FSDataInputStream indexStream = fs.open(new Path(basePath, dataFile + ".idx"));
+		FSDataInputStream dataStream = fs.open(new Path(basePath, dataFile + ".dat"));
+
+		m_data.init(dataStream);
+		m_index.init(indexStream);
 	}
 
 	@Override
 	public void puts(ByteBuf data, Map<MessageId, Integer> mappings) throws IOException {
 		throw new RuntimeException("unsupport operation");
-	}
-
-	@Override
-	public void setBenchmark(Benchmark benchmark) {
-		m_benchmark = benchmark;
-		m_indexMetric = benchmark.get("index");
-		m_dataMetric = benchmark.get("data");
 	}
 
 	@Override
@@ -127,48 +105,31 @@ public class HdfsBucket implements Bucket, BenchmarkEnabled {
 	private class DataHelper {
 		private File m_path;
 
-		private RandomAccessFile m_file;
-
-		private DataOutputStream m_out;
+		private FSDataInputStream m_dataStream;
 
 		public void close() {
 			try {
-				m_file.close();
+				m_dataStream.close();
 			} catch (IOException e) {
 				Cat.logError(e);
 			}
-
-			try {
-				if (m_out != null) {
-					m_out.close();
-				}
-			} catch (IOException e) {
-				Cat.logError(e);
-			}
-
-			m_file = null;
 		}
 
 		public File getPath() {
 			return m_path;
 		}
 
-		public void init(File dataPath) throws IOException {
-			m_path = dataPath;
-			m_path.getParentFile().mkdirs();
-
-			m_out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(m_path, true), SEGMENT_SIZE));
-			m_file = new RandomAccessFile(m_path, "r"); // read-only
+		public void init(FSDataInputStream dataStream) throws IOException {
+			m_dataStream = dataStream;
 		}
 
 		public byte[] read(long dataOffset) throws IOException {
-			m_out.flush();
-			m_file.seek(dataOffset);
+			m_dataStream.seek(dataOffset);
 
-			int len = m_file.readInt();
+			int len = m_dataStream.readInt();
 			byte[] data = new byte[len];
 
-			m_file.readFully(data);
+			m_dataStream.readFully(data);
 
 			return data;
 		}
@@ -183,40 +144,20 @@ public class HdfsBucket implements Bucket, BenchmarkEnabled {
 
 		private static final int ENTRY_PER_SEGMENT = SEGMENT_SIZE / BYTE_PER_ENTRY;
 
-		private RandomAccessFile m_file;
-
-		private File m_path;
-
-		private FileChannel m_indexChannel;
-
 		private Header m_header = new Header();
 
+		private FSDataInputStream m_indexSteam;
+
 		public void close() {
-			try {
-				m_indexChannel.force(false);
-				m_indexChannel.close();
-			} catch (IOException e) {
-				Cat.logError(e);
-			}
-
-			try {
-				m_file.close();
-			} catch (IOException e) {
-				Cat.logError(e);
-			}
-
-			m_file = null;
 		}
 
-		public void init(File indexPath) throws IOException {
-			m_path = indexPath;
-			m_path.getParentFile().mkdirs();
+		public void init(FSDataInputStream indexStream) throws IOException {
+			m_indexSteam = indexStream;
 
-			// read-write without meta sync
-			m_file = new RandomAccessFile(m_path, "rwd");
-			m_indexChannel = m_file.getChannel();
-
-			long size = m_file.length();
+			// TODO
+			FileSystem hdfs = FileSystem.get(URI.create("fff"), null);
+			FileStatus fs = hdfs.getFileStatus(new Path("hdfs:/dump/2015/10/3"));
+			long size = fs.getLen();
 			int totalHeaders = (int) Math.ceil((size * 1.0 / (ENTRY_PER_SEGMENT * SEGMENT_SIZE)));
 
 			if (totalHeaders == 0) {
@@ -229,16 +170,16 @@ public class HdfsBucket implements Bucket, BenchmarkEnabled {
 		}
 
 		public boolean isOpen() {
-			return m_file != null;
+			return m_indexSteam != null;
 		}
 
 		public long read(MessageId id) throws IOException {
 			int index = id.getIndex();
 			long position = m_header.getOffset(id.getIpAddressValue(), index);
 
-			m_file.seek(position);
+			m_indexSteam.seek(position);
 
-			long address = m_file.readLong();
+			long address = m_indexSteam.readLong();
 
 			return address;
 		}
@@ -272,11 +213,11 @@ public class HdfsBucket implements Bucket, BenchmarkEnabled {
 			}
 
 			public void load(int headBlockIndex) throws IOException {
-				Segment segment = new Segment(m_indexChannel, headBlockIndex * ENTRY_PER_SEGMENT * SEGMENT_SIZE);
+				Segment segment = new Segment(m_indexSteam, headBlockIndex * ENTRY_PER_SEGMENT * SEGMENT_SIZE);
 				long magicCode = segment.readLong();
 
 				if (magicCode != -1) {
-					throw new IOException("Invalid index file: " + m_path);
+					throw new IOException("Invalid index file: " + m_indexSteam);
 				}
 
 				m_nextSegment = 1 + ENTRY_PER_SEGMENT * headBlockIndex;
@@ -312,19 +253,17 @@ public class HdfsBucket implements Bucket, BenchmarkEnabled {
 		}
 
 		private class Segment {
-			private FileChannel m_segmentChannel;
 
 			private long m_address;
 
 			private ByteBuffer m_buf;
 
-			private Segment(FileChannel channel, long address) throws IOException {
-				m_segmentChannel = channel;
+			private Segment(FSDataInputStream channel, long address) throws IOException {
 				m_address = address;
-				m_buf = ByteBuffer.allocate(SEGMENT_SIZE);
-				m_buf.mark();
-				m_segmentChannel.read(m_buf, address);
-				m_buf.reset();
+				byte[] b = new byte[SEGMENT_SIZE];
+
+				channel.readFully(b);
+				m_buf = ByteBuffer.wrap(b);
 			}
 
 			public int readInt() throws IOException {
@@ -340,6 +279,21 @@ public class HdfsBucket implements Bucket, BenchmarkEnabled {
 				return String.format("%s[address=%s]", getClass().getSimpleName(), m_address);
 			}
 		}
+	}
+
+	@Override
+	public void setBenchmark(Benchmark benchmark) {
+		throw new RuntimeException("unsupport operation");
+	}
+
+	@Override
+	public Benchmark getBechmark() {
+		throw new RuntimeException("unsupport operation");
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+
 	}
 
 }

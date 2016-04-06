@@ -228,10 +228,10 @@ public class LocalBucket implements Bucket, BenchmarkEnabled {
 
 		public void close() {
 			try {
-				m_header.m_segment.flush();
+				m_header.m_segment.close();
 
 				for (SegmentCache cache : m_caches.values()) {
-					cache.flush();
+					cache.close();
 				}
 			} catch (IOException e) {
 				Cat.logError(e);
@@ -458,6 +458,16 @@ public class LocalBucket implements Bucket, BenchmarkEnabled {
 				m_buf.reset();
 			}
 
+			public void close() throws IOException {
+				int pos = m_buf.position();
+
+				m_buf.position(0);
+				m_segmentChannel.write(m_buf, m_address);
+				m_buf.position(pos);
+				m_dirty = false;
+				m_buf = null;
+			}
+
 			public void flush() throws IOException {
 				if (m_dirty) {
 					int pos = m_buf.position();
@@ -522,9 +532,9 @@ public class LocalBucket implements Bucket, BenchmarkEnabled {
 				return segment;
 			}
 
-			public void flush() throws IOException {
+			public void close() throws IOException {
 				for (Segment segment : m_latestSegments.values()) {
-					segment.flush();
+					segment.close();
 				}
 				m_latestSegments.clear();
 			}
