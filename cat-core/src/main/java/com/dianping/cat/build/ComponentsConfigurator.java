@@ -19,6 +19,7 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppConnectionTableProvider;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.app.AppSpeedTableProvider;
+import com.dianping.cat.config.app.BrokerConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatConfigManager;
 import com.dianping.cat.config.app.command.DefaultCommandFormatlHandler;
 import com.dianping.cat.config.business.BusinessConfigManager;
@@ -78,6 +79,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(WebSpeedConfigManager.class));
 		all.add(A(AppSpeedConfigManager.class));
 		all.add(A(BusinessConfigManager.class));
+		all.add(A(BrokerConfigManager.class));
 
 		all.add(A(DefaultUrlPatternHandler.class));
 		all.add(A(UrlPatternConfigManager.class));

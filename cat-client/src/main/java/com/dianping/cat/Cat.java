@@ -244,9 +244,7 @@ public class Cat {
 	}
 
 	public static boolean isInitialized() {
-		synchronized (s_instance) {
-			return s_instance.m_container != null;
-		}
+		return s_init;
 	}
 
 	static void log(String severity, String message) {
