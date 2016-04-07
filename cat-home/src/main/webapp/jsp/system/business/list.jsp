@@ -100,7 +100,7 @@
      			<th width="9%"><h5 class='text-center'>平均值</h5></th>
      			<th width="9%"><h5 class='text-center'>总和</h5></th>
      			<th width="13%"><h5 class='text-center'>操作
-				&nbsp;&nbsp;<a class="btn update btn-primary btn-xs" href="?op=add&domain=${payload.domain}">新增</a>
+				&nbsp;&nbsp;<a class="btn update btn-primary btn-xs" href="?op=customAdd&domain=${payload.domain}">新增</a>
 					</h5></th>
      		</tr>
 	     	<c:forEach var="config" items="${model.configs}">
@@ -146,6 +146,35 @@
 		      		<a href="?op=add&key=${config.id}&domain=${payload.domain}" class="btn btn-primary btn-xs">
 				<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
 					<a href="?op=delete&key=${config.id}&domain=${payload.domain}" class="btn btn-danger btn-xs delete" >
+				<i class="ace-icon fa fa-trash-o bigger-120"></i></a>
+ 	     		</td>
+	     		</tr>
+	     	</c:forEach>
+	     	<c:forEach var="config" items="${model.customConfigs}">
+     			<tr>
+     			<td>${payload.domain}</td>
+     			<td>${config.viewOrder}</td>
+     			<td>
+     				<span>否</span>
+     			</td>
+     			<td style="word-wrap:break-word;word-break:break-all;">${config.id}</td>
+     			<td style="word-wrap:break-word;word-break:break-all;">${config.title}</td>
+     			<td>
+     				<c:if test="${model.tags[config.id] != null}">
+     					<c:forEach var="tag" items="${model.tags[config.id]}">
+     						<span class="label label-info">${tag}</span> &nbsp;
+     					</c:forEach>
+     				</c:if>
+     			</td> 
+     			<td align='center'></td>
+     			<td align='center'>
+     				<span class="dashboard">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+     			<td align='center'>
+     			</td>
+	     		<td style="text-align:center;white-space: nowrap">
+		      		<a href="?op=customAdd&key=${config.id}&domain=${payload.domain}" class="btn btn-primary btn-xs">
+				<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+					<a href="?op=customDelete&key=${config.id}&domain=${payload.domain}" class="btn btn-danger btn-xs delete" >
 				<i class="ace-icon fa fa-trash-o bigger-120"></i></a>
  	     		</td>
 	     		</tr>

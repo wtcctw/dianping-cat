@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.dianping.cat.configuration.business.entity.BusinessItemConfig;
+import com.dianping.cat.configuration.business.entity.CustomConfig;
 import com.dianping.cat.system.SystemPage;
 
 import org.unidal.web.mvc.ViewModel;
@@ -25,7 +26,11 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private List<BusinessItemConfig> m_configs;
 
+	private List<CustomConfig> m_customConfigs;
+
 	private BusinessItemConfig m_businessItemConfig;
+
+	private CustomConfig m_customConfig;
 
 	private String m_content;
 
@@ -94,6 +99,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_configs = configs;
 	}
 
+	public List<CustomConfig> getCustomConfigs() {
+		return m_customConfigs;
+	}
+
+	public void setCustomConfigs(List<CustomConfig> customConfigs) {
+		m_customConfigs = customConfigs;
+	}
+
 	public Map<String, Set<String>> getTags() {
 		return m_tags;
 	}
@@ -116,6 +129,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setContent(String content) {
 		m_content = content;
+	}
+
+	public CustomConfig getCustomConfig() {
+		return m_customConfig;
+	}
+
+	public void setCustomConfig(CustomConfig customConfig) {
+		m_customConfig = customConfig;
 	}
 
 	public String getIpAddress() {

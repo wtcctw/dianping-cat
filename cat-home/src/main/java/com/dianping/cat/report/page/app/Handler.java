@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -50,6 +49,7 @@ import com.dianping.cat.report.page.app.display.CodeDisplayVisitor;
 import com.dianping.cat.report.page.app.display.CrashLogDetailInfo;
 import com.dianping.cat.report.page.app.display.CrashLogDisplayInfo;
 import com.dianping.cat.report.page.app.display.DashBoardInfo;
+import com.dianping.cat.report.page.app.display.DisplayCommand;
 import com.dianping.cat.report.page.app.display.DisplayCommands;
 import com.dianping.cat.report.page.app.display.UpdateStatus;
 import com.dianping.cat.report.page.app.service.AppConnectionService;
@@ -112,6 +112,13 @@ public class Handler implements PageHandler<Context> {
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
+	private void buildAppCrashGraph(Payload payload, Model model) {
+		CrashLogQueryEntity entity = payload.getCrashLogQuery();
+		CrashLogDisplayInfo info = m_crashLogService.buildCrashGraph(entity);
+
+		model.setCrashLogDisplayInfo(info);
+	}
+
 	private CrashLogDisplayInfo buildAppCrashLog(Payload payload) {
 		CrashLogQueryEntity entity = payload.getCrashLogQuery();
 		CrashLogDisplayInfo info = m_crashLogService.buildCrashLogDisplayInfo(entity);
@@ -140,15 +147,23 @@ public class Handler implements PageHandler<Context> {
 
 	public List<String> buildCodeDistributions(DisplayCommands displayCommands) {
 		List<String> ids = new LinkedList<String>();
-		Set<String> orgIds = displayCommands.findOrCreateCommand(AppConfigManager.ALL_COMMAND_ID).getCodes().keySet();
 
-		for (String id : orgIds) {
-			if (id.contains("XX") || CodeDisplayVisitor.STANDALONES.contains(Integer.valueOf(id))) {
-				ids.add(id);
+		for (DisplayCommand displaycmd : displayCommands.getCommands().values()) {
+			for (String id : displaycmd.getCodes().keySet()) {
+				if (id.contains("XX") || CodeDisplayVisitor.STANDALONES.contains(Integer.valueOf(id))) {
+					ids.add(id);
+				}
 			}
 		}
 		Collections.sort(ids, new CodeDistributionComparator());
 		return ids;
+	}
+
+	private void buildCommandDailyChart(Payload payload, Model model) {
+		DailyCommandQueryEntity queryEntity = payload.getCommandDailyQueryEntity();
+
+		LineChart lineChart = m_dailyService.buildLineChart(queryEntity, payload.getQueryType());
+		model.setLineChart(lineChart);
 	}
 
 	private AppCommandDisplayInfo buildCommandDistributeChart(Payload payload) {
@@ -493,20 +508,6 @@ public class Handler implements PageHandler<Context> {
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
-	}
-
-	private void buildAppCrashGraph(Payload payload, Model model) {
-		CrashLogQueryEntity entity = payload.getCrashLogQuery();
-		CrashLogDisplayInfo info = m_crashLogService.buildCrashGraph(entity);
-
-		model.setCrashLogDisplayInfo(info);
-	}
-
-	private void buildCommandDailyChart(Payload payload, Model model) {
-		DailyCommandQueryEntity queryEntity = payload.getCommandDailyQueryEntity();
-
-		LineChart lineChart = m_dailyService.buildLineChart(queryEntity, payload.getQueryType());
-		model.setLineChart(lineChart);
 	}
 
 	private void normalize(Model model, Payload payload) {

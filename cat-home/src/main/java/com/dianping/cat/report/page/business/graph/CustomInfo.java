@@ -2,54 +2,44 @@ package com.dianping.cat.report.page.business.graph;
 
 public class CustomInfo {
 
-	private String domain;
+	private String m_domain;
 
-	private String key;
+	private String m_key;
 
-	private String type;
+	private String m_type;
 
-	private int start;
-
-	private int end;
+	private String m_pattern;
 
 	public String getDomain() {
-		return domain;
+		return m_domain;
 	}
 
 	public void setDomain(String domain) {
-		this.domain = domain;
+		m_domain = domain;
 	}
 
 	public String getKey() {
-		return key;
+		return m_key;
 	}
 
 	public void setKey(String key) {
-		this.key = key;
+		m_key = key;
 	}
 
 	public String getType() {
-		return type;
+		return m_type;
 	}
 
 	public void setType(String type) {
-		this.type = type;
+		m_type = type;
 	}
 
-	public int getStart() {
-		return start;
+	public String getPattern() {
+		return m_pattern;
 	}
 
-	public void setStart(int start) {
-		this.start = start;
-	}
-
-	public int getEnd() {
-		return end;
-	}
-
-	public void setEnd(int end) {
-		this.end = end;
+	public void setPattern(String pattern) {
+		m_pattern = pattern;
 	}
 
 }

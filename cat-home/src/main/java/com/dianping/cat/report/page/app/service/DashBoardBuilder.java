@@ -99,6 +99,7 @@ public class DashBoardBuilder {
 			@Override
 			public void run() {
 				LineChart lineChart = buildLineChart(entity, QueryType.SUCCESS);
+				lineChart.setMinYlable(95.0);
 				dashboard.setSuccessLineChart(lineChart);
 			}
 		});

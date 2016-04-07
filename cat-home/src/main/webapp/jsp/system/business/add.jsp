@@ -103,10 +103,6 @@
 				<tr>
 					<td style="text-align:center" colspan='4'><input class='btn btn-primary btn-xs' id="addOrUpdateNodeSubmit" type="submit" name="submit" value="提交" /></td>
 				</tr>
-			<!-- 	<tr>
-					<td style="text-align:right" class="text-success">标签</td>
-					<td>aaa</td>
-				</tr> -->
 			</table>
 		</form>
 

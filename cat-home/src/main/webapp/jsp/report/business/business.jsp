@@ -36,6 +36,8 @@
 		
 		$(document).ready(
 				function() {
+					$('[data-rel=tooltip]').tooltip();
+
 					$('#startTime').datetimepicker({
 						format:'Y-m-d H:i',
 						step:30,
@@ -66,6 +68,13 @@
 					});
 					
 					var data = [];
+					<c:forEach var="item" items="${model.tags}">
+						var item = {};
+						item['label'] = 'TAG_${item}';
+						item['category'] = '标签';
+						data.push(item);
+					</c:forEach>
+
 					<c:forEach var="item" items="${model.domains}">
 						var item = {};
 						item['label'] = '${item}';
@@ -73,13 +82,6 @@
 						data.push(item);
 					</c:forEach>
 					
-					<c:forEach var="item" items="${model.tags}">
-						var item = {};
-						item['label'] = 'TAG_${item}';
-						item['category'] = '标签';
-						data.push(item);
-					</c:forEach>
-							
 					$( "#search" ).catcomplete({
 						delay: 0,
 						source: data
@@ -121,7 +123,9 @@
 					结束 <input type="text" id="endTime" style="width: 150px;" />
 				</div> 
 			</th>
-			<th>&nbsp;&nbsp;查询条件&nbsp;</th>
+			<th>&nbsp;&nbsp;查询条件
+			<i data-rel="tooltip" data-placement="left" title="标签以TAG开头" class="glyphicon glyphicon-question-sign" ></i>&nbsp;&nbsp;
+			</th>
 			<th>
 				<div class="navbar-header pull-left position" style="width: 350px;">
 					<form id="wrap_search" style="margin-bottom: 0px;">

@@ -2,6 +2,7 @@ package com.dianping.cat.system.page.business;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.business.entity.BusinessItemConfig;
+import com.dianping.cat.configuration.business.entity.CustomConfig;
 import com.dianping.cat.system.SystemPage;
 
 import org.unidal.web.mvc.ActionContext;
@@ -29,6 +30,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@ObjectMeta("businessItemConfig")
 	private BusinessItemConfig m_businessItemConfig = new BusinessItemConfig();
+	
+	@ObjectMeta("customConfig")
+	private CustomConfig m_customConfig = new CustomConfig();
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.LIST);
@@ -83,6 +87,14 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setBusinessItemConfig(BusinessItemConfig businessItemConfig) {
 		m_businessItemConfig = businessItemConfig;
+	}
+	
+	public CustomConfig getCustomConfig() {
+		return m_customConfig;
+	}
+
+	public void setCustomConfig(CustomConfig customConfig) {
+		m_customConfig = customConfig;
 	}
 
 	public String getKey() {
