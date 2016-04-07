@@ -34,6 +34,7 @@ public class DailyReportService {
 		LineChart lineChart = new LineChart();
 		lineChart.setSize(graphData.length);
 		lineChart.setStep(TimeHelper.ONE_DAY);
+		lineChart.setMinTickInterval(TimeHelper.ONE_DAY);
 		lineChart.setStart(entity.getDate());
 		lineChart.add(Constants.CURRENT_STR, graphData);
 

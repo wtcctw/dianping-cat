@@ -468,6 +468,7 @@ function graphLineChart(container, data) {
 				},
 				xAxis : {
 					type : 'datetime',
+					minTickInterval: data.minTickInterval,
 					dateTimeLabelFormats : {
 						second : '%H:%M:%S',
 						minute : '%H:%M',
@@ -479,7 +480,7 @@ function graphLineChart(container, data) {
 					}
 				},
 				yAxis : {
-					min : 0.0
+					min : data.minYlabel
 				},
 				credits : {
 					enabled : false
@@ -508,68 +509,6 @@ function graphLineChart(container, data) {
 								+ '</b><br/>'
 								+ Highcharts.dateFormat('%Y-%m-%d %H:%M',
 										this.x) + ': ' +  this.y.toFixed(2);
-					}
-				},
-				series : _data
-			});
-}
-
-function graphLineChartForDashboard(container, data, yMin) {
-	Highcharts.setOptions({
-		global : {
-			useUTC : false
-		}
-	});
-	var _data = parseLineData(data);
-	$(container).highcharts(
-			{
-				chart : {
-					type : 'spline'
-				},
-				title : {
-					text : data.title,
-					useHTML : true
-				},
-				xAxis : {
-					type : 'datetime',
-					dateTimeLabelFormats : {
-						second : '%H:%M:%S',
-						minute : '%H:%M',
-						hour : '%H:%M',
-						day : '%m-%d',
-						week : '%Y-%m-%d',
-						month : '%m-%d',
-						year : '%Y-%m'
-					}
-				},
-				yAxis : {
-					min : yMin
-				},
-				credits : {
-					enabled : false
-				},
-				plotOptions : {
-					spline : {
-						lineWidth : 2,
-						states : {
-							hover : {
-								lineWidth : 2
-							}
-						},
-						marker : {
-							enabled : false
-						}
-					}
-				},
-				legend : {
-					maxHeight : 82
-				},
-				tooltip : {
-					allowPointSelect : false,
-					formatter : function() {
-						return Highcharts.dateFormat('%Y-%m-%d %H:%M',
-										this.x) + "~" +  Highcharts.dateFormat('%H:%M', (this.x + 300000)) +
-								'<br/><b>'	+ this.series.name	+ '</b>'+ ': ' + this.y.toFixed(2) ;
 					}
 				},
 				series : _data

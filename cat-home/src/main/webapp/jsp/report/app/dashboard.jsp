@@ -229,10 +229,10 @@ $(document).ready(
 				${model.dashBoardInfo.platformSuccessChart.valuesJson}, '${model.dashBoardInfo.platformSuccessChart.serieName}', 90);
 		
 		var data = ${model.dashBoardInfo.lineChart.jsonString};
-		graphLineChartForDashboard(document.getElementById("lineChart"), data, 0.0);
+		graphLineChart(document.getElementById("lineChart"), data);
 		
 		var successData = ${model.dashBoardInfo.successLineChart.jsonString};
-		graphLineChartForDashboard(document.getElementById("successLineChart"), successData, 95.0);
+		graphLineChart(document.getElementById("successLineChart"), successData);
 	});
 	
 function getFromTime() {

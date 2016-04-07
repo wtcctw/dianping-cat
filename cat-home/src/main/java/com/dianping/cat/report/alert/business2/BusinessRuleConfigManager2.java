@@ -23,6 +23,8 @@ import com.dianping.cat.core.config.BusinessConfig;
 import com.dianping.cat.core.config.BusinessConfigDao;
 import com.dianping.cat.core.config.BusinessConfigEntity;
 import com.dianping.cat.helper.MetricType;
+import com.dianping.cat.task.ConfigSyncTask;
+import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
 public class BusinessRuleConfigManager2 implements Initializable {
 
@@ -62,18 +64,37 @@ public class BusinessRuleConfigManager2 implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
+		loadData();
+
+		ConfigSyncTask.getInstance().register(new SyncHandler() {
+
+			@Override
+			public void handle() throws Exception {
+				loadData();
+			}
+
+			@Override
+			public String getName() {
+				return ALERT_CONFIG;
+			}
+		});
+	}
+
+	private void loadData() {
 		try {
 			List<BusinessConfig> configs = m_configDao.findByName(ALERT_CONFIG, BusinessConfigEntity.READSET_FULL);
+			Map<String, MonitorRules> rules = new ConcurrentHashMap<String, MonitorRules>();
 
 			for (BusinessConfig config : configs) {
 				try {
 					String doamin = config.getDomain();
 					MonitorRules rule = DefaultSaxParser.parse(config.getContent());
-					m_rules.put(doamin, rule);
+					rules.put(doamin, rule);
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
 			}
+			m_rules = rules;
 		} catch (DalException e) {
 			Cat.logError(e);
 		}

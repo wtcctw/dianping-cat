@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.jexl3.JexlBuilder;
 import org.apache.commons.jexl3.JexlEngine;
+import org.apache.commons.jexl3.JexlException;
 import org.apache.commons.jexl3.JexlExpression;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
@@ -83,6 +84,8 @@ public class CustomDataCalculator {
 				}
 
 				result[i] = calculate(expression);
+			} catch (JexlException ex) {
+				// Ignore
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
