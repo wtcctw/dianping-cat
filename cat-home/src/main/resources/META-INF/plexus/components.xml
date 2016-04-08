@@ -869,7 +869,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.business.service.LocalBusinessService</role>
+			<role>com.dianping.cat.report.service.LocalModelService</role>
+			<role-hint>business</role-hint>
 			<implementation>com.dianping.cat.report.page.business.service.LocalBusinessService</implementation>
 			<requirements>
 				<requirement>

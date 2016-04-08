@@ -19,8 +19,10 @@ import com.dianping.cat.report.service.LocalModelService;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 
-@Named
+@Named(type = LocalModelService.class, value = LocalBusinessService.ID)
 public class LocalBusinessService extends LocalModelService<BusinessReport> {
+
+	public static final String ID = BusinessAnalyzer.ID;
 
 	@Inject
 	private ReportBucketManager m_bucketManager;
