@@ -21,7 +21,8 @@ import com.dianping.cat.message.Transaction;
 
 @Named(type = BlockWriter.class, instantiationStrategy = Named.PER_LOOKUP)
 public class DefaultBlockWriter implements BlockWriter {
-	@Inject
+
+	@Inject("local")
 	private BucketManager m_bucketManager;
 
 	@Inject
@@ -72,9 +73,9 @@ public class DefaultBlockWriter implements BlockWriter {
 							Transaction t = Cat.newTransaction("Block", block.getDomain());
 
 							bucket.puts(block.getData(), block.getMappings());
-							
+
 							block.clear(); // for gc
-							
+
 							t.setStatus(Transaction.SUCCESS);
 							t.complete();
 						} else {
