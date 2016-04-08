@@ -3,6 +3,8 @@ package com.dianping.cat.build.report;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.unidal.cat.message.storage.BucketManager;
+import org.unidal.cat.message.storage.hdfs.HdfsBucket;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
@@ -11,11 +13,10 @@ import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.top.TopAnalyzer;
-import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
 import com.dianping.cat.message.codec.HtmlMessageCodec;
 import com.dianping.cat.message.codec.WaterfallMessageCodec;
 import com.dianping.cat.message.spi.MessageCodec;
-import com.dianping.cat.message.storage.MessageBucketManager;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.report.page.cross.service.CompositeCrossService;
 import com.dianping.cat.report.page.cross.service.CrossReportService;
 import com.dianping.cat.report.page.cross.service.HistoricalCrossService;
@@ -128,9 +129,10 @@ public class ReportComponentConfigurator extends AbstractResourceConfigurator {
 		// message service
 		all.add(A(LocalMessageService.class));
 		all.add(C(ModelService.class, "logview-historical", HistoricalMessageService.class) //
-		      .req(MessageBucketManager.class, HdfsMessageBucketManager.ID) //
 		      .req(MessageCodec.class, HtmlMessageCodec.ID, "m_html") //
-		      .req(MessageCodec.class, WaterfallMessageCodec.ID, "m_waterfall").req(ServerConfigManager.class));
+		      .req(MessageCodec.class, WaterfallMessageCodec.ID, "m_waterfall") //
+		      .req(MessageCodec.class, PlainTextMessageCodec.ID, "m_plainText") //
+		      .req(BucketManager.class, HdfsBucket.ID).req(ServerConfigManager.class));
 		all.add(C(ModelService.class, "logview", CompositeLogViewService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "logview-historical", "logview-local" }, "m_services"));

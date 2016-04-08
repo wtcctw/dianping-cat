@@ -17,6 +17,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.hadoop.hdfs.HdfsUploader;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 
@@ -24,16 +25,12 @@ public class LogviewUploader implements Task {
 
 	private File m_baseDir;
 
-	private LocalMessageBucketManager m_bucketManager;
-
 	private HdfsUploader m_hdfsUploader;
 
 	private ServerConfigManager m_configManager;
 
-	public LogviewUploader(LocalMessageBucketManager bucketManager, HdfsUploader hdfsUploader,
-	      ServerConfigManager configManager) {
+	public LogviewUploader(HdfsUploader hdfsUploader, ServerConfigManager configManager) {
 		m_baseDir = new File(configManager.getHdfsLocalBaseDir(ServerConfigManager.DUMP_DIR));
-		m_bucketManager = bucketManager;
 		m_hdfsUploader = hdfsUploader;
 		m_configManager = configManager;
 	}
@@ -130,6 +127,49 @@ public class LogviewUploader implements Task {
 		t.complete();
 	}
 
+	private boolean shouldUpload(String path) {
+		long current = System.currentTimeMillis();
+		long currentHour = current - current % TimeHelper.ONE_HOUR;
+		long lastHour = currentHour - TimeHelper.ONE_HOUR;
+		long nextHour = currentHour + TimeHelper.ONE_HOUR;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd/HH");
+		String currentHourStr = sdf.format(new Date(currentHour));
+		String lastHourStr = sdf.format(new Date(lastHour));
+		String nextHourStr = sdf.format(new Date(nextHour));
+
+		int indexOf = path.indexOf(currentHourStr);
+		int indexOfLast = path.indexOf(lastHourStr);
+		int indexOfNext = path.indexOf(nextHourStr);
+
+		if (indexOf > -1 || indexOfLast > -1 || indexOfNext > -1) {
+			return false;
+		}
+		return true;
+	}
+
+	public List<String> findCloseBuckets() {
+		final Set<String> paths = new HashSet<String>();
+
+		Scanners.forDir().scan(m_baseDir, new FileMatcher() {
+			@Override
+			public Direction matches(File base, String path) {
+				if (new File(base, path).isFile()) {
+					if (shouldUpload(path)) {
+						int index = path.indexOf(".idx");
+
+						if (index == -1) {
+							paths.add(path);
+						} else {
+							paths.add(path.substring(0, index));
+						}
+					}
+				}
+				return Direction.DOWN;
+			}
+		});
+		return new ArrayList<String>(paths);
+	}
+
 	@Override
 	public void run() {
 		boolean active = true;
@@ -146,7 +186,7 @@ public class LogviewUploader implements Task {
 				if (m_configManager.isHdfsOn()) {
 					// make system 0-10 min is not busy
 					if (min >= 9) {
-						List<String> paths = m_bucketManager.findCloseBuckets();
+						List<String> paths = findCloseBuckets();
 
 						processLogviewFiles(paths, true);
 					}

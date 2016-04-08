@@ -4,20 +4,16 @@ import io.netty.buffer.ByteBuf;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.ByteBuffer;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.cat.message.storage.Bucket;
-import org.unidal.cat.message.storage.FileBuilder;
 import org.unidal.cat.message.storage.internals.DefaultBlock;
 import org.unidal.cat.metric.Benchmark;
 import org.unidal.lookup.annotation.Inject;
@@ -26,23 +22,30 @@ import org.unidal.lookup.annotation.Named;
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
+import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.message.PathBuilder;
 import com.dianping.cat.message.internal.MessageId;
 
 @Named(type = Bucket.class, value = HdfsBucket.ID, instantiationStrategy = Named.PER_LOOKUP)
-public class HdfsBucket implements Bucket, Initializable {
+public class HdfsBucket implements Bucket {
 	private static final int SEGMENT_SIZE = 32 * 1024;
 
 	public static final String ID = "hdfs";
 
-	@Inject(HdfsBucket.ID)
-	private FileBuilder m_bulider;
-
 	@Inject
 	protected FileSystemManager m_manager;
+
+	@Inject
+	private PathBuilder m_pathBuilder;
+
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	private DataHelper m_data = new DataHelper();
 
 	private IndexHelper m_index = new IndexHelper();
+
+	private long m_lastAccessTime;
 
 	@Override
 	public void close() {
@@ -58,6 +61,7 @@ public class HdfsBucket implements Bucket, Initializable {
 
 	@Override
 	public ByteBuf get(MessageId id) throws IOException {
+		m_lastAccessTime = System.currentTimeMillis();
 		long address = m_index.read(id);
 
 		if (address < 0) {
@@ -75,16 +79,23 @@ public class HdfsBucket implements Bucket, Initializable {
 	}
 
 	@Override
+	public Benchmark getBechmark() {
+		throw new RuntimeException("unsupport operation");
+	}
+
+	public long getLastAccessTime() {
+		return m_lastAccessTime;
+	}
+
+	@Override
 	public void initialize(String domain, String ip, int hour) throws IOException {
-		long timestamp = hour * 3600 * 1000L;
-
-		String basePath = domain + '-' + ip;
-		String dataFile = "";
-
-		// TODO
+		String dataFile = domain + '-' + ip;
+		Date date = new Date(hour * TimeHelper.ONE_HOUR);
+		String baseDir = m_serverConfigManager.getHdfsBaseDir(ServerConfigManager.DUMP_DIR);
+		String basePath = baseDir + "/" + m_pathBuilder.getLogviewPath(date, "");
 		StringBuilder sb = new StringBuilder();
-		FileSystem fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
 
+		FileSystem fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
 		FSDataInputStream indexStream = fs.open(new Path(basePath, dataFile + ".idx"));
 		FSDataInputStream dataStream = fs.open(new Path(basePath, dataFile + ".dat"));
 
@@ -94,6 +105,11 @@ public class HdfsBucket implements Bucket, Initializable {
 
 	@Override
 	public void puts(ByteBuf data, Map<MessageId, Integer> mappings) throws IOException {
+		throw new RuntimeException("unsupport operation");
+	}
+
+	@Override
+	public void setBenchmark(Benchmark benchmark) {
 		throw new RuntimeException("unsupport operation");
 	}
 
@@ -153,11 +169,7 @@ public class HdfsBucket implements Bucket, Initializable {
 
 		public void init(FSDataInputStream indexStream) throws IOException {
 			m_indexSteam = indexStream;
-
-			// TODO
-			FileSystem hdfs = FileSystem.get(URI.create("fff"), null);
-			FileStatus fs = hdfs.getFileStatus(new Path("hdfs:/dump/2015/10/3"));
-			long size = fs.getLen();
+			int size = indexStream.available();
 			int totalHeaders = (int) Math.ceil((size * 1.0 / (ENTRY_PER_SEGMENT * SEGMENT_SIZE)));
 
 			if (totalHeaders == 0) {
@@ -279,21 +291,6 @@ public class HdfsBucket implements Bucket, Initializable {
 				return String.format("%s[address=%s]", getClass().getSimpleName(), m_address);
 			}
 		}
-	}
-
-	@Override
-	public void setBenchmark(Benchmark benchmark) {
-		throw new RuntimeException("unsupport operation");
-	}
-
-	@Override
-	public Benchmark getBechmark() {
-		throw new RuntimeException("unsupport operation");
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-
 	}
 
 }
