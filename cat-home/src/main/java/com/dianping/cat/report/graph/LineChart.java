@@ -41,6 +41,8 @@ public class LineChart {
 	private Double m_minYlabel = 0D;
 
 	private Double m_maxYlabel;
+	
+	private long m_minTickInterval;
 
 	public LineChart() {
 	}
@@ -190,6 +192,14 @@ public class LineChart {
 	public LineChart setTitle(String title) {
 		m_title = title;
 		return this;
+	}
+	
+	public long getMinTickInterval() {
+		return m_minTickInterval;
+	}
+
+	public void setMinTickInterval(long minTickInterval) {
+		m_minTickInterval = minTickInterval;
 	}
 
 	public LineChart setUnit(String unit) {

@@ -4,16 +4,22 @@ public enum Action implements org.unidal.web.mvc.Action {
 	LIST("list"),
 
 	ADD("add"),
-	
+
 	AddSubmit("addSubmit"),
 
 	DELETE("delete"),
-	
+
 	TagConfig("tagConfig"),
 
 	AlertRuleAdd("alertRuleAdd"),
+
+	AlertRuleAddSubmit("alertRuleAddSubmit"),
+
+	CustomAdd("customAdd"),
+
+	CustomAddSubmit("customAddSubmit"),
 	
-	AlertRuleAddSubmit("alertRuleAddSubmit");
+	CustomDelete("customDelete");
 
 	private String m_name;
 

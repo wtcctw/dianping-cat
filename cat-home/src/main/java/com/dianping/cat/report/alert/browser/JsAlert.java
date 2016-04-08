@@ -60,11 +60,13 @@ public class JsAlert implements Task {
 						AlertEntity entity = new AlertEntity();
 						entity.setDate(startTime).setContent(buildContent(module, level, count))
 						      .setLevel(level.toLowerCase());
-						entity.setMetric(limit.getId()).setType(getName()).setGroup(limit.getId());
+						entity.setMetric(limit.getId()).setType(getName()).setGroup(module);
 
 						Map<String, Object> paras = new HashMap<String, Object>();
 
 						paras.put("end", endTime);
+						paras.put("limit", limit.getLimit());
+						paras.put("count", count);
 						entity.setParas(paras);
 
 						m_sendManager.addAlert(entity);

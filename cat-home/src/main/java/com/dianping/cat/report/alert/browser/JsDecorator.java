@@ -63,6 +63,9 @@ public class JsDecorator extends Decorator implements Initializable {
 		map.put("date", m_dateFormat.format(startTime));
 		map.put("start", m_timeFormat.format(startTime));
 		map.put("end", m_timeFormat.format(alert.getParas().get("end")));
+		map.put("limit", alert.getParas().get("limit"));
+		map.put("count", alert.getParas().get("count"));
+	
 		return map;
 	}
 
