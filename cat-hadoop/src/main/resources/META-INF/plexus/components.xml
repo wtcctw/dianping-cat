@@ -90,10 +90,6 @@
 			<implementation>org.unidal.cat.message.storage.hdfs.HdfsBucketManager</implementation>
 			<requirements>
 				<requirement>
-					<role>org.unidal.cat.message.storage.FileBuilder</role>
-					<role-hint>local</role-hint>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
