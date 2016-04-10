@@ -6,9 +6,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -37,6 +38,7 @@ import com.dianping.cat.home.app.entity.AppReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.page.app.display.AppCommandDisplayInfo;
 import com.dianping.cat.report.page.app.display.AppCommandsSorter;
 import com.dianping.cat.report.page.app.display.AppConnectionDisplayInfo;
@@ -45,6 +47,7 @@ import com.dianping.cat.report.page.app.display.AppDataDetail;
 import com.dianping.cat.report.page.app.display.AppDetailComparator;
 import com.dianping.cat.report.page.app.display.AppGraphCreator;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
+import com.dianping.cat.report.page.app.display.AppStatisticPiechartBuilder;
 import com.dianping.cat.report.page.app.display.CodeDisplayVisitor;
 import com.dianping.cat.report.page.app.display.CrashLogDetailInfo;
 import com.dianping.cat.report.page.app.display.CrashLogDisplayInfo;
@@ -110,6 +113,9 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private DailyReportService m_dailyService;
 
+	@Inject
+	private AppStatisticPiechartBuilder m_piechartBuilder;
+
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
 	private void buildAppCrashGraph(Payload payload, Model model) {
@@ -145,16 +151,19 @@ public class Handler implements PageHandler<Context> {
 		return appDetails;
 	}
 
-	public List<String> buildCodeDistributions(DisplayCommands displayCommands) {
-		List<String> ids = new LinkedList<String>();
+	public List<String> buildCodeKeys(DisplayCommands displayCommands) {
+		Set<String> tmps = new HashSet<String>();
 
 		for (DisplayCommand displaycmd : displayCommands.getCommands().values()) {
 			for (String id : displaycmd.getCodes().keySet()) {
 				if (id.contains("XX") || CodeDisplayVisitor.STANDALONES.contains(Integer.valueOf(id))) {
-					ids.add(id);
+					tmps.add(id);
 				}
 			}
 		}
+
+		List<String> ids = new ArrayList<String>(tmps);
+
 		Collections.sort(ids, new CodeDistributionComparator());
 		return ids;
 	}
@@ -494,10 +503,13 @@ public class Handler implements PageHandler<Context> {
 		case STATISTICS:
 			AppReport report = queryAppReport(payload);
 			DisplayCommands displayCommands = buildDisplayCommands(report, payload.getSort());
+			List<String> codeKeys = buildCodeKeys(displayCommands);
+			Map<String, PieChart> piecharts = m_piechartBuilder.buildCodePiecharts(codeKeys, displayCommands);
 
+			model.setPiecharts(piecharts);
 			model.setDisplayCommands(displayCommands);
 			model.setAppReport(report);
-			model.setCodeDistributions(buildCodeDistributions(displayCommands));
+			model.setCodeDistributions(codeKeys);
 			break;
 		case DASHBOARD:
 			DashBoardInfo dashboardInfo = m_dashboardBuilder.buildDashBoard(payload.getDashBoardQuery());
@@ -600,5 +612,4 @@ public class Handler implements PageHandler<Context> {
 			return id2 - id1;
 		}
 	}
-
 }

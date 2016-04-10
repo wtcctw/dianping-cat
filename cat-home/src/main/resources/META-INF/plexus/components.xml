@@ -297,6 +297,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.app.display.AppStatisticPiechartBuilder</role>
+			<implementation>com.dianping.cat.report.page.app.display.AppStatisticPiechartBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppCommandGroupConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.alarm.spi.receiver.Contactor</role>
 			<role-hint>App</role-hint>
 			<implementation>com.dianping.cat.report.alert.app.AppContactor</implementation>
@@ -4457,6 +4469,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.app.service.DailyReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.app.display.AppStatisticPiechartBuilder</role>
 				</requirement>
 			</requirements>
 		</component>

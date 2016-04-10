@@ -39,6 +39,10 @@
 			  }
 			  $("#li-"+type).addClass("active");
 			  $("#tabContent-"+type).addClass("active");
+			  
+			 <c:forEach var="entry" items="${model.piecharts}" varStatus="status">
+				graphPieChartWithName(document.getElementById('piechart_${entry.key}'), ${entry.value.jsonString},  '${entry.value.title}');
+			</c:forEach>
 	      });
 	      
 	      function queryNew(){

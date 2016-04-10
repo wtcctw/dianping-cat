@@ -11,6 +11,7 @@
   <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height:50px;">
 	    <li class="text-right" id="li-all"><a href="#tabContent-all" data-toggle="tab"><strong>访问情况</strong></a></li>
    	    <li class="text-right" id="li-code"><a href="#tabContent-code" data-toggle="tab"><strong>返回码统计</strong></a></li>
+   	    <li class="text-right" id="li-codeDist"><a href="#tabContent-codeDist" data-toggle="tab"><strong>返回码分布</strong></a></li>
   </ul>
   <div class="tab-content">
   <div class="tab-pane" id="tabContent-all">
@@ -150,6 +151,19 @@
 		</c:forEach>
 		</tbody>
 	</table>
+	</div>
+	
+	<div class="tab-pane" id="tabContent-codeDist">
+		<table id="contents-code" style="width:100%" >
+		<c:forEach var="entry" items="${model.piecharts}" varStatus="status">
+			<tr>	
+				<td  class="center">
+				<div id="piechart_${entry.key}" ></div>
+				</td>
+			</tr>
+		</c:forEach>
+		</table>
+		
 	</div>
 	</div>
 </div>
