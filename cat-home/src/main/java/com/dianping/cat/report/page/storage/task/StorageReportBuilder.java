@@ -26,7 +26,7 @@ import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask;
 import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask.CurrentWeeklyMonthlyTask;
 
-@Named
+@Named(type = TaskBuilder.class, value = StorageReportBuilder.ID)
 public class StorageReportBuilder implements TaskBuilder, Initializable {
 
 	public static final String ID = StorageAnalyzer.ID;

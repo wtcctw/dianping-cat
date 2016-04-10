@@ -97,6 +97,11 @@ public class LocalBucket implements Bucket, BenchmarkEnabled {
 	}
 
 	@Override
+	public void initialize(String fileName) throws IOException {
+		throw new RuntimeException("unsupport operation");
+	}
+
+	@Override
 	public void initialize(String domain, String ip, int hour) throws IOException {
 		long timestamp = hour * 3600 * 1000L;
 		Date startTime = new Date(timestamp);
@@ -509,6 +514,13 @@ public class LocalBucket implements Bucket, BenchmarkEnabled {
 
 			private final static int CACHE_SIZE = 2;
 
+			public void close() throws IOException {
+				for (Segment segment : m_latestSegments.values()) {
+					segment.close();
+				}
+				m_latestSegments.clear();
+			}
+
 			public Segment findOrCreateNextSegment(long segmentId) throws IOException {
 				Segment segment = m_latestSegments.get(segmentId);
 
@@ -530,13 +542,6 @@ public class LocalBucket implements Bucket, BenchmarkEnabled {
 				}
 
 				return segment;
-			}
-
-			public void close() throws IOException {
-				for (Segment segment : m_latestSegments.values()) {
-					segment.close();
-				}
-				m_latestSegments.clear();
 			}
 
 			private void removeOldSegment() throws IOException {

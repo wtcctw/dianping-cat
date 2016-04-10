@@ -135,7 +135,7 @@ public class ReportComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, HdfsBucket.ID).req(ServerConfigManager.class));
 		all.add(C(ModelService.class, "logview", CompositeLogViewService.class) //
 		      .req(ServerConfigManager.class) //
-		      .req(ModelService.class, new String[] { "logview-historical", "logview-local" }, "m_services"));
+		      .req(ModelService.class, new String[] { "logview-historical" }, "m_services"));
 
 		return all;
 	}

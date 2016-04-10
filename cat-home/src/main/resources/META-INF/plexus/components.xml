@@ -1608,7 +1608,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.storage.task.StorageReportBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role-hint>storage</role-hint>
 			<implementation>com.dianping.cat.report.page.storage.task.StorageReportBuilder</implementation>
 			<requirements>
 				<requirement>
@@ -2714,7 +2715,6 @@
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hints>
 						<role-hint>logview-historical</role-hint>
-						<role-hint>logview-local</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>

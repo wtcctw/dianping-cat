@@ -18,5 +18,7 @@ public interface Bucket extends BenchmarkEnabled {
 
 	public void initialize(String domain, String ip, int hour) throws IOException;
 
+	public void initialize(String fileName) throws IOException;
+
 	public void puts(ByteBuf buf, Map<MessageId, Integer> mappings) throws IOException;
 }

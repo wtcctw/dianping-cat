@@ -5,7 +5,6 @@ import io.netty.buffer.ByteBuf;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -22,7 +21,6 @@ import org.unidal.lookup.annotation.Named;
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
-import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.PathBuilder;
 import com.dianping.cat.message.internal.MessageId;
 
@@ -88,19 +86,21 @@ public class HdfsBucket implements Bucket {
 	}
 
 	@Override
-	public void initialize(String domain, String ip, int hour) throws IOException {
-		String dataFile = domain + '-' + ip;
-		Date date = new Date(hour * TimeHelper.ONE_HOUR);
+	public void initialize(String fileName) throws IOException {
 		String baseDir = m_serverConfigManager.getHdfsBaseDir(ServerConfigManager.DUMP_DIR);
-		String basePath = baseDir + "/" + m_pathBuilder.getLogviewPath(date, "");
 		StringBuilder sb = new StringBuilder();
 
 		FileSystem fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
-		FSDataInputStream indexStream = fs.open(new Path(basePath, dataFile + ".idx"));
-		FSDataInputStream dataStream = fs.open(new Path(basePath, dataFile + ".dat"));
+		FSDataInputStream indexStream = fs.open(new Path(baseDir, fileName + ".idx"));
+		FSDataInputStream dataStream = fs.open(new Path(baseDir, fileName + ".dat"));
 
 		m_data.init(dataStream);
 		m_index.init(indexStream);
+	}
+
+	@Override
+	public void initialize(String domain, String ip, int hour) throws IOException {
+		throw new RuntimeException("unsupport operation");
 	}
 
 	@Override
