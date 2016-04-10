@@ -310,7 +310,7 @@ public class LocalBucket implements Bucket, BenchmarkEnabled {
 				} catch (EOFException e) {
 					// ignore it
 				}
-			} else {
+			} else if (position > 0) {
 				m_file.seek(position);
 
 				long address = m_file.readLong();

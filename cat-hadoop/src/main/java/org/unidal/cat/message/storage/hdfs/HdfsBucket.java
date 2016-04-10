@@ -189,11 +189,14 @@ public class HdfsBucket implements Bucket {
 			int index = id.getIndex();
 			long position = m_header.getOffset(id.getIpAddressValue(), index);
 
-			m_indexSteam.seek(position);
+			if (position > 0) {
+				m_indexSteam.seek(position);
 
-			long address = m_indexSteam.readLong();
+				long address = m_indexSteam.readLong();
 
-			return address;
+				return address;
+			}
+			return -1;
 		}
 
 		private class Header {
