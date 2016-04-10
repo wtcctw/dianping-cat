@@ -21,7 +21,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.BucketManager;
-import org.unidal.cat.message.storage.FileBuilder;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.ContainerHolder;
@@ -41,9 +40,6 @@ import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 
 @Named(type = BucketManager.class, value = HdfsBucket.ID)
 public class HdfsBucketManager extends ContainerHolder implements BucketManager, Initializable, LogEnabled {
-
-	@Inject("local")
-	private FileBuilder m_bulider;
 
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
