@@ -105,7 +105,7 @@ public class HdfsBucketManager extends ContainerHolder implements BucketManager,
 					public boolean accept(Path p) {
 						String name = p.getName();
 
-						if (name.contains(key) && !name.endsWith(".idx") && name.endsWith(".dat")) {
+						if (name.contains(key) && name.endsWith(".dat")) {
 							paths.add(path + name.substring(0, name.length() - 4));
 						}
 						return false;
