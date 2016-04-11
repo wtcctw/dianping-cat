@@ -192,7 +192,11 @@ public class HdfsBucketManager extends ContainerHolder implements BucketManager,
 
 					if (data != null) {
 						try {
-							return m_plainTextCodec.decode(data);
+							MessageTree tree = m_plainTextCodec.decode(data);
+
+							if (tree.getMessageId().equals(id.toString())) {
+								return tree;
+							}
 						} finally {
 							m_plainTextCodec.reset();
 						}
