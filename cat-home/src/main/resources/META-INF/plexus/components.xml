@@ -1058,6 +1058,9 @@
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.summary.AlertSummaryExecutor</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
