@@ -35,4 +35,31 @@ public class IndexTest extends ComponentTestCase {
 			index.close();
 		}
 	}
+
+	@Test
+	public void testMapAndLookups() throws Exception {
+		IndexManager manager = lookup(IndexManager.class, "local");
+		Index index = manager.getIndex(MessageId.parse("from-0a260014-403899-1"), true);
+
+		for (int i = 1; i < 32 * 1024 * 32; i++) {
+			MessageId from = MessageId.parse("from-0a260014-403899-"+i);
+			MessageId expected = MessageId.parse("to-0a260015-403899-"+i);
+	
+			index.map(from, expected);
+		}
+		
+		for (int i = 1; i < 32 * 1024 * 32; i++) {
+			MessageId from = MessageId.parse("from-0a260014-403899-"+i);
+			MessageId expected = MessageId.parse("to-0a260015-403899-"+i);
+	
+			MessageId actual = index.lookup(from);
+
+			try {
+				Assert.assertEquals(expected, actual);
+			} finally {
+				index.close();
+			}
+		}
+	}
+	
 }
