@@ -83,6 +83,8 @@ public class DefaultBlockWriter implements BlockWriter {
 						}
 					} catch (Exception e) {
 						Cat.logError(e);
+					} catch (Error e) {
+						Cat.logError(e);
 					}
 				}
 			}
