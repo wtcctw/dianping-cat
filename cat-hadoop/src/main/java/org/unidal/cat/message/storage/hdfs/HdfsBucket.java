@@ -21,7 +21,6 @@ import org.unidal.lookup.annotation.Named;
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
-import com.dianping.cat.message.PathBuilder;
 import com.dianping.cat.message.internal.MessageId;
 
 @Named(type = Bucket.class, value = HdfsBucket.ID, instantiationStrategy = Named.PER_LOOKUP)
@@ -32,9 +31,6 @@ public class HdfsBucket implements Bucket {
 
 	@Inject
 	protected FileSystemManager m_manager;
-
-	@Inject
-	private PathBuilder m_pathBuilder;
 
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
