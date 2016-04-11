@@ -1,6 +1,8 @@
 package org.unidal.cat.message.storage.local;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.PooledByteBufAllocator;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
@@ -26,6 +28,8 @@ import org.unidal.cat.metric.BenchmarkEnabled;
 import org.unidal.cat.metric.Metric;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
+
+import sun.nio.ch.DirectBuffer;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
@@ -457,7 +461,8 @@ public class LocalBucket implements Bucket, BenchmarkEnabled {
 			private Segment(FileChannel channel, long address) throws IOException {
 				m_segmentChannel = channel;
 				m_address = address;
-				m_buf = ByteBuffer.allocate(SEGMENT_SIZE);
+				 
+				m_buf = ByteBuffer.allocateDirect(SEGMENT_SIZE);
 				m_buf.mark();
 				m_segmentChannel.read(m_buf, address);
 				m_buf.reset();
