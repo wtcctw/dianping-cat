@@ -120,7 +120,7 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 					} catch (Exception e) {
 						Cat.logError(e);
 					} finally {
-						// buffer.release();
+						buffer.release();
 					}
 				}
 			}
