@@ -3,10 +3,7 @@ package com.dianping.cat.report.page.app;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,32 +30,27 @@ import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.helper.JsonBuilder;
-import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.app.entity.AppReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.page.app.display.AppCommandDisplayInfo;
-import com.dianping.cat.report.page.app.display.AppCommandsSorter;
 import com.dianping.cat.report.page.app.display.AppConnectionDisplayInfo;
 import com.dianping.cat.report.page.app.display.AppConnectionGraphCreator;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
 import com.dianping.cat.report.page.app.display.AppDetailComparator;
 import com.dianping.cat.report.page.app.display.AppGraphCreator;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
-import com.dianping.cat.report.page.app.display.AppStatisticPiechartBuilder;
-import com.dianping.cat.report.page.app.display.CodeDisplayVisitor;
+import com.dianping.cat.report.page.app.display.AppStatisticBuilder;
 import com.dianping.cat.report.page.app.display.CrashLogDetailInfo;
 import com.dianping.cat.report.page.app.display.CrashLogDisplayInfo;
 import com.dianping.cat.report.page.app.display.DashBoardInfo;
-import com.dianping.cat.report.page.app.display.DisplayCommand;
 import com.dianping.cat.report.page.app.display.DisplayCommands;
 import com.dianping.cat.report.page.app.display.UpdateStatus;
 import com.dianping.cat.report.page.app.service.AppConnectionService;
 import com.dianping.cat.report.page.app.service.AppDataField;
 import com.dianping.cat.report.page.app.service.AppDataService;
-import com.dianping.cat.report.page.app.service.AppReportService;
 import com.dianping.cat.report.page.app.service.AppSpeedService;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 import com.dianping.cat.report.page.app.service.CrashLogQueryEntity;
@@ -102,9 +94,6 @@ public class Handler implements PageHandler<Context> {
 	private CrashLogService m_crashLogService;
 
 	@Inject
-	private AppReportService m_appReportService;
-
-	@Inject
 	private ProjectService m_projectService;
 
 	@Inject
@@ -114,7 +103,7 @@ public class Handler implements PageHandler<Context> {
 	private DailyReportService m_dailyService;
 
 	@Inject
-	private AppStatisticPiechartBuilder m_piechartBuilder;
+	private AppStatisticBuilder m_appStatisticBuilder;
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
@@ -149,23 +138,6 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 		}
 		return appDetails;
-	}
-
-	public List<String> buildCodeKeys(DisplayCommands displayCommands) {
-		Set<String> tmps = new HashSet<String>();
-
-		for (DisplayCommand displaycmd : displayCommands.getCommands().values()) {
-			for (String id : displaycmd.getCodes().keySet()) {
-				if (id.contains("XX") || CodeDisplayVisitor.STANDALONES.contains(Integer.valueOf(id))) {
-					tmps.add(id);
-				}
-			}
-		}
-
-		List<String> ids = new ArrayList<String>(tmps);
-
-		Collections.sort(ids, new CodeDistributionComparator());
-		return ids;
 	}
 
 	private void buildCommandDailyChart(Payload payload, Model model) {
@@ -252,17 +224,6 @@ public class Handler implements PageHandler<Context> {
 		return new AppConnectionDisplayInfo();
 	}
 
-	private DisplayCommands buildDisplayCommands(AppReport report, String sort) throws IOException {
-		CodeDisplayVisitor distributionVisitor = new CodeDisplayVisitor(m_projectService, m_appConfigManager);
-
-		distributionVisitor.visitAppReport(report);
-		DisplayCommands displayCommands = distributionVisitor.getCommands();
-
-		AppCommandsSorter sorter = new AppCommandsSorter(displayCommands, sort);
-		displayCommands = sorter.getSortedCommands();
-		return displayCommands;
-	}
-
 	private LineChart buildLineChart(Payload payload) {
 		CommandQueryEntity entity1 = payload.getQueryEntity1();
 		CommandQueryEntity entity2 = payload.getQueryEntity2();
@@ -303,6 +264,25 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 		}
 		return new AppSpeedDisplayInfo();
+	}
+
+	private void buillAppStatisticInfo(Model model, Payload payload) throws IOException {
+		AppReport report = m_appStatisticBuilder.queryAppReport(payload.getDayDate());
+		DisplayCommands displayCommands = m_appStatisticBuilder.buildDisplayCommands(report, payload.getSort());
+		Set<String> codeKeys = m_appStatisticBuilder.buildCodeKeys(displayCommands);
+		List<String> piechartCodes = payload.getCodes();
+
+		if (piechartCodes.isEmpty()) {
+			piechartCodes = new ArrayList<String>(codeKeys);
+		}
+
+		Map<String, PieChart> piecharts = m_appStatisticBuilder.buildCodePiecharts(piechartCodes, displayCommands,
+		      payload.getTop());
+
+		model.setPiecharts(piecharts);
+		model.setDisplayCommands(displayCommands);
+		model.setAppReport(report);
+		model.setCodeDistributions(codeKeys);
 	}
 
 	private void commandAdd(Payload payload, Model model) {
@@ -501,15 +481,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case STATISTICS:
-			AppReport report = queryAppReport(payload);
-			DisplayCommands displayCommands = buildDisplayCommands(report, payload.getSort());
-			List<String> codeKeys = buildCodeKeys(displayCommands);
-			Map<String, PieChart> piecharts = m_piechartBuilder.buildCodePiecharts(codeKeys, displayCommands);
-
-			model.setPiecharts(piecharts);
-			model.setDisplayCommands(displayCommands);
-			model.setAppReport(report);
-			model.setCodeDistributions(codeKeys);
+			buillAppStatisticInfo(model, payload);
 			break;
 		case DASHBOARD:
 			DashBoardInfo dashboardInfo = m_dashboardBuilder.buildDashBoard(payload.getDashBoardQuery());
@@ -592,24 +564,5 @@ public class Handler implements PageHandler<Context> {
 		model.setLineChart(lineChart);
 		model.setAppDataDetailInfos(appDataDetails);
 		model.setComparisonAppDetails(comparisonDetails);
-	}
-
-	private AppReport queryAppReport(Payload payload) {
-		Date startDate = payload.getDayDate();
-		Date endDate = TimeHelper.addDays(startDate, 1);
-		AppReport report = m_appReportService.queryDailyReport(Constants.CAT, startDate, endDate);
-
-		return report;
-	}
-
-	public class CodeDistributionComparator implements Comparator<String> {
-
-		@Override
-		public int compare(String o1, String o2) {
-			int id1 = Integer.parseInt(o1.replaceAll("X", "0"));
-			int id2 = Integer.parseInt(o2.replaceAll("X", "0"));
-
-			return id2 - id1;
-		}
 	}
 }
