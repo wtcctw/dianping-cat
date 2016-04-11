@@ -67,9 +67,7 @@ public class HdfsBucket implements Bucket {
 		} else {
 			int segmentOffset = (int) (address & 0xFFFFFFL);
 			long dataOffset = address >> 24;
-
 			byte[] data = m_data.read(dataOffset);
-
 			DefaultBlock block = new DefaultBlock(id, segmentOffset, data);
 
 			return block.unpack(id);
