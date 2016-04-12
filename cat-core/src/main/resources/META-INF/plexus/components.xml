@@ -246,6 +246,7 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+<<<<<<< HEAD
 			<role-hint>app-command-data</role-hint>
 			<implementation>com.dianping.cat.config.app.AppCommandTableProvider</implementation>
 		</component>
@@ -273,6 +274,10 @@
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>web-speed-data</role-hint>
 			<implementation>com.dianping.cat.config.web.WebSpeedDataTableProvider</implementation>
+=======
+			<role-hint>report</role-hint>
+			<implementation>com.dianping.cat.report.HourlyReportTableProvider</implementation>
+>>>>>>> master
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
