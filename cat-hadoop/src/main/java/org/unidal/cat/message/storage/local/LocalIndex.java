@@ -88,6 +88,7 @@ public class LocalIndex implements Index {
 		int offset = m_header.getOffset(from.getIpAddressValue(), from.getIndex());
 		byte[] data = new byte[8];
 
+		System.out.println(from.toString() + " offset:" + offset);
 		m_file.seek(offset);
 		m_file.read(data);
 
@@ -100,6 +101,7 @@ public class LocalIndex implements Index {
 
 		int offset = m_header.getOffset(from.getIpAddressValue(), from.getIndex());
 		byte[] data = m_codec.encode(to, from.getHour());
+
 
 		m_file.seek(offset);
 		m_file.write(data);
@@ -145,6 +147,7 @@ public class LocalIndex implements Index {
 
 			if (block == null) {
 				block = m_nextBlock++;
+				System.err.println("current block id:" + block);
 				blocks.put(index, block);
 				m_data.writeInt(ip);
 				m_data.writeInt(index);
@@ -189,8 +192,8 @@ public class LocalIndex implements Index {
 			m_dirty = false;
 		}
 	}
-
-	class MessageIdCodec {
+	
+	public  class MessageIdCodec {
 		public MessageId decode(byte[] data, int currentHour) throws IOException {
 			int s1 = ((data[0] << 8) + data[1]) & 0XFFFF;
 			int s2 = ((data[2] << 8) + data[3]) & 0XFFFF;
