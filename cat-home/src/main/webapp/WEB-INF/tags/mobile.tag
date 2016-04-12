@@ -91,7 +91,10 @@
 								<b class="arrow"></b></li>
 							<li id="appRule"><a href="/cat/s/app?op=appRule">
 								<i class="menu-icon fa fa-caret-right"></i>App告警</a>
-								<b class="arrow"></b></li>
+								<b class="arrow"></b>
+						 	<li id="crashLogConfigUpdate"><a href="/cat/s/app?op=crashLogConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>CrashLog配置</a>
+								<b class="arrow"></b></li></li>
 						</ul>
 					</li>
 				</ul>
