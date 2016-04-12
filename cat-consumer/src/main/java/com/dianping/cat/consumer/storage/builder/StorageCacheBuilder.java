@@ -32,7 +32,7 @@ public class StorageCacheBuilder implements StorageBuilder {
 			if (message instanceof Event) {
 				String type = message.getType();
 				StringBuilder sb = new StringBuilder();
-				sb.append("Squirrel.").append(name).append(".server");
+				sb.append("Squirrel.").append(id).append(".server");
 
 				if (type.equals("Cache.memcached.server") || type.equals(sb.toString())) {
 					ip = message.getName();
