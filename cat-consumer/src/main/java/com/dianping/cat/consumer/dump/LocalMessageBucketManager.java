@@ -82,9 +82,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(m_messageBlockSize);
 
-	private ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>>();
+	private List<BlockingQueue<MessageItem>> m_messageQueues = new ArrayList<BlockingQueue<MessageItem>>();
 
-	private LinkedBlockingQueue<MessageItem> m_last;
+	private BlockingQueue<MessageItem> m_last;
 
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getLogviewPath(new Date(startTime), "");
@@ -152,7 +152,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		for (int i = 0; i < m_gzipThreads; i++) {
 			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<MessageItem>(m_gzipMessageSize);
 
-			m_messageQueues.put(i, messageQueue);
+			m_messageQueues.add(messageQueue);
 			Threads.forGroup("cat").start(new MessageGzip(messageQueue, i));
 		}
 		m_last = m_messageQueues.get(m_gzipThreads - 1);
@@ -287,7 +287,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		int hash = Math.abs((id.getDomain() + '-' + id.getIpAddress()).hashCode());
 		int index = (int) (hash % m_gzipThreads);
 		MessageItem item = new MessageItem(tree, id);
-		LinkedBlockingQueue<MessageItem> queue = m_messageQueues.get(index % (m_gzipThreads - 1));
+		BlockingQueue<MessageItem> queue = m_messageQueues.get(index % (m_gzipThreads - 1));
 		boolean result = queue.offer(item);
 
 		if (result) {
