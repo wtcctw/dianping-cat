@@ -36,6 +36,7 @@ import com.dianping.cat.config.web.url.DefaultUrlPatternHandler;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.message.DefaultPathBuilder;
 import com.dianping.cat.report.DomainValidator;
+import com.dianping.cat.report.HourlyReportTableProvider;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.statistic.ServerStatisticManager;
@@ -92,6 +93,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(AppSpeedTableProvider.class));
 		all.add(A(AjaxDataTableProvider.class));
 		all.add(A(WebSpeedDataTableProvider.class));
+		all.add(A(HourlyReportTableProvider.class));
 
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
