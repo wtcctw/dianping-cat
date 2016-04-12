@@ -13,7 +13,7 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.report.alert.app.AppAlert;
 import com.dianping.cat.report.alert.app.AppContactor;
 import com.dianping.cat.report.alert.app.AppDecorator;
-import com.dianping.cat.report.page.app.display.AppStatisticPiechartBuilder;
+import com.dianping.cat.report.page.app.display.AppStatisticBuilder;
 import com.dianping.cat.report.page.app.service.AppConnectionService;
 import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.app.service.AppReportService;
@@ -44,7 +44,7 @@ public class AppComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(A(AppReportBuilder.class));
 
-		all.add(A(AppStatisticPiechartBuilder.class));
+		all.add(A(AppStatisticBuilder.class));
 
 		all.add(C(Contactor.class, AppContactor.ID, AppContactor.class).req(AlertConfigManager.class,
 		      AppConfigManager.class, ProjectService.class));

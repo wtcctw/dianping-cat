@@ -297,9 +297,15 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.app.display.AppStatisticPiechartBuilder</role>
-			<implementation>com.dianping.cat.report.page.app.display.AppStatisticPiechartBuilder</implementation>
+			<role>com.dianping.cat.report.page.app.display.AppStatisticBuilder</role>
+			<implementation>com.dianping.cat.report.page.app.display.AppStatisticBuilder</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.app.service.AppReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
@@ -1057,6 +1063,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.summary.AlertSummaryExecutor</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4459,9 +4468,6 @@
 					<role>com.dianping.cat.report.page.app.service.CrashLogService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.app.service.AppReportService</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
@@ -4471,7 +4477,7 @@
 					<role>com.dianping.cat.report.page.app.service.DailyReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.app.display.AppStatisticPiechartBuilder</role>
+					<role>com.dianping.cat.report.page.app.display.AppStatisticBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
