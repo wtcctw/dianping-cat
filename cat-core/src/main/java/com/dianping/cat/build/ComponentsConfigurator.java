@@ -46,6 +46,7 @@ import com.dianping.cat.message.PathBuilder;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.report.DomainValidator;
+import com.dianping.cat.report.HourlyReportTableProvider;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.statistic.ServerStatisticManager;
@@ -112,6 +113,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(BrokerConfigManager.class));
 
 		all.add(C(Module.class, CatCoreModule.ID, CatCoreModule.class));
+		all.add(A(HourlyReportTableProvider.class));
 
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
@@ -79,7 +80,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Map<Integer, Code> m_codes;
 
-	private List<String> m_codeDistributions;
+	private Set<String> m_codeDistributions;
 
 	private Map<Integer, List<Code>> m_command2Codes;
 
@@ -122,7 +123,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_cities;
 	}
 
-	public List<String> getCodeDistributions() {
+	public Set<String> getCodeDistributions() {
 		return m_codeDistributions;
 	}
 
@@ -277,7 +278,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_cities = cities;
 	}
 
-	public void setCodeDistributions(List<String> codeDistributions) {
+	public void setCodeDistributions(Set<String> codeDistributions) {
 		m_codeDistributions = codeDistributions;
 	}
 
