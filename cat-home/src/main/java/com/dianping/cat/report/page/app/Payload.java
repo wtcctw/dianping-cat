@@ -1,8 +1,11 @@
 package com.dianping.cat.report.page.app;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
+import org.unidal.helper.Splitters;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import org.unidal.web.mvc.payload.annotation.ObjectMeta;
@@ -64,9 +67,15 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@FieldMeta("day")
 	private String m_day;
 
+	@FieldMeta("top")
+	private int m_top = 20;
+
 	@FieldMeta("id")
 	private int m_id;
-	
+
+	@FieldMeta("codes")
+	private List<String> m_codes = Collections.emptyList();
+
 	@ObjectMeta("crashLogQuery")
 	private CrashLogQueryEntity m_crashLogQuery = new CrashLogQueryEntity();
 
@@ -85,6 +94,18 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_codeId;
 	}
 
+	public List<String> getCodes() {
+		return m_codes;
+	}
+
+	public DailyCommandQueryEntity getCommandDailyQueryEntity() {
+		if (m_query1 != null && m_query1.length() > 0) {
+			return new DailyCommandQueryEntity(m_query1);
+		} else {
+			return new DailyCommandQueryEntity();
+		}
+	}
+
 	public String getCommandId() {
 		return m_commandId;
 	}
@@ -95,6 +116,14 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public CrashLogQueryEntity getCrashLogQuery() {
 		return m_crashLogQuery;
+	}
+
+	public CommandQueryEntity getDashBoardQuery() {
+		if (m_query1 != null && m_query1.length() > 0) {
+			return new CommandQueryEntity(m_query1);
+		} else {
+			return new CommandQueryEntity(0);
+		}
 	}
 
 	public String getDay() {
@@ -153,20 +182,12 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 			return new CommandQueryEntity();
 		}
 	}
-	
+
 	public CommandQueryEntity getQueryEntity2() {
 		if (m_query2 != null && m_query2.length() > 0) {
 			return new CommandQueryEntity(m_query2);
 		} else {
 			return null;
-		}
-	}
-	
-	public CommandQueryEntity getDashBoardQuery() {
-		if (m_query1 != null && m_query1.length() > 0) {
-			return new CommandQueryEntity(m_query1);
-		} else {
-			return new CommandQueryEntity(0);
 		}
 	}
 
@@ -176,14 +197,6 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public String getSort() {
 		return m_sort;
-	}
-	
-	public DailyCommandQueryEntity getCommandDailyQueryEntity() {
-		if (m_query1 != null && m_query1.length() > 0) {
-			return new DailyCommandQueryEntity(m_query1);
-		} else {
-			return new DailyCommandQueryEntity();
-		}
 	}
 
 	public SpeedQueryEntity getSpeedQueryEntity1() {
@@ -210,6 +223,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_title;
 	}
 
+	public int getTop() {
+		return m_top;
+	}
+
 	public String getType() {
 		return m_type;
 	}
@@ -220,6 +237,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public void setCodeId(int codeId) {
 		m_codeId = codeId;
+	}
+
+	public void setCodes(String codes) {
+		m_codes = Splitters.by(",").noEmptyItem().split(codes);
 	}
 
 	public void setCommandId(String commandId) {
@@ -277,6 +298,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public void setTitle(String title) {
 		m_title = title;
+	}
+
+	public void setTop(int top) {
+		m_top = top;
 	}
 
 	public void setType(String type) {

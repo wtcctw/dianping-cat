@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
@@ -20,6 +21,7 @@ import com.dianping.cat.home.app.entity.AppReport;
 import com.dianping.cat.mvc.AbstractReportModel;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.page.app.display.AppCommandDisplayInfo;
 import com.dianping.cat.report.page.app.display.AppConnectionDisplayInfo;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
@@ -34,6 +36,9 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	@EntityMeta
 	private LineChart m_lineChart;
+
+	@EntityMeta
+	private Map<String, PieChart> m_piecharts;
 
 	private AppCommandDisplayInfo m_commandDisplayInfo;
 
@@ -75,7 +80,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Map<Integer, Code> m_codes;
 
-	private List<String> m_codeDistributions;
+	private Set<String> m_codeDistributions;
 
 	private Map<Integer, List<Code>> m_command2Codes;
 
@@ -118,7 +123,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_cities;
 	}
 
-	public List<String> getCodeDistributions() {
+	public Set<String> getCodeDistributions() {
 		return m_codeDistributions;
 	}
 
@@ -233,6 +238,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_operators;
 	}
 
+	public Map<String, PieChart> getPiecharts() {
+		return m_piecharts;
+	}
+
 	public Map<Integer, Item> getPlatforms() {
 		return m_platforms;
 	}
@@ -269,7 +278,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_cities = cities;
 	}
 
-	public void setCodeDistributions(List<String> codeDistributions) {
+	public void setCodeDistributions(Set<String> codeDistributions) {
 		m_codeDistributions = codeDistributions;
 	}
 
@@ -359,6 +368,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setOperators(Map<Integer, Item> operators) {
 		m_operators = operators;
+	}
+
+	public void setPiecharts(Map<String, PieChart> piecharts) {
+		m_piecharts = piecharts;
 	}
 
 	public void setPlatforms(Map<Integer, Item> platforms) {
