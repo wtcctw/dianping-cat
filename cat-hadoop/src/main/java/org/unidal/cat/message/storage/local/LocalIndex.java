@@ -208,6 +208,7 @@ public class LocalIndex implements Index {
 
 			return new MessageId(domain, ipAddressInHex, hour, index);
 		}
+		
 
 		public byte[] encode(MessageId to, int currentHour) throws IOException {
 			int domainIndex = m_mapping.map(to.getDomain());
