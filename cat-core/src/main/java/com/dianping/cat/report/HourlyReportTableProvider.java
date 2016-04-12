@@ -53,7 +53,7 @@ public class HourlyReportTableProvider implements TableProvider, Initializable {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 		try {
-			m_historyDate = sdf.parse("2016-04-13 00:00");
+			m_historyDate = sdf.parse("2016-04-15 00:00");
 		} catch (ParseException e) {
 			Cat.logError(e);
 		}
