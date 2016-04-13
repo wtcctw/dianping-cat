@@ -88,7 +88,6 @@ public class LocalIndex implements Index {
 		int offset = m_header.getOffset(from.getIpAddressValue(), from.getIndex());
 		byte[] data = new byte[8];
 
-		System.out.println(from.toString() + " offset:" + offset);
 		m_file.seek(offset);
 		m_file.read(data);
 
@@ -101,7 +100,6 @@ public class LocalIndex implements Index {
 
 		int offset = m_header.getOffset(from.getIpAddressValue(), from.getIndex());
 		byte[] data = m_codec.encode(to, from.getHour());
-
 
 		m_file.seek(offset);
 		m_file.write(data);
@@ -147,7 +145,6 @@ public class LocalIndex implements Index {
 
 			if (block == null) {
 				block = m_nextBlock++;
-				System.err.println("current block id:" + block);
 				blocks.put(index, block);
 				m_data.writeInt(ip);
 				m_data.writeInt(index);
@@ -192,13 +189,13 @@ public class LocalIndex implements Index {
 			m_dirty = false;
 		}
 	}
-	
-	public  class MessageIdCodec {
+
+	class MessageIdCodec {
 		public MessageId decode(byte[] data, int currentHour) throws IOException {
 			int s1 = ((data[0] << 8) + data[1]) & 0XFFFF;
 			int s2 = ((data[2] << 8) + data[3]) & 0XFFFF;
 			int s3 = ((data[4] << 8) + data[5]) & 0XFFFF;
-			int s4 = ((data[6] << 8) + data[7]) & 0XFFFF;
+			int s4 = ((data[6] << 8) + (data[7] & 0X00FF)) & 0XFFFF;
 
 			String domain = m_mapping.lookup(s1);
 			String ipAddressInHex = m_mapping.lookup(s2);
@@ -208,7 +205,6 @@ public class LocalIndex implements Index {
 
 			return new MessageId(domain, ipAddressInHex, hour, index);
 		}
-		
 
 		public byte[] encode(MessageId to, int currentHour) throws IOException {
 			int domainIndex = m_mapping.map(to.getDomain());
@@ -219,7 +215,7 @@ public class LocalIndex implements Index {
 
 			buf.writeShort(domainIndex);
 			buf.writeShort(ipIndex);
-			buf.writeShort((hour & 0x03) << 14 + (seq >> 16) & 0xFFFF);
+			buf.writeShort(((hour & 0x03) << 14) + ((seq >> 16) & 0xFFFF));
 			buf.writeShort(seq & 0xFFFF);
 			byte[] data = buf.array();
 

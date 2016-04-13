@@ -23,45 +23,56 @@ public class IndexTest extends ComponentTestCase {
 	}
 
 	@Test
-	public void testMapAndLookup() throws Exception {
-		MessageId from = MessageId.parse("from-0a260014-403899-76543");
-		MessageId expected = MessageId.parse("to-0a260015-403899-12345");
-		IndexManager manager = lookup(IndexManager.class, "local");
-		Index index = manager.getIndex("from", 403899, true);
-
-		index.map(from, expected);
-
-		MessageId actual = index.lookup(from);
-
-		try {
-			Assert.assertEquals(expected, actual);
-		} finally {
-			index.close();
-		}
-	}
-
-	@Test
 	public void testMapAndLookups() throws Exception {
 		IndexManager manager = lookup(IndexManager.class, "local");
 		Index index = manager.getIndex("from", 403899, true);
 
-		for (int i = 1; i < 150; i++) {
+		for (int i = 1; i < 150000; i++) {
 			MessageId from = MessageId.parse("from-0a260014-403899-" + i);
 			MessageId to = MessageId.parse("to-0a260015-403899-" + i);
 
 			index.map(from, to);
 		}
 
-		System.err.println("write end!");
 		index.close();
 		index = manager.getIndex("from", 403899, true);
-		for (int i = 1; i <150; i++) {
+		for (int i = 1; i < 150000; i++) {
 			MessageId from = MessageId.parse("from-0a260014-403899-" + i);
 			MessageId expected = MessageId.parse("to-0a260015-403899-" + i);
 
 			MessageId actual = index.lookup(from);
 
 			Assert.assertEquals(expected, actual);
+		}
+	}
+
+	@Test
+	public void testMapAndLookupManyIps() throws Exception {
+		IndexManager manager = lookup(IndexManager.class, "local");
+		Index index = manager.getIndex("from", 403899, true);
+
+		for (int i = 1; i < 150000; i++) {
+			for (int ip = 0; ip < 9; ip++) {
+				MessageId from = MessageId.parse("from-0a26000" + ip + "-403899-" + i);
+				MessageId to = MessageId.parse("from-0a25000" + ip + "-403899-" + i);
+
+				index.map(from, to);
+			}
+
+		}
+
+		index.close();
+		index = manager.getIndex("from", 403899, true);
+		for (int i = 1; i < 150000; i++) {
+
+			for (int ip = 0; ip < 9; ip++) {
+				MessageId from = MessageId.parse("from-0a26000" + ip + "-403899-" + i);
+				MessageId expected = MessageId.parse("from-0a25000" + ip + "-403899-" + i);
+
+				MessageId actual = index.lookup(from);
+
+				Assert.assertEquals(expected, actual);
+			}
 		}
 	}
 
