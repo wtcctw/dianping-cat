@@ -33,4 +33,7 @@
    <model package="com.dianping.cat.configuration.app.broker" name="broker-config">
       <sample-model>src/main/resources/config/broker-config.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.crashLogConfig" name="crash-log-config">
+      <sample-model>../cat-home/src/main/resources/config/crash-log-config.xml</sample-model>
+   </model>
 </wizard>

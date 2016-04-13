@@ -51,6 +51,8 @@ public class AppConfigManager implements Initializable {
 
 	private volatile Map<String, Integer> m_operators = new ConcurrentHashMap<String, Integer>();
 
+	private volatile Map<String, Integer> m_platforms = new ConcurrentHashMap<String, Integer>();
+
 	private volatile Map<Integer, String> m_excludedCommands = new ConcurrentHashMap<Integer, String>();
 
 	private int m_configId;
@@ -236,6 +238,10 @@ public class AppConfigManager implements Initializable {
 
 	public Map<String, Integer> getOperators() {
 		return m_operators;
+	}
+
+	public Map<String, Integer> getPlatforms() {
+		return m_platforms;
 	}
 
 	public Map<Integer, Command> getRawCommands() {
@@ -475,6 +481,14 @@ public class AppConfigManager implements Initializable {
 			operatorMap.put(item.getName(), item.getId());
 		}
 		m_operators = operatorMap;
+
+		Map<String, Integer> platformMap = new ConcurrentHashMap<String, Integer>();
+		ConfigItem platforms = m_config.findConfigItem(PLATFORM);
+
+		for (Item item : platforms.getItems().values()) {
+			platformMap.put(item.getName(), item.getId());
+		}
+		m_platforms = platformMap;
 	}
 
 	public Item getPlatformStr(int platform) {
@@ -567,5 +581,9 @@ public class AppConfigManager implements Initializable {
 			}
 			return c1.compareTo(c2);
 		}
+	}
+
+	public int getPlatformId(String platform) {
+		return m_platforms.get(platform);
 	}
 }
