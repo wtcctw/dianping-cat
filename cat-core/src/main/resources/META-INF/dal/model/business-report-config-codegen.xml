@@ -18,6 +18,7 @@
     <attribute name="id" value-type="String" />
     <attribute name="view-order" value-type="double" />
     <attribute name="title" value-type="String" />
+    <attribute name="alarm" value-type="boolean" />
     <element name="pattern" value-type="String" />
   </entity>
 </model>

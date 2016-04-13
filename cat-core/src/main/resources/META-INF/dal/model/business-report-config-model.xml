@@ -19,6 +19,7 @@
     <attribute name="id" value-type="String" key="true" />
     <attribute name="view-order" value-type="double" primitive="true" />
     <attribute name="title" value-type="String" />
+    <attribute name="alarm" value-type="boolean" primitive="true" default-value="false"/>
     <element name="pattern" value-type="String" />
   </entity>
 </model>

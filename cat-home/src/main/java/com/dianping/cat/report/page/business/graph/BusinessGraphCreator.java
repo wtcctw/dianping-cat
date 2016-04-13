@@ -60,106 +60,25 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 	@Inject
 	private CustomDataCalculator m_customDataCalculator;
 
-	public Map<String, LineChart> buildGraphByTag(Date start, Date end, String tag) {
-		Tag tagConfig = m_tagManager.findTag(tag);
-
-		if (tagConfig != null) {
-			List<BusinessItem> items = tagConfig.getBusinessItems();
-			Map<String, double[]> all = new LinkedHashMap<String, double[]>();
-			Map<String, double[]> needed = new LinkedHashMap<String, double[]>();
-			Map<String, BusinessReportConfig> configs = new HashMap<String, BusinessReportConfig>();
-			Set<String> domains = new HashSet<String>();
-
-			for (BusinessItem item : items) {
-				domains.add(item.getDomain());
-			}
-
-			for (String domain : domains) {
-				BusinessReportConfig config = m_configManager.queryConfigByDomain(domain);
-
-				if (config != null) {
-					Map<String, double[]> datas = prepareBusinessItemDatas(start, end, domain, config);
-
-					all.putAll(datas);
-					configs.put(domain, config);
-				}
-			}
-
-			for (BusinessItem item : items) {
-				String domain = item.getDomain();
-				String key = item.getItemId();
-
-				for (MetricType metricType : MetricType.values()) {
-					String id = m_keyHelper.generateKey(key, domain, metricType.getName());
-					double[] data = all.get(id);
-
-					if (data != null) {
-						needed.put(id, data);
-					}
-				}
-			}
-
-			return buildChartData(needed, start, end, configs);
-		} else {
-			return new HashMap<String, LineChart>();
-		}
-	}
-
-	public Map<String, LineChart> buildGraphByDomain(Date start, Date end, String domain) {
-		Map<String, BusinessReportConfig> configs = new HashMap<String, BusinessReportConfig>();
-		BusinessReportConfig config = m_configManager.queryConfigByDomain(domain);
+	private String buidlTitle(BusinessReportConfig businessReportConfig, String itemId, String type) {
+		String title = null;
+		String des = MetricType.getDesByName(type);
+		BusinessItemConfig config = businessReportConfig.findBusinessItemConfig(itemId);
 
 		if (config != null) {
-			Map<String, double[]> datas = prepareBusinessItemDatas(start, end, domain, config);
-
-			prepareCustomData(start, end, domain, config, datas);
-			configs.put(domain, config);
-
-			return buildChartData(datas, start, end, configs);
+			title = config.getTitle() + des;
 		} else {
-			return new HashMap<String, LineChart>();
-		}
-	}
+			CustomConfig customConfig = businessReportConfig.findCustomConfig(itemId);
 
-	private void prepareCustomData(Date start, Date end, String currentDomain, BusinessReportConfig currentConfig,
-	      Map<String, double[]> datas) {
-		Map<String, double[]> businessItemDataCache = new LinkedHashMap<String, double[]>();
-		Map<String, CustomConfig> customConfigs = currentConfig.getCustomConfigs();
-		Set<String> domains = new HashSet<String>();
-		int totalSize = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_MINUTE);
-
-		domains.add(currentDomain);
-		businessItemDataCache.putAll(datas);
-
-		for (CustomConfig customConfig : customConfigs.values()) {
-			String pattern = customConfig.getPattern();
-			Pair<Boolean, List<CustomInfo>> translate = m_customDataCalculator.translatePattern(pattern);
-
-			if (translate.getKey()) {
-				List<CustomInfo> customInfos = translate.getValue();
-
-				for (CustomInfo customInfo : customInfos) {
-					String domain = customInfo.getDomain();
-
-					if (!domains.contains(domain)) {
-						BusinessReportConfig config = m_configManager.queryConfigByDomain(domain);
-
-						domains.add(domain);
-						businessItemDataCache.putAll(prepareBusinessItemDatas(start, end, domain, config));
-					}
-				}
-				double[] result = m_customDataCalculator.calculate(pattern, customInfos, businessItemDataCache, totalSize);
-				String key = m_keyHelper.generateKey(customConfig.getId(), currentDomain, MetricType.AVG.getName());
-
-				datas.put(key, result);
-			} else {
-				Cat.logEvent("BusinessPatternWrong", pattern);
+			if (customConfig != null) {
+				title = customConfig.getTitle() + des;
 			}
 		}
+		return title;
 	}
 
-	private Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date start, Date end,
-	      Map<String, BusinessReportConfig> configs) {
+	private Map<String, LineChart> buildCharts(final Map<String, double[]> datas, Map<String, double[]> baseLines,
+	      Date start, Date end, Map<String, BusinessReportConfig> configs) {
 		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(datas);
 		Map<String, double[]> dataWithOutFutures = removeFutureData(end, allCurrentValues);
 
@@ -171,15 +90,15 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 			try {
 				String key = entry.getKey();
 				double[] value = entry.getValue();
-				LineChart lineChart = new LineChart();
 				String domain = m_keyHelper.getDomain(key);
 				BusinessReportConfig config = configs.get(domain);
+				LineChart lineChart = new LineChart();
 
 				buildLineChartTitle(alertKeys, lineChart, key, config);
 				lineChart.setStart(start);
 				lineChart.setSize(value.length);
 				lineChart.setStep(step * TimeHelper.ONE_MINUTE);
-				double[] baselines = queryBaseline(BusinessAnalyzer.ID, key, start, end);
+				double[] baselines = baseLines.get(key);
 				Map<Long, Double> all = convertToMap(datas.get(key), start, 1);
 				Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), start, step);
 
@@ -194,21 +113,135 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 		return charts;
 	}
 
-	private Map<String, double[]> prepareBusinessItemDatas(Date startDate, Date endDate, String domain,
-	      BusinessReportConfig config) {
-		long start = startDate.getTime(), end = endDate.getTime();
-		int totalSize = (int) ((end - start) / TimeHelper.ONE_MINUTE);
-		Map<String, double[]> oldCurrentValues = new LinkedHashMap<String, double[]>();
-		int index = 0;
+	protected String buildContactInfo(String domainName) {
+		try {
+			Project project = m_projectService.findByDomain(domainName);
 
-		for (; start < end; start += TimeHelper.ONE_HOUR) {
-			BusinessReport report = m_reportService.queryBusinessReport(domain, new Date(start));
-			Map<String, double[]> currentValues = buildGraphData(report, config);
+			if (project != null) {
+				String owners = project.getOwner();
+				String phones = project.getPhone();
+				StringBuilder builder = new StringBuilder();
 
-			mergeMap(oldCurrentValues, currentValues, totalSize, index);
-			index++;
+				builder.append("[项目: ").append(domainName);
+				if (!StringUtils.isEmpty(owners)) {
+					builder.append(" 负责人: ").append(owners);
+				}
+				if (!StringUtils.isEmpty(phones)) {
+					builder.append(" 手机: ").append(phones).append(" ]");
+				}
+				return builder.toString();
+			}
+		} catch (Exception ex) {
+			Cat.logError("build contact info error for doamin: " + domainName, ex);
 		}
-		return oldCurrentValues;
+		return null;
+	}
+
+	public Map<String, LineChart> buildGraphByDomain(Date start, Date end, String domain) {
+		BusinessReportConfig config = m_configManager.queryConfigByDomain(domain);
+		HashMap<String, LineChart> result = new LinkedHashMap<String, LineChart>();
+
+		if (config != null) {
+			Map<String, double[]> datas = prepareBusinessItemDatas(start, end, domain, config);
+			Map<String, double[]> baseLines = prepareBusinessItemBaseLines(start, end, datas.keySet());
+
+			Map<String, CustomConfig> customConfigs = config.getCustomConfigs();
+			Map<String, double[]> customBaseLines = prepareCustomBaseLines(start, end, domain, customConfigs);
+			Map<String, double[]> customDatas = prepareCustomDatas(start, end, domain, customConfigs, datas);
+
+			Map<String, BusinessReportConfig> configs = new HashMap<String, BusinessReportConfig>();
+			configs.put(domain, config);
+
+			result.putAll(buildCharts(datas, baseLines, start, end, configs));
+			result.putAll(buildCharts(customDatas, customBaseLines, start, end, configs));
+		}
+
+		return result;
+	}
+
+	public Map<String, LineChart> buildGraphByTag(Date start, Date end, String tag) {
+		Tag tagConfig = m_tagManager.findTag(tag);
+
+		if (tagConfig != null) {
+			List<BusinessItem> items = tagConfig.getBusinessItems();
+			Map<String, double[]> all = new LinkedHashMap<String, double[]>();
+			Map<String, double[]> needed = new LinkedHashMap<String, double[]>();
+			Map<String, double[]> baseLines = new HashMap<String, double[]>();
+			Map<String, BusinessReportConfig> configs = new HashMap<String, BusinessReportConfig>();
+			Map<String, Map<String, CustomConfig>> customConfigs = new HashMap<String, Map<String, CustomConfig>>();
+			Map<String, Set<String>> businessItemConfigs = new HashMap<String, Set<String>>();
+
+			buildTagConfigs(items, configs, customConfigs, businessItemConfigs);
+
+			for (Entry<String, Set<String>> businessItemConfigItem : businessItemConfigs.entrySet()) {
+				String domain = businessItemConfigItem.getKey();
+				BusinessReportConfig config = configs.get(domain);
+				Map<String, double[]> datas = prepareBusinessItemDatas(start, end, domain, config);
+				all.putAll(datas);
+
+				for (String key : businessItemConfigItem.getValue()) {
+					for (MetricType metricType : MetricType.values()) {
+						String id = m_keyHelper.generateKey(key, domain, metricType.getName());
+						double[] baseline = queryBaseline(BusinessAnalyzer.ID, id, start, end);
+						baseLines.put(id, baseline);
+						double[] data = all.get(id);
+
+						if (data != null) {
+							needed.put(id, data);
+						}
+					}
+				}
+			}
+
+			for (Entry<String, Map<String, CustomConfig>> customConfigItem : customConfigs.entrySet()) {
+				String domain = customConfigItem.getKey();
+				Map<String, CustomConfig> value = customConfigItem.getValue();
+				Map<String, double[]> customDatas = prepareCustomDatas(start, end, domain, value, all);
+				Map<String, double[]> customBaseLines = prepareCustomBaseLines(start, end, domain, value);
+				needed.putAll(customDatas);
+				baseLines.putAll(customBaseLines);
+			}
+
+			return buildCharts(needed, baseLines, start, end, configs);
+		} else {
+			return new HashMap<String, LineChart>();
+		}
+	}
+
+	private void buildTagConfigs(List<BusinessItem> items, Map<String, BusinessReportConfig> configs,
+	      Map<String, Map<String, CustomConfig>> customConfigs, Map<String, Set<String>> businessItemConfigs) {
+		for (BusinessItem item : items) {
+			String domain = item.getDomain();
+			String itemId = item.getItemId();
+			BusinessReportConfig config = configs.get(domain);
+			Map<String, CustomConfig> customConfig = customConfigs.get(domain);
+			Set<String> businessItemConfig = businessItemConfigs.get(domain);
+
+			if (config == null) {
+				config = m_configManager.queryConfigByDomain(domain);
+
+				if (config != null) {
+					configs.put(domain, config);
+				}
+				customConfig = new HashMap<String, CustomConfig>();
+				businessItemConfig = new HashSet<String>();
+
+				customConfigs.put(domain, customConfig);
+				businessItemConfigs.put(domain, businessItemConfig);
+			}
+
+			BusinessItemConfig businessItem = config.findBusinessItemConfig(itemId);
+
+			if (businessItem == null) {
+				CustomConfig customItem = config.findCustomConfig(itemId);
+
+				if (customItem != null) {
+					customConfig.put(itemId, customItem);
+				}
+			} else {
+				businessItemConfig.add(itemId);
+			}
+		}
 	}
 
 	private Map<String, double[]> buildGraphData(BusinessReport report, BusinessReportConfig config) {
@@ -264,23 +297,6 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 		}
 	}
 
-	private String buidlTitle(BusinessReportConfig businessReportConfig, String itemId, String type) {
-		String title = null;
-		String des = MetricType.getDesByName(type);
-		BusinessItemConfig config = businessReportConfig.findBusinessItemConfig(itemId);
-
-		if (config != null) {
-			title = config.getTitle() + des;
-		} else {
-			CustomConfig customConfig = businessReportConfig.findCustomConfig(itemId);
-
-			if (customConfig != null) {
-				title = customConfig.getTitle() + des;
-			}
-		}
-		return title;
-	}
-
 	private boolean containMetric(List<AlertEntity> alertKeys, String metricId) {
 		for (AlertEntity alertMetric : alertKeys) {
 			if (alertMetric.getRealMetricId().equals(metricId)) {
@@ -290,29 +306,97 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 		return false;
 	}
 
-	protected String buildContactInfo(String domainName) {
-		try {
-			Project project = m_projectService.findByDomain(domainName);
+	private Map<String, double[]> prepareBusinessItemBaseLines(Date start, Date end, Set<String> keys) {
+		Map<String, double[]> baselines = new HashMap<String, double[]>();
 
-			if (project != null) {
-				String owners = project.getOwner();
-				String phones = project.getPhone();
-				StringBuilder builder = new StringBuilder();
-
-				builder.append("[项目: ").append(domainName);
-				if (!StringUtils.isEmpty(owners)) {
-					builder.append(" 负责人: ").append(owners);
-				}
-				if (!StringUtils.isEmpty(phones)) {
-					builder.append(" 手机: ").append(phones).append(" ]");
-				}
-				return builder.toString();
-			}
-		} catch (Exception ex) {
-			Cat.logError("build contact info error for doamin: " + domainName, ex);
+		for (String key : keys) {
+			double[] baseline = queryBaseline(BusinessAnalyzer.ID, key, start, end);
+			baselines.put(key, baseline);
 		}
-
-		return null;
+		return baselines;
 	}
 
+	private Map<String, double[]> prepareBusinessItemDatas(Date startDate, Date endDate, String domain,
+	      BusinessReportConfig config) {
+		long start = startDate.getTime(), end = endDate.getTime();
+		int totalSize = (int) ((end - start) / TimeHelper.ONE_MINUTE);
+		Map<String, double[]> oldCurrentValues = new LinkedHashMap<String, double[]>();
+		int index = 0;
+
+		for (; start < end; start += TimeHelper.ONE_HOUR) {
+			BusinessReport report = m_reportService.queryBusinessReport(domain, new Date(start));
+			Map<String, double[]> currentValues = buildGraphData(report, config);
+
+			mergeMap(oldCurrentValues, currentValues, totalSize, index);
+			index++;
+		}
+		return oldCurrentValues;
+	}
+
+	private Map<String, double[]> prepareCustomBaseLines(Date start, Date end, String currentDomain,
+	      Map<String, CustomConfig> customConfigs) {
+		Map<String, double[]> baseLineCache = new HashMap<String, double[]>();
+		Map<String, double[]> customBaseLines = new LinkedHashMap<String, double[]>();
+		int totalSize = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_MINUTE);
+
+		for (CustomConfig customConfig : customConfigs.values()) {
+			String pattern = customConfig.getPattern();
+			Pair<Boolean, List<CustomInfo>> translate = m_customDataCalculator.translatePattern(pattern);
+
+			if (translate.getKey()) {
+				List<CustomInfo> customInfos = translate.getValue();
+
+				for (CustomInfo customInfo : customInfos) {
+					String customKey = m_keyHelper.generateKey(customInfo.getKey(), customInfo.getDomain(),
+					      customInfo.getType());
+					baseLineCache.put(customKey, queryBaseline(BusinessAnalyzer.ID, customKey, start, end));
+				}
+				double[] baseLine = m_customDataCalculator.calculate(pattern, customInfos, baseLineCache, totalSize);
+				String key = m_keyHelper.generateKey(customConfig.getId(), currentDomain, MetricType.AVG.getName());
+
+				customBaseLines.put(key, baseLine);
+			} else {
+				Cat.logEvent("BusinessPatternWrong", pattern);
+			}
+		}
+		return customBaseLines;
+	}
+
+	private Map<String, double[]> prepareCustomDatas(Date start, Date end, String currentDomain,
+	      Map<String, CustomConfig> customConfigs, Map<String, double[]> datas) {
+		Map<String, double[]> customDatas = new LinkedHashMap<String, double[]>();
+		Map<String, double[]> businessItemDataCache = new HashMap<String, double[]>();
+		Set<String> domains = new HashSet<String>();
+		int totalSize = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_MINUTE);
+
+		domains.add(currentDomain);
+		businessItemDataCache.putAll(datas);
+
+		for (CustomConfig customConfig : customConfigs.values()) {
+			String pattern = customConfig.getPattern();
+			Pair<Boolean, List<CustomInfo>> translate = m_customDataCalculator.translatePattern(pattern);
+
+			if (translate.getKey()) {
+				List<CustomInfo> customInfos = translate.getValue();
+
+				for (CustomInfo customInfo : customInfos) {
+					String domain = customInfo.getDomain();
+
+					if (!domains.contains(domain)) {
+						BusinessReportConfig config = m_configManager.queryConfigByDomain(domain);
+
+						domains.add(domain);
+						businessItemDataCache.putAll(prepareBusinessItemDatas(start, end, domain, config));
+					}
+				}
+				double[] data = m_customDataCalculator.calculate(pattern, customInfos, businessItemDataCache, totalSize);
+				String key = m_keyHelper.generateKey(customConfig.getId(), currentDomain, MetricType.AVG.getName());
+
+				customDatas.put(key, data);
+			} else {
+				Cat.logEvent("BusinessPatternWrong", pattern);
+			}
+		}
+		return customDatas;
+	}
 }
