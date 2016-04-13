@@ -28,7 +28,7 @@ public class BusinessReportGroupService {
 		}
 	}
 
-	public BusinessReportGroup prepareDatas(String product, int minute, int duration) {
+	public BusinessReportGroup prepareDatas(String domain, int minute, int duration) {
 		BusinessReport currentReport = null;
 		BusinessReport lastReport = null;
 		boolean dataReady = false;
@@ -37,7 +37,7 @@ public class BusinessReportGroupService {
 			int min = minute - duration + 1;
 			int max = minute;
 
-			currentReport = fetchMetricReport(product, ModelPeriod.CURRENT, min, max);
+			currentReport = fetchMetricReport(domain, ModelPeriod.CURRENT, min, max);
 
 			if (currentReport != null) {
 				dataReady = true;
@@ -46,7 +46,7 @@ public class BusinessReportGroupService {
 			int min = minute + 60 - duration + 1;
 			int max = minute + 60;
 
-			lastReport = fetchMetricReport(product, ModelPeriod.LAST, min, max);
+			lastReport = fetchMetricReport(domain, ModelPeriod.LAST, min, max);
 
 			if (lastReport != null) {
 				dataReady = true;
@@ -55,8 +55,8 @@ public class BusinessReportGroupService {
 			int lastLength = duration - minute - 1;
 			int lastMin = 60 - lastLength;
 
-			currentReport = fetchMetricReport(product, ModelPeriod.CURRENT, 0, minute);
-			lastReport = fetchMetricReport(product, ModelPeriod.LAST, lastMin, 59);
+			currentReport = fetchMetricReport(domain, ModelPeriod.CURRENT, 0, minute);
+			lastReport = fetchMetricReport(domain, ModelPeriod.LAST, lastMin, 59);
 
 			if (lastReport != null && currentReport != null) {
 				dataReady = true;

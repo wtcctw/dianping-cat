@@ -109,6 +109,7 @@ import com.dianping.cat.report.alert.transaction.TransactionDecorator;
 import com.dianping.cat.report.alert.transaction.TransactionRuleConfigManager;
 import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.browser.service.AjaxDataService;
+import com.dianping.cat.report.page.business.graph.CustomDataCalculator;
 import com.dianping.cat.report.page.business.task.BusinessKeyHelper;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.event.transform.EventMergeHelper;
@@ -188,7 +189,8 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add((C(BusinessAlert2.class).req(BusinessRuleConfigManager2.class, BusinessConfigManager.class,
 		      BusinessTagConfigManager.class, BusinessReportGroupService.class, ProjectService.class, AlertManager.class,
-		      BusinessKeyHelper.class, BaselineService.class, DataChecker.class, BaseRuleHelper.class)));
+		      BusinessKeyHelper.class, BaselineService.class, DataChecker.class, BaseRuleHelper.class,
+		      CustomDataCalculator.class)));
 
 		all.add(C(NetworkAlert.class).req(ProductLineConfigManager.class).req(MetricReportGroupService.class,
 		      NetworkRuleConfigManager.class, DataChecker.class, AlertManager.class));

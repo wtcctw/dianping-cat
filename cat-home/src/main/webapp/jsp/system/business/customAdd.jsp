@@ -45,9 +45,24 @@
 					<td><input  name="customConfig.viewOrder" value="${model.customConfig.viewOrder}" required/></td>
 				</tr>
 				<tr>
+					<td style="text-align:right" class="text-success">是否告警</td>
+					<td colspan='3'>
+						<c:choose>
+							<c:when test="${model.customConfig.alarm}">
+								<input type="radio" name="customConfig.alarm" value="true" checked />是&nbsp;&nbsp;&nbsp;	
+								<input type="radio" name="customConfig.alarm" value="false" />否
+							</c:when>
+							<c:otherwise>
+						    	<input type="radio" name="customConfig.alarm" value="true" />是&nbsp;&nbsp;&nbsp;
+								<input type="radio" name="customConfig.alarm" value="false" checked />否
+							</c:otherwise>
+						</c:choose>
+					</td>
+				</tr>
+				<tr>
 					<td style="text-align:right"  class="text-success">规则配置</td>
 					<td colspan='3'>
-						<textarea style="width:200px;height:80px;" name="customConfig.pattern" required>${model.customConfig.pattern}</textarea>
+						<textarea style="width:660px;height:150px;" name="customConfig.pattern" required>${model.customConfig.pattern}</textarea>
 					</td>
 				</tr>
 				<tr>

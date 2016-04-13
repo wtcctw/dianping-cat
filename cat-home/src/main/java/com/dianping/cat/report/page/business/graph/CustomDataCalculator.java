@@ -45,9 +45,9 @@ public class CustomDataCalculator {
 				String[] strs = subStr.split(SPLITTER);
 
 				if (strs != null && strs.length == 3) {
-					customInfo.setDomain(strs[0]);
-					customInfo.setKey(strs[1]);
-					customInfo.setType(strs[2].toUpperCase());
+					customInfo.setDomain(strs[0].trim());
+					customInfo.setKey(strs[1].trim());
+					customInfo.setType(strs[2].trim().toUpperCase());
 					customInfo.setPattern(pattern.substring(start, end + 1));
 
 					infos.add(customInfo);

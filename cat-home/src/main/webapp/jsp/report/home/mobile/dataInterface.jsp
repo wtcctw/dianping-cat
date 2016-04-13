@@ -120,6 +120,24 @@
 		<tr><td>mi</td><td>混淆map id</td><td>String</td></tr>
 		<tr><td>d</td><td>详细的错误日志</td><td>String</td></tr>
 	</table>
+	
+	<h5>原有crash日志兼容接口：<br/></h5>
+	<table class="table table-bordered table-striped table-condensed  ">
+		<tr><th>参数名</th><th>描述</th><th>类型</th></tr>
+		<tr><td>v</td><td>版本号，兼容之前的接口,v=2</td><td>String</td></tr>
+		<tr><td>an</td><td>appname</td><td>String</td></tr>
+		<tr><td>mi</td><td>混淆map id</td><td>String</td></tr>
+		<tr><td>d</td><td>详细的错误日志</td><td>String</td></tr>
+	</table>
+	
+	<h5>mobile-log-web中的crash日志接口：<br/></h5>
+	<pre>http://stat.api.dianping.com/utm.js?v=\${appname}&mi=\${mapid}</pre>
+	<table class="table table-bordered table-striped table-condensed  ">
+		<tr><th>参数名</th><th>描述</th><th>类型</th></tr>
+		<tr><td>v</td><td>appname,每个app有一个特定的名称</td><td>String</td></tr>
+		<tr><td>mi</td><td>混淆map id</td><td>String</td></tr>
+	</table>
+	<pre class="text-danger">将错误的详细信息放在post的内容中。</pre>
 <br/>
 
 <h4 class="text-danger">APP Crash日志混淆map上传接口</h4>
