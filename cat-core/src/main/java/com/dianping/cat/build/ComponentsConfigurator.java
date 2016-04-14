@@ -19,6 +19,7 @@ import com.dianping.cat.analysis.TcpSocketReceiver;
 import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.app.AppCommandGroupConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
+import com.dianping.cat.config.app.CrashLogConfigManager;
 import com.dianping.cat.config.app.MobileConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatHandler;
@@ -91,6 +92,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(SampleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(AppCommandConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+
+		all.add(C(CrashLogConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(AppCommandGroupConfigManager.class).req(CommandFormatHandler.class, ConfigDao.class,
 		      ContentFetcher.class, AppCommandConfigManager.class));

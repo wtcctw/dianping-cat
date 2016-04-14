@@ -132,8 +132,20 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.app.AppConfigManager</role>
-			<implementation>com.dianping.cat.config.app.AppConfigManager</implementation>
+			<role>com.dianping.cat.config.app.AppCommandConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppCommandConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.CrashLogConfigManager</role>
+			<implementation>com.dianping.cat.config.app.CrashLogConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -157,7 +169,7 @@
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
+					<role>com.dianping.cat.config.app.AppCommandConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -226,8 +238,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.app.BrokerConfigManager</role>
-			<implementation>com.dianping.cat.config.app.BrokerConfigManager</implementation>
+			<role>com.dianping.cat.config.app.MobileConfigManager</role>
+			<implementation>com.dianping.cat.config.app.MobileConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

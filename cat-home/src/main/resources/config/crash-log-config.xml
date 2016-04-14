@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<crash-log-config>
+   <App id="androidv1c" platform="android" name="AndroidCrashLog"/>
+   <App id="iphonecr" platform="ios" name="iOSCrashLog"/>
+   <App id="iphoneapollocr" platform="ios" name="ApolloIOSCrashLog"/>
+   <App id="androidapollocr" platform="android" name="ApolloAndroidCrashLog"/>
+   <App id="televisionwallcr" platform="android" name="TVAndroidCrashLog"/>
+   <App id="iphonewedcr" platform="ios" name="WedIOSCrashLog"/>
+   <App id="androidwedcr" platform="android" name="WedAndroidCrashLog"/>
+   <App id="androidwedmer" platform="android" name="WedMerchantAndroid"/>
+   <App id="iphonewedmer" platform="ios" name="WedMerchantIOS"/>
+   <Modules id="android">
+      <Module id="com.dianping.main" name="Main" project="Main"/>
+      <Module id="com.dianping.tuan" name="Tuan" project="Tuan"/>
+      <Module id="com.dianping.booking" name="Booking" project="Booking"/>
+      <Module id="com.dianping.beauty" name="Beauty" project="Beauty"/>
+      <Module id="com.dianping.membercard" name="Member" project="Member"/>
+      <Module id="com.dianping.orderdish" name="Order" project="Order"/>
+      <Module id="com.dianping.promo" name="Promo" project="Promo"/>
+      <Module id="com.dianping.takeaway" name="Takeaway" project="Takeaway"/>
+      <Module id="com.dianping.queue" name="Queue" project="Queue"/>
+      <Module id="com.dianping.wed" name="Wed" project="Wed"/>
+      <Module id="com.dianping.hotel" name="Hotel" project="Hotel"/>
+      <Module id="com.dianping.base" name="Main" project="Main"/>
+      <Module id="com.dianping.hui" name="Hui" project="Hui"/>
+      <Module id="com.dianping.movie" name="Movie" project="Movie"/>
+      <Module id="com.dianping.search" name="Search" project="Search"/>
+      <Module id="com.dianping.shopinfo" name="Shopinfo" project="Shopinfo"/>
+      <Module id="com.dianping.travel" name="Travel" project="Travel"/>
+      <Module id="com.dianping.verticalchannel" name="Vertical" project="Vertical"/>
+      <Module id="com.dianping.car" name="Car" project="Car"/>
+      <Module id="com.dianping.fun" name="Fun" project="Fun"/>
+      <Module id="com.dianping.selectdish" name="SelectDish" project="SelectDish"/>
+      <Module id="com.dianping.ugc" name="Ugc" project="Ugc"/>
+      <Module id="com.dianping.znct" name="Znct" project="Znct"/>
+   </Modules>
+   <Modules id="ios">
+      <Module id="TG" name="主App-团购" project="Tuan"/>
+      <Module id="BOOK" name="主App-预订" project="Booking"/>
+      <Module id="BEAUTY" name="主App-丽人" project="Beauty"/>
+      <Module id="PROMO" name="主App-优惠" project="Promo"/>
+      <Module id="TA" name="主App-外卖" project="Takeaway"/>
+      <Module id="WED" name="主App-结婚" project="Wed"/>
+      <Module id="HOTEL" name="主App-酒店" project="Hotel"/>
+      <Module id="HUI" name="主App-优惠" project="Hui"/>
+      <Module id="MOVIE" name="主App-电影" project="Movie"/>
+      <Module id="SEARCH" name="主App-搜索" project="Search"/>
+      <Module id="UGC" name="主App-UGC" project="Ugc"/>
+      <Module id="NV" name="主App-平台" project="Main"/>
+      <Module id="CARD" name="主App-会员" project="Member"/>
+      <Module id="ORDER" name="主App-订单" project="Order"/>
+      <Module id="FUN" name="主App-玩乐" project="Fun"/>
+      <Module id="VC" name="主App-垂直" project="Vertical"/>
+      <Module id="QUEUE" name="主App-排队" project="Queue"/>
+      <Module id="CAR" name="主App-汽车" project="Car"/>
+   </Modules>
+</crash-log-config>

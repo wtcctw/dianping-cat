@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.unidal.helper.Threads.Task;
@@ -22,12 +23,15 @@ import com.dianping.cat.alarm.spi.rule.DataChecker;
 import com.dianping.cat.config.business.BusinessConfigManager;
 import com.dianping.cat.configuration.business.entity.BusinessItemConfig;
 import com.dianping.cat.configuration.business.entity.BusinessReportConfig;
+import com.dianping.cat.configuration.business.entity.CustomConfig;
 import com.dianping.cat.consumer.business.BusinessAnalyzer;
 import com.dianping.cat.helper.MetricType;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.alert.config.BaseRuleHelper;
 import com.dianping.cat.report.alert.spi.AlarmRule;
+import com.dianping.cat.report.page.business.graph.CustomDataCalculator;
+import com.dianping.cat.report.page.business.graph.CustomInfo;
 import com.dianping.cat.report.page.business.task.BusinessKeyHelper;
 import com.dianping.cat.report.page.metric.service.BaselineService;
 import com.dianping.cat.service.ProjectService;
@@ -65,40 +69,57 @@ public class BusinessAlert2 implements Task {
 	@Inject
 	protected BaseRuleHelper m_baseRuleHelper;
 
+	@Inject
+	private CustomDataCalculator m_customDataCalculator;
+
 	private static final long DURATION = TimeHelper.ONE_MINUTE;
 
 	private static final int DATA_AREADY_MINUTE = 1;
 
 	public static final String DEFAULT_TAG = "业务大盘";
 
+	private void buidMonitorConfigs(String domain, String key,
+	      Map<String, Map<MetricType, List<Config>>> monitorConfigs, Map<MetricType, List<Config>> defaultRules) {
+		Map<MetricType, List<Config>> monitorConfigsByItem = new HashMap<MetricType, List<Config>>();
+
+		for (MetricType type : MetricType.values()) {
+			List<Config> configs = m_alertConfigManager.queryConfigs(domain, key, type);
+
+			if (configs != null && configs.size() > 0) {
+				monitorConfigsByItem.put(type, configs);
+			}
+		}
+
+		if (monitorConfigsByItem.isEmpty()) {
+			monitorConfigs.put(key, defaultRules);
+		} else {
+			monitorConfigs.put(key, monitorConfigsByItem);
+		}
+	}
+
 	private AlarmRule buildMonitorConfigs(String domain, BusinessReportConfig businessReportConfig) {
 		Map<String, Map<MetricType, List<Config>>> monitorConfigs = new HashMap<String, Map<MetricType, List<Config>>>();
 		Map<String, BusinessItemConfig> itemConfigs = businessReportConfig.getBusinessItemConfigs();
+		Map<String, CustomConfig> customConfigs = businessReportConfig.getCustomConfigs();
 
 		for (BusinessItemConfig config : itemConfigs.values()) {
-			Map<MetricType, List<Config>> monitorConfigsByItem = new HashMap<MetricType, List<Config>>();
-
 			if (needAlert(config, domain)) {
 				String key = config.getId();
+				Map<MetricType, List<Config>> defaultRules = m_alertConfigManager.getDefaultRules(config);
 
-				if (config.isShowAvg()) {
-					List<Config> tmpConfigs = m_alertConfigManager.queryConfigs(domain, key, MetricType.AVG);
-
-					monitorConfigsByItem.put(MetricType.AVG, tmpConfigs);
-				}
-				if (config.isShowCount()) {
-					List<Config> tmpConfigs = m_alertConfigManager.queryConfigs(domain, key, MetricType.COUNT);
-
-					monitorConfigsByItem.put(MetricType.COUNT, tmpConfigs);
-				}
-				if (config.isShowSum()) {
-					List<Config> tmpConfigs = m_alertConfigManager.queryConfigs(domain, key, MetricType.SUM);
-
-					monitorConfigsByItem.put(MetricType.SUM, tmpConfigs);
-				}
-				monitorConfigs.put(key, monitorConfigsByItem);
+				buidMonitorConfigs(domain, key, monitorConfigs, defaultRules);
 			}
 		}
+
+		for (CustomConfig config : customConfigs.values()) {
+			if (needAlert(config, domain)) {
+				String key = config.getId();
+				Map<MetricType, List<Config>> defaultRules = m_alertConfigManager.getDefaultRulesForCustomItem();
+
+				buidMonitorConfigs(domain, key, monitorConfigs, defaultRules);
+			}
+		}
+
 		return new AlarmRule(monitorConfigs);
 	}
 
@@ -127,34 +148,84 @@ public class BusinessAlert2 implements Task {
 		}
 	}
 
+	private boolean needAlert(CustomConfig config, String domain) {
+		if (config.isAlarm()) {
+			return true;
+		}
+		Set<String> tags = m_tagConfigManager.findTagByDomain(domain).get(config.getId());
+
+		if (tags != null && tags.contains(DEFAULT_TAG)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	private List<DataCheckEntity> processBusinessItem(BusinessReportGroup reportGroup,
-	      Map<MetricType, List<Config>> alertConfig, BusinessItemConfig config, int minute, String domain) {
+	      Map<MetricType, List<Config>> alertConfig, String id, int minute, String domain) {
 		List<DataCheckEntity> results = new ArrayList<DataCheckEntity>();
-		String id = config.getId();
 
-		if (config.isShowAvg()) {
-			String metricKey = m_keyHelper.generateKey(id, domain, MetricType.AVG.getName());
-			List<DataCheckEntity> tmpResults = processMetricType(minute, alertConfig.get(MetricType.AVG), reportGroup,
-			      metricKey, MetricType.AVG);
-
-			results.addAll(tmpResults);
-		}
-		if (config.isShowCount()) {
-			String metricKey = m_keyHelper.generateKey(id, domain, MetricType.COUNT.getName());
-			List<DataCheckEntity> tmpResults = processMetricType(minute, alertConfig.get(MetricType.COUNT), reportGroup,
-			      metricKey, MetricType.COUNT);
+		for (Entry<MetricType, List<Config>> alertConfigEntry : alertConfig.entrySet()) {
+			MetricType type = alertConfigEntry.getKey();
+			String metricKey = m_keyHelper.generateKey(id, domain, type.getName());
+			List<DataCheckEntity> tmpResults = processMetricType(minute, alertConfigEntry.getValue(), reportGroup,
+			      metricKey, type);
 
 			results.addAll(tmpResults);
 		}
-		if (config.isShowSum()) {
-			String metricKey = m_keyHelper.generateKey(id, domain, MetricType.SUM.getName());
-			List<DataCheckEntity> tmpResults = processMetricType(minute, alertConfig.get(MetricType.SUM), reportGroup,
-			      metricKey, MetricType.SUM);
-
-			results.addAll(tmpResults);
-		}
-
 		return results;
+	}
+
+	private List<DataCheckEntity> processCustomItem(BusinessReportGroup currentReportGroup, List<Config> configs,
+	      int minute, String key, CustomConfig customConfig, int maxDuration) {
+		Pair<Integer, List<Condition>> conditionPair = m_baseRuleHelper.convertConditions(configs);
+		Map<String, double[]> businessItemDataCache = new HashMap<String, double[]>();
+		Map<String, double[]> baseLineCache = new HashMap<String, double[]>();
+		Map<String, BusinessReportGroup> reportGroupCache = new HashMap<String, BusinessReportGroup>();
+
+		reportGroupCache.put(m_keyHelper.getDomain(key), currentReportGroup);
+
+		if (conditionPair != null) {
+			int ruleMinute = conditionPair.getKey();
+
+			String pattern = customConfig.getPattern();
+			Pair<Boolean, List<CustomInfo>> translate = m_customDataCalculator.translatePattern(pattern);
+
+			if (translate.getKey()) {
+				List<CustomInfo> customInfos = translate.getValue();
+
+				for (CustomInfo customInfo : customInfos) {
+					String domain = customInfo.getDomain();
+
+					if (!reportGroupCache.containsKey(domain)) {
+						BusinessReportGroup tmpReportGroup = m_service.prepareDatas(domain, minute, maxDuration);
+						reportGroupCache.put(domain, tmpReportGroup);
+					}
+				}
+
+				for (CustomInfo customInfo : customInfos) {
+					String domain = customInfo.getDomain();
+					String type = customInfo.getType();
+					String id = customInfo.getKey();
+					String metricKey = m_keyHelper.generateKey(id, domain, type);
+					BusinessReportGroup reportGroup = reportGroupCache.get(domain);
+					double[] value = reportGroup.extractData(minute, ruleMinute, id, MetricType.getTypeByName(type));
+					double[] baseline = m_baselineService.queryBaseline(minute, ruleMinute, metricKey, BusinessAnalyzer.ID);
+					businessItemDataCache.put(metricKey, value);
+					baseLineCache.put(metricKey, baseline);
+				}
+
+				double[] currentData = m_customDataCalculator.calculate(pattern, customInfos, businessItemDataCache,
+				      ruleMinute);
+				double[] currentBaseLine = m_customDataCalculator
+				      .calculate(pattern, customInfos, baseLineCache, ruleMinute);
+				List<Condition> conditions = conditionPair.getValue();
+
+				return m_dataChecker.checkData(currentData, currentBaseLine, conditions);
+			}
+		}
+		return new ArrayList<DataCheckEntity>();
+
 	}
 
 	private void processDomain(String domain) {
@@ -168,14 +239,28 @@ public class BusinessAlert2 implements Task {
 
 			if (reportGroup.isDataReady()) {
 				Collection<BusinessItemConfig> configs = businessReportConfig.getBusinessItemConfigs().values();
+				Collection<CustomConfig> customConfigs = businessReportConfig.getCustomConfigs().values();
 
 				for (BusinessItemConfig itemConfig : configs) {
-					Map<MetricType, List<Config>> alertConfig = monitorConfigs.getConfigs().get(itemConfig.getId());
+					String id = itemConfig.getId();
+					Map<MetricType, List<Config>> alertConfig = monitorConfigs.getConfigs().get(id);
 
 					if (alertConfig != null) {
-						List<DataCheckEntity> results = processBusinessItem(reportGroup, alertConfig, itemConfig, minute,
-						      domain);
+						List<DataCheckEntity> results = processBusinessItem(reportGroup, alertConfig, id, minute, domain);
 						sendBusinessAlerts(domain, itemConfig.getId(), results);
+					}
+				}
+
+				for (CustomConfig customConfig : customConfigs) {
+					String id = customConfig.getId();
+					Map<MetricType, List<Config>> alertConfig = monitorConfigs.getConfigs().get(id);
+					MetricType customType = MetricType.AVG;
+
+					if (alertConfig != null) {
+						String metricKey = m_keyHelper.generateKey(id, domain, customType.getName());
+						List<DataCheckEntity> results = processCustomItem(reportGroup, alertConfig.get(customType), minute,
+						      metricKey, customConfig, maxDuration);
+						sendBusinessAlerts(domain, customConfig.getId(), results);
 					}
 				}
 			}

@@ -2,6 +2,7 @@ package com.dianping.cat.report.alert.business2;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,6 +20,7 @@ import com.dianping.cat.alarm.rule.entity.Rule;
 import com.dianping.cat.alarm.rule.entity.SubCondition;
 import com.dianping.cat.alarm.rule.transform.DefaultJsonParser;
 import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
+import com.dianping.cat.configuration.business.entity.BusinessItemConfig;
 import com.dianping.cat.core.config.BusinessConfig;
 import com.dianping.cat.core.config.BusinessConfigDao;
 import com.dianping.cat.core.config.BusinessConfigEntity;
@@ -39,7 +41,8 @@ public class BusinessRuleConfigManager2 implements Initializable {
 
 	Map<String, MonitorRules> m_rules = new ConcurrentHashMap<String, MonitorRules>();
 
-	private Config buildDefaultConfig() {
+	private List<Config> buildDefaultConfigs() {
+		List<Config> configs = new ArrayList<Config>();
 		Config config = new Config();
 		config.setStarttime("00:00");
 		config.setEndtime("24:00");
@@ -55,11 +58,38 @@ public class BusinessRuleConfigManager2 implements Initializable {
 		condition.addSubCondition(descPerSubcon).addSubCondition(descValSubcon).addSubCondition(flucPerSubcon);
 		config.addCondition(condition);
 
-		return config;
+		configs.add(config);
+
+		return configs;
 	}
 
 	private String generateRuleId(String key, String type) {
 		return new StringBuilder().append(key).append(SPLITTER).append(type).toString();
+	}
+
+	public Map<MetricType, List<Config>> getDefaultRules(BusinessItemConfig config) {
+		Map<MetricType, List<Config>> configs = new HashMap<MetricType, List<Config>>();
+
+		if (config.isShowAvg()) {
+			configs.put(MetricType.AVG, buildDefaultConfigs());
+		}
+
+		if (config.isShowCount()) {
+			configs.put(MetricType.COUNT, buildDefaultConfigs());
+		}
+
+		if (config.isShowSum()) {
+			configs.put(MetricType.SUM, buildDefaultConfigs());
+		}
+		return configs;
+	}
+
+	public Map<MetricType, List<Config>> getDefaultRulesForCustomItem() {
+		Map<MetricType, List<Config>> configs = new HashMap<MetricType, List<Config>>();
+
+		configs.put(MetricType.AVG, buildDefaultConfigs());
+
+		return configs;
 	}
 
 	@Override
@@ -69,13 +99,13 @@ public class BusinessRuleConfigManager2 implements Initializable {
 		ConfigSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
-			public void handle() throws Exception {
-				loadData();
+			public String getName() {
+				return ALERT_CONFIG;
 			}
 
 			@Override
-			public String getName() {
-				return ALERT_CONFIG;
+			public void handle() throws Exception {
+				loadData();
 			}
 		});
 	}
@@ -109,9 +139,6 @@ public class BusinessRuleConfigManager2 implements Initializable {
 			configs.addAll(rule.getConfigs());
 		}
 
-		if (configs.size() == 0) {
-			configs.add(buildDefaultConfig());
-		}
 		return configs;
 	}
 

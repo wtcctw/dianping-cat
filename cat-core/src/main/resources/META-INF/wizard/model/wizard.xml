@@ -36,4 +36,7 @@
    <model package="com.dianping.cat.command" name="app-command-config">
       <sample-model>src/main/resources/config/app-command-config.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.crashLogConfig" name="crash-log-config">
+      <sample-model>../cat-home/src/main/resources/config/crash-log-config.xml</sample-model>
+   </model>
 </wizard>
