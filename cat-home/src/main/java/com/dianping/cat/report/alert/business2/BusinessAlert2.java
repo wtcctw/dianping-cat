@@ -178,21 +178,18 @@ public class BusinessAlert2 implements Task {
 
 	private List<DataCheckEntity> processCustomItem(BusinessReportGroup currentReportGroup, List<Config> configs,
 	      int minute, String key, CustomConfig customConfig, int maxDuration) {
-		Pair<Integer, List<Condition>> conditionPair = m_baseRuleHelper.convertConditions(configs);
-		Map<String, double[]> businessItemDataCache = new HashMap<String, double[]>();
-		Map<String, double[]> baseLineCache = new HashMap<String, double[]>();
-		Map<String, BusinessReportGroup> reportGroupCache = new HashMap<String, BusinessReportGroup>();
+		try {
+			Pair<Integer, List<Condition>> conditionPair = m_baseRuleHelper.convertConditions(configs);
+			Map<String, double[]> businessItemDataCache = new HashMap<String, double[]>();
+			Map<String, double[]> baseLineCache = new HashMap<String, double[]>();
+			Map<String, BusinessReportGroup> reportGroupCache = new HashMap<String, BusinessReportGroup>();
 
-		reportGroupCache.put(m_keyHelper.getDomain(key), currentReportGroup);
+			reportGroupCache.put(m_keyHelper.getDomain(key), currentReportGroup);
 
-		if (conditionPair != null) {
-			int ruleMinute = conditionPair.getKey();
-
-			String pattern = customConfig.getPattern();
-			Pair<Boolean, List<CustomInfo>> translate = m_customDataCalculator.translatePattern(pattern);
-
-			if (translate.getKey()) {
-				List<CustomInfo> customInfos = translate.getValue();
+			if (conditionPair != null) {
+				int ruleMinute = conditionPair.getKey();
+				String pattern = customConfig.getPattern();
+				List<CustomInfo> customInfos = m_customDataCalculator.translatePattern(pattern);
 
 				for (CustomInfo customInfo : customInfos) {
 					String domain = customInfo.getDomain();
@@ -223,9 +220,10 @@ public class BusinessAlert2 implements Task {
 
 				return m_dataChecker.checkData(currentData, currentBaseLine, conditions);
 			}
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
 		return new ArrayList<DataCheckEntity>();
-
 	}
 
 	private void processDomain(String domain) {
