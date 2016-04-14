@@ -67,6 +67,15 @@ public class Cat {
 		}
 	}
 
+	public static String createMapMessageId() {
+		try {
+			return Cat.getProducer().createMapMessageId();
+		} catch (Exception e) {
+			errorHandler(e);
+			return NullMessageProducer.NULL_MESSAGE_PRODUCER.createMessageId();
+		}
+	}
+
 	public static void destroy() {
 		try {
 			s_instance.m_container.dispose();
@@ -373,7 +382,8 @@ public class Cat {
 				tree.setMessageId(messageId);
 			}
 
-			String childId = Cat.createMessageId();
+			// create next map id
+			String childId = Cat.createMapMessageId();
 			Cat.logEvent(CatConstants.TYPE_REMOTE_CALL, "", Event.SUCCESS, childId);
 
 			String root = tree.getRootMessageId();
@@ -393,18 +403,19 @@ public class Cat {
 	public static void logRemoteCallServer(Context ctx) {
 		try {
 			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
-			String messageId = ctx.getProperty(Context.CHILD);
+			String mapId = ctx.getProperty(Context.CHILD);
 			String rootId = ctx.getProperty(Context.ROOT);
 			String parentId = ctx.getProperty(Context.PARENT);
 
-			if (messageId != null) {
-				tree.setMessageId(messageId);
-			}
 			if (parentId != null) {
 				tree.setParentMessageId(parentId);
 			}
 			if (rootId != null) {
 				tree.setRootMessageId(rootId);
+			}
+			// use parent msg first TODO 
+			if (mapId != null) {
+				tree.setParentMessageId(mapId);
 			}
 		} catch (Exception e) {
 			errorHandler(e);

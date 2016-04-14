@@ -55,13 +55,11 @@ public class LocalIndex implements Index {
 			} catch (IOException e) {
 				Cat.logError(e);
 			}
-
 			try {
 				m_file.close();
 			} catch (IOException e) {
 				Cat.logError(e);
 			}
-
 			m_file = null;
 		}
 	}
@@ -112,10 +110,10 @@ public class LocalIndex implements Index {
 
 		private Map<Integer, Map<Integer, Integer>> m_blockTable = new LinkedHashMap<Integer, Map<Integer, Integer>>();
 
-		private int m_nextBlock = 2;
+		private int m_nextBlock = 4;
 
 		private boolean m_dirty;
-
+		
 		public void flush() throws IOException {
 			if (m_dirty) {
 				m_file.seek(0);
@@ -149,13 +147,17 @@ public class LocalIndex implements Index {
 				m_data.writeInt(ip);
 				m_data.writeInt(index);
 				m_dirty = true;
+
+				if (m_nextBlock % MESSAGE_PER_BLOCK == 0) {
+					
+				}
 			}
 
 			return block;
 		}
 
 		public void load() throws IOException {
-			m_data = Unpooled.buffer(2 * BLOCK_SIZE);
+			m_data = Unpooled.buffer(4 * BLOCK_SIZE);
 
 			if (m_file.length() < m_data.capacity()) {
 				m_data.writeBytes(MAGIC_CODE.getBytes());

@@ -118,6 +118,13 @@ package com.dianping.cat.message;
  */
 public interface MessageProducer {
 	/**
+	 * Create a new message id used in rpc message id map.
+	 * 
+	 * @return new message id
+	 */
+	public String createMapMessageId();
+
+	/**
 	 * Create a new message id.
 	 * 
 	 * @return new message id
@@ -137,7 +144,7 @@ public interface MessageProducer {
 	 * @param cause
 	 *           root cause exception
 	 */
-	public void logError(Throwable cause);
+	public void logError(String message, Throwable cause);
 
 	/**
 	 * Log an error.
@@ -145,7 +152,7 @@ public interface MessageProducer {
 	 * @param cause
 	 *           root cause exception
 	 */
-	public void logError(String message, Throwable cause);
+	public void logError(Throwable cause);
 
 	/**
 	 * Log an event in one shot with SUCCESS status.
@@ -156,16 +163,6 @@ public interface MessageProducer {
 	 *           event name
 	 */
 	public void logEvent(String type, String name);
-
-	/**
-	 * Log an trace in one shot with SUCCESS status.
-	 * 
-	 * @param type
-	 *           trace type
-	 * @param name
-	 *           trace name
-	 */
-	public void logTrace(String type, String name);
 
 	/**
 	 * Log an event in one shot.
@@ -180,20 +177,6 @@ public interface MessageProducer {
 	 *           name value pairs in the format of "a=1&b=2&..."
 	 */
 	public void logEvent(String type, String name, String status, String nameValuePairs);
-
-	/**
-	 * Log an trace in one shot.
-	 * 
-	 * @param type
-	 *           trace type
-	 * @param name
-	 *           trace name
-	 * @param status
-	 *           "0" means success, otherwise means error code
-	 * @param nameValuePairs
-	 *           name value pairs in the format of "a=1&b=2&..."
-	 */
-	public void logTrace(String type, String name, String status, String nameValuePairs);
 
 	/**
 	 * Log a heartbeat in one shot.
@@ -222,6 +205,30 @@ public interface MessageProducer {
 	public void logMetric(String name, String status, String nameValuePairs);
 
 	/**
+	 * Log an trace in one shot with SUCCESS status.
+	 * 
+	 * @param type
+	 *           trace type
+	 * @param name
+	 *           trace name
+	 */
+	public void logTrace(String type, String name);
+
+	/**
+	 * Log an trace in one shot.
+	 * 
+	 * @param type
+	 *           trace type
+	 * @param name
+	 *           trace name
+	 * @param status
+	 *           "0" means success, otherwise means error code
+	 * @param nameValuePairs
+	 *           name value pairs in the format of "a=1&b=2&..."
+	 */
+	public void logTrace(String type, String name, String status, String nameValuePairs);
+
+	/**
 	 * Create a new event with given type and name.
 	 * 
 	 * @param type
@@ -232,14 +239,15 @@ public interface MessageProducer {
 	public Event newEvent(String type, String name);
 
 	/**
-	 * Create a new trace with given type and name.
+	 * Create a forked transaction for child thread.
 	 * 
 	 * @param type
-	 *           trace type
+	 *           transaction type
 	 * @param name
-	 *           trace name
+	 *           transaction name
+	 * @return forked transaction
 	 */
-	public Trace newTrace(String type, String name);
+	public ForkedTransaction newForkedTransaction(String type, String name);
 
 	/**
 	 * Create a new heartbeat with given type and name.
@@ -262,27 +270,6 @@ public interface MessageProducer {
 	public Metric newMetric(String type, String name);
 
 	/**
-	 * Create a new transaction with given type and name.
-	 * 
-	 * @param type
-	 *           transaction type
-	 * @param name
-	 *           transaction name
-	 */
-	public Transaction newTransaction(String type, String name);
-
-	/**
-	 * Create a forked transaction for child thread.
-	 * 
-	 * @param type
-	 *           transaction type
-	 * @param name
-	 *           transaction name
-	 * @return forked transaction
-	 */
-	public ForkedTransaction newForkedTransaction(String type, String name);
-
-	/**
 	 * Create a tagged transaction for another process or thread.
 	 * 
 	 * @param type
@@ -294,4 +281,24 @@ public interface MessageProducer {
 	 * @return tagged transaction
 	 */
 	public TaggedTransaction newTaggedTransaction(String type, String name, String tag);
+
+	/**
+	 * Create a new trace with given type and name.
+	 * 
+	 * @param type
+	 *           trace type
+	 * @param name
+	 *           trace name
+	 */
+	public Trace newTrace(String type, String name);
+
+	/**
+	 * Create a new transaction with given type and name.
+	 * 
+	 * @param type
+	 *           transaction type
+	 * @param name
+	 *           transaction name
+	 */
+	public Transaction newTransaction(String type, String name);
 }

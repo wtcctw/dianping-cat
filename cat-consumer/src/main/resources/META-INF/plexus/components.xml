@@ -335,6 +335,9 @@
 					<role>org.unidal.cat.message.storage.MessageFinderManager</role>
 				</requirement>
 				<requirement>
+					<role>org.unidal.cat.message.storage.IndexManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>

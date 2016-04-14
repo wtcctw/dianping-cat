@@ -28,6 +28,11 @@ public class DefaultMessageProducer implements MessageProducer {
 	private MessageIdFactory m_factory;
 
 	@Override
+	public String createMapMessageId() {
+		return m_factory.getNextMapId();
+	}
+
+	@Override
 	public String createMessageId() {
 		return m_factory.getNextId();
 	}

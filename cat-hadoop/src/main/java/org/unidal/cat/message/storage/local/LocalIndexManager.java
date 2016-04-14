@@ -1,8 +1,11 @@
 package org.unidal.cat.message.storage.local;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.unidal.cat.message.storage.Index;
 import org.unidal.cat.message.storage.IndexManager;
@@ -31,7 +34,7 @@ public class LocalIndexManager extends ContainerHolder implements IndexManager {
 	}
 
 	@Override
-	public Index getIndex(String domain,int hour, boolean createIfNotExists) throws IOException {
+	public Index getIndex(String domain, int hour, boolean createIfNotExists) throws IOException {
 		Map<String, Index> map = findOrCreateMap(m_indexes, hour, createIfNotExists);
 		Index index = map == null ? null : map.get(domain);
 
@@ -47,5 +50,28 @@ public class LocalIndexManager extends ContainerHolder implements IndexManager {
 		}
 
 		return index;
+	}
+
+	@Override
+	public void close(int hour) {
+		Set<Integer> removed = new HashSet<Integer>();
+
+		for (Entry<Integer, Map<String, Index>> entry : m_indexes.entrySet()) {
+			Integer key = entry.getKey();
+
+			if (key <= hour) {
+				removed.add(key);
+			}
+		}
+
+		synchronized (m_indexes) {
+			for (Integer i : removed) {
+				Map<String, Index> value = m_indexes.remove(i);
+
+				for (Index t : value.values()) {
+					t.close();
+				}
+			}
+		}
 	}
 }
