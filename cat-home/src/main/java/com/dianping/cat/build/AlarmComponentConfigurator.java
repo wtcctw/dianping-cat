@@ -13,7 +13,7 @@ import com.dianping.cat.alarm.spi.decorator.Decorator;
 import com.dianping.cat.alarm.spi.receiver.Contactor;
 import com.dianping.cat.alarm.spi.rule.DataChecker;
 import com.dianping.cat.alarm.spi.sender.SenderManager;
-import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.business.BusinessConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
@@ -151,7 +151,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Contactor.class, JsContactor.ID, JsContactor.class).req(JsRuleConfigManager.class,
 		      AlertConfigManager.class));
 		all.add(C(Contactor.class, AppContactor.ID, AppContactor.class).req(AlertConfigManager.class,
-		      AppConfigManager.class, ProjectService.class));
+		      AppCommandConfigManager.class, ProjectService.class));
 		all.add(C(Contactor.class, AjaxContactor.ID, AjaxContactor.class).req(AlertConfigManager.class,
 		      ProjectService.class, UrlPatternConfigManager.class));
 		all.add(C(Contactor.class, TransactionContactor.ID, TransactionContactor.class).req(ProjectService.class,
@@ -206,7 +206,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      SystemRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
 		all.add(C(AppAlert.class).req(AppDataService.class, AlertManager.class, AppRuleConfigManager.class,
-		      DataChecker.class, AppConfigManager.class));
+		      DataChecker.class, AppCommandConfigManager.class));
 
 		all.add(C(AjaxAlert.class).req(AjaxDataService.class, AlertManager.class, AjaxRuleConfigManager.class,
 		      DataChecker.class, UrlPatternConfigManager.class));

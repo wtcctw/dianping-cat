@@ -64,7 +64,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/command-format-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/url-pattern-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/aggreation-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/app-config-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/app-command-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/web-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/app-speed-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/web-speed-config-manifest.xml,
@@ -72,7 +72,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/sample-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/app-command-group-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/business-report-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/broker-config-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/mobile-config-manifest.xml,
 					</manifest>
                   </configuration>
                </execution>

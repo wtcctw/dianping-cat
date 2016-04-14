@@ -9,13 +9,15 @@ import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.rule.entity.Rule;
-import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.configuration.app.entity.Code;
-import com.dianping.cat.configuration.app.entity.Command;
-import com.dianping.cat.configuration.app.entity.ConfigItem;
-import com.dianping.cat.configuration.app.entity.Item;
+import com.dianping.cat.command.entity.Code;
+import com.dianping.cat.command.entity.Codes;
+import com.dianping.cat.command.entity.Command;
+import com.dianping.cat.config.app.AppCommandConfigManager;
+import com.dianping.cat.config.app.MobileConfigManager;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.configuration.group.entity.AppCommandGroupConfig;
+import com.dianping.cat.configuration.mobile.entity.ConstantItem;
+import com.dianping.cat.configuration.mobile.entity.Item;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.system.SystemPage;
 
@@ -29,7 +31,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private Map<Integer, Speed> m_speeds;
 
-	private Map<Integer, Code> m_codes;
+	private Map<String, Codes> m_codes;
 
 	private Map<Integer, Item> m_operators;
 
@@ -43,7 +45,9 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private List<Command> m_commands;
 
-	private AppConfigManager m_appConfigManager;
+	private AppCommandConfigManager m_appConfigManager;
+
+	private MobileConfigManager m_mobileConfigManager;
 
 	private String m_nameUniqueResult;
 
@@ -76,7 +80,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public Model(Context ctx) {
 		super(ctx);
 		try {
-			m_appConfigManager = ContainerLoader.getDefaultContainer().lookup(AppConfigManager.class);
+			m_appConfigManager = ContainerLoader.getDefaultContainer().lookup(AppCommandConfigManager.class);
+			m_mobileConfigManager = ContainerLoader.getDefaultContainer().lookup(MobileConfigManager.class);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -98,7 +103,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_code;
 	}
 
-	public Map<Integer, Code> getCodes() {
+	public Map<String, Codes> getCodes() {
 		return m_codes;
 	}
 
@@ -118,8 +123,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_configHeader;
 	}
 
-	public Map<String, ConfigItem> getConfigItems() {
-		return m_appConfigManager.getConfig().getConfigItems();
+	public Map<String, ConstantItem> getConfigItems() {
+		return m_mobileConfigManager.getConfig().getConstantItems();
 	}
 
 	public Map<Integer, Item> getConnectionTypes() {
@@ -219,7 +224,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_code = code;
 	}
 
-	public void setCodes(Map<Integer, Code> codes) {
+	public void setCodes(Map<String, Codes> codes) {
 		m_codes = codes;
 	}
 

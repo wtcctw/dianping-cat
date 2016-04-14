@@ -35,7 +35,7 @@ import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.task.ConfigSyncTask;
 import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
-public class AppConfigManager implements Initializable {
+public class AppConfigManager1 implements Initializable {
 
 	@Inject
 	protected ConfigDao m_configDao;

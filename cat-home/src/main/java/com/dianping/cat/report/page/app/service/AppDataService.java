@@ -16,7 +16,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppCommandData;
 import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppCommandDataEntity;
-import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.report.page.DataSequence;
 import com.dianping.cat.report.page.app.QueryType;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
@@ -27,7 +27,7 @@ public class AppDataService {
 	private AppCommandDataDao m_dao;
 
 	@Inject
-	private AppConfigManager m_appConfigManager;
+	private AppCommandConfigManager m_appConfigManager;
 
 	public List<AppDataDetail> buildAppDataDetailInfos(CommandQueryEntity entity, AppDataField groupByField) {
 		List<AppDataDetail> infos = new LinkedList<AppDataDetail>();

@@ -16,10 +16,10 @@ import com.dianping.cat.analysis.MessageConsumer;
 import com.dianping.cat.analysis.MessageHandler;
 import com.dianping.cat.analysis.RealtimeConsumer;
 import com.dianping.cat.analysis.TcpSocketReceiver;
+import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.app.AppCommandGroupConfigManager;
-import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
-import com.dianping.cat.config.app.BrokerConfigManager;
+import com.dianping.cat.config.app.MobileConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatHandler;
 import com.dianping.cat.config.app.command.DefaultCommandFormatlHandler;
@@ -90,10 +90,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(SampleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
-		all.add(C(AppConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(AppCommandConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(AppCommandGroupConfigManager.class).req(CommandFormatHandler.class, ConfigDao.class,
-		      ContentFetcher.class, AppConfigManager.class));
+		      ContentFetcher.class, AppCommandConfigManager.class));
 
 		all.add(C(WebConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
@@ -107,7 +107,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(UrlPatternConfigManager.class).req(ConfigDao.class, UrlPatternHandler.class, ContentFetcher.class));
 
-		all.add(A(BrokerConfigManager.class));
+		all.add(A(MobileConfigManager.class));
 
 		all.add(C(Module.class, CatCoreModule.ID, CatCoreModule.class));
 		all.add(A(HourlyReportTableProvider.class));

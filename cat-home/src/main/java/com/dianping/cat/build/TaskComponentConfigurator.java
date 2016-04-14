@@ -10,7 +10,8 @@ import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppSpeedDataDao;
 import com.dianping.cat.app.CrashLogContentDao;
 import com.dianping.cat.app.CrashLogDao;
-import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.app.AppCommandConfigManager;
+import com.dianping.cat.config.app.MobileConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.business.BusinessConfigManager;
 import com.dianping.cat.config.server.ServerConfigManager;
@@ -123,7 +124,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MetricPointParser.class));
 		all.add(C(BusinessPointParser.class));
 		all.add(C(BusinessKeyHelper.class));
-	
+
 		all.add(C(BaselineCreator.class, DefaultBaselineCreator.class));
 		all.add(C(BaselineService.class, DefaultBaselineService.class).req(BaselineDao.class));
 		all.add(C(BaselineConfigManager.class, BaselineConfigManager.class));
@@ -132,18 +133,17 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MetricReportService.class, MetricPointParser.class)//
 		      .req(MetricConfigManager.class, ProductLineConfigManager.class)//
 		      .req(BaselineCreator.class, BaselineService.class, BaselineConfigManager.class));
-		
+
 		all.add(C(TaskBuilder.class, BusinessBaselineReportBuilder.ID, BusinessBaselineReportBuilder.class)
 		      .req(BusinessReportService.class, BusinessPointParser.class)//
 		      .req(BusinessConfigManager.class, BusinessKeyHelper.class)//
 		      .req(BaselineCreator.class, BaselineService.class, BaselineConfigManager.class));
 
-
 		all.add(C(TaskBuilder.class, TransactionReportBuilder.ID, TransactionReportBuilder.class) //
 		      .req(TransactionReportService.class));
 
 		all.add(C(TaskBuilder.class, EventReportBuilder.ID, EventReportBuilder.class) //
-		      .req(EventReportService.class)); 
+		      .req(EventReportService.class));
 
 		all.add(C(TaskBuilder.class, ProblemReportBuilder.ID, ProblemReportBuilder.class) //
 		      .req(ProblemReportService.class));//
@@ -220,8 +220,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AppDatabaseConfigurator.class).req(AppCommandDataDao.class, AppSpeedDataDao.class));
 
 		all.add(C(TaskBuilder.class, AppDatabasePruner.ID, AppDatabasePruner.class).req(AppCommandDataDao.class,
-		      AppSpeedDataDao.class, AppSpeedConfigManager.class, AppConfigManager.class, CrashLogDao.class,
-		      CrashLogContentDao.class));
+		      AppSpeedDataDao.class, AppSpeedConfigManager.class, MobileConfigManager.class, CrashLogDao.class,
+		      CrashLogContentDao.class, AppCommandConfigManager.class));
 
 		all.add(C(TaskBuilder.class, WebDatabasePruner.ID, WebDatabasePruner.class).req(AjaxDataDao.class,
 		      WebSpeedDataDao.class, WebSpeedConfigManager.class, UrlPatternConfigManager.class, JsErrorLogDao.class,
@@ -229,11 +229,12 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TaskBuilder.class, MetricGraphPruner.ID, MetricGraphPruner.class).req(MetricGraphService.class));
 
-		all.add(C(CommandAutoCompleter.class).req(TransactionReportService.class, AppConfigManager.class));
+		all.add(C(CommandAutoCompleter.class).req(TransactionReportService.class, MobileConfigManager.class));
 
 		all.add(C(TaskBuilder.class, AppReportBuilder.ID, AppReportBuilder.class).req(AppCommandDataDao.class,
-		      AppConfigManager.class, AppReportService.class, TransactionReportService.class, CommandAutoCompleter.class,
-		      AppRuleConfigManager.class, TransactionMergeHelper.class));
+		      AppCommandConfigManager.class, AppReportService.class, TransactionReportService.class,
+		      CommandAutoCompleter.class, AppRuleConfigManager.class, TransactionMergeHelper.class,
+		      MobileConfigManager.class));
 
 		all.add(C(ReportFacade.class));
 

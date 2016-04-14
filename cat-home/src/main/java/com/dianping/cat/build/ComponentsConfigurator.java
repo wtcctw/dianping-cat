@@ -20,9 +20,10 @@ import com.dianping.cat.app.AppConnectionDataDao;
 import com.dianping.cat.app.AppSpeedDataDao;
 import com.dianping.cat.config.app.AppCmdDailyTableProvider;
 import com.dianping.cat.config.app.AppCommandTableProvider;
-import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.app.AppConnectionTableProvider;
 import com.dianping.cat.config.app.AppSpeedTableProvider;
+import com.dianping.cat.config.app.MobileConfigManager;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
@@ -237,11 +238,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DataExtractor.class, DataExtractorImpl.class));
 		all.add(C(MetricDataFetcher.class, MetricDataFetcherImpl.class));
 
-		all.add(C(AppSpeedDataBuilder.class).req(AppSpeedDataDao.class, AppConfigManager.class));
+		all.add(C(AppSpeedDataBuilder.class).req(AppSpeedDataDao.class, AppCommandConfigManager.class,
+		      MobileConfigManager.class));
 		all.add(C(AppSpeedService.class).req(AppSpeedDataDao.class, AppSpeedDataBuilder.class));
 
-		all.add(C(AppDataService.class).req(AppCommandDataDao.class, AppConfigManager.class));
-		all.add(C(AppConnectionService.class).req(AppConnectionDataDao.class, AppConfigManager.class));
+		all.add(C(AppDataService.class).req(AppCommandDataDao.class, AppCommandConfigManager.class));
+		all.add(C(AppConnectionService.class).req(AppConnectionDataDao.class, AppCommandConfigManager.class));
 
 		all.add(C(GraphBuilder.class));
 		all.add(C(MetricScreenTransformer.class));

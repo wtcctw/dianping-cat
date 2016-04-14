@@ -10,8 +10,8 @@ import java.util.Set;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.configuration.app.entity.Command;
+import com.dianping.cat.command.entity.Command;
+import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -24,7 +24,7 @@ import com.site.lookup.util.StringUtils;
 public class CommandAutoCompleter {
 
 	@Inject
-	private AppConfigManager m_configManager;
+	private AppCommandConfigManager m_configManager;
 
 	@Inject
 	private TransactionReportService m_reportService;

@@ -18,9 +18,9 @@ import com.dianping.cat.app.CrashLog;
 import com.dianping.cat.app.CrashLogContent;
 import com.dianping.cat.app.CrashLogContentDao;
 import com.dianping.cat.app.CrashLogDao;
-import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.command.entity.Command;
+import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
-import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.TaskBuilder;
 
@@ -44,7 +44,7 @@ public class AppDatabasePruner implements TaskBuilder {
 	private CrashLogContentDao m_crashLogContentDao;
 
 	@Inject
-	private AppConfigManager m_appConfigManager;
+	private AppCommandConfigManager m_appConfigManager;
 
 	private static final int DURATION = -2;
 

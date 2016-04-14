@@ -23,8 +23,8 @@ import com.dianping.cat.alarm.spi.AlertManager;
 import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
 import com.dianping.cat.alarm.spi.rule.DataChecker;
-import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.configuration.app.entity.Command;
+import com.dianping.cat.command.entity.Command;
+import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.app.QueryType;
@@ -46,7 +46,7 @@ public class AppAlert implements Task {
 	private DataChecker m_dataChecker;
 
 	@Inject
-	private AppConfigManager m_appConfigManager;
+	private AppCommandConfigManager m_appConfigManager;
 
 	private static final long DURATION = TimeHelper.ONE_MINUTE * 5;
 

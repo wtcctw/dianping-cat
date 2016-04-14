@@ -25,9 +25,11 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.command.entity.Command;
+import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
-import com.dianping.cat.configuration.app.entity.Command;
+import com.dianping.cat.config.app.MobileConfigManager;
+import com.dianping.cat.config.app.MobileConstants;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.app.entity.AppReport;
@@ -67,7 +69,7 @@ public class Handler implements PageHandler<Context> {
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private AppConfigManager m_appConfigManager;
+	private AppCommandConfigManager m_appConfigManager;
 
 	@Inject
 	private AppSpeedConfigManager m_appSpeedConfigManager;
@@ -104,6 +106,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private AppStatisticBuilder m_appStatisticBuilder;
+
+	@Inject
+	private MobileConfigManager m_mobileConfigManager;
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
@@ -497,17 +502,17 @@ public class Handler implements PageHandler<Context> {
 	private void normalize(Model model, Payload payload) {
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.APP);
-		model.setConnectionTypes(m_appConfigManager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
-		model.setCities(m_appConfigManager.queryConfigItem(AppConfigManager.CITY));
-		model.setNetworks(m_appConfigManager.queryConfigItem(AppConfigManager.NETWORK));
-		model.setOperators(m_appConfigManager.queryConfigItem(AppConfigManager.OPERATOR));
-		model.setPlatforms(m_appConfigManager.queryConfigItem(AppConfigManager.PLATFORM));
-		model.setVersions(m_appConfigManager.queryConfigItem(AppConfigManager.VERSION));
-		model.setSources(m_appConfigManager.queryConfigItem(AppConfigManager.SOURCE));
+		model.setConnectionTypes(m_mobileConfigManager.queryConstantItem(MobileConstants.CONNECT_TYPE));
+		model.setCities(m_mobileConfigManager.queryConstantItem(MobileConstants.CITY));
+		model.setNetworks(m_mobileConfigManager.queryConstantItem(MobileConstants.NETWORK));
+		model.setOperators(m_mobileConfigManager.queryConstantItem(MobileConstants.OPERATOR));
+		model.setPlatforms(m_mobileConfigManager.queryConstantItem(MobileConstants.PLATFORM));
+		model.setVersions(m_mobileConfigManager.queryConstantItem(MobileConstants.VERSION));
+		model.setSources(m_mobileConfigManager.queryConstantItem(MobileConstants.SOURCE));
 		model.setCommands(m_appConfigManager.queryCommands());
 		model.setCommand2Id(m_appConfigManager.getCommands());
 		model.setCommand2Codes(m_appConfigManager.queryCommand2Codes());
-		model.setGlobalCodes(m_appConfigManager.getConfig().getCodes());
+		model.setGlobalCodes(m_appConfigManager.getConfig().getCodeses());
 
 		Command defaultCommand = m_appConfigManager.getRawCommands().get(CommandQueryEntity.DEFAULT_COMMAND);
 

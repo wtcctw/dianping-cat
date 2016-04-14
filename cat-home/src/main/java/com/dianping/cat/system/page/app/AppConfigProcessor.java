@@ -17,15 +17,16 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.rule.entity.Rule;
 import com.dianping.cat.alarm.rule.transform.DefaultJsonBuilder;
+import com.dianping.cat.command.entity.Code;
+import com.dianping.cat.command.entity.Command;
+import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.app.AppCommandGroupConfigManager;
-import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
-import com.dianping.cat.config.app.BrokerConfigManager;
+import com.dianping.cat.config.app.MobileConfigManager;
+import com.dianping.cat.config.app.MobileConstants;
 import com.dianping.cat.config.app.command.CommandFormatConfigManager;
-import com.dianping.cat.configuration.app.entity.Code;
-import com.dianping.cat.configuration.app.entity.Command;
-import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
+import com.dianping.cat.configuration.mobile.entity.Item;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
@@ -43,7 +44,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 	private AppRuleConfigManager m_appRuleConfigManager;
 
 	@Inject
-	private AppConfigManager m_appConfigManager;
+	private AppCommandConfigManager m_appConfigManager;
 
 	@Inject
 	private AppSpeedConfigManager m_appSpeedConfigManager;
@@ -58,7 +59,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 	private AppCommandGroupConfigManager m_appCommandGroupManager;
 
 	@Inject
-	private BrokerConfigManager m_brokerConfigManager;
+	private MobileConfigManager m_brokerConfigManager;
 
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
@@ -72,7 +73,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 				if (StringUtils.isNotEmpty(path) && !m_appConfigManager.getCommands().containsKey(path)) {
 					Command command = new Command();
 
-					command.setDomain("").setTitle(path).setName(path).setAll(false);
+					command.setDomain("").setTitle(path).setName(path).setNamespace("");
 					m_appConfigManager.addCommand(command);
 				}
 			} catch (Exception e) {
@@ -81,20 +82,20 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 		}
 	}
 
-	private void buildAppConfigInfo(AppConfigManager appConfigManager, Model model) {
-		model.setConnectionTypes(appConfigManager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
-		model.setCities(appConfigManager.queryConfigItem(AppConfigManager.CITY));
-		model.setNetworks(appConfigManager.queryConfigItem(AppConfigManager.NETWORK));
-		model.setOperators(appConfigManager.queryConfigItem(AppConfigManager.OPERATOR));
-		model.setPlatforms(appConfigManager.queryConfigItem(AppConfigManager.PLATFORM));
-		model.setVersions(appConfigManager.queryConfigItem(AppConfigManager.VERSION));
-		model.setCommands(appConfigManager.queryCommands());
+	private void buildAppConfigInfo(Model model) {
+		model.setConnectionTypes(m_brokerConfigManager.queryConstantItem(MobileConstants.CONNECT_TYPE));
+		model.setCities(m_brokerConfigManager.queryConstantItem(MobileConstants.CITY));
+		model.setNetworks(m_brokerConfigManager.queryConstantItem(MobileConstants.NETWORK));
+		model.setOperators(m_brokerConfigManager.queryConstantItem(MobileConstants.OPERATOR));
+		model.setPlatforms(m_brokerConfigManager.queryConstantItem(MobileConstants.PLATFORM));
+		model.setVersions(m_brokerConfigManager.queryConstantItem(MobileConstants.VERSION));
+		model.setCommands(m_appConfigManager.queryCommands());
 	}
 
 	public void buildBatchApiConfig(Payload payload, Model model) {
 		Date start = TimeHelper.getCurrentDay(-1);
 		Date end = TimeHelper.getCurrentDay();
-		EventReport report = m_eventReportService.queryReport(m_appConfigManager.getConfig().getBroker(), start, end);
+		EventReport report = m_eventReportService.queryReport(m_brokerConfigManager.getBrokerName(), start, end);
 		EventReportVisitor visitor = new EventReportVisitor();
 
 		visitor.visitEventReport(report);
@@ -189,13 +190,13 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			String domain = payload.getDomain();
 			String name = payload.getName();
 			String title = payload.getTitle();
-			boolean all = payload.isAll();
+			String namespace = payload.getNamespace();
 			int timeThreshold = payload.getThreshold();
 
 			if (m_appConfigManager.containCommand(id)) {
 				Command command = new Command();
 
-				command.setDomain(domain).setName(name).setTitle(title).setAll(all).setThreshold(timeThreshold);
+				command.setDomain(domain).setName(name).setTitle(title).setNamespace(namespace).setThreshold(timeThreshold);
 
 				if (m_appConfigManager.updateCommand(id, command)) {
 					model.setOpState(true);
@@ -204,7 +205,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 				}
 			} else {
 				try {
-					Command command = new Command().setDomain(domain).setTitle(title).setName(name).setAll(all)
+					Command command = new Command().setDomain(domain).setTitle(title).setName(name).setNamespace(namespace)
 					      .setThreshold(timeThreshold);
 
 					if (m_appConfigManager.addCommand(command).getKey()) {
@@ -234,7 +235,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			int codeId = payload.getCode();
 
 			if (payload.isConstant()) {
-				Code code = m_appConfigManager.getConfig().getCodes().get(codeId);
+				Code code = m_appConfigManager.getConfig().findCodes(payload.getNamespace()).findCode(codeId);
 
 				model.setCode(code);
 			} else {
@@ -261,7 +262,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 				code.setName(name).setStatus(status);
 
 				if (payload.isConstant()) {
-					m_appConfigManager.updateCode(code);
+					m_appConfigManager.updateCode(payload.getNamespace(), code);
 				} else {
 					m_appConfigManager.updateCode(id, code);
 				}
@@ -346,20 +347,20 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			model.setContent(m_configHtmlParser.parse(m_brokerConfigManager.getConfig().toString()));
 			break;
 		case APP_RULE:
-			buildAppConfigInfo(m_appConfigManager, model);
+			buildAppConfigInfo(model);
 			model.setRules(m_appRuleConfigManager.getMonitorRules().getRules().values());
 			break;
 		case APP_RULE_ADD_OR_UPDATE:
-			buildAppConfigInfo(m_appConfigManager, model);
+			buildAppConfigInfo(model);
 			generateRuleConfigContent(payload.getRuleId(), m_appRuleConfigManager, model);
 			break;
 		case APP_RULE_ADD_OR_UPDATE_SUBMIT:
-			buildAppConfigInfo(m_appConfigManager, model);
+			buildAppConfigInfo(model);
 			model.setOpState(addSubmitRule(m_appRuleConfigManager, payload.getRuleId(), "", payload.getConfigs()));
 			model.setRules(m_appRuleConfigManager.getMonitorRules().getRules().values());
 			break;
 		case APP_RULE_DELETE:
-			buildAppConfigInfo(m_appConfigManager, model);
+			buildAppConfigInfo(model);
 			model.setOpState(deleteRule(m_appRuleConfigManager, payload.getRuleId()));
 			model.setRules(m_appRuleConfigManager.getMonitorRules().getRules().values());
 			break;
@@ -373,7 +374,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 		case APP_CONSTANT_ADD:
 			break;
 		case APP_CONSTANT_UPDATE:
-			Item item = m_appConfigManager.queryItem(payload.getType(), payload.getId());
+			Item item = m_brokerConfigManager.queryConstantItem(payload.getType(), payload.getId());
 
 			model.setAppItem(item);
 			break;
@@ -389,7 +390,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 				int constantId = Integer.valueOf(strs[1]);
 				String value = strs[2];
 
-				model.setOpState(m_appConfigManager.addConstant(type, constantId, value));
+				model.setOpState(m_brokerConfigManager.addConstant(type, constantId, value));
 				buildListInfo(model, payload);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -441,7 +442,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 		}
 
 		private boolean invalidate(String name) {
-			Set<String> invalids = m_appConfigManager.getConfig().getInvalidatePatterns();
+			List<String> invalids = m_brokerConfigManager.getInvalidatePatterns();
 
 			for (String str : invalids) {
 				if (StringUtils.isEmpty(str) || name.indexOf(str) > -1) {
