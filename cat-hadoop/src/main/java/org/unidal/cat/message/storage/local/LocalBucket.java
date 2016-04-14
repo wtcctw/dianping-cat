@@ -458,7 +458,7 @@ public class LocalBucket implements Bucket, BenchmarkEnabled {
 				m_segmentChannel = channel;
 				m_address = address;
 				 
-				m_buf = ByteBuffer.allocateDirect(SEGMENT_SIZE);
+				m_buf = ByteBuffer.allocate(SEGMENT_SIZE);
 				m_buf.mark();
 				m_segmentChannel.read(m_buf, address);
 				m_buf.reset();
