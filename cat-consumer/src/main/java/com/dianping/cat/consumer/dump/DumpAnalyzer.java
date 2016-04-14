@@ -11,6 +11,7 @@ import org.unidal.cat.message.storage.MessageDumperManager;
 import org.unidal.cat.message.storage.MessageFinderManager;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
@@ -102,7 +103,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 				String mapId = tree.getSessionToken();
 
-				if (mapId != null && !mapId.equals("null")) {
+				if (StringUtils.isNotEmpty(mapId) && !mapId.equals("null")) {
 					try {
 						Index index = m_indexManager.getIndex(domain, hour, true);
 
