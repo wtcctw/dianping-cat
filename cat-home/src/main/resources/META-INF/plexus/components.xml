@@ -1130,6 +1130,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.business.graph.CustomDataCalculator</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

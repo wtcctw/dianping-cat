@@ -155,7 +155,12 @@
      			<td>${payload.domain}</td>
      			<td>${config.viewOrder}</td>
      			<td>
-     				<span>否</span>
+					<c:if test="${config.alarm}">
+     					<span class="text-danger">是</span>
+     				</c:if>
+     				<c:if test="${config.alarm == false}">
+     					<span>否</span>
+     				</c:if>     			
      			</td>
      			<td style="word-wrap:break-word;word-break:break-all;">${config.id}</td>
      			<td style="word-wrap:break-word;word-break:break-all;">${config.title}</td>
@@ -169,6 +174,7 @@
      			<td align='center'></td>
      			<td align='center'>
      				<span class="dashboard">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+     				<a href="?op=alertRuleAdd&key=${config.id}&domain=${payload.domain}&attributes=AVG" id="alertRule" class="btn btn-primary btn-xs">告警</a>
      			<td align='center'>
      			</td>
 	     		<td style="text-align:center;white-space: nowrap">
