@@ -19,6 +19,8 @@ public class MessageIdFactory {
 
 	private volatile AtomicInteger m_index;
 
+	private volatile AtomicInteger m_mapIndex;
+
 	private String m_domain;
 
 	private String m_ipAddress;
@@ -33,6 +35,7 @@ public class MessageIdFactory {
 
 	public void close() {
 		try {
+			saveMark();
 			m_markFile.close();
 		} catch (Exception e) {
 			// ignore it
@@ -95,6 +98,29 @@ public class MessageIdFactory {
 		}
 	}
 
+	public String getNextMapId() {
+		long timestamp = getTimestamp();
+
+		if (timestamp != m_timestamp) {
+			m_mapIndex = new AtomicInteger(0);
+			m_timestamp = timestamp;
+		}
+
+		int index = m_mapIndex.getAndIncrement();
+
+		StringBuilder sb = new StringBuilder(m_domain.length() + 32);
+
+		sb.append(m_domain);
+		sb.append('-');
+		sb.append(m_ipAddress);
+		sb.append('-');
+		sb.append(timestamp);
+		sb.append('-');
+		sb.append(index);
+
+		return sb.toString();
+	}
+
 	protected long getTimestamp() {
 		long timestamp = MilliSecondTimer.currentTimeMillis();
 
@@ -128,17 +154,28 @@ public class MessageIdFactory {
 		m_byteBuffer = m_markFile.getChannel().map(MapMode.READ_WRITE, 0, 20);
 
 		if (m_byteBuffer.limit() > 0) {
-			int index = m_byteBuffer.getInt();
 			long lastTimestamp = m_byteBuffer.getLong();
+			int index = m_byteBuffer.getInt();
+			int rpcIndex = m_byteBuffer.getInt();
 
 			if (lastTimestamp == m_timestamp) { // for same hour
-				m_index = new AtomicInteger(index + 10000);
+				m_index = new AtomicInteger(index + 1000);
+				m_mapIndex = new AtomicInteger(rpcIndex + 1000);
 			} else {
 				m_index = new AtomicInteger(0);
+				m_mapIndex = new AtomicInteger(0);
 			}
 		}
 
 		saveMark();
+
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+
+			@Override
+			public void run() {
+				saveMark();
+			}
+		});
 	}
 
 	protected void resetIndex() {
@@ -152,8 +189,10 @@ public class MessageIdFactory {
 	public void saveMark() {
 		try {
 			m_byteBuffer.rewind();
-			m_byteBuffer.putInt(m_index.get());
 			m_byteBuffer.putLong(m_timestamp);
+			m_byteBuffer.putInt(m_index.get());
+			m_byteBuffer.putInt(m_mapIndex.get());
+			m_byteBuffer.force();
 		} catch (Exception e) {
 			// ignore it
 		}
@@ -166,4 +205,5 @@ public class MessageIdFactory {
 	public void setIpAddress(String ipAddress) {
 		m_ipAddress = ipAddress;
 	}
+
 }

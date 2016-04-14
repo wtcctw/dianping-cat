@@ -21,10 +21,20 @@ public class MessageIdFactoryTest {
 	};
 
 	@Before
-	public void before(){
+	public void before() {
 		new File("/data/appdatas/cat/cat-cat.mark").delete();
 	}
-	
+
+	@Test
+	public void testMapId() throws IOException {
+		m_factory.initialize("test");
+
+		for (int i = 0; i < 1000; i++) {
+			System.out.println(m_factory.getNextMapId());
+			System.out.println(m_factory.getNextId());
+		}
+	}
+
 	@Test
 	public void test() {
 		String id = "UNKNOWN-c0a82050-376665-314";
