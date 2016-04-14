@@ -9,6 +9,8 @@ public interface FileBuilder {
 	public static enum FileType {
 		MAPPING("map"),
 
+		TOKEN("token"),
+
 		INDEX("idx"),
 
 		DATA("dat");

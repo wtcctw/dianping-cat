@@ -413,9 +413,9 @@ public class Cat {
 			if (rootId != null) {
 				tree.setRootMessageId(rootId);
 			}
-			// use parent msg first TODO 
+			// use session token first TODO 
 			if (mapId != null) {
-				tree.setParentMessageId(mapId);
+				tree.setSessionToken(mapId);
 			}
 		} catch (Exception e) {
 			errorHandler(e);

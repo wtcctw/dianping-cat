@@ -247,7 +247,7 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 	private Map<String, double[]> buildGraphData(BusinessReport report, BusinessReportConfig config) {
 		Map<String, double[]> values = new LinkedHashMap<String, double[]>();
 		Map<String, double[]> datas = m_dataFetcher.buildGraphData(report);
-		Map<String, BusinessItemConfig> businessItemConfigs = config.getBusinessItemConfigs();
+		Map<String, BusinessItemConfig> businessItemConfigs= config.getBusinessItemConfigs();
 		List<BusinessItemConfig> items = new ArrayList<BusinessItemConfig>(businessItemConfigs.values());
 
 		Collections.sort(items, new Comparator<BusinessItemConfig>() {

@@ -100,13 +100,13 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 			if (dumper != null) {
 				dumper.process(tree);
 
-				String parentMessageId = tree.getParentMessageId();
+				String mapId = tree.getSessionToken();
 
-				if (parentMessageId != null) {
+				if (mapId != null && !mapId.equals("null")) {
 					try {
 						Index index = m_indexManager.getIndex(domain, hour, true);
 
-						index.map(MessageId.parse(parentMessageId), messageId);
+						index.map(MessageId.parse(mapId), messageId);
 					} catch (Exception e) {
 						Cat.logError(e);
 					}

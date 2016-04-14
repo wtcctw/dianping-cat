@@ -148,7 +148,7 @@ public class LocalTokenMapping implements TokenMapping {
 
 	@Override
 	public void open(Date startTime, String ip) throws IOException {
-		m_path = m_bulider.getFile(null, startTime, ip, FileType.MAPPING);
+		m_path = m_bulider.getFile(null, startTime, ip, FileType.TOKEN);
 		m_path.getParentFile().mkdirs();
 		m_file = new RandomAccessFile(m_path, "rwd"); // read-write without meta sync
 		m_data = Unpooled.buffer(BLOCK_SIZE);

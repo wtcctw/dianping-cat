@@ -70,7 +70,7 @@ public class LocalIndex implements Index {
 			Date startTime = new Date(from.getTimestamp());
 			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
-			m_path = m_bulider.getFile(domain, startTime, ip, FileType.INDEX);
+			m_path = m_bulider.getFile(domain, startTime, ip, FileType.MAPPING);
 			m_path.getParentFile().mkdirs();
 			m_file = new RandomAccessFile(m_path, "rwd"); // read-write without meta sync
 
