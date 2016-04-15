@@ -269,8 +269,10 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 
 				if (payload.isConstant()) {
 					m_appConfigManager.updateCode(payload.getNamespace(), code);
-				} else {
+				} else if (id > 0) {
 					m_appConfigManager.updateCode(id, code);
+				} else {
+					m_appConfigManager.addCode(payload.getNamespace(), code);
 				}
 				buildCodesInfo(model, payload);
 			} catch (Exception e) {

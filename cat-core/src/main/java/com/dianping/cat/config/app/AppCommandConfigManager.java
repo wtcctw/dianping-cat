@@ -59,6 +59,12 @@ public class AppCommandConfigManager implements Initializable {
 
 	public static final int ALL_COMMAND_ID = 0;
 
+	public boolean addCode(String namespace, Code code) {
+		m_config.findOrCreateCodes(namespace).addCode(code);
+
+		return storeConfig();
+	}
+
 	public Pair<Boolean, Integer> addCommand(Command command) throws Exception {
 		int commandId = 0;
 
