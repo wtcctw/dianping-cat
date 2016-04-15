@@ -63,7 +63,6 @@
 							<li id="traceLog"><a href="http://mobile-tracer-web01.nh/" target="_blank">
 								<i class="menu-icon fa fa-caret-right"></i>dpid离线日志</a>
 								<b class="arrow"></b></li>
-							
 						</ul>
 					</li>
 					<li id="userMonitor_config" class="hsub" >
@@ -74,11 +73,20 @@
 							<li id="appList"><a href="/cat/s/app?op=appList">
 								<i class="menu-icon fa fa-caret-right"></i>App命令字</a>
 								<b class="arrow"></b></li>
+							<li id="appCodes"><a href="/cat/s/app?op=appCodes">
+								<i class="menu-icon fa fa-caret-right"></i>App返回码</a>
+								<b class="arrow"></b></li>
+							<li id="appConstants"><a href="/cat/s/app?op=appConstants">
+								<i class="menu-icon fa fa-caret-right"></i>App常量</a>
+								<b class="arrow"></b></li>
+							<li id="appCommandGroup"><a href="/cat/s/app?op=appCommandGroup">
+								<i class="menu-icon fa fa-caret-right"></i>App分组</a>
+								<b class="arrow"></b></li>
 							<li id="appSpeedList"><a href="/cat/s/app?op=appSpeedList">
 								<i class="menu-icon fa fa-caret-right"></i>App测速</a>
 								<b class="arrow"></b></li>
 							<li id="brokerConfigUpdate"><a href="/cat/s/app?op=brokerConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>Broker配置</a>
+								<i class="menu-icon fa fa-caret-right"></i>Mobile配置</a>
 								<b class="arrow"></b></li>
 							<li id="appCommandBatch"><a href="/cat/s/app?op=appCommandBatch">
 								<i class="menu-icon fa fa-caret-right"></i>批量添加</a>

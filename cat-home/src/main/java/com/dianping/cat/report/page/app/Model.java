@@ -61,7 +61,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Map<String, Codes> m_globalCodes;
 
-	private List<Command> m_commands;
+	private Map<Integer, Command> m_commands;
 
 	private List<AppDataDetail> m_appDataDetailInfos;
 
@@ -156,8 +156,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_commandId;
 	}
 
-	public List<Command> getCommands() {
+	public Map<Integer, Command> getCommands() {
 		return m_commands;
+	}
+
+	public String getCommandsJson() {
+		return new JsonBuilder().toJson(m_commands);
 	}
 
 	public Map<String, AppDataDetail> getComparisonAppDetails() {
@@ -303,8 +307,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_commandId = commandId;
 	}
 
-	public void setCommands(List<Command> commands) {
-		m_commands = commands;
+	public void setCommands(Map<Integer, Command> map) {
+		m_commands = map;
 	}
 
 	public void setComparisonAppDetails(Map<String, AppDataDetail> comparisonAppDetail) {

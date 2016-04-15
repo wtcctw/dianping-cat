@@ -13,6 +13,7 @@ import com.dianping.cat.command.entity.Code;
 import com.dianping.cat.command.entity.Codes;
 import com.dianping.cat.command.entity.Command;
 import com.dianping.cat.config.app.AppCommandConfigManager;
+import com.dianping.cat.config.app.AppCommandConfigManager.AppCommandDisplayInfo;
 import com.dianping.cat.config.app.MobileConfigManager;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.configuration.group.entity.AppCommandGroupConfig;
@@ -43,7 +44,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private String m_domain;
 
-	private List<Command> m_commands;
+	private Map<Integer, Command> m_commands;
 
 	private AppCommandConfigManager m_appConfigManager;
 
@@ -87,7 +88,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		}
 	}
 
-	public Map<String, List<Command>> getApiCommands() {
+	public Map<String, AppCommandDisplayInfo> getApiCommands() {
 		return m_appConfigManager.queryDomain2Commands();
 	}
 
@@ -115,7 +116,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return new JsonBuilder().toJson(m_appConfigManager.queryCommand2Codes());
 	}
 
-	public List<Command> getCommands() {
+	public Map<Integer, Command> getCommands() {
 		return m_commands;
 	}
 
@@ -232,8 +233,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_commandGroupConfig = commandGroupConfig;
 	}
 
-	public void setCommands(List<Command> commands) {
-		m_commands = commands;
+	public void setCommands(Map<Integer, Command> map) {
+		m_commands = map;
 	}
 
 	public void setConfigHeader(String configHeader) {

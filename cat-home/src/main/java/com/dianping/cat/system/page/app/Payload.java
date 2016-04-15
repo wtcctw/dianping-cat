@@ -4,7 +4,6 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
-import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.system.SystemPage;
 
 public class Payload implements ActionPayload<SystemPage, Action> {
@@ -53,7 +52,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	private String m_parent;
 
 	@FieldMeta("namespace")
-	private String m_namespace = AppCommandConfigManager.DEFAULT_NAMESPACE;
+	private String m_namespace;
 
 	@Override
 	public Action getAction() {

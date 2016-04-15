@@ -22,9 +22,9 @@ import com.dianping.cat.command.entity.Command;
 import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.app.AppCommandGroupConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
+import com.dianping.cat.config.app.CrashLogConfigManager;
 import com.dianping.cat.config.app.MobileConfigManager;
 import com.dianping.cat.config.app.MobileConstants;
-import com.dianping.cat.config.app.CrashLogConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatConfigManager;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.configuration.mobile.entity.Item;
@@ -64,7 +64,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
-	
+
 	@Inject
 	private CrashLogConfigManager m_crashLogConfigManager;
 
@@ -116,26 +116,20 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 		model.setInvalidatePaths(new ArrayList<String>(invalidatePaths));
 	}
 
-	private void buildListInfo(Model model, Payload payload) {
-		int id = 0;
-		List<Command> commands = m_appConfigManager.queryCommands();
+	private void buildCodesInfo(Model model, Payload payload) {
+		int id = payload.getId();
 
-		if ("code".equals(payload.getType()) && payload.getId() > 0) {
-			id = payload.getId();
-		} else {
-			if (!commands.isEmpty()) {
-				id = commands.iterator().next().getId();
+		if (id > 0) {
+			Command cmd = m_appConfigManager.getRawCommands().get(id);
+
+			if (cmd != null) {
+				model.setUpdateCommand(cmd);
+				model.setId(String.valueOf(id));
 			}
 		}
-		Command cmd = m_appConfigManager.getRawCommands().get(id);
 
-		if (cmd != null) {
-			model.setUpdateCommand(cmd);
-			model.setId(String.valueOf(id));
-		}
-
-		model.setCommandGroupConfig(m_appCommandGroupManager.getConfig());
 		model.setCodes(m_appConfigManager.getCodes());
+		model.setCommands(m_appConfigManager.queryCommands());
 	}
 
 	public void generateRuleConfigContent(String key, BaseRuleConfigManager manager, Model model) {
@@ -175,7 +169,9 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			}
 			break;
 		case APP_LIST:
-			buildListInfo(model, payload);
+			break;
+		case APP_CODES:
+			buildCodesInfo(model, payload);
 			break;
 		case APP_COMMMAND_UPDATE:
 			id = payload.getId();
@@ -196,32 +192,39 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			String title = payload.getTitle();
 			String namespace = payload.getNamespace();
 			int timeThreshold = payload.getThreshold();
+			List<String> commands = Splitters.by(",").noEmptyItem().split(name);
 
 			if (m_appConfigManager.containCommand(id)) {
-				Command command = new Command();
+				if (commands.size() == 1) {
+					Command command = new Command();
 
-				command.setDomain(domain).setName(name).setTitle(title).setNamespace(namespace).setThreshold(timeThreshold);
-
-				if (m_appConfigManager.updateCommand(id, command)) {
-					model.setOpState(true);
-				} else {
-					model.setOpState(false);
-				}
-			} else {
-				try {
-					Command command = new Command().setDomain(domain).setTitle(title).setName(name).setNamespace(namespace)
+					command.setDomain(domain).setName(commands.get(0)).setTitle(title).setNamespace(namespace)
 					      .setThreshold(timeThreshold);
 
-					if (m_appConfigManager.addCommand(command).getKey()) {
+					if (m_appConfigManager.updateCommand(id, command)) {
 						model.setOpState(true);
 					} else {
 						model.setOpState(false);
 					}
-				} catch (Exception e) {
+				} else {
 					model.setOpState(false);
 				}
+			} else {
+				for (String cmd : commands) {
+					try {
+						Command command = new Command().setDomain(domain).setTitle(title).setName(cmd)
+						      .setNamespace(namespace).setThreshold(timeThreshold);
+
+						if (m_appConfigManager.addCommand(command).getKey()) {
+							model.setOpState(true);
+						} else {
+							model.setOpState(false);
+						}
+					} catch (Exception e) {
+						model.setOpState(false);
+					}
+				}
 			}
-			buildListInfo(model, payload);
 			break;
 		case APP_COMMAND_DELETE:
 			id = payload.getId();
@@ -232,7 +235,6 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			} else {
 				model.setOpState(false);
 			}
-			buildListInfo(model, payload);
 			break;
 		case APP_CODE_UPDATE:
 			id = payload.getId();
@@ -270,7 +272,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 				} else {
 					m_appConfigManager.updateCode(id, code);
 				}
-				buildListInfo(model, payload);
+				buildCodesInfo(model, payload);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -290,7 +292,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 				} else {
 					m_appConfigManager.deleteCode(id, codeId);
 				}
-				buildListInfo(model, payload);
+				buildCodesInfo(model, payload);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -382,6 +384,8 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			appCommandBatchUpdate(payload, model);
 			buildBatchApiConfig(payload, model);
 			break;
+		case APP_CONSTANTS:
+			break;
 		case APP_CONSTANT_ADD:
 			break;
 		case APP_CONSTANT_UPDATE:
@@ -402,7 +406,6 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 				String value = strs[2];
 
 				model.setOpState(m_brokerConfigManager.addConstant(type, constantId, value));
-				buildListInfo(model, payload);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -415,18 +418,21 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			}
 			model.setContent(m_configHtmlParser.parse(m_urlConfigManager.getUrlFormat().toString()));
 			break;
+		case APP_COMMAND_GROUP:
+			model.setCommandGroupConfig(m_appCommandGroupManager.getConfig());
+			break;
 		case APP_COMMAND_GROUP_ADD:
 			break;
 		case APP_COMMAND_GROUP_DELETE:
 			model.setOpState(m_appCommandGroupManager.deleteByName(payload.getParent(), payload.getName()));
-			buildListInfo(model, payload);
+			model.setCommandGroupConfig(m_appCommandGroupManager.getConfig());
 			break;
 		case APP_COMMAND_GROUP_SUBMIT:
 			String parent = payload.getParent();
 			name = payload.getName();
 
 			model.setOpState(m_appCommandGroupManager.insert(parent, name));
-			buildListInfo(model, payload);
+			model.setCommandGroupConfig(m_appCommandGroupManager.getConfig());
 			break;
 		case APP_COMMAND_GROUP_UPDATE:
 			content = payload.getContent();

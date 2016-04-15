@@ -1689,9 +1689,6 @@
 					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.app.MobileConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.app.CrashLogDao</role>
 				</requirement>
 				<requirement>
@@ -1745,7 +1742,7 @@
 					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.app.MobileConfigManager</role>
+					<role>com.dianping.cat.config.app.AppCommandConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

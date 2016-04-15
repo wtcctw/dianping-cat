@@ -89,7 +89,7 @@ public class AppReportBuilder implements TaskBuilder {
 	private AppReport buildDailyReport(String id, Date period) {
 		AppReport report = m_appReportService.makeReport(id, period, TaskHelper.tomorrowZero(period));
 
-		for (Command command : m_appConfigManager.queryCommands()) {
+		for (Command command : m_appConfigManager.queryCommands().values()) {
 			processCommand(period, command, report);
 		}
 		return report;

@@ -35,7 +35,7 @@
 		</thead>
 		<tbody>
 		<c:forEach var="entry" items="${model.displayCommands.commands}" varStatus="status">
-			<tr><td><a href="/cat/r/app?query1=${payload.day};${entry.value.id};;;;;;;;;" target="_blank">
+			<tr><td><a href="/cat/r/app?query1=${payload.day};${entry.value.id};;;;;;;;;00:00;23:59&commandId=${entry.value.name}" target="_blank">
 			<c:choose>
 				<c:when test="${not empty entry.value.title}">
 					${entry.value.title}

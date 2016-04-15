@@ -31,6 +31,7 @@ import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.task.ConfigSyncTask;
 import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
@@ -221,13 +222,13 @@ public class AppCommandConfigManager implements Initializable {
 		ConfigSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
-			public void handle() throws Exception {
-				refreshConfig();
+			public String getName() {
+				return CONFIG_NAME;
 			}
 
 			@Override
-			public String getName() {
-				return CONFIG_NAME;
+			public void handle() throws Exception {
+				refreshConfig();
 			}
 		});
 	}
@@ -295,58 +296,86 @@ public class AppCommandConfigManager implements Initializable {
 		return codes;
 	}
 
-	public List<Command> queryCommands() {
-		ArrayList<Command> results = new ArrayList<Command>();
-
+	public Map<Integer, Command> queryCommands() {
 		try {
 			AppCommandConfig config = copyAppCommandConfig();
 			Map<Integer, Command> commands = config.getCommands();
 
-			for (Entry<Integer, Command> entry : commands.entrySet()) {
-				Command cmd = entry.getValue();
-				Map<Integer, Code> codes = cmd.getCodes();
-				Codes namespaceCodes = m_config.findCodes(cmd.getNamespace());
+			// for (Entry<Integer, Command> entry : commands.entrySet()) {
+			// Command cmd = entry.getValue();
+			// Map<Integer, Code> codes = cmd.getCodes();
+			// Codes namespaceCodes = m_config.findCodes(cmd.getNamespace());
+			//
+			// if (namespaceCodes == null) {
+			// namespaceCodes = m_config.findCodes(DEFAULT_NAMESPACE);
+			// }
+			//
+			// for (Entry<Integer, Code> e : namespaceCodes.getCodes().entrySet()) {
+			// if (!codes.containsKey(e.getKey())) {
+			// codes.put(e.getKey(), e.getValue());
+			// }
+			// }
+			// }
 
-				if (namespaceCodes == null) {
-					namespaceCodes = m_config.findCodes(DEFAULT_NAMESPACE);
-				}
+			commands = SortHelper.sortMap(commands, new Comparator<Entry<Integer, Command>>() {
+				@Override
+				public int compare(Entry<Integer, Command> o1, Entry<Integer, Command> o2) {
+					String c1 = o1.getValue().getName();
+					String title1 = o1.getValue().getTitle();
+					String c2 = o2.getValue().getName();
+					String title2 = o2.getValue().getTitle();
 
-				for (Entry<Integer, Code> e : namespaceCodes.getCodes().entrySet()) {
-					if (!codes.containsKey(e.getKey())) {
-						codes.put(e.getKey(), e.getValue());
+					if (StringUtils.isNotEmpty(title1)) {
+						c1 = title1;
 					}
+
+					if (StringUtils.isNotEmpty(title2)) {
+						c2 = title2;
+					}
+
+					return c1.compareTo(c2);
 				}
-			}
-			results = new ArrayList<Command>(commands.values());
-			Collections.sort(results, new CommandComparator());
+			});
+
+			return commands;
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return results;
+		return Collections.emptyMap();
 	}
 
-	public Map<String, List<Command>> queryDomain2Commands() {
+	public Map<String, AppCommandDisplayInfo> queryDomain2Commands() {
 		return queryDomain2Commands(queryCommands());
 	}
 
-	public Map<String, List<Command>> queryDomain2Commands(List<Command> commands) {
-		Map<String, List<Command>> map = new LinkedHashMap<String, List<Command>>();
+	public Map<String, AppCommandDisplayInfo> queryDomain2Commands(Map<Integer, Command> commands) {
+		Map<String, AppCommandDisplayInfo> map = new LinkedHashMap<String, AppCommandDisplayInfo>();
+		Map<String, AppCommandDisplayInfo> results = new LinkedHashMap<String, AppCommandDisplayInfo>();
 
-		for (Command command : commands) {
+		for (Command command : commands.values()) {
 			String domain = command.getDomain();
 
 			if (StringUtils.isEmpty(domain)) {
 				domain = "default";
 			}
-			List<Command> cmds = map.get(domain);
 
-			if (cmds == null) {
-				cmds = new ArrayList<Command>();
-				map.put(domain, cmds);
+			String namespace = command.getNamespace();
+			AppCommandDisplayInfo appCommandDisplayInfo = map.get(namespace);
+
+			if (appCommandDisplayInfo == null) {
+				appCommandDisplayInfo = new AppCommandDisplayInfo();
+
+				map.put(namespace, appCommandDisplayInfo);
 			}
-			cmds.add(command);
+			appCommandDisplayInfo.addCommand(domain, command);
 		}
-		return buildSortedCommands(map);
+
+		for (Entry<String, AppCommandDisplayInfo> entry : map.entrySet()) {
+			Map<String, List<Command>> cmds = buildSortedCommands(entry.getValue().getCommands());
+
+			results.put(entry.getKey(), new AppCommandDisplayInfo(cmds));
+		}
+		return results;
 	}
 
 	public Map<Integer, Code> queryInternalCodes(int commandId) {
@@ -422,12 +451,6 @@ public class AppCommandConfigManager implements Initializable {
 		return true;
 	}
 
-	public boolean updateCode(String namespace, Code code) {
-		m_config.findCodes(namespace).addCode(code);
-
-		return true;
-	}
-
 	public boolean updateCode(int id, Code code) {
 		Command command = m_config.findCommand(id);
 
@@ -439,6 +462,12 @@ public class AppCommandConfigManager implements Initializable {
 		return false;
 	}
 
+	public boolean updateCode(String namespace, Code code) {
+		m_config.findCodes(namespace).addCode(code);
+
+		return true;
+	}
+
 	public boolean updateCommand(int id, Command command) {
 		Command c = m_config.findCommand(id);
 
@@ -448,6 +477,40 @@ public class AppCommandConfigManager implements Initializable {
 		c.setThreshold(command.getThreshold());
 		c.setNamespace(command.getNamespace());
 		return storeConfig();
+	}
+
+	public static class AppCommandDisplayInfo {
+
+		private Map<String, List<Command>> m_commands = new HashMap<String, List<Command>>();
+
+		public AppCommandDisplayInfo() {
+
+		}
+
+		public AppCommandDisplayInfo(Map<String, List<Command>> commands) {
+			m_commands = commands;
+		}
+
+		public void addCommand(String domain, Command command) {
+			List<Command> commands = m_commands.get(domain);
+
+			if (commands == null) {
+				commands = new ArrayList<Command>();
+
+				m_commands.put(domain, commands);
+			}
+			commands.add(command);
+		}
+
+		public Map<String, List<Command>> getCommands() {
+			return m_commands;
+		}
+
+		@Override
+		public String toString() {
+			return "AppCommandDisplayInfo [m_commands=" + m_commands + "]";
+		}
+
 	}
 
 	public static class CommandComparator implements Comparator<Command> {

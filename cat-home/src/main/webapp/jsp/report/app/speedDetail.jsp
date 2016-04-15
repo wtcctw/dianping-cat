@@ -20,7 +20,7 @@
 					 <select id="network" style="width: 80px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.networks}" varStatus="status">
-						<option value='${item.value.id}'>${item.value.name}</option>
+						<option value='${item.value.id}'>${item.value.value}</option>
 					</c:forEach>
 			</select></div>
 			</th>
@@ -31,24 +31,24 @@
 					<span class="input-group-addon">版本</span><select id="version" style="width: 100px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.versions}" varStatus="status">
-						<option value='${item.value.id}'>${item.value.name}</option>
+						<option value='${item.value.id}'>${item.value.value}</option>
 					</c:forEach>
 			</select>  <span class="input-group-addon">平台</span><select id="platform" style="width: 100px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.platforms}"
 						varStatus="status">
-						<option value='${item.value.id}'>${item.value.name}</option>
+						<option value='${item.value.id}'>${item.value.value}</option>
 					</c:forEach>
 			</select>  <span class="input-group-addon">地区</span><select id="city" style="width: 100px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.cities}" varStatus="status">
-						<option value='${item.value.id}'>${item.value.name}</option>
+						<option value='${item.value.id}'>${item.value.value}</option>
 					</c:forEach>
 			</select>  <span class="input-group-addon">运营商</span><select id="operator" style="width: 100px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.operators}"
 						varStatus="status">
-						<option value='${item.value.id}'>${item.value.name}</option>
+						<option value='${item.value.id}'>${item.value.value}</option>
 					</c:forEach>
 			</select> <input class="btn btn-primary btn-sm"
 				value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
@@ -74,7 +74,7 @@
 					<span class="input-group-addon">网络类型</span> <select id="network2" style="width: 80px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.networks}" varStatus="status">
-						<option value='${item.value.id}'>${item.value.name}</option>
+						<option value='${item.value.id}'>${item.value.value}</option>
 					</c:forEach>
 			</select></div>
 			</th>
@@ -85,24 +85,24 @@
 				<span class="input-group-addon">版本</span> <select id="version2" style="width: 100px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.versions}" varStatus="status">
-						<option value='${item.value.id}'>${item.value.name}</option>
+						<option value='${item.value.id}'>${item.value.value}</option>
 					</c:forEach>
 			</select> <span class="input-group-addon">平台</span> <select id="platform2" style="width: 100px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.platforms}"
 						varStatus="status">
-						<option value='${item.value.id}'>${item.value.name}</option>
+						<option value='${item.value.id}'>${item.value.value}</option>
 					</c:forEach>
 			</select> <span class="input-group-addon">地区</span> <select id="city2" style="width: 100px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.cities}" varStatus="status">
-						<option value='${item.value.id}'>${item.value.name}</option>
+						<option value='${item.value.id}'>${item.value.value}</option>
 					</c:forEach>
 			</select> <span class="input-group-addon">运营商</span> <select id="operator2" style="width: 100px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.operators}"
 						varStatus="status">
-						<option value='${item.value.id}'>${item.value.name}</option>
+						<option value='${item.value.id}'>${item.value.value}</option>
 					</c:forEach>
 			</select></div>
 			</th>

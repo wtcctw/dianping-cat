@@ -29,7 +29,7 @@
 					<select id="network">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 				</select>
 	            </div>
@@ -42,7 +42,7 @@
 					<select id="version" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -52,7 +52,7 @@
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.connectionTypes}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -62,7 +62,7 @@
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.platforms}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -71,7 +71,7 @@
 					<select id="city" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.cities}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -81,7 +81,7 @@
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.operators}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -118,7 +118,7 @@
 					<select id="network2">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 				</select>
 	            </div>
@@ -131,7 +131,7 @@
 					<select id="version2" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -141,7 +141,7 @@
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.connectionTypes}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -151,7 +151,7 @@
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.platforms}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -160,7 +160,7 @@
 					<select id="city2" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.cities}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -170,7 +170,7 @@
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.operators}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -217,12 +217,12 @@
 		<c:set var="platformCode" value="${item.platform eq '-1' ? '' : item.platform}"/>
 		<c:set var="cityCode" value="${item.city eq '-1' ? '' : item.city}"/>
 		<c:set var="operatorCode" value="${item.operator eq '-1' ? '' : item.operator}"/>
-		<c:set var="network" value="${model.networks[networkCode].name}"/>
-		<c:set var="appVersion" value="${model.versions[appVersionCode].name}"/>
-		<c:set var="channel" value="${model.connectionTypes[channelCode].name}"/>
-		<c:set var="platform" value="${model.platforms[platformCode].name}"/>
-		<c:set var="city" value="${model.cities[cityCode].name}"/>
-		<c:set var="operator" value="${model.operators[operatorCode].name}"/>
+		<c:set var="network" value="${model.networks[networkCode].value}"/>
+		<c:set var="appVersion" value="${model.versions[appVersionCode].value}"/>
+		<c:set var="channel" value="${model.connectionTypes[channelCode].value}"/>
+		<c:set var="platform" value="${model.platforms[platformCode].value}"/>
+		<c:set var="city" value="${model.cities[cityCode].value}"/>
+		<c:set var="operator" value="${model.operators[operatorCode].value}"/>
 		
 		<c:choose>
 			<c:when test="${empty networkCode}">

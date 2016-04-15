@@ -31,7 +31,7 @@
 	              <span class="input-group-addon">APP Name</span>  
 				<select id="appName" style="width: 200px; height:33px">
 						<c:forEach var="appName" items="${model.crashLogDisplayInfo.appNames}">
-							<option value="${appName.name}">${appName.des}</option>
+							<option value="${appName.value}">${appName.des}</option>
 						</c:forEach>
 				</select></div>
 				    <div class="input-group" style="float:left;">

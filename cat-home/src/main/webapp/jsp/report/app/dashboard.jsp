@@ -192,9 +192,9 @@ $(document).ready(
 		var data = [];
 		<c:forEach var="command" items="${model.commands}">
 					var item = {};
-					item['label'] = '${command.name}|${command.title}';
-					if('${command.domain}'.length >0 ){
-						item['category'] ='${command.domain}';
+					item['label'] = '${command.value.name}|${command.value.title}';
+					if('${command.value.domain}'.length >0 ){
+						item['category'] ='${command.value.domain}';
 					}else{
 						item['category'] ='未知项目';
 					}

@@ -81,7 +81,7 @@ public class AppDatabasePruner implements TaskBuilder {
 	private boolean pruneAppCommndData(Date period) {
 		boolean success = true;
 
-		for (Command command : m_appConfigManager.queryCommands()) {
+		for (Command command : m_appConfigManager.queryCommands().values()) {
 			Transaction t = Cat.newTransaction("DeleteTask", "App");
 			try {
 				pruneAppCommandTable(period, command.getId());

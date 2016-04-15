@@ -220,8 +220,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AppDatabaseConfigurator.class).req(AppCommandDataDao.class, AppSpeedDataDao.class));
 
 		all.add(C(TaskBuilder.class, AppDatabasePruner.ID, AppDatabasePruner.class).req(AppCommandDataDao.class,
-		      AppSpeedDataDao.class, AppSpeedConfigManager.class, MobileConfigManager.class, CrashLogDao.class,
-		      CrashLogContentDao.class, AppCommandConfigManager.class));
+		      AppSpeedDataDao.class, AppSpeedConfigManager.class, CrashLogDao.class, CrashLogContentDao.class,
+		      AppCommandConfigManager.class));
 
 		all.add(C(TaskBuilder.class, WebDatabasePruner.ID, WebDatabasePruner.class).req(AjaxDataDao.class,
 		      WebSpeedDataDao.class, WebSpeedConfigManager.class, UrlPatternConfigManager.class, JsErrorLogDao.class,
@@ -229,7 +229,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TaskBuilder.class, MetricGraphPruner.ID, MetricGraphPruner.class).req(MetricGraphService.class));
 
-		all.add(C(CommandAutoCompleter.class).req(TransactionReportService.class, MobileConfigManager.class));
+		all.add(C(CommandAutoCompleter.class).req(TransactionReportService.class, AppCommandConfigManager.class));
 
 		all.add(C(TaskBuilder.class, AppReportBuilder.ID, AppReportBuilder.class).req(AppCommandDataDao.class,
 		      AppCommandConfigManager.class, AppReportService.class, TransactionReportService.class,

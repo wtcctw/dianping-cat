@@ -19,11 +19,11 @@
 				<th align=left>告警名<input id="name" value="${name}"/> 命令字 <select id="command" style="width: 350px;">
 						<c:forEach var="item" items="${model.commands}" varStatus="status">
 							<c:choose>
-								<c:when test="${empty item.title}">
-									<option value='${item.id}'>${item.name}</option>
+								<c:when test="${empty item.value.title}">
+									<option value='${item.value.id}'>${item.value.name}</option>
 								</c:when>
 								<c:otherwise>
-									<option value='${item.id}'>${item.title}</option>
+									<option value='${item.value.id}'>${item.value.title}</option>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
@@ -31,7 +31,7 @@
 				</select> 网络类型 <select id="network" style="width: 80px;">
 						<option value='-1'>All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 				</select>
 				</th>
@@ -40,30 +40,30 @@
 				<th align=left>版本 <select id="version" style="width: 100px;">
 						<option value='-1'>All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 				</select> 连接类型 <select id="connectionType" style="width: 100px;">
 						<option value='-1'>All</option>
 						<c:forEach var="item" items="${model.connectionTypes}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 				</select> 平台 <select id="platform" style="width: 100px;">
 						<option value='-1'>All</option>
 						<c:forEach var="item" items="${model.platforms}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 				</select> 地区 <select id="city" style="width: 100px;">
 						<option value='-1'>All</option>
 						<c:forEach var="item" items="${model.cities}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 				</select> 运营商 <select id="operator" style="width: 100px;">
 						<option value='-1'>All</option>
 						<c:forEach var="item" items="${model.operators}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 				</select> 告警指标 <select id="metric" style="width: 100px;">
 						<option value='request'>请求数</option>
