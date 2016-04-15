@@ -17,7 +17,7 @@ public class AppCommandConvertor extends ComponentTestCase {
 		AppCommandConfig config = m_appconfigmanger.getConfig();
 
 		for (Command command : config.getCommands().values()) {
-			command.setNamespace("dianping");
+			command.setNamespace("default");
 		}
 
 		m_appconfigmanger.storeConfig();
