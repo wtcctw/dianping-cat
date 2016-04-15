@@ -81,6 +81,41 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 		m_finderManager.register(hour, this);
 	}
 
+	private void processMessage(MessageTree tree) {
+	   MessageId id = tree.getFormatMessageId();
+
+	   if (id == null) {
+	   	id = MessageId.parse(tree.getMessageId());
+	   }
+	   String domain = id.getDomain();
+	   int hour = id.getHour();
+	   Block block = m_blocks.get(domain);
+
+	   if (block == null) {
+	   	block = new DefaultBlock(domain, hour);
+	   	m_blocks.put(domain, block);
+	   }
+
+	   ByteBuf buffer = tree.getBuffer();
+
+	   try {
+	   	if (block.isFull()) {
+	   		block.finish();
+
+	   		m_dumper.dump(block);
+	   		
+	   		block = new DefaultBlock(domain, hour);
+	   		m_blocks.put(domain, block);
+	   	}
+
+	   	block.pack(id, buffer);
+	   } catch (Exception e) {
+	   	Cat.logError(e);
+	   } finally {
+	   	// buffer.release();
+	   }
+   }
+
 	@Override
 	public void run() {
 		MessageTree tree;
@@ -90,38 +125,7 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 				tree = m_queue.poll(5, TimeUnit.MILLISECONDS);
 
 				if (tree != null) {
-					MessageId id = tree.getFormatMessageId();
-
-					if (id == null) {
-						id = MessageId.parse(tree.getMessageId());
-					}
-					String domain = id.getDomain();
-					int hour = id.getHour();
-					Block block = m_blocks.get(domain);
-
-					if (block == null) {
-						block = new DefaultBlock(domain, hour);
-						m_blocks.put(domain, block);
-					}
-
-					ByteBuf buffer = tree.getBuffer();
-
-					try {
-						if (block.isFull()) {
-							block.finish();
-
-							m_dumper.dump(block);
-							
-							block = new DefaultBlock(domain, hour);
-							m_blocks.put(domain, block);
-						}
-
-						block.pack(id, buffer);
-					} catch (Exception e) {
-						Cat.logError(e);
-					} finally {
-						// buffer.release();
-					}
+					processMessage(tree);
 				}
 			}
 		} catch (InterruptedException e) {

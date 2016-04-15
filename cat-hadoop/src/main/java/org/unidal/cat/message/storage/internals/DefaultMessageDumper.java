@@ -2,8 +2,8 @@ package org.unidal.cat.message.storage.internals;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import org.unidal.cat.message.QueueFullException;
@@ -71,7 +71,7 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 
 	public void initialize(int hour) {
 		for (int i = 0; i < 10; i++) {
-			BlockingQueue<MessageTree> queue = new LinkedBlockingQueue<MessageTree>(10000);
+			BlockingQueue<MessageTree> queue = new ArrayBlockingQueue<MessageTree>(10000);
 			MessageProcessor processor = lookup(MessageProcessor.class);
 
 			m_queues.add(queue);

@@ -60,7 +60,8 @@ public class BucketTest extends ComponentTestCase {
 					MessageTree tree = TreeHelper.tree(m_codec,id);
 					
 					((DefaultMessageTree)tree).setMessageId(id.toString());
-
+					tree.setFormatMessageId(id);
+					
 					dumper.process(tree);
 				}
 			}

@@ -56,6 +56,29 @@ public class DefaultBlockWriter implements BlockWriter {
 		m_latch = new CountDownLatch(1);
 	}
 
+	private void processBlock(String ip, Block block) {
+		try {
+			Bucket bucket = m_bucketManager.getBucket(block.getDomain(), ip, block.getHour(), true);
+
+			if ((++m_count) % 100 == 0) {
+				Transaction t = Cat.newTransaction("Block", block.getDomain());
+
+				bucket.puts(block.getData(), block.getMappings());
+
+				t.setStatus(Transaction.SUCCESS);
+				t.complete();
+			} else {
+				bucket.puts(block.getData(), block.getMappings());
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		} catch (Error e) {
+			Cat.logError(e);
+		} finally {
+			block.clear();
+		}
+	}
+
 	@Override
 	public void run() {
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
@@ -66,26 +89,7 @@ public class DefaultBlockWriter implements BlockWriter {
 				block = m_queue.poll(5, TimeUnit.MILLISECONDS);
 
 				if (block != null) {
-					try {
-						Bucket bucket = m_bucketManager.getBucket(block.getDomain(), ip, block.getHour(), true);
-
-						if ((++m_count) % 100 == 0) {
-							Transaction t = Cat.newTransaction("Block", block.getDomain());
-
-							bucket.puts(block.getData(), block.getMappings());
-
-							block.clear(); // for gc
-
-							t.setStatus(Transaction.SUCCESS);
-							t.complete();
-						} else {
-							bucket.puts(block.getData(), block.getMappings());
-						}
-					} catch (Exception e) {
-						Cat.logError(e);
-					} catch (Error e) {
-						Cat.logError(e);
-					}
+					processBlock(ip, block);
 				}
 			}
 		} catch (InterruptedException e) {
