@@ -45,6 +45,8 @@ public class MobileConfigManager implements Initializable {
 
 	private volatile Map<String, Integer> m_operators = new ConcurrentHashMap<String, Integer>();
 
+	private volatile Map<String, Integer> m_platforms = new ConcurrentHashMap<String, Integer>();
+
 	public boolean addConstant(String type, int id, String value) {
 		ConstantItem item = m_config.findConstantItem(type);
 
@@ -151,6 +153,10 @@ public class MobileConfigManager implements Initializable {
 
 	public Map<String, Integer> getOperators() {
 		return m_operators;
+	}
+
+	public int getPlatformId(String platform) {
+		return m_platforms.get(platform);
 	}
 
 	public Item getPlatformStr(int platform) {
@@ -285,9 +291,17 @@ public class MobileConfigManager implements Initializable {
 		ConstantItem operations = m_config.findConstantItem(MobileConstants.OPERATOR);
 
 		for (Item item : operations.getItems().values()) {
-			operatorMap.put(item.getValue(), Integer.valueOf(item.getId()));
+			operatorMap.put(item.getValue(), item.getId());
 		}
 		m_operators = operatorMap;
+
+		Map<String, Integer> platformMap = new ConcurrentHashMap<String, Integer>();
+		ConstantItem platforms = m_config.findConstantItem(MobileConstants.PLATFORM);
+
+		for (Item item : platforms.getItems().values()) {
+			platformMap.put(item.getValue(), item.getId());
+		}
+		m_platforms = platformMap;
 	}
 
 	public boolean shouldAutoPrune() {
