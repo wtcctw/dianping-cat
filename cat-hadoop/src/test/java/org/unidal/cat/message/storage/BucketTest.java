@@ -23,6 +23,7 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class BucketTest extends ComponentTestCase {
 	private MessageCodec m_codec;
@@ -38,6 +39,41 @@ public class BucketTest extends ComponentTestCase {
 		lookup(StorageConfiguration.class).setBaseDataDir(baseDir);
 		m_codec = lookup(MessageCodec.class, PlainTextMessageCodec.ID);
 		m_benchmarkManager = lookup(BenchmarkManager.class);
+	}
+
+	@Test
+	public void testManyDomainIpWrite() throws Exception {
+		long start = System.currentTimeMillis();
+		MessageDumperManager manager = lookup(MessageDumperManager.class);
+		int hour = 405746;
+		MessageDumper dumper = manager.findOrCreate(hour);
+		
+		for (int i = 0; i < 10000; i++) {
+			long interStart = System.currentTimeMillis();
+			
+			for (int domainIndex = 0; domainIndex < 300; domainIndex++) {
+				String domain = "domain" + domainIndex;
+
+				for (int ipIndex = 0; ipIndex < 9; ipIndex++) {
+					String ip = "0a01020" + ipIndex;
+					MessageId id = new MessageId(domain, ip, hour, i * 10 + ipIndex);
+					MessageTree tree = TreeHelper.tree(m_codec,id);
+					
+					((DefaultMessageTree)tree).setMessageId(id.toString());
+
+					dumper.process(tree);
+				}
+			}
+
+			long duration = System.currentTimeMillis() - interStart;
+
+			if (i % 100 == 0) {
+				System.out.println("duration:" + duration);
+			}
+		}
+
+		long duration = System.currentTimeMillis() - start;
+		System.out.println("write cost" + duration);
 	}
 
 	@Test
@@ -413,6 +449,10 @@ public class BucketTest extends ComponentTestCase {
 		}
 
 		@Override
+		public void clear() {
+		}
+
+		@Override
 		public ByteBuf find(MessageId id) {
 			// TODO Auto-generated method stub
 			return null;
@@ -458,9 +498,5 @@ public class BucketTest extends ComponentTestCase {
 		public ByteBuf unpack(MessageId id) throws IOException {
 			throw new UnsupportedOperationException();
 		}
-
-		@Override
-      public void clear() {
-      }
 	}
 }
