@@ -191,6 +191,7 @@ public class MobileConfigManager implements Initializable {
 		if (m_config == null) {
 			m_config = new MobileConfig();
 		}
+		refreshData();
 
 		ConfigSyncTask.getInstance().register(new SyncHandler() {
 
@@ -274,7 +275,7 @@ public class MobileConfigManager implements Initializable {
 
 		if (cities != null && cities.getItems() != null) {
 			for (Item item : cities.getItems().values()) {
-				cityMap.put(item.getValue(), Integer.valueOf(item.getId()));
+				cityMap.put(item.getValue(), item.getId());
 			}
 		}
 
