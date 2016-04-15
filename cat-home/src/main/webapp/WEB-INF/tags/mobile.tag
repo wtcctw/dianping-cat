@@ -88,7 +88,7 @@
 							<li id="brokerConfigUpdate"><a href="/cat/s/app?op=brokerConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>Mobile配置</a>
 								<b class="arrow"></b></li>
-							<li id="appCommandBatch"><a href="/cat/s/app?op=appCommandBatch">
+							<li id="appCommandBatch"  style="display:none><a href="/cat/s/app?op=appCommandBatch">
 								<i class="menu-icon fa fa-caret-right"></i>批量添加</a>
 								<b class="arrow"></b></li>
 							<li id="appCommandFormatConfig"><a href="/cat/s/app?op=appCommandFormatConfig">
