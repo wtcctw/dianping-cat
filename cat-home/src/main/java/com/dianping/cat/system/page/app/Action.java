@@ -5,7 +5,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	APP_CONFIG_UPDATE("appConfigUpdate"),
 
 	BROKER_CONFIG_UPDATE("brokerConfigUpdate"),
-	
+
 	CRASH_LOG_CONFIG_UPDATE("crashLogConfigUpdate"),
 
 	APP_NAME_CHECK("appNameCheck"),
@@ -18,6 +18,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	APP_COMMAND_DELETE("appPageDelete"),
 
+	APP_CODES("appCodes"),
+
 	APP_CODE_UPDATE("appCodeUpdate"),
 
 	APP_CODE_SUBMIT("appCodeSubmit"),
@@ -25,6 +27,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 	APP_CODE_ADD("appCodeAdd"),
 
 	APP_CODE_DELETE("appCodeDelete"),
+
+	APP_COMMAND_GROUP("appCommandGroup"),
 
 	APP_COMMAND_GROUP_ADD("appCommandGroupAdd"),
 
@@ -43,6 +47,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 	APP_SPEED_ADD("appSpeedAdd"),
 
 	APP_SPEED_DELETE("appSpeedDelete"),
+
+	APP_CONSTANTS("appConstants"),
 
 	APP_CONSTANT_ADD("appConstantAdd"),
 

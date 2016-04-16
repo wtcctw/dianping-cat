@@ -11,8 +11,10 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.app.AppConnectionData;
-import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.configuration.app.entity.Code;
+import com.dianping.cat.command.entity.Code;
+import com.dianping.cat.config.app.AppCommandConfigManager;
+import com.dianping.cat.config.app.MobileConfigManager;
+import com.dianping.cat.config.app.MobileConstants;
 import com.dianping.cat.report.graph.DistributeDetailInfo.DistributeDetail;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
@@ -29,7 +31,10 @@ public class AppConnectionGraphCreator {
 	private AppConnectionService m_AppConnectionService;
 
 	@Inject
-	private AppConfigManager m_appConfigManager;
+	private AppCommandConfigManager m_appConfigManager;
+
+	@Inject
+	private MobileConfigManager m_mobileConfigManager;
 
 	public LineChart buildChartData(final Map<String, Double[]> datas, QueryType type) {
 		LineChart lineChart = new LineChart();
@@ -99,63 +104,63 @@ public class AppConnectionGraphCreator {
 
 		switch (field) {
 		case OPERATOR:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> operators = m_appConfigManager
-			      .queryConfigItem(AppConfigManager.OPERATOR);
-			com.dianping.cat.configuration.app.entity.Item operator = null;
+			Map<Integer, com.dianping.cat.configuration.mobile.entity.Item> operators = m_mobileConfigManager
+			      .queryConstantItem(MobileConstants.OPERATOR);
+			com.dianping.cat.configuration.mobile.entity.Item operator = null;
 			keyValue = data.getOperator();
 
 			if (operators != null && (operator = operators.get(keyValue)) != null) {
-				title = operator.getName();
+				title = operator.getValue();
 			}
 			break;
 		case APP_VERSION:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> appVersions = m_appConfigManager
-			      .queryConfigItem(AppConfigManager.VERSION);
-			com.dianping.cat.configuration.app.entity.Item appVersion = null;
+			Map<Integer, com.dianping.cat.configuration.mobile.entity.Item> appVersions = m_mobileConfigManager
+			      .queryConstantItem(MobileConstants.VERSION);
+			com.dianping.cat.configuration.mobile.entity.Item appVersion = null;
 			keyValue = data.getAppVersion();
 
 			if (appVersions != null && (appVersion = appVersions.get(keyValue)) != null) {
-				title = appVersion.getName();
+				title = appVersion.getValue();
 			}
 			break;
 		case CITY:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> cities = m_appConfigManager
-			      .queryConfigItem(AppConfigManager.CITY);
-			com.dianping.cat.configuration.app.entity.Item city = null;
+			Map<Integer, com.dianping.cat.configuration.mobile.entity.Item> cities = m_mobileConfigManager
+			      .queryConstantItem(MobileConstants.CITY);
+			com.dianping.cat.configuration.mobile.entity.Item city = null;
 			keyValue = data.getCity();
 
 			if (cities != null && (city = cities.get(keyValue)) != null) {
-				title = city.getName();
+				title = city.getValue();
 			}
 			break;
 		case CONNECT_TYPE:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> connectTypes = m_appConfigManager
-			      .queryConfigItem(AppConfigManager.CONNECT_TYPE);
-			com.dianping.cat.configuration.app.entity.Item connectType = null;
+			Map<Integer, com.dianping.cat.configuration.mobile.entity.Item> connectTypes = m_mobileConfigManager
+			      .queryConstantItem(MobileConstants.CONNECT_TYPE);
+			com.dianping.cat.configuration.mobile.entity.Item connectType = null;
 			keyValue = data.getConnectType();
 
 			if (connectTypes != null && (connectType = connectTypes.get(keyValue)) != null) {
-				title = connectType.getName();
+				title = connectType.getValue();
 			}
 			break;
 		case NETWORK:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> networks = m_appConfigManager
-			      .queryConfigItem(AppConfigManager.NETWORK);
-			com.dianping.cat.configuration.app.entity.Item network = null;
+			Map<Integer, com.dianping.cat.configuration.mobile.entity.Item> networks = m_mobileConfigManager
+			      .queryConstantItem(MobileConstants.NETWORK);
+			com.dianping.cat.configuration.mobile.entity.Item network = null;
 			keyValue = data.getNetwork();
 
 			if (networks != null && (network = networks.get(keyValue)) != null) {
-				title = network.getName();
+				title = network.getValue();
 			}
 			break;
 		case PLATFORM:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> platforms = m_appConfigManager
-			      .queryConfigItem(AppConfigManager.PLATFORM);
-			com.dianping.cat.configuration.app.entity.Item platform = null;
+			Map<Integer, com.dianping.cat.configuration.mobile.entity.Item> platforms = m_mobileConfigManager
+			      .queryConstantItem(MobileConstants.PLATFORM);
+			com.dianping.cat.configuration.mobile.entity.Item platform = null;
 			keyValue = data.getPlatform();
 
 			if (platforms != null && (platform = platforms.get(keyValue)) != null) {
-				title = platform.getName();
+				title = platform.getValue();
 			}
 			break;
 		case CODE:

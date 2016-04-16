@@ -17,9 +17,9 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.command.entity.Command;
+import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.app.AppCommandGroupConfigManager;
-import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.app.entity.AppReport;
@@ -38,7 +38,7 @@ public class AppStatisticBuilder {
 	private ProjectService m_projectService;
 
 	@Inject
-	private AppConfigManager m_appConfigManager;
+	private AppCommandConfigManager m_appConfigManager;
 
 	@Inject
 	private AppCommandGroupConfigManager m_commandGroupConfigManager;

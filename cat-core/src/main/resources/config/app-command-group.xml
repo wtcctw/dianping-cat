@@ -1,10 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
 <app-command-group-config>
-	<command id="all.bin">
-		<sub-command id="shop.bin"></sub-command>
-		<sub-command id="search.api"></sub-command>
-	</command>
-	<command id="all2.bin">
-		<sub-command id="shop2.bin"></sub-command>
-		<sub-command id="search2.api"></sub-command>
-	</command>
+	<commands namespace="app">
+		<command id="all.bin">
+			<sub-command id="shop.bin"></sub-command>
+			<sub-command id="search.api"></sub-command>
+		</command>
+		<command id="all2.bin">
+			<sub-command id="shop2.bin"></sub-command>
+			<sub-command id="search2.api"></sub-command>
+		</command>
+	</commands>
+	<commands namespace="app2">
+		<command id="all.bin">
+			<sub-command id="shop.bin"></sub-command>
+			<sub-command id="search.api"></sub-command>
+		</command>
+		<command id="all2.bin">
+			<sub-command id="shop2.bin"></sub-command>
+			<sub-command id="search2.api"></sub-command>
+		</command>
+	</commands>
 </app-command-group-config>

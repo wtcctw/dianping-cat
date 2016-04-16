@@ -28,7 +28,9 @@ import com.dianping.cat.app.CrashLogContentEntity;
 import com.dianping.cat.app.CrashLogDao;
 import com.dianping.cat.app.CrashLogEntity;
 import com.dianping.cat.config.Level;
-import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.app.AppCommandConfigManager;
+import com.dianping.cat.config.app.MobileConfigManager;
+import com.dianping.cat.config.app.MobileConstants;
 import com.dianping.cat.report.ErrorMsg;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
@@ -48,7 +50,10 @@ public class CrashLogService {
 	private CrashLogDao m_crashLogDao;
 
 	@Inject
-	private AppConfigManager m_appConfigManager;
+	private AppCommandConfigManager m_appConfigManager;
+
+	@Inject
+	private MobileConfigManager m_mobileConfigManager;
 
 	private String APP_VERSIONS = "appVersions";
 
@@ -68,7 +73,7 @@ public class CrashLogService {
 			CrashLogContent detail = m_crashLogContentDao.findByPK(id, CrashLogContentEntity.READSET_FULL);
 
 			info.setAppName(crashLog.getAppName());
-			info.setPlatform(m_appConfigManager.getPlatformStr(crashLog.getPlatform()).getName());
+			info.setPlatform(m_mobileConfigManager.getPlatformStr(crashLog.getPlatform()).getValue());
 			info.setAppVersion(crashLog.getAppVersion());
 			info.setPlatformVersion(crashLog.getPlatformVersion());
 			info.setModule(crashLog.getModule());
@@ -132,7 +137,7 @@ public class CrashLogService {
 		CrashLogDisplayInfo info = new CrashLogDisplayInfo();
 
 		buildCrashLogData(entity, info);
-		info.setAppNames(m_appConfigManager.queryConfigItem(AppConfigManager.APP_NAME).values());
+		info.setAppNames(m_mobileConfigManager.queryConstantItem(MobileConstants.APP_NAME).values());
 
 		return info;
 	}

@@ -64,7 +64,7 @@
 							<c:when test="${command ne -1}">
 							<td>
 							<c:forEach var="i" items="${model.commands}">
-							<c:if test="${i.id eq command}">${i.name}</c:if>  
+							<c:if test="${i.value.id eq command}">${i.value.name}</c:if>  
 							</c:forEach>
 							</td>
 							</c:when>
@@ -94,7 +94,7 @@
 							<c:when test="${network ne -1}">
 							<td>
 							<c:forEach var="i" items="${model.networks}">
-							<c:if test="${i.value.id eq network}">${i.value.name}</c:if>  
+							<c:if test="${i.value.id eq network}">${i.value.value}</c:if>  
 							</c:forEach>
 							</td>
 							</c:when>
@@ -107,7 +107,7 @@
 							<c:when test="${version ne -1}">
 							<td>
 							<c:forEach var="i" items="${model.versions}">
-							<c:if test="${i.value.id eq version}">${i.value.name}</c:if>  
+							<c:if test="${i.value.id eq version}">${i.value.value}</c:if>  
 							</c:forEach>
 							</td>
 							</c:when>
@@ -120,7 +120,7 @@
 							<c:when test="${connectType ne -1}">
 							<td>
 							<c:forEach var="i" items="${model.connectionTypes}">
-							<c:if test="${i.value.id eq connectType}">${i.value.name}</c:if>  
+							<c:if test="${i.value.id eq connectType}">${i.value.value}</c:if>  
 							</c:forEach>
 							</td>
 							</c:when>
@@ -133,7 +133,7 @@
 							<c:when test="${platform ne -1}">
 							<td>
 							<c:forEach var="i" items="${model.platforms}">
-							<c:if test="${i.value.id eq platform}">${i.value.name}</c:if>  
+							<c:if test="${i.value.id eq platform}">${i.value.value}</c:if>  
 							</c:forEach>
 							</td>
 							</c:when>
@@ -146,7 +146,7 @@
 							<c:when test="${city ne -1}">
 							<td>
 							<c:forEach var="i" items="${model.cities}">
-							<c:if test="${i.value.id eq city}">${i.value.name}</c:if>  
+							<c:if test="${i.value.id eq city}">${i.value.value}</c:if>  
 							</c:forEach>
 							</td>
 							</c:when>
@@ -159,7 +159,7 @@
 							<c:when test="${operator ne -1}">
 							<td>
 							<c:forEach var="i" items="${model.operators}">
-							<c:if test="${i.value.id eq operator}">${i.value.name}</c:if>  
+							<c:if test="${i.value.id eq operator}">${i.value.value}</c:if>  
 							</c:forEach>
 							</td>
 							</c:when>

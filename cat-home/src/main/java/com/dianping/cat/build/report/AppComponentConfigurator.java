@@ -9,7 +9,7 @@ import org.unidal.lookup.configuration.Component;
 import com.dianping.cat.alarm.spi.config.AlertConfigManager;
 import com.dianping.cat.alarm.spi.decorator.Decorator;
 import com.dianping.cat.alarm.spi.receiver.Contactor;
-import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.report.alert.app.AppAlert;
 import com.dianping.cat.report.alert.app.AppContactor;
 import com.dianping.cat.report.alert.app.AppDecorator;
@@ -47,7 +47,7 @@ public class AppComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(A(AppStatisticBuilder.class));
 
 		all.add(C(Contactor.class, AppContactor.ID, AppContactor.class).req(AlertConfigManager.class,
-		      AppConfigManager.class, ProjectService.class));
+		      AppCommandConfigManager.class, ProjectService.class));
 		all.add(C(Decorator.class, AppDecorator.ID, AppDecorator.class));
 
 		all.add(A(AppAlert.class));

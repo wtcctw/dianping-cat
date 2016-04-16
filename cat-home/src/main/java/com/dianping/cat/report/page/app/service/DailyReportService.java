@@ -15,7 +15,7 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.app.AppCommandDataDaily;
 import com.dianping.cat.app.AppCommandDataDailyDao;
 import com.dianping.cat.app.AppCommandDataDailyEntity;
-import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.app.QueryType;
@@ -26,7 +26,7 @@ public class DailyReportService {
 	private AppCommandDataDailyDao m_commandDailyDao;
 
 	@Inject
-	private AppConfigManager m_appConfigManager;
+	private AppCommandConfigManager m_appConfigManager;
 
 	public LineChart buildLineChart(DailyCommandQueryEntity entity, QueryType type) {
 		Double[] graphData = buildGraphData(entity, type);

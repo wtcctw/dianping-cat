@@ -8,13 +8,13 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.alarm.spi.receiver.ProjectContactor;
-import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.configuration.app.entity.Command;
+import com.dianping.cat.command.entity.Command;
+import com.dianping.cat.config.app.AppCommandConfigManager;
 
 public class AppContactor extends ProjectContactor {
 
 	@Inject
-	protected AppConfigManager m_appConfigManager;
+	protected AppCommandConfigManager m_appConfigManager;
 
 	public static final String ID = AlertType.App.getName();
 

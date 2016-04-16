@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.dianping.cat.configuration.app.entity.Item;
+import com.dianping.cat.configuration.mobile.entity.Item;
 import com.dianping.cat.report.ErrorMsg;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.page.app.service.CrashLogService.FieldsInfo;

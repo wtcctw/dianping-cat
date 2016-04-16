@@ -15,13 +15,11 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		case APP_LIST:
 		case APP_COMMAND_SUBMIT:
 		case APP_COMMAND_DELETE:
+			return JspFile.APP_LIST.getPath();
+		case APP_CODES:
 		case APP_CODE_SUBMIT:
 		case APP_CODE_DELETE:
-		case APP_CONSTATN_DELETE:
-		case APP_CONSTATN_SUBMIT:
-		case APP_COMMAND_GROUP_DELETE:
-		case APP_COMMAND_GROUP_SUBMIT:
-			return JspFile.APP_LIST.getPath();
+			return JspFile.APP_CODE_LIST.getPath();
 		case APP_CODE_ADD:
 		case APP_CODE_UPDATE:
 			return JspFile.APP_CODE_UPDATE.getPath();
@@ -49,11 +47,19 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		case APP_COMMAND_BATCH:
 		case APP_COMMAND_BATCH_UPDATE:
 			return JspFile.APP_COMMAND_BATCH.getPath();
+		case APP_CONSTANTS:
+		case APP_CONSTATN_DELETE:
+		case APP_CONSTATN_SUBMIT:
+			return JspFile.APP_CONSTANTS.getPath();
 		case APP_CONSTANT_ADD:
 		case APP_CONSTANT_UPDATE:
 			return JspFile.APP_CONSTANT_UPDATE.getPath();
 		case APP_COMMAND_FORMAT_CONFIG:
 			return JspFile.APP_COMMAND_FORMAT_CONFIG.getPath();
+		case APP_COMMAND_GROUP:
+		case APP_COMMAND_GROUP_DELETE:
+		case APP_COMMAND_GROUP_SUBMIT:
+			return JspFile.APP_COMMAND_GROUP.getPath();
 		case APP_COMMAND_GROUP_ADD:
 			return JspFile.APP_COMMAND_GROUP_ADD.getPath();
 		case APP_COMMAND_GROUP_UPDATE:

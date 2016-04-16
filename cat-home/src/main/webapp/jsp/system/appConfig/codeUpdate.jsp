@@ -13,7 +13,7 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');
-			$('#appList').addClass('active');
+			$('#appCodes').addClass('active');
 			$('#codeStatus').val(${model.code.status});
 		});
 		
@@ -22,6 +22,7 @@
 			var codeId = $("#codeId").val();
 			var codeName = $("#codeName").val();
 			var codeStatus = $("#codeStatus").val();
+			var codeNamespace = $("#codeNamespace").val();
 			
 			if(codeId == "undefined" || codeId.trim().length == 0){
 				if($("#errorMessage").length == 0){
@@ -36,6 +37,12 @@
 				}
 				return;
 			}
+			if(codeNamespace == "undefined" || codeNamespace.trim().length == 0){
+				if($("#errorMessage").length == 0){
+					$("#codeNamespace").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
+				}
+				return;
+			}
 			if(codeStatus == "undefined" || codeStatus.trim().length == 0){
 				if($("#errorMessage").length == 0){
 					$("#codeStatus").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
@@ -43,7 +50,7 @@
 				return;
 			}
 			
-			window.location.href = "/cat/s/app?op=appCodeSubmit&type=code&constant=${payload.constant}&id="+${payload.id}+"&domain=${payload.domain}&content="+codeId.trim()+":"+codeName.trim()+":"+codeStatus;
+			window.location.href = "/cat/s/app?op=appCodeSubmit&constant=${payload.constant}&id="+${payload.id}+"&domain=${payload.domain}&content="+codeId.trim()+":"+codeName.trim()+":"+codeStatus+"&namespace="+codeNamespace;
 		}) 
 	</script>
 	
@@ -64,10 +71,14 @@
 		</c:otherwise>
 		</c:choose>
 		<tr>
+			<td>返回码所属域</td><td><input name="codeNamespace" value="${payload.namespace}" id="codeNamespace" /><span class="text-danger">（* 支持数字、字符）</span><br/>
+			</td>
+			</tr>
+		<tr>
 			<td>返回码说明</td><td><input name="codeName" value="${model.code.name}" id="codeName" /><span class="text-danger">（* 支持数字、字符）</span><br/>
-</td>
-</tr>
-<tr>
+		</td>
+		</tr>
+		<tr>
 			<td>返回码状态</td><td><select id="codeStatus" />
 									<option value='0'>成功</option>
 									<option value='1'>失败</option>

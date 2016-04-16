@@ -15,9 +15,10 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.app.AppCommandData;
 import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppCommandDataEntity;
-import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.command.entity.Command;
+import com.dianping.cat.config.app.AppCommandConfigManager;
+import com.dianping.cat.config.app.MobileConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -44,7 +45,7 @@ public class AppReportBuilder implements TaskBuilder {
 	private AppCommandDataDao m_dao;
 
 	@Inject
-	private AppConfigManager m_appConfigManager;
+	private AppCommandConfigManager m_appConfigManager;
 
 	@Inject
 	private AppReportService m_appReportService;
@@ -60,6 +61,9 @@ public class AppReportBuilder implements TaskBuilder {
 
 	@Inject
 	private TransactionMergeHelper m_mergeHelper;
+
+	@Inject
+	private MobileConfigManager m_mobileConfigManager;
 
 	public static final String ID = Constants.APP;
 
@@ -87,7 +91,7 @@ public class AppReportBuilder implements TaskBuilder {
 	private AppReport buildDailyReport(String id, Date period) {
 		AppReport report = m_appReportService.makeReport(id, period, TaskHelper.tomorrowZero(period));
 
-		for (Command command : m_appConfigManager.queryCommands()) {
+		for (Command command : m_appConfigManager.queryCommands().values()) {
 			processCommand(period, command, report);
 		}
 		return report;
@@ -104,7 +108,7 @@ public class AppReportBuilder implements TaskBuilder {
 		try {
 			AppReport appReport = buildDailyReport(domain, period);
 
-			if (m_appConfigManager.getConfig().isAutoPrune()) {
+			if (m_mobileConfigManager.shouldAutoPrune()) {
 				pruneAppCommand(appReport);
 			}
 
@@ -159,7 +163,7 @@ public class AppReportBuilder implements TaskBuilder {
 
 		String domain = command.getDomain();
 
-		if (StringUtils.isNotEmpty(domain) && commandId != AppConfigManager.ALL_COMMAND_ID) {
+		if (StringUtils.isNotEmpty(domain) && commandId != AppCommandConfigManager.ALL_COMMAND_ID) {
 			processTransactionInfo(cmd, domain, period);
 		}
 	}

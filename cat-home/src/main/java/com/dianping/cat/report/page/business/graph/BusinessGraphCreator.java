@@ -14,7 +14,6 @@ import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
-import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.spi.AlertEntity;
@@ -340,11 +339,10 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 		int totalSize = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_MINUTE);
 
 		for (CustomConfig customConfig : customConfigs.values()) {
-			String pattern = customConfig.getPattern();
-			Pair<Boolean, List<CustomInfo>> translate = m_customDataCalculator.translatePattern(pattern);
+			try {
+				String pattern = customConfig.getPattern();
 
-			if (translate.getKey()) {
-				List<CustomInfo> customInfos = translate.getValue();
+				List<CustomInfo> customInfos = m_customDataCalculator.translatePattern(pattern);
 
 				for (CustomInfo customInfo : customInfos) {
 					String customKey = m_keyHelper.generateKey(customInfo.getKey(), customInfo.getDomain(),
@@ -355,8 +353,8 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 				String key = m_keyHelper.generateKey(customConfig.getId(), currentDomain, MetricType.AVG.getName());
 
 				customBaseLines.put(key, baseLine);
-			} else {
-				Cat.logEvent("BusinessPatternWrong", pattern);
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 		return customBaseLines;
@@ -373,11 +371,9 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 		businessItemDataCache.putAll(datas);
 
 		for (CustomConfig customConfig : customConfigs.values()) {
-			String pattern = customConfig.getPattern();
-			Pair<Boolean, List<CustomInfo>> translate = m_customDataCalculator.translatePattern(pattern);
-
-			if (translate.getKey()) {
-				List<CustomInfo> customInfos = translate.getValue();
+			try {
+				String pattern = customConfig.getPattern();
+				List<CustomInfo> customInfos = m_customDataCalculator.translatePattern(pattern);
 
 				for (CustomInfo customInfo : customInfos) {
 					String domain = customInfo.getDomain();
@@ -393,8 +389,8 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 				String key = m_keyHelper.generateKey(customConfig.getId(), currentDomain, MetricType.AVG.getName());
 
 				customDatas.put(key, data);
-			} else {
-				Cat.logEvent("BusinessPatternWrong", pattern);
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 		return customDatas;

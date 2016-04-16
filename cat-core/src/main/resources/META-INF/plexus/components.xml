@@ -137,8 +137,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.app.AppConfigManager</role>
-			<implementation>com.dianping.cat.config.app.AppConfigManager</implementation>
+			<role>com.dianping.cat.config.app.AppCommandConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppCommandConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -159,7 +159,7 @@
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
+					<role>com.dianping.cat.config.app.AppCommandConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -209,8 +209,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.app.BrokerConfigManager</role>
-			<implementation>com.dianping.cat.config.app.BrokerConfigManager</implementation>
+			<role>com.dianping.cat.config.app.MobileConfigManager</role>
+			<implementation>com.dianping.cat.config.app.MobileConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -290,6 +290,67 @@
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>report</role-hint>
 			<implementation>com.dianping.cat.report.HourlyReportTableProvider</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportBucketManager</role>
+			<implementation>com.dianping.cat.report.DefaultReportBucketManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportBucket</role>
+			<implementation>com.dianping.cat.report.LocalReportBucket</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.PathBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.storage.MessageBucket</role>
+			<role-hint>local</role-hint>
+			<implementation>com.dianping.cat.message.storage.LocalMessageBucket</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>plain-text</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
+			<role-hint>html</role-hint>
+			<implementation>com.dianping.cat.message.codec.HtmlEncodingBufferWriter</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.MessageCodec</role>
+			<role-hint>html</role-hint>
+			<implementation>com.dianping.cat.message.codec.HtmlMessageCodec</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
+					<role-hint>html</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.MessageCodec</role>
+			<role-hint>waterfall</role-hint>
+			<implementation>com.dianping.cat.message.codec.WaterfallMessageCodec</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
+					<role-hint>html</role-hint>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
@@ -789,67 +850,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
-			<role-hint>html</role-hint>
-			<implementation>com.dianping.cat.message.codec.HtmlEncodingBufferWriter</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.MessageCodec</role>
-			<role-hint>html</role-hint>
-			<implementation>com.dianping.cat.message.codec.HtmlMessageCodec</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
-					<role-hint>html</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.MessageCodec</role>
-			<role-hint>waterfall</role-hint>
-			<implementation>com.dianping.cat.message.codec.WaterfallMessageCodec</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
-					<role-hint>html</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.ReportBucketManager</role>
-			<implementation>com.dianping.cat.report.DefaultReportBucketManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.ReportBucket</role>
-			<implementation>com.dianping.cat.report.LocalReportBucket</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.PathBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.storage.MessageBucket</role>
-			<role-hint>local</role-hint>
-			<implementation>com.dianping.cat.message.storage.LocalMessageBucket</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>plain-text</role-hint>
 				</requirement>
 			</requirements>
 		</component>
