@@ -309,22 +309,6 @@ public class AppCommandConfigManager implements Initializable {
 			AppCommandConfig config = copyAppCommandConfig();
 			Map<Integer, Command> commands = config.getCommands();
 
-			// for (Entry<Integer, Command> entry : commands.entrySet()) {
-			// Command cmd = entry.getValue();
-			// Map<Integer, Code> codes = cmd.getCodes();
-			// Codes namespaceCodes = m_config.findCodes(cmd.getNamespace());
-			//
-			// if (namespaceCodes == null) {
-			// namespaceCodes = m_config.findCodes(DEFAULT_NAMESPACE);
-			// }
-			//
-			// for (Entry<Integer, Code> e : namespaceCodes.getCodes().entrySet()) {
-			// if (!codes.containsKey(e.getKey())) {
-			// codes.put(e.getKey(), e.getValue());
-			// }
-			// }
-			// }
-
 			commands = SortHelper.sortMap(commands, new Comparator<Entry<Integer, Command>>() {
 				@Override
 				public int compare(Entry<Integer, Command> o1, Entry<Integer, Command> o2) {
