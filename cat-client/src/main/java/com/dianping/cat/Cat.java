@@ -372,6 +372,10 @@ public class Cat {
 		}
 	}
 
+	/**
+	 * used in rpc client
+	 * @param ctx
+	 */
 	public static void logRemoteCallClient(Context ctx) {
 		try {
 			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
@@ -400,6 +404,10 @@ public class Cat {
 		}
 	}
 
+	/**
+	 * used in rpc server
+	 * @param ctx
+	 */
 	public static void logRemoteCallServer(Context ctx) {
 		try {
 			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
