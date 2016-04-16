@@ -109,10 +109,11 @@ public class ChannelManager implements Task {
 
 	private boolean checkActive(ChannelFuture future) {
 		boolean isActive = false;
-		Channel channel = future.channel();
 
-		if (future != null && channel.isOpen()) {
-			if (channel.isActive()) {
+		if (future != null) {
+			Channel channel = future.channel();
+			
+			if (channel.isActive() && channel.isOpen()) {
 				isActive = true;
 			} else {
 				m_logger.warn("channel buf is not active ,current channel " + future.channel().remoteAddress());
