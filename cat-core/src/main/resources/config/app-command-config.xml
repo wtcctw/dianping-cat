@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<app-command-config max-command-id="3000">
+	<command id="1" name="shop.bin" domain="mapi-tpusercenter-web" namespace="dianping" title="getmywalletgn.bin" threshold="30">
+		<code id="-100" name="-100 不能连接到网络" status="1"/>
+		<code id="-101" name="-101 不能连接到网络" status="1"/>
+	</command>
+	<command id="2" name="getmywalletgn.bin" domain="mapi-tpusercenter-web" title="getmywalletgn.bin" threshold="30"></command>
+	<command id="3" name="shop.bin" domain="mapi-tpusercenter-web" title="getmywalletgn.bin" threshold="30">
+		<code id="-100" name="-100 不能连接到网络" status="1"/>
+		<code id="-101" name="-101 不能连接到网络" status="1"/>
+	</command>
+	<command id="4" name="getmywalletgn.bin" domain="mapi-tpusercenter-web" title="getmywalletgn.bin" threshold="30"></command>
+	<codes namespace="dianping">
+		<code id="-100" name="-100 不能连接到网络" status="1"/>
+   		<code id="-101" name="-101 PushServer访问API超时" status="1"/>
+   		<code id="-102" name="-102 无法建立连接（DNS或者建立连接错误）" status="1"/>
+   		<code id="-103" name="-103 超时（一般发生在建立连接或发送阶段）" status="1"/>
+   		<code id="-104" name="-104 Socket超时（Android Only）" status="1"/>
+	</codes>
+	<codes namespace="MOMA">
+		<code id="-100" name="-100 不能连接到网络" status="1"/>
+   		<code id="-101" name="-101 PushServer访问API超时" status="1"/>
+   		<code id="-102" name="-102 无法建立连接（DNS或者建立连接错误）" status="1"/>
+   		<code id="-103" name="-103 超时（一般发生在建立连接或发送阶段）" status="1"/>
+   		<code id="-104" name="-104 Socket超时（Android Only）" status="1"/>
+	</codes>
+</app-command-config>

@@ -12,7 +12,7 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');
-			$('#appList').addClass('active');
+			$('#appConstants').addClass('active');
 			$('#codeStatus').val(${model.code.status});
 		});
 		
@@ -34,7 +34,7 @@
 				return;
 			}
 			
-			window.location.href = "/cat/s/app?op=appConstantSubmit&type=constant&&domain=${model.domain}&content=${payload.type}:"+constantId.trim()+":"+constantName.trim();
+			window.location.href = "/cat/s/app?op=appConstantSubmit&type=${payload.type}&domain=${model.domain}&content=${payload.type}:"+constantId.trim()+":"+constantName.trim();
 		}) 
 	</script>
 	
@@ -49,7 +49,7 @@
 		</c:otherwise>
 		</c:choose>
 		<tr>
-			<td>值</td><td><input value="${model.appItem.name}" id="constantName" /></td>
+			<td>值</td><td><input value="${model.appItem.value}" id="constantName" /></td>
 		</tr>
 		<tr>
 			<td colspan="2" style="text-align:center;"><button class="btn btn-primary" id="updateSubmit">提交</button></td>

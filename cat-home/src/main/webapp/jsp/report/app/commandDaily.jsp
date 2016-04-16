@@ -39,7 +39,7 @@
 					<select id="network">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 				</select>
 	            </div>
@@ -52,7 +52,7 @@
 					<select id="version" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -62,7 +62,7 @@
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.connectionTypes}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -72,7 +72,7 @@
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.platforms}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -81,7 +81,7 @@
 					<select id="city" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.cities}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -91,7 +91,7 @@
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.operators}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -113,19 +113,22 @@
 		<div id="lineChart"></div>
 	</div>
 <script>
+var commandsMap = ${model.commandsJson};
 var commandInfo = ${model.command2CodesJson};
 var globalInfo = ${model.globalCodesJson};
 
 var queryCodeByCommand = function queryCode(commandId){
 	var value = commandInfo[commandId];
+	var command = commandsMap[commandId];
+	var globalcodes = globalInfo[command.namespace].codes;
 	var result = {};
 	
-	for(var tmp in globalInfo){
-		result[globalInfo[tmp].id] =globalInfo[tmp].name;
+	for(var tmp in globalcodes){
+		result[globalcodes[tmp].id] =globalcodes[tmp].name;
 	}
 	
 	for (var prop in value) {
-		result[value[prop].id] =value[prop].name;
+		result[value[prop].id] =value[prop].value;
 	}
 	
 	return result;
@@ -321,9 +324,9 @@ $(document).ready(
 				var data = [];
 				<c:forEach var="command" items="${model.commands}">
 							var item = {};
-							item['label'] = '${command.name}|${command.title}';
-							if('${command.domain}'.length >0 ){
-								item['category'] ='${command.domain}';
+							item['label'] = '${command.value.name}|${command.value.title}';
+							if('${command.value.domain}'.length >0 ){
+								item['category'] ='${command.value.domain}';
 							}else{
 								item['category'] ='未知项目';
 							}

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-  <file path="broker-config-codegen.xml" />
-  <file path="broker-config-model.xml" />
-</manifest>
-

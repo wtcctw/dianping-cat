@@ -9,14 +9,13 @@ import org.apache.commons.jexl3.JexlEngine;
 import org.apache.commons.jexl3.JexlException;
 import org.apache.commons.jexl3.JexlExpression;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.report.page.business.task.BusinessKeyHelper;
 
 public class CustomDataCalculator {
 
-	private static final JexlEngine jexl = new JexlBuilder().cache(512).strict(true).silent(false).create();
+	private final JexlEngine jexl = new JexlBuilder().cache(512).strict(true).silent(false).create();
 
 	@Inject
 	private BusinessKeyHelper m_keyHelper;
@@ -27,7 +26,7 @@ public class CustomDataCalculator {
 
 	private static final String SPLITTER = ",";
 
-	public Pair<Boolean, List<CustomInfo>> translatePattern(String pattern) {
+	public List<CustomInfo> translatePattern(String pattern) {
 		List<CustomInfo> infos = new ArrayList<CustomInfo>();
 		boolean result = true;
 		int length = pattern.length();
@@ -61,10 +60,14 @@ public class CustomDataCalculator {
 			}
 		} while (end >= 0 && start >= 0 && end < length);
 
-		return new Pair<Boolean, List<CustomInfo>>(result, infos);
+		if (!result) {
+			throw new RuntimeException("Wrong Business Pattern!");
+		}
+
+		return infos;
 	}
 
-	public double[] calculate(String pattern, List<CustomInfo> customInfos, Map<String, double[]> businessItemDataCache,
+	public double[] calculate(String pattern, List<CustomInfo> customInfos, Map<String, double[]> businessItemData,
 	      int totalSize) {
 		double[] result = new double[totalSize];
 
@@ -76,7 +79,7 @@ public class CustomDataCalculator {
 					String customPattern = customInfo.getPattern();
 					String itemId = m_keyHelper.generateKey(customInfo.getKey(), customInfo.getDomain(),
 					      customInfo.getType());
-					double[] sourceData = businessItemDataCache.get(itemId);
+					double[] sourceData = businessItemData.get(itemId);
 
 					if (sourceData != null) {
 						expression = expression.replace(customPattern, Double.toString(sourceData[i]));

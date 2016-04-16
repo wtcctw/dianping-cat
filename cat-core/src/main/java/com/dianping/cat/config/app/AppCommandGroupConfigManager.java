@@ -15,8 +15,8 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.command.entity.Command;
 import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.group.entity.AppCommandGroupConfig;
 import com.dianping.cat.configuration.group.entity.SubCommand;
 import com.dianping.cat.configuration.group.transform.DefaultSaxParser;
@@ -36,7 +36,7 @@ public class AppCommandGroupConfigManager implements Initializable {
 	protected ContentFetcher m_fetcher;
 
 	@Inject
-	private AppConfigManager m_appConfigManager;
+	private AppCommandConfigManager m_appConfigManager;
 
 	private volatile AppCommandGroupConfig m_config;
 

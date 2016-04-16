@@ -11,9 +11,10 @@ import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.configuration.app.entity.Code;
-import com.dianping.cat.configuration.app.entity.Command;
-import com.dianping.cat.configuration.app.entity.Item;
+import com.dianping.cat.command.entity.Code;
+import com.dianping.cat.command.entity.Codes;
+import com.dianping.cat.command.entity.Command;
+import com.dianping.cat.configuration.mobile.entity.Item;
 import com.dianping.cat.configuration.server.filter.entity.CrashLogDomain;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.JsonBuilder;
@@ -58,9 +59,9 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Map<Integer, Item> m_sources;
 
-	private Map<Integer, Code> m_globalCodes;
+	private Map<String, Codes> m_globalCodes;
 
-	private List<Command> m_commands;
+	private Map<Integer, Command> m_commands;
 
 	private List<AppDataDetail> m_appDataDetailInfos;
 
@@ -155,8 +156,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_commandId;
 	}
 
-	public List<Command> getCommands() {
+	public Map<Integer, Command> getCommands() {
 		return m_commands;
+	}
+
+	public String getCommandsJson() {
+		return new JsonBuilder().toJson(m_commands);
 	}
 
 	public Map<String, AppDataDetail> getComparisonAppDetails() {
@@ -302,8 +307,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_commandId = commandId;
 	}
 
-	public void setCommands(List<Command> commands) {
-		m_commands = commands;
+	public void setCommands(Map<Integer, Command> map) {
+		m_commands = map;
 	}
 
 	public void setComparisonAppDetails(Map<String, AppDataDetail> comparisonAppDetail) {
@@ -354,7 +359,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_fetchData = fetchData;
 	}
 
-	public void setGlobalCodes(Map<Integer, Code> globalCodes) {
+	public void setGlobalCodes(Map<String, Codes> globalCodes) {
 		m_globalCodes = globalCodes;
 	}
 

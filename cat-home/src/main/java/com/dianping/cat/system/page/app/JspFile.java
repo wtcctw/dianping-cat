@@ -7,6 +7,8 @@ public enum JspFile {
 
 	APP_SPEED_LIST("/jsp/system/appConfig/appSpeedList.jsp"),
 
+	APP_CODE_LIST("/jsp/system/appConfig/code.jsp"),
+
 	APP_CODE_UPDATE("/jsp/system/appConfig/codeUpdate.jsp"),
 
 	APP_SPEED_UPDATE("/jsp/system/appConfig/speedUpdate.jsp"),
@@ -20,16 +22,20 @@ public enum JspFile {
 	APP_CONFIG_UPDATE("/jsp/system/appConfig/appConfig.jsp"),
 
 	BROKER_CONFIG_UPDATE("/jsp/system/appConfig/brokerConfigUpdate.jsp"),
-	
+
 	CRASH_LOG_CONFIG_UPDATE("/jsp/system/appConfig/crashLogConfigUpdate.jsp"),
 
 	APP_COMMAND_BATCH("/jsp/system/appConfig/appCommandBatch.jsp"),
 
 	APP_RULE_BATCH("/jsp/system/appConfig/appConfigBatch.jsp"),
 
+	APP_CONSTANTS("/jsp/system/appConfig/constants.jsp"),
+
 	APP_CONSTANT_UPDATE("/jsp/system/appConfig/constantUpdate.jsp"),
 
 	APP_COMMAND_FORMAT_CONFIG("/jsp/system/appConfig/appCommandFormatConfig.jsp"),
+
+	APP_COMMAND_GROUP("/jsp/system/appConfig/appCommandGroup.jsp"),
 
 	APP_COMMAND_GROUP_ADD("/jsp/system/appConfig/appCommandGroupAdd.jsp"),
 

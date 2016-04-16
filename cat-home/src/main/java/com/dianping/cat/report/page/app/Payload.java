@@ -79,6 +79,9 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@ObjectMeta("crashLogQuery")
 	private CrashLogQueryEntity m_crashLogQuery = new CrashLogQueryEntity();
 
+	@FieldMeta("namespace")
+	private String m_namespace;
+
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	public Payload() {
@@ -160,6 +163,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public String getName() {
 		return m_name;
+	}
+
+	public String getNamespace() {
+		return m_namespace;
 	}
 
 	@Override
@@ -273,6 +280,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public void setName(String name) {
 		m_name = name;
+	}
+
+	public void setNamespace(String namespace) {
+		m_namespace = namespace;
 	}
 
 	@Override

@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
-  <entity name="broker-config" root="true">
-    <attribute name="group-statistics-enabled" value-type="boolean" />
-    <attribute name="remote-ip-service-enabled" value-type="boolean" />
-    <attribute name="dev-mode" value-type="boolean" />
+  <entity name="mobile-config" root="true">
     <entity-ref name="type" type="list" names="logs" xml-indent="true" />
     <entity-ref name="checkpoint" />
-    <entity-ref name="too-long-command" />
+    <entity-ref name="config" type="list" names="configs" xml-indent="true" />
+    <entity-ref name="constant-item" type="list" names="constant-items" />
   </entity>
   <entity name="type">
     <attribute name="id" value-type="String" />
@@ -21,8 +19,18 @@
   <entity name="local-flush">
     <attribute name="path" value-type="String" />
   </entity>
-  <entity name="too-long-command">
+  <entity name="config">
     <attribute name="id" value-type="String" />
+    <attribute name="value" value-type="String" />
+  </entity>
+  <entity name="constant-item">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="item" type="list" names="items" />
+  </entity>
+  <entity name="item">
+    <attribute name="id" value-type="int" />
+    <attribute name="value" value-type="String" />
+    <attribute name="des" value-type="String" />
   </entity>
 </model>
 

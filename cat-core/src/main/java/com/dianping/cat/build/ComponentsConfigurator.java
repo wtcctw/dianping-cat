@@ -1,6 +1,7 @@
 package com.dianping.cat.build;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager;
@@ -13,14 +14,14 @@ import com.dianping.cat.analysis.DefaultMessageHandler;
 import com.dianping.cat.analysis.RealtimeConsumer;
 import com.dianping.cat.analysis.TcpSocketReceiver;
 import com.dianping.cat.config.app.AppCmdDailyTableProvider;
+import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.app.AppCommandGroupConfigManager;
 import com.dianping.cat.config.app.AppCommandTableProvider;
-import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppConnectionTableProvider;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.app.AppSpeedTableProvider;
-import com.dianping.cat.config.app.BrokerConfigManager;
 import com.dianping.cat.config.app.CrashLogConfigManager;
+import com.dianping.cat.config.app.MobileConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatConfigManager;
 import com.dianping.cat.config.app.command.DefaultCommandFormatlHandler;
 import com.dianping.cat.config.business.BusinessConfigManager;
@@ -36,8 +37,14 @@ import com.dianping.cat.config.web.js.DefaultAggregationHandler;
 import com.dianping.cat.config.web.url.DefaultUrlPatternHandler;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.message.DefaultPathBuilder;
+import com.dianping.cat.message.codec.HtmlEncodingBufferWriter;
+import com.dianping.cat.message.codec.HtmlMessageCodec;
+import com.dianping.cat.message.codec.WaterfallMessageCodec;
+import com.dianping.cat.message.storage.LocalMessageBucket;
+import com.dianping.cat.report.DefaultReportBucketManager;
 import com.dianping.cat.report.DomainValidator;
 import com.dianping.cat.report.HourlyReportTableProvider;
+import com.dianping.cat.report.LocalReportBucket;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.statistic.ServerStatisticManager;
@@ -75,13 +82,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(DefaultCommandFormatlHandler.class));
 		all.add(A(CommandFormatConfigManager.class));
 		all.add(A(SampleConfigManager.class));
-		all.add(A(AppConfigManager.class));
+		all.add(A(AppCommandConfigManager.class));
 		all.add(A(AppCommandGroupConfigManager.class));
 		all.add(A(WebConfigManager.class));
 		all.add(A(WebSpeedConfigManager.class));
 		all.add(A(AppSpeedConfigManager.class));
 		all.add(A(BusinessConfigManager.class));
-		all.add(A(BrokerConfigManager.class));
+		all.add(A(MobileConfigManager.class));
 		all.add(A(CrashLogConfigManager.class));
 
 		all.add(A(DefaultUrlPatternHandler.class));
@@ -97,6 +104,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(WebSpeedDataTableProvider.class));
 		all.add(A(HourlyReportTableProvider.class));
 
+		all.addAll(defineStorageComponents());
+		all.addAll(defineCodecComponents());
+
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
@@ -105,8 +115,26 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(new AppDatabaseConfigurator().defineComponents());
 		all.addAll(new WebDatabaseConfigurator().defineComponents());
 
-		all.addAll(new CodecComponentConfigurator().defineComponents());
-		all.addAll(new StorageComponentConfigurator().defineComponents());
+		return all;
+	}
+
+	private Collection<Component> defineStorageComponents() {
+		List<Component> all = new ArrayList<Component>();
+
+		all.add(A(DefaultReportBucketManager.class));
+		all.add(A(LocalReportBucket.class));
+		all.add(A(LocalMessageBucket.class));
+
+		return all;
+	}
+
+	private Collection<Component> defineCodecComponents() {
+		List<Component> all = new ArrayList<Component>();
+
+		all.add(A(HtmlEncodingBufferWriter.class));
+
+		all.add(A(HtmlMessageCodec.class));
+		all.add(A(WaterfallMessageCodec.class));
 
 		return all;
 	}

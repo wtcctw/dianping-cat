@@ -25,20 +25,24 @@
 				$('#state').html('&nbsp;');
 			},3000);
 			
-			var type = "${payload.type}";
+			var namespace = "${payload.namespace}";
 			
-			if(typeof type != "undefined" && type.length > 0) {
-				$('#tab-'+ type).addClass('active');
-				$('#tabContent-'+ type).addClass('active');
-			}else {
-				$('#tab-api').addClass('active');
-				$('#tabContent-api').addClass('active');
+			if(namespace == ""){
+				for (var ns in ${model.domain2CommandsJson}) {
+					namespace = ns;
+					break;
+				}
 			}
 			
-			$("#tab-api-default").addClass('active');
-			$("#tabContent-api-default").addClass('active');
-			$("#tab-constant-版本").addClass('active');
-			$("#tabContent-constant-版本").addClass('active');
+			if(typeof namespace != "undefined" && namespace.length > 0) {
+				$('#tab-'+ namespace).addClass('active');
+				$('#tabContent-'+ namespace).addClass('active');
+			}
+			
+			<c:forEach var="item" items="${model.apiCommands}">
+				$("#tab-${item.key}-default").addClass('active');
+				$("#tabContent-${item.key}-default").addClass('active');
+			</c:forEach>
 			
 			$(document).delegate('#updateSubmit', 'click', function(e){
 				var name = $("#commandName").val();
@@ -68,23 +72,23 @@
 	</script>
 			<div class="tabbable" id="content"> <!-- Only required for left/right tabs -->
 				<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height:50px;" id="myTab">
-				    <li id="tab-api" class="text-right"><a href="#tabContent-api" data-toggle="tab"> <strong>API命令字</strong></a></li>
-				    <li id="tab-code" class="text-right"><a href="#tabContent-code" data-toggle="tab"> <strong>返回码</strong></a></li>
-				    <li id="tab-constant" class="text-right"><a href="#tabContent-constant" data-toggle="tab"><strong>常量配置</strong></a></li>
-				    <li id="tab-group" class="text-right"><a href="#tabContent-group" data-toggle="tab"><strong>数据归并</strong></a></li>
+					<c:forEach var="item" items="${model.apiCommands}">
+						<li id="tab-${item.key}" class="text-right"><a href="#tabContent-${item.key}" data-toggle="tab"> <strong>${item.key}</strong></a></li>
+					</c:forEach>
 				</ul>
 				<div class="tab-content">
-					<div class="tab-pane" id="tabContent-api">
+					<c:forEach var="item" items="${model.apiCommands}">
+					<div class="tab-pane" id="tabContent-${item.key}">
 						<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
 						
 						  <ul class="nav nav-tabs padding-12 ">
-						  	<c:forEach var="entry" items="${model.apiCommands}" varStatus="status">
-							    <li id="tab-api-${entry.key}" class="text-right"><a href="#tabContent-api-${entry.key}" data-toggle="tab"> ${entry.key}</a></li>
+						  	<c:forEach var="entry" items="${item.value.commands}" varStatus="status">
+							    <li id="tab-${item.key}-${entry.key}" class="text-right"><a href="#tabContent-${item.key}-${entry.key}" data-toggle="tab"> ${entry.key}</a></li>
 							</c:forEach>
 						  </ul>
 						  <div class="tab-content">
-						  	<c:forEach var="entry" items="${model.apiCommands}" varStatus="status">
-							  	<div class="tab-pane" id="tabContent-api-${entry.key}">
+						  	<c:forEach var="entry" items="${item.value.commands}" varStatus="status">
+							  	<div class="tab-pane" id="tabContent-${item.key}-${entry.key}">
 								    <table class="table table-striped table-condensed table-bordered table-hover">
 									    <thead><tr>
 												<th width="30%">名称</th>
@@ -112,56 +116,8 @@
 							</c:forEach>
 						  </div>
 						</div>
-						
 					</div>
-					<div class="tab-pane" id="tabContent-code">
-						<%@include file="code.jsp"%>
-					</div>
-					<div class="tab-pane" id="tabContent-constant">
-						<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
-							  <ul class="nav nav-tabs padding-12 ">
-							  	<c:forEach var="entry" items="${model.configItems}" varStatus="status">
-								    <li id="tab-constant-${entry.key}" class="text-right"><a href="#tabContent-constant-${entry.key}" data-toggle="tab"> ${entry.key}</a></li>
-								</c:forEach>
-							  </ul>
-							  <div class="tab-content">
-							  	<c:forEach var="entry" items="${model.configItems}" varStatus="status">
-								  	<div class="tab-pane" id="tabContent-constant-${entry.key}">
-									    <table class="table table-striped table-condensed table-bordered table-hover">
-										    <thead><tr>
-													<th>ID</th>
-													<th>值</th>
-													<c:if test="${entry.key eq '版本'}">
-														<th width="5%"><a href="?op=appConstantAdd&type=${entry.key}" class="btn btn-primary btn-xs" >
-														<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
-													</c:if>
-													<c:if test="${entry.key eq 'APP类型'}">
-													<th>desc</th>
-												</c:if>
-												</tr>
-											</thead>
-											
-									    	<c:forEach var="e" items="${entry.value.items}">
-										    	<tr><td>${e.value.id}</td>
-												<td>${e.value.name}</td>
-												<c:if test="${entry.key eq '版本'}">
-													<td><a href="?op=appConstantUpdate&id=${e.key}&type=${entry.key}" class="btn btn-primary btn-xs">
-														<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
-													</td>
-												</c:if>
-												<c:if test="${entry.key eq 'APP类型'}">
-													<td>${e.value.des}</td>
-												</c:if>
-									    	</c:forEach>
-									    </table>
-								    </div>
-								</c:forEach>
-							  </div>
-							</div>
-					</div>
-					<div class="tab-pane" id="tabContent-group">
-						<%@include file="appCommandGroup.jsp"%>
-					</div>
+					</c:forEach>
 				</div>
 			</div>
 </a:mobile>

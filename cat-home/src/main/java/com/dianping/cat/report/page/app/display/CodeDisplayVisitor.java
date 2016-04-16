@@ -6,7 +6,7 @@ import java.util.List;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.app.entity.Code;
 import com.dianping.cat.home.app.entity.Command;
@@ -26,9 +26,9 @@ public class CodeDisplayVisitor extends BaseVisitor {
 
 	private ProjectService m_projectService;
 
-	private AppConfigManager m_appConfigManager;
+	private AppCommandConfigManager m_appConfigManager;
 
-	public CodeDisplayVisitor(ProjectService projectService, AppConfigManager appConfigManager) {
+	public CodeDisplayVisitor(ProjectService projectService, AppCommandConfigManager appConfigManager) {
 		m_projectService = projectService;
 		m_appConfigManager = appConfigManager;
 		init();
@@ -90,7 +90,7 @@ public class CodeDisplayVisitor extends BaseVisitor {
 		int id = command.getId();
 		DisplayCommand c = m_commands.findOrCreateCommand(id);
 
-		if (AppConfigManager.ALL_COMMAND_ID == id) {
+		if (AppCommandConfigManager.ALL_COMMAND_ID == id) {
 			c.setName(Constants.ALL);
 			c.setDomain(Constants.ALL);
 			c.setTitle(Constants.ALL);
@@ -99,7 +99,8 @@ public class CodeDisplayVisitor extends BaseVisitor {
 		} else {
 			c.setName(command.getName());
 
-			com.dianping.cat.configuration.app.entity.Command cmd = m_appConfigManager.getRawCommands().get(id);
+			com.dianping.cat.command.entity.Command cmd = m_appConfigManager.getRawCommands().get(id);
+
 			if (cmd != null) {
 				c.setTitle(cmd.getTitle());
 				String domain = cmd.getDomain();

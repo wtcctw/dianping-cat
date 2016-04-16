@@ -18,7 +18,8 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.app.AppCommandData;
-import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.app.AppCommandConfigManager;
+import com.dianping.cat.config.app.MobileConfigManager;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.BarChart;
@@ -43,7 +44,10 @@ public class DashBoardBuilder {
 	private AppGraphCreator m_appGraphCreator;
 
 	@Inject
-	private AppConfigManager m_appConfigManager;
+	private AppCommandConfigManager m_appConfigManager;
+
+	@Inject
+	private MobileConfigManager m_mobileConfigManager;
 
 	public DashBoardInfo buildDashBoard(final CommandQueryEntity entity) {
 		final DashBoardInfo dashboard = new DashBoardInfo();
@@ -298,10 +302,11 @@ public class DashBoardBuilder {
 		default:
 			throw new RuntimeException("Unsupported AppDataField.");
 		}
-		com.dianping.cat.configuration.app.entity.Item item = m_appConfigManager.queryItem(field.getTitle(), value);
+		com.dianping.cat.configuration.mobile.entity.Item item = m_mobileConfigManager.queryConstantItem(
+		      field.getTitle(), value);
 
 		if (item != null) {
-			title = item.getName();
+			title = item.getValue();
 		} else {
 			title = String.valueOf(value);
 		}

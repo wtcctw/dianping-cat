@@ -23,21 +23,21 @@ import org.unidal.tuple.Pair;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.command.entity.AppCommandConfig;
+import com.dianping.cat.command.entity.Code;
+import com.dianping.cat.command.entity.Codes;
+import com.dianping.cat.command.entity.Command;
+import com.dianping.cat.command.transform.DefaultSaxParser;
 import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.configuration.app.entity.AppConfig;
-import com.dianping.cat.configuration.app.entity.Code;
-import com.dianping.cat.configuration.app.entity.Command;
-import com.dianping.cat.configuration.app.entity.ConfigItem;
-import com.dianping.cat.configuration.app.entity.Item;
-import com.dianping.cat.configuration.app.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.task.ConfigSyncTask;
 import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
-@Named(type = AppConfigManager.class)
-public class AppConfigManager implements Initializable {
+@Named
+public class AppCommandConfigManager implements Initializable {
 
 	@Inject
 	protected ConfigDao m_configDao;
@@ -47,41 +47,25 @@ public class AppConfigManager implements Initializable {
 
 	private volatile Map<String, Command> m_commands = new ConcurrentHashMap<String, Command>();
 
-	private volatile Map<String, Integer> m_cities = new ConcurrentHashMap<String, Integer>();
-
-	private volatile Map<String, Integer> m_operators = new ConcurrentHashMap<String, Integer>();
-
-	private volatile Map<String, Integer> m_platforms = new ConcurrentHashMap<String, Integer>();
-
-	private volatile Map<Integer, String> m_excludedCommands = new ConcurrentHashMap<Integer, String>();
-
 	private int m_configId;
 
-	private volatile AppConfig m_config;
+	private volatile AppCommandConfig m_config;
 
 	private long m_modifyTime;
 
 	private int m_maxCommandId;
 
-	private static final String CONFIG_NAME = "app-config";
+	private static final String CONFIG_NAME = "app-command-config";
 
-	public static final String NETWORK = "网络类型";
-
-	public static final String OPERATOR = "运营商";
-
-	public static final String VERSION = "版本";
-
-	public static final String PLATFORM = "平台";
-
-	public static final String CITY = "城市";
-
-	public static final String SOURCE = "来源";
-
-	public static final String CONNECT_TYPE = "连接类型";
-
-	public static final String APP_NAME = "APP类型";
+	public static final String DEFAULT_NAMESPACE = "default";
 
 	public static final int ALL_COMMAND_ID = 0;
+
+	public boolean addCode(String namespace, Code code) {
+		m_config.findOrCreateCodes(namespace).addCode(code);
+
+		return storeConfig();
+	}
 
 	public Pair<Boolean, Integer> addCommand(Command command) throws Exception {
 		int commandId = 0;
@@ -91,26 +75,6 @@ public class AppConfigManager implements Initializable {
 		m_config.addCommand(command);
 
 		return new Pair<Boolean, Integer>(storeConfig(), commandId);
-	}
-
-	public boolean addConstant(String type, int id, String value) {
-		ConfigItem item = m_config.getConfigItems().get(type);
-
-		if (item != null) {
-			Item data = item.getItems().get(id);
-
-			if (data != null) {
-				data.setName(value);
-			} else {
-				data = new Item(id);
-				data.setName(value);
-
-				item.getItems().put(id, data);
-			}
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	private Map<String, List<Command>> buildSortedCommands(Map<String, List<Command>> commands) {
@@ -140,9 +104,9 @@ public class AppConfigManager implements Initializable {
 		}
 	}
 
-	private AppConfig copyAppConfig() throws SAXException, IOException {
+	private AppCommandConfig copyAppCommandConfig() throws SAXException, IOException {
 		String xml = m_config.toString();
-		AppConfig config = DefaultSaxParser.parse(xml);
+		AppCommandConfig config = DefaultSaxParser.parse(xml);
 
 		return config;
 	}
@@ -216,32 +180,16 @@ public class AppConfigManager implements Initializable {
 		}
 	}
 
-	public Map<String, Integer> getCities() {
-		return m_cities;
-	}
-
-	public Map<Integer, Code> getCodes() {
-		return m_config.getCodes();
+	public Map<String, Codes> getCodes() {
+		return m_config.getCodeses();
 	}
 
 	public Map<String, Command> getCommands() {
 		return m_commands;
 	}
 
-	public AppConfig getConfig() {
+	public AppCommandConfig getConfig() {
 		return m_config;
-	}
-
-	public Map<Integer, String> getExcludedCommands() {
-		return m_excludedCommands;
-	}
-
-	public Map<String, Integer> getOperators() {
-		return m_operators;
-	}
-
-	public Map<String, Integer> getPlatforms() {
-		return m_platforms;
 	}
 
 	public Map<Integer, Command> getRawCommands() {
@@ -276,19 +224,19 @@ public class AppConfigManager implements Initializable {
 			Cat.logError(e);
 		}
 		if (m_config == null) {
-			m_config = new AppConfig();
+			m_config = new AppCommandConfig();
 		}
 
 		ConfigSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
-			public void handle() throws Exception {
-				refreshConfig();
+			public String getName() {
+				return CONFIG_NAME;
 			}
 
 			@Override
-			public String getName() {
-				return CONFIG_NAME;
+			public void handle() throws Exception {
+				refreshConfig();
 			}
 		});
 	}
@@ -327,8 +275,12 @@ public class AppConfigManager implements Initializable {
 	public Map<Integer, Code> queryCodeByCommand(int command) {
 		Command c = m_config.findCommand(command);
 		Map<Integer, Code> result = new HashMap<Integer, Code>();
+		Codes codes = m_config.findCodes(c.getNamespace());
 
-		result.putAll(m_config.getCodes());
+		if (codes == null) {
+			codes = m_config.findCodes(DEFAULT_NAMESPACE);
+		}
+		result.putAll(codes.getCodes());
 
 		if (c != null) {
 			Map<Integer, Code> values = c.getCodes();
@@ -352,62 +304,70 @@ public class AppConfigManager implements Initializable {
 		return codes;
 	}
 
-	public List<Command> queryCommands() {
-		ArrayList<Command> results = new ArrayList<Command>();
-
+	public Map<Integer, Command> queryCommands() {
 		try {
-			AppConfig config = copyAppConfig();
+			AppCommandConfig config = copyAppCommandConfig();
 			Map<Integer, Command> commands = config.getCommands();
 
-			for (Entry<Integer, Command> entry : commands.entrySet()) {
-				Map<Integer, Code> codes = entry.getValue().getCodes();
+			commands = SortHelper.sortMap(commands, new Comparator<Entry<Integer, Command>>() {
+				@Override
+				public int compare(Entry<Integer, Command> o1, Entry<Integer, Command> o2) {
+					String c1 = o1.getValue().getName();
+					String title1 = o1.getValue().getTitle();
+					String c2 = o2.getValue().getName();
+					String title2 = o2.getValue().getTitle();
 
-				for (Entry<Integer, Code> e : m_config.getCodes().entrySet()) {
-					if (!codes.containsKey(e.getKey())) {
-						codes.put(e.getKey(), e.getValue());
+					if (StringUtils.isNotEmpty(title1)) {
+						c1 = title1;
 					}
+
+					if (StringUtils.isNotEmpty(title2)) {
+						c2 = title2;
+					}
+
+					return c1.compareTo(c2);
 				}
-			}
-			results = new ArrayList<Command>(commands.values());
-			Collections.sort(results, new CommandComparator());
+			});
+
+			return commands;
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return results;
+		return Collections.emptyMap();
 	}
 
-	public Map<Integer, Item> queryConfigItem(String name) {
-		ConfigItem config = m_config.findConfigItem(name);
-
-		if (config != null) {
-			return config.getItems();
-		} else {
-			return new ConcurrentHashMap<Integer, Item>();
-		}
-	}
-
-	public Map<String, List<Command>> queryDomain2Commands() {
+	public Map<String, AppCommandDisplayInfo> queryDomain2Commands() {
 		return queryDomain2Commands(queryCommands());
 	}
 
-	public Map<String, List<Command>> queryDomain2Commands(List<Command> commands) {
-		Map<String, List<Command>> map = new LinkedHashMap<String, List<Command>>();
+	public Map<String, AppCommandDisplayInfo> queryDomain2Commands(Map<Integer, Command> commands) {
+		Map<String, AppCommandDisplayInfo> map = new LinkedHashMap<String, AppCommandDisplayInfo>();
+		Map<String, AppCommandDisplayInfo> results = new LinkedHashMap<String, AppCommandDisplayInfo>();
 
-		for (Command command : commands) {
+		for (Command command : commands.values()) {
 			String domain = command.getDomain();
 
 			if (StringUtils.isEmpty(domain)) {
 				domain = "default";
 			}
-			List<Command> cmds = map.get(domain);
 
-			if (cmds == null) {
-				cmds = new ArrayList<Command>();
-				map.put(domain, cmds);
+			String namespace = command.getNamespace();
+			AppCommandDisplayInfo appCommandDisplayInfo = map.get(namespace);
+
+			if (appCommandDisplayInfo == null) {
+				appCommandDisplayInfo = new AppCommandDisplayInfo();
+
+				map.put(namespace, appCommandDisplayInfo);
 			}
-			cmds.add(command);
+			appCommandDisplayInfo.addCommand(domain, command);
 		}
-		return buildSortedCommands(map);
+
+		for (Entry<String, AppCommandDisplayInfo> entry : map.entrySet()) {
+			Map<String, List<Command>> cmds = buildSortedCommands(entry.getValue().getCommands());
+
+			results.put(entry.getKey(), new AppCommandDisplayInfo(cmds));
+		}
+		return results;
 	}
 
 	public Map<Integer, Code> queryInternalCodes(int commandId) {
@@ -419,17 +379,6 @@ public class AppConfigManager implements Initializable {
 		return new HashMap<Integer, Code>();
 	}
 
-	public Item queryItem(String type, int id) {
-		ConfigItem itemConfig = m_config.getConfigItems().get(type);
-
-		if (itemConfig != null) {
-			Item item = itemConfig.getItems().get(id);
-
-			return item;
-		}
-		return null;
-	}
-
 	private void refreshConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
@@ -437,7 +386,7 @@ public class AppConfigManager implements Initializable {
 		synchronized (this) {
 			if (modifyTime > m_modifyTime) {
 				String content = config.getContent();
-				AppConfig appConfig = DefaultSaxParser.parse(content);
+				AppCommandConfig appConfig = DefaultSaxParser.parse(content);
 
 				m_config = appConfig;
 				m_modifyTime = modifyTime;
@@ -449,55 +398,13 @@ public class AppConfigManager implements Initializable {
 	private void refreshData() {
 		m_maxCommandId = m_config.getMaxCommandId();
 
-		Map<Integer, String> excludedCommands = new ConcurrentHashMap<Integer, String>();
 		Collection<Command> commands = m_config.getCommands().values();
 		Map<String, Command> commandMap = new ConcurrentHashMap<String, Command>();
 
 		for (Command c : commands) {
 			commandMap.put(c.getName(), c);
-
-			if (!c.isAll()) {
-				excludedCommands.put(c.getId(), c.getName());
-			}
 		}
 		m_commands = commandMap;
-		m_excludedCommands = excludedCommands;
-
-		Map<String, Integer> cityMap = new ConcurrentHashMap<String, Integer>();
-		ConfigItem cities = m_config.findConfigItem(CITY);
-
-		if (cities != null && cities.getItems() != null) {
-			for (Item item : cities.getItems().values()) {
-				cityMap.put(item.getName(), item.getId());
-			}
-		}
-
-		m_cities = cityMap;
-
-		Map<String, Integer> operatorMap = new ConcurrentHashMap<String, Integer>();
-		ConfigItem operations = m_config.findConfigItem(OPERATOR);
-
-		for (Item item : operations.getItems().values()) {
-			operatorMap.put(item.getName(), item.getId());
-		}
-		m_operators = operatorMap;
-
-		Map<String, Integer> platformMap = new ConcurrentHashMap<String, Integer>();
-		ConfigItem platforms = m_config.findConfigItem(PLATFORM);
-
-		for (Item item : platforms.getItems().values()) {
-			platformMap.put(item.getName(), item.getId());
-		}
-		m_platforms = platformMap;
-	}
-
-	public Item getPlatformStr(int platform) {
-		ConfigItem configItem = m_config.findConfigItem(PLATFORM);
-		return configItem.findItem(platform);
-	}
-
-	public boolean shouldAdd2AllCommands(int id) {
-		return !m_excludedCommands.containsKey(id);
 	}
 
 	private void sortCommands() {
@@ -536,11 +443,6 @@ public class AppConfigManager implements Initializable {
 		return true;
 	}
 
-	public boolean updateCode(Code code) {
-		m_config.getCodes().put(code.getId(), code);
-		return true;
-	}
-
 	public boolean updateCode(int id, Code code) {
 		Command command = m_config.findCommand(id);
 
@@ -552,15 +454,55 @@ public class AppConfigManager implements Initializable {
 		return false;
 	}
 
+	public boolean updateCode(String namespace, Code code) {
+		m_config.findCodes(namespace).addCode(code);
+
+		return true;
+	}
+
 	public boolean updateCommand(int id, Command command) {
 		Command c = m_config.findCommand(id);
 
 		c.setDomain(command.getDomain());
 		c.setName(command.getName());
 		c.setTitle(command.getTitle());
-		c.setAll(command.getAll());
 		c.setThreshold(command.getThreshold());
+		c.setNamespace(command.getNamespace());
 		return storeConfig();
+	}
+
+	public static class AppCommandDisplayInfo {
+
+		private Map<String, List<Command>> m_commands = new HashMap<String, List<Command>>();
+
+		public AppCommandDisplayInfo() {
+
+		}
+
+		public AppCommandDisplayInfo(Map<String, List<Command>> commands) {
+			m_commands = commands;
+		}
+
+		public void addCommand(String domain, Command command) {
+			List<Command> commands = m_commands.get(domain);
+
+			if (commands == null) {
+				commands = new ArrayList<Command>();
+
+				m_commands.put(domain, commands);
+			}
+			commands.add(command);
+		}
+
+		public Map<String, List<Command>> getCommands() {
+			return m_commands;
+		}
+
+		@Override
+		public String toString() {
+			return "AppCommandDisplayInfo [m_commands=" + m_commands + "]";
+		}
+
 	}
 
 	public static class CommandComparator implements Comparator<Command> {
@@ -581,9 +523,5 @@ public class AppConfigManager implements Initializable {
 			}
 			return c1.compareTo(c2);
 		}
-	}
-
-	public int getPlatformId(String platform) {
-		return m_platforms.get(platform);
 	}
 }

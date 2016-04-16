@@ -33,7 +33,7 @@
 					<select id="network">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 				</select>
 	            </div>
@@ -46,7 +46,7 @@
 					<select id="app-version" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -56,7 +56,7 @@
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.connectionTypes}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -66,7 +66,7 @@
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.platforms}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -75,7 +75,7 @@
 					<select id="city" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.cities}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -85,7 +85,7 @@
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.operators}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -95,7 +95,7 @@
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.sources}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>

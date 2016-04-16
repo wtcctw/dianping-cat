@@ -8,7 +8,7 @@ import com.dianping.cat.system.SystemPage;
 
 public class Payload implements ActionPayload<SystemPage, Action> {
 	private SystemPage m_page;
-	
+
 	@FieldMeta("op")
 	private Action m_action;
 
@@ -50,7 +50,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@FieldMeta("parent")
 	private String m_parent;
-	
+
+	@FieldMeta("namespace")
+	private String m_namespace;
+
 	@Override
 	public Action getAction() {
 		return m_action;
@@ -78,6 +81,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public String getName() {
 		return m_name;
+	}
+
+	public String getNamespace() {
+		return m_namespace;
 	}
 
 	@Override
@@ -151,6 +158,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setName(String name) {
 		m_name = name;
+	}
+
+	public void setNamespace(String namespace) {
+		m_namespace = namespace;
 	}
 
 	@Override

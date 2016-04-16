@@ -10,16 +10,15 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatHomeModule;
-import com.dianping.cat.alarm.build.AlarmComponentConfigurator;
 import com.dianping.cat.build.report.AppComponentConfigurator;
 import com.dianping.cat.build.report.DependencyComponentConfigurator;
 import com.dianping.cat.build.report.EventComponentConfigurator;
 import com.dianping.cat.build.report.HeartbeatComponentConfigurator;
-import com.dianping.cat.build.report.StorageComponentConfigurator;
 import com.dianping.cat.build.report.MetricComponentConfigurator;
 import com.dianping.cat.build.report.OfflineComponentConfigurator;
 import com.dianping.cat.build.report.ProblemComponentConfigurator;
 import com.dianping.cat.build.report.ReportComponentConfigurator;
+import com.dianping.cat.build.report.StorageComponentConfigurator;
 import com.dianping.cat.build.report.TransactionComponentConfigurator;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.mvc.PayloadNormalizer;
@@ -97,9 +96,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
-
-		// for alarm module
-		all.addAll(new AlarmComponentConfigurator().defineComponents());
 
 		// for alarm module
 		all.addAll(new HomeAlarmComponentConfigurator().defineComponents());

@@ -13,8 +13,10 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppSpeedData;
 import com.dianping.cat.app.AppSpeedDataDao;
 import com.dianping.cat.app.AppSpeedDataEntity;
-import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.configuration.app.entity.Item;
+import com.dianping.cat.config.app.AppCommandConfigManager;
+import com.dianping.cat.config.app.MobileConfigManager;
+import com.dianping.cat.config.app.MobileConstants;
+import com.dianping.cat.configuration.mobile.entity.Item;
 import com.dianping.cat.report.graph.BarChart;
 import com.dianping.cat.report.page.app.display.AppSpeedDetail;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
@@ -27,7 +29,10 @@ public class AppSpeedDataBuilder {
 	private AppSpeedDataDao m_dao;
 
 	@Inject
-	private AppConfigManager m_appConfig;
+	private AppCommandConfigManager m_appConfig;
+
+	@Inject
+	private MobileConfigManager m_mobileConfigManager;
 
 	public AppSpeedDisplayInfo buildBarChart(SpeedQueryEntity entity) {
 		AppSpeedDisplayInfo info = new AppSpeedDisplayInfo();
@@ -84,10 +89,10 @@ public class AppSpeedDataBuilder {
 
 				Item item = builder.queryConfigItem(appSpeedData);
 
-				if (StringUtils.isNotEmpty(item.getName())) {
-					detail.setItemName(item.getName());
+				if (StringUtils.isNotEmpty(item.getValue())) {
+					detail.setItemName(item.getValue());
 				} else {
-					detail.setItemName(item.getId().toString());
+					detail.setItemName(String.valueOf(item.getId()));
 				}
 
 				details.add(detail);
@@ -139,7 +144,7 @@ public class AppSpeedDataBuilder {
 
 		@Override
 		Item queryConfigItem(AppSpeedData data) {
-			Item item = m_appConfig.queryItem(AppConfigManager.CITY, data.getCity());
+			Item item = m_mobileConfigManager.queryConstantItem(MobileConstants.CITY, data.getCity());
 
 			if (item == null) {
 				item = new Item(data.getCity());
@@ -176,7 +181,7 @@ public class AppSpeedDataBuilder {
 
 		@Override
 		Item queryConfigItem(AppSpeedData data) {
-			Item item = m_appConfig.queryItem(AppConfigManager.NETWORK, data.getNetwork());
+			Item item = m_mobileConfigManager.queryConstantItem(MobileConstants.NETWORK, data.getNetwork());
 
 			if (item == null) {
 				item = new Item(data.getNetwork());
@@ -213,7 +218,7 @@ public class AppSpeedDataBuilder {
 
 		@Override
 		Item queryConfigItem(AppSpeedData data) {
-			Item item = m_appConfig.queryItem(AppConfigManager.OPERATOR, data.getOperator());
+			Item item = m_mobileConfigManager.queryConstantItem(MobileConstants.OPERATOR, data.getOperator());
 
 			if (item == null) {
 				item = new Item(data.getOperator());
@@ -250,7 +255,7 @@ public class AppSpeedDataBuilder {
 
 		@Override
 		Item queryConfigItem(AppSpeedData data) {
-			Item item = m_appConfig.queryItem(AppConfigManager.PLATFORM, data.getPlatform());
+			Item item = m_mobileConfigManager.queryConstantItem(MobileConstants.PLATFORM, data.getPlatform());
 
 			if (item == null) {
 				item = new Item(data.getPlatform());
@@ -287,7 +292,7 @@ public class AppSpeedDataBuilder {
 
 		@Override
 		Item queryConfigItem(AppSpeedData data) {
-			Item item = m_appConfig.queryItem(AppConfigManager.VERSION, data.getAppVersion());
+			Item item = m_mobileConfigManager.queryConstantItem(MobileConstants.VERSION, data.getAppVersion());
 
 			if (item == null) {
 				item = new Item(data.getAppVersion());
