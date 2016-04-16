@@ -185,7 +185,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private void sendInternal(MessageTree tree) {
 		ChannelFuture future = m_channelManager.channel();
-		ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(10 * 1024); // 10K
+		ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(4 * 1024); // 4K
 
 		m_codec.encode(tree, buf);
 
@@ -269,13 +269,13 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			m_queue.offer(tree);
 		}
 
-		private boolean shouldMerge(MessageQueue handler) {
-			MessageTree tree = handler.peek();
+		private boolean shouldMerge(MessageQueue queue) {
+			MessageTree tree = queue.peek();
 
 			if (tree != null) {
 				long firstTime = tree.getMessage().getTimestamp();
 
-				if (System.currentTimeMillis() - firstTime > MAX_DURATION || handler.size() >= MAX_CHILD_NUMBER) {
+				if (System.currentTimeMillis() - firstTime > MAX_DURATION || queue.size() >= MAX_CHILD_NUMBER) {
 					return true;
 				}
 			}
