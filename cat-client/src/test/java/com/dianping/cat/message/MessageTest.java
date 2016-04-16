@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -310,9 +311,6 @@ public class MessageTest extends ComponentTestCase {
 
 		public void setQueue(final Queue<MessageTree> queue) {
 			m_sender = new MessageSender() {
-				@Override
-				public void initialize() {
-				}
 
 				@Override
 				public void send(MessageTree tree) {
@@ -322,6 +320,10 @@ public class MessageTest extends ComponentTestCase {
 				@Override
 				public void shutdown() {
 				}
+
+				@Override
+            public void initialize(List<InetSocketAddress> addresses) {
+            }
 			};
 		}
 	}

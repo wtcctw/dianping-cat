@@ -45,8 +45,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private MessageQueue m_atomicQueue = new DefaultMessageQueue(SIZE);
 
-	private List<InetSocketAddress> m_serverAddresses;
-
 	private ChannelManager m_channelManager;
 
 	private Logger m_logger;
@@ -70,8 +68,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	}
 
 	@Override
-	public void initialize() {
-		m_channelManager = new ChannelManager(m_logger, m_serverAddresses, m_configManager, m_factory);
+	public void initialize(List<InetSocketAddress> addresses) {
+		m_channelManager = new ChannelManager(m_logger, addresses, m_configManager, m_factory);
 		m_mergeTask = new MergeAtomicTask();
 
 		Threads.forGroup("cat").start(this);
@@ -196,10 +194,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		if (m_statistics != null) {
 			m_statistics.onBytes(size);
 		}
-	}
-
-	public void setServerAddresses(List<InetSocketAddress> serverAddresses) {
-		m_serverAddresses = serverAddresses;
 	}
 
 	@Override
