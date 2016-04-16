@@ -59,8 +59,10 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private AtomicInteger m_sampleCount = new AtomicInteger();
 
+	private MergeAtomicTask m_mergeTask;
+
 	private static final int MAX_CHILD_NUMBER = 200;
-	
+
 	private static final int MAX_DURATION = 1000 * 30;
 
 	@Override
@@ -76,10 +78,19 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	@Override
 	public void initialize() {
 		m_channelManager = new ChannelManager(m_logger, m_serverAddresses, m_configManager, m_factory);
+		m_mergeTask = new MergeAtomicTask();
 
 		Threads.forGroup("cat").start(this);
 		Threads.forGroup("cat").start(m_channelManager);
-		Threads.forGroup("cat").start(new MergeAtomicTask());
+		Threads.forGroup("cat").start(m_mergeTask);
+
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				m_logger.info("shut down cat client in runtime shut down hook!");
+				shutdown();
+			}
+		});
 	}
 
 	private void logQueueFullInfo(MessageTree tree) {
@@ -164,6 +175,17 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 				}
 			}
 		}
+
+		while (true) {
+			MessageTree tree = m_queue.poll();
+
+			if (tree != null) {
+				sendInternal(tree);
+				tree.setMessage(null);
+			} else {
+				break;
+			}
+		}
 	}
 
 	@Override
@@ -225,6 +247,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	@Override
 	public void shutdown() {
+		m_mergeTask.shutdown();
 		m_active = false;
 		m_channelManager.shutdown();
 	}
@@ -238,7 +261,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 		@Override
 		public void run() {
-			while (true) {
+			boolean m_active = true;
+			while (m_active) {
 				if (shouldMerge(m_atomicQueue)) {
 					MessageTree tree = mergeTree(m_atomicQueue);
 					boolean result = m_queue.offer(tree);
@@ -254,10 +278,15 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 					}
 				}
 			}
+
+			MessageTree tree = mergeTree(m_atomicQueue);
+
+			m_queue.offer(tree);
 		}
 
 		@Override
 		public void shutdown() {
+			m_active = false;
 		}
 	}
 }
