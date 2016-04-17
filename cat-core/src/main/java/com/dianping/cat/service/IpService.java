@@ -250,16 +250,16 @@ public class IpService implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		InputStream areaFile = IpService.class.getClassLoader().getResourceAsStream("config/area_china");
-		InputStream corpFile = IpService.class.getClassLoader().getResourceAsStream("config/corp_china");
-		InputStream ipFile = IpService.class.getClassLoader().getResourceAsStream("config/iptable_china");
+		InputStream areaFile = IpService.class.getClassLoader().getResourceAsStream("ip/area_china");
+		InputStream corpFile = IpService.class.getClassLoader().getResourceAsStream("ip/corp_china");
+		InputStream ipFile = IpService.class.getClassLoader().getResourceAsStream("ip/iptable_china");
 
 		initAreaMap(areaFile);
 		initCorpMap(corpFile);
 		initIpTable(ipFile);
 
-		InputStream foreignAreaFile = IpService.class.getClassLoader().getResourceAsStream("config/area_foreign");
-		InputStream foreignIpFile = IpService.class.getClassLoader().getResourceAsStream("config/iptable_foreign");
+		InputStream foreignAreaFile = IpService.class.getClassLoader().getResourceAsStream("ip/area_foreign");
+		InputStream foreignIpFile = IpService.class.getClassLoader().getResourceAsStream("ip/iptable_foreign");
 
 		initForeignAreaMap(foreignAreaFile);
 		initForeignIpTable(foreignIpFile);

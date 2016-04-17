@@ -15,7 +15,8 @@ public class LocalResourceContentFetcher implements ContentFetcher {
 		try {
 			content = Files.forIO().readFrom(this.getClass().getResourceAsStream(path), "utf-8");
 		} catch (Exception e) {
-			Cat.logError(e);
+			System.err.println(configName+" can't find");
+			Cat.logError(configName + " can't find", e);
 		}
 		return content;
 	}
