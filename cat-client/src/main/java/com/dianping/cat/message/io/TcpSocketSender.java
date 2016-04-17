@@ -30,8 +30,6 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 @Named
 public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
-	public static final String ID = "tcp-socket-sender";
-
 	public static final int SIZE = 5000;
 
 	@Inject(PlainTextMessageCodec.ID)
@@ -50,23 +48,17 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private MessageQueue m_atomicQueue = new DefaultMessageQueue(SIZE);
 
-	private List<InetSocketAddress> m_serverAddresses;
-
 	private ChannelManager m_channelManager;
 
 	private Logger m_logger;
 
-	private transient boolean m_active;
+	private boolean m_active;
 
 	private AtomicInteger m_errors = new AtomicInteger();
 
 	private AtomicInteger m_sampleCount = new AtomicInteger();
 
 	private MergeAtomicTask m_mergeTask;
-
-	private static final int MAX_CHILD_NUMBER = 200;
-
-	private static final int MAX_DURATION = 1000 * 30;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -79,8 +71,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	}
 
 	@Override
-	public void initialize() {
-		m_channelManager = new ChannelManager(m_logger, m_serverAddresses, m_configManager, m_factory);
+	public void initialize(List<InetSocketAddress> addresses) {
+		m_channelManager = new ChannelManager(m_logger, addresses, m_configManager, m_factory);
 		m_mergeTask = new MergeAtomicTask();
 
 		Threads.forGroup("cat").start(this);
@@ -108,30 +100,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		}
 
 		tree = null;
-	}
-
-	private MessageTree mergeTree(MessageQueue handler) {
-		int max = MAX_CHILD_NUMBER;
-		DefaultTransaction tran = new DefaultTransaction("_CatMergeTree", "_CatMergeTree", null);
-		MessageTree first = handler.poll();
-
-		tran.setStatus(Transaction.SUCCESS);
-		tran.setCompleted(true);
-		tran.setDurationInMicros(0);
-		tran.addChild(first.getMessage());
-
-		while (max >= 0) {
-			MessageTree tree = handler.poll();
-
-			if (tree == null) {
-				break;
-			}
-			tran.addChild(tree.getMessage());
-			m_factory.reuse(tree.getMessageId());
-			max--;
-		}
-		((DefaultMessageTree) first).setMessage(tran);
-		return first;
 	}
 
 	private void offer(MessageTree tree) {
@@ -218,7 +186,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private void sendInternal(MessageTree tree) {
 		ChannelFuture future = m_channelManager.channel();
-		ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(10 * 1024); // 10K
+		ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(4 * 1024); // 4K
 
 		m_codec.encode(tree, buf);
 
@@ -231,23 +199,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		}
 	}
 
-	public void setServerAddresses(List<InetSocketAddress> serverAddresses) {
-		m_serverAddresses = serverAddresses;
-	}
-
-	private boolean shouldMerge(MessageQueue handler) {
-		MessageTree tree = handler.peek();
-
-		if (tree != null) {
-			long firstTime = tree.getMessage().getTimestamp();
-
-			if (System.currentTimeMillis() - firstTime > MAX_DURATION || handler.size() >= MAX_CHILD_NUMBER) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	@Override
 	public void shutdown() {
 		m_mergeTask.shutdown();
@@ -257,9 +208,37 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	public class MergeAtomicTask implements Task {
 
+		private static final int MAX_CHILD_NUMBER = 200;
+
+		private static final int MAX_DURATION = 1000 * 30;
+
 		@Override
 		public String getName() {
 			return "merge-atomic-task";
+		}
+
+		private MessageTree mergeTree(MessageQueue handler) {
+			int max = MAX_CHILD_NUMBER;
+			DefaultTransaction tran = new DefaultTransaction("_CatMergeTree", "_CatMergeTree", null);
+			MessageTree first = handler.poll();
+
+			tran.setStatus(Transaction.SUCCESS);
+			tran.setCompleted(true);
+			tran.setDurationInMicros(0);
+			tran.addChild(first.getMessage());
+
+			while (max >= 0) {
+				MessageTree tree = handler.poll();
+
+				if (tree == null) {
+					break;
+				}
+				tran.addChild(tree.getMessage());
+				m_factory.reuse(tree.getMessageId());
+				max--;
+			}
+			((DefaultMessageTree) first).setMessage(tran);
+			return first;
 		}
 
 		@Override
@@ -285,6 +264,19 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			MessageTree tree = mergeTree(m_atomicQueue);
 
 			m_queue.offer(tree);
+		}
+
+		private boolean shouldMerge(MessageQueue queue) {
+			MessageTree tree = queue.peek();
+
+			if (tree != null) {
+				long firstTime = tree.getMessage().getTimestamp();
+
+				if (System.currentTimeMillis() - firstTime > MAX_DURATION || queue.size() >= MAX_CHILD_NUMBER) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		@Override

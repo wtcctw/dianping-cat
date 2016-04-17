@@ -22,13 +22,5 @@
    <domain>paas</domain>
    <domain>SMS-RECEIVER</domain>
    
-   <crash-log-domain id="AndroidCrashLog" title="Android(主APP)"/>
-   <crash-log-domain id="iOSCrashLog" title="iOS(主APP)"/>
-   <crash-log-domain id="MerchantAndroidCrashLog" title="Android(点评管家)"/>
-   <crash-log-domain id="MerchantIOSCrashLog" title="iOS(点评管家)"/>
-   <crash-log-domain id="ApolloAndroidCrashLog" title="Android(阿波罗)"/>
-   <crash-log-domain id="ApolloIOSCrashLog" title="iOS(阿波罗)"/>
-   <crash-log-domain id="TVAndroidCrashLog" title="Android(电视墙)"/>
-   
    <atomic-tree-config start-types="Cache.;Squirrel." match-types="SQL"/>
 </server-filter-config>

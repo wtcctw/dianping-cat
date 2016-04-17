@@ -55,8 +55,7 @@ public class DefaultTransportManager implements TransportManager, Initializable,
 			if (addresses.isEmpty()) {
 				throw new RuntimeException("All servers in configuration are disabled!\r\n" + servers);
 			} else {
-				m_tcpSocketSender.setServerAddresses(addresses);
-				m_tcpSocketSender.initialize();
+				m_tcpSocketSender.initialize(addresses);
 			}
 		}
 	}
