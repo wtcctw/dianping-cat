@@ -421,10 +421,6 @@ CREATE TABLE `web_speed_data_0` (
   KEY `updatetime` (`updatetime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=227 DEFAULT CHARSET=utf8 COMMENT='web测速数据';
 
-<<<<<<< HEAD
-=======
->>>>>>> e1abaedaec97cb5c009bc267bf574b7cd537562f
->>>>>>> storage_merge
 CREATE TABLE `overload` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
   `report_id` int(11) NOT NULL COMMENT '报告id',
@@ -453,43 +449,6 @@ CREATE TABLE `user_define_rule` (
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户定义规则表';
-
-CREATE TABLE `metric_screen` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL COMMENT '配置名称',
-  `graph_name` varchar(50) NOT NULL COMMENT 'Graph名称',
-  `category` varchar(50) NOT NULL COMMENT 'Graph类别',
-  `content` longtext COMMENT '配置的具体内容',
-  `creation_date` datetime NOT NULL COMMENT '配置创建时间',
-  `updatetime` datetime NOT NULL COMMENT '配置修改时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name_graph` (`name`,`graph_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统监控的screen配置';
-
-CREATE TABLE `metric_graph` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL COMMENT '配置ID',
-  `content` longtext COMMENT '配置的具体内容',
-  `creation_date` datetime NOT NULL COMMENT '配置创建时间',
-  `updatetime` datetime NOT NULL COMMENT '配置修改时间',
-  PRIMARY KEY (`id`),
-  UNIQUE `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统监控的graph配置';
-
-CREATE TABLE `server_alarm_rule` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `category` varchar(50) NOT NULL COMMENT '监控分类',
-  `endPoint` varchar(200) NOT NULL COMMENT '监控对象ID',
-  `measurement` varchar(200) NOT NULL COMMENT '监控指标',
-  `tags` varchar(200) NOT NULL DEFAULT '' COMMENT '监控指标标签',
-  `content` longtext NOT NULL COMMENT '配置的具体内容',
-  `type` varchar(20) NOT NULL DEFAULT '' COMMENT '数据聚合方式',
-  `creator` varchar(100) DEFAULT '' COMMENT '创建人',
-  `creation_date` datetime NOT NULL COMMENT '配置创建时间',
-  `updatetime` datetime NOT NULL COMMENT '配置修改时间',
-  PRIMARY KEY (`id`),
-  KEY `updatetime` (`updatetime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统告警的配置';
 
 CREATE TABLE `business_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

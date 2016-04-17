@@ -38,7 +38,6 @@ CREATE TABLE `app_speed_data_1` (
   UNIQUE KEY `IX_condition` (period,minute_order,city,operator,network,app_version,platform)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='app测速数据';
 
-
 CREATE TABLE `crash_log` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `app_name` varchar(100) NOT NULL DEFAULT '' COMMENT 'app名称',
