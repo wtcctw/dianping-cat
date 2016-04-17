@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.cat.message.QueueFullException;
 import org.unidal.cat.message.storage.BlockDumperManager;
 import org.unidal.cat.message.storage.BucketManager;
@@ -21,7 +24,7 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 
 @Named(type = MessageDumper.class, instantiationStrategy = Named.PER_LOOKUP)
-public class DefaultMessageDumper extends ContainerHolder implements MessageDumper {
+public class DefaultMessageDumper extends ContainerHolder implements MessageDumper, LogEnabled {
 	@Inject
 	private BlockDumperManager m_blockDumperManager;
 
@@ -32,7 +35,9 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 
 	private List<MessageProcessor> m_processors = new ArrayList<MessageProcessor>();
 
-	private int m_failCount = -1;
+	private AtomicInteger m_failCount = new AtomicInteger(-1);
+
+	private Logger m_logger;
 
 	@Override
 	public void awaitTermination(int hour) throws InterruptedException {
@@ -70,7 +75,9 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 	}
 
 	public void initialize(int hour) {
-		for (int i = 0; i < 10; i++) {
+		int processThreads = 24;
+
+		for (int i = 0; i < processThreads; i++) {
 			BlockingQueue<MessageTree> queue = new ArrayBlockingQueue<MessageTree>(10000);
 			MessageProcessor processor = lookup(MessageProcessor.class);
 
@@ -93,11 +100,17 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 			BlockingQueue<MessageTree> last = m_queues.get(m_queues.size() - 1);
 			boolean success = last.offer(tree);
 
-			if (!success && (++m_failCount % 100) == 0) {
+			if (!success && (m_failCount.incrementAndGet() % 100) == 0) {
 				Cat.logError(new QueueFullException("Error when adding message to queue, fails: " + m_failCount));
-			
+
+				m_logger.info("queue is full " + m_failCount);
 				// tree.getBuffer().release();
 			}
 		}
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 }

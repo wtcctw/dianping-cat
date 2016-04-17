@@ -6,6 +6,7 @@ import io.netty.buffer.Unpooled;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -47,6 +48,8 @@ public class LocalIndex implements Index {
 
 	private MessageIdCodec m_codec = new MessageIdCodec();
 
+	protected FileChannel m_channel;
+
 	@Override
 	public void close() {
 		if (m_file != null) {
@@ -76,6 +79,7 @@ public class LocalIndex implements Index {
 
 			m_mapping = m_manager.getTokenMapping(startTime, ip);
 			m_header.load();
+			m_channel = m_file.getChannel();
 		}
 	}
 
@@ -99,8 +103,11 @@ public class LocalIndex implements Index {
 		int offset = m_header.getOffset(from.getIpAddressValue(), from.getIndex());
 		byte[] data = m_codec.encode(to, from.getHour());
 
-		m_file.seek(offset);
-		m_file.write(data);
+//		m_channel.position(offset);
+//		m_channel.write(ByteBuffer.wrap(data));
+
+		 m_file.seek(offset);
+		 m_file.write(data);
 	}
 
 	private class Header {
@@ -113,7 +120,7 @@ public class LocalIndex implements Index {
 		private int m_nextBlock = 4;
 
 		private boolean m_dirty;
-		
+
 		public void flush() throws IOException {
 			if (m_dirty) {
 				m_file.seek(0);
@@ -149,7 +156,7 @@ public class LocalIndex implements Index {
 				m_dirty = true;
 
 				if (m_nextBlock % MESSAGE_PER_BLOCK == 0) {
-					
+
 				}
 			}
 

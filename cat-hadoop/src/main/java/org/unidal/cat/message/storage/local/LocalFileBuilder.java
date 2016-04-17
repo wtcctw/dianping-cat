@@ -20,7 +20,7 @@ public class LocalFileBuilder implements FileBuilder {
 		String path;
 
 		switch (type) {
-		case MAPPING:
+		case TOKEN:
 			format = new MessageFormat("dump/{0,date,yyyyMMdd}/{0,date,HH}/{2}.{3}");
 			path = format.format(new Object[] { startTime, null, ip, type.getExtension() });
 			break;

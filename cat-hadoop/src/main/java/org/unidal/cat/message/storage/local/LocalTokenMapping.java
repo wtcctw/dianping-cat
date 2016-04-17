@@ -127,7 +127,6 @@ public class LocalTokenMapping implements TokenMapping {
 
 			if (!m_data.isWritable(2 + len)) { // no enough space
 				flush();
-
 				m_data.clear();
 				m_data.setZero(0, m_data.capacity());
 				m_block++;

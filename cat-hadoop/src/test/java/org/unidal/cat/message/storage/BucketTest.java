@@ -44,16 +44,19 @@ public class BucketTest extends ComponentTestCase {
 		lookup(StorageConfiguration.class).setBaseDataDir(baseDir);
 		m_codec = lookup(MessageCodec.class, PlainTextMessageCodec.ID);
 		m_benchmarkManager = lookup(BenchmarkManager.class);
+		System.setProperty("devMode", "true");
 	}
 
 	@Test
 	public void testManyDomainIpWrite() throws Exception {
+		TreeHelper.init(m_codec);
+
 		long start = System.currentTimeMillis();
 		MessageDumperManager manager = lookup(MessageDumperManager.class);
 		int hour = 405746;
 		MessageDumper dumper = manager.findOrCreate(hour);
 
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 0; i < 1000000; i++) {
 			long interStart = System.currentTimeMillis();
 
 			for (int domainIndex = 0; domainIndex < 300; domainIndex++) {
@@ -62,7 +65,7 @@ public class BucketTest extends ComponentTestCase {
 				for (int ipIndex = 0; ipIndex < 9; ipIndex++) {
 					String ip = "0a01020" + ipIndex;
 					MessageId id = new MessageId(domain, ip, hour, i * 10 + ipIndex);
-					MessageTree tree = TreeHelper.tree(m_codec, id);
+					MessageTree tree = TreeHelper.cacheTree(m_codec, id);
 
 					((DefaultMessageTree) tree).setMessageId(id.toString());
 					tree.setFormatMessageId(id);
@@ -74,7 +77,7 @@ public class BucketTest extends ComponentTestCase {
 			long duration = System.currentTimeMillis() - interStart;
 
 			if (i % 100 == 0) {
-				System.out.println("duration:" + duration + ":qps:" + 2700 * 1000 / duration);
+				System.out.println("duration:" + duration + ":qps:" + 3000 * 1000 / duration);
 			}
 		}
 
@@ -84,10 +87,11 @@ public class BucketTest extends ComponentTestCase {
 
 	@Test
 	public void testWithManyThreads() {
+		TreeHelper.init(m_codec);
 		long start = System.currentTimeMillis();
 		List<TestThread> threads = new ArrayList<TestThread>();
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 5; i++) {
 			TestThread task = new TestThread(i);
 
 			Threads.forGroup("cat").start(task);
@@ -104,7 +108,6 @@ public class BucketTest extends ComponentTestCase {
 					total = total + thread.m_totalCount.get();
 				}
 				long duration = System.currentTimeMillis() - start;
-
 				System.out.println("qps:" + total * 1000 / duration);
 			} catch (InterruptedException e) {
 				break;
@@ -534,6 +537,7 @@ public class BucketTest extends ComponentTestCase {
 		public ByteBuf unpack(MessageId id) throws IOException {
 			throw new UnsupportedOperationException();
 		}
+
 	}
 
 	public class TestThread implements Task {
@@ -564,7 +568,7 @@ public class BucketTest extends ComponentTestCase {
 					for (int ipIndex = 0; ipIndex < 10; ipIndex++) {
 						String ip = "0a01020" + ipIndex;
 						MessageId id = new MessageId(domain, ip, hour, i * 10 + ipIndex);
-						MessageTree tree = TreeHelper.tree(m_codec, id);
+						MessageTree tree = TreeHelper.cacheTree(m_codec, id);
 
 						((DefaultMessageTree) tree).setMessageId(id.toString());
 						tree.setFormatMessageId(id);
@@ -579,6 +583,5 @@ public class BucketTest extends ComponentTestCase {
 		@Override
 		public void shutdown() {
 		}
-
 	}
 }

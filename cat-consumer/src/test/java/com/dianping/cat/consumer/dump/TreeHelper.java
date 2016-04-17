@@ -1,4 +1,4 @@
-package org.unidal.cat.message.storage;
+package com.dianping.cat.consumer.dump;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
