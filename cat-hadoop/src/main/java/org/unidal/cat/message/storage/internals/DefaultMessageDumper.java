@@ -85,10 +85,6 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 	@Override
 	public void process(MessageTree tree) {
 		MessageId id = tree.getFormatMessageId();
-
-		if (id == null) {
-			id = MessageId.parse(tree.getMessageId());
-		}
 		String domain = id.getDomain();
 		int index = getIndex(domain);
 		BlockingQueue<MessageTree> queue = m_queues.get(index);

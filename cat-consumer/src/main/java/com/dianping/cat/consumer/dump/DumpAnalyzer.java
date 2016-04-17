@@ -4,16 +4,13 @@ import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.unidal.cat.message.storage.Index;
 import org.unidal.cat.message.storage.IndexManager;
 import org.unidal.cat.message.storage.MessageDumper;
 import org.unidal.cat.message.storage.MessageDumperManager;
 import org.unidal.cat.message.storage.MessageFinderManager;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
-import org.unidal.lookup.util.StringUtils;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.message.internal.MessageId;
@@ -101,17 +98,6 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 			if (dumper != null) {
 				dumper.process(tree);
 
-				String mapId = tree.getSessionToken();
-
-				if (StringUtils.isNotEmpty(mapId) && !mapId.equals("null")) {
-					try {
-						Index index = m_indexManager.getIndex(domain, hour, true);
-
-						index.map(MessageId.parse(mapId), messageId);
-					} catch (Exception e) {
-						Cat.logError(e);
-					}
-				}
 			} else {
 				m_serverStateManager.addPigeonTimeError(1);
 			}

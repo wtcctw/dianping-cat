@@ -14,12 +14,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.unidal.cat.message.storage.Block;
 import org.unidal.cat.message.storage.BlockDumper;
 import org.unidal.cat.message.storage.BlockDumperManager;
+import org.unidal.cat.message.storage.Index;
+import org.unidal.cat.message.storage.IndexManager;
 import org.unidal.cat.message.storage.MessageFinder;
 import org.unidal.cat.message.storage.MessageFinderManager;
 import org.unidal.cat.message.storage.MessageProcessor;
 import org.unidal.cat.metric.BenchmarkManager;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
@@ -36,6 +39,9 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 
 	@Inject
 	private MessageFinderManager m_finderManager;
+
+	@Inject
+	private IndexManager m_indexManager;
 
 	private BlockDumper m_dumper;
 
@@ -81,40 +87,51 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 		m_finderManager.register(hour, this);
 	}
 
+	private void processIndex(MessageTree tree) {
+		String mapId = tree.getSessionToken();
+
+		if (StringUtils.isNotEmpty(mapId) && !mapId.equals("null")) {
+			MessageId messageId = tree.getFormatMessageId();
+			try {
+				Index index = m_indexManager.getIndex(messageId.getDomain(), messageId.getHour(), true);
+
+				index.map(MessageId.parse(mapId), messageId);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+	}
+
 	private void processMessage(MessageTree tree) {
-	   MessageId id = tree.getFormatMessageId();
+		MessageId id = tree.getFormatMessageId();
+		String domain = id.getDomain();
+		int hour = id.getHour();
+		Block block = m_blocks.get(domain);
 
-	   if (id == null) {
-	   	id = MessageId.parse(tree.getMessageId());
-	   }
-	   String domain = id.getDomain();
-	   int hour = id.getHour();
-	   Block block = m_blocks.get(domain);
+		if (block == null) {
+			block = new DefaultBlock(domain, hour);
+			m_blocks.put(domain, block);
+		}
 
-	   if (block == null) {
-	   	block = new DefaultBlock(domain, hour);
-	   	m_blocks.put(domain, block);
-	   }
+		ByteBuf buffer = tree.getBuffer();
 
-	   ByteBuf buffer = tree.getBuffer();
+		try {
+			if (block.isFull()) {
+				block.finish();
 
-	   try {
-	   	if (block.isFull()) {
-	   		block.finish();
+				m_dumper.dump(block);
 
-	   		m_dumper.dump(block);
-	   		
-	   		block = new DefaultBlock(domain, hour);
-	   		m_blocks.put(domain, block);
-	   	}
+				block = new DefaultBlock(domain, hour);
+				m_blocks.put(domain, block);
+			}
 
-	   	block.pack(id, buffer);
-	   } catch (Exception e) {
-	   	Cat.logError(e);
-	   } finally {
-	   	// buffer.release();
-	   }
-   }
+			block.pack(id, buffer);
+		} catch (Exception e) {
+			Cat.logError(e);
+		} finally {
+			// buffer.release();
+		}
+	}
 
 	@Override
 	public void run() {
@@ -126,6 +143,7 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 
 				if (tree != null) {
 					processMessage(tree);
+					processIndex(tree);
 				}
 			}
 		} catch (InterruptedException e) {

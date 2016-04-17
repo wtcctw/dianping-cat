@@ -142,6 +142,9 @@
 				<requirement>
 					<role>org.unidal.cat.message.storage.MessageFinderManager</role>
 				</requirement>
+				<requirement>
+					<role>org.unidal.cat.message.storage.IndexManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

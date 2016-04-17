@@ -43,7 +43,7 @@ public class DefaultMessageTree implements MessageTree {
 	private String m_threadId;
 
 	private String m_threadName;
-	
+
 	private MessageId m_formatMessageId;
 
 	private boolean m_discard = true;
@@ -114,6 +114,10 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	public MessageId getFormatMessageId() {
+		if (m_formatMessageId == null) {
+			m_formatMessageId = MessageId.parse(m_messageId);
+		}
+
 		return m_formatMessageId;
 	}
 
