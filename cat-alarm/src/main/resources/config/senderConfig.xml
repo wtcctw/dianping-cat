@@ -3,7 +3,7 @@
    <sender id="mail" url="http://test/" type="post" successCode="200" batchSend="true">
       <par id="type=1500"/>
       <par id="key=title,body"/>
-      <par id="re=yong.you@dianping.com"/>
+      <par id="re=test@dianping.com"/>
       <par id="to=${receiver}"/>
       <par id="value=${title},${content}"/>
    </sender>
