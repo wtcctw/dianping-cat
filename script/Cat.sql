@@ -421,6 +421,10 @@ CREATE TABLE `web_speed_data_0` (
   KEY `updatetime` (`updatetime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=227 DEFAULT CHARSET=utf8 COMMENT='web测速数据';
 
+<<<<<<< HEAD
+=======
+>>>>>>> e1abaedaec97cb5c009bc267bf574b7cd537562f
+>>>>>>> storage_merge
 CREATE TABLE `overload` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
   `report_id` int(11) NOT NULL COMMENT '报告id',
