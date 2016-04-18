@@ -34,7 +34,7 @@ public class LocalBucketManager extends ContainerHolder implements BucketManager
 
 	private Map<Integer, Map<String, Bucket>> m_buckets = new LinkedHashMap<Integer, Map<String, Bucket>>();
 
-	private Logger m_logger;
+	protected Logger m_logger;
 
 	private boolean bucketFilesExsits(String domain, String ip, int hour) {
 		long timestamp = hour * 3600 * 1000L;
@@ -66,7 +66,6 @@ public class LocalBucketManager extends ContainerHolder implements BucketManager
 
 					Benchmark benchmark = bucket.getBechmark();
 					m_benchmarkManager.remove(benchmark.getType());
-					m_logger.info("Close bucket " + bucket);
 				} catch (Exception e) {
 					Cat.logError(e);
 				} finally {
