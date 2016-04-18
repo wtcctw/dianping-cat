@@ -18,7 +18,6 @@ public class IndexTest extends ComponentTestCase {
 
 		config.setBaseDataDir(new File("target"));
 		File baseDir = new File("target");
-
 		Files.forDir().delete(new File(baseDir, "dump"), true);
 	}
 
@@ -27,21 +26,19 @@ public class IndexTest extends ComponentTestCase {
 		IndexManager manager = lookup(IndexManager.class, "local");
 		Index index = manager.getIndex("from", 403899, true);
 
-		for (int i = 1; i < 150000; i++) {
+		for (int i = 1; i < 15000000; i++) {
 			MessageId from = MessageId.parse("from-0a260014-403899-" + i);
 			MessageId to = MessageId.parse("to-0a260015-403899-" + i);
 
 			index.map(from, to);
 		}
 
-		index.close();
 		index = manager.getIndex("from", 403899, true);
-		for (int i = 1; i < 150000; i++) {
+		for (int i = 1; i < 15000000; i++) {
 			MessageId from = MessageId.parse("from-0a260014-403899-" + i);
 			MessageId expected = MessageId.parse("to-0a260015-403899-" + i);
 
 			MessageId actual = index.lookup(from);
-
 			Assert.assertEquals(expected, actual);
 		}
 	}
@@ -52,20 +49,18 @@ public class IndexTest extends ComponentTestCase {
 		Index index = manager.getIndex("from", 403899, true);
 
 		for (int i = 1; i < 150000; i++) {
-			for (int ip = 0; ip < 9; ip++) {
+			for (int ip = 0; ip < 10; ip++) {
 				MessageId from = MessageId.parse("from-0a26000" + ip + "-403899-" + i);
 				MessageId to = MessageId.parse("from-0a25000" + ip + "-403899-" + i);
 
 				index.map(from, to);
 			}
-
 		}
 
-		index.close();
 		index = manager.getIndex("from", 403899, true);
 		for (int i = 1; i < 150000; i++) {
 
-			for (int ip = 0; ip < 9; ip++) {
+			for (int ip = 0; ip < 10; ip++) {
 				MessageId from = MessageId.parse("from-0a26000" + ip + "-403899-" + i);
 				MessageId expected = MessageId.parse("from-0a25000" + ip + "-403899-" + i);
 

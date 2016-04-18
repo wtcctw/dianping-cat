@@ -204,6 +204,12 @@
 			<role>org.unidal.cat.message.storage.IndexManager</role>
 			<role-hint>local</role-hint>
 			<implementation>org.unidal.cat.message.storage.local.LocalIndexManager</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.cat.message.storage.FileBuilder</role>
+					<role-hint>local</role-hint>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>org.unidal.cat.message.storage.Index</role>
