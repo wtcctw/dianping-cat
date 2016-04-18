@@ -91,7 +91,7 @@ public class BucketTest extends ComponentTestCase {
 		long start = System.currentTimeMillis();
 		List<TestThread> threads = new ArrayList<TestThread>();
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 1; i++) {
 			TestThread task = new TestThread(i);
 
 			Threads.forGroup("cat").start(task);
@@ -134,9 +134,9 @@ public class BucketTest extends ComponentTestCase {
 			}
 
 			block.finish();
-			bucket.puts(block.getData(), block.getMappings());
+			bucket.puts(block.getData(), block.getOffsets());
 
-			for (MessageId id : block.getMappings().keySet()) {
+			for (MessageId id : block.getOffsets().keySet()) {
 				ByteBuf buf = bucket.get(id);
 				MessageTree tree = m_codec.decode(buf);
 
@@ -164,7 +164,7 @@ public class BucketTest extends ComponentTestCase {
 			}
 
 			block.finish();
-			bucket.puts(block.getData(), block.getMappings());
+			bucket.puts(block.getData(), block.getOffsets());
 		}
 
 		manager.closeBuckets(hour);
@@ -208,7 +208,7 @@ public class BucketTest extends ComponentTestCase {
 			}
 
 			block.finish();
-			bucket.puts(block.getData(), block.getMappings());
+			bucket.puts(block.getData(), block.getOffsets());
 		}
 
 		manager.closeBuckets(hour);
@@ -261,7 +261,7 @@ public class BucketTest extends ComponentTestCase {
 			}
 
 			block.finish();
-			bucket.puts(block.getData(), block.getMappings());
+			bucket.puts(block.getData(), block.getOffsets());
 		}
 
 		for (int i = 0; i < 10000; i++) {
@@ -284,7 +284,7 @@ public class BucketTest extends ComponentTestCase {
 			}
 
 			block.finish();
-			bucket.puts(block.getData(), block.getMappings());
+			bucket.puts(block.getData(), block.getOffsets());
 		}
 
 		manager.closeBuckets(hour);
@@ -330,7 +330,7 @@ public class BucketTest extends ComponentTestCase {
 			}
 
 			block.finish();
-			bucket.puts(block.getData(), block.getMappings());
+			bucket.puts(block.getData(), block.getOffsets());
 		}
 
 		for (int i = 0; i < 10000; i++) {
@@ -344,7 +344,7 @@ public class BucketTest extends ComponentTestCase {
 			}
 
 			block.finish();
-			bucket.puts(block.getData(), block.getMappings());
+			bucket.puts(block.getData(), block.getOffsets());
 		}
 
 		manager.closeBuckets(hour);
@@ -381,9 +381,9 @@ public class BucketTest extends ComponentTestCase {
 			}
 
 			block.finish();
-			bucket.puts(block.getData(), block.getMappings());
+			bucket.puts(block.getData(), block.getOffsets());
 
-			for (MessageId id : block.getMappings().keySet()) {
+			for (MessageId id : block.getOffsets().keySet()) {
 				ByteBuf buf = bucket.get(id);
 				MessageTree tree = m_codec.decode(buf);
 
@@ -397,7 +397,7 @@ public class BucketTest extends ComponentTestCase {
 		for (int i = 0; i < 500; i++) {
 			Block block = new DefaultBlock(domain, hour);
 
-			for (MessageId id : block.getMappings().keySet()) {
+			for (MessageId id : block.getOffsets().keySet()) {
 				ByteBuf buf = bucket.get(id);
 				MessageTree tree = m_codec.decode(buf);
 
@@ -416,9 +416,9 @@ public class BucketTest extends ComponentTestCase {
 			}
 
 			block.finish();
-			bucket.puts(block.getData(), block.getMappings());
+			bucket.puts(block.getData(), block.getOffsets());
 
-			for (MessageId id : block.getMappings().keySet()) {
+			for (MessageId id : block.getOffsets().keySet()) {
 				ByteBuf buf = bucket.get(id);
 				MessageTree tree = m_codec.decode(buf);
 
@@ -449,7 +449,7 @@ public class BucketTest extends ComponentTestCase {
 
 			mo.start();
 			try {
-				bucket.puts(block.getData(), block.getMappings());
+				bucket.puts(block.getData(), block.getOffsets());
 			} catch (Exception e) {
 				System.out.println(i);
 				e.printStackTrace();
@@ -520,7 +520,7 @@ public class BucketTest extends ComponentTestCase {
 		}
 
 		@Override
-		public Map<MessageId, Integer> getMappings() {
+		public Map<MessageId, Integer> getOffsets() {
 			return m_mappings;
 		}
 
@@ -537,6 +537,15 @@ public class BucketTest extends ComponentTestCase {
 		public ByteBuf unpack(MessageId id) throws IOException {
 			throw new UnsupportedOperationException();
 		}
+
+		@Override
+      public Map<MessageId, MessageId> getMappIds() {
+	      return null;
+      }
+
+		@Override
+      public void map(MessageId from, MessageId to) {
+      }
 
 	}
 
@@ -561,9 +570,9 @@ public class BucketTest extends ComponentTestCase {
 			int hour = 405746;
 			MessageDumper dumper = manager.findOrCreate(hour);
 
-			for (int i = 0; i < 10000; i++) {
-				for (int domainIndex = 0; domainIndex < 30; domainIndex++) {
-					String domain = "domain" + m_threadIndex + "-" + domainIndex;
+			for (int i = 0; i < 10000000; i++) {
+				for (int domainIndex = 0; domainIndex < 300; domainIndex++) {
+					String domain = "domain_" + domainIndex;
 
 					for (int ipIndex = 0; ipIndex < 10; ipIndex++) {
 						String ip = "0a01020" + ipIndex;

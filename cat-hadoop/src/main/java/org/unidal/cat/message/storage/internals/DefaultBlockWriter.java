@@ -11,6 +11,8 @@ import org.unidal.cat.message.storage.Block;
 import org.unidal.cat.message.storage.BlockWriter;
 import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.BucketManager;
+import org.unidal.cat.message.storage.Index;
+import org.unidal.cat.message.storage.IndexManager;
 import org.unidal.cat.metric.BenchmarkManager;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
@@ -27,6 +29,9 @@ public class DefaultBlockWriter implements BlockWriter {
 
 	@Inject
 	private BenchmarkManager m_benchmarkManager;
+
+	@Inject("local")
+	private IndexManager m_indexManager;
 
 	private int m_index;
 
@@ -60,15 +65,29 @@ public class DefaultBlockWriter implements BlockWriter {
 		try {
 			Bucket bucket = m_bucketManager.getBucket(block.getDomain(), ip, block.getHour(), true);
 
-			if ((++m_count) % 100 == 0) {
+			boolean monitor = (++m_count) % 100 == 0;
+			if (monitor) {
 				Transaction t = Cat.newTransaction("Block", block.getDomain());
 
-				bucket.puts(block.getData(), block.getMappings());
+				bucket.puts(block.getData(), block.getOffsets());
 
 				t.setStatus(Transaction.SUCCESS);
 				t.complete();
 			} else {
-				bucket.puts(block.getData(), block.getMappings());
+				bucket.puts(block.getData(), block.getOffsets());
+			}
+
+			Index index = m_indexManager.getIndex(block.getDomain(), ip, block.getHour(), true);
+
+			if (monitor) {
+				Transaction t = Cat.newTransaction("Index", block.getDomain());
+
+				index.maps(block.getMappIds());
+
+				t.setStatus(Transaction.SUCCESS);
+				t.complete();
+			} else {
+				index.maps(block.getMappIds());
 			}
 		} catch (Exception e) {
 			Cat.logError(e);

@@ -103,7 +103,7 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 			if (!success && (m_failCount.incrementAndGet() % 100) == 0) {
 				Cat.logError(new QueueFullException("Error when adding message to queue, fails: " + m_failCount));
 
-				m_logger.info("queue is full " + m_failCount);
+				m_logger.info("message tree queue is full " + m_failCount);
 				// tree.getBuffer().release();
 			}
 		}

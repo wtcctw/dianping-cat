@@ -168,6 +168,10 @@
 				<requirement>
 					<role>org.unidal.cat.metric.BenchmarkManager</role>
 				</requirement>
+				<requirement>
+					<role>org.unidal.cat.message.storage.IndexManager</role>
+					<role-hint>local</role-hint>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -198,6 +202,9 @@
 					<role>org.unidal.cat.message.storage.FileBuilder</role>
 					<role-hint>local</role-hint>
 				</requirement>
+				<requirement>
+					<role>org.unidal.cat.message.storage.ByteBufCache</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -224,6 +231,9 @@
 				<requirement>
 					<role>org.unidal.cat.message.storage.TokenMappingManager</role>
 					<role-hint>local</role-hint>
+				</requirement>
+				<requirement>
+					<role>org.unidal.cat.message.storage.ByteBufCache</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -269,6 +279,10 @@
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.ByteBufCache</role>
+			<implementation>org.unidal.cat.message.storage.ByteBufCache</implementation>
 		</component>
 	</components>
 </plexus>

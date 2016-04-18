@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 
 import org.unidal.cat.message.storage.FileBuilder;
 import org.unidal.cat.message.storage.FileBuilder.FileType;
+import org.unidal.cat.message.storage.ByteBufCache;
 import org.unidal.cat.message.storage.Index;
 import org.unidal.cat.message.storage.TokenMapping;
 import org.unidal.cat.message.storage.TokenMappingManager;
@@ -36,6 +37,9 @@ public class LocalIndex implements Index {
 
 	@Inject("local")
 	private TokenMappingManager m_manager;
+	
+	@Inject
+	private ByteBufCache m_bufCache;
 
 	private TokenMapping m_mapping;
 
@@ -49,14 +53,6 @@ public class LocalIndex implements Index {
 			m_index.close();
 			m_mapping.close();
 		}
-	}
-
-	@Override
-	public MessageId lookup(MessageId id) throws IOException {
-		long value = m_index.read(id);
-		byte[] data = getBytes(value);
-		
-		return m_codec.decode(data, id.getHour());
 	}
 
 	public byte[] getBytes(long data) {
@@ -90,10 +86,25 @@ public class LocalIndex implements Index {
 	}
 
 	@Override
+	public MessageId lookup(MessageId id) throws IOException {
+		long value = m_index.read(id);
+		byte[] data = getBytes(value);
+
+		return m_codec.decode(data, id.getHour());
+	}
+
+	@Override
 	public void map(MessageId from, MessageId to) throws IOException {
 		byte[] data = m_codec.encode(to, from.getHour());
 
 		m_index.write(from, getLong(data));
+	}
+
+	@Override
+	public void maps(Map<MessageId, MessageId> maps) throws IOException {
+		for (Entry<MessageId, MessageId> entry : maps.entrySet()) {
+			map(entry.getKey(), entry.getValue());
+		}
 	}
 
 	@Override
@@ -346,7 +357,8 @@ public class LocalIndex implements Index {
 				m_segmentChannel = channel;
 				m_address = address;
 
-				m_buf = ByteBuffer.allocate(SEGMENT_SIZE);
+				m_buf = m_bufCache.get();
+				//m_buf = ByteBuffer.allocate(SEGMENT_SIZE);
 				m_buf.mark();
 				m_segmentChannel.read(m_buf, address);
 				m_buf.reset();
@@ -360,6 +372,7 @@ public class LocalIndex implements Index {
 				m_buf.position(pos);
 				m_dirty = false;
 				m_buf = null;
+				m_bufCache.put(m_buf);
 			}
 
 			public void flush() throws IOException {
@@ -370,6 +383,7 @@ public class LocalIndex implements Index {
 					m_segmentChannel.write(m_buf, m_address);
 					m_buf.position(pos);
 					m_dirty = false;
+					m_bufCache.put(m_buf);
 				}
 			}
 

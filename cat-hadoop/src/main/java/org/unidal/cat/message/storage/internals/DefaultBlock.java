@@ -34,7 +34,9 @@ public class DefaultBlock implements Block {
 
 	private int m_offset;
 
-	private Map<MessageId, Integer> m_mappings = new LinkedHashMap<MessageId, Integer>();
+	private Map<MessageId, Integer> m_offsets = new LinkedHashMap<MessageId, Integer>();
+	
+	private Map<MessageId, MessageId> m_mappingIds = new LinkedHashMap<MessageId, MessageId>();
 
 	private DeflaterOutputStream m_out;
 
@@ -43,7 +45,7 @@ public class DefaultBlock implements Block {
 	private boolean m_isFulsh;
 
 	public DefaultBlock(MessageId id, int offset, byte[] data) {
-		m_mappings.put(id, offset);
+		m_offsets.put(id, offset);
 		m_data = data == null ? null : Unpooled.wrappedBuffer(data);
 	}
 
@@ -68,12 +70,12 @@ public class DefaultBlock implements Block {
 	@Override
 	public void clear() {
 		m_data = null;
-		m_mappings.clear();
+		m_offsets.clear();
 	}
 
 	@Override
 	public ByteBuf find(MessageId id) {
-		Integer offset = m_mappings.get(id);
+		Integer offset = m_offsets.get(id);
 
 		if (offset != null) {
 			finish();
@@ -131,8 +133,13 @@ public class DefaultBlock implements Block {
 	}
 
 	@Override
-	public Map<MessageId, Integer> getMappings() {
-		return m_mappings;
+   public Map<MessageId, MessageId> getMappIds() {
+	   return m_mappingIds;
+   }
+
+	@Override
+	public Map<MessageId, Integer> getOffsets() {
+		return m_offsets;
 	}
 
 	@Override
@@ -141,11 +148,16 @@ public class DefaultBlock implements Block {
 	}
 
 	@Override
+   public void map(MessageId from, MessageId to) {
+		m_mappingIds.put(from, to);
+   }
+
+	@Override
 	public void pack(MessageId id, ByteBuf buf) throws IOException {
 		int len = buf.readableBytes();
 
 		buf.readBytes(m_out, len);
-		m_mappings.put(id, m_offset);
+		m_offsets.put(id, m_offset);
 		m_offset += len;
 	}
 
@@ -166,7 +178,7 @@ public class DefaultBlock implements Block {
 			in = new DataInputStream(new InflaterInputStream(is, inflater, BUFFER_SIZE));
 		}
 
-		int offset = m_mappings.get(id);
+		int offset = m_offsets.get(id);
 
 		in.skip(offset);
 

@@ -18,8 +18,6 @@ import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
-import com.dianping.cat.configuration.NetworkInterfaceManager;
-
 @Named(type = IndexManager.class, value = "local")
 public class LocalIndexManager extends ContainerHolder implements IndexManager {
 	private Map<Integer, Map<String, Index>> m_indexes = new LinkedHashMap<Integer, Map<String, Index>>();
@@ -78,10 +76,9 @@ public class LocalIndexManager extends ContainerHolder implements IndexManager {
 	}
 
 	@Override
-	public Index getIndex(String domain, int hour, boolean createIfNotExists) throws IOException {
+	public Index getIndex(String domain,String ip, int hour, boolean createIfNotExists) throws IOException {
 		Map<String, Index> map = findOrCreateMap(m_indexes, hour);
 		Index index = map == null ? null : map.get(domain);
-		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		boolean shouldCreate = (createIfNotExists && index == null) || (!createIfNotExists
 		      && bucketFilesExsits(domain, ip, hour));
 

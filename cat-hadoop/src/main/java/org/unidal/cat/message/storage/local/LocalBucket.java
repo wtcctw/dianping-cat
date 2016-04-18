@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.unidal.cat.message.storage.Bucket;
+import org.unidal.cat.message.storage.ByteBufCache;
 import org.unidal.cat.message.storage.FileBuilder;
 import org.unidal.cat.message.storage.FileBuilder.FileType;
 import org.unidal.cat.message.storage.internals.DefaultBlock;
@@ -37,6 +38,9 @@ public class LocalBucket implements Bucket, BenchmarkEnabled {
 
 	@Inject("local")
 	private FileBuilder m_bulider;
+	
+	@Inject
+	private ByteBufCache m_bufCache;
 
 	private Metric m_indexMetric;
 
@@ -458,7 +462,8 @@ public class LocalBucket implements Bucket, BenchmarkEnabled {
 				m_segmentChannel = channel;
 				m_address = address;
 				 
-				m_buf = ByteBuffer.allocate(SEGMENT_SIZE);
+				m_buf = m_bufCache.get();
+				// m_buf = ByteBuffer.allocate(SEGMENT_SIZE);
 				m_buf.mark();
 				m_segmentChannel.read(m_buf, address);
 				m_buf.reset();
@@ -471,7 +476,7 @@ public class LocalBucket implements Bucket, BenchmarkEnabled {
 				m_segmentChannel.write(m_buf, m_address);
 				m_buf.position(pos);
 				m_dirty = false;
-				m_buf = null;
+				m_bufCache.put(m_buf);
 			}
 
 			public void flush() throws IOException {
@@ -482,6 +487,7 @@ public class LocalBucket implements Bucket, BenchmarkEnabled {
 					m_segmentChannel.write(m_buf, m_address);
 					m_buf.position(pos);
 					m_dirty = false;
+					m_bufCache.put(m_buf);
 				}
 			}
 

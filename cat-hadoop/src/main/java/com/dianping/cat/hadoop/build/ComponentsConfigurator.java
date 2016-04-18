@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.unidal.cat.message.LogviewProcessor;
+import org.unidal.cat.message.storage.ByteBufCache;
 import org.unidal.cat.message.storage.hdfs.HdfsBucket;
 import org.unidal.cat.message.storage.hdfs.HdfsBucketManager;
 import org.unidal.cat.message.storage.internals.DefaultBlockDumper;
@@ -90,6 +91,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(DefaultStorageConfiguration.class));
 
 		all.add(A(LogviewProcessor.class));
+		
+		all.add(A(ByteBufCache.class));
 
 		return all;
 	}
