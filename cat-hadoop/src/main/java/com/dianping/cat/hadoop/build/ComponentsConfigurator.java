@@ -10,6 +10,7 @@ import org.unidal.cat.message.storage.hdfs.HdfsBucketManager;
 import org.unidal.cat.message.storage.internals.DefaultBlockDumper;
 import org.unidal.cat.message.storage.internals.DefaultBlockDumperManager;
 import org.unidal.cat.message.storage.internals.DefaultBlockWriter;
+import org.unidal.cat.message.storage.internals.DefaultByteBufCache;
 import org.unidal.cat.message.storage.internals.DefaultMessageDumper;
 import org.unidal.cat.message.storage.internals.DefaultMessageDumperManager;
 import org.unidal.cat.message.storage.internals.DefaultMessageFinderManager;
@@ -92,7 +93,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(A(LogviewProcessor.class));
 		
-		all.add(A(ByteBufCache.class));
+		all.add(A(DefaultByteBufCache.class));
 
 		return all;
 	}

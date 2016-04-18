@@ -282,7 +282,7 @@
 		</component>
 		<component>
 			<role>org.unidal.cat.message.storage.ByteBufCache</role>
-			<implementation>org.unidal.cat.message.storage.ByteBufCache</implementation>
+			<implementation>org.unidal.cat.message.storage.internals.DefaultByteBufCache</implementation>
 		</component>
 	</components>
 </plexus>
