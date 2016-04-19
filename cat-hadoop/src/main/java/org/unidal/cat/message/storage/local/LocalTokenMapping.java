@@ -123,26 +123,31 @@ public class LocalTokenMapping implements TokenMapping {
 		Integer index = m_map.get(token);
 
 		if (index == null) {
-			byte[] ba = token.getBytes("utf-8");
-			int len = ba.length;
+			synchronized (this) {
+				index = m_map.get(token);
 
-			if (!m_data.isWritable(2 + len)) { // no enough space
-				flush();
-				m_data.clear();
-				m_data.setZero(0, m_data.capacity());
-				m_block++;
+				if (index == null) {
+					byte[] ba = token.getBytes("utf-8");
+					int len = ba.length;
+
+					if (!m_data.isWritable(2 + len)) { // no enough space
+						flush();
+						m_data.clear();
+						m_data.setZero(0, m_data.capacity());
+						m_block++;
+					}
+
+					index = m_tokens.size();
+
+					m_data.writeShort(len);
+					m_data.writeBytes(ba);
+					m_tokens.add(token);
+					m_map.put(token, index);
+					m_dirty = true;
+					m_lastAccessTime = System.currentTimeMillis();
+				}
 			}
-
-			index = m_tokens.size();
-
-			m_data.writeShort(len);
-			m_data.writeBytes(ba);
-			m_tokens.add(token);
-			m_map.put(token, index);
-			m_dirty = true;
-			m_lastAccessTime = System.currentTimeMillis();
 		}
-
 		return index.intValue();
 	}
 
