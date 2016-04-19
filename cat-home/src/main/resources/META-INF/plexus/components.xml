@@ -142,6 +142,41 @@
 			</requirements>
 		</component>
 		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-command-data</role-hint>
+			<implementation>com.dianping.cat.config.app.AppCommandTableProvider</implementation>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-command-data-daily</role-hint>
+			<implementation>com.dianping.cat.config.app.AppCmdDailyTableProvider</implementation>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-connection-data</role-hint>
+			<implementation>com.dianping.cat.config.app.AppConnectionTableProvider</implementation>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-speed-data</role-hint>
+			<implementation>com.dianping.cat.config.app.AppSpeedTableProvider</implementation>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>ajax-data</role-hint>
+			<implementation>com.dianping.cat.config.web.AjaxDataTableProvider</implementation>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>web-speed-data</role-hint>
+			<implementation>com.dianping.cat.config.web.WebSpeedDataTableProvider</implementation>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>report</role-hint>
+			<implementation>com.dianping.cat.report.HourlyReportTableProvider</implementation>
+		</component>
+		<component>
 			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-home</role-hint>
 			<implementation>com.dianping.cat.CatHomeModule</implementation>
