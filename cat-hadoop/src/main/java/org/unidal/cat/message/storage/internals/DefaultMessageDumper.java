@@ -59,10 +59,13 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 
 		m_logger.info("starting close dumper manager " + date);
 		m_blockDumperManager.close(hour);
+		
 		m_logger.info("starting close bucket manager " + date);
 		m_bucketManager.closeBuckets(hour);
+		
 		m_logger.info("starting close index manager " + date);
 		m_indexManager.close(hour);
+		
 		m_logger.info("starting close token manager " + date);
 		m_tokenManager.close(hour);
 	}
