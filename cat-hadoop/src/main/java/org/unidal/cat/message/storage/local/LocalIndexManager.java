@@ -53,6 +53,7 @@ public class LocalIndexManager extends ContainerHolder implements IndexManager {
 
 				for (Index index : value.values()) {
 					index.close();
+					super.release(index);
 				}
 			}
 		}
