@@ -43,6 +43,7 @@ import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.influxdb.InfluxDB;
 import com.dianping.cat.metric.MetricService;
 import com.dianping.cat.mvc.PayloadNormalizer;
+import com.dianping.cat.report.HourlyReportTableProvider;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.alert.browser.JsRuleConfigManager;
 import com.dianping.cat.report.alert.business.BusinessRuleConfigManager;
@@ -169,6 +170,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TableProvider.class, "app-speed-data", AppSpeedTableProvider.class));
 		all.add(C(TableProvider.class, "ajax-data", AjaxDataTableProvider.class));
 		all.add(C(TableProvider.class, "web-speed-data", WebSpeedDataTableProvider.class));
+		all.add(C(TableProvider.class, "report", HourlyReportTableProvider.class));
 
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //

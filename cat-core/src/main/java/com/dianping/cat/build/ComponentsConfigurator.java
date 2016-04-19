@@ -113,7 +113,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(MobileConfigManager.class));
 
 		all.add(C(Module.class, CatCoreModule.ID, CatCoreModule.class));
-		all.add(A(HourlyReportTableProvider.class));
+		// all.add(A(HourlyReportTableProvider.class));
 
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
