@@ -338,7 +338,7 @@ public class LocalBucket implements Bucket {
 
 					if (m_nextSegment % (ENTRY_PER_SEGMENT) == 0) {
 						// last segment is full, create new one
-						m_segment.flush();
+						m_segment.close();
 						m_segment = new Segment(m_indexChannel, m_nextSegment * SEGMENT_SIZE);
 
 						m_nextSegment++; // skip self head data
@@ -417,8 +417,6 @@ public class LocalBucket implements Bucket {
 
 			private ByteBuffer m_buf;
 
-			private boolean m_dirty;
-
 			private Segment(FileChannel channel, long address) throws IOException {
 				m_segmentChannel = channel;
 				m_address = address;
@@ -436,20 +434,7 @@ public class LocalBucket implements Bucket {
 				m_buf.position(0);
 				m_segmentChannel.write(m_buf, m_address);
 				m_buf.position(pos);
-				m_dirty = false;
 				m_bufCache.put(m_buf);
-			}
-
-			public void flush() throws IOException {
-				if (m_dirty) {
-					int pos = m_buf.position();
-
-					m_buf.position(0);
-					m_segmentChannel.write(m_buf, m_address);
-					m_buf.position(pos);
-					m_dirty = false;
-					m_bufCache.put(m_buf);
-				}
 			}
 
 			public int readInt() throws IOException {
@@ -471,7 +456,6 @@ public class LocalBucket implements Bucket {
 
 			public void writeLong(int offset, long value) throws IOException {
 				m_buf.putLong(offset, value);
-				m_dirty = true;
 			}
 		}
 
@@ -514,10 +498,9 @@ public class LocalBucket implements Bucket {
 
 			private void removeOldSegment() throws IOException {
 				Entry<Long, Segment> first = m_latestSegments.entrySet().iterator().next();
+				Segment segment = m_latestSegments.remove(first.getKey());
 
-				first.getValue().flush();
-
-				m_latestSegments.remove(first.getKey());
+				segment.close();
 			}
 		}
 	}

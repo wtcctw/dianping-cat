@@ -15,9 +15,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.unidal.cat.message.storage.ByteBufCache;
 import org.unidal.cat.message.storage.FileBuilder;
 import org.unidal.cat.message.storage.FileBuilder.FileType;
-import org.unidal.cat.message.storage.ByteBufCache;
 import org.unidal.cat.message.storage.Index;
 import org.unidal.cat.message.storage.TokenMapping;
 import org.unidal.cat.message.storage.TokenMappingManager;
@@ -271,7 +271,7 @@ public class LocalIndex implements Index {
 
 					if (m_nextSegment % (ENTRY_PER_SEGMENT) == 0) {
 						// last segment is full, create new one
-						m_segment.flush();
+						m_segment.close();
 						m_segment = new Segment(m_indexChannel, m_nextSegment * SEGMENT_SIZE);
 
 						m_nextSegment++; // skip self head data
@@ -350,8 +350,6 @@ public class LocalIndex implements Index {
 
 			private ByteBuffer m_buf;
 
-			private boolean m_dirty;
-
 			private Segment(FileChannel channel, long address) throws IOException {
 				m_segmentChannel = channel;
 				m_address = address;
@@ -369,20 +367,7 @@ public class LocalIndex implements Index {
 				m_buf.position(0);
 				m_segmentChannel.write(m_buf, m_address);
 				m_buf.position(pos);
-				m_dirty = false;
 				m_bufCache.put(m_buf);
-			}
-
-			public void flush() throws IOException {
-				if (m_dirty) {
-					int pos = m_buf.position();
-
-					m_buf.position(0);
-					m_segmentChannel.write(m_buf, m_address);
-					m_buf.position(pos);
-					m_dirty = false;
-					m_bufCache.put(m_buf);
-				}
 			}
 
 			public int readInt() throws IOException {
@@ -404,7 +389,6 @@ public class LocalIndex implements Index {
 
 			public void writeLong(int offset, long value) throws IOException {
 				m_buf.putLong(offset, value);
-				m_dirty = true;
 			}
 		}
 
@@ -447,10 +431,9 @@ public class LocalIndex implements Index {
 
 			private void removeOldSegment() throws IOException {
 				Entry<Long, Segment> first = m_latestSegments.entrySet().iterator().next();
-
-				first.getValue().flush();
-
-				m_latestSegments.remove(first.getKey());
+				Segment segment = m_latestSegments.remove(first.getKey());
+				
+				segment.close();
 			}
 		}
 	}
