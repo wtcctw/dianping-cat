@@ -70,7 +70,9 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 
 	@Override
 	public void initialize(int hour) {
-		for (int i = 0; i < 10; i++) {
+		int threads = 10;
+
+		for (int i = 0; i < threads; i++) {
 			BlockingQueue<Block> queue = new ArrayBlockingQueue<Block>(10000);
 			BlockWriter writer = lookup(BlockWriter.class);
 
