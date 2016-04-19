@@ -60,6 +60,7 @@ public class LocalTokenMappingManager extends ContainerHolder implements TokenMa
 			if (mapping != null) {
 				mapping.close();
 			}
+			super.release(mapping);
 		}
 	}
 
