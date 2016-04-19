@@ -7,14 +7,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.cat.message.storage.ByteBufCache;
 import org.unidal.lookup.annotation.Named;
 
 @Named(type = ByteBufCache.class)
-public class DefaultByteBufCache implements ByteBufCache, LogEnabled {
+public class DefaultByteBufCache implements ByteBufCache, Initializable, LogEnabled {
 	private AtomicInteger createBuf = new AtomicInteger(0);
 
-	private BlockingQueue<ByteBuffer> m_bufs = new ArrayBlockingQueue<ByteBuffer>(2000);
+	private BlockingQueue<ByteBuffer> m_bufs = new ArrayBlockingQueue<ByteBuffer>(8000);
 
 	private Logger m_logger;
 
@@ -44,5 +46,9 @@ public class DefaultByteBufCache implements ByteBufCache, LogEnabled {
 			m_logger.info("error when put back buf");
 		}
 	}
+
+	@Override
+   public void initialize() throws InitializationException {
+   }
 
 }
