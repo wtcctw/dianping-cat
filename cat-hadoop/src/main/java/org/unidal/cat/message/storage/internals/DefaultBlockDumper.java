@@ -31,7 +31,9 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 
 	@Override
 	public void awaitTermination() throws InterruptedException {
-		while (true) {
+		int index = 0;
+		
+		while (true && index < 100) {
 			boolean allEmpty = true;
 
 			for (BlockingQueue<Block> queue : m_queues) {
@@ -45,7 +47,9 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 				break;
 			}
 
-			TimeUnit.MILLISECONDS.sleep(1);
+			TimeUnit.MILLISECONDS.sleep(10);
+			
+			index++;
 		}
 
 		for (BlockWriter writer : m_writers) {

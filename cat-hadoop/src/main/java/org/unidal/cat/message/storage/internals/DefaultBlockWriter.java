@@ -114,15 +114,6 @@ public class DefaultBlockWriter implements BlockWriter {
 			// ignore it
 		}
 
-		while (true) {
-			Block block = m_queue.poll();
-
-			if (block != null) {
-				processBlock(ip, block);
-			} else {
-				break;
-			}
-		}
 		m_latch.countDown();
 	}
 
@@ -134,6 +125,15 @@ public class DefaultBlockWriter implements BlockWriter {
 			m_latch.await();
 		} catch (InterruptedException e) {
 			// ignore it
+		}
+		while (true) {
+			Block block = m_queue.poll();
+
+			if (block != null) {
+				processBlock(NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), block);
+			} else {
+				break;
+			}
 		}
 	}
 }
