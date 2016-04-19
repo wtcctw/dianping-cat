@@ -191,11 +191,14 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		m_codec.encode(tree, buf);
 
 		int size = buf.readableBytes();
-		Channel channel = future.channel();
 
-		channel.writeAndFlush(buf);
-		if (m_statistics != null) {
-			m_statistics.onBytes(size);
+		if (future != null) {
+			Channel channel = future.channel();
+
+			channel.writeAndFlush(buf);
+			if (m_statistics != null) {
+				m_statistics.onBytes(size);
+			}
 		}
 	}
 
