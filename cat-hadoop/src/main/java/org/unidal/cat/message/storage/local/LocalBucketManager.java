@@ -15,8 +15,6 @@ import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.BucketManager;
 import org.unidal.cat.message.storage.FileBuilder;
 import org.unidal.cat.message.storage.FileBuilder.FileType;
-import org.unidal.cat.metric.Benchmark;
-import org.unidal.cat.metric.BenchmarkManager;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
@@ -26,8 +24,6 @@ import com.dianping.cat.message.spi.MessageTree;
 
 @Named(type = BucketManager.class, value = "local")
 public class LocalBucketManager extends ContainerHolder implements BucketManager, LogEnabled {
-	@Inject
-	private BenchmarkManager m_benchmarkManager;
 
 	@Inject("local")
 	private FileBuilder m_bulider;
@@ -63,9 +59,6 @@ public class LocalBucketManager extends ContainerHolder implements BucketManager
 			for (Bucket bucket : buckets.values()) {
 				try {
 					bucket.close();
-
-					Benchmark benchmark = bucket.getBechmark();
-					m_benchmarkManager.remove(benchmark.getType());
 				} catch (Exception e) {
 					Cat.logError(e);
 				} finally {
@@ -109,11 +102,7 @@ public class LocalBucketManager extends ContainerHolder implements BucketManager
 				bucket = map.get(domain);
 
 				if (bucket == null) {
-					String benchmarkId = domain + ":" + hour;
-					Benchmark benchmark = m_benchmarkManager.get(benchmarkId);
-
 					bucket = lookup(Bucket.class, "local");
-					bucket.setBenchmark(benchmark);
 					bucket.initialize(domain, ip, hour);
 					map.put(domain, bucket);
 				}

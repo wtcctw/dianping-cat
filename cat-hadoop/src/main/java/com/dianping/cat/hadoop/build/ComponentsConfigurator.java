@@ -22,7 +22,6 @@ import org.unidal.cat.message.storage.local.LocalIndex;
 import org.unidal.cat.message.storage.local.LocalIndexManager;
 import org.unidal.cat.message.storage.local.LocalTokenMapping;
 import org.unidal.cat.message.storage.local.LocalTokenMappingManager;
-import org.unidal.cat.metric.DefaultBenchmarkManager;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
@@ -76,8 +75,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(DefaultBlockDumperManager.class));
 		all.add(A(DefaultBlockDumper.class));
 		all.add(A(DefaultBlockWriter.class));
-
-		all.add(A(DefaultBenchmarkManager.class));
 
 		all.add(A(LocalBucketManager.class));
 		all.add(A(LocalBucket.class));

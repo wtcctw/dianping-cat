@@ -14,7 +14,6 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.internals.DefaultBlock;
-import org.unidal.cat.metric.Benchmark;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
@@ -70,11 +69,6 @@ public class HdfsBucket implements Bucket {
 		}
 	}
 
-	@Override
-	public Benchmark getBechmark() {
-		throw new RuntimeException("unsupport operation");
-	}
-
 	public long getLastAccessTime() {
 		return m_lastAccessTime;
 	}
@@ -99,11 +93,6 @@ public class HdfsBucket implements Bucket {
 
 	@Override
 	public void puts(ByteBuf data, Map<MessageId, Integer> mappings) throws IOException {
-		throw new RuntimeException("unsupport operation");
-	}
-
-	@Override
-	public void setBenchmark(Benchmark benchmark) {
 		throw new RuntimeException("unsupport operation");
 	}
 

@@ -13,9 +13,6 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.unidal.cat.message.storage.internals.DefaultBlock;
-import org.unidal.cat.metric.Benchmark;
-import org.unidal.cat.metric.BenchmarkManager;
-import org.unidal.cat.metric.Metric;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
@@ -28,8 +25,6 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 public class BucketTest extends ComponentTestCase {
 	private MessageCodec m_codec;
 
-	private BenchmarkManager m_benchmarkManager;
-
 	@Before
 	public void before() {
 		File baseDir = new File("target");
@@ -38,7 +33,6 @@ public class BucketTest extends ComponentTestCase {
 
 		lookup(StorageConfiguration.class).setBaseDataDir(baseDir);
 		m_codec = lookup(MessageCodec.class, PlainTextMessageCodec.ID);
-		m_benchmarkManager = lookup(BenchmarkManager.class);
 		System.setProperty("devMode", "true");
 	}
 
@@ -396,24 +390,12 @@ public class BucketTest extends ComponentTestCase {
 	@Test
 	public void testWritePerf() throws IOException {
 		BucketManager manager = lookup(BucketManager.class, "local");
-		Benchmark bm = m_benchmarkManager.get("bucket");
-		Metric mb = bm.get("build");
-		Metric mo = bm.get("other");
-		Metric mc = bm.get("close");
 
 		for (int i = 0; i < 100000; i++) {
-			mo.start();
-
 			String domain = "mock";
 			Bucket bucket = manager.getBucket(domain, "0a010203", 404448, true);
-
-			mo.end();
-
-			mb.start();
 			Block block = new MockBlock(domain, 404448, 10, i);
-			mb.end();
 
-			mo.start();
 			try {
 				bucket.puts(block.getData(), block.getOffsets());
 			} catch (Exception e) {
@@ -421,14 +403,9 @@ public class BucketTest extends ComponentTestCase {
 				e.printStackTrace();
 				break;
 			}
-			mo.end();
 		}
 
-		mc.start();
 		manager.closeBuckets(404448);
-		mc.end();
-
-		bm.print();
 	}
 
 	private static class MockBlock implements Block {

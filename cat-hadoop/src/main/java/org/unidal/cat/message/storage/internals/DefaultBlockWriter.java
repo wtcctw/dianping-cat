@@ -13,7 +13,6 @@ import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.BucketManager;
 import org.unidal.cat.message.storage.Index;
 import org.unidal.cat.message.storage.IndexManager;
-import org.unidal.cat.metric.BenchmarkManager;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
@@ -26,9 +25,6 @@ public class DefaultBlockWriter implements BlockWriter {
 
 	@Inject("local")
 	private BucketManager m_bucketManager;
-
-	@Inject
-	private BenchmarkManager m_benchmarkManager;
 
 	@Inject("local")
 	private IndexManager m_indexManager;

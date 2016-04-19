@@ -22,9 +22,6 @@ import org.unidal.cat.message.storage.ByteBufCache;
 import org.unidal.cat.message.storage.FileBuilder;
 import org.unidal.cat.message.storage.FileBuilder.FileType;
 import org.unidal.cat.message.storage.internals.DefaultBlock;
-import org.unidal.cat.metric.Benchmark;
-import org.unidal.cat.metric.BenchmarkEnabled;
-import org.unidal.cat.metric.Metric;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
@@ -33,7 +30,7 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.internal.MessageId;
 
 @Named(type = Bucket.class, value = "local", instantiationStrategy = Named.PER_LOOKUP)
-public class LocalBucket implements Bucket, BenchmarkEnabled {
+public class LocalBucket implements Bucket {
 	private static final int SEGMENT_SIZE = 32 * 1024;
 
 	@Inject("local")
@@ -42,26 +39,15 @@ public class LocalBucket implements Bucket, BenchmarkEnabled {
 	@Inject
 	private ByteBufCache m_bufCache;
 
-	private Metric m_indexMetric;
-
-	private Metric m_dataMetric;
-
 	private DataHelper m_data = new DataHelper();
 
 	private IndexHelper m_index = new IndexHelper();
 
-	private Benchmark m_benchmark;
-
 	@Override
 	public void close() {
 		if (m_index.isOpen()) {
-			m_indexMetric.start();
 			m_index.close();
-			m_indexMetric.end();
-
-			m_dataMetric.start();
 			m_data.close();
-			m_dataMetric.end();
 		}
 	}
 
@@ -75,29 +61,19 @@ public class LocalBucket implements Bucket, BenchmarkEnabled {
 
 	@Override
 	public ByteBuf get(MessageId id) throws IOException {
-		m_indexMetric.start();
 		long address = m_index.read(id);
-		m_indexMetric.end();
 
 		if (address < 0) {
 			return null;
 		} else {
 			int segmentOffset = (int) (address & 0xFFFFFFL);
 			long dataOffset = address >> 24;
-
-			m_dataMetric.start();
 			byte[] data = m_data.read(dataOffset);
-			m_dataMetric.end();
 
 			DefaultBlock block = new DefaultBlock(id, segmentOffset, data);
 
 			return block.unpack(id);
 		}
-	}
-
-	@Override
-	public Benchmark getBechmark() {
-		return m_benchmark;
 	}
 
 	@Override
@@ -112,39 +88,24 @@ public class LocalBucket implements Bucket, BenchmarkEnabled {
 		File dataPath = m_bulider.getFile(domain, startTime, ip, FileType.DATA);
 		File indexPath = m_bulider.getFile(domain, startTime, ip, FileType.INDEX);
 
-		m_dataMetric.start();
 		m_data.init(dataPath);
-		m_dataMetric.end();
-
-		m_indexMetric.start();
 		m_index.init(indexPath);
-		m_indexMetric.end();
 	}
 
 	@Override
 	public void puts(ByteBuf data, Map<MessageId, Integer> mappings) throws IOException {
 		long dataOffset = m_data.getDataOffset();
 
-		m_dataMetric.start();
 		m_data.write(data);
-		m_dataMetric.end();
 
 		for (Map.Entry<MessageId, Integer> e : mappings.entrySet()) {
 			MessageId id = e.getKey();
 			int offset = e.getValue();
 
-			m_indexMetric.start();
 			m_index.write(id, dataOffset, offset);
-			m_indexMetric.end();
 		}
 	}
 
-	@Override
-	public void setBenchmark(Benchmark benchmark) {
-		m_benchmark = benchmark;
-		m_indexMetric = benchmark.get("index");
-		m_dataMetric = benchmark.get("data");
-	}
 
 	@Override
 	public String toString() {
