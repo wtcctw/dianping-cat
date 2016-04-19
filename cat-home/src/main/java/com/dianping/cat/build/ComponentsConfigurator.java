@@ -164,6 +164,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
+		// must define in home module instead of core
 		all.add(C(TableProvider.class, "app-command-data", AppCommandTableProvider.class));
 		all.add(C(TableProvider.class, "app-command-data-daily", AppCmdDailyTableProvider.class));
 		all.add(C(TableProvider.class, "app-connection-data", AppConnectionTableProvider.class));

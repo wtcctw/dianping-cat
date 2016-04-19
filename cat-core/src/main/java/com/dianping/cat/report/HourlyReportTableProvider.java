@@ -40,18 +40,11 @@ public class HourlyReportTableProvider implements TableProvider, Initializable {
 	@Override
 	public String getPhysicalTableName(Map<String, Object> hints) {
 		HourlyReport command = (HourlyReport) hints.get(QueryEngine.HINT_DATA_OBJECT);
-		System.err.println(command.getPeriod());
 
-		try {
-			if (command.getPeriod().before(m_historyDate)) {
-				System.err.println("read table: " + m_physicalTableName);
-				return m_physicalTableName;
-			} else {
-				return "hourlyreport";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (command.getPeriod().before(m_historyDate)) {
 			return m_physicalTableName;
+		} else {
+			return "hourlyreport";
 		}
 	}
 
