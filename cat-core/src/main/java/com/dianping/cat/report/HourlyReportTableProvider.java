@@ -47,8 +47,6 @@ public class HourlyReportTableProvider implements TableProvider, Initializable {
 				System.err.println("read table: " + m_physicalTableName);
 				return m_physicalTableName;
 			} else {
-				System.err.println("read table: hourlyreport");
-
 				return "hourlyreport";
 			}
 		} catch (Exception e) {
@@ -63,7 +61,6 @@ public class HourlyReportTableProvider implements TableProvider, Initializable {
 
 		try {
 			m_historyDate = sdf.parse("2016-04-16 00:00");
-			System.err.println(this.getClass().getSimpleName() + ": " + m_historyDate);
 		} catch (ParseException e) {
 			Cat.logError(e);
 		}

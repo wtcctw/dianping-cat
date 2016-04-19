@@ -170,7 +170,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TableProvider.class, "app-speed-data", AppSpeedTableProvider.class));
 		all.add(C(TableProvider.class, "ajax-data", AjaxDataTableProvider.class));
 		all.add(C(TableProvider.class, "web-speed-data", WebSpeedDataTableProvider.class));
-		all.add(C(TableProvider.class, "report", HourlyReportTableProvider.class));
+		all.add(A(HourlyReportTableProvider.class));
 
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
