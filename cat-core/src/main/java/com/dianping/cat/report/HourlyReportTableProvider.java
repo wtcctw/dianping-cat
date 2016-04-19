@@ -40,11 +40,20 @@ public class HourlyReportTableProvider implements TableProvider, Initializable {
 	@Override
 	public String getPhysicalTableName(Map<String, Object> hints) {
 		HourlyReport command = (HourlyReport) hints.get(QueryEngine.HINT_DATA_OBJECT);
+		System.err.println(command.getPeriod());
 
-		if (command.getPeriod().before(m_historyDate)) {
+		try {
+			if (command.getPeriod().before(m_historyDate)) {
+				System.err.println("read table: " + m_physicalTableName);
+				return m_physicalTableName;
+			} else {
+				System.err.println("read table: hourlyreport");
+
+				return "hourlyreport";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 			return m_physicalTableName;
-		} else {
-			return "hourlyreport";
 		}
 	}
 
@@ -54,6 +63,7 @@ public class HourlyReportTableProvider implements TableProvider, Initializable {
 
 		try {
 			m_historyDate = sdf.parse("2016-04-16 00:00");
+			System.err.println(this.getClass().getSimpleName() + ": " + m_historyDate);
 		} catch (ParseException e) {
 			Cat.logError(e);
 		}
