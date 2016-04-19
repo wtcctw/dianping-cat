@@ -101,11 +101,10 @@ public class DefaultBlockWriter implements BlockWriter {
 	@Override
 	public void run() {
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-		Block block;
 
 		try {
 			while (m_enabled.get() || !m_queue.isEmpty()) {
-				block = m_queue.poll(5, TimeUnit.MILLISECONDS);
+				Block block = m_queue.poll(5, TimeUnit.MILLISECONDS);
 
 				if (block != null) {
 					processBlock(ip, block);
@@ -115,6 +114,15 @@ public class DefaultBlockWriter implements BlockWriter {
 			// ignore it
 		}
 
+		while (true) {
+			Block block = m_queue.poll();
+
+			if (block != null) {
+				processBlock(ip, block);
+			} else {
+				break;
+			}
+		}
 		m_latch.countDown();
 	}
 
