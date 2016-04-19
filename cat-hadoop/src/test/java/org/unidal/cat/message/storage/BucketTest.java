@@ -5,11 +5,8 @@ import io.netty.buffer.Unpooled;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import junit.framework.Assert;
 
@@ -20,8 +17,6 @@ import org.unidal.cat.metric.Benchmark;
 import org.unidal.cat.metric.BenchmarkManager;
 import org.unidal.cat.metric.Metric;
 import org.unidal.helper.Files;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.message.internal.MessageId;
@@ -85,35 +80,6 @@ public class BucketTest extends ComponentTestCase {
 		System.out.println("write cost" + duration);
 	}
 
-	@Test
-	public void testWithManyThreads() {
-		TreeHelper.init(m_codec);
-		long start = System.currentTimeMillis();
-		List<TestThread> threads = new ArrayList<TestThread>();
-
-		for (int i = 0; i < 1; i++) {
-			TestThread task = new TestThread(i);
-
-			Threads.forGroup("cat").start(task);
-			threads.add(task);
-		}
-
-		while (true) {
-			try {
-				Thread.sleep(10000);
-
-				long total = 0;
-
-				for (TestThread thread : threads) {
-					total = total + thread.m_totalCount.get();
-				}
-				long duration = System.currentTimeMillis() - start;
-				System.out.println("qps:" + total * 1000 / duration);
-			} catch (InterruptedException e) {
-				break;
-			}
-		}
-	}
 
 	@Test
 	public void testWriteAndRead() throws Exception {
@@ -549,48 +515,5 @@ public class BucketTest extends ComponentTestCase {
 
 	}
 
-	public class TestThread implements Task {
-
-		public AtomicInteger m_totalCount = new AtomicInteger(0);
-
-		public int m_threadIndex;
-
-		public TestThread(int index) {
-			m_threadIndex = index;
-		}
-
-		@Override
-		public String getName() {
-			return "task";
-		}
-
-		@Override
-		public void run() {
-			MessageDumperManager manager = lookup(MessageDumperManager.class);
-			int hour = 405746;
-			MessageDumper dumper = manager.findOrCreate(hour);
-
-			for (int i = 0; i < 10000000; i++) {
-				for (int domainIndex = 0; domainIndex < 300; domainIndex++) {
-					String domain = "domain_" + domainIndex;
-
-					for (int ipIndex = 0; ipIndex < 10; ipIndex++) {
-						String ip = "0a01020" + ipIndex;
-						MessageId id = new MessageId(domain, ip, hour, i * 10 + ipIndex);
-						MessageTree tree = TreeHelper.cacheTree(m_codec, id);
-
-						((DefaultMessageTree) tree).setMessageId(id.toString());
-						tree.setFormatMessageId(id);
-
-						dumper.process(tree);
-						m_totalCount.addAndGet(1);
-					}
-				}
-			}
-		}
-
-		@Override
-		public void shutdown() {
-		}
-	}
+	
 }
