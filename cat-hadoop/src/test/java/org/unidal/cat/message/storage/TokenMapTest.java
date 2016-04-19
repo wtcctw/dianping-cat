@@ -10,16 +10,17 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
-public class TokenMappingTest extends ComponentTestCase {
+public class TokenMapTest extends ComponentTestCase {
 
 	@Before
-	public void setUp() {
+	public void before() {
+		File baseDir = new File("target");
+
+		Files.forDir().delete(new File(baseDir, "dump"), true);
+
 		StorageConfiguration config = lookup(StorageConfiguration.class);
-		File target = new File("target");
 
-		config.setBaseDataDir(target);
-
-		Files.forDir().delete(target, true);
+		config.setBaseDataDir(baseDir);
 	}
 
 	@Test

@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.unidal.cat.message.storage.IndexManagerTest;
 import org.unidal.cat.message.storage.IndexTest;
-import org.unidal.cat.message.storage.TokenMappingTest;
+import org.unidal.cat.message.storage.TokenMapTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -18,7 +18,7 @@ IndexManagerTest.class,
 
 IndexTest.class,
 
-TokenMappingTest.class,
+TokenMapTest.class,
 
 IndexTest.class,
 
