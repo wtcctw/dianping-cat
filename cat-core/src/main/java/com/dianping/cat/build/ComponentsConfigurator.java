@@ -13,13 +13,9 @@ import com.dianping.cat.analysis.DefaultMessageAnalyzerManager;
 import com.dianping.cat.analysis.DefaultMessageHandler;
 import com.dianping.cat.analysis.RealtimeConsumer;
 import com.dianping.cat.analysis.TcpSocketReceiver;
-import com.dianping.cat.config.app.AppCmdDailyTableProvider;
 import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.app.AppCommandGroupConfigManager;
-import com.dianping.cat.config.app.AppCommandTableProvider;
-import com.dianping.cat.config.app.AppConnectionTableProvider;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
-import com.dianping.cat.config.app.AppSpeedTableProvider;
 import com.dianping.cat.config.app.CrashLogConfigManager;
 import com.dianping.cat.config.app.MobileConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatConfigManager;
@@ -29,10 +25,8 @@ import com.dianping.cat.config.content.LocalResourceContentFetcher;
 import com.dianping.cat.config.sample.SampleConfigManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
-import com.dianping.cat.config.web.AjaxDataTableProvider;
 import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.config.web.WebSpeedConfigManager;
-import com.dianping.cat.config.web.WebSpeedDataTableProvider;
 import com.dianping.cat.config.web.js.DefaultAggregationHandler;
 import com.dianping.cat.config.web.url.DefaultUrlPatternHandler;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
@@ -43,7 +37,6 @@ import com.dianping.cat.message.codec.WaterfallMessageCodec;
 import com.dianping.cat.message.storage.LocalMessageBucket;
 import com.dianping.cat.report.DefaultReportBucketManager;
 import com.dianping.cat.report.DomainValidator;
-import com.dianping.cat.report.HourlyReportTableProvider;
 import com.dianping.cat.report.LocalReportBucket;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
@@ -95,14 +88,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(UrlPatternConfigManager.class));
 
 		all.add(A(CatCoreModule.class));
-
-		all.add(A(AppCommandTableProvider.class));
-		all.add(A(AppCmdDailyTableProvider.class));
-		all.add(A(AppConnectionTableProvider.class));
-		all.add(A(AppSpeedTableProvider.class));
-		all.add(A(AjaxDataTableProvider.class));
-		all.add(A(WebSpeedDataTableProvider.class));
-		all.add(A(HourlyReportTableProvider.class));
 
 		all.addAll(defineStorageComponents());
 		all.addAll(defineCodecComponents());

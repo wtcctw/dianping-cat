@@ -20,8 +20,15 @@ import com.dianping.cat.build.report.ProblemComponentConfigurator;
 import com.dianping.cat.build.report.ReportComponentConfigurator;
 import com.dianping.cat.build.report.StorageComponentConfigurator;
 import com.dianping.cat.build.report.TransactionComponentConfigurator;
+import com.dianping.cat.config.app.AppCmdDailyTableProvider;
+import com.dianping.cat.config.app.AppCommandTableProvider;
+import com.dianping.cat.config.app.AppConnectionTableProvider;
+import com.dianping.cat.config.app.AppSpeedTableProvider;
+import com.dianping.cat.config.web.AjaxDataTableProvider;
+import com.dianping.cat.config.web.WebSpeedDataTableProvider;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.mvc.PayloadNormalizer;
+import com.dianping.cat.report.HourlyReportTableProvider;
 import com.dianping.cat.report.graph.svg.DefaultGraphBuilder;
 import com.dianping.cat.report.graph.svg.DefaultValueTranslater;
 import com.dianping.cat.report.page.DomainGroupConfigManager;
@@ -66,6 +73,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(defineCommonComponents());
 
 		all.addAll(defineConfigComponents());
+
+		// must define in home module instead of core
+		all.addAll(defineTableProviderComponents());
 
 		all.add(A(CatHomeModule.class));
 
@@ -115,6 +125,20 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(RouterConfigHandler.class));
 		all.add(A(EsServerConfigManager.class));
 		all.add(A(ServerMetricConfigManager.class));
+
+		return all;
+	}
+
+	private List<Component> defineTableProviderComponents() {
+		List<Component> all = new ArrayList<Component>();
+
+		all.add(A(AppCommandTableProvider.class));
+		all.add(A(AppCmdDailyTableProvider.class));
+		all.add(A(AppConnectionTableProvider.class));
+		all.add(A(AppSpeedTableProvider.class));
+		all.add(A(AjaxDataTableProvider.class));
+		all.add(A(WebSpeedDataTableProvider.class));
+		all.add(A(HourlyReportTableProvider.class));
 
 		return all;
 	}
