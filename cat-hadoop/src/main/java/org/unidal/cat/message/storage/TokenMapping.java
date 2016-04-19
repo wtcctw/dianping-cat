@@ -1,7 +1,6 @@
 package org.unidal.cat.message.storage;
 
 import java.io.IOException;
-import java.util.Date;
 
 public interface TokenMapping {
 	public void close();
@@ -12,5 +11,5 @@ public interface TokenMapping {
 
 	public int map(String token) throws IOException;
 
-	public void open(Date startTime, String ip) throws IOException;
+	public void open(int hour, String ip) throws IOException;
 }

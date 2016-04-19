@@ -51,7 +51,6 @@ public class LocalIndex implements Index {
 	public void close() {
 		if (m_index.isOpen()) {
 			m_index.close();
-			m_mapping.close();
 		}
 	}
 
@@ -82,7 +81,7 @@ public class LocalIndex implements Index {
 		File indexPath = m_bulider.getFile(domain, startTime, ip, FileType.MAPPING);
 
 		m_index.init(indexPath);
-		m_mapping = m_manager.getTokenMapping(startTime, ip);
+		m_mapping = m_manager.getTokenMapping(hour, ip);
 	}
 
 	@Override

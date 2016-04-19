@@ -93,6 +93,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(LogviewProcessor.class));
 		
 		all.add(A(DefaultByteBufCache.class));
+		all.add(A(DefaultStorageConfiguration.class));
 
 		return all;
 	}

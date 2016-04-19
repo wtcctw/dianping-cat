@@ -126,6 +126,14 @@
 					<role>org.unidal.cat.message.storage.BucketManager</role>
 					<role-hint>local</role-hint>
 				</requirement>
+				<requirement>
+					<role>org.unidal.cat.message.storage.IndexManager</role>
+					<role-hint>local</role-hint>
+				</requirement>
+				<requirement>
+					<role>org.unidal.cat.message.storage.TokenMappingManager</role>
+					<role-hint>local</role-hint>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -283,6 +291,10 @@
 		<component>
 			<role>org.unidal.cat.message.storage.ByteBufCache</role>
 			<implementation>org.unidal.cat.message.storage.internals.DefaultByteBufCache</implementation>
+		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.StorageConfiguration</role>
+			<implementation>org.unidal.cat.message.storage.internals.DefaultStorageConfiguration</implementation>
 		</component>
 	</components>
 </plexus>

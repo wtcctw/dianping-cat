@@ -1,6 +1,8 @@
 package org.unidal.cat.message.storage.internals;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -12,14 +14,17 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.cat.message.QueueFullException;
 import org.unidal.cat.message.storage.BlockDumperManager;
 import org.unidal.cat.message.storage.BucketManager;
+import org.unidal.cat.message.storage.IndexManager;
 import org.unidal.cat.message.storage.MessageDumper;
 import org.unidal.cat.message.storage.MessageProcessor;
+import org.unidal.cat.message.storage.TokenMappingManager;
 import org.unidal.helper.Threads;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 
@@ -30,6 +35,12 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 
 	@Inject("local")
 	private BucketManager m_bucketManager;
+
+	@Inject("local")
+	private IndexManager m_indexManager;
+
+	@Inject("local")
+	private TokenMappingManager m_tokenManager;
 
 	private List<BlockingQueue<MessageTree>> m_queues = new ArrayList<BlockingQueue<MessageTree>>();
 
@@ -62,9 +73,17 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 			processor.shutdown();
 			super.release(processor);
 		}
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
+		String date = sdf.format(new Date(hour * TimeHelper.ONE_HOUR));
 
+		m_logger.info("starting close dumper manager " + date);
 		m_blockDumperManager.close(hour);
+		m_logger.info("starting close bucket manager " + date);
 		m_bucketManager.closeBuckets(hour);
+		m_logger.info("starting close index manager " + date);
+		m_indexManager.close(hour);
+		m_logger.info("starting close token manager " + date);
+		m_tokenManager.close(hour);
 	}
 
 	private int getIndex(String domain) {

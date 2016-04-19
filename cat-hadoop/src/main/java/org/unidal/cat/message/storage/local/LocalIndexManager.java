@@ -51,8 +51,8 @@ public class LocalIndexManager extends ContainerHolder implements IndexManager {
 			for (Integer i : removed) {
 				Map<String, Index> value = m_indexes.remove(i);
 
-				for (Index t : value.values()) {
-					t.close();
+				for (Index index : value.values()) {
+					index.close();
 				}
 			}
 		}

@@ -19,6 +19,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.helper.TimeHelper;
 
 /**
  * Supports up to 64K tokens mapping from <code>String</code> to <code>int</code>, or reverse by local file system.
@@ -146,8 +147,8 @@ public class LocalTokenMapping implements TokenMapping {
 	}
 
 	@Override
-	public void open(Date startTime, String ip) throws IOException {
-		m_path = m_bulider.getFile(null, startTime, ip, FileType.TOKEN);
+	public void open(int hour, String ip) throws IOException {
+		m_path = m_bulider.getFile(null, new Date(hour * TimeHelper.ONE_HOUR), ip, FileType.TOKEN);
 		m_path.getParentFile().mkdirs();
 		m_file = new RandomAccessFile(m_path, "rwd"); // read-write without meta sync
 		m_data = Unpooled.buffer(BLOCK_SIZE);

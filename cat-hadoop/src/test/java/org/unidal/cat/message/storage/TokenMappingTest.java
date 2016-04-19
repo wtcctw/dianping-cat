@@ -2,7 +2,6 @@ package org.unidal.cat.message.storage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 
 import junit.framework.Assert;
 
@@ -26,10 +25,10 @@ public class TokenMappingTest extends ComponentTestCase {
 	@Test
 	public void test() throws IOException {
 		TokenMapping mapping = lookup(TokenMapping.class, "local");
-		Date timestamp = new Date(1454901510210L); // Mon Feb 08 11:18:30 CST 2016
+		int hour = 405845;
 
 		for (int times = 0; times < 3; times++) {
-			mapping.open(timestamp, "127.0.0.1");
+			mapping.open(hour, "127.0.0.1");
 
 			for (int i = 0; i < 64 * 1024; i++) {
 				String expected = "token-mapping-" + i;
@@ -51,10 +50,10 @@ public class TokenMappingTest extends ComponentTestCase {
 		config.setBaseDataDir(new File("target"));
 
 		TokenMapping mapping = lookup(TokenMapping.class, "local");
-		Date timestamp = new Date(1454901510210L); // Mon Feb 08 11:18:30 CST 2016
+		int hour = 405845;
 
 		for (int times = 0; times < 3; times++) {
-			mapping.open(timestamp, "127.0.0.1");
+			mapping.open(hour, "127.0.0.1");
 
 			for (int i = 0; i < 64 * 1024 * 10; i++) {
 				String expected = "token-mapping-" + i;
