@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
-public class TokenMapTest extends ComponentTestCase {
+public class TokenMappingTest extends ComponentTestCase {
 
 	@Before
 	public void before() {
