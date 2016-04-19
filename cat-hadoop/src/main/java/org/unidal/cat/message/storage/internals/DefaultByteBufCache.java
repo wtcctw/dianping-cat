@@ -20,35 +20,44 @@ public class DefaultByteBufCache implements ByteBufCache, Initializable, LogEnab
 
 	private Logger m_logger;
 
+	private boolean m_on = false;
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
 
 	public ByteBuffer get() {
-		ByteBuffer buf = m_bufs.poll();
+		if (m_on) {
+			ByteBuffer buf = m_bufs.poll();
 
-		if (buf == null) {
-			if (createBuf.incrementAndGet() % 100 == 0) {
-				m_logger.info("create buf:" + createBuf.get());
+			if (buf == null) {
+				if (createBuf.incrementAndGet() % 100 == 0) {
+					m_logger.info("create buf:" + createBuf.get());
+				}
+				buf = ByteBuffer.allocate(32 * 1024);
 			}
-			buf = ByteBuffer.allocate(32 * 1024);
-		}
 
-		return buf;
+			return buf;
+		} else {
+			return ByteBuffer.allocate(32 * 1024);
+		}
 	}
 
 	public void put(ByteBuffer buf) {
-		buf.clear();
-		boolean result = m_bufs.offer(buf);
+		if (m_on) {
+			buf.clear();
+			boolean result = m_bufs.offer(buf);
 
-		if (!result) {
-			m_logger.info("error when put back buf");
+			if (!result) {
+				m_logger.info("error when put back buf");
+			}
 		}
 	}
 
 	@Override
-   public void initialize() throws InitializationException {
-   }
+	public void initialize() throws InitializationException {
+		System.out.println("use cache " + m_on);
+	}
 
 }
