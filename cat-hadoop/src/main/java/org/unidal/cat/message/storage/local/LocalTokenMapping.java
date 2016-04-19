@@ -106,7 +106,7 @@ public class LocalTokenMapping implements TokenMapping {
 	}
 
 	@Override
-	public String lookup(int index) throws IOException {
+	public String find(int index) throws IOException {
 		int len = m_tokens.size();
 
 		if (index < len) {

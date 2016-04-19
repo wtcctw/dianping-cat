@@ -34,7 +34,7 @@ public class TokenMappingTest extends ComponentTestCase {
 			for (int i = 0; i < 64 * 1024; i++) {
 				String expected = "token-mapping-" + i;
 				int index = mapping.map(expected);
-				String actual = mapping.lookup(index);
+				String actual = mapping.find(index);
 
 				Assert.assertEquals(i + 1, index);
 				Assert.assertEquals(expected, actual);
@@ -59,7 +59,7 @@ public class TokenMappingTest extends ComponentTestCase {
 			for (int i = 0; i < 64 * 1024 * 10; i++) {
 				String expected = "token-mapping-" + i;
 				int index = mapping.map(expected);
-				String actual = mapping.lookup(index);
+				String actual = mapping.find(index);
 
 				Assert.assertEquals(i + 1, index);
 				Assert.assertEquals(expected, actual);

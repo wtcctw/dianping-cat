@@ -7,7 +7,7 @@ public interface TokenMapping {
 
 	public long getLastAccessTime();
 
-	public String lookup(int index) throws IOException;
+	public String find(int index) throws IOException;
 
 	public int map(String token) throws IOException;
 

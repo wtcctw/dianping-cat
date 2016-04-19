@@ -85,7 +85,7 @@ public class LocalIndex implements Index {
 	}
 
 	@Override
-	public MessageId lookup(MessageId id) throws IOException {
+	public MessageId find(MessageId id) throws IOException {
 		long value = m_index.read(id);
 		byte[] data = getBytes(value);
 
@@ -471,8 +471,8 @@ public class LocalIndex implements Index {
 			int s2 = (value >> 2) & 0x00007FFF;
 			int s3 = value & 0x0003;
 
-			String domain = m_mapping.lookup(s1);
-			String ipAddressInHex = m_mapping.lookup(s2);
+			String domain = m_mapping.find(s1);
+			String ipAddressInHex = m_mapping.find(s2);
 			int flag = (s3 >> 14) & 0x03;
 			int hour = currentHour + (flag == 3 ? -1 : flag);
 

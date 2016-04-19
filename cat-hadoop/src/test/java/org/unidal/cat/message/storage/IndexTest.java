@@ -43,7 +43,7 @@ public class IndexTest extends ComponentTestCase {
 			MessageId from = MessageId.parse("from-0a260014-403899-" + i);
 			MessageId expected = MessageId.parse("to-0a260015-403899-" + i);
 
-			MessageId actual = index.lookup(from);
+			MessageId actual = index.find(from);
 			Assert.assertEquals(expected, actual);
 		}
 	}
@@ -69,7 +69,7 @@ public class IndexTest extends ComponentTestCase {
 				MessageId from = MessageId.parse("from-0a26000" + ip + "-403899-" + i);
 				MessageId expected = MessageId.parse("from-0a25000" + ip + "-403899-" + i);
 
-				MessageId actual = index.lookup(from);
+				MessageId actual = index.find(from);
 
 				Assert.assertEquals(expected, actual);
 			}
