@@ -18,7 +18,6 @@ import org.unidal.cat.message.storage.IndexManager;
 import org.unidal.cat.message.storage.MessageFinder;
 import org.unidal.cat.message.storage.MessageFinderManager;
 import org.unidal.cat.message.storage.MessageProcessor;
-import org.unidal.cat.metric.BenchmarkManager;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
@@ -32,9 +31,6 @@ import com.dianping.cat.message.spi.MessageTree;
 public class DefaultMessageProcessor implements MessageProcessor, MessageFinder {
 	@Inject
 	private BlockDumperManager m_blockDumperManager;
-
-	@Inject
-	private BenchmarkManager m_benchmarkManager;
 
 	@Inject
 	private MessageFinderManager m_finderManager;
@@ -116,6 +112,7 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 			// buffer.release();
 		}
 		String mapId = tree.getSessionToken();
+		//String mapId = tree.getMessageId();
 
 		if (StringUtils.isNotEmpty(mapId) && !mapId.equals("null")) {
 			MessageId messageId = tree.getFormatMessageId();
@@ -137,7 +134,6 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 
 				if (tree != null) {
 					processMessage(tree);
-					// processIndex(tree);
 				}
 			}
 		} catch (InterruptedException e) {
