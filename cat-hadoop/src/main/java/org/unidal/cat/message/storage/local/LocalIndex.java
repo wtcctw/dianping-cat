@@ -370,7 +370,6 @@ public class LocalIndex implements Index {
 				m_segmentChannel.write(m_buf, m_address);
 				m_buf.position(pos);
 				m_dirty = false;
-				m_buf = null;
 				m_bufCache.put(m_buf);
 			}
 

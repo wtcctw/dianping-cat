@@ -91,6 +91,11 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 		}
    }
 
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
 	private int getIndex(String domain) {
 		int hash = Math.abs(domain.hashCode());
 		int index = hash % (m_processors.size() - 1); // last one for message overflow
@@ -131,10 +136,5 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 				// tree.getBuffer().release();
 			}
 		}
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 }
