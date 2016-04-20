@@ -14,7 +14,7 @@ import org.unidal.lookup.annotation.Named;
 
 @Named(type = ByteBufCache.class)
 public class DefaultByteBufCache implements ByteBufCache, Initializable, LogEnabled {
-	private AtomicInteger createBuf = new AtomicInteger(0);
+	private AtomicInteger m_counts = new AtomicInteger(0);
 
 	private BlockingQueue<ByteBuffer> m_bufs = new ArrayBlockingQueue<ByteBuffer>(8000);
 
@@ -29,8 +29,8 @@ public class DefaultByteBufCache implements ByteBufCache, Initializable, LogEnab
 		ByteBuffer buf = m_bufs.poll();
 
 		if (buf == null) {
-			if (createBuf.incrementAndGet() % 100 == 0) {
-				m_logger.info("create buf:" + createBuf.get());
+			if (m_counts.incrementAndGet() % 100 == 0) {
+				m_logger.info("create buf:" + m_counts.get());
 			}
 			buf = ByteBuffer.allocate(32 * 1024);
 		}
@@ -43,7 +43,6 @@ public class DefaultByteBufCache implements ByteBufCache, Initializable, LogEnab
 	}
 
 	public void put(ByteBuffer buf) {
-		// clear the byte buf data
 		byte[] array = buf.array();
 
 		for (int i = 0; i < array.length; i++) {
