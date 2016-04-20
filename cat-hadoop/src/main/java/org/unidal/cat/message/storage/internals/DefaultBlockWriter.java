@@ -60,8 +60,8 @@ public class DefaultBlockWriter implements BlockWriter {
 	private void processBlock(String ip, Block block) {
 		try {
 			Bucket bucket = m_bucketManager.getBucket(block.getDomain(), ip, block.getHour(), true);
-
 			boolean monitor = (++m_count) % 100 == 0;
+
 			if (monitor) {
 				Transaction t = Cat.newTransaction("Block", block.getDomain());
 

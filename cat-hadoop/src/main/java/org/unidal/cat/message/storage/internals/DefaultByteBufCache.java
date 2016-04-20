@@ -13,9 +13,10 @@ import org.unidal.lookup.annotation.Named;
 
 @Named(type = ByteBufCache.class)
 public class DefaultByteBufCache implements ByteBufCache, Initializable, LogEnabled {
-	private AtomicInteger m_counts = new AtomicInteger(0);
 
 	private BlockingQueue<ByteBuffer> m_bufs = new ArrayBlockingQueue<ByteBuffer>(8000);
+
+	private AtomicInteger m_counts = new AtomicInteger(0);
 
 	private Logger m_logger;
 
