@@ -1,4 +1,4 @@
-package org.unidal.cat.message.storage;
+package org.unidal.cat.message.storage.local;
 
 import java.nio.ByteBuffer;
 

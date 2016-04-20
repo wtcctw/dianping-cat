@@ -15,7 +15,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.unidal.cat.message.storage.ByteBufCache;
 import org.unidal.cat.message.storage.FileBuilder;
 import org.unidal.cat.message.storage.FileBuilder.FileType;
 import org.unidal.cat.message.storage.Index;

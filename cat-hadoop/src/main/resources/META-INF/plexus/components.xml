@@ -198,7 +198,7 @@
 					<role-hint>local</role-hint>
 				</requirement>
 				<requirement>
-					<role>org.unidal.cat.message.storage.ByteBufCache</role>
+					<role>org.unidal.cat.message.storage.local.ByteBufCache</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -228,7 +228,7 @@
 					<role-hint>local</role-hint>
 				</requirement>
 				<requirement>
-					<role>org.unidal.cat.message.storage.ByteBufCache</role>
+					<role>org.unidal.cat.message.storage.local.ByteBufCache</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -276,7 +276,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>org.unidal.cat.message.storage.ByteBufCache</role>
+			<role>org.unidal.cat.message.storage.local.ByteBufCache</role>
 			<implementation>org.unidal.cat.message.storage.internals.DefaultByteBufCache</implementation>
 		</component>
 		<component>
