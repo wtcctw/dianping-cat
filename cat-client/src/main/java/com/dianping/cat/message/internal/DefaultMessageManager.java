@@ -103,10 +103,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	public void flush(MessageTree tree, boolean clearContext) {
-		if (tree.getMessageId() == null) {
-			tree.setMessageId(nextMessageId());
-		}
-
 		MessageSender sender = m_transportManager.getSender();
 
 		if (sender != null && isMessageEnabled()) {

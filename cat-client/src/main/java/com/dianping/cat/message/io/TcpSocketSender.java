@@ -170,35 +170,36 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 					if (count % (1 / sampleRatio) == 0) {
 						offer(tree);
-					} else {
-						m_factory.reuse(tree.getMessageId());
 					}
-				} else {
-					m_factory.reuse(tree.getMessageId());
 				}
 			} else {
 				offer(tree);
 			}
-		} else {
-			m_factory.reuse(tree.getMessageId());
 		}
 	}
 
 	private void sendInternal(MessageTree tree) {
+		if (tree.getMessageId() == null) {
+			tree.setMessageId(m_factory.getNextId());
+		}
+
 		ChannelFuture future = m_channelManager.channel();
-		ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(4 * 1024); // 4K
-
-		m_codec.encode(tree, buf);
-
-		int size = buf.readableBytes();
 
 		if (future != null) {
+			ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(4 * 1024); // 4K
+
+			m_codec.encode(tree, buf);
+
+			int size = buf.readableBytes();
+
 			Channel channel = future.channel();
 
 			channel.writeAndFlush(buf);
 			if (m_statistics != null) {
 				m_statistics.onBytes(size);
 			}
+		} else {
+			offer(tree);
 		}
 	}
 
@@ -237,7 +238,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 					break;
 				}
 				tran.addChild(tree.getMessage());
-				m_factory.reuse(tree.getMessageId());
 				max--;
 			}
 			((DefaultMessageTree) first).setMessage(tran);

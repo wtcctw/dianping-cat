@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel.MapMode;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.unidal.helper.Splitters;
@@ -29,9 +29,9 @@ public class MessageIdFactory {
 
 	private RandomAccessFile m_markFile;
 
-	public static final long HOUR = 3600 * 1000L;
+	private Map<String, AtomicInteger> m_mapIds = new LinkedHashMap<String, AtomicInteger>(100);
 
-	private BlockingQueue<String> m_reusedIds = new LinkedBlockingQueue<String>(100000);
+	public static final long HOUR = 3600 * 1000L;
 
 	public void close() {
 		try {
@@ -72,37 +72,30 @@ public class MessageIdFactory {
 		long timestamp = getTimestamp();
 
 		if (timestamp != m_timestamp) {
-			m_index = new AtomicInteger(0);
+			m_index.set(0);
 			m_timestamp = timestamp;
-			m_reusedIds.clear();
 		}
 
-		String id = m_reusedIds.poll();
+		int index = m_index.getAndIncrement();
 
-		if (id != null) {
-			return id;
-		} else {
-			int index = m_index.getAndIncrement();
+		StringBuilder sb = new StringBuilder(m_domain.length() + 32);
 
-			StringBuilder sb = new StringBuilder(m_domain.length() + 32);
+		sb.append(m_domain);
+		sb.append('-');
+		sb.append(m_ipAddress);
+		sb.append('-');
+		sb.append(timestamp);
+		sb.append('-');
+		sb.append(index);
 
-			sb.append(m_domain);
-			sb.append('-');
-			sb.append(m_ipAddress);
-			sb.append('-');
-			sb.append(timestamp);
-			sb.append('-');
-			sb.append(index);
-
-			return sb.toString();
-		}
+		return sb.toString();
 	}
 
 	public String getNextMapId() {
 		long timestamp = getTimestamp();
 
 		if (timestamp != m_timestamp) {
-			m_mapIndex = new AtomicInteger(0);
+			m_mapIndex.set(0);
 			m_timestamp = timestamp;
 		}
 
@@ -180,10 +173,6 @@ public class MessageIdFactory {
 
 	protected void resetIndex() {
 		m_index.set(0);
-	}
-
-	public void reuse(String id) {
-		m_reusedIds.offer(id);
 	}
 
 	public void saveMark() {
