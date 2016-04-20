@@ -9,7 +9,6 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.cat.message.storage.local.ByteBufCache;
 import org.unidal.lookup.annotation.Named;
 
 @Named(type = ByteBufCache.class)

@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 
 import org.unidal.cat.message.storage.FileBuilder;
 import org.unidal.cat.message.storage.FileBuilder.FileType;
+import org.unidal.cat.message.storage.internals.ByteBufCache;
 import org.unidal.cat.message.storage.Index;
 import org.unidal.cat.message.storage.TokenMapping;
 import org.unidal.cat.message.storage.TokenMappingManager;

@@ -20,6 +20,7 @@ import java.util.Map.Entry;
 import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.FileBuilder;
 import org.unidal.cat.message.storage.FileBuilder.FileType;
+import org.unidal.cat.message.storage.internals.ByteBufCache;
 import org.unidal.cat.message.storage.internals.DefaultBlock;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
