@@ -64,7 +64,7 @@ public class LocalBucket implements Bucket {
 	public ByteBuf get(MessageId id) throws IOException {
 		long address = m_index.read(id);
 
-		if (address < 0) {
+		if (address <= 0) {
 			return null;
 		} else {
 			int segmentOffset = (int) (address & 0xFFFFFFL);
@@ -154,6 +154,11 @@ public class LocalBucket implements Bucket {
 			m_out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(m_path, true), SEGMENT_SIZE));
 			m_file = new RandomAccessFile(m_path, "r"); // read-only
 			m_offset = m_path.length();
+
+			if (m_offset == 0) {
+				m_out.writeInt(-1);
+				m_offset += 4;
+			}
 		}
 
 		private byte[] read(long dataOffset) throws IOException {
