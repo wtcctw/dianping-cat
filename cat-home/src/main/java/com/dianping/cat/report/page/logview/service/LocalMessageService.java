@@ -3,10 +3,13 @@ package com.dianping.cat.report.page.logview.service;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 
 import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.BucketManager;
+import org.unidal.cat.message.storage.Index;
+import org.unidal.cat.message.storage.IndexManager;
 import org.unidal.cat.message.storage.MessageFinderManager;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
@@ -37,7 +40,10 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 	private MessageFinderManager m_finderManager;
 
 	@Inject("local")
-	private BucketManager m_localBucketManager;
+	private BucketManager m_bucketManager;
+
+	@Inject("local")
+	private IndexManager m_indexManager;
 
 	@Inject(HtmlMessageCodec.ID)
 	private MessageCodec m_html;
@@ -58,6 +64,15 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 		String messageId = payload.getMessageId();
 		boolean waterfull = payload.isWaterfall();
 		MessageId id = MessageId.parse(messageId);
+
+		if (payload.isMap()) {
+			MessageId mapId = findIndex(id);
+
+			if (mapId != null) {
+				id = mapId;
+			}
+		}
+
 		ByteBuf buf = m_finderManager.find(id);
 		MessageTree tree = null;
 
@@ -67,7 +82,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 			}
 
 			if (tree == null) {
-				Bucket bucket = m_localBucketManager.getBucket(id.getDomain(),
+				Bucket bucket = m_bucketManager.getBucket(id.getDomain(),
 				      NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), id.getHour(), false);
 
 				if (bucket != null) {
@@ -102,6 +117,16 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 		}
 
 		return null;
+	}
+
+	private MessageId findIndex(MessageId from) throws IOException {
+		int hour = from.getHour();
+		String domain = from.getDomain();
+		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
+		Index index = m_indexManager.getIndex(domain, ip, hour, false);
+
+		return index.find(from);
 	}
 
 	@Override

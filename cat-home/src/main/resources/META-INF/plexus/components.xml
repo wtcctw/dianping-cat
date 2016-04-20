@@ -2717,6 +2717,10 @@
 					<role-hint>local</role-hint>
 				</requirement>
 				<requirement>
+					<role>org.unidal.cat.message.storage.IndexManager</role>
+					<role-hint>local</role-hint>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>html</role-hint>
 					<field-name>m_html</field-name>
