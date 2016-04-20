@@ -51,6 +51,7 @@ public class LocalBucket implements Bucket {
 		}
 	}
 
+	@Override
 	public void flush() {
 		try {
 			m_data.m_file.getFD().sync();
@@ -120,7 +121,7 @@ public class LocalBucket implements Bucket {
 
 		private DataOutputStream m_out;
 
-		public void close() {
+		private void close() {
 			try {
 				m_file.close();
 			} catch (IOException e) {
@@ -138,15 +139,15 @@ public class LocalBucket implements Bucket {
 			m_file = null;
 		}
 
-		public long getDataOffset() {
+		private long getDataOffset() {
 			return m_offset;
 		}
 
-		public File getPath() {
+		private File getPath() {
 			return m_path;
 		}
 
-		public void init(File dataPath) throws IOException {
+		private void init(File dataPath) throws IOException {
 			m_path = dataPath;
 			m_path.getParentFile().mkdirs();
 
@@ -155,7 +156,7 @@ public class LocalBucket implements Bucket {
 			m_offset = m_path.length();
 		}
 
-		public byte[] read(long dataOffset) throws IOException {
+		private byte[] read(long dataOffset) throws IOException {
 			m_out.flush();
 			m_file.seek(dataOffset);
 
@@ -167,7 +168,7 @@ public class LocalBucket implements Bucket {
 			return data;
 		}
 
-		public void write(ByteBuf data) throws IOException {
+		private void write(ByteBuf data) throws IOException {
 			int len = data.readableBytes();
 
 			m_out.writeInt(len);
@@ -195,7 +196,7 @@ public class LocalBucket implements Bucket {
 
 		private Map<String, SegmentCache> m_caches = new LinkedHashMap<String, SegmentCache>();
 
-		public void close() {
+		private void close() {
 			try {
 				m_header.m_segment.close();
 
@@ -234,7 +235,7 @@ public class LocalBucket implements Bucket {
 			return cache.findOrCreateNextSegment(id);
 		}
 
-		public void init(File indexPath) throws IOException {
+		private void init(File indexPath) throws IOException {
 			m_path = indexPath;
 			m_path.getParentFile().mkdirs();
 
@@ -254,11 +255,11 @@ public class LocalBucket implements Bucket {
 			}
 		}
 
-		public boolean isOpen() {
+		private boolean isOpen() {
 			return m_file != null;
 		}
 
-		public long read(MessageId id) throws IOException {
+		private long read(MessageId id) throws IOException {
 			int index = id.getIndex();
 			long position = m_header.getOffset(id.getIpAddressValue(), index, false);
 
@@ -285,7 +286,7 @@ public class LocalBucket implements Bucket {
 			return -1;
 		}
 
-		public void write(MessageId id, long blockAddress, int blockOffset) throws IOException {
+		private void write(MessageId id, long blockAddress, int blockOffset) throws IOException {
 			long position = m_header.getOffset(id.getIpAddressValue(), id.getIndex(), true);
 			long address = position / SEGMENT_SIZE;
 			int offset = (int) (position % SEGMENT_SIZE);
@@ -349,7 +350,7 @@ public class LocalBucket implements Bucket {
 				return segmentId;
 			}
 
-			public long getOffset(int ip, int seq, boolean createIfNotExists) throws IOException {
+			private long getOffset(int ip, int seq, boolean createIfNotExists) throws IOException {
 				int segmentIndex = seq / MESSAGE_PER_SEGMENT;
 				int segmentOffset = (seq % MESSAGE_PER_SEGMENT) * BYTE_PER_MESSAGE;
 				Integer segmentId = findSegment(ip, segmentIndex, createIfNotExists);
@@ -363,7 +364,7 @@ public class LocalBucket implements Bucket {
 				}
 			}
 
-			public void load(int headBlockIndex) throws IOException {
+			private void load(int headBlockIndex) throws IOException {
 				Segment segment = new Segment(m_indexChannel, headBlockIndex * ENTRY_PER_SEGMENT * SEGMENT_SIZE);
 				long magicCode = segment.readLong();
 
@@ -427,7 +428,7 @@ public class LocalBucket implements Bucket {
 				m_buf.reset();
 			}
 
-			public void close() throws IOException {
+			private void close() throws IOException {
 				int pos = m_buf.position();
 
 				m_buf.position(0);
@@ -436,15 +437,15 @@ public class LocalBucket implements Bucket {
 				m_bufCache.put(m_buf);
 			}
 
-			public int readInt() throws IOException {
+			private int readInt() throws IOException {
 				return m_buf.getInt();
 			}
 
-			public long readLong() throws IOException {
+			private long readLong() throws IOException {
 				return m_buf.getLong();
 			}
 
-			public long readLong(int offset) throws IOException {
+			private long readLong(int offset) throws IOException {
 				return m_buf.getLong(offset);
 			}
 
@@ -453,7 +454,7 @@ public class LocalBucket implements Bucket {
 				return String.format("%s[address=%s]", getClass().getSimpleName(), m_address);
 			}
 
-			public void writeLong(int offset, long value) throws IOException {
+			private void writeLong(int offset, long value) throws IOException {
 				m_buf.putLong(offset, value);
 			}
 		}
@@ -465,14 +466,14 @@ public class LocalBucket implements Bucket {
 
 			private final static int CACHE_SIZE = 2;
 
-			public void close() throws IOException {
+			private void close() throws IOException {
 				for (Segment segment : m_latestSegments.values()) {
 					segment.close();
 				}
 				m_latestSegments.clear();
 			}
 
-			public Segment findOrCreateNextSegment(long segmentId) throws IOException {
+			private Segment findOrCreateNextSegment(long segmentId) throws IOException {
 				Segment segment = m_latestSegments.get(segmentId);
 
 				if (segment == null) {

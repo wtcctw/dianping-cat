@@ -130,7 +130,7 @@ public class LocalIndex implements Index {
 
 		private Map<String, SegmentCache> m_caches = new LinkedHashMap<String, SegmentCache>();
 
-		public void close() {
+		private void close() {
 			try {
 				m_header.m_segment.close();
 
@@ -169,7 +169,7 @@ public class LocalIndex implements Index {
 			return cache.findOrCreateNextSegment(id);
 		}
 
-		public void init(File indexPath) throws IOException {
+		private void init(File indexPath) throws IOException {
 			m_path = indexPath;
 			m_path.getParentFile().mkdirs();
 
@@ -189,11 +189,11 @@ public class LocalIndex implements Index {
 			}
 		}
 
-		public boolean isOpen() {
+		private boolean isOpen() {
 			return m_file != null;
 		}
 
-		public long read(MessageId id) throws IOException {
+		private long read(MessageId id) throws IOException {
 			int index = id.getIndex();
 			long position = m_header.getOffset(id.getIpAddressValue(), index, false);
 
@@ -220,7 +220,7 @@ public class LocalIndex implements Index {
 			throw new RuntimeException("error when find message id:" + id.toString());
 		}
 
-		public void write(MessageId id, long value) throws IOException {
+		private void write(MessageId id, long value) throws IOException {
 			long position = m_header.getOffset(id.getIpAddressValue(), id.getIndex(), true);
 			long address = position / SEGMENT_SIZE;
 			int offset = (int) (position % SEGMENT_SIZE);
@@ -283,7 +283,7 @@ public class LocalIndex implements Index {
 				return segmentId;
 			}
 
-			public long getOffset(int ip, int seq, boolean createIfNotExists) throws IOException {
+			private long getOffset(int ip, int seq, boolean createIfNotExists) throws IOException {
 				int segmentIndex = seq / MESSAGE_PER_SEGMENT;
 				int segmentOffset = (seq % MESSAGE_PER_SEGMENT) * BYTE_PER_MESSAGE;
 				Integer segmentId = findSegment(ip, segmentIndex, createIfNotExists);
@@ -297,7 +297,7 @@ public class LocalIndex implements Index {
 				}
 			}
 
-			public void load(int headBlockIndex) throws IOException {
+			private void load(int headBlockIndex) throws IOException {
 				Segment segment = new Segment(m_indexChannel, headBlockIndex * ENTRY_PER_SEGMENT * SEGMENT_SIZE);
 				long magicCode = segment.readLong();
 
@@ -361,7 +361,7 @@ public class LocalIndex implements Index {
 				m_buf.reset();
 			}
 
-			public void close() throws IOException {
+			private void close() throws IOException {
 				int pos = m_buf.position();
 
 				m_buf.position(0);
@@ -370,15 +370,15 @@ public class LocalIndex implements Index {
 				m_bufCache.put(m_buf);
 			}
 
-			public int readInt() throws IOException {
+			private int readInt() throws IOException {
 				return m_buf.getInt();
 			}
 
-			public long readLong() throws IOException {
+			private long readLong() throws IOException {
 				return m_buf.getLong();
 			}
 
-			public long readLong(int offset) throws IOException {
+			private long readLong(int offset) throws IOException {
 				return m_buf.getLong(offset);
 			}
 
@@ -387,7 +387,7 @@ public class LocalIndex implements Index {
 				return String.format("%s[address=%s]", getClass().getSimpleName(), m_address);
 			}
 
-			public void writeLong(int offset, long value) throws IOException {
+			private void writeLong(int offset, long value) throws IOException {
 				m_buf.putLong(offset, value);
 			}
 		}
@@ -440,13 +440,13 @@ public class LocalIndex implements Index {
 
 	protected class MessageIdCodec {
 
-		public int bytesToInt(byte[] src, int offset) {
+		private int bytesToInt(byte[] src, int offset) {
 			int value = (int) (((src[offset] & 0xFF) << 24) | ((src[offset + 1] & 0xFF) << 16)
 			      | ((src[offset + 2] & 0xFF) << 8) | (src[offset + 3] & 0xFF));
 			return value;
 		}
 
-		public MessageId decode(byte[] data, int currentHour) throws IOException {
+		private MessageId decode(byte[] data, int currentHour) throws IOException {
 			int value = bytesToInt(data, 0);
 			int index = bytesToInt(data, 4);
 
@@ -462,7 +462,7 @@ public class LocalIndex implements Index {
 			return new MessageId(domain, ipAddressInHex, hour, index);
 		}
 
-		public byte[] encode(MessageId id, int currentHour) throws IOException {
+		private byte[] encode(MessageId id, int currentHour) throws IOException {
 			int domainIndex = m_mapping.map(id.getDomain());
 			int ipIndex = m_mapping.map(id.getIpAddressInHex());
 			int hour = id.getHour() - currentHour;
