@@ -57,9 +57,14 @@ public class LocalIndex implements Index {
 	@Override
 	public MessageId find(MessageId id) throws IOException {
 		long value = m_index.read(id);
-		byte[] data = getBytes(value);
 
-		return m_codec.decode(data, id.getHour());
+		if (value != 0) {
+			byte[] data = getBytes(value);
+
+			return m_codec.decode(data, id.getHour());
+		} else {
+			return null;
+		}
 	}
 
 	private byte[] getBytes(long data) {
@@ -453,7 +458,6 @@ public class LocalIndex implements Index {
 			int s1 = (value >> 17) & 0x00007FFF;
 			int s2 = (value >> 2) & 0x00007FFF;
 			int s3 = value & 0x0003;
-
 			String domain = m_mapping.find(s1);
 			String ipAddressInHex = m_mapping.find(s2);
 			int flag = (s3 >> 14) & 0x03;
