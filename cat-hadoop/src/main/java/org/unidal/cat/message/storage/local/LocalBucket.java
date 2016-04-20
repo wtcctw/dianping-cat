@@ -35,7 +35,7 @@ public class LocalBucket implements Bucket {
 
 	@Inject("local")
 	private FileBuilder m_bulider;
-	
+
 	@Inject
 	private ByteBufCache m_bufCache;
 
@@ -105,7 +105,6 @@ public class LocalBucket implements Bucket {
 			m_index.write(id, dataOffset, offset);
 		}
 	}
-
 
 	@Override
 	public String toString() {
@@ -420,7 +419,7 @@ public class LocalBucket implements Bucket {
 			private Segment(FileChannel channel, long address) throws IOException {
 				m_segmentChannel = channel;
 				m_address = address;
-				 
+
 				m_buf = m_bufCache.get();
 				// m_buf = ByteBuffer.allocate(SEGMENT_SIZE);
 				m_buf.mark();

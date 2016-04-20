@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 public interface ByteBufCache {
 
-	public ByteBuffer get() ;
+	public ByteBuffer get();
 
 	public void put(ByteBuffer buf);
 

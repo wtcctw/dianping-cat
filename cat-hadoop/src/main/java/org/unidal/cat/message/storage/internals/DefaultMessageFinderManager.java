@@ -58,5 +58,5 @@ public class DefaultMessageFinderManager implements MessageFinderManager {
 
 		finders.add(finder);
 	}
-	
+
 }

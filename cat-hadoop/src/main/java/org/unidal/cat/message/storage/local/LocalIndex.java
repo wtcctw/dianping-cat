@@ -37,7 +37,7 @@ public class LocalIndex implements Index {
 
 	@Inject("local")
 	private TokenMappingManager m_manager;
-	
+
 	@Inject
 	private ByteBufCache m_bufCache;
 
@@ -355,7 +355,7 @@ public class LocalIndex implements Index {
 				m_address = address;
 
 				m_buf = m_bufCache.get();
-				//m_buf = ByteBuffer.allocate(SEGMENT_SIZE);
+				// m_buf = ByteBuffer.allocate(SEGMENT_SIZE);
 				m_buf.mark();
 				m_segmentChannel.read(m_buf, address);
 				m_buf.reset();
@@ -432,7 +432,7 @@ public class LocalIndex implements Index {
 			private void removeOldSegment() throws IOException {
 				Entry<Long, Segment> first = m_latestSegments.entrySet().iterator().next();
 				Segment segment = m_latestSegments.remove(first.getKey());
-				
+
 				segment.close();
 			}
 		}

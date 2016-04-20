@@ -32,11 +32,11 @@ public class LocalTokenMappingManager extends ContainerHolder implements TokenMa
 
 		for (Pair<Integer, String> pair : removes) {
 			TokenMapping mapping = null;
-			
+
 			synchronized (this) {
 				mapping = m_cache.remove(pair);
 			}
-			
+
 			if (mapping != null) {
 				mapping.close();
 			}

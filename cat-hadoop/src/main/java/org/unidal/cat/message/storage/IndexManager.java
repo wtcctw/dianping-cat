@@ -4,6 +4,6 @@ import java.io.IOException;
 
 public interface IndexManager {
 	public void close(int hour);
-	
-	public Index getIndex(String domain,String ip, int hour, boolean createIfNotExists) throws IOException;
+
+	public Index getIndex(String domain, String ip, int hour, boolean createIfNotExists) throws IOException;
 }

@@ -35,7 +35,7 @@ public class DefaultBlock implements Block {
 	private int m_offset;
 
 	private Map<MessageId, Integer> m_offsets = new LinkedHashMap<MessageId, Integer>();
-	
+
 	private Map<MessageId, MessageId> m_mappingIds = new LinkedHashMap<MessageId, MessageId>();
 
 	private DeflaterOutputStream m_out;
@@ -133,9 +133,9 @@ public class DefaultBlock implements Block {
 	}
 
 	@Override
-   public Map<MessageId, MessageId> getMappIds() {
-	   return m_mappingIds;
-   }
+	public Map<MessageId, MessageId> getMappIds() {
+		return m_mappingIds;
+	}
 
 	@Override
 	public Map<MessageId, Integer> getOffsets() {
@@ -148,9 +148,9 @@ public class DefaultBlock implements Block {
 	}
 
 	@Override
-   public void map(MessageId from, MessageId to) {
+	public void map(MessageId from, MessageId to) {
 		m_mappingIds.put(from, to);
-   }
+	}
 
 	@Override
 	public void pack(MessageId id, ByteBuf buf) throws IOException {

@@ -32,9 +32,9 @@ public class LocalIndexManager extends ContainerHolder implements IndexManager {
 		Date startTime = new Date(timestamp);
 		File indexPath = m_bulider.getFile(domain, startTime, ip, FileType.MAPPING);
 
-		return indexPath.exists() ;
+		return indexPath.exists();
 	}
-	
+
 	@Override
 	public void close(int hour) {
 		Set<Integer> removed = new HashSet<Integer>();
@@ -77,11 +77,11 @@ public class LocalIndexManager extends ContainerHolder implements IndexManager {
 	}
 
 	@Override
-	public Index getIndex(String domain,String ip, int hour, boolean createIfNotExists) throws IOException {
+	public Index getIndex(String domain, String ip, int hour, boolean createIfNotExists) throws IOException {
 		Map<String, Index> map = findOrCreateMap(m_indexes, hour);
 		Index index = map == null ? null : map.get(domain);
-		boolean shouldCreate = (createIfNotExists && index == null) || (!createIfNotExists
-		      && bucketFilesExsits(domain, ip, hour));
+		boolean shouldCreate = (createIfNotExists && index == null)
+		      || (!createIfNotExists && bucketFilesExsits(domain, ip, hour));
 
 		if (shouldCreate) {
 			synchronized (map) {

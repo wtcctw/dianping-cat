@@ -54,24 +54,24 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 	public void awaitTermination(int hour) throws InterruptedException {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
 		String date = sdf.format(new Date(hour * TimeHelper.ONE_HOUR));
-		
+
 		closeMessageProcessor();
 
 		m_logger.info("starting close dumper manager " + date);
 		m_blockDumperManager.close(hour);
-		
+
 		m_logger.info("starting close bucket manager " + date);
 		m_bucketManager.closeBuckets(hour);
-		
+
 		m_logger.info("starting close index manager " + date);
 		m_indexManager.close(hour);
-		
+
 		m_logger.info("starting close token manager " + date);
 		m_tokenManager.close(hour);
 	}
 
 	private void closeMessageProcessor() throws InterruptedException {
-	   while (true) {
+		while (true) {
 			boolean allEmpty = true;
 
 			for (BlockingQueue<MessageTree> queue : m_queues) {
@@ -92,7 +92,7 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 			processor.shutdown();
 			super.release(processor);
 		}
-   }
+	}
 
 	@Override
 	public void enableLogging(Logger logger) {

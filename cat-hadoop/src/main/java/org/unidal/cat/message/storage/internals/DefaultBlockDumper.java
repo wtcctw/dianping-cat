@@ -32,7 +32,7 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 	@Override
 	public void awaitTermination() throws InterruptedException {
 		int index = 0;
-		
+
 		while (true && index < 100) {
 			boolean allEmpty = true;
 
@@ -48,7 +48,7 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 			}
 
 			TimeUnit.MILLISECONDS.sleep(10);
-			
+
 			index++;
 		}
 

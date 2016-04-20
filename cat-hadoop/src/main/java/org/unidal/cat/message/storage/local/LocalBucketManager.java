@@ -94,8 +94,8 @@ public class LocalBucketManager extends ContainerHolder implements BucketManager
 	public Bucket getBucket(String domain, String ip, int hour, boolean createIfNotExists) throws IOException {
 		Map<String, Bucket> map = findOrCreateMap(m_buckets, hour);
 		Bucket bucket = map.get(domain);
-		boolean shouldCreate = (createIfNotExists && bucket == null) || (!createIfNotExists
-		      && bucketFilesExsits(domain, ip, hour));
+		boolean shouldCreate = (createIfNotExists && bucket == null)
+		      || (!createIfNotExists && bucketFilesExsits(domain, ip, hour));
 
 		if (shouldCreate) {
 			synchronized (map) {
