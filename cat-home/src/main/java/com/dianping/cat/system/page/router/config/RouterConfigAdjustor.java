@@ -265,7 +265,7 @@ public class RouterConfigAdjustor {
 			DailyReport oldReport = reports.get(0);
 			DailyReport dailyReport = new DailyReport();
 
-			dailyReport.setCreationDate(oldReport.getCreationDate());
+			dailyReport.setCreationDate(new Date());
 			dailyReport.setDomain(domain);
 			dailyReport.setIp(oldReport.getIp());
 			dailyReport.setName(name);
