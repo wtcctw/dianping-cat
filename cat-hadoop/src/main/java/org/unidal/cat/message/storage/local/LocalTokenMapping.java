@@ -123,7 +123,7 @@ public class LocalTokenMapping implements TokenMapping {
 		Integer index = m_map.get(token);
 
 		if (index == null) {
-			synchronized (this) {
+			synchronized (m_map) {
 				index = m_map.get(token);
 
 				if (index == null) {
