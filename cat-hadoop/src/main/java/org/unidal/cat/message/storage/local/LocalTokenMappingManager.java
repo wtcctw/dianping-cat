@@ -18,26 +18,6 @@ public class LocalTokenMappingManager extends ContainerHolder implements TokenMa
 	private Map<Pair<Integer, String>, TokenMapping> m_cache = new HashMap<Pair<Integer, String>, TokenMapping>();
 
 	@Override
-	public TokenMapping getTokenMapping(int hour, String ip) throws IOException {
-		Pair<Integer, String> pair = new Pair<Integer, String>(hour, ip);
-		TokenMapping mapping = m_cache.get(pair);
-
-		if (mapping == null) {
-			synchronized (this) {
-				mapping = m_cache.get(pair);
-
-				if (mapping == null) {
-					mapping = lookup(TokenMapping.class, "local");
-					mapping.open(hour, ip);
-					m_cache.put(pair, mapping);
-				}
-			}
-		}
-
-		return mapping;
-	}
-
-	@Override
 	public void close(int hour) {
 		Set<Pair<Integer, String>> removes = new HashSet<Pair<Integer, String>>();
 
@@ -62,6 +42,26 @@ public class LocalTokenMappingManager extends ContainerHolder implements TokenMa
 			}
 			super.release(mapping);
 		}
+	}
+
+	@Override
+	public TokenMapping getTokenMapping(int hour, String ip) throws IOException {
+		Pair<Integer, String> pair = new Pair<Integer, String>(hour, ip);
+		TokenMapping mapping = m_cache.get(pair);
+
+		if (mapping == null) {
+			synchronized (this) {
+				mapping = m_cache.get(pair);
+
+				if (mapping == null) {
+					mapping = lookup(TokenMapping.class, "local");
+					mapping.open(hour, ip);
+					m_cache.put(pair, mapping);
+				}
+			}
+		}
+
+		return mapping;
 	}
 
 }

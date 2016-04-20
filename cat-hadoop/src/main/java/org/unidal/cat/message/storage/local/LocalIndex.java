@@ -54,6 +54,14 @@ public class LocalIndex implements Index {
 		}
 	}
 
+	@Override
+	public MessageId find(MessageId id) throws IOException {
+		long value = m_index.read(id);
+		byte[] data = getBytes(value);
+
+		return m_codec.decode(data, id.getHour());
+	}
+
 	private byte[] getBytes(long data) {
 		byte[] bytes = new byte[8];
 		bytes[0] = (byte) (data & 0xff);
@@ -82,14 +90,6 @@ public class LocalIndex implements Index {
 
 		m_index.init(indexPath);
 		m_mapping = m_manager.getTokenMapping(hour, ip);
-	}
-
-	@Override
-	public MessageId find(MessageId id) throws IOException {
-		long value = m_index.read(id);
-		byte[] data = getBytes(value);
-
-		return m_codec.decode(data, id.getHour());
 	}
 
 	@Override

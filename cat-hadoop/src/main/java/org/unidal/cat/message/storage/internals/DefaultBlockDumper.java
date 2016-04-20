@@ -73,6 +73,11 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 	}
 
 	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
 	public void initialize(int hour) {
 		int threads = 10;
 
@@ -86,10 +91,5 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 			writer.initialize(hour, i, queue);
 			Threads.forGroup("Cat").start(writer);
 		}
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 }

@@ -38,6 +38,10 @@ public class DefaultByteBufCache implements ByteBufCache, Initializable, LogEnab
 		return buf;
 	}
 
+	@Override
+	public void initialize() throws InitializationException {
+	}
+
 	public void put(ByteBuffer buf) {
 		// clear the byte buf data
 		byte[] array = buf.array();
@@ -53,10 +57,6 @@ public class DefaultByteBufCache implements ByteBufCache, Initializable, LogEnab
 		if (!result) {
 			m_logger.info("error when put back buf");
 		}
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
 	}
 
 }

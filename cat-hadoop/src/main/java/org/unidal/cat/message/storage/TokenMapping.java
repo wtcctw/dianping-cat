@@ -5,9 +5,9 @@ import java.io.IOException;
 public interface TokenMapping {
 	public void close();
 
-	public long getLastAccessTime();
-
 	public String find(int index) throws IOException;
+
+	public long getLastAccessTime();
 
 	public int map(String token) throws IOException;
 

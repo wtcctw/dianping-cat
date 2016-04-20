@@ -67,6 +67,19 @@ public class LocalTokenMapping implements TokenMapping {
 		m_map.clear();
 	}
 
+	@Override
+	public String find(int index) throws IOException {
+		int len = m_tokens.size();
+
+		if (index < len) {
+			m_lastAccessTime = System.currentTimeMillis();
+
+			return m_tokens.get(index);
+		} else {
+			return null;
+		}
+	}
+
 	private void flush() throws IOException {
 		if (m_dirty) {
 			m_file.seek(1L * m_block * BLOCK_SIZE);
@@ -103,19 +116,6 @@ public class LocalTokenMapping implements TokenMapping {
 		}
 
 		buf.writerIndex(buf.readerIndex());
-	}
-
-	@Override
-	public String find(int index) throws IOException {
-		int len = m_tokens.size();
-
-		if (index < len) {
-			m_lastAccessTime = System.currentTimeMillis();
-
-			return m_tokens.get(index);
-		} else {
-			return null;
-		}
 	}
 
 	@Override
