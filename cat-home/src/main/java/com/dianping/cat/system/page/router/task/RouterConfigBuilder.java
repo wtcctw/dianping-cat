@@ -10,6 +10,7 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.task.TaskBuilder;
+import com.dianping.cat.system.page.router.config.RouterConfigAdjustor;
 import com.dianping.cat.system.page.router.config.RouterConfigHandler;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
 
@@ -19,6 +20,9 @@ public class RouterConfigBuilder implements TaskBuilder {
 
 	@Inject
 	private RouterConfigHandler m_routerConfigHandler;
+
+	@Inject
+	private RouterConfigAdjustor m_routerAdjustor;
 
 	@Inject
 	private RouterConfigService m_reportService;
@@ -42,17 +46,18 @@ public class RouterConfigBuilder implements TaskBuilder {
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
-		throw new RuntimeException("router builder don't support hourly task");
+		m_routerAdjustor.Adjust(period);
+		return true;
 	}
 
 	@Override
 	public boolean buildMonthlyTask(String name, String domain, Date period) {
-		throw new RuntimeException("router builder don't support monthly task");
+		throw new RuntimeException("router builder doesn't support monthly task");
 	}
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		throw new RuntimeException("router builder don't support weekly task");
+		throw new RuntimeException("router builder doesn't support weekly task");
 	}
 
 }

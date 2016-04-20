@@ -26,6 +26,7 @@ import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.entity.Server;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
+import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
 
 public class Handler implements PageHandler<Context> {
 
@@ -40,6 +41,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ServerFilterConfigManager m_filterManager;
+
+	@Inject
+	private RouterConfigBuilder m_routerConfigBuilder;
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
@@ -129,6 +133,11 @@ public class Handler implements PageHandler<Context> {
 			kvs.put("startTransactionTypes", m_filterManager.getAtomicStartTypes());
 			kvs.put("matchTransactionTypes", m_filterManager.getAtomicMatchTypes());
 			model.setContent(m_jsonBuilder.toJson(config));
+			break;
+		case BUILD:
+			Date period = TimeHelper.getCurrentDay(-1);
+
+			m_routerConfigBuilder.buildDailyTask(RouterConfigBuilder.ID, Constants.CAT, period);
 			break;
 		case MODEL:
 			if (report != null) {

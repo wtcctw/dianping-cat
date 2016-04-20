@@ -1364,6 +1364,27 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.page.router.config.RouterConfigAdjustor</role>
+			<implementation>com.dianping.cat.system.page.router.config.RouterConfigAdjustor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.state.service.StateReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>router</role-hint>
 			<implementation>com.dianping.cat.system.page.router.task.RouterConfigBuilder</implementation>
@@ -1373,6 +1394,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.router.config.RouterConfigHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.config.RouterConfigAdjustor</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -7079,6 +7103,24 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.task.RouterConfigBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.router.task.RouterConfigBuilder</role>
+			<implementation>com.dianping.cat.system.page.router.task.RouterConfigBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.config.RouterConfigHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.config.RouterConfigAdjustor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
 				</requirement>
 			</requirements>
 		</component>
