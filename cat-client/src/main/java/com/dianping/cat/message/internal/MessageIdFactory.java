@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel.MapMode;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.unidal.helper.Splitters;
@@ -28,8 +26,6 @@ public class MessageIdFactory {
 	private MappedByteBuffer m_byteBuffer;
 
 	private RandomAccessFile m_markFile;
-
-	private Map<String, AtomicInteger> m_mapIds = new LinkedHashMap<String, AtomicInteger>(100);
 
 	public static final long HOUR = 3600 * 1000L;
 
