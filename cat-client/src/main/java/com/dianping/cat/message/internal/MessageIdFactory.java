@@ -6,8 +6,6 @@ import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel.MapMode;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.unidal.helper.Splitters;
@@ -19,6 +17,8 @@ public class MessageIdFactory {
 
 	private volatile AtomicInteger m_index;
 
+	private volatile AtomicInteger m_mapIndex;
+
 	private String m_domain;
 
 	private String m_ipAddress;
@@ -27,12 +27,11 @@ public class MessageIdFactory {
 
 	private RandomAccessFile m_markFile;
 
-	private static final long HOUR = 3600 * 1000L;
-
-	private BlockingQueue<String> m_reusedIds = new LinkedBlockingQueue<String>(100000);
+	public static final long HOUR = 3600 * 1000L;
 
 	public void close() {
 		try {
+			saveMark();
 			m_markFile.close();
 		} catch (Exception e) {
 			// ignore it
@@ -66,32 +65,49 @@ public class MessageIdFactory {
 	}
 
 	public String getNextId() {
-		String id = m_reusedIds.poll();
+		long timestamp = getTimestamp();
 
-		if (id != null) {
-			return id;
-		} else {
-			long timestamp = getTimestamp();
-
-			if (timestamp != m_timestamp) {
-				m_index = new AtomicInteger(0);
-				m_timestamp = timestamp;
-			}
-
-			int index = m_index.getAndIncrement();
-
-			StringBuilder sb = new StringBuilder(m_domain.length() + 32);
-
-			sb.append(m_domain);
-			sb.append('-');
-			sb.append(m_ipAddress);
-			sb.append('-');
-			sb.append(timestamp);
-			sb.append('-');
-			sb.append(index);
-
-			return sb.toString();
+		if (timestamp != m_timestamp) {
+			m_index.set(0);
+			m_timestamp = timestamp;
 		}
+
+		int index = m_index.getAndIncrement();
+
+		StringBuilder sb = new StringBuilder(m_domain.length() + 32);
+
+		sb.append(m_domain);
+		sb.append('-');
+		sb.append(m_ipAddress);
+		sb.append('-');
+		sb.append(timestamp);
+		sb.append('-');
+		sb.append(index);
+
+		return sb.toString();
+	}
+
+	public String getNextMapId() {
+		long timestamp = getTimestamp();
+
+		if (timestamp != m_timestamp) {
+			m_mapIndex.set(0);
+			m_timestamp = timestamp;
+		}
+
+		int index = m_mapIndex.getAndIncrement();
+
+		StringBuilder sb = new StringBuilder(m_domain.length() + 32);
+
+		sb.append(m_domain);
+		sb.append('-');
+		sb.append(m_ipAddress);
+		sb.append('-');
+		sb.append(timestamp);
+		sb.append('-');
+		sb.append(index);
+
+		return sb.toString();
 	}
 
 	protected long getTimestamp() {
@@ -127,32 +143,41 @@ public class MessageIdFactory {
 		m_byteBuffer = m_markFile.getChannel().map(MapMode.READ_WRITE, 0, 20);
 
 		if (m_byteBuffer.limit() > 0) {
-			int index = m_byteBuffer.getInt();
 			long lastTimestamp = m_byteBuffer.getLong();
+			int index = m_byteBuffer.getInt();
+			int rpcIndex = m_byteBuffer.getInt();
 
 			if (lastTimestamp == m_timestamp) { // for same hour
-				m_index = new AtomicInteger(index + 10000);
+				m_index = new AtomicInteger(index + 1000);
+				m_mapIndex = new AtomicInteger(rpcIndex + 1000);
 			} else {
 				m_index = new AtomicInteger(0);
+				m_mapIndex = new AtomicInteger(0);
 			}
 		}
 
 		saveMark();
+
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+
+			@Override
+			public void run() {
+				saveMark();
+			}
+		});
 	}
 
 	protected void resetIndex() {
 		m_index.set(0);
 	}
 
-	public void reuse(String id) {
-		m_reusedIds.offer(id);
-	}
-
 	public void saveMark() {
 		try {
 			m_byteBuffer.rewind();
-			m_byteBuffer.putInt(m_index.get());
 			m_byteBuffer.putLong(m_timestamp);
+			m_byteBuffer.putInt(m_index.get());
+			m_byteBuffer.putInt(m_mapIndex.get());
+			m_byteBuffer.force();
 		} catch (Exception e) {
 			// ignore it
 		}
@@ -165,4 +190,5 @@ public class MessageIdFactory {
 	public void setIpAddress(String ipAddress) {
 		m_ipAddress = ipAddress;
 	}
+
 }

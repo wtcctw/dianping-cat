@@ -14,6 +14,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.Transaction;
@@ -23,13 +24,15 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
+@Named
 public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	public static final int SIZE = 5000;
 
-	@Inject
+	@Inject(PlainTextMessageCodec.ID)
 	private MessageCodec m_codec;
 
 	@Inject
@@ -167,32 +170,36 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 					if (count % (1 / sampleRatio) == 0) {
 						offer(tree);
-					} else {
-						m_factory.reuse(tree.getMessageId());
 					}
-				} else {
-					m_factory.reuse(tree.getMessageId());
 				}
 			} else {
 				offer(tree);
 			}
-		} else {
-			m_factory.reuse(tree.getMessageId());
 		}
 	}
 
 	private void sendInternal(MessageTree tree) {
+		if (tree.getMessageId() == null) {
+			tree.setMessageId(m_factory.getNextId());
+		}
+
 		ChannelFuture future = m_channelManager.channel();
-		ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(4 * 1024); // 4K
 
-		m_codec.encode(tree, buf);
+		if (future != null) {
+			ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(4 * 1024); // 4K
 
-		int size = buf.readableBytes();
-		Channel channel = future.channel();
+			m_codec.encode(tree, buf);
 
-		channel.writeAndFlush(buf);
-		if (m_statistics != null) {
-			m_statistics.onBytes(size);
+			int size = buf.readableBytes();
+
+			Channel channel = future.channel();
+
+			channel.writeAndFlush(buf);
+			if (m_statistics != null) {
+				m_statistics.onBytes(size);
+			}
+		} else {
+			offer(tree);
 		}
 	}
 
@@ -231,7 +238,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 					break;
 				}
 				tran.addChild(tree.getMessage());
-				m_factory.reuse(tree.getMessageId());
 				max--;
 			}
 			((DefaultMessageTree) first).setMessage(tran);
