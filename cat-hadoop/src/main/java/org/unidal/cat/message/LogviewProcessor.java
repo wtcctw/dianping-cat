@@ -54,13 +54,7 @@ public class LogviewProcessor implements Task, Initializable {
 			public Direction matches(File base, String path) {
 				if (new File(base, path).isFile()) {
 					if (shouldDelete(path)) {
-						int index = path.indexOf(".idx");
-
-						if (index == -1) {
-							paths.add(path);
-						} else if (index > 0) {
-							paths.add(path.substring(0, index));
-						}
+						paths.add(path);
 					}
 				}
 				return Direction.DOWN;
@@ -89,13 +83,7 @@ public class LogviewProcessor implements Task, Initializable {
 			public Direction matches(File base, String path) {
 				if (new File(base, path).isFile()) {
 					if (isOldBucketFile(path)) {
-						int index = path.indexOf(".idx");
-
-						if (index == -1) {
-							paths.add(path);
-						} else {
-							paths.add(path.substring(0, index));
-						}
+						paths.add(path);
 					}
 				}
 				return Direction.DOWN;
@@ -158,11 +146,9 @@ public class LogviewProcessor implements Task, Initializable {
 			try {
 				if (upload) {
 					uploadFileToHdfs(path);
-					uploadFileToHdfs(path + ".idx");
 					Cat.getProducer().logEvent("Upload", "UploadAndDelete", Message.SUCCESS, loginfo);
 				} else {
 					deleteLocalFile(path);
-					deleteLocalFile(path + ".idx");
 					Cat.getProducer().logEvent("Upload", "Delete", Message.SUCCESS, loginfo);
 				}
 			} catch (Exception e) {
