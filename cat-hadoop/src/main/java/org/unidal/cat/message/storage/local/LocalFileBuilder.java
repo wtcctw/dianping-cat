@@ -1,6 +1,5 @@
 package org.unidal.cat.message.storage.local;
 
-import java.io.File;
 import java.text.MessageFormat;
 import java.util.Date;
 
@@ -30,7 +29,7 @@ public class LocalFileBuilder implements PathBuilder {
 			break;
 		}
 
-		File baseDir = m_config.getBaseDataDir();
+		String baseDir = m_config.getBaseDataDir();
 
 		return baseDir + path;
 	}

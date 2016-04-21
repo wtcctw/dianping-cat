@@ -9,16 +9,15 @@ import org.unidal.lookup.annotation.Named;
 
 @Named(type = StorageConfiguration.class)
 public class DefaultStorageConfiguration implements Initializable, StorageConfiguration {
-	private File m_baseDataDir;
+	private String m_baseDataDir;
 
 	@Override
-	public File getBaseDataDir() {
+	public String getBaseDataDir() {
 		return m_baseDataDir;
 	}
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_baseDataDir = new File("/data/appdatas/cat/bucket");
 	}
 
 	@Override
@@ -27,7 +26,12 @@ public class DefaultStorageConfiguration implements Initializable, StorageConfig
 	}
 
 	@Override
-	public void setBaseDataDir(File baseDataDir) {
+	public void setBaseDataDir(String baseDataDir) {
 		m_baseDataDir = baseDataDir;
 	}
+
+	@Override
+   public void setBaseDataDir(File baseDataDir) {
+		m_baseDataDir = baseDataDir.getAbsolutePath();
+   }
 }
