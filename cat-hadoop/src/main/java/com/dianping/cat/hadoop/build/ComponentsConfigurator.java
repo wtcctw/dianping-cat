@@ -75,13 +75,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(DefaultBlockDumper.class));
 		all.add(A(DefaultBlockWriter.class));
 
-		all.add(A(LocalBucketManager.class));
 		all.add(A(LocalBucket.class));
+		all.add(A(LocalBucketManager.class));
 		all.add(A(HdfsBucket.class));
 		all.add(A(HdfsBucketManager.class));
 		
-		all.add(A(LocalIndexManager.class));
 		all.add(A(LocalIndex.class));
+		all.add(A(LocalIndexManager.class));
 		all.add(A(HdfsIndex.class));
 
 		all.add(A(LocalFileBuilder.class));
