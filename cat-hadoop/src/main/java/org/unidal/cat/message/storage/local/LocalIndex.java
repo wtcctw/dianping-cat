@@ -88,6 +88,11 @@ public class LocalIndex implements Index {
 	}
 
 	@Override
+   public void initialize(String fileName) throws IOException {
+		throw new RuntimeException("unsupport operation");
+   }
+
+	@Override
 	public void initialize(String domain, String ip, int hour) throws IOException {
 		long timestamp = hour * 3600 * 1000L;
 		Date startTime = new Date(timestamp);

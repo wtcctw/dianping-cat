@@ -11,6 +11,8 @@ public interface Index {
 
 	public MessageId find(MessageId from) throws IOException;
 
+	public void initialize(String fileName) throws IOException;
+	
 	public void initialize(String domain, String ip, int hour) throws IOException;
 
 	public void map(MessageId from, MessageId to) throws IOException;
