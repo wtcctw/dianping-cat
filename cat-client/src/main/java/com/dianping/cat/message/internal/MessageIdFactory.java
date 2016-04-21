@@ -84,10 +84,6 @@ public class MessageIdFactory {
 		return sb.toString();
 	}
 
-	public String getNextMapId() {
-		return getNextMapId("default");
-	}
-
 	public String getNextMapId(String domain) {
 		long timestamp = getTimestamp();
 

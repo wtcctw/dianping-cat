@@ -67,9 +67,9 @@ public class Cat {
 		}
 	}
 
-	public static String createMapMessageId() {
+	public static String createMapMessageId(String domain) {
 		try {
-			return Cat.getProducer().createMapMessageId();
+			return Cat.getProducer().createMapMessageId(domain);
 		} catch (Exception e) {
 			errorHandler(e);
 			return NullMessageProducer.NULL_MESSAGE_PRODUCER.createMessageId();
@@ -373,10 +373,26 @@ public class Cat {
 	}
 
 	/**
-	 * used in rpc client
+	 * logRemoteCallClient is used in rpc client
+	 * 
 	 * @param ctx
+	 *           ctx is rpc context ,such as duboo context , please use rpc context implement Context
+	 * @param domain
+	 *           domain is default, if use default config, the performance of server storage is bad
 	 */
 	public static void logRemoteCallClient(Context ctx) {
+		logRemoteCallClient(ctx, "default");
+	}
+
+	/**
+	 * logRemoteCallClient is used in rpc client
+	 * 
+	 * @param ctx
+	 *           ctx is rpc context ,such as duboo context , please use rpc context implement Context
+	 * @param domain
+	 *           domain is project name of rpc server name
+	 */
+	public static void logRemoteCallClient(Context ctx, String domain) {
 		try {
 			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 			String messageId = tree.getMessageId();
@@ -387,7 +403,7 @@ public class Cat {
 			}
 
 			// create next map id
-			String childId = Cat.createMapMessageId();
+			String childId = Cat.createMapMessageId(domain);
 			Cat.logEvent(CatConstants.TYPE_REMOTE_CALL, "", Event.SUCCESS, childId);
 
 			String root = tree.getRootMessageId();
@@ -406,6 +422,7 @@ public class Cat {
 
 	/**
 	 * used in rpc server
+	 * 
 	 * @param ctx
 	 */
 	public static void logRemoteCallServer(Context ctx) {
@@ -421,7 +438,7 @@ public class Cat {
 			if (rootId != null) {
 				tree.setRootMessageId(rootId);
 			}
-			// use session token first TODO 
+			// use session token first TODO
 			if (mapId != null) {
 				tree.setSessionToken(mapId);
 			}

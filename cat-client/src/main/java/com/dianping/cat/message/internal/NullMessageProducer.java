@@ -18,7 +18,7 @@ public class NullMessageProducer implements MessageProducer {
 	private AtomicInteger seq = new AtomicInteger(0);
 
 	@Override
-	public String createMapMessageId() {
+	public String createMapMessageId(String domain) {
 		return createMessageId();
 	}
 
