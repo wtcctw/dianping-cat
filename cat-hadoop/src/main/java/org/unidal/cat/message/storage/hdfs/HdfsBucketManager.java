@@ -141,30 +141,28 @@ public class HdfsBucketManager extends ContainerHolder implements BucketManager,
 
 	@Override
 	public MessageTree loadMessage(String messageId) {
-		if (!m_serverConfigManager.isHdfsOn()) {
-			return null;
-		}
+		if (m_serverConfigManager.isHdfsOn()) {
+			Transaction t = Cat.newTransaction("BucketService", getClass().getSimpleName());
+			t.setStatus(Message.SUCCESS);
 
-		Transaction t = Cat.newTransaction("BucketService", getClass().getSimpleName());
-		t.setStatus(Message.SUCCESS);
+			try {
+				MessageId id = MessageId.parse(messageId);
+				Date date = new Date(id.getTimestamp());
+				List<String> paths = loadFileFromHdfs(id, date);
 
-		try {
-			MessageId id = MessageId.parse(messageId);
-			Date date = new Date(id.getTimestamp());
-			List<String> paths = loadFileFromHdfs(id, date);
+				t.addData(paths.toString());
 
-			t.addData(paths.toString());
-
-			return readMessage(id, date, paths);
-		} catch (RuntimeException e) {
-			t.setStatus(e);
-			Cat.logError(e);
-			throw e;
-		} catch (Exception e) {
-			t.setStatus(e);
-			Cat.logError(e);
-		} finally {
-			t.complete();
+				return readMessage(id, date, paths);
+			} catch (RuntimeException e) {
+				t.setStatus(e);
+				Cat.logError(e);
+				throw e;
+			} catch (Exception e) {
+				t.setStatus(e);
+				Cat.logError(e);
+			} finally {
+				t.complete();
+			}
 		}
 		return null;
 	}
