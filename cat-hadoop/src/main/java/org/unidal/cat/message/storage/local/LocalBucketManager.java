@@ -13,8 +13,8 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.BucketManager;
-import org.unidal.cat.message.storage.FileBuilder;
-import org.unidal.cat.message.storage.FileBuilder.FileType;
+import org.unidal.cat.message.storage.PathBuilder;
+import org.unidal.cat.message.storage.PathBuilder.FileType;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
@@ -26,7 +26,7 @@ import com.dianping.cat.message.spi.MessageTree;
 public class LocalBucketManager extends ContainerHolder implements BucketManager, LogEnabled {
 
 	@Inject("local")
-	private FileBuilder m_bulider;
+	private PathBuilder m_bulider;
 
 	private Map<Integer, Map<String, Bucket>> m_buckets = new LinkedHashMap<Integer, Map<String, Bucket>>();
 
@@ -35,8 +35,8 @@ public class LocalBucketManager extends ContainerHolder implements BucketManager
 	private boolean bucketFilesExsits(String domain, String ip, int hour) {
 		long timestamp = hour * 3600 * 1000L;
 		Date startTime = new Date(timestamp);
-		File dataPath = m_bulider.getFile(domain, startTime, ip, FileType.DATA);
-		File indexPath = m_bulider.getFile(domain, startTime, ip, FileType.INDEX);
+		File dataPath = new File(m_bulider.getPath(domain, startTime, ip, FileType.DATA));
+		File indexPath = new File(m_bulider.getPath(domain, startTime, ip, FileType.INDEX));
 
 		return dataPath.exists() && indexPath.exists();
 	}

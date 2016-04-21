@@ -15,8 +15,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.unidal.cat.message.storage.FileBuilder;
-import org.unidal.cat.message.storage.FileBuilder.FileType;
+import org.unidal.cat.message.storage.PathBuilder;
+import org.unidal.cat.message.storage.PathBuilder.FileType;
 import org.unidal.cat.message.storage.internals.ByteBufCache;
 import org.unidal.cat.message.storage.Index;
 import org.unidal.cat.message.storage.TokenMapping;
@@ -33,7 +33,7 @@ public class LocalIndex implements Index {
 	private static final int SEGMENT_SIZE = 32 * 1024;
 
 	@Inject("local")
-	private FileBuilder m_bulider;
+	private PathBuilder m_bulider;
 
 	@Inject("local")
 	private TokenMappingManager m_manager;
@@ -88,15 +88,15 @@ public class LocalIndex implements Index {
 	}
 
 	@Override
-   public void initialize(String fileName) throws IOException {
+	public void initialize(String fileName) throws IOException {
 		throw new RuntimeException("unsupport operation");
-   }
+	}
 
 	@Override
 	public void initialize(String domain, String ip, int hour) throws IOException {
 		long timestamp = hour * 3600 * 1000L;
 		Date startTime = new Date(timestamp);
-		File indexPath = m_bulider.getFile(domain, startTime, ip, FileType.MAPPING);
+		File indexPath = new File(m_bulider.getPath(domain, startTime, ip, FileType.MAPPING));
 
 		m_index.init(indexPath);
 		m_mapping = m_manager.getTokenMapping(hour, ip);

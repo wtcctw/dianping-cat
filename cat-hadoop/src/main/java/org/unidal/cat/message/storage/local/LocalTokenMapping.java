@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.unidal.cat.message.storage.FileBuilder;
-import org.unidal.cat.message.storage.FileBuilder.FileType;
+import org.unidal.cat.message.storage.PathBuilder;
+import org.unidal.cat.message.storage.PathBuilder.FileType;
 import org.unidal.cat.message.storage.TokenMapping;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
@@ -31,7 +31,7 @@ public class LocalTokenMapping implements TokenMapping {
 	private static final String MAGIC_CODE = "TokenMapping"; // token mapping
 
 	@Inject("local")
-	private FileBuilder m_bulider;
+	private PathBuilder m_bulider;
 
 	private RandomAccessFile m_file;
 
@@ -153,7 +153,7 @@ public class LocalTokenMapping implements TokenMapping {
 
 	@Override
 	public void open(int hour, String ip) throws IOException {
-		m_path = m_bulider.getFile(null, new Date(hour * TimeHelper.ONE_HOUR), ip, FileType.TOKEN);
+		m_path = new File(m_bulider.getPath(null, new Date(hour * TimeHelper.ONE_HOUR), ip, FileType.TOKEN));
 		m_path.getParentFile().mkdirs();
 		m_file = new RandomAccessFile(m_path, "rwd"); // read-write without meta sync
 		m_data = Unpooled.buffer(BLOCK_SIZE);

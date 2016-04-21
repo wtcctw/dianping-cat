@@ -18,8 +18,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.unidal.cat.message.storage.Bucket;
-import org.unidal.cat.message.storage.FileBuilder;
-import org.unidal.cat.message.storage.FileBuilder.FileType;
+import org.unidal.cat.message.storage.PathBuilder;
+import org.unidal.cat.message.storage.PathBuilder.FileType;
 import org.unidal.cat.message.storage.internals.ByteBufCache;
 import org.unidal.cat.message.storage.internals.DefaultBlock;
 import org.unidal.lookup.annotation.Inject;
@@ -34,7 +34,7 @@ public class LocalBucket implements Bucket {
 	private static final int SEGMENT_SIZE = 32 * 1024;
 
 	@Inject("local")
-	private FileBuilder m_bulider;
+	private PathBuilder m_bulider;
 
 	@Inject
 	private ByteBufCache m_bufCache;
@@ -86,8 +86,8 @@ public class LocalBucket implements Bucket {
 	public void initialize(String domain, String ip, int hour) throws IOException {
 		long timestamp = hour * 3600 * 1000L;
 		Date startTime = new Date(timestamp);
-		File dataPath = m_bulider.getFile(domain, startTime, ip, FileType.DATA);
-		File indexPath = m_bulider.getFile(domain, startTime, ip, FileType.INDEX);
+		File dataPath = new File(m_bulider.getPath(domain, startTime, ip, FileType.DATA));
+		File indexPath = new File(m_bulider.getPath(domain, startTime, ip, FileType.INDEX));
 
 		m_data.init(dataPath);
 		m_index.init(indexPath);

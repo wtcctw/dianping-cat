@@ -4,18 +4,18 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.Date;
 
-import org.unidal.cat.message.storage.FileBuilder;
+import org.unidal.cat.message.storage.PathBuilder;
 import org.unidal.cat.message.storage.StorageConfiguration;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
-@Named(type = FileBuilder.class, value = "local")
-public class LocalFileBuilder implements FileBuilder {
+@Named(type = PathBuilder.class, value = "local")
+public class LocalFileBuilder implements PathBuilder {
 	@Inject
 	private StorageConfiguration m_config;
 
 	@Override
-	public File getFile(String domain, Date startTime, String ip, FileType type) {
+	public String getPath(String domain, Date startTime, String ip, FileType type) {
 		MessageFormat format;
 		String path;
 
@@ -32,6 +32,6 @@ public class LocalFileBuilder implements FileBuilder {
 
 		File baseDir = m_config.getBaseDataDir();
 
-		return new File(baseDir, path);
+		return baseDir + path;
 	}
 }

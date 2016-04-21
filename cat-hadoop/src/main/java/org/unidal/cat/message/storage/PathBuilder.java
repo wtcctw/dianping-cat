@@ -1,10 +1,9 @@
 package org.unidal.cat.message.storage;
 
-import java.io.File;
 import java.util.Date;
 
-public interface FileBuilder {
-	public File getFile(String domain, Date startTime, String ip, FileType type);
+public interface PathBuilder {
+	public String getPath(String domain, Date startTime, String ip, FileType type);
 
 	public static enum FileType {
 		MAPPING("map"),

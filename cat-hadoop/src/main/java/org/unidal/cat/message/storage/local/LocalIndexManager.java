@@ -10,8 +10,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.codehaus.plexus.logging.Logger;
-import org.unidal.cat.message.storage.FileBuilder;
-import org.unidal.cat.message.storage.FileBuilder.FileType;
+import org.unidal.cat.message.storage.PathBuilder;
+import org.unidal.cat.message.storage.PathBuilder.FileType;
 import org.unidal.cat.message.storage.Index;
 import org.unidal.cat.message.storage.IndexManager;
 import org.unidal.lookup.ContainerHolder;
@@ -23,14 +23,14 @@ public class LocalIndexManager extends ContainerHolder implements IndexManager {
 	private Map<Integer, Map<String, Index>> m_indexes = new LinkedHashMap<Integer, Map<String, Index>>();
 
 	@Inject("local")
-	private FileBuilder m_bulider;
+	private PathBuilder m_bulider;
 
 	protected Logger m_logger;
 
 	private boolean bucketFilesExsits(String domain, String ip, int hour) {
 		long timestamp = hour * 3600 * 1000L;
 		Date startTime = new Date(timestamp);
-		File indexPath = m_bulider.getFile(domain, startTime, ip, FileType.MAPPING);
+		File indexPath = new File(m_bulider.getPath(domain, startTime, ip, FileType.MAPPING));
 
 		return indexPath.exists();
 	}
