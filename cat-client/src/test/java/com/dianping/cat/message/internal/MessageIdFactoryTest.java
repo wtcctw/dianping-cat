@@ -2,11 +2,19 @@ package com.dianping.cat.message.internal;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import junit.framework.Assert;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.unidal.helper.Scanners;
+import org.unidal.helper.Scanners.FileMatcher;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
 
 public class MessageIdFactoryTest {
 	private long m_timestamp = 1330327814748L;
@@ -20,19 +28,50 @@ public class MessageIdFactoryTest {
 		}
 	};
 
+	@After
+	public void clear() {
+		m_factory.close();
+	}
+
 	@Before
 	public void before() {
-		new File("/data/appdatas/cat/cat-cat.mark").delete();
+		final List<String> paths = new ArrayList<String>();
+		String base = "/data/appdatas/cat/";
+		Scanners.forDir().scan(new File(base), new FileMatcher() {
+			@Override
+			public Direction matches(File base, String path) {
+				if (new File(base, path).isFile()) {
+					if (path.indexOf("mark") > -1) {
+						paths.add(path);
+					}
+				}
+				return Direction.DOWN;
+			}
+		});
+
+		for (String path : paths) {
+			boolean result = new File(base, path).delete();
+			System.err.println("delete " + path + " " + result);
+		}
 	}
 
 	@Test
 	public void testMapId() throws IOException {
 		m_factory.initialize("test");
 
-		for (int i = 0; i < 1000; i++) {
-			System.out.println(m_factory.getNextMapId());
-			System.out.println(m_factory.getNextId());
+		for (int i = 0; i < 100; i++) {
+			for (int j = 0; j < 100; j++) {
+				String domain = "domain" + j;
+				System.out.println(m_factory.getNextMapId(domain));
+			}
 		}
+
+		m_factory.saveMark();
+	}
+
+	@Test
+	public void testInit() throws IOException {
+		m_factory.initialize("test");
 	}
 
 	@Test
@@ -66,27 +105,67 @@ public class MessageIdFactoryTest {
 
 		Assert.assertEquals(domain, id.getDomain());
 		Assert.assertEquals("c0a83f99", id.getIpAddressInHex());
-		Assert.assertEquals(m_timestamp, id.getTimestamp());
 	}
 
 	@Test
 	public void testNextId() throws Exception {
 		m_factory.initialize("test");
 
-		check("domain1", "domain1-c0a83f99-814748-0");
-		check("domain1", "domain1-c0a83f99-814748-1");
-		check("domain1", "domain1-c0a83f99-814748-2");
-		check("domain1", "domain1-c0a83f99-814748-3");
+		check("domain1", "domain1-c0a83f99-369535-0");
+		check("domain1", "domain1-c0a83f99-369535-1");
+		check("domain1", "domain1-c0a83f99-369535-2");
+		check("domain1", "domain1-c0a83f99-369535-3");
 
-		m_timestamp++;
-		check("domain1", "domain1-c0a83f99-814749-0");
-		check("domain1", "domain1-c0a83f99-814749-1");
-		check("domain1", "domain1-c0a83f99-814749-2");
+		m_timestamp = m_timestamp +MessageIdFactory.HOUR;
+		check("domain1", "domain1-c0a83f99-369536-0");
+		check("domain1", "domain1-c0a83f99-369536-1");
+		check("domain1", "domain1-c0a83f99-369536-2");
 
-		m_timestamp++;
-		check("domain1", "domain1-c0a83f99-814750-0");
-		check("domain1", "domain1-c0a83f99-814750-1");
-		check("domain1", "domain1-c0a83f99-814750-2");
+		m_timestamp = m_timestamp +MessageIdFactory.HOUR;
+		check("domain1", "domain1-c0a83f99-369537-0");
+		check("domain1", "domain1-c0a83f99-369537-1");
+		check("domain1", "domain1-c0a83f99-369537-2");
+	}
+
+	@Test
+	public void testMultithreads() throws IOException, InterruptedException {
+		m_factory.initialize("test");
+		int count = 50;
+		CountDownLatch latch = new CountDownLatch(count);
+		CountDownLatch mainLatch = new CountDownLatch(count);
+
+		for (int i = 0; i < count; i++) {
+			Threads.forGroup("cat").start(new CreateMessageIdTask(i, latch, mainLatch));
+
+			latch.countDown();
+		}
+
+		mainLatch.await();
+		;
+		Assert.assertEquals(500000, MessageId.parse(m_factory.getNextId()).getIndex());
+	}
+
+	@Test
+	public void testMapIdMultithreads() throws IOException, InterruptedException {
+		m_factory.initialize("test");
+		int count = 50;
+		CountDownLatch latch = new CountDownLatch(count);
+		CountDownLatch mainLatch = new CountDownLatch(count);
+
+		for (int i = 0; i < count; i++) {
+			Threads.forGroup("cat").start(new CreateMapIdTask(i, latch, mainLatch));
+
+			latch.countDown();
+		}
+		mainLatch.await();
+
+		for (int j = 0; j < 50; j++) {
+			String domain = "domain_" + j;
+			String id = m_factory.getNextMapId(domain);
+
+			Assert.assertEquals(500000, MessageId.parse(id).getIndex());
+		}
+
 	}
 
 	@Test
@@ -147,6 +226,96 @@ public class MessageIdFactoryTest {
 			sb.setCharAt(len - 1, ch1);
 			offset++;
 			len--;
+		}
+	}
+
+	public class CreateMapIdTask implements Task {
+
+		private int m_thread;
+
+		private CountDownLatch m_latch;
+
+		private CountDownLatch m_mainLatch;
+
+		public CreateMapIdTask(int thread, CountDownLatch latch, CountDownLatch mainLatch) {
+			m_thread = thread;
+			m_latch = latch;
+			m_mainLatch = mainLatch;
+		}
+
+		@Override
+		public void run() {
+			try {
+				m_latch.await();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			try {
+				for (int i = 0; i < 10000; i++) {
+					for (int j = 0; j < 50; j++) {
+						String domain = "domain_" + j;
+
+						m_factory.getNextMapId(domain);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			m_mainLatch.countDown();
+		}
+
+		@Override
+		public String getName() {
+			return "create-message-" + m_thread;
+		}
+
+		@Override
+		public void shutdown() {
+		}
+	}
+
+	public class CreateMessageIdTask implements Task {
+
+		private int m_thread;
+
+		private CountDownLatch m_latch;
+
+		private CountDownLatch m_mainLatch;
+
+		public CreateMessageIdTask(int thread, CountDownLatch latch, CountDownLatch mainLatch) {
+			m_thread = thread;
+			m_latch = latch;
+			m_mainLatch = mainLatch;
+		}
+
+		@Override
+		public void run() {
+			try {
+				m_latch.await();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			try {
+				for (int i = 0; i < 10000; i++) {
+					String id = m_factory.getNextId();
+
+					MessageId.parse(id).getIndex();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			m_mainLatch.countDown();
+		}
+
+		@Override
+		public String getName() {
+			return "create-message-" + m_thread;
+		}
+
+		@Override
+		public void shutdown() {
 		}
 	}
 }
