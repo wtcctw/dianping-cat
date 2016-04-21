@@ -6,7 +6,9 @@ import java.util.List;
 import org.unidal.cat.message.LogviewProcessor;
 import org.unidal.cat.message.storage.hdfs.HdfsBucket;
 import org.unidal.cat.message.storage.hdfs.HdfsBucketManager;
+import org.unidal.cat.message.storage.hdfs.HdfsFileBuilder;
 import org.unidal.cat.message.storage.hdfs.HdfsIndex;
+import org.unidal.cat.message.storage.hdfs.HdfsTokenMapping;
 import org.unidal.cat.message.storage.internals.DefaultBlockDumper;
 import org.unidal.cat.message.storage.internals.DefaultBlockDumperManager;
 import org.unidal.cat.message.storage.internals.DefaultBlockWriter;
@@ -85,7 +87,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(HdfsIndex.class));
 
 		all.add(A(LocalFileBuilder.class));
+		all.add(A(HdfsFileBuilder.class));
 		all.add(A(LocalTokenMapping.class));
+		all.add(A(HdfsTokenMapping.class));
 		all.add(A(LocalTokenMappingManager.class));
 
 		all.add(A(DefaultStorageConfiguration.class));

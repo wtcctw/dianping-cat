@@ -15,12 +15,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.unidal.cat.message.storage.PathBuilder;
-import org.unidal.cat.message.storage.PathBuilder.FileType;
-import org.unidal.cat.message.storage.internals.ByteBufCache;
+import org.unidal.cat.message.storage.FileType;
 import org.unidal.cat.message.storage.Index;
+import org.unidal.cat.message.storage.PathBuilder;
 import org.unidal.cat.message.storage.TokenMapping;
 import org.unidal.cat.message.storage.TokenMappingManager;
+import org.unidal.cat.message.storage.internals.ByteBufCache;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
@@ -85,11 +85,6 @@ public class LocalIndex implements Index {
 		      | (0xff000000L & ((long) bytes[3] << 24)) | (0xff00000000L & ((long) bytes[4] << 32))
 		      | (0xff0000000000L & ((long) bytes[5] << 40)) | (0xff000000000000L & ((long) bytes[6] << 48))
 		      | (0xff00000000000000L & ((long) bytes[7] << 56));
-	}
-
-	@Override
-	public void initialize(String fileName) throws IOException {
-		throw new RuntimeException("unsupport operation");
 	}
 
 	@Override

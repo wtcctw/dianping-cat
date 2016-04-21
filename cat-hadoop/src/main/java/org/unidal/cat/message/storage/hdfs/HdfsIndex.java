@@ -2,6 +2,7 @@ package org.unidal.cat.message.storage.hdfs;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -9,7 +10,9 @@ import java.util.Map;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.unidal.cat.message.storage.FileType;
 import org.unidal.cat.message.storage.Index;
+import org.unidal.cat.message.storage.PathBuilder;
 import org.unidal.cat.message.storage.TokenMapping;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
@@ -29,6 +32,9 @@ public class HdfsIndex implements Index {
 
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
+	
+	@Inject("hdfs")
+	private PathBuilder m_bulider;
 
 	private TokenMapping m_mapping;
 
@@ -82,20 +88,15 @@ public class HdfsIndex implements Index {
 	}
 
 	@Override
-	public void initialize(String fileName) throws IOException {
-		String baseDir = m_serverConfigManager.getHdfsBaseDir(ServerConfigManager.DUMP_DIR);
+	public void initialize(String domain, String ip, int hour) throws IOException {
+		long timestamp = hour * 3600 * 1000L;
+		Date startTime = new Date(timestamp);
 		StringBuilder sb = new StringBuilder();
-
 		FileSystem fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
-		FSDataInputStream indexStream = fs.open(new Path(baseDir, fileName + ".map"));
+		String dataPath = m_bulider.getPath(domain, startTime, ip, FileType.MAPPING);
+		FSDataInputStream indexStream = fs.open(new Path(dataPath));
 
 		m_index.init(indexStream);
-		m_fileName = fileName;
-	}
-
-	@Override
-	public void initialize(String domain, String ip, int hour) throws IOException {
-		throw new RuntimeException("unsupport operation");
 	}
 
 	@Override

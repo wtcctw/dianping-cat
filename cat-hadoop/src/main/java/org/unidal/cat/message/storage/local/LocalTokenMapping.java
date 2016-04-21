@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.unidal.cat.message.storage.FileType;
 import org.unidal.cat.message.storage.PathBuilder;
-import org.unidal.cat.message.storage.PathBuilder.FileType;
 import org.unidal.cat.message.storage.TokenMapping;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;

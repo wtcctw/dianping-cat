@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -13,6 +14,8 @@ import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.unidal.cat.message.storage.Bucket;
+import org.unidal.cat.message.storage.FileType;
+import org.unidal.cat.message.storage.PathBuilder;
 import org.unidal.cat.message.storage.internals.DefaultBlock;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
@@ -33,6 +36,9 @@ public class HdfsBucket implements Bucket {
 
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
+
+	@Inject("hdfs")
+	private PathBuilder m_bulider;
 
 	private DataHelper m_data = new DataHelper();
 
@@ -88,7 +94,19 @@ public class HdfsBucket implements Bucket {
 
 	@Override
 	public void initialize(String domain, String ip, int hour) throws IOException {
-		throw new RuntimeException("unsupport operation");
+		long timestamp = hour * 3600 * 1000L;
+		Date startTime = new Date(timestamp);
+		StringBuilder sb = new StringBuilder();
+		FileSystem fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
+		String dataPath = m_bulider.getPath(domain, startTime, ip, FileType.DATA);
+		String indexPath = m_bulider.getPath(domain, startTime, ip, FileType.INDEX);
+
+		FSDataInputStream indexStream = fs.open(new Path(dataPath));
+		FSDataInputStream dataStream = fs.open(new Path(indexPath));
+
+		m_data.init(dataStream);
+		m_index.init(indexStream);
+
 	}
 
 	@Override

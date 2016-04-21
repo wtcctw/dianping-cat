@@ -180,6 +180,10 @@
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>org.unidal.cat.message.storage.PathBuilder</role>
+					<role-hint>hdfs</role-hint>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -244,6 +248,10 @@
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>org.unidal.cat.message.storage.PathBuilder</role>
+					<role-hint>hdfs</role-hint>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -257,6 +265,16 @@
 			</requirements>
 		</component>
 		<component>
+			<role>org.unidal.cat.message.storage.PathBuilder</role>
+			<role-hint>hdfs</role-hint>
+			<implementation>org.unidal.cat.message.storage.hdfs.HdfsFileBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.cat.message.storage.TokenMapping</role>
 			<role-hint>local</role-hint>
 			<implementation>org.unidal.cat.message.storage.local.LocalTokenMapping</implementation>
@@ -265,6 +283,21 @@
 				<requirement>
 					<role>org.unidal.cat.message.storage.PathBuilder</role>
 					<role-hint>local</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.TokenMapping</role>
+			<role-hint>hdfs</role-hint>
+			<implementation>org.unidal.cat.message.storage.hdfs.HdfsTokenMapping</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
+				</requirement>
+				<requirement>
+					<role>org.unidal.cat.message.storage.PathBuilder</role>
+					<role-hint>hdfs</role-hint>
 				</requirement>
 			</requirements>
 		</component>

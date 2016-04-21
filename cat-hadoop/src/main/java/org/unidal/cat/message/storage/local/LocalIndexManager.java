@@ -10,10 +10,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.codehaus.plexus.logging.Logger;
-import org.unidal.cat.message.storage.PathBuilder;
-import org.unidal.cat.message.storage.PathBuilder.FileType;
+import org.unidal.cat.message.storage.FileType;
 import org.unidal.cat.message.storage.Index;
 import org.unidal.cat.message.storage.IndexManager;
+import org.unidal.cat.message.storage.PathBuilder;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;

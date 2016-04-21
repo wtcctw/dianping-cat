@@ -3,6 +3,7 @@ package org.unidal.cat.message.storage.hdfs;
 import java.text.MessageFormat;
 import java.util.Date;
 
+import org.unidal.cat.message.storage.FileType;
 import org.unidal.cat.message.storage.PathBuilder;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;

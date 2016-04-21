@@ -18,8 +18,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.unidal.cat.message.storage.Bucket;
+import org.unidal.cat.message.storage.FileType;
 import org.unidal.cat.message.storage.PathBuilder;
-import org.unidal.cat.message.storage.PathBuilder.FileType;
 import org.unidal.cat.message.storage.internals.ByteBufCache;
 import org.unidal.cat.message.storage.internals.DefaultBlock;
 import org.unidal.lookup.annotation.Inject;
