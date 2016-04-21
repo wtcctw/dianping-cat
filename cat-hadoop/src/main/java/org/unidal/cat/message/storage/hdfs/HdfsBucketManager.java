@@ -62,31 +62,6 @@ public class HdfsBucketManager extends ContainerHolder implements BucketManager,
 		throw new RuntimeException("unsupport operation");
 	}
 
-	private void closeIdleBuckets() throws IOException {
-		long now = System.currentTimeMillis();
-		long hour = 3600 * 1000L;
-		Set<String> closed = new HashSet<String>();
-
-		for (Entry<String, HdfsBucket> entry : m_buckets.entrySet()) {
-			HdfsBucket bucket = entry.getValue();
-
-			if (now - bucket.getLastAccessTime() >= hour) {
-				try {
-					bucket.close();
-					closed.add(entry.getKey());
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-			}
-		}
-		for (String close : closed) {
-			HdfsBucket bucket = m_buckets.remove(close);
-
-			m_logger.info("Close bucket " + bucket);
-			release(bucket);
-		}
-	}
-
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -207,12 +182,37 @@ public class HdfsBucketManager extends ContainerHolder implements BucketManager,
 		return null;
 	}
 
-	class IdleChecker implements Task {
+	private class IdleChecker implements Task {
+		private void closeIdleBuckets() throws IOException {
+			long now = System.currentTimeMillis();
+			long hour = 3600 * 1000L;
+			Set<String> closed = new HashSet<String>();
+
+			for (Entry<String, HdfsBucket> entry : m_buckets.entrySet()) {
+				HdfsBucket bucket = entry.getValue();
+
+				if (now - bucket.getLastAccessTime() >= hour) {
+					try {
+						bucket.close();
+						closed.add(entry.getKey());
+					} catch (Exception e) {
+						Cat.logError(e);
+					}
+				}
+			}
+			for (String close : closed) {
+				HdfsBucket bucket = m_buckets.remove(close);
+
+				m_logger.info("Close bucket " + bucket);
+				release(bucket);
+			}
+		}
+
 		@Override
 		public String getName() {
 			return "HdfsBucketManager-IdleChecker";
 		}
-
+		
 		@Override
 		public void run() {
 			try {
