@@ -120,7 +120,7 @@ public interface MessageProducer {
 	/**
 	 * Create a new message id used in rpc message id map.
 	 * 
-	 * domain is the rpc server project name
+	 * domain is the rpc server 
 	 * @return new message id
 	 */
 	public String createMapMessageId(String domain);
