@@ -158,8 +158,6 @@ public class MessageIdFactory {
 				m_index = new AtomicInteger(index + 1000);
 
 				int mapLength = m_byteBuffer.getInt();
-				
-				System.err.println("index:"+m_index);
 
 				for (int i = 0; i < mapLength; i++) {
 					int domainLength = m_byteBuffer.getInt();
@@ -170,8 +168,6 @@ public class MessageIdFactory {
 
 					m_maps.put(new String(domainArray), new AtomicInteger(value + 1000));
 				}
-
-				System.out.println(m_maps);
 			} else {
 				m_index = new AtomicInteger(0);
 			}
