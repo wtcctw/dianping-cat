@@ -4,17 +4,15 @@
 			<property name="local-mode" value="false" />
 			<property name="job-machine" value="false" />
 			<property name="send-machine" value="false" />
-			<property name="alert-machine" value="false" />
-			<property name="hdfs-machine" value="true" />
-			<property name="remote-servers" value="127.0.0.1:2281,10.66.13.115:2281" />
-			<property name="ldap" value="ldap://ldap.dianpingoa.com/DC=dianpingoa,DC=com" />
+			<property name="alarm-machine" value="false" />
+			<property name="hdfs-enabled" value="true" />
+			<property name="remote-servers" value="10.1.101.84:8080,10.1.6.102:8080,10.1.6.126:8080,10.1.6.37:8080,10.1.6.145:8080,10.1.6.108:8080,10.1.6.128:8080,10.1.110.21:8080,10.1.110.23:8080,10.1.110.57:8080,10.1.110.117:8080,10.1.110.118:8080,10.3.16.40:8080,10.3.16.39:8080,10.3.16.38:8080,10.3.16.41:8080,10.3.40.10:8080,10.3.40.11:8080,10.1.110.72:8080" />
 		</properties>
 		<storage local-base-dir="/data/appdatas/cat/bucket/" max-hdfs-storage-time="15" local-report-storage-time="2" local-logivew-storage-time="1" har-mode="true">
-			<hdfs id="logview" max-size="128M" server-uri="hdfs://10.1.77.86/" base-dir="/user/cat/logview" />
-			<hdfs id="dump" max-size="128M" server-uri="hdfs://10.1.77.86/" base-dir="/user/cat/dump" />
-			<harfs id="dump" max-size="128M" server-uri="har://hdfs-10.1.77.86/" base-dir="/user/cat/dump"/>
+			<hdfs id="dump" max-size="128M" server-uri="hdfs://10.3.39.26/" base-dir="/user/cat/dump" />
+			<harfs id="dump" max-size="128M" server-uri="har://hdfs-10.3.39.26/" base-dir="/user/cat/dump"/>
 			<properties>
-				<property name="hadoop.security.authentication" value="kerberos" />
+				<property name="hadoop.security.authentication" value="false" />
 				<property name="dfs.namenode.kerberos.principal" value="hadoop/dev80.hadoop@DIANPING.COM" />
 				<property name="dfs.cat.kerberos.principal" value="cat@DIANPING.COM" />
 				<property name="dfs.cat.keytab.file" value="/data/appdatas/cat/cat.keytab" />
@@ -34,7 +32,7 @@
 			<property name="local-mode" value="true" />
 			<property name="job-machine" value="true" />
 			<property name="send-machine" value="true" />
-			<property name="alert-machine" value="true" />
+			<property name="alarm-machine" value="true" />
 		</properties>
 	</server>
 </server-config>
