@@ -32,7 +32,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	private MessageFinderManager m_finderManager;
 
 	private Logger m_logger;
-
+	
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
 		Threads.forGroup("cat").start(new Runnable() {
@@ -55,6 +55,11 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
+
+	@Override
+   public int getAnanlyzerCount() {
+		return 2;
+   }
 
 	@Override
 	public Object getReport(String domain) {
