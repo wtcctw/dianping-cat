@@ -1,8 +1,5 @@
 package com.dianping.cat.message.spi.codec;
 
-import com.dianping.cat.message.*;
-import com.dianping.cat.message.internal.*;
-
 import io.netty.buffer.ByteBuf;
 
 import java.io.UnsupportedEncodingException;
@@ -14,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.TimeZone;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -23,6 +19,17 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Named;
 
+import com.dianping.cat.message.Event;
+import com.dianping.cat.message.Heartbeat;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Metric;
+import com.dianping.cat.message.Trace;
+import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.DefaultEvent;
+import com.dianping.cat.message.internal.DefaultHeartbeat;
+import com.dianping.cat.message.internal.DefaultMetric;
+import com.dianping.cat.message.internal.DefaultTrace;
+import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
