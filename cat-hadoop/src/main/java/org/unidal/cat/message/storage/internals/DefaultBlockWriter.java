@@ -29,7 +29,7 @@ public class DefaultBlockWriter implements BlockWriter {
 
 	@Inject("local")
 	private IndexManager m_indexManager;
-	
+
 	@Inject
 	private ServerStatisticManager m_statisticManager;
 
@@ -109,8 +109,8 @@ public class DefaultBlockWriter implements BlockWriter {
 				if (block != null) {
 					long time = System.currentTimeMillis();
 					processBlock(ip, block);
-					long duration = System.currentTimeMillis()-time;
-					
+					long duration = System.currentTimeMillis() - time;
+
 					m_statisticManager.addBlockTime(duration);
 				}
 			}
@@ -143,5 +143,5 @@ public class DefaultBlockWriter implements BlockWriter {
 			}
 		}
 	}
-	
+
 }
