@@ -46,7 +46,7 @@ public class HdfsMessageConsumerFinder implements MessageConsumerFinder {
 	private Set<String> findfromHdfs(final String domain, int hour) {
 		Date start = new Date(hour * TimeHelper.ONE_HOUR);
 		MessageFormat format = new MessageFormat("/{0,date,yyyyMMdd}/{0,date,HH}");
-		String parent = format.format(new Object[] { start });
+		String parent = m_fileSystemManager.getBaseDir() + format.format(new Object[] { start });
 
 		FileSystem fs;
 
