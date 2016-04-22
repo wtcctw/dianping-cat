@@ -39,6 +39,11 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 	public void awaitTermination() throws InterruptedException {
 		int index = 0;
 
+		for (final BlockWriter writer : m_writers) {
+			writer.shutdown();
+			super.release(writer);
+		}
+
 		while (true && index < 100) {
 			boolean allEmpty = true;
 
@@ -53,14 +58,9 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 				break;
 			}
 
-			TimeUnit.MILLISECONDS.sleep(10);
+			TimeUnit.MILLISECONDS.sleep(100);
 
 			index++;
-		}
-
-		for (BlockWriter writer : m_writers) {
-			writer.shutdown();
-			super.release(writer);
 		}
 	}
 
@@ -77,7 +77,7 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 
 			if ((++m_failCount % 100) == 0) {
 				Cat.logError(new QueueFullException("Error when adding block to queue, fails: " + m_failCount));
-				m_logger.info("block dump queue is full " + m_failCount);
+				m_logger.info("block dump queue is full " + m_failCount + " index:" + index);
 			}
 		}
 	}

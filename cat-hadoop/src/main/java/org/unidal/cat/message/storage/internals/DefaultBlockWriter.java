@@ -116,7 +116,10 @@ public class DefaultBlockWriter implements BlockWriter {
 	@Override
 	public void shutdown() {
 		m_enabled.set(false);
+	}
 
+	@Override
+	public void await() {
 		try {
 			m_latch.await();
 		} catch (InterruptedException e) {
@@ -132,4 +135,5 @@ public class DefaultBlockWriter implements BlockWriter {
 			}
 		}
 	}
+	
 }

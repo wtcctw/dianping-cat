@@ -89,7 +89,7 @@ public class LocalBucket implements Bucket {
 	}
 
 	@Override
-	public void puts(ByteBuf data, Map<MessageId, Integer> mappings) throws IOException {
+	public synchronized void puts(ByteBuf data, Map<MessageId, Integer> mappings) throws IOException {
 		long dataOffset = m_data.getDataOffset();
 
 		m_data.write(data);
