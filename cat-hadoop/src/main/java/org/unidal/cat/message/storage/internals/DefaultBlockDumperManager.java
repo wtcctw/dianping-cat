@@ -10,7 +10,6 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.cat.message.storage.BlockDumper;
 import org.unidal.cat.message.storage.BlockDumperManager;
-import org.unidal.helper.Threads;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Named;
 
@@ -22,21 +21,15 @@ public class DefaultBlockDumperManager extends ContainerHolder implements LogEna
 
 	@Override
 	public void close(int hour) {
-		final BlockDumper dumper = m_map.remove(hour);
+		BlockDumper dumper = m_map.remove(hour);
 
 		if (dumper != null) {
-			Threads.forGroup("cat").start(new Runnable() {
-
-				@Override
-				public void run() {
-					try {
-						dumper.awaitTermination();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-			super.release(dumper);
+			try {
+				dumper.awaitTermination();
+				super.release(dumper);
+			} catch (InterruptedException e) {
+				// ignore it
+			}
 		}
 	}
 

@@ -81,6 +81,9 @@
 					<role>org.unidal.cat.message.storage.IndexManager</role>
 					<role-hint>local</role-hint>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

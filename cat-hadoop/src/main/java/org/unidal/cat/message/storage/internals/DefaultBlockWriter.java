@@ -19,6 +19,7 @@ import org.unidal.lookup.annotation.Named;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.statistic.ServerStatisticManager;
 
 @Named(type = BlockWriter.class, instantiationStrategy = Named.PER_LOOKUP)
 public class DefaultBlockWriter implements BlockWriter {
@@ -28,6 +29,9 @@ public class DefaultBlockWriter implements BlockWriter {
 
 	@Inject("local")
 	private IndexManager m_indexManager;
+	
+	@Inject
+	private ServerStatisticManager m_statisticManager;
 
 	private int m_index;
 
@@ -103,7 +107,11 @@ public class DefaultBlockWriter implements BlockWriter {
 				Block block = m_queue.poll(5, TimeUnit.MILLISECONDS);
 
 				if (block != null) {
+					long time = System.currentTimeMillis();
 					processBlock(ip, block);
+					long duration = System.currentTimeMillis()-time;
+					
+					m_statisticManager.addBlockTime(duration);
 				}
 			}
 		} catch (InterruptedException e) {

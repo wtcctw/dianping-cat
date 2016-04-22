@@ -79,6 +79,8 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 				Cat.logError(new QueueFullException("Error when adding block to queue, fails: " + m_failCount));
 				m_logger.info("block dump queue is full " + m_failCount + " index:" + index);
 			}
+		} else {
+			m_statisticManager.addBlockTotal(1);
 		}
 	}
 
