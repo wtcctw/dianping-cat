@@ -27,12 +27,12 @@ public class DefaultStorageConfiguration implements Initializable, StorageConfig
 	}
 
 	@Override
-	public void setBaseDataDir(String baseDataDir) {
-		m_baseDataDir = baseDataDir;
+	public void setBaseDataDir(File baseDataDir) {
+		m_baseDataDir = baseDataDir.getAbsolutePath() + '/';
 	}
 
 	@Override
-	public void setBaseDataDir(File baseDataDir) {
-		m_baseDataDir = baseDataDir.getAbsolutePath() + '/';
+	public void setBaseDataDir(String baseDataDir) {
+		m_baseDataDir = baseDataDir;
 	}
 }

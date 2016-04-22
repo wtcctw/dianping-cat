@@ -90,10 +90,6 @@
 			<implementation>org.unidal.cat.message.storage.hdfs.HdfsMessageConsumerFinder</implementation>
 			<requirements>
 				<requirement>
-					<role>org.unidal.cat.message.storage.PathBuilder</role>
-					<role-hint>hdfs</role-hint>
-				</requirement>
-				<requirement>
 					<role>org.unidal.cat.message.storage.hdfs.FileSystemManager</role>
 				</requirement>
 			</requirements>
@@ -158,6 +154,7 @@
 				</requirement>
 				<requirement>
 					<role>org.unidal.cat.message.storage.hdfs.MessageConsumerFinder</role>
+					<role-hint>hdfs</role-hint>
 				</requirement>
 			</requirements>
 		</component>
@@ -208,7 +205,8 @@
 					<role-hint>hdfs</role-hint>
 				</requirement>
 				<requirement>
-					<role>org.unidal.cat.message.storage.hdfs.HdfsTokenMappingManager</role>
+					<role>org.unidal.cat.message.storage.TokenMappingManager</role>
+					<role-hint>hdfs</role-hint>
 				</requirement>
 			</requirements>
 		</component>
@@ -224,6 +222,7 @@
 				</requirement>
 				<requirement>
 					<role>org.unidal.cat.message.storage.hdfs.MessageConsumerFinder</role>
+					<role-hint>hdfs</role-hint>
 				</requirement>
 			</requirements>
 		</component>

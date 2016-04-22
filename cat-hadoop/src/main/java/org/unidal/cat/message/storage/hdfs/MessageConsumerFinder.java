@@ -1,11 +1,9 @@
 package org.unidal.cat.message.storage.hdfs;
 
-import java.util.List;
-
-import com.dianping.cat.message.internal.MessageId;
+import java.util.Set;
 
 public interface MessageConsumerFinder {
 
-	public List<String> findConsumerIps(MessageId id);
+	public Set<String> findConsumerIps(String domain, int hour);
 
 }

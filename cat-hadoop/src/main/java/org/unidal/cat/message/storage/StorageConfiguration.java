@@ -7,7 +7,7 @@ public interface StorageConfiguration {
 
 	public boolean isLocalMode();
 
-	public void setBaseDataDir(String baseDataDir);
-	
 	public void setBaseDataDir(File baseDataDir);
+	
+	public void setBaseDataDir(String baseDataDir);
 }

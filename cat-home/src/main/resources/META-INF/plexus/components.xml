@@ -2764,8 +2764,10 @@
 					<field-name>m_plainText</field-name>
 				</requirement>
 				<requirement>
-					<role>org.unidal.cat.message.storage.BucketManager</role>
-					<role-hint>hdfs</role-hint>
+					<role>org.unidal.cat.message.storage.hdfs.HdfsBucketManager</role>
+				</requirement>
+				<requirement>
+					<role>org.unidal.cat.message.storage.hdfs.HdfsIndexManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>

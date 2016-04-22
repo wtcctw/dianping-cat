@@ -31,6 +31,10 @@ public class FileSystemManager implements Initializable {
 		return m_configManager.getHarfsBaseDir(DUMP);
 	}
 
+	public Configuration getConfig() {
+		return m_config;
+	}
+
 	public FileSystem getFileSystem() throws IOException {
 		String serverUri = m_configManager.getHdfsServerUri(DUMP);
 
@@ -101,10 +105,6 @@ public class FileSystemManager implements Initializable {
 		} else {
 			m_config = new Configuration();
 		}
-	}
-
-	public Configuration getConfig() {
-		return m_config;
 	}
 
 }

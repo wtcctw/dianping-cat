@@ -460,12 +460,15 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		m_logger.info("CAT server is running with hdfs," + isHdfsOn());
 		m_logger.info("CAT server is running with alert," + isAlertMachine());
 		m_logger.info("CAT server is running with job," + isJobMachine());
-		m_logger.info(m_server.toString());
 
-		if (isLocalMode()) {
-			m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 5);
-		} else {
-			m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 100);
+		if (m_server != null) {
+			m_logger.info(m_server.toString());
+
+			if (isLocalMode()) {
+				m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 5);
+			} else {
+				m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 100);
+			}
 		}
 	}
 

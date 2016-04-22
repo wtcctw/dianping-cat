@@ -108,13 +108,13 @@ public class HdfsTokenMapping implements TokenMapping {
 	public int map(String token) throws IOException {
 		throw new RuntimeException("unsupport operation");
 	}
-	
+
 	@Override
 	public void open(int hour, String ip) throws IOException {
 		String path = m_bulider.getPath(null, new Date(hour * TimeHelper.ONE_HOUR), ip, FileType.TOKEN);
 		FileSystem fs = m_manager.getFileSystem();
 		m_file = fs.open(new Path(path));
-		
+
 		m_data = Unpooled.buffer(BLOCK_SIZE);
 		m_block = 0;
 
@@ -140,5 +140,5 @@ public class HdfsTokenMapping implements TokenMapping {
 			m_map.put(MAGIC_CODE, 0);
 		}
 	}
-	
+
 }
