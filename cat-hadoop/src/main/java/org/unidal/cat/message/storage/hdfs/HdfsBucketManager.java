@@ -3,9 +3,9 @@ package org.unidal.cat.message.storage.hdfs;
 import io.netty.buffer.ByteBuf;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -37,7 +37,7 @@ public class HdfsBucketManager extends ContainerHolder implements Initializable,
 	@Inject(PlainTextMessageCodec.ID)
 	private MessageCodec m_plainTextCodec;
 
-	@Inject
+	@Inject(value = "hdfs")
 	private MessageConsumerFinder m_consumerFinder;
 
 	private Map<String, HdfsBucket> m_buckets = new LinkedHashMap<String, HdfsBucket>() {
@@ -63,12 +63,13 @@ public class HdfsBucketManager extends ContainerHolder implements Initializable,
 
 	public MessageTree loadMessage(MessageId id) {
 		if (m_configManager.isHdfsOn()) {
-			Transaction t = Cat.newTransaction("BucketService", getClass().getSimpleName());
+			Transaction t = Cat.newTransaction("Hdfs", getClass().getSimpleName());
 			t.setStatus(Message.SUCCESS);
 
 			try {
-				List<String> ips = m_consumerFinder.findConsumerIps(id);
+				Set<String> ips = m_consumerFinder.findConsumerIps(id.getDomain(), id.getHour());
 
+				System.err.println("messageid" + ips);
 				t.addData(ips.toString());
 
 				return readMessage(id, ips);
@@ -86,7 +87,7 @@ public class HdfsBucketManager extends ContainerHolder implements Initializable,
 		return null;
 	}
 
-	private MessageTree readMessage(MessageId id, List<String> ips) {
+	private MessageTree readMessage(MessageId id, Set<String> ips) {
 		for (String ip : ips) {
 			String domain = id.getDomain();
 			int hour = id.getHour();

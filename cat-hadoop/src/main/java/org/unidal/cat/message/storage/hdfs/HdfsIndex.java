@@ -14,6 +14,7 @@ import org.unidal.cat.message.storage.FileType;
 import org.unidal.cat.message.storage.Index;
 import org.unidal.cat.message.storage.PathBuilder;
 import org.unidal.cat.message.storage.TokenMapping;
+import org.unidal.cat.message.storage.TokenMappingManager;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
@@ -35,8 +36,8 @@ public class HdfsIndex implements Index {
 	@Inject("hdfs")
 	private PathBuilder m_bulider;
 
-	@Inject
-	private HdfsTokenMappingManager m_hdfsTokenManager;
+	@Inject("hdfs")
+	private TokenMappingManager m_hdfsTokenManager;
 
 	private TokenMapping m_mapping;
 
@@ -281,7 +282,12 @@ public class HdfsIndex implements Index {
 			int flag = (s3 >> 14) & 0x03;
 			int hour = currentHour + (flag == 3 ? -1 : flag);
 
-			return new MessageId(domain, ipAddressInHex, hour, index);
+			if (domain != null && ipAddressInHex != null) {
+				return new MessageId(domain, ipAddressInHex, hour, index);
+			} else {
+				return null;
+			}
+
 		}
 	}
 

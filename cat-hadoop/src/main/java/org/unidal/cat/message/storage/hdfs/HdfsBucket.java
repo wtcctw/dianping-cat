@@ -86,12 +86,11 @@ public class HdfsBucket implements Bucket {
 		String dataPath = m_bulider.getPath(domain, startTime, ip, FileType.DATA);
 		String indexPath = m_bulider.getPath(domain, startTime, ip, FileType.INDEX);
 
-		FSDataInputStream indexStream = fs.open(new Path(dataPath));
 		FSDataInputStream dataStream = fs.open(new Path(indexPath));
+		FSDataInputStream indexStream = fs.open(new Path(dataPath));
 
 		m_data.init(dataStream);
 		m_index.init(indexStream);
-
 	}
 
 	@Override

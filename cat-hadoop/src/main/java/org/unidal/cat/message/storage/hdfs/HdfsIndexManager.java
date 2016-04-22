@@ -1,9 +1,9 @@
 package org.unidal.cat.message.storage.hdfs;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -29,7 +29,7 @@ public class HdfsIndexManager extends ContainerHolder implements Initializable, 
 	@Inject
 	private FileSystemManager m_fileSystemManager;
 
-	@Inject
+	@Inject(value = "hdfs")
 	private MessageConsumerFinder m_consumerFinder;
 
 	private Map<String, HdfsIndex> m_buckets = new LinkedHashMap<String, HdfsIndex>() {
@@ -53,17 +53,17 @@ public class HdfsIndexManager extends ContainerHolder implements Initializable, 
 	public void initialize() throws InitializationException {
 	}
 
-	public MessageId loadMessage(MessageId messageId) {
+	public MessageId loadMessage(MessageId id) {
 		if (m_configManager.isHdfsOn()) {
-			Transaction t = Cat.newTransaction("BucketService", getClass().getSimpleName());
+			Transaction t = Cat.newTransaction("Hdfs", getClass().getSimpleName());
 			t.setStatus(Message.SUCCESS);
 
 			try {
-				List<String> ips = m_consumerFinder.findConsumerIps(messageId);
+				Set<String> ips = m_consumerFinder.findConsumerIps(id.getDomain(), id.getHour());
 
 				t.addData(ips.toString());
 
-				return readMessage(messageId, ips);
+				return readMessage(id, ips);
 			} catch (RuntimeException e) {
 				t.setStatus(e);
 				Cat.logError(e);
@@ -78,7 +78,7 @@ public class HdfsIndexManager extends ContainerHolder implements Initializable, 
 		return null;
 	}
 
-	private MessageId readMessage(MessageId id, List<String> ips) {
+	private MessageId readMessage(MessageId id, Set<String> ips) {
 		for (String ip : ips) {
 			String domain = id.getDomain();
 			int hour = id.getHour();
