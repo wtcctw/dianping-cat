@@ -36,7 +36,7 @@ public class DefaultMessageTree implements MessageTree {
 
 	private String m_rootMessageId;
 
-	private String m_sessionToken;
+	private String m_mapId;
 
 	private String m_threadGroupName;
 
@@ -73,7 +73,7 @@ public class DefaultMessageTree implements MessageTree {
 		tree.setMessageId(m_messageId);
 		tree.setParentMessageId(m_parentMessageId);
 		tree.setRootMessageId(m_rootMessageId);
-		tree.setSessionToken(m_sessionToken);
+		tree.setMessageMapId(m_mapId);
 		tree.setThreadGroupName(m_threadGroupName);
 		tree.setThreadId(m_threadId);
 		tree.setThreadName(m_threadName);
@@ -136,6 +136,11 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
+	public String getMapMessageId() {
+		return m_mapId;
+	}
+
+	@Override
 	public Message getMessage() {
 		return m_message;
 	}
@@ -157,11 +162,6 @@ public class DefaultMessageTree implements MessageTree {
 	@Override
 	public String getRootMessageId() {
 		return m_rootMessageId;
-	}
-
-	@Override
-	public String getSessionToken() {
-		return m_sessionToken;
 	}
 
 	@Override
@@ -228,6 +228,11 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
+	public void setMessageMapId(String mapId) {
+		m_mapId = mapId;
+	}
+
+	@Override
 	public void setParentMessageId(String parentMessageId) {
 		if (parentMessageId != null && parentMessageId.length() > 0) {
 			m_parentMessageId = parentMessageId;
@@ -244,11 +249,6 @@ public class DefaultMessageTree implements MessageTree {
 		if (rootMessageId != null && rootMessageId.length() > 0) {
 			m_rootMessageId = rootMessageId;
 		}
-	}
-
-	@Override
-	public void setSessionToken(String sessionToken) {
-		m_sessionToken = sessionToken;
 	}
 
 	@Override

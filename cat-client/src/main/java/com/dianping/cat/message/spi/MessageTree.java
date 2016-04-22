@@ -30,6 +30,8 @@ public interface MessageTree extends Cloneable {
 
 	public String getIpAddress();
 
+	public String getMapMessageId();
+
 	public Message getMessage();
 
 	public String getMessageId();
@@ -40,8 +42,6 @@ public interface MessageTree extends Cloneable {
 
 	public String getRootMessageId();
 
-	public String getSessionToken();
-
 	public String getThreadGroupName();
 
 	public String getThreadId();
@@ -51,6 +51,8 @@ public interface MessageTree extends Cloneable {
 	public List<Transaction> getTransactions();
 
 	public boolean isProcessLoss();
+
+	public void setDiscard(boolean discard);
 
 	public void setDomain(String domain);
 
@@ -64,15 +66,13 @@ public interface MessageTree extends Cloneable {
 
 	public void setMessageId(String messageId);
 
+	public void setMessageMapId(String mapId);
+
 	public void setParentMessageId(String parentMessageId);
 
 	public void setProcessLoss(boolean loss);
 
 	public void setRootMessageId(String rootMessageId);
-
-	public void setDiscard(boolean discard);
-
-	public void setSessionToken(String sessionToken);
 
 	public void setThreadGroupName(String name);
 

@@ -53,7 +53,6 @@ public class HdfsBucketTest extends ComponentTestCase {
 
 			if (byteBuf != null) {
 				MessageTree tree = m_plainText.decode(byteBuf);
-
 				System.out.println(tree.toString());
 
 				m_plainText.reset();

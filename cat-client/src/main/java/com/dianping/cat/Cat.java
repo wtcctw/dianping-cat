@@ -440,7 +440,7 @@ public class Cat {
 			}
 			// use session token first TODO
 			if (mapId != null) {
-				tree.setSessionToken(mapId);
+				tree.setMessageMapId(mapId);
 			}
 		} catch (Exception e) {
 			errorHandler(e);
