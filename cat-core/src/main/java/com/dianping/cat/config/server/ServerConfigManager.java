@@ -1,6 +1,7 @@
 package com.dianping.cat.config.server;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import org.unidal.helper.Splitters;
 import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
+import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -472,10 +474,11 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		}
 	}
 
-	private void refreshServer() {
+	private void refreshServer() throws SAXException, IOException {
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-		Server defaultServer = m_config.findServer(DEFAULT);
-		Server server = m_config.findServer(ip);
+		ServerConfig config = DefaultSaxParser.parse(m_config.toString());
+		Server defaultServer = config.findServer(DEFAULT);
+		Server server = config.findServer(ip);
 
 		if (server != null && defaultServer != null) {
 			ServerConfigVisitor visitor = new ServerConfigVisitor(server);
@@ -494,6 +497,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 			config.setName(CONFIG_NAME);
 			config.setContent(m_config.toString());
 			m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
+			refreshServer();
 		} catch (Exception e) {
 			Cat.logError(e);
 			return false;

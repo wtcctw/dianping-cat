@@ -15,4 +15,7 @@ public class ServerConstants {
 	public final static String HDFS_ENABLED = "hdfs-enabled";
 
 	public final static String LDAP = "ldap";
+
+	public static final String CONFIG_FILE = "/data/appdatas/cat/server.xml";
+
 }
