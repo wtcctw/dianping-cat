@@ -112,7 +112,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		sb.append(tree.getThreadGroupName()).append(" ").append(tree.getThreadId()).append(" ");
 		sb.append(tree.getThreadName()).append(" ").append(tree.getMessageId()).append(" ");
 		sb.append(tree.getParentMessageId()).append(" ").append(tree.getRootMessageId()).append(" ");
-		sb.append(tree.getSessionToken()).append(" ");
+		sb.append(tree.getMapMessageId()).append(" ");
 		sb.append("</td></tr>");
 		sb.append("<tr><td>");
 

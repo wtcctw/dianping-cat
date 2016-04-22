@@ -86,7 +86,7 @@ public class NullMessageTree implements MessageTree {
 	}
 
 	@Override
-	public String getSessionToken() {
+	public String getMapMessageId() {
 		return UNKNOWN;
 	}
 
@@ -160,7 +160,7 @@ public class NullMessageTree implements MessageTree {
 	}
 
 	@Override
-	public void setSessionToken(String sessionToken) {
+	public void setMessageMapId(String sessionToken) {
 
 	}
 
