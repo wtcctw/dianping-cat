@@ -90,10 +90,6 @@
 			<implementation>org.unidal.cat.message.storage.hdfs.HdfsMessageConsumerFinder</implementation>
 			<requirements>
 				<requirement>
-					<role>org.unidal.cat.message.storage.PathBuilder</role>
-					<role-hint>hdfs</role-hint>
-				</requirement>
-				<requirement>
 					<role>org.unidal.cat.message.storage.hdfs.FileSystemManager</role>
 				</requirement>
 			</requirements>
