@@ -68,7 +68,6 @@ public class HdfsUploader implements LogEnabled, Initializable {
 	}
 
 	private FSDataOutputStream makeHdfsOutputStream(String path) throws IOException {
-		StringBuilder baseDir = new StringBuilder(32);
 		FileSystem fs = m_fileSystemManager.getFileSystem(ServerConfigManager.DUMP_DIR, baseDir);
 		Path file = new Path(baseDir.toString(), path);
 		FSDataOutputStream out;

@@ -8,6 +8,7 @@ import org.unidal.cat.message.storage.hdfs.HdfsBucket;
 import org.unidal.cat.message.storage.hdfs.HdfsBucketManager;
 import org.unidal.cat.message.storage.hdfs.HdfsFileBuilder;
 import org.unidal.cat.message.storage.hdfs.HdfsIndex;
+import org.unidal.cat.message.storage.hdfs.HdfsMessageConsumerFinder;
 import org.unidal.cat.message.storage.hdfs.HdfsTokenMapping;
 import org.unidal.cat.message.storage.internals.DefaultBlockDumper;
 import org.unidal.cat.message.storage.internals.DefaultBlockDumperManager;
@@ -76,6 +77,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(DefaultBlockDumperManager.class));
 		all.add(A(DefaultBlockDumper.class));
 		all.add(A(DefaultBlockWriter.class));
+		
+		all.add(A(HdfsMessageConsumerFinder.class));
+		
 
 		all.add(A(LocalBucket.class));
 		all.add(A(LocalBucketManager.class));

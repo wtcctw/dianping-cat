@@ -142,8 +142,6 @@ public class HdfsTokenMapping implements TokenMapping {
 			m_tokens.add(MAGIC_CODE);
 			m_map.put(MAGIC_CODE, 0);
 		}
-	
-		
 	}
 	
 }
