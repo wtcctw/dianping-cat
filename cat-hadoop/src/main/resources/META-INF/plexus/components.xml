@@ -85,30 +85,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>org.unidal.cat.message.storage.hdfs.HdfsUploader</role>
-			<implementation>org.unidal.cat.message.storage.hdfs.HdfsUploader</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.cat.message.storage.hdfs.FileSystemManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>org.unidal.cat.message.storage.hdfs.LogviewProcessor</role>
-			<implementation>org.unidal.cat.message.storage.hdfs.LogviewProcessor</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.cat.message.storage.hdfs.HdfsUploader</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>org.unidal.cat.message.storage.hdfs.MessageConsumerFinder</role>
 			<role-hint>hdfs</role-hint>
 			<implementation>org.unidal.cat.message.storage.hdfs.HdfsMessageConsumerFinder</implementation>
@@ -167,8 +143,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>org.unidal.cat.message.storage.BucketManager</role>
-			<role-hint>hdfs</role-hint>
+			<role>org.unidal.cat.message.storage.hdfs.HdfsBucketManager</role>
 			<implementation>org.unidal.cat.message.storage.hdfs.HdfsBucketManager</implementation>
 			<requirements>
 				<requirement>
@@ -232,6 +207,24 @@
 					<role>org.unidal.cat.message.storage.PathBuilder</role>
 					<role-hint>hdfs</role-hint>
 				</requirement>
+				<requirement>
+					<role>org.unidal.cat.message.storage.hdfs.HdfsTokenMappingManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.hdfs.HdfsIndexManager</role>
+			<implementation>org.unidal.cat.message.storage.hdfs.HdfsIndexManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>org.unidal.cat.message.storage.hdfs.FileSystemManager</role>
+				</requirement>
+				<requirement>
+					<role>org.unidal.cat.message.storage.hdfs.MessageConsumerFinder</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -287,8 +280,29 @@
 			<implementation>org.unidal.cat.message.storage.local.LocalTokenMappingManager</implementation>
 		</component>
 		<component>
+			<role>org.unidal.cat.message.storage.TokenMappingManager</role>
+			<role-hint>hdfs</role-hint>
+			<implementation>org.unidal.cat.message.storage.hdfs.HdfsTokenMappingManager</implementation>
+		</component>
+		<component>
 			<role>org.unidal.cat.message.storage.StorageConfiguration</role>
 			<implementation>org.unidal.cat.message.storage.internals.DefaultStorageConfiguration</implementation>
+		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.internals.ByteBufCache</role>
+			<implementation>org.unidal.cat.message.storage.internals.DefaultByteBufCache</implementation>
+		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.hdfs.HdfsUploader</role>
+			<implementation>org.unidal.cat.message.storage.hdfs.HdfsUploader</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.cat.message.storage.hdfs.FileSystemManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>org.unidal.cat.message.storage.hdfs.LogviewProcessor</role>
@@ -301,14 +315,6 @@
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>org.unidal.cat.message.storage.internals.ByteBufCache</role>
-			<implementation>org.unidal.cat.message.storage.internals.DefaultByteBufCache</implementation>
-		</component>
-		<component>
-			<role>org.unidal.cat.message.storage.StorageConfiguration</role>
-			<implementation>org.unidal.cat.message.storage.internals.DefaultStorageConfiguration</implementation>
 		</component>
 	</components>
 </plexus>

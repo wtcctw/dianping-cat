@@ -20,7 +20,6 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.spi.MessageTree;
 
 @Named(type = BucketManager.class, value = "local")
 public class LocalBucketManager extends ContainerHolder implements BucketManager, LogEnabled {
@@ -112,8 +111,4 @@ public class LocalBucketManager extends ContainerHolder implements BucketManager
 		return bucket;
 	}
 
-	@Override
-	public MessageTree loadMessage(String messageId) {
-		throw new RuntimeException("unsupport operation");
-	}
 }

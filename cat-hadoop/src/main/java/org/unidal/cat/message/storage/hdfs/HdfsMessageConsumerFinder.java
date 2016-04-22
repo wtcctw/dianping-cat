@@ -29,9 +29,9 @@ public class HdfsMessageConsumerFinder implements MessageConsumerFinder {
 	public List<String> findConsumerIps(MessageId id) {
 		final String domain = id.getDomain();
 		Date start = new Date(id.getTimestamp());
-		String parent = m_pathBuilder.getPath(domain, start, null, FileType.PARENT);
+		String parent = m_pathBuilder.getPath(domain, start, id.getIpAddress(), FileType.PARENT);
 		FileSystem fs;
-		
+
 		try {
 			fs = m_fileSystemManager.getFileSystem();
 		} catch (IOException e) {

@@ -31,9 +31,12 @@ public class HdfsIndex implements Index {
 
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
-	
+
 	@Inject("hdfs")
 	private PathBuilder m_bulider;
+
+	@Inject
+	private HdfsTokenMappingManager m_hdfsTokenManager;
 
 	private TokenMapping m_mapping;
 
@@ -95,6 +98,7 @@ public class HdfsIndex implements Index {
 		FSDataInputStream indexStream = fs.open(new Path(dataPath));
 
 		m_index.init(indexStream);
+		m_mapping = m_hdfsTokenManager.getTokenMapping(hour, ip);
 	}
 
 	@Override
