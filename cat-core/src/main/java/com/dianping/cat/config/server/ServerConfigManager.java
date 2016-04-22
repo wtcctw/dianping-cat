@@ -477,7 +477,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	private void refreshServer() throws SAXException, IOException {
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		ServerConfig config = DefaultSaxParser.parse(m_config.toString());
-		Server defaultServer = config.findServer(DEFAULT);
+		Server defaultServer = config.findServer(DEFAULT).setId(ip);
 		Server server = config.findServer(ip);
 
 		if (server != null && defaultServer != null) {
