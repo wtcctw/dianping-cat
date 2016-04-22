@@ -7,9 +7,7 @@ public enum FileType {
 
 	INDEX("idx"),
 
-	DATA("dat"),
-	
-	PARENT("parent");
+	DATA("dat");
 
 	private String m_extension;
 

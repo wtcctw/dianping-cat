@@ -1,6 +1,7 @@
 package org.unidal.cat.message.storage.hdfs;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -10,8 +11,6 @@ import java.util.Set;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathFilter;
-import org.unidal.cat.message.storage.FileType;
-import org.unidal.cat.message.storage.PathBuilder;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
@@ -20,9 +19,6 @@ import com.dianping.cat.helper.TimeHelper;
 
 @Named(type = MessageConsumerFinder.class, value = "hdfs")
 public class HdfsMessageConsumerFinder implements MessageConsumerFinder {
-
-	@Inject("hdfs")
-	private PathBuilder m_pathBuilder;
 
 	@Inject
 	private FileSystemManager m_fileSystemManager;
@@ -49,7 +45,9 @@ public class HdfsMessageConsumerFinder implements MessageConsumerFinder {
 
 	private Set<String> findfromHdfs(final String domain, int hour) {
 		Date start = new Date(hour * TimeHelper.ONE_HOUR);
-		String parent = m_pathBuilder.getPath(domain, start, null, FileType.PARENT);
+		MessageFormat format = new MessageFormat("/{0,date,yyyyMMdd}/{0,date,HH}");
+		String parent = format.format(new Object[] { start });
+
 		FileSystem fs;
 
 		try {

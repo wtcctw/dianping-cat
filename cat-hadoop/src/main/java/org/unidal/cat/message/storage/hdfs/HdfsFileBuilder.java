@@ -24,10 +24,6 @@ public class HdfsFileBuilder implements PathBuilder {
 			format = new MessageFormat("/{0,date,yyyyMMdd}/{0,date,HH}/{2}.{3}");
 			path = format.format(new Object[] { startTime, null, ip, type.getExtension() });
 			break;
-		case PARENT:
-			format = new MessageFormat("/{0,date,yyyyMMdd}/{0,date,HH}");
-			path = format.format(new Object[] { startTime });
-			break;
 		default:
 			format = new MessageFormat("/{0,date,yyyyMMdd}/{0,date,HH}/{1}-{2}.{3}");
 			path = format.format(new Object[] { startTime, domain, ip, type.getExtension() });
