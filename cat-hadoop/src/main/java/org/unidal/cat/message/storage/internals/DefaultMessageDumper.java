@@ -24,6 +24,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.CatConstants;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
@@ -45,6 +46,8 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 
 	@Inject
 	private ServerStatisticManager m_statisticManager;
+
+	private long m_total;
 
 	private List<BlockingQueue<MessageTree>> m_queues = new ArrayList<BlockingQueue<MessageTree>>();
 
@@ -105,13 +108,13 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 
 	private int getIndex(String domain) {
 		int hash = Math.abs(domain.hashCode());
-		int index = hash % (m_processors.size() - 1); // last one for message overflow
+		int index = hash % (m_processors.size()); 
 
 		return index;
 	}
 
 	public void initialize(int hour) {
-		int processThreads = 12;
+		int processThreads = 24;
 
 		for (int i = 0; i < processThreads; i++) {
 			BlockingQueue<MessageTree> queue = new ArrayBlockingQueue<MessageTree>(10000);
@@ -131,20 +134,22 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 		String domain = id.getDomain();
 		int index = getIndex(domain);
 		BlockingQueue<MessageTree> queue = m_queues.get(index);
+		boolean success = queue.offer(tree);
+		
+		if (!success) {
+			m_statisticManager.addMessageDumpLoss(1);
 
-		if (!queue.offer(tree)) { // overflow
-			BlockingQueue<MessageTree> last = m_queues.get(m_queues.size() - 1);
-			boolean success = last.offer(tree);
+			if ((m_failCount.incrementAndGet() % 100) == 0) {
+				Cat.logError(new QueueFullException("Error when adding message to queue, fails: " + m_failCount));
 
-			if (!success) {
-				m_statisticManager.addMessageDumpLoss(1);
-
-				if ((m_failCount.incrementAndGet() % 100) == 0) {
-					Cat.logError(new QueueFullException("Error when adding message to queue, fails: " + m_failCount));
-
-					m_logger.info("message tree queue is full " + m_failCount);
-				}
+				m_logger.info("message tree queue is full " + m_failCount);
 				// tree.getBuffer().release();
+			} else {
+				m_statisticManager.addMessageSize(domain, tree.getBuffer().readableBytes());
+
+				if ((++m_total) % CatConstants.SUCCESS_COUNT == 0) {
+					m_statisticManager.addMessageDump(CatConstants.SUCCESS_COUNT);
+				}
 			}
 		}
 	}
