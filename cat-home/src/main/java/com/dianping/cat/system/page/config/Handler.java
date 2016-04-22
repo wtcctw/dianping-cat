@@ -111,6 +111,7 @@ public class Handler implements PageHandler<Context> {
 		case ALERT_SENDER_CONFIG_UPDATE:
 		case STORAGE_GROUP_CONFIG_UPDATE:
 		case SERVER_FILTER_CONFIG_UPDATE:
+		case SERVER_CONFIG_UPDATE:
 		case ALL_REPORT_CONFIG:
 		case SAMPLE_CONFIG_UPDATE:
 			m_globalConfigProcessor.process(action, payload, model);
