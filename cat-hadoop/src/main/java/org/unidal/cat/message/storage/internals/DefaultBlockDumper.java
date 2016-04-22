@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -94,7 +95,7 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 		int threads = 10;
 
 		for (int i = 0; i < threads; i++) {
-			BlockingQueue<Block> queue = new ArrayBlockingQueue<Block>(10000);
+			BlockingQueue<Block> queue = new LinkedBlockingQueue<Block>(10000);
 			BlockWriter writer = lookup(BlockWriter.class);
 
 			m_queues.add(queue);

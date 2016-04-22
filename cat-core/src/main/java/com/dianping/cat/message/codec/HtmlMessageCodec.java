@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -498,7 +499,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 	protected static class DateHelper {
 		private static final String DATE_PATTERN = "HH:mm:ss.SSS";
 
-		private BlockingQueue<SimpleDateFormat> m_queue = new ArrayBlockingQueue<SimpleDateFormat>(20);
+		private BlockingQueue<SimpleDateFormat> m_queue = new LinkedBlockingQueue<SimpleDateFormat>(20);
 
 		public String format(long timestamp) {
 			SimpleDateFormat format = m_queue.poll();

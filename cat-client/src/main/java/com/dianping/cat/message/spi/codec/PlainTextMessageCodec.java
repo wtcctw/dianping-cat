@@ -17,6 +17,7 @@ import java.util.TimeZone;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -546,7 +547,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	 * Thread safe date helper class. DateFormat is NOT thread safe.
 	 */
 	protected static class DateHelper {
-		private BlockingQueue<SimpleDateFormat> m_formats = new ArrayBlockingQueue<SimpleDateFormat>(20);
+		private BlockingQueue<SimpleDateFormat> m_formats = new LinkedBlockingQueue<SimpleDateFormat>(20);
 
 		private Map<String, Long> m_map = new ConcurrentHashMap<String, Long>();
 

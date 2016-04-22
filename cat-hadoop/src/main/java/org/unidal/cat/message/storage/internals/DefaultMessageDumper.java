@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -123,7 +124,7 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 		int processThreads = 24;
 
 		for (int i = 0; i < processThreads; i++) {
-			BlockingQueue<MessageTree> queue = new ArrayBlockingQueue<MessageTree>(10000);
+			BlockingQueue<MessageTree> queue = new LinkedBlockingQueue<MessageTree>(10000);
 			MessageProcessor processor = lookup(MessageProcessor.class);
 
 			m_queues.add(queue);
