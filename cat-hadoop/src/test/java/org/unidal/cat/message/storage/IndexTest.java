@@ -28,10 +28,11 @@ public class IndexTest extends ComponentTestCase {
 
 	@Test
 	public void testMapAndLookups() throws Exception {
+		int total = 15000;
 		IndexManager manager = lookup(IndexManager.class, "local");
 		Index index = manager.getIndex("from", m_ip, 403899, true);
 
-		for (int i = 1; i < 15000000; i++) {
+		for (int i = 1; i < total; i++) {
 			MessageId from = MessageId.parse("from-0a260014-403899-" + i);
 			MessageId to = MessageId.parse("to-0a260015-403899-" + i);
 
@@ -39,7 +40,7 @@ public class IndexTest extends ComponentTestCase {
 		}
 
 		index = manager.getIndex("from", m_ip, 403899, true);
-		for (int i = 1; i < 15000000; i++) {
+		for (int i = 1; i < total; i++) {
 			MessageId from = MessageId.parse("from-0a260014-403899-" + i);
 			MessageId expected = MessageId.parse("to-0a260015-403899-" + i);
 

@@ -20,8 +20,6 @@ IndexTest.class,
 
 TokenMappingTest.class,
 
-IndexTest.class,
-
 })
 public class AllMessageTests {
 

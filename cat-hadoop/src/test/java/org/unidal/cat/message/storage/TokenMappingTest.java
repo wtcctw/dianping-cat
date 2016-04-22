@@ -72,7 +72,6 @@ public class TokenMappingTest extends ComponentTestCase {
 		}
 	}
 
-	@Test
 	public void testMuliThreadMap() throws IOException {
 		int total = 50;
 		CountDownLatch latch = new CountDownLatch(total);

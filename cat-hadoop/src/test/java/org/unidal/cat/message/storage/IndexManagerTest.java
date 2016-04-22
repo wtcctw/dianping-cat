@@ -16,8 +16,7 @@ public class IndexManagerTest extends ComponentTestCase {
 		IndexManager manager = lookup(IndexManager.class, "local");
 		MessageId id = MessageId.parse("mock-0a260014-403890-12345");
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-		
-		Assert.assertNull(manager.getIndex(id.getDomain(),ip, id.getHour(), false));
-		Assert.assertNotNull(manager.getIndex(id.getDomain(),ip, id.getHour(), true));
+
+		Assert.assertNotNull(manager.getIndex(id.getDomain(), ip, id.getHour(), true));
 	}
 }

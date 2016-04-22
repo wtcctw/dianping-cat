@@ -4,9 +4,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.cat.consumer.core.FormatTest;
-import com.dianping.cat.consumer.core.GsonTest;
-import com.dianping.cat.consumer.core.NumberFormatTest;
 import com.dianping.cat.consumer.core.aggregation.CompositeFormatTest;
 import com.dianping.cat.consumer.core.aggregation.DefaultFormatTest;
 import com.dianping.cat.consumer.cross.CrossAnalyzerTest;
@@ -43,12 +40,6 @@ import com.dianping.cat.consumer.transaction.TransactionReportTypeAggergatorTest
 @SuiteClasses({
 
 ProblemHandlerTest.class,
-
-FormatTest.class,
-
-GsonTest.class,
-
-NumberFormatTest.class,
 
 MetricAnalyzerTest.class,
 
