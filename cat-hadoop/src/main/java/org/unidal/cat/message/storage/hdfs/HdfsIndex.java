@@ -90,8 +90,7 @@ public class HdfsIndex implements Index {
 	public void initialize(String domain, String ip, int hour) throws IOException {
 		long timestamp = hour * 3600 * 1000L;
 		Date startTime = new Date(timestamp);
-		StringBuilder sb = new StringBuilder();
-		FileSystem fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
+		FileSystem fs = m_manager.getFileSystem();
 		String dataPath = m_bulider.getPath(domain, startTime, ip, FileType.MAPPING);
 		FSDataInputStream indexStream = fs.open(new Path(dataPath));
 

@@ -105,10 +105,10 @@ public class HdfsBucketManager extends ContainerHolder implements BucketManager,
 	}
 
 	private List<String> loadFileFromHdfs(MessageId id, Date date) throws IOException {
-		StringBuilder sb = new StringBuilder();
 		String p = m_pathBuilder.getLogviewPath(date, "");
-		FileSystem fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
-		List<String> paths = filterFiles(fs, id.getDomain(), sb.toString(), p);
+		FileSystem fs = m_manager.getFileSystem();
+		String baseDir = m_manager.getBaseDir();
+		List<String> paths = filterFiles(fs, id.getDomain(), baseDir, p);
 
 		return paths;
 	}

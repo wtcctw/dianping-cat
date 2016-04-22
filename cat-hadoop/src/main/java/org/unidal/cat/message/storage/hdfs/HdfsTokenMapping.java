@@ -20,7 +20,6 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 
 /**
@@ -113,8 +112,7 @@ public class HdfsTokenMapping implements TokenMapping {
 	@Override
 	public void open(int hour, String ip) throws IOException {
 		String path = m_bulider.getPath(null, new Date(hour * TimeHelper.ONE_HOUR), ip, FileType.TOKEN);
-		StringBuilder sb = new StringBuilder();
-		FileSystem fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
+		FileSystem fs = m_manager.getFileSystem();
 		m_file = fs.open(new Path(path));
 		
 		m_data = Unpooled.buffer(BLOCK_SIZE);

@@ -29,12 +29,15 @@ public class HdfsMessageConsumerFinder implements MessageConsumerFinder {
 	public List<String> findConsumerIps(MessageId id) {
 		final String domain = id.getDomain();
 		Date start = new Date(id.getTimestamp());
-		StringBuilder sb = new StringBuilder();
 		String parent = m_pathBuilder.getPath(domain, start, null, FileType.PARENT);
-
-		// get base base;
-
-		FileSystem fs =null;
+		FileSystem fs;
+		
+		try {
+			fs = m_fileSystemManager.getFileSystem();
+		} catch (IOException e) {
+			Cat.logError(e);
+			return null;
+		}
 
 		final List<String> ips = new ArrayList<String>();
 
