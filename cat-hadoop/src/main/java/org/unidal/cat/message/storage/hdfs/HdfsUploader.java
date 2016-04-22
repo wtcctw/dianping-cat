@@ -63,7 +63,7 @@ public class HdfsUploader implements LogEnabled, Initializable {
 		int thread = m_serverConfigManager.getHdfsUploadThreadCount();
 
 		m_localBaseDir = new File(m_serverConfigManager.getHdfsLocalBaseDir(FileSystemManager.DUMP));
-		m_executors = new ThreadPoolExecutor(thread, thread, 10, TimeUnit.SECONDS,
+		m_executors = new ThreadPoolExecutor(thread, thread, 3, TimeUnit.SECONDS,
 		      new LinkedBlockingQueue<Runnable>(5000), new ThreadPoolExecutor.CallerRunsPolicy());
 	}
 
