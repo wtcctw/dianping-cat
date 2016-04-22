@@ -62,7 +62,9 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
 		String date = sdf.format(new Date(hour * TimeHelper.ONE_HOUR));
 
+		m_logger.info("starting close message processor " + date);
 		closeMessageProcessor();
+		m_logger.info("end close dumper processor " + date);
 
 		m_logger.info("starting close dumper manager " + date);
 		m_blockDumperManager.close(hour);
@@ -83,10 +85,6 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 
 	private void closeMessageProcessor() throws InterruptedException {
 		while (true) {
-			for (MessageProcessor processor : m_processors) {
-				processor.shutdown();
-			}
-			
 			boolean allEmpty = true;
 
 			for (BlockingQueue<MessageTree> queue : m_queues) {
