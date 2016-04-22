@@ -72,6 +72,10 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		m_logger = logger;
 	}
 
+	public ServerConfig getConfig() {
+		return m_config;
+	}
+
 	public String getConsoleDefaultDomain() {
 		return Constants.CAT;
 	}
@@ -250,45 +254,6 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		}
 	}
 
-	public void initialize(File configFile) throws Exception {
-		if (configFile != null && configFile.canRead()) {
-			m_logger.info(String.format("Loading configuration file(%s) ...", configFile.getCanonicalPath()));
-
-			String xml = Files.forIO().readFrom(configFile, "utf-8");
-			ServerConfig config = DefaultSaxParser.parse(xml);
-
-			// do validation
-			config.accept(new ServerConfigValidator());
-			m_config = config;
-		} else {
-			if (configFile != null) {
-				m_logger.warn(String.format("Configuration file(%s) not found, IGNORED.", configFile.getCanonicalPath()));
-			}
-
-			ServerConfig config = new ServerConfig();
-
-			// do validation
-			config.accept(new ServerConfigValidator());
-			m_config = config;
-		}
-
-		refreshServer();
-
-		if (isLocalMode()) {
-			m_logger.warn("CAT server is running in LOCAL mode! No HDFS or MySQL will be accessed!");
-		}
-		m_logger.info("CAT server is running with hdfs," + isHdfsOn());
-		m_logger.info("CAT server is running with alert," + isAlertMachine());
-		m_logger.info("CAT server is running with job," + isJobMachine());
-		m_logger.info(m_config.toString());
-
-		if (isLocalMode()) {
-			m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 5);
-		} else {
-			m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 100);
-		}
-	}
-
 	public Map<String, Domain> getLongConfigDomains() {
 		if (m_server != null) {
 			LongConfig longConfig = m_server.getConsumer().getLongConfig();
@@ -379,6 +344,45 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		});
 
 		prepare();
+	}
+
+	public void initialize(File configFile) throws Exception {
+		if (configFile != null && configFile.canRead()) {
+			m_logger.info(String.format("Loading configuration file(%s) ...", configFile.getCanonicalPath()));
+
+			String xml = Files.forIO().readFrom(configFile, "utf-8");
+			ServerConfig config = DefaultSaxParser.parse(xml);
+
+			// do validation
+			config.accept(new ServerConfigValidator());
+			m_config = config;
+		} else {
+			if (configFile != null) {
+				m_logger.warn(String.format("Configuration file(%s) not found, IGNORED.", configFile.getCanonicalPath()));
+			}
+
+			ServerConfig config = new ServerConfig();
+
+			// do validation
+			config.accept(new ServerConfigValidator());
+			m_config = config;
+		}
+
+		refreshServer();
+
+		if (isLocalMode()) {
+			m_logger.warn("CAT server is running in LOCAL mode! No HDFS or MySQL will be accessed!");
+		}
+		m_logger.info("CAT server is running with hdfs," + isHdfsOn());
+		m_logger.info("CAT server is running with alert," + isAlertMachine());
+		m_logger.info("CAT server is running with job," + isJobMachine());
+		m_logger.info(m_config.toString());
+
+		if (isLocalMode()) {
+			m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 5);
+		} else {
+			m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 100);
+		}
 	}
 
 	public boolean insert(String xml) {
@@ -490,6 +494,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 			config.setName(CONFIG_NAME);
 			config.setContent(m_config.toString());
 			m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
+			refreshServer();
 		} catch (Exception e) {
 			Cat.logError(e);
 			return false;

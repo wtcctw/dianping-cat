@@ -6562,6 +6562,9 @@
 				<requirement>
 					<role>com.dianping.cat.config.sample.SampleConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

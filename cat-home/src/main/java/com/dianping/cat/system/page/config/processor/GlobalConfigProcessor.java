@@ -11,6 +11,7 @@ import org.unidal.lookup.util.StringUtils;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.sample.SampleConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.core.dal.Project;
@@ -58,6 +59,9 @@ public class GlobalConfigProcessor {
 
 	@Inject
 	private SampleConfigManager m_sampleConfigManager;
+
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	private boolean deleteProject(Payload payload) {
 		Project proto = new Project();
@@ -172,6 +176,14 @@ public class GlobalConfigProcessor {
 				model.setOpState(m_sampleConfigManager.insert(sampleConfig));
 			}
 			model.setContent(m_configHtmlParser.parse(m_sampleConfigManager.getConfig().toString()));
+			break;
+		case SERVER_CONFIG_UPDATE:
+			serverConfig = payload.getContent();
+
+			if (!StringUtils.isEmpty(serverConfig)) {
+				model.setOpState(m_serverConfigManager.insert(serverConfig));
+			}
+			model.setContent(m_configHtmlParser.parse(m_serverConfigManager.getConfig().toString()));
 			break;
 		default:
 			break;

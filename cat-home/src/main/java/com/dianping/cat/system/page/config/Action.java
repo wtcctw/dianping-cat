@@ -155,6 +155,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	SERVER_FILTER_CONFIG_UPDATE("serverFilterConfigUpdate"),
 
+	SERVER_CONFIG_UPDATE("serverConfigUpdate"),
+
 	ALL_REPORT_CONFIG("allReportConfig");
 
 	private String m_name;
