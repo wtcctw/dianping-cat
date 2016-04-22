@@ -67,8 +67,6 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 
 	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
 
-	public static final String DUMP_DIR = "dump";
-
 	public static final String DEFAULT = "default";
 
 	@Override

@@ -2,7 +2,6 @@ package org.unidal.cat.message.storage.hdfs;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
@@ -22,47 +21,30 @@ public class FileSystemManager implements Initializable {
 	@Inject
 	private ServerConfigManager m_configManager;
 
-	private String m_defaultBaseDir;
-
-	private Map<String, FileSystem> m_fileSystems = new HashMap<String, FileSystem>();
+	private FileSystem m_fileSystem;
 
 	private Configuration m_config;
 
-	public FileSystem getFileSystem(String id, StringBuilder basePath) throws IOException {
-		String serverUri = m_configManager.getHdfsServerUri(id);
-		String baseDir = m_configManager.getHdfsBaseDir(id);
-		FileSystem fs = m_fileSystems.get(id);
+	public static final String DUMP = "dump";
 
-		if (serverUri == null || !serverUri.startsWith("hdfs:")) {
-			// no config found, use local HDFS
-			if (fs == null) {
-				fs = FileSystem.getLocal(m_config);
-				m_fileSystems.put(id, fs);
-			}
+	public String getBaseDir() {
+		return m_configManager.getHarfsBaseDir(DUMP);
+	}
 
-			basePath.append(m_defaultBaseDir).append("/");
+	public FileSystem getFileSystem() throws IOException {
+		String serverUri = m_configManager.getHdfsServerUri(DUMP);
 
-			if (baseDir == null) {
-				basePath.append(id);
-			} else {
-				basePath.append(baseDir);
-			}
-		} else {
-			if (fs == null) {
-				URI uri = URI.create(serverUri);
-				fs = FileSystem.get(uri, m_config);
-				m_fileSystems.put(id, fs);
-			}
+		if (m_fileSystem == null) {
+			synchronized (this) {
 
-			if (baseDir == null) {
-				basePath.append(id);
-			} else {
-				basePath.append(baseDir);
+				if (m_fileSystem == null) {
+					URI uri = URI.create(serverUri);
+					m_fileSystem = FileSystem.get(uri, m_config);
+				}
 			}
-			basePath.append("/");
 		}
 
-		return fs;
+		return m_fileSystem;
 	}
 
 	// prepare file /etc/krb5.conf
@@ -77,7 +59,7 @@ public class FileSystemManager implements Initializable {
 		String authentication = properties.get("hadoop.security.authentication");
 
 		config.setInt("io.file.buffer.size", 8192);
-		config.setInt("dfs.replication", 3);
+		config.setInt("dfs.replication", 1);
 
 		for (Map.Entry<String, String> property : properties.entrySet()) {
 			config.set(property.getKey(), property.getValue());
@@ -109,8 +91,6 @@ public class FileSystemManager implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_defaultBaseDir = m_configManager.getHdfsLocalBaseDir("hdfs");
-
 		if (m_configManager.isHdfsOn()) {
 			try {
 				m_config = getHdfsConfiguration();
@@ -126,5 +106,5 @@ public class FileSystemManager implements Initializable {
 	public Configuration getConfig() {
 		return m_config;
 	}
-	
+
 }

@@ -79,24 +79,10 @@ public class HdfsBucket implements Bucket {
 	}
 
 	@Override
-	public void initialize(String fileName) throws IOException {
-		String baseDir = m_serverConfigManager.getHdfsBaseDir(ServerConfigManager.DUMP_DIR);
-		StringBuilder sb = new StringBuilder();
-
-		FileSystem fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
-		FSDataInputStream indexStream = fs.open(new Path(baseDir, fileName + ".idx"));
-		FSDataInputStream dataStream = fs.open(new Path(baseDir, fileName + ".dat"));
-
-		m_data.init(dataStream);
-		m_index.init(indexStream);
-	}
-
-	@Override
 	public void initialize(String domain, String ip, int hour) throws IOException {
 		long timestamp = hour * 3600 * 1000L;
 		Date startTime = new Date(timestamp);
-		StringBuilder sb = new StringBuilder();
-		FileSystem fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
+		FileSystem fs = m_manager.getFileSystem();
 		String dataPath = m_bulider.getPath(domain, startTime, ip, FileType.DATA);
 		String indexPath = m_bulider.getPath(domain, startTime, ip, FileType.INDEX);
 

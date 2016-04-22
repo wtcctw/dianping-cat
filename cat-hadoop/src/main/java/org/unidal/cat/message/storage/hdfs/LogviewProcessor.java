@@ -111,7 +111,7 @@ public class LogviewProcessor implements Task, Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_baseDir = new File(m_configManager.getHdfsLocalBaseDir(ServerConfigManager.DUMP_DIR));
+		m_baseDir = new File(m_configManager.getHdfsLocalBaseDir("dump"));
 	}
 
 	private boolean isOldBucketFile(String path) {

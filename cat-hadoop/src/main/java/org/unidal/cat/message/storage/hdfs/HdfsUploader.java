@@ -40,12 +40,12 @@ public class HdfsUploader implements LogEnabled, Initializable {
 
 	private ThreadPoolExecutor m_executors;
 
-	private File m_baseDir;
+	private File m_localBaseDir;
 
 	private Logger m_logger;
 
 	private void deleteFile(String path) {
-		File file = new File(m_baseDir, path);
+		File file = new File(m_localBaseDir, path);
 		File parent = file.getParentFile();
 
 		file.delete();
@@ -62,15 +62,15 @@ public class HdfsUploader implements LogEnabled, Initializable {
 	public void initialize() throws InitializationException {
 		int thread = m_serverConfigManager.getHdfsUploadThreadCount();
 
-		m_baseDir = new File(m_serverConfigManager.getHdfsLocalBaseDir(ServerConfigManager.DUMP_DIR));
+		m_localBaseDir = new File(m_serverConfigManager.getHdfsLocalBaseDir(FileSystemManager.DUMP));
 		m_executors = new ThreadPoolExecutor(thread, thread, 10, TimeUnit.SECONDS,
 		      new LinkedBlockingQueue<Runnable>(5000), new ThreadPoolExecutor.CallerRunsPolicy());
 	}
 
 	private FSDataOutputStream makeHdfsOutputStream(String path) throws IOException {
-		StringBuilder baseDir = new StringBuilder(32);
-		FileSystem fs = m_fileSystemManager.getFileSystem(ServerConfigManager.DUMP_DIR, baseDir);
-		Path file = new Path(baseDir.toString(), path);
+		FileSystem fs = m_fileSystemManager.getFileSystem();
+		String baseDir = m_fileSystemManager.getBaseDir();
+		Path file = new Path(baseDir, path);
 		FSDataOutputStream out;
 
 		try {

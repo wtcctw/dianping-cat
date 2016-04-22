@@ -8,8 +8,10 @@ import org.unidal.cat.message.storage.hdfs.HdfsBucket;
 import org.unidal.cat.message.storage.hdfs.HdfsBucketManager;
 import org.unidal.cat.message.storage.hdfs.HdfsFileBuilder;
 import org.unidal.cat.message.storage.hdfs.HdfsIndex;
+import org.unidal.cat.message.storage.hdfs.HdfsIndexManager;
 import org.unidal.cat.message.storage.hdfs.HdfsMessageConsumerFinder;
 import org.unidal.cat.message.storage.hdfs.HdfsTokenMapping;
+import org.unidal.cat.message.storage.hdfs.HdfsTokenMappingManager;
 import org.unidal.cat.message.storage.hdfs.HdfsUploader;
 import org.unidal.cat.message.storage.hdfs.LogviewProcessor;
 import org.unidal.cat.message.storage.internals.DefaultBlockDumper;
@@ -56,8 +58,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(DefaultBlockWriter.class));
 		
 		all.add(A(FileSystemManager.class));
-		all.add(A(HdfsUploader.class));
-		all.add(A(LogviewProcessor.class));
 		
 		all.add(A(HdfsMessageConsumerFinder.class));
 
@@ -69,19 +69,20 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(LocalIndex.class));
 		all.add(A(LocalIndexManager.class));
 		all.add(A(HdfsIndex.class));
+		all.add(A(HdfsIndexManager.class));
 
 		all.add(A(LocalFileBuilder.class));
 		all.add(A(HdfsFileBuilder.class));
 		all.add(A(LocalTokenMapping.class));
 		all.add(A(HdfsTokenMapping.class));
 		all.add(A(LocalTokenMappingManager.class));
+		all.add(A(HdfsTokenMappingManager.class));
 
 		all.add(A(DefaultStorageConfiguration.class));
-
-		all.add(A(LogviewProcessor.class));
-		
 		all.add(A(DefaultByteBufCache.class));
-		all.add(A(DefaultStorageConfiguration.class));
+
+		all.add(A(HdfsUploader.class));
+		all.add(A(LogviewProcessor.class));
 
 		return all;
 	}
