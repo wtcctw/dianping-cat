@@ -138,7 +138,8 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 	public void process(MessageTree tree) {
 		MessageId id = tree.getFormatMessageId();
 		String domain = id.getDomain();
-		int index = getIndex(domain);
+		// hash by ip address and block hash by domain
+		int index = getIndex(id.getIpAddress());
 		BlockingQueue<MessageTree> queue = m_queues.get(index);
 		boolean success = queue.offer(tree);
 
