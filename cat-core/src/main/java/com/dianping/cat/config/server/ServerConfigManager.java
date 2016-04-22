@@ -67,6 +67,18 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 
 	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
 
+	public final static String REMOTE_SERVERS = "remote-servers";
+
+	public final static String LOCAL_MODE = "local-mode";
+
+	public final static String JOB_MACHINE = "job-machine";
+
+	public final static String SEND_MACHINE = "send-machine";
+
+	public final static String ALARM_MACHINE = "alarm-machine";
+
+	public final static String HDFS_ENABLED = "hdfs-enabled";
+
 	public static final String DEFAULT = "default";
 
 	@Override
@@ -83,7 +95,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	}
 
 	public List<Pair<String, Integer>> getConsoleEndpoints() {
-		String remoteServers = getProperty(ServerConstants.REMOTE_SERVERS, "");
+		String remoteServers = getProperty(REMOTE_SERVERS, "");
 		List<String> endpoints = Splitters.by(',').noEmptyItem().trim().split(remoteServers);
 		List<Pair<String, Integer>> pairs = new ArrayList<Pair<String, Integer>>(endpoints.size());
 
@@ -99,7 +111,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	}
 
 	public String getConsoleRemoteServers() {
-		String remoteServers = getProperty(ServerConstants.REMOTE_SERVERS, "");
+		String remoteServers = getProperty(REMOTE_SERVERS, "");
 
 		if (remoteServers != null && remoteServers.length() > 0) {
 			return remoteServers;
@@ -399,7 +411,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	}
 
 	public boolean isAlertMachine() {
-		boolean alert = Boolean.parseBoolean(getProperty(ServerConstants.ALARM_MACHINE, "false"));
+		boolean alert = Boolean.parseBoolean(getProperty(ALARM_MACHINE, "false"));
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 		if ("10.1.6.128".equals(ip) || alert) {
@@ -418,15 +430,15 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	}
 
 	public boolean isHdfsOn() {
-		return Boolean.parseBoolean(getProperty(ServerConstants.HDFS_ENABLED, "false"));
+		return Boolean.parseBoolean(getProperty(HDFS_ENABLED, "false"));
 	}
 
 	public boolean isJobMachine() {
-		return Boolean.parseBoolean(getProperty(ServerConstants.JOB_MACHINE, "false"));
+		return Boolean.parseBoolean(getProperty(JOB_MACHINE, "false"));
 	}
 
 	public boolean isLocalMode() {
-		return Boolean.parseBoolean(getProperty(ServerConstants.LOCAL_MODE, "false"));
+		return Boolean.parseBoolean(getProperty(LOCAL_MODE, "false"));
 	}
 
 	public boolean isRpcClient(String type) {
@@ -438,7 +450,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	}
 
 	public boolean isSendMachine() {
-		return Boolean.parseBoolean(getProperty(ServerConstants.SEND_MACHINE, "false"));
+		return Boolean.parseBoolean(getProperty(SEND_MACHINE, "false"));
 	}
 
 	private void prepare() {
