@@ -22,7 +22,6 @@ import com.dianping.cat.consumer.cross.IpConvertManager;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyDelegate;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
-import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.EventDelegate;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
@@ -123,7 +122,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	private Collection<Component> defineDumpComponents() {
 		final List<Component> all = new ArrayList<Component>();
 		all.add(A(DumpAnalyzer.class));
-		all.add(A(LocalMessageBucketManager.class));
 
 		return all;
 	}

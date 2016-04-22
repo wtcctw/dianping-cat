@@ -22,7 +22,6 @@ import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.message.internal.MessageId;
 
 @Named(type = Bucket.class, value = HdfsBucket.ID, instantiationStrategy = Named.PER_LOOKUP)

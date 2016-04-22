@@ -3,13 +3,15 @@ package com.dianping.cat.hadoop.build;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.unidal.cat.message.LogviewProcessor;
+import org.unidal.cat.message.storage.hdfs.FileSystemManager;
 import org.unidal.cat.message.storage.hdfs.HdfsBucket;
 import org.unidal.cat.message.storage.hdfs.HdfsBucketManager;
 import org.unidal.cat.message.storage.hdfs.HdfsFileBuilder;
 import org.unidal.cat.message.storage.hdfs.HdfsIndex;
 import org.unidal.cat.message.storage.hdfs.HdfsMessageConsumerFinder;
 import org.unidal.cat.message.storage.hdfs.HdfsTokenMapping;
+import org.unidal.cat.message.storage.hdfs.HdfsUploader;
+import org.unidal.cat.message.storage.hdfs.LogviewProcessor;
 import org.unidal.cat.message.storage.internals.DefaultBlockDumper;
 import org.unidal.cat.message.storage.internals.DefaultBlockDumperManager;
 import org.unidal.cat.message.storage.internals.DefaultBlockWriter;
@@ -29,12 +31,6 @@ import org.unidal.cat.message.storage.local.LocalTokenMappingManager;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.hadoop.hdfs.FileSystemManager;
-import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
-import com.dianping.cat.hadoop.hdfs.HdfsUploader;
-import com.dianping.cat.hadoop.hdfs.bucket.HarfsMessageBucket;
-import com.dianping.cat.hadoop.hdfs.bucket.HdfsMessageBucket;
-
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {
 		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
@@ -44,26 +40,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.addAll(defineHdfsComponents());
 		all.addAll(defineLocalComponents());
-		return all;
-	}
-
-	public List<Component> defineHdfsComponents() {
-		List<Component> all = new ArrayList<Component>();
-
-		all.add(A(FileSystemManager.class));
-
-		all.add(A(HdfsUploader.class));
-
-		all.add(A(HdfsMessageBucket.class));
-
-		all.add(A(HarfsMessageBucket.class));
-
-		all.add(A(HdfsMessageBucketManager.class));
-
-		
-
 		return all;
 	}
 
@@ -78,8 +55,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(DefaultBlockDumper.class));
 		all.add(A(DefaultBlockWriter.class));
 		
-		all.add(A(HdfsMessageConsumerFinder.class));
+		all.add(A(FileSystemManager.class));
+		all.add(A(HdfsUploader.class));
 		
+		all.add(A(HdfsMessageConsumerFinder.class));
 
 		all.add(A(LocalBucket.class));
 		all.add(A(LocalBucketManager.class));
@@ -103,7 +82,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(DefaultByteBufCache.class));
 		all.add(A(DefaultStorageConfiguration.class));
 
-		
 		return all;
 	}
 

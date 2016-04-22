@@ -29,7 +29,6 @@ import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.PathBuilder;
 import com.dianping.cat.message.Transaction;

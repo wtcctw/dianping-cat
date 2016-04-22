@@ -1,14 +1,12 @@
-package com.dianping.cat.hadoop.hdfs;
+package org.unidal.cat.message.storage.hdfs;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.HarFileSystem;
 import org.apache.hadoop.security.SecurityUtil;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -27,8 +25,6 @@ public class FileSystemManager implements Initializable {
 	private String m_defaultBaseDir;
 
 	private Map<String, FileSystem> m_fileSystems = new HashMap<String, FileSystem>();
-
-	private Map<String, HarConnectionPool> m_harConnPools = new HashMap<String, HarConnectionPool>();
 
 	private Configuration m_config;
 
@@ -75,25 +71,6 @@ public class FileSystemManager implements Initializable {
 		}
 
 		return fs;
-	}
-
-	public HarFileSystem getHarFileSystem(String id, Date date) throws IOException {
-		FileSystem fs = getFileSystem(id, new StringBuilder());
-		HarConnectionPool harPool = m_harConnPools.get(id);
-
-		if (harPool == null) {
-			harPool = new HarConnectionPool(m_configManager);
-
-			try {
-				harPool.initialize();
-				m_harConnPools.put(id, harPool);
-			} catch (InitializationException e) {
-				Cat.logError(e);
-				return null;
-			}
-		}
-
-		return harPool.getHarfsConnection(id, date, fs);
 	}
 
 	// prepare file /etc/krb5.conf

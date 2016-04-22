@@ -1,4 +1,4 @@
-package com.dianping.cat.hadoop.hdfs;
+package org.unidal.cat.message.storage.hdfs;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,14 +22,12 @@ import org.unidal.helper.Files.AutoClose;
 import org.unidal.helper.Formats;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 
-@Named
 public class HdfsUploader implements LogEnabled, Initializable {
 
 	@Inject
@@ -68,6 +66,7 @@ public class HdfsUploader implements LogEnabled, Initializable {
 	}
 
 	private FSDataOutputStream makeHdfsOutputStream(String path) throws IOException {
+		StringBuilder baseDir = new StringBuilder(32);
 		FileSystem fs = m_fileSystemManager.getFileSystem(ServerConfigManager.DUMP_DIR, baseDir);
 		Path file = new Path(baseDir.toString(), path);
 		FSDataOutputStream out;
