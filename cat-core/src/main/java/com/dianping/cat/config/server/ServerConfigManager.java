@@ -338,6 +338,8 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 			m_config = new ServerConfig();
 		}
 
+		m_config.accept(new ServerConfigValidator());
+
 		try {
 			refreshServer();
 		} catch (Exception e) {

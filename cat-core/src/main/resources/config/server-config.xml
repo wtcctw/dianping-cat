@@ -29,7 +29,6 @@
 	</server>
 	<server id="10.1.6.128">
 		<properties>
-			<property name="local-mode" value="true" />
 			<property name="job-machine" value="true" />
 			<property name="send-machine" value="true" />
 			<property name="alarm-machine" value="true" />
