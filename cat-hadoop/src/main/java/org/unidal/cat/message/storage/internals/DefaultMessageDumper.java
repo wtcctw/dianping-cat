@@ -66,19 +66,27 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 
 		m_logger.info("starting close dumper manager " + date);
 		m_blockDumperManager.close(hour);
+		m_logger.info("end close dumper manager " + date);
 
 		m_logger.info("starting close bucket manager " + date);
 		m_bucketManager.closeBuckets(hour);
+		m_logger.info("end close bucket manager " + date);
 
 		m_logger.info("starting close index manager " + date);
 		m_indexManager.close(hour);
+		m_logger.info("end close index manager " + date);
 
 		m_logger.info("starting close token manager " + date);
 		m_tokenManager.close(hour);
+		m_logger.info("end close token manager " + date);
 	}
 
 	private void closeMessageProcessor() throws InterruptedException {
 		while (true) {
+			for (MessageProcessor processor : m_processors) {
+				processor.shutdown();
+			}
+			
 			boolean allEmpty = true;
 
 			for (BlockingQueue<MessageTree> queue : m_queues) {

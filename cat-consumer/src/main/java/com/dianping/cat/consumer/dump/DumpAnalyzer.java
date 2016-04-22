@@ -7,6 +7,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.cat.message.storage.MessageDumper;
 import org.unidal.cat.message.storage.MessageDumperManager;
 import org.unidal.cat.message.storage.MessageFinderManager;
+import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
@@ -34,14 +35,20 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
-		try {
-			int hour = (int) TimeUnit.MILLISECONDS.toHours(m_startTime);
+		Threads.forGroup("cat").start(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					int hour = (int) TimeUnit.MILLISECONDS.toHours(m_startTime);
 
-			m_dumperManager.close(hour);
-			m_finderManager.close(hour);
-		} catch (Exception e) {
-			m_logger.error(e.getMessage(), e);
-		}
+					m_dumperManager.close(hour);
+					m_finderManager.close(hour);
+				} catch (Exception e) {
+					m_logger.error(e.getMessage(), e);
+				}
+			}
+		});
+
 	}
 
 	@Override
