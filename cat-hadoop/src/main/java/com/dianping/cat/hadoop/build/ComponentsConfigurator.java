@@ -57,6 +57,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		
 		all.add(A(FileSystemManager.class));
 		all.add(A(HdfsUploader.class));
+		all.add(A(LogviewProcessor.class));
 		
 		all.add(A(HdfsMessageConsumerFinder.class));
 
