@@ -494,7 +494,6 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 			config.setName(CONFIG_NAME);
 			config.setContent(m_config.toString());
 			m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
-			refreshServer();
 		} catch (Exception e) {
 			Cat.logError(e);
 			return false;
