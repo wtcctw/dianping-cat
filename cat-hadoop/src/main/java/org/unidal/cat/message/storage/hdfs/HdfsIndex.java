@@ -287,7 +287,6 @@ public class HdfsIndex implements Index {
 			} else {
 				return null;
 			}
-
 		}
 	}
 

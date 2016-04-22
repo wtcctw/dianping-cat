@@ -48,42 +48,42 @@ public class HdfsMessageConsumerFinder implements MessageConsumerFinder {
 	}
 
 	private Set<String> findfromHdfs(final String domain, int hour) {
-	   Date start = new Date(hour * TimeHelper.ONE_HOUR);
-	   String parent = m_pathBuilder.getPath(domain, start, null, FileType.PARENT);
-	   FileSystem fs;
+		Date start = new Date(hour * TimeHelper.ONE_HOUR);
+		String parent = m_pathBuilder.getPath(domain, start, null, FileType.PARENT);
+		FileSystem fs;
 
-	   try {
-	   	fs = m_fileSystemManager.getFileSystem();
-	   } catch (IOException e) {
-	   	Cat.logError(e);
-	   	return null;
-	   }
+		try {
+			fs = m_fileSystemManager.getFileSystem();
+		} catch (IOException e) {
+			Cat.logError(e);
+			return null;
+		}
 
-	   final Set<String> result = new HashSet<String>();
+		final Set<String> result = new HashSet<String>();
 
-	   try {
-	   	final Path basePath = new Path(parent);
+		try {
+			final Path basePath = new Path(parent);
 
-	   	if (fs != null) {
-	   		fs.listStatus(basePath, new PathFilter() {
-	   			@Override
-	   			public boolean accept(Path p) {
-	   				String name = p.getName();
+			if (fs != null) {
+				fs.listStatus(basePath, new PathFilter() {
+					@Override
+					public boolean accept(Path p) {
+						String name = p.getName();
 
-	   				if (name.contains(domain) && name.endsWith(".dat")) {
-	   					int start = name.lastIndexOf('-');
-	   					int end = name.length() - 4;
+						if (name.contains(domain) && name.endsWith(".dat")) {
+							int start = name.lastIndexOf('-');
+							int end = name.length() - 4;
 
-	   					result.add(name.substring(start + 1, end));
-	   				}
-	   				return false;
-	   			}
-	   		});
-	   	}
-	   } catch (IOException e) {
-	   	Cat.logError(e);
-	   }
-	   return result;
-   }
+							result.add(name.substring(start + 1, end));
+						}
+						return false;
+					}
+				});
+			}
+		} catch (IOException e) {
+			Cat.logError(e);
+		}
+		return result;
+	}
 
 }

@@ -69,7 +69,6 @@ public class HdfsBucketManager extends ContainerHolder implements Initializable,
 			try {
 				Set<String> ips = m_consumerFinder.findConsumerIps(id.getDomain(), id.getHour());
 
-				System.err.println("messageid" + ips);
 				t.addData(ips.toString());
 
 				return readMessage(id, ips);
