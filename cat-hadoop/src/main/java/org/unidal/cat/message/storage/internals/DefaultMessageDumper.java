@@ -108,7 +108,7 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 
 	private int getIndex(String domain) {
 		int hash = Math.abs(domain.hashCode());
-		int index = hash % (m_processors.size()); 
+		int index = hash % (m_processors.size());
 
 		return index;
 	}
@@ -135,7 +135,7 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 		int index = getIndex(domain);
 		BlockingQueue<MessageTree> queue = m_queues.get(index);
 		boolean success = queue.offer(tree);
-		
+
 		if (!success) {
 			m_statisticManager.addMessageDumpLoss(1);
 
@@ -144,12 +144,12 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 
 				m_logger.info("message tree queue is full " + m_failCount);
 				// tree.getBuffer().release();
-			} else {
-				m_statisticManager.addMessageSize(domain, tree.getBuffer().readableBytes());
+			}
+		} else {
+			m_statisticManager.addMessageSize(domain, tree.getBuffer().readableBytes());
 
-				if ((++m_total) % CatConstants.SUCCESS_COUNT == 0) {
-					m_statisticManager.addMessageDump(CatConstants.SUCCESS_COUNT);
-				}
+			if ((++m_total) % CatConstants.SUCCESS_COUNT == 0) {
+				m_statisticManager.addMessageDump(CatConstants.SUCCESS_COUNT);
 			}
 		}
 	}
