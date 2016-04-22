@@ -27,6 +27,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.statistic.ServerStatisticManager;
 
 @Named(type = MessageDumper.class, instantiationStrategy = Named.PER_LOOKUP)
 public class DefaultMessageDumper extends ContainerHolder implements MessageDumper, LogEnabled {
@@ -41,6 +42,9 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 
 	@Inject("local")
 	private TokenMappingManager m_tokenManager;
+
+	@Inject
+	private ServerStatisticManager m_statisticManager;
 
 	private List<BlockingQueue<MessageTree>> m_queues = new ArrayList<BlockingQueue<MessageTree>>();
 
@@ -132,10 +136,14 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 			BlockingQueue<MessageTree> last = m_queues.get(m_queues.size() - 1);
 			boolean success = last.offer(tree);
 
-			if (!success && (m_failCount.incrementAndGet() % 100) == 0) {
-				Cat.logError(new QueueFullException("Error when adding message to queue, fails: " + m_failCount));
+			if (!success) {
+				m_statisticManager.addMessageDumpLoss(1);
 
-				m_logger.info("message tree queue is full " + m_failCount);
+				if ((m_failCount.incrementAndGet() % 100) == 0) {
+					Cat.logError(new QueueFullException("Error when adding message to queue, fails: " + m_failCount));
+
+					m_logger.info("message tree queue is full " + m_failCount);
+				}
 				// tree.getBuffer().release();
 			}
 		}

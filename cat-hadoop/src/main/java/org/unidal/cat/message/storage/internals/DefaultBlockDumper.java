@@ -15,12 +15,18 @@ import org.unidal.cat.message.storage.BlockDumper;
 import org.unidal.cat.message.storage.BlockWriter;
 import org.unidal.helper.Threads;
 import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.statistic.ServerStatisticManager;
 
 @Named(type = BlockDumper.class, instantiationStrategy = Named.PER_LOOKUP)
 public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, LogEnabled {
+
+	@Inject
+	private ServerStatisticManager m_statisticManager;
+
 	private List<BlockingQueue<Block>> m_queues = new ArrayList<BlockingQueue<Block>>();
 
 	private List<BlockWriter> m_writers = new ArrayList<BlockWriter>();
@@ -66,9 +72,13 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 		BlockingQueue<Block> queue = m_queues.get(index);
 		boolean success = queue.offer(block);
 
-		if (!success && (++m_failCount % 100) == 0) {
-			Cat.logError(new QueueFullException("Error when adding block to queue, fails: " + m_failCount));
-			m_logger.info("block dump queue is full " + m_failCount);
+		if (!success) {
+			m_statisticManager.addBlockLoss(1);
+
+			if ((++m_failCount % 100) == 0) {
+				Cat.logError(new QueueFullException("Error when adding block to queue, fails: " + m_failCount));
+				m_logger.info("block dump queue is full " + m_failCount);
+			}
 		}
 	}
 

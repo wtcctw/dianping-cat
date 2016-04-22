@@ -33,6 +33,9 @@
 					<role>org.unidal.cat.message.storage.TokenMappingManager</role>
 					<role-hint>local</role-hint>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -59,6 +62,11 @@
 			<role>org.unidal.cat.message.storage.BlockDumper</role>
 			<implementation>org.unidal.cat.message.storage.internals.DefaultBlockDumper</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>org.unidal.cat.message.storage.BlockWriter</role>
