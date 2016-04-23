@@ -55,18 +55,10 @@ public class LocalBucket implements Bucket {
 
 	@Override
 	public void flush() {
-		if (m_nio) {
-			try {
-	         m_data.m_dataChannel.force(true);
-         } catch (IOException e) {
-         	Cat.logError(e);
-         }
-		} else {
-			try {
-				m_data.m_file.getFD().sync();
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
+		try {
+			m_data.m_file.getFD().sync();
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
 	}
 
@@ -91,18 +83,18 @@ public class LocalBucket implements Bucket {
 	public void initialize(String domain, String ip, int hour) throws IOException {
 		long timestamp = hour * 3600 * 1000L;
 		Date startTime = new Date(timestamp);
-		File dataPath = new File(m_bulider.getPath(domain, startTime, ip, FileType.DATA));
 		File indexPath = new File(m_bulider.getPath(domain, startTime, ip, FileType.INDEX));
+		File dataPath = new File(m_bulider.getPath(domain, startTime, ip, FileType.DATA));
 
-		m_data.init(dataPath);
 		m_index.init(indexPath);
+		m_data.init(dataPath);
 	}
 
 	@Override
 	public synchronized void puts(ByteBuf data, Map<MessageId, Integer> mappings) throws IOException {
 		long dataOffset = m_data.getDataOffset();
 
-		m_data.write(data);
+		m_data.write(dataOffset, data);
 
 		for (Map.Entry<MessageId, Integer> e : mappings.entrySet()) {
 			MessageId id = e.getKey();
@@ -129,7 +121,6 @@ public class LocalBucket implements Bucket {
 		private FileChannel m_dataChannel;
 
 		private void close() {
-
 			if (m_nio) {
 				try {
 					m_dataChannel.force(false);
@@ -168,9 +159,9 @@ public class LocalBucket implements Bucket {
 			m_path = dataPath;
 			m_path.getParentFile().mkdirs();
 
-			m_file = new RandomAccessFile(m_path, "rw"); // read-only
+			m_file = new RandomAccessFile(m_path, "rw"); // read-write
 			m_offset = m_path.length();
-			
+
 			if (m_nio) {
 				m_dataChannel = m_file.getChannel();
 				m_dataChannel.position(m_offset);
@@ -193,11 +184,6 @@ public class LocalBucket implements Bucket {
 		}
 
 		private byte[] read(long dataOffset) throws IOException {
-			if (m_nio) {
-				m_dataChannel.force(true);
-			} else {
-				m_out.flush();
-			}
 			m_file.seek(dataOffset);
 
 			int len = m_file.readInt();
@@ -208,10 +194,11 @@ public class LocalBucket implements Bucket {
 			return data;
 		}
 
-		private void write(ByteBuf data) throws IOException {
+		private void write(long offset, ByteBuf data) throws IOException {
 			int len = data.readableBytes();
 
 			if (m_nio) {
+				m_dataChannel.position(offset);
 				ByteBuffer buf = ByteBuffer.allocate(4 + len);
 
 				buf.putInt(len);
@@ -349,8 +336,8 @@ public class LocalBucket implements Bucket {
 			if (segment != null) {
 				segment.writeLong(offset, value);
 			} else {
+				Cat.logEvent("Block", "Abnormal:" + id.getDomain(), Event.SUCCESS, id.toString());
 				if (m_nio) {
-					Cat.logEvent("Block", "Abnormal:" + id.getDomain(), Event.SUCCESS, id.toString());
 					m_indexChannel.position(position);
 
 					ByteBuffer buf = ByteBuffer.allocate(8);
