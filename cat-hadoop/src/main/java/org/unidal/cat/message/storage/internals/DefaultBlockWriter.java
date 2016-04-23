@@ -77,17 +77,19 @@ public class DefaultBlockWriter implements BlockWriter {
 				bucket.puts(block.getData(), block.getOffsets());
 			}
 
-			Index index = m_indexManager.getIndex(block.getDomain(), ip, block.getHour(), true);
+			if (block.getMappIds().size() > 0) {
+				Index index = m_indexManager.getIndex(block.getDomain(), ip, block.getHour(), true);
 
-			if (monitor) {
-				Transaction t = Cat.newTransaction("Index", block.getDomain());
+				if (monitor) {
+					Transaction t = Cat.newTransaction("Index", block.getDomain());
 
-				index.maps(block.getMappIds());
+					index.maps(block.getMappIds());
 
-				t.setStatus(Transaction.SUCCESS);
-				t.complete();
-			} else {
-				index.maps(block.getMappIds());
+					t.setStatus(Transaction.SUCCESS);
+					t.complete();
+				} else {
+					index.maps(block.getMappIds());
+				}
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -124,7 +126,7 @@ public class DefaultBlockWriter implements BlockWriter {
 	@Override
 	public void shutdown() {
 		m_enabled.set(false);
-		
+
 		try {
 			m_latch.await();
 		} catch (InterruptedException e) {
