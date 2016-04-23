@@ -46,24 +46,6 @@ public class DefaultBlockWriter implements BlockWriter {
 	private CountDownLatch m_latch;
 
 	@Override
-	public void await() {
-		try {
-			m_latch.await();
-		} catch (InterruptedException e) {
-			// ignore it
-		}
-		while (true) {
-			Block block = m_queue.poll();
-
-			if (block != null) {
-				processBlock(NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), block);
-			} else {
-				break;
-			}
-		}
-	}
-
-	@Override
 	public String getName() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -142,6 +124,21 @@ public class DefaultBlockWriter implements BlockWriter {
 	@Override
 	public void shutdown() {
 		m_enabled.set(false);
+		
+		try {
+			m_latch.await();
+		} catch (InterruptedException e) {
+			// ignore it
+		}
+		while (true) {
+			Block block = m_queue.poll();
+
+			if (block != null) {
+				processBlock(NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), block);
+			} else {
+				break;
+			}
+		}
 	}
 
 }
