@@ -95,11 +95,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		m_logger = logger;
 	}
 
-	@Override
-	public int getAnanlyzerCount() {
-		return 2;
-	}
-
 	public Set<String> getDomains() {
 		return m_reportManager.getDomains(getStartTime());
 	}

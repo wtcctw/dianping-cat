@@ -92,11 +92,6 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	}
 
 	@Override
-	public int getAnanlyzerCount() {
-		return 2;
-	}
-
-	@Override
 	public HeartbeatReport getReport(String domain) {
 		HeartbeatReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 

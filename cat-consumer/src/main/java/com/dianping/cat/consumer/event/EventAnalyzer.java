@@ -47,11 +47,6 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	@Override
-	public int getAnanlyzerCount() {
-		return 2;
-	}
-
-	@Override
 	public EventReport getReport(String domain) {
 		long period = getStartTime();
 		long timestamp = System.currentTimeMillis();

@@ -83,11 +83,6 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	@Override
-	public int getAnanlyzerCount() {
-		return 2;
-	}
-
-	@Override
 	public CrossReport getReport(String domain) {
 		CrossReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 

@@ -57,11 +57,6 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	}
 
 	@Override
-   public int getAnanlyzerCount() {
-		return 2;
-   }
-
-	@Override
 	public Object getReport(String domain) {
 		throw new UnsupportedOperationException("This should not be called!");
 	}

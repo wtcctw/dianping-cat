@@ -56,11 +56,6 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	}
 
 	@Override
-	public int getAnanlyzerCount() {
-		return 2;
-	}
-
-	@Override
 	public StorageReport getReport(String id) {
 		long period = getStartTime();
 		StorageReport report = m_reportManager.getHourlyReport(period, id, false);

@@ -63,11 +63,6 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	@Override
-	public int getAnanlyzerCount() {
-		return 2;
-	}
-
-	@Override
 	public DependencyReport getReport(String domain) {
 		DependencyReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 

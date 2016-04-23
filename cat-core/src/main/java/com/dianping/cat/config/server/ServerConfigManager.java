@@ -550,11 +550,15 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 			return defaultValue;
 		}
 	}
-	
+
 	public boolean validateIp(String str) {
 		Pattern pattern = Pattern
 		      .compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
 		return pattern.matcher(str).matches();
+	}
+
+	public int getThreadsOfRealtimeAnalyzer(String name) {
+		return Integer.parseInt(getProperty(name + "-analyzer-threads", "1"));
 	}
 
 }
