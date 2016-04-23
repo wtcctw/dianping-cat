@@ -397,7 +397,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		if (isLocalMode()) {
 			m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 5);
 		} else {
-			m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 100);
+			m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", getModelServiceThreads());
 		}
 	}
 
@@ -549,6 +549,22 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		Pattern pattern = Pattern
 		      .compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
 		return pattern.matcher(str).matches();
+	}
+
+	public int getMessageProcessorThreads() {
+		return Integer.parseInt(getProperty("message-processor-thread", "24"));
+	}
+
+	public int getMessageDumpThreads() {
+		return Integer.parseInt(getProperty("message-dumper-thread", "5"));
+	}
+
+	public int getHdfsUploadThreads() {
+		return Integer.parseInt(getProperty("hdfs-upload-thread", "3"));
+	}
+	
+	public int getModelServiceThreads() {
+		return Integer.parseInt(getProperty("model-service-thread", "100"));
 	}
 
 }

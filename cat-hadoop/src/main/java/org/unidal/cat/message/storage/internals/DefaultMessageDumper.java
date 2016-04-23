@@ -46,7 +46,7 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 
 	@Inject
 	private ServerStatisticManager m_statisticManager;
-
+	
 	private long m_total;
 
 	private List<BlockingQueue<MessageTree>> m_queues = new ArrayList<BlockingQueue<MessageTree>>();
