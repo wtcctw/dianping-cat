@@ -25,6 +25,7 @@ import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
@@ -46,7 +47,10 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 
 	@Inject
 	private ServerStatisticManager m_statisticManager;
-	
+
+	@Inject
+	private ServerConfigManager m_configManager;
+
 	private long m_total;
 
 	private List<BlockingQueue<MessageTree>> m_queues = new ArrayList<BlockingQueue<MessageTree>>();
@@ -120,7 +124,7 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 	}
 
 	public void initialize(int hour) {
-		int processThreads = 24;
+		int processThreads = m_configManager.getMessageProcessorThreads();
 
 		for (int i = 0; i < processThreads; i++) {
 			BlockingQueue<MessageTree> queue = new LinkedBlockingQueue<MessageTree>(10000);

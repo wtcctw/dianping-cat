@@ -19,6 +19,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
 @Named(type = BlockDumper.class, instantiationStrategy = Named.PER_LOOKUP)
@@ -26,6 +27,9 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 
 	@Inject
 	private ServerStatisticManager m_statisticManager;
+
+	@Inject
+	private ServerConfigManager m_configManager;
 
 	private List<BlockingQueue<Block>> m_queues = new ArrayList<BlockingQueue<Block>>();
 
@@ -91,7 +95,7 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 
 	@Override
 	public void initialize(int hour) {
-		int threads = 10;
+		int threads = m_configManager.getMessageDumpThreads();
 
 		for (int i = 0; i < threads; i++) {
 			BlockingQueue<Block> queue = new LinkedBlockingQueue<Block>(10000);

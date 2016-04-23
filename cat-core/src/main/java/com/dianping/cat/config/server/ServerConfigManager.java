@@ -238,14 +238,8 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		return null;
 	}
 
-	public int getHdfsUploadThreadCount() {
-		if (m_server != null) {
-			StorageConfig storage = m_server.getStorage();
-
-			return storage.getUploadThread();
-		} else {
-			return 5;
-		}
+	public int getHdfsUploadThreads() {
+		return Integer.parseInt(getProperty("hdfs-upload-thread", "3"));
 	}
 
 	public int getLocalReportStroageTime() {
@@ -290,8 +284,20 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		return 1000; // 1 second
 	}
 
+	public int getMessageDumpThreads() {
+		return Integer.parseInt(getProperty("message-dumper-thread", "5"));
+	}
+
+	public int getMessageProcessorThreads() {
+		return Integer.parseInt(getProperty("message-processor-thread", "24"));
+	}
+
 	public ExecutorService getModelServiceExecutorService() {
 		return m_threadPool;
+	}
+
+	public int getModelServiceThreads() {
+		return Integer.parseInt(getProperty("model-service-thread", "100"));
 	}
 
 	public String getProperty(String name, String defaultValue) {
@@ -544,27 +550,11 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 			return defaultValue;
 		}
 	}
-
+	
 	public boolean validateIp(String str) {
 		Pattern pattern = Pattern
 		      .compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
 		return pattern.matcher(str).matches();
-	}
-
-	public int getMessageProcessorThreads() {
-		return Integer.parseInt(getProperty("message-processor-thread", "24"));
-	}
-
-	public int getMessageDumpThreads() {
-		return Integer.parseInt(getProperty("message-dumper-thread", "5"));
-	}
-
-	public int getHdfsUploadThreads() {
-		return Integer.parseInt(getProperty("hdfs-upload-thread", "3"));
-	}
-	
-	public int getModelServiceThreads() {
-		return Integer.parseInt(getProperty("model-service-thread", "100"));
 	}
 
 }

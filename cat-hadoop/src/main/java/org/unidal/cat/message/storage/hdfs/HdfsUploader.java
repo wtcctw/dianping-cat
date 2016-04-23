@@ -60,7 +60,7 @@ public class HdfsUploader implements LogEnabled, Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		int thread = m_serverConfigManager.getHdfsUploadThreadCount();
+		int thread = m_serverConfigManager.getHdfsUploadThreads();
 
 		m_localBaseDir = new File(m_serverConfigManager.getHdfsLocalBaseDir(FileSystemManager.DUMP));
 		m_executors = new ThreadPoolExecutor(thread, thread, 3, TimeUnit.SECONDS,
