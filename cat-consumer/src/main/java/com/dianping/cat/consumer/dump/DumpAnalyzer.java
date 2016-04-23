@@ -32,23 +32,31 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	private MessageFinderManager m_finderManager;
 
 	private Logger m_logger;
-	
+
+	private void closeStorage() {
+		try {
+			int hour = (int) TimeUnit.MILLISECONDS.toHours(m_startTime);
+
+			m_dumperManager.close(hour);
+			m_finderManager.close(hour);
+		} catch (Exception e) {
+			m_logger.error(e.getMessage(), e);
+		}
+	}
+
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
-		Threads.forGroup("cat").start(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					int hour = (int) TimeUnit.MILLISECONDS.toHours(m_startTime);
-
-					m_dumperManager.close(hour);
-					m_finderManager.close(hour);
-				} catch (Exception e) {
-					m_logger.error(e.getMessage(), e);
+		if (atEnd) {
+			Threads.forGroup("cat").start(new Runnable() {
+				@Override
+				public void run() {
+					closeStorage();
 				}
-			}
-		});
 
+			});
+		} else {
+			closeStorage();
+		}
 	}
 
 	@Override
