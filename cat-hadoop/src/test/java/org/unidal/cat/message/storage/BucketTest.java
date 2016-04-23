@@ -94,6 +94,7 @@ public class BucketTest extends ComponentTestCase {
 
 			block.finish();
 			bucket.puts(block.getData(), block.getOffsets());
+			bucket.flush();
 
 			for (MessageId id : block.getOffsets().keySet()) {
 				ByteBuf buf = bucket.get(id);
@@ -341,7 +342,8 @@ public class BucketTest extends ComponentTestCase {
 
 			block.finish();
 			bucket.puts(block.getData(), block.getOffsets());
-
+			bucket.flush();
+			
 			for (MessageId id : block.getOffsets().keySet()) {
 				ByteBuf buf = bucket.get(id);
 				MessageTree tree = m_codec.decode(buf);

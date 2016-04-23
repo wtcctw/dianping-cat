@@ -43,7 +43,7 @@ public class LocalBucket implements Bucket {
 
 	private IndexHelper m_index = new IndexHelper();
 
-	private boolean m_nio = true;
+	private static final boolean s_nioEnabled = true;
 
 	@Override
 	public void close() {
@@ -56,6 +56,7 @@ public class LocalBucket implements Bucket {
 	@Override
 	public void flush() {
 		try {
+			m_data.m_out.flush();
 			m_data.m_file.getFD().sync();
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -121,7 +122,7 @@ public class LocalBucket implements Bucket {
 		private FileChannel m_dataChannel;
 
 		private void close() {
-			if (m_nio) {
+			if (s_nioEnabled) {
 				try {
 					m_dataChannel.force(false);
 					m_dataChannel.close();
@@ -162,7 +163,7 @@ public class LocalBucket implements Bucket {
 			m_file = new RandomAccessFile(m_path, "rw"); // read-write
 			m_offset = m_path.length();
 
-			if (m_nio) {
+			if (s_nioEnabled) {
 				m_dataChannel = m_file.getChannel();
 				m_dataChannel.position(m_offset);
 
@@ -197,7 +198,7 @@ public class LocalBucket implements Bucket {
 		private void write(long offset, ByteBuf data) throws IOException {
 			int len = data.readableBytes();
 
-			if (m_nio) {
+			if (s_nioEnabled) {
 				m_dataChannel.position(offset);
 				ByteBuffer buf = ByteBuffer.allocate(4 + len);
 
@@ -244,7 +245,7 @@ public class LocalBucket implements Bucket {
 				Cat.logError(e);
 			}
 
-			if (m_nio) {
+			if (s_nioEnabled) {
 				try {
 					m_indexChannel.force(false);
 					m_indexChannel.close();
@@ -337,7 +338,7 @@ public class LocalBucket implements Bucket {
 				segment.writeLong(offset, value);
 			} else {
 				Cat.logEvent("Block", "Abnormal:" + id.getDomain(), Event.SUCCESS, id.toString());
-				if (m_nio) {
+				if (s_nioEnabled) {
 					m_indexChannel.position(position);
 
 					ByteBuffer buf = ByteBuffer.allocate(8);
