@@ -9,10 +9,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.unidal.cat.message.QueueFullException;
 import org.unidal.cat.message.storage.Block;
 import org.unidal.cat.message.storage.BlockDumper;
 import org.unidal.cat.message.storage.BlockWriter;
+import org.unidal.cat.message.storage.exception.BlockQueueFullException;
 import org.unidal.helper.Threads;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
@@ -61,7 +61,7 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 
 			index++;
 		}
-		
+
 		for (final BlockWriter writer : m_writers) {
 			writer.shutdown();
 			super.release(writer);
@@ -80,7 +80,7 @@ public class DefaultBlockDumper extends ContainerHolder implements BlockDumper, 
 			m_statisticManager.addBlockLoss(1);
 
 			if ((++m_failCount % 100) == 0) {
-				Cat.logError(new QueueFullException("Error when adding block to queue, fails: " + m_failCount));
+				Cat.logError(new BlockQueueFullException("Error when adding block to queue, fails: " + m_failCount));
 				m_logger.info("block dump queue is full " + m_failCount + " index:" + index);
 			}
 		} else {

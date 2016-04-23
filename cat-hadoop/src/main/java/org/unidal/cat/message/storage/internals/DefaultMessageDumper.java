@@ -11,13 +11,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.unidal.cat.message.QueueFullException;
 import org.unidal.cat.message.storage.BlockDumperManager;
 import org.unidal.cat.message.storage.BucketManager;
 import org.unidal.cat.message.storage.IndexManager;
 import org.unidal.cat.message.storage.MessageDumper;
 import org.unidal.cat.message.storage.MessageProcessor;
 import org.unidal.cat.message.storage.TokenMappingManager;
+import org.unidal.cat.message.storage.exception.MessageQueueFullException;
 import org.unidal.helper.Threads;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
@@ -151,7 +151,7 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 			m_statisticManager.addMessageDumpLoss(1);
 
 			if ((m_failCount.incrementAndGet() % 100) == 0) {
-				Cat.logError(new QueueFullException("Error when adding message to queue, fails: " + m_failCount));
+				Cat.logError(new MessageQueueFullException("Error when adding message to queue, fails: " + m_failCount));
 
 				m_logger.info("message tree queue is full " + m_failCount + " index " + index);
 				// tree.getBuffer().release();
