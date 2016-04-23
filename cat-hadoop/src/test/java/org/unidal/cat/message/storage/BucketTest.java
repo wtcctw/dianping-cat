@@ -200,7 +200,7 @@ public class BucketTest extends ComponentTestCase {
 		BucketManager manager = lookup(BucketManager.class, "local");
 		Bucket bucket = manager.getBucket(domain, "0a010203", hour, true);
 
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 0; i < 1000; i++) {
 			Block block = new DefaultBlock(domain, hour);
 
 			for (int index = 0; index < 9; index++) {
@@ -223,7 +223,7 @@ public class BucketTest extends ComponentTestCase {
 			bucket.puts(block.getData(), block.getOffsets());
 		}
 
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 0; i < 1000; i++) {
 			Block block = new DefaultBlock(domain, hour);
 
 			for (int index = 9; index < 10; index++) {
