@@ -329,7 +329,7 @@ public class BucketTest extends ComponentTestCase {
 		BucketManager manager = lookup(BucketManager.class, "local");
 		Bucket bucket = manager.getBucket(domain, ip, hour, true);
 
-		for (int i = 0; i < 500; i++) {
+		for (int i = 0; i < 5000; i++) {
 			Block block = new DefaultBlock(domain, hour);
 
 			for (int index = 0; index < 10; index++) {
@@ -353,7 +353,7 @@ public class BucketTest extends ComponentTestCase {
 		manager.closeBuckets(hour);
 		bucket = manager.getBucket(domain, ip, hour, true);
 		
-		for (int i = 0; i < 500; i++) {
+		for (int i = 0; i < 5000; i++) {
 			for (int index = 0; index < 10; index++) {
 				MessageId id = new MessageId(domain, ip, hour, i * 10 + index);
 				ByteBuf buf = bucket.get(id);
@@ -362,7 +362,7 @@ public class BucketTest extends ComponentTestCase {
 			}
 		}
 
-		for (int i = 500; i < 1000; i++) {
+		for (int i = 5000; i < 10000; i++) {
 			Block block = new DefaultBlock(domain, hour);
 
 			for (int index = 0; index < 10; index++) {
@@ -381,6 +381,59 @@ public class BucketTest extends ComponentTestCase {
 				ByteBuf buf = bucket.get(id);
 				MessageTree tree = m_codec.decode(buf);
 
+				Assert.assertEquals(id.toString(), tree.getMessageId());
+			}
+		}
+		
+		for (int i = 5000; i < 10000; i++) {
+			for (int index = 0; index < 10; index++) {
+				MessageId id = new MessageId(domain, ip, hour, i * 10 + index);
+				ByteBuf buf = bucket.get(id);
+				MessageTree tree = m_codec.decode(buf);
+				Assert.assertEquals(id.toString(), tree.getMessageId());
+			}
+		}
+	}
+
+	@Test
+	public void testWriteAndReadReload() throws Exception {
+		String ip = "0a010203";
+		String domain = "mock";
+		int hour = 404857;
+		BucketManager manager = lookup(BucketManager.class, "local");
+
+		for (int i = 0; i < 5000; i++) {
+			Bucket bucket = manager.getBucket(domain, ip, hour, true);
+			Block block = new DefaultBlock(domain, hour);
+
+			for (int index = 0; index < 10; index++) {
+				MessageId id = new MessageId(domain, ip, hour, i * 10 + index);
+				MessageTree tree = TreeHelper.tree(m_codec, id);
+
+				block.pack(id, tree.getBuffer());
+			}
+
+			block.finish();
+			bucket.puts(block.getData(), block.getOffsets());
+			
+			bucket.flush();
+			
+			for (int index = 0; index < 10; index++) {
+				MessageId id = new MessageId(domain, ip, hour, i * 10 + index);
+				ByteBuf buf = bucket.get(id);
+				MessageTree tree = m_codec.decode(buf);
+				Assert.assertEquals(id.toString(), tree.getMessageId());
+			}
+			manager.closeBuckets(hour);
+		}
+		
+		Bucket bucket = manager.getBucket(domain, ip, hour, true);
+		
+		for (int i = 0; i < 5000; i++) {
+			for (int index = 0; index < 10; index++) {
+				MessageId id = new MessageId(domain, ip, hour, i * 10 + index);
+				ByteBuf buf = bucket.get(id);
+				MessageTree tree = m_codec.decode(buf);
 				Assert.assertEquals(id.toString(), tree.getMessageId());
 			}
 		}
