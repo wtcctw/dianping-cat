@@ -22,7 +22,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.message.internal.MessageId;
 
 public class DefaultBlock implements Block {
-	private static final int MAX_SIZE = 256 * 1024;
+	private static final int MAX_SIZE = 128 * 1024;
 
 	private static final int BUFFER_SIZE = 1024;
 
