@@ -561,4 +561,8 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		return Integer.parseInt(getProperty(name + "-analyzer-threads", "1"));
 	}
 
+	public boolean getEnableOfRealtimeAnalyzer(String name) {
+		return Boolean.parseBoolean(getProperty(name + "-analyzer-enable", "true"));
+	}
+
 }
