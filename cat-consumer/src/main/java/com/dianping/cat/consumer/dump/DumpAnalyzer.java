@@ -11,8 +11,10 @@ import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.ReportManager;
@@ -34,13 +36,18 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	private Logger m_logger;
 
 	private void closeStorage() {
+		Transaction t = Cat.newTransaction("Dumper", "Storage");
 		try {
 			int hour = (int) TimeUnit.MILLISECONDS.toHours(m_startTime);
 
 			m_dumperManager.close(hour);
 			m_finderManager.close(hour);
+			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception e) {
 			m_logger.error(e.getMessage(), e);
+			t.setStatus(e);
+		} finally{
+			t.complete();
 		}
 	}
 
