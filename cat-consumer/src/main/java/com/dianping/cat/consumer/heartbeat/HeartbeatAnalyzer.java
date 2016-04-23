@@ -121,7 +121,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	protected void process(MessageTree tree) {
 		String domain = tree.getDomain();
 
-		if (m_serverFilterConfigManager.validateDomain(domain)) {
+		if (m_serverFilterConfigManager.validateDomain(domain) && !"zebra-web".equals(domain)) {
 			HeartbeatReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
 			report.addIp(tree.getIpAddress());
 
