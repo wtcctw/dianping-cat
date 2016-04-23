@@ -43,6 +43,8 @@ public class LocalBucket implements Bucket {
 
 	private IndexHelper m_index = new IndexHelper();
 
+	private boolean m_nio = true;
+
 	@Override
 	public void close() {
 		if (m_index.isOpen()) {
@@ -53,10 +55,18 @@ public class LocalBucket implements Bucket {
 
 	@Override
 	public void flush() {
-		try {
-			m_data.m_file.getFD().sync();
-		} catch (Exception e) {
-			Cat.logError(e);
+		if (m_nio) {
+			try {
+	         m_data.m_dataChannel.force(true);
+         } catch (IOException e) {
+         	Cat.logError(e);
+         }
+		} else {
+			try {
+				m_data.m_file.getFD().sync();
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 		}
 	}
 
@@ -116,17 +126,29 @@ public class LocalBucket implements Bucket {
 
 		private DataOutputStream m_out;
 
+		private FileChannel m_dataChannel;
+
 		private void close() {
-			try {
-				m_file.close();
-			} catch (IOException e) {
-				Cat.logError(e);
+
+			if (m_nio) {
+				try {
+					m_dataChannel.force(false);
+					m_dataChannel.close();
+				} catch (IOException e) {
+					Cat.logError(e);
+				}
+			} else {
+				try {
+					if (m_out != null) {
+						m_out.close();
+					}
+				} catch (IOException e) {
+					Cat.logError(e);
+				}
 			}
 
 			try {
-				if (m_out != null) {
-					m_out.close();
-				}
+				m_file.close();
 			} catch (IOException e) {
 				Cat.logError(e);
 			}
@@ -146,18 +168,36 @@ public class LocalBucket implements Bucket {
 			m_path = dataPath;
 			m_path.getParentFile().mkdirs();
 
-			m_out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(m_path, true), SEGMENT_SIZE));
-			m_file = new RandomAccessFile(m_path, "r"); // read-only
+			m_file = new RandomAccessFile(m_path, "rw"); // read-only
 			m_offset = m_path.length();
+			
+			if (m_nio) {
+				m_dataChannel = m_file.getChannel();
+				m_dataChannel.position(m_offset);
 
-			if (m_offset == 0) {
-				m_out.writeInt(-1);
-				m_offset += 4;
+				if (m_offset == 0) {
+					ByteBuffer buf = ByteBuffer.allocate(4);
+					buf.putInt(-1);
+					buf.flip();
+					m_dataChannel.write(buf);
+					m_offset += 4;
+				}
+			} else {
+				m_out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(m_path, true), SEGMENT_SIZE));
+
+				if (m_offset == 0) {
+					m_out.writeInt(-1);
+					m_offset += 4;
+				}
 			}
 		}
 
 		private byte[] read(long dataOffset) throws IOException {
-			m_out.flush();
+			if (m_nio) {
+				m_dataChannel.force(true);
+			} else {
+				m_out.flush();
+			}
 			m_file.seek(dataOffset);
 
 			int len = m_file.readInt();
@@ -171,8 +211,18 @@ public class LocalBucket implements Bucket {
 		private void write(ByteBuf data) throws IOException {
 			int len = data.readableBytes();
 
-			m_out.writeInt(len);
-			data.readBytes(m_out, len);
+			if (m_nio) {
+				ByteBuffer buf = ByteBuffer.allocate(4 + len);
+
+				buf.putInt(len);
+				buf.put(data.array(), 0, len);
+				buf.flip();
+				m_dataChannel.write(buf);
+			} else {
+				m_out.writeInt(len);
+				data.readBytes(m_out, len);
+			}
+
 			m_offset += len + 4;
 		}
 	}
@@ -207,11 +257,14 @@ public class LocalBucket implements Bucket {
 				Cat.logError(e);
 			}
 
-			try {
-				m_indexChannel.force(false);
-				m_indexChannel.close();
-			} catch (IOException e) {
-				Cat.logError(e);
+			if (m_nio) {
+				try {
+					m_indexChannel.force(false);
+					m_indexChannel.close();
+				} catch (IOException e) {
+					Cat.logError(e);
+				}
+			} else {
 			}
 
 			try {
@@ -240,7 +293,7 @@ public class LocalBucket implements Bucket {
 			m_path.getParentFile().mkdirs();
 
 			// read-write without meta sync
-			m_file = new RandomAccessFile(m_path, "rwd");
+			m_file = new RandomAccessFile(m_path, "rw");
 			m_indexChannel = m_file.getChannel();
 
 			long size = m_file.length();
@@ -296,13 +349,18 @@ public class LocalBucket implements Bucket {
 			if (segment != null) {
 				segment.writeLong(offset, value);
 			} else {
-				Cat.logEvent("Block", "Abnormal:" + id.getDomain(), Event.SUCCESS, id.toString());
-				m_indexChannel.position(position);
+				if (m_nio) {
+					Cat.logEvent("Block", "Abnormal:" + id.getDomain(), Event.SUCCESS, id.toString());
+					m_indexChannel.position(position);
 
-				ByteBuffer buf = ByteBuffer.allocate(8);
-				buf.putLong(value);
-				buf.flip();
-				m_indexChannel.write(buf);
+					ByteBuffer buf = ByteBuffer.allocate(8);
+					buf.putLong(value);
+					buf.flip();
+					m_indexChannel.write(buf);
+				} else {
+					m_file.seek(position);
+					m_file.writeLong(value);
+				}
 			}
 		}
 

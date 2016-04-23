@@ -36,7 +36,6 @@ public class BucketTest extends ComponentTestCase {
 		System.setProperty("devMode", "true");
 	}
 
-	@Test
 	public void testManyDomainIpWrite() throws Exception {
 		TreeHelper.init(m_codec);
 
@@ -353,14 +352,12 @@ public class BucketTest extends ComponentTestCase {
 
 		manager.closeBuckets(hour);
 		bucket = manager.getBucket(domain, ip, hour, true);
-
+		
 		for (int i = 0; i < 500; i++) {
-			Block block = new DefaultBlock(domain, hour);
-
-			for (MessageId id : block.getOffsets().keySet()) {
+			for (int index = 0; index < 10; index++) {
+				MessageId id = new MessageId(domain, ip, hour, i * 10 + index);
 				ByteBuf buf = bucket.get(id);
 				MessageTree tree = m_codec.decode(buf);
-
 				Assert.assertEquals(id.toString(), tree.getMessageId());
 			}
 		}
@@ -377,6 +374,8 @@ public class BucketTest extends ComponentTestCase {
 
 			block.finish();
 			bucket.puts(block.getData(), block.getOffsets());
+			
+			bucket.flush();
 
 			for (MessageId id : block.getOffsets().keySet()) {
 				ByteBuf buf = bucket.get(id);
