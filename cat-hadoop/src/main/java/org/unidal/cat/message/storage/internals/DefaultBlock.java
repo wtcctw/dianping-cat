@@ -64,23 +64,10 @@ public class DefaultBlock implements Block {
 		m_out = createOutputSteam(m_data, type);
 	}
 
-	private OutputStream createOutputSteam(ByteBuf buf, CompressTye type) {
-		m_type = type;
-		ByteBufOutputStream os = new ByteBufOutputStream(buf);
-		OutputStream out = null;
-
-		if (type == CompressTye.GZIP) {
-			try {
-				out = new GZIPOutputStream(os, BUFFER_SIZE);
-			} catch (IOException e) {
-				Cat.logError(e);
-			}
-		} else if (type == CompressTye.DEFLATE) {
-			out = new DeflaterOutputStream(os, new Deflater(2, true), BUFFER_SIZE);
-		} else if (type == CompressTye.SNAPPY) {
-			out = new SnappyOutputStream(os);
-		}
-		return out;
+	@Override
+	public void clear() {
+		m_data = null;
+		m_offsets.clear();
 	}
 
 	private InputStream createInputSteam(ByteBuf buf, CompressTye type) {
@@ -105,10 +92,23 @@ public class DefaultBlock implements Block {
 		return out;
 	}
 
-	@Override
-	public void clear() {
-		m_data = null;
-		m_offsets.clear();
+	private OutputStream createOutputSteam(ByteBuf buf, CompressTye type) {
+		m_type = type;
+		ByteBufOutputStream os = new ByteBufOutputStream(buf);
+		OutputStream out = null;
+
+		if (type == CompressTye.GZIP) {
+			try {
+				out = new GZIPOutputStream(os, BUFFER_SIZE);
+			} catch (IOException e) {
+				Cat.logError(e);
+			}
+		} else if (type == CompressTye.DEFLATE) {
+			out = new DeflaterOutputStream(os, new Deflater(2, true), BUFFER_SIZE);
+		} else if (type == CompressTye.SNAPPY) {
+			out = new SnappyOutputStream(os);
+		}
+		return out;
 	}
 
 	@Override
