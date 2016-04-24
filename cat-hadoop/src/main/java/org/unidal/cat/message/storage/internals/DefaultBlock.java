@@ -74,7 +74,13 @@ public class DefaultBlock implements Block {
 		ByteBufInputStream os = new ByteBufInputStream(buf);
 		InputStream out = null;
 
-		if (type == CompressTye.GZIP) {
+		if (type == CompressTye.SNAPPY) {
+			try {
+				out = new SnappyInputStream(os);
+			} catch (IOException e) {
+				Cat.logError(e);
+			}
+		} else if (type == CompressTye.GZIP) {
 			try {
 				out = new GZIPInputStream(os, BUFFER_SIZE);
 			} catch (IOException e) {
@@ -82,12 +88,6 @@ public class DefaultBlock implements Block {
 			}
 		} else if (type == CompressTye.DEFLATE) {
 			out = new DeflaterInputStream(os, new Deflater(2, true), BUFFER_SIZE);
-		} else if (type == CompressTye.SNAPPY) {
-			try {
-				out = new SnappyInputStream(os);
-			} catch (IOException e) {
-				Cat.logError(e);
-			}
 		}
 		return out;
 	}
@@ -97,7 +97,9 @@ public class DefaultBlock implements Block {
 		ByteBufOutputStream os = new ByteBufOutputStream(buf);
 		OutputStream out = null;
 
-		if (type == CompressTye.GZIP) {
+		if (type == CompressTye.SNAPPY) {
+			out = new SnappyOutputStream(os);
+		} else if (type == CompressTye.GZIP) {
 			try {
 				out = new GZIPOutputStream(os, BUFFER_SIZE);
 			} catch (IOException e) {
@@ -105,8 +107,6 @@ public class DefaultBlock implements Block {
 			}
 		} else if (type == CompressTye.DEFLATE) {
 			out = new DeflaterOutputStream(os, new Deflater(2, true), BUFFER_SIZE);
-		} else if (type == CompressTye.SNAPPY) {
-			out = new SnappyOutputStream(os);
 		}
 		return out;
 	}
@@ -204,7 +204,7 @@ public class DefaultBlock implements Block {
 		if (m_data == null) {
 			return null;
 		}
-		
+
 		DataInputStream in = new DataInputStream(createInputSteam(m_data, m_type));
 		int offset = m_offsets.get(id);
 
