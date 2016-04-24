@@ -12,10 +12,11 @@ import java.io.OutputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.zip.Deflater;
-import java.util.zip.DeflaterInputStream;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
 
 import org.unidal.cat.message.storage.Block;
 import org.xerial.snappy.SnappyInputStream;
@@ -72,24 +73,26 @@ public class DefaultBlock implements Block {
 
 	private InputStream createInputSteam(ByteBuf buf, CompressTye type) {
 		ByteBufInputStream os = new ByteBufInputStream(buf);
-		InputStream out = null;
+		InputStream in = null;
 
 		if (type == CompressTye.SNAPPY) {
 			try {
-				out = new SnappyInputStream(os);
+				in = new SnappyInputStream(os);
 			} catch (IOException e) {
 				Cat.logError(e);
 			}
 		} else if (type == CompressTye.GZIP) {
 			try {
-				out = new GZIPInputStream(os, BUFFER_SIZE);
+				in = new GZIPInputStream(os, BUFFER_SIZE);
 			} catch (IOException e) {
 				Cat.logError(e);
 			}
 		} else if (type == CompressTye.DEFLATE) {
-			out = new DeflaterInputStream(os, new Deflater(1, true), BUFFER_SIZE);
+			Inflater inflater = new Inflater(true);
+
+			in = new DataInputStream(new InflaterInputStream(os, inflater, BUFFER_SIZE));
 		}
-		return out;
+		return in;
 	}
 
 	private OutputStream createOutputSteam(ByteBuf buf, CompressTye type) {
@@ -105,6 +108,7 @@ public class DefaultBlock implements Block {
 				Cat.logError(e);
 			}
 		} else if (type == CompressTye.DEFLATE) {
+
 			out = new DeflaterOutputStream(os, new Deflater(1, true), BUFFER_SIZE);
 		}
 		return out;
