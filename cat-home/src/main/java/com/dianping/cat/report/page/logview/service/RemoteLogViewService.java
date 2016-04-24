@@ -3,10 +3,10 @@ package com.dianping.cat.report.page.logview.service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.zip.GZIPInputStream;
 
 import org.unidal.helper.Files;
 import org.unidal.helper.Urls;
+import org.xerial.snappy.SnappyInputStream;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.config.server.ServerConfigManager;
@@ -42,7 +42,7 @@ public class RemoteLogViewService extends BaseRemoteModelService<String> {
 			t.addData(url.toString());
 
 			InputStream in = Urls.forIO().connectTimeout(1000).readTimeout(5000).openStream(url.toExternalForm());
-			GZIPInputStream gzip = new GZIPInputStream(in);
+			SnappyInputStream gzip = new SnappyInputStream(in);
 			String xml = Files.forIO().readFrom(gzip, "utf-8");
 
 			int len = xml == null ? 0 : xml.length();

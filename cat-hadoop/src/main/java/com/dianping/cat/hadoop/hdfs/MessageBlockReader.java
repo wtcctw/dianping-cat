@@ -3,11 +3,11 @@ package com.dianping.cat.hadoop.hdfs;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.zip.GZIPInputStream;
 
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.xerial.snappy.SnappyInputStream;
 
 public class MessageBlockReader {
 	private FSDataInputStream m_indexFile;
@@ -49,7 +49,7 @@ public class MessageBlockReader {
 		}
 
 		ByteArrayInputStream bais = new ByteArrayInputStream(buf);
-		DataInputStream in = new DataInputStream(new GZIPInputStream(bais));
+		DataInputStream in = new DataInputStream(new SnappyInputStream(bais));
 
 		try {
 			in.skip(blockOffset);
