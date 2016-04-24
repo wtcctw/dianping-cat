@@ -17,7 +17,7 @@ import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 public class CompressPerformanceTest extends ComponentTestCase {
 	private MessageCodec m_codec;
 	
-	private int m_total = 200000;
+	private int m_total = 20000;
 
 	@Before
 	public void before() {

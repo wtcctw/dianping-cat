@@ -108,8 +108,7 @@ public class DefaultBlock implements Block {
 				Cat.logError(e);
 			}
 		} else if (type == CompressTye.DEFLATE) {
-
-			out = new DeflaterOutputStream(os, new Deflater(5, true), BUFFER_SIZE);
+			out = new DeflaterOutputStream(os, new Deflater(3, true), BUFFER_SIZE);
 		}
 		return out;
 	}
