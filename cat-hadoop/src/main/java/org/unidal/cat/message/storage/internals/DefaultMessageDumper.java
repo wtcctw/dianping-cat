@@ -124,6 +124,9 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 	}
 
 	public void initialize(int hour) {
+		DefaultBlock.s_commpressType = CompressTye.getCompressTye(m_configManager.getStorageCompressType());
+		DefaultBlock.s_deflateLevel = m_configManager.getStorageDeflateLevel();
+		
 		int processThreads = m_configManager.getMessageProcessorThreads();
 
 		for (int i = 0; i < processThreads; i++) {

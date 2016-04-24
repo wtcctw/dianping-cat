@@ -564,9 +564,17 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	public boolean getEnableOfRealtimeAnalyzer(String name) {
 		return Boolean.parseBoolean(getProperty(name + "-analyzer-enable", "true"));
 	}
-	
-	public boolean getStroargeNioEnable(){
+
+	public boolean getStroargeNioEnable() {
 		return Boolean.parseBoolean(getProperty("storage-nio-enable", "true"));
+	}
+
+	public String getStorageCompressType() {
+		return getProperty("storage-compress-type", "gzip");
+	}
+
+	public int getStorageDeflateLevel() {
+		return Integer.parseInt(getProperty("storage-deflate-level", "5"));
 	}
 
 }

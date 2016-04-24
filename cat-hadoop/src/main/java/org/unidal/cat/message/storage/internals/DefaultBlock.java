@@ -46,7 +46,9 @@ public class DefaultBlock implements Block {
 
 	private boolean m_isFulsh;
 
-	private static CompressTye s_type = CompressTye.SNAPPY;
+	public static CompressTye s_commpressType = CompressTye.SNAPPY;
+	
+	public static int s_deflateLevel = 5;;
 
 	public DefaultBlock(MessageId id, int offset, byte[] data) {
 		m_offsets.put(id, offset);
@@ -54,13 +56,13 @@ public class DefaultBlock implements Block {
 	}
 
 	public DefaultBlock(String domain, int hour) {
-		this(domain, hour, s_type);
+		this(domain, hour, s_commpressType);
 	}
 
 	public DefaultBlock(String domain, int hour, CompressTye type) {
 		m_domain = domain;
 		m_hour = hour;
-		s_type = type;
+		s_commpressType = type;
 		m_data = Unpooled.buffer(8 * 1024);
 		m_out = createOutputSteam(m_data, type);
 	}
@@ -108,7 +110,7 @@ public class DefaultBlock implements Block {
 				Cat.logError(e);
 			}
 		} else if (type == CompressTye.DEFLATE) {
-			out = new DeflaterOutputStream(os, new Deflater(3, true), BUFFER_SIZE);
+			out = new DeflaterOutputStream(os, new Deflater(s_deflateLevel, true), BUFFER_SIZE);
 		}
 		return out;
 	}
@@ -207,7 +209,7 @@ public class DefaultBlock implements Block {
 			return null;
 		}
 
-		DataInputStream in = new DataInputStream(createInputSteam(m_data, s_type));
+		DataInputStream in = new DataInputStream(createInputSteam(m_data, s_commpressType));
 		int offset = m_offsets.get(id);
 
 		in.skip(offset);
