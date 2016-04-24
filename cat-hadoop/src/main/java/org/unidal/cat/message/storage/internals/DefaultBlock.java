@@ -59,8 +59,8 @@ public class DefaultBlock implements Block {
 	public DefaultBlock(String domain, int hour, CompressTye type) {
 		m_domain = domain;
 		m_hour = hour;
+		m_type = type;
 		m_data = Unpooled.buffer(8 * 1024);
-
 		m_out = createOutputSteam(m_data, type);
 	}
 
@@ -93,7 +93,6 @@ public class DefaultBlock implements Block {
 	}
 
 	private OutputStream createOutputSteam(ByteBuf buf, CompressTye type) {
-		m_type = type;
 		ByteBufOutputStream os = new ByteBufOutputStream(buf);
 		OutputStream out = null;
 
