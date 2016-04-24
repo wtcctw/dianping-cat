@@ -5,7 +5,8 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.zip.GZIPInputStream;
+
+import org.xerial.snappy.SnappyInputStream;
 
 public class MessageBlockReader {
 	private RandomAccessFile m_indexFile;
@@ -40,7 +41,7 @@ public class MessageBlockReader {
 		m_dataFile.readFully(buf);
 
 		ByteArrayInputStream bais = new ByteArrayInputStream(buf);
-		DataInputStream in = new DataInputStream(new GZIPInputStream(bais));
+		DataInputStream in = new DataInputStream(new SnappyInputStream(bais));
 
 		try {
 			in.skip(blockOffset);
