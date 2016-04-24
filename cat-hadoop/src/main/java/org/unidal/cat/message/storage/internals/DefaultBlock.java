@@ -46,7 +46,7 @@ public class DefaultBlock implements Block {
 
 	private boolean m_isFulsh;
 
-	private static CompressTye s_type = CompressTye.DEFLATE;
+	private static CompressTye s_type = CompressTye.SNAPPY;
 
 	public DefaultBlock(MessageId id, int offset, byte[] data) {
 		m_offsets.put(id, offset);
