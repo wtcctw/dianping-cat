@@ -26,6 +26,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.internal.MessageId;
 
@@ -39,11 +40,14 @@ public class LocalBucket implements Bucket {
 	@Inject
 	private ByteBufCache m_bufCache;
 
+	@Inject
+	private ServerConfigManager m_config;
+
 	private DataHelper m_data = new DataHelper();
 
 	private IndexHelper m_index = new IndexHelper();
 
-	private static final boolean s_nioEnabled = true;
+	private boolean m_nioEnabled = true;
 
 	@Override
 	public void close() {
@@ -56,7 +60,9 @@ public class LocalBucket implements Bucket {
 	@Override
 	public void flush() {
 		try {
-			m_data.m_out.flush();
+			if (!m_nioEnabled) {
+				m_data.m_out.flush();
+			}
 			m_data.m_file.getFD().sync();
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -82,6 +88,7 @@ public class LocalBucket implements Bucket {
 
 	@Override
 	public void initialize(String domain, String ip, int hour) throws IOException {
+		m_nioEnabled = m_config.getStroargeNioEnable();
 		long timestamp = hour * 3600 * 1000L;
 		Date startTime = new Date(timestamp);
 		File indexPath = new File(m_bulider.getPath(domain, startTime, ip, FileType.INDEX));
@@ -122,9 +129,8 @@ public class LocalBucket implements Bucket {
 		private FileChannel m_dataChannel;
 
 		private void close() {
-			if (s_nioEnabled) {
+			if (m_nioEnabled) {
 				try {
-					m_dataChannel.force(false);
 					m_dataChannel.close();
 				} catch (IOException e) {
 					Cat.logError(e);
@@ -163,7 +169,7 @@ public class LocalBucket implements Bucket {
 			m_file = new RandomAccessFile(m_path, "rw"); // read-write
 			m_offset = m_path.length();
 
-			if (s_nioEnabled) {
+			if (m_nioEnabled) {
 				m_dataChannel = m_file.getChannel();
 				m_dataChannel.position(m_offset);
 
@@ -198,7 +204,7 @@ public class LocalBucket implements Bucket {
 		private void write(long offset, ByteBuf data) throws IOException {
 			int len = data.readableBytes();
 
-			if (s_nioEnabled) {
+			if (m_nioEnabled) {
 				m_dataChannel.position(offset);
 				ByteBuffer buf = ByteBuffer.allocate(4 + len);
 
@@ -245,7 +251,7 @@ public class LocalBucket implements Bucket {
 				Cat.logError(e);
 			}
 
-			if (s_nioEnabled) {
+			if (m_nioEnabled) {
 				try {
 					m_indexChannel.force(false);
 					m_indexChannel.close();
@@ -338,7 +344,7 @@ public class LocalBucket implements Bucket {
 				segment.writeLong(offset, value);
 			} else {
 				Cat.logEvent("Block", "Abnormal:" + id.getDomain(), Event.SUCCESS, id.toString());
-				if (s_nioEnabled) {
+				if (m_nioEnabled) {
 					m_indexChannel.position(position);
 
 					ByteBuffer buf = ByteBuffer.allocate(8);

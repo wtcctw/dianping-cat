@@ -564,5 +564,9 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	public boolean getEnableOfRealtimeAnalyzer(String name) {
 		return Boolean.parseBoolean(getProperty(name + "-analyzer-enable", "true"));
 	}
+	
+	public boolean getStroargeNioEnable(){
+		return Boolean.parseBoolean(getProperty("storage-nio-enable", "true"));
+	}
 
 }

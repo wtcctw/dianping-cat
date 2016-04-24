@@ -124,6 +124,9 @@
 				<requirement>
 					<role>org.unidal.cat.message.storage.internals.ByteBufCache</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
