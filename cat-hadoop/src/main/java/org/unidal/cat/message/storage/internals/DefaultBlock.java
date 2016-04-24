@@ -45,7 +45,7 @@ public class DefaultBlock implements Block {
 
 	private boolean m_isFulsh;
 
-	private CompressTye m_type = CompressTye.SNAPPY;
+	private CompressTye m_type = CompressTye.DEFLATE;
 
 	public DefaultBlock(MessageId id, int offset, byte[] data) {
 		m_offsets.put(id, offset);
@@ -87,7 +87,7 @@ public class DefaultBlock implements Block {
 				Cat.logError(e);
 			}
 		} else if (type == CompressTye.DEFLATE) {
-			out = new DeflaterInputStream(os, new Deflater(2, true), BUFFER_SIZE);
+			out = new DeflaterInputStream(os, new Deflater(1, true), BUFFER_SIZE);
 		}
 		return out;
 	}
