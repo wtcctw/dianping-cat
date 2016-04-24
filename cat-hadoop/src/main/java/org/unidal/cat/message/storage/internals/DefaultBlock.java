@@ -109,7 +109,7 @@ public class DefaultBlock implements Block {
 			}
 		} else if (type == CompressTye.DEFLATE) {
 
-			out = new DeflaterOutputStream(os, new Deflater(1, true), BUFFER_SIZE);
+			out = new DeflaterOutputStream(os, new Deflater(5, true), BUFFER_SIZE);
 		}
 		return out;
 	}
