@@ -26,10 +26,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.message.internal.MessageId;
 
 public class DefaultBlock implements Block {
-	private static final int MAX_SIZE = 128 * 1024;
-
-	private static final int BUFFER_SIZE = 1024;
-
+	
 	private String m_domain;
 
 	private int m_hour;
@@ -45,10 +42,14 @@ public class DefaultBlock implements Block {
 	private OutputStream m_out;
 
 	private boolean m_isFulsh;
-
-	public static CompressTye s_commpressType = CompressTye.SNAPPY;
 	
-	public static int s_deflateLevel = 5;;
+	private static final int BUFFER_SIZE = 1024;
+
+	public static int MAX_SIZE = 128 * 1024;
+
+	public static CompressTye COMMPRESS_TYPE = CompressTye.SNAPPY;
+	
+	public static int DEFLATE_LEVEL = 5;;
 
 	public DefaultBlock(MessageId id, int offset, byte[] data) {
 		m_offsets.put(id, offset);
@@ -56,13 +57,13 @@ public class DefaultBlock implements Block {
 	}
 
 	public DefaultBlock(String domain, int hour) {
-		this(domain, hour, s_commpressType);
+		this(domain, hour, COMMPRESS_TYPE);
 	}
 
 	public DefaultBlock(String domain, int hour, CompressTye type) {
 		m_domain = domain;
 		m_hour = hour;
-		s_commpressType = type;
+		COMMPRESS_TYPE = type;
 		m_data = Unpooled.buffer(8 * 1024);
 		m_out = createOutputSteam(m_data, type);
 	}
@@ -110,7 +111,7 @@ public class DefaultBlock implements Block {
 				Cat.logError(e);
 			}
 		} else if (type == CompressTye.DEFLATE) {
-			out = new DeflaterOutputStream(os, new Deflater(s_deflateLevel, true), BUFFER_SIZE);
+			out = new DeflaterOutputStream(os, new Deflater(DEFLATE_LEVEL, true), BUFFER_SIZE);
 		}
 		return out;
 	}
@@ -209,7 +210,7 @@ public class DefaultBlock implements Block {
 			return null;
 		}
 
-		DataInputStream in = new DataInputStream(createInputSteam(m_data, s_commpressType));
+		DataInputStream in = new DataInputStream(createInputSteam(m_data, COMMPRESS_TYPE));
 		int offset = m_offsets.get(id);
 
 		in.skip(offset);

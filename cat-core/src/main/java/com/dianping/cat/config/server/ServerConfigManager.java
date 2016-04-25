@@ -475,7 +475,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 			if (isLocalMode()) {
 				m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 5);
 			} else {
-				m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 100);
+				m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", getModelServiceThreads());
 			}
 		}
 	}
@@ -575,6 +575,10 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 
 	public int getStorageDeflateLevel() {
 		return Integer.parseInt(getProperty("storage-deflate-level", "5"));
+	}
+	
+	public int getStorageMaxBlockSize(){
+		return Integer.parseInt(getProperty("storage-max-block-size", "131072"));
 	}
 
 }

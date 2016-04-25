@@ -124,8 +124,14 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 	}
 
 	public void initialize(int hour) {
-		DefaultBlock.s_commpressType = CompressTye.getCompressTye(m_configManager.getStorageCompressType());
-		DefaultBlock.s_deflateLevel = m_configManager.getStorageDeflateLevel();
+		DefaultBlock.COMMPRESS_TYPE = CompressTye.getCompressTye(m_configManager.getStorageCompressType());
+		DefaultBlock.DEFLATE_LEVEL = m_configManager.getStorageDeflateLevel();
+		DefaultBlock.MAX_SIZE = m_configManager.getStorageMaxBlockSize();
+		
+		
+		m_logger.info("set compress type :" + DefaultBlock.COMMPRESS_TYPE.toString());
+		m_logger.info("set compress level:" + DefaultBlock.DEFLATE_LEVEL);
+		m_logger.info("set default block size:" + DefaultBlock.MAX_SIZE);
 		
 		int processThreads = m_configManager.getMessageProcessorThreads();
 
