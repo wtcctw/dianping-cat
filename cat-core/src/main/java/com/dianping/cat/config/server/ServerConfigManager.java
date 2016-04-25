@@ -18,8 +18,8 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Files;
 import org.unidal.helper.Splitters;
 import org.unidal.helper.Threads;
-import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 import org.xml.sax.SAXException;
 
@@ -28,7 +28,6 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.server.entity.Domain;
-import com.dianping.cat.configuration.server.entity.HarfsConfig;
 import com.dianping.cat.configuration.server.entity.HdfsConfig;
 import com.dianping.cat.configuration.server.entity.LongConfig;
 import com.dianping.cat.configuration.server.entity.Property;
@@ -64,8 +63,6 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	private Logger m_logger;
 
 	public ExecutorService m_threadPool;
-
-	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
 
 	public final static String REMOTE_SERVERS = "remote-servers";
 
@@ -120,47 +117,6 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		}
 	}
 
-	public String getHarfsBaseDir(String id) {
-		if (m_server != null) {
-			HarfsConfig harfsConfig = m_server.getStorage().findHarfs(id);
-
-			if (harfsConfig != null) {
-				String baseDir = harfsConfig.getBaseDir();
-
-				if (baseDir != null && baseDir.trim().length() > 0) {
-					return baseDir;
-				}
-			}
-		}
-		return null;
-	}
-
-	public long getHarfsFileMaxSize(String id) {
-		if (m_server != null) {
-			HarfsConfig hdfsConfig = m_server.getStorage().findHarfs(id);
-
-			return toLong(hdfsConfig == null ? null : hdfsConfig.getMaxSize(), DEFAULT_HDFS_FILE_MAX_SIZE);
-		} else {
-			return DEFAULT_HDFS_FILE_MAX_SIZE;
-		}
-	}
-
-	public String getHarfsServerUri(String id) {
-		if (m_server != null) {
-			HarfsConfig hdfsConfig = m_server.getStorage().findHarfs(id);
-
-			if (hdfsConfig != null) {
-				String serverUri = hdfsConfig.getServerUri();
-
-				if (serverUri != null && serverUri.trim().length() > 0) {
-					return serverUri;
-				}
-			}
-		}
-
-		return null;
-	}
-
 	public String getHdfsBaseDir(String id) {
 		if (m_server != null) {
 			HdfsConfig hdfsConfig = m_server.getStorage().findHdfs(id);
@@ -174,16 +130,6 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 			}
 		}
 		return null;
-	}
-
-	public long getHdfsFileMaxSize(String id) {
-		if (m_server != null) {
-			HdfsConfig hdfsConfig = m_server.getStorage().findHdfs(id);
-
-			return toLong(hdfsConfig == null ? null : hdfsConfig.getMaxSize(), DEFAULT_HDFS_FILE_MAX_SIZE);
-		} else {
-			return DEFAULT_HDFS_FILE_MAX_SIZE;
-		}
 	}
 
 	public String getHdfsLocalBaseDir(String id) {
@@ -419,22 +365,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	}
 
 	public boolean isAlertMachine() {
-		boolean alert = Boolean.parseBoolean(getProperty(ALARM_MACHINE, "false"));
-		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-
-		if ("10.1.6.128".equals(ip) || alert) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public boolean isHarMode() {
-		if (m_server != null) {
-			return m_server.getStorage().isHarMode();
-		} else {
-			return false;
-		}
+		return Boolean.parseBoolean(getProperty(ALARM_MACHINE, "false"));
 	}
 
 	public boolean isHdfsOn() {
@@ -528,29 +459,6 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		return true;
 	}
 
-	private long toLong(String str, long defaultValue) {
-		long value = 0;
-		int len = str == null ? 0 : str.length();
-
-		for (int i = 0; i < len; i++) {
-			char ch = str.charAt(i);
-
-			if (Character.isDigit(ch)) {
-				value = value * 10L + (ch - '0');
-			} else if (ch == 'm' || ch == 'M') {
-				value *= 1024 * 1024L;
-			} else if (ch == 'k' || ch == 'K') {
-				value *= 1024L;
-			}
-		}
-
-		if (value > 0) {
-			return value;
-		} else {
-			return defaultValue;
-		}
-	}
-
 	public boolean validateIp(String str) {
 		Pattern pattern = Pattern
 		      .compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
@@ -576,8 +484,8 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	public int getStorageDeflateLevel() {
 		return Integer.parseInt(getProperty("storage-deflate-level", "5"));
 	}
-	
-	public int getStorageMaxBlockSize(){
+
+	public int getStorageMaxBlockSize() {
 		return Integer.parseInt(getProperty("storage-max-block-size", "131072"));
 	}
 

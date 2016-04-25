@@ -28,7 +28,7 @@ public class FileSystemManager implements Initializable {
 	public static final String DUMP = "dump";
 
 	public String getBaseDir() {
-		return m_configManager.getHarfsBaseDir(DUMP);
+		return m_configManager.getHdfsBaseDir(DUMP);
 	}
 
 	public Configuration getConfig() {

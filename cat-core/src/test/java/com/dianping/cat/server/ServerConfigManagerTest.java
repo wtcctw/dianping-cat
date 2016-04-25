@@ -24,7 +24,6 @@ public class ServerConfigManagerTest extends ComponentTestCase {
 		Assert.assertEquals("[Pair[key=127.0.0.1, value=2281]]", manager.getConsoleEndpoints().toString());
 		Assert.assertEquals("127.0.0.1:2281", manager.getConsoleRemoteServers());
 		Assert.assertEquals("/user/cat/logview", manager.getHdfsBaseDir(id));
-		Assert.assertEquals(134217728, manager.getHdfsFileMaxSize(id));
 		Assert.assertEquals("/data/appdatas/cat/bucket/logview", manager.getHdfsLocalBaseDir(id));
 		Assert.assertEquals("hdfs://10.1.77.86/", manager.getHdfsServerUri(id));
 		Assert.assertEquals(6, manager.getHdfsProperties().size());
