@@ -43,18 +43,23 @@ public abstract class AbstractHdfsMessageBucket implements MessageBucket {
 
 		try {
 			byte[] data = m_reader.readMessage(index);
-			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(data.length);
 
-			buf.writeBytes(data);
+			if (data != null) {
+				ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(data.length);
 
-			MessageTree tree = m_codec.decode(buf);
+				buf.writeBytes(data);
 
-			m_lastAccessTime = System.currentTimeMillis();
-			return tree;
+				MessageTree tree = m_codec.decode(buf);
+
+				m_lastAccessTime = System.currentTimeMillis();
+				return tree;
+			} else {
+				return null;
+			}
 		} catch (EOFException e) {
 			Cat.logError(e);
 			return null;
-		} finally{
+		} finally {
 			m_codec.reset();
 		}
 	}

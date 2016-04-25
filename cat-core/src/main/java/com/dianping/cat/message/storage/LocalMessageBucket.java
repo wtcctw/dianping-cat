@@ -74,10 +74,15 @@ public class LocalMessageBucket implements MessageBucket {
 			m_lastAccessTime = System.currentTimeMillis();
 
 			byte[] data = reader.readMessage(index);
-			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(data.length);
 
-			buf.writeBytes(data);
-			return m_codec.decode(buf);
+			if (data != null) {
+				ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(data.length);
+
+				buf.writeBytes(data);
+				return m_codec.decode(buf);
+			} else {
+				return null;
+			}
 		} catch (EOFException e) {
 			Cat.logError(e);
 			return null;
