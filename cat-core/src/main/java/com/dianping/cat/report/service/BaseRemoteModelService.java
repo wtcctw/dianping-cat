@@ -6,11 +6,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map.Entry;
+import java.util.zip.GZIPInputStream;
 
 import org.unidal.helper.Files;
 import org.unidal.helper.Urls;
 import org.unidal.lookup.annotation.Inject;
-import org.xerial.snappy.SnappyInputStream;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
@@ -68,7 +68,7 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 			t.addData(url.toString());
 
 			InputStream in = Urls.forIO().connectTimeout(1000).readTimeout(10000).openStream(url.toExternalForm());
-			SnappyInputStream gzip = new SnappyInputStream(in);
+			GZIPInputStream gzip = new GZIPInputStream(in);
 			String xml = Files.forIO().readFrom(gzip, "utf-8");
 
 			int len = xml == null ? 0 : xml.length();
