@@ -49,7 +49,7 @@ public class DefaultBlock implements Block {
 
 	public static CompressTye COMMPRESS_TYPE = CompressTye.SNAPPY;
 	
-	public static int DEFLATE_LEVEL = 5;;
+	public static int DEFLATE_LEVEL = 5;
 
 	public DefaultBlock(MessageId id, int offset, byte[] data) {
 		m_offsets.put(id, offset);
