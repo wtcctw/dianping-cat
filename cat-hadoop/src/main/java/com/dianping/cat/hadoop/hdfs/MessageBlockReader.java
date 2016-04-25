@@ -32,6 +32,21 @@ public class MessageBlockReader {
 		}
 	}
 
+	private DataInputStream createDataInputStream(ByteArrayInputStream bais) {
+		DataInputStream in = null;
+
+		try {
+			in = new DataInputStream(new SnappyInputStream(bais));
+		} catch (IOException e) {
+			try {
+				in = new DataInputStream(new GZIPInputStream(bais));
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			}
+		}
+		return in;
+	}
+
 	public byte[] readMessage(int index) throws IOException {
 		int blockAddress;
 		int blockOffset;
@@ -67,21 +82,6 @@ public class MessageBlockReader {
 				// ignore it
 			}
 		}
-	}
-
-	private DataInputStream createDataInputStream(ByteArrayInputStream bais) {
-		DataInputStream in = null;
-
-		try {
-			in = new DataInputStream(new SnappyInputStream(bais));
-		} catch (IOException e) {
-			try {
-				in = new DataInputStream(new GZIPInputStream(bais));
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-			}
-		}
-		return in;
 	}
 
 }
