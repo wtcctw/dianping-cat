@@ -45,7 +45,7 @@ public class DefaultBlock implements Block {
 	
 	private static final int BUFFER_SIZE = 1024;
 
-	public static int MAX_SIZE = 128 * 1024;
+	public static int MAX_SIZE = 256 * 1024;
 
 	public static CompressTye COMMPRESS_TYPE = CompressTye.SNAPPY;
 	
