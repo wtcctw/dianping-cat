@@ -34,14 +34,14 @@ public class MessageBlockReader {
 		}
 	}
 
-	private DataInputStream createDataInputStream(ByteArrayInputStream bais) {
+	private DataInputStream createDataInputStream(byte[] buf) {
 		DataInputStream in = null;
 
 		try {
-			in = new DataInputStream(new SnappyInputStream(bais));
+			in = new DataInputStream(new SnappyInputStream(new ByteArrayInputStream(buf)));
 		} catch (IOException e) {
 			try {
-				in = new DataInputStream(new GZIPInputStream(bais));
+				in = new DataInputStream(new GZIPInputStream(new ByteArrayInputStream(buf)));
 			} catch (IOException ioe) {
 				Cat.logError(ioe);
 			}
@@ -66,8 +66,7 @@ public class MessageBlockReader {
 			m_dataFile.readFully(buf);
 		}
 
-		ByteArrayInputStream bais = new ByteArrayInputStream(buf);
-		DataInputStream in = createDataInputStream(bais);
+		DataInputStream in = createDataInputStream(buf);
 
 		if (in != null) {
 			try {
