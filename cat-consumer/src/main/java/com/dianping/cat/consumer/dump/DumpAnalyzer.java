@@ -46,7 +46,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 		} catch (Exception e) {
 			m_logger.error(e.getMessage(), e);
 			t.setStatus(e);
-		} finally{
+		} finally {
 			t.complete();
 		}
 	}
@@ -101,13 +101,13 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 	@Override
 	public void process(MessageTree tree) {
-		String domain = tree.getDomain();
-
+		MessageId messageId = MessageId.parse(tree.getMessageId());
+		int hour = messageId.getHour();
+		String domain = messageId.getDomain();
+		
 		if (invalid(domain)) {
 			return;
 		} else {
-			MessageId messageId = MessageId.parse(tree.getMessageId());
-			int hour = messageId.getHour();
 			MessageDumper dumper = m_dumperManager.find(hour);
 
 			tree.setFormatMessageId(messageId);
