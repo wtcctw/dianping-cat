@@ -12,7 +12,11 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	APP_LIST("appList"),
 
-	APP_COMMMAND_UPDATE("appUpdate"),
+	APP_COMMAND_UPDATE("appUpdate"),
+
+	APP_COMMAND_BATCH_ADD("appBatchAdd"),
+
+	APP_COMMAND_BATCH_SUBMIT("appBatchSubmit"),
 
 	APP_COMMAND_SUBMIT("appSubmit"),
 

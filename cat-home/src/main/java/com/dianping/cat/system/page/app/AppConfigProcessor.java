@@ -173,7 +173,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 		case APP_CODES:
 			buildCodesInfo(model, payload);
 			break;
-		case APP_COMMMAND_UPDATE:
+		case APP_COMMAND_UPDATE:
 			id = payload.getId();
 
 			if (m_appConfigManager.containCommand(id)) {
@@ -185,44 +185,68 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 				model.setUpdateCommand(command);
 			}
 			break;
-		case APP_COMMAND_SUBMIT:
+		case APP_COMMAND_BATCH_ADD:
+			break;
+		case APP_COMMAND_BATCH_SUBMIT:
 			id = payload.getId();
 			String domain = payload.getDomain();
 			String name = payload.getName();
-			String title = payload.getTitle();
+			String title = name;
 			String namespace = payload.getNamespace();
 			int timeThreshold = payload.getThreshold();
-			List<String> commands = Splitters.by(",").noEmptyItem().split(name);
+			List<String> commands = Splitters.by(";").noEmptyItem().split(name);
 
-			if (m_appConfigManager.containCommand(id)) {
-				if (commands.size() == 1) {
-					Command command = new Command();
+			for (String cmd : commands) {
+				try {
+					int index = cmd.lastIndexOf("|");
 
-					command.setDomain(domain).setName(commands.get(0)).setTitle(title).setNamespace(namespace)
+					if (index > 0) {
+						name = cmd.substring(0, index);
+						title = cmd.substring(index + 1);
+					}
+					Command command = new Command().setDomain(domain).setTitle(title).setName(name).setNamespace(namespace)
 					      .setThreshold(timeThreshold);
 
-					if (m_appConfigManager.updateCommand(id, command)) {
+					if (m_appConfigManager.addCommand(command).getKey()) {
 						model.setOpState(true);
 					} else {
 						model.setOpState(false);
 					}
+				} catch (Exception e) {
+					model.setOpState(false);
+				}
+			}
+			break;
+		case APP_COMMAND_SUBMIT:
+			id = payload.getId();
+			domain = payload.getDomain();
+			name = payload.getName();
+			title = payload.getTitle();
+			namespace = payload.getNamespace();
+			timeThreshold = payload.getThreshold();
+
+			if (m_appConfigManager.containCommand(id)) {
+				Command command = new Command();
+
+				command.setDomain(domain).setName(name).setTitle(title).setNamespace(namespace).setThreshold(timeThreshold);
+
+				if (m_appConfigManager.updateCommand(id, command)) {
+					model.setOpState(true);
 				} else {
 					model.setOpState(false);
 				}
 			} else {
-				for (String cmd : commands) {
-					try {
-						Command command = new Command().setDomain(domain).setTitle(title).setName(cmd)
-						      .setNamespace(namespace).setThreshold(timeThreshold);
+				try {
+					Command command = new Command().setDomain(domain).setTitle(title).setName(name).setNamespace(namespace)
+					      .setThreshold(timeThreshold);
 
-						if (m_appConfigManager.addCommand(command).getKey()) {
-							model.setOpState(true);
-						} else {
-							model.setOpState(false);
-						}
-					} catch (Exception e) {
+					if (m_appConfigManager.addCommand(command).getKey()) {
+						model.setOpState(true);
+					} else {
 						model.setOpState(false);
 					}
+				} catch (Exception e) {
+					model.setOpState(false);
 				}
 			}
 			break;
