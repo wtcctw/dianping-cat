@@ -3,6 +3,7 @@ package com.dianping.cat.hadoop.hdfs;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -49,7 +50,7 @@ public class MessageBlockReader {
 		}
 
 		ByteArrayInputStream bais = new ByteArrayInputStream(buf);
-		DataInputStream in = new DataInputStream(new SnappyInputStream(bais));
+		DataInputStream in = createDataInputStream(bais);
 
 		try {
 			in.skip(blockOffset);
@@ -67,4 +68,20 @@ public class MessageBlockReader {
 			}
 		}
 	}
+
+	private DataInputStream createDataInputStream(ByteArrayInputStream bais) {
+		DataInputStream in = null;
+
+		try {
+			in = new DataInputStream(new SnappyInputStream(bais));
+		} catch (IOException e) {
+			try {
+				in = new DataInputStream(new GZIPInputStream(bais));
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			}
+		}
+		return in;
+	}
+
 }

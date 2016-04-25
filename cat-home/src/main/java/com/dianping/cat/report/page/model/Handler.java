@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.model;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
+import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -15,7 +16,6 @@ import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
-import org.xerial.snappy.SnappyOutputStream;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.internal.MessageId;
@@ -31,7 +31,7 @@ public class Handler extends ContainerHolder implements Initializable, PageHandl
 
 	private byte[] compress(String str) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream(1024 * 32);
-		SnappyOutputStream gzip = new SnappyOutputStream(out);
+		GZIPOutputStream gzip = new GZIPOutputStream(out);
 		gzip.write(str.getBytes());
 		gzip.close();
 		return out.toByteArray();
@@ -79,6 +79,7 @@ public class Handler extends ContainerHolder implements Initializable, PageHandl
 				byte[] compress = compress(xml);
 
 				httpResponse.setContentType("application/xml;charset=utf-8");
+				httpResponse.addHeader("Content-Encoding", "gzip");
 				outputStream.write(compress);
 			}
 		} catch (Throwable e) {
