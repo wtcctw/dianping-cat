@@ -14,6 +14,7 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.APP_NAME_CHECK.getPath();
 		case APP_LIST:
 		case APP_COMMAND_SUBMIT:
+		case APP_COMMAND_BATCH_SUBMIT:
 		case APP_COMMAND_DELETE:
 			return JspFile.APP_LIST.getPath();
 		case APP_CODES:
@@ -30,8 +31,10 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		case APP_SPEED_ADD:
 		case APP_SPEED_UPDATE:
 			return JspFile.APP_SPEED_UPDATE.getPath();
-		case APP_COMMMAND_UPDATE:
+		case APP_COMMAND_UPDATE:
 			return JspFile.APP_UPDATE.getPath();
+		case APP_COMMAND_BATCH_ADD:
+			return JspFile.APP_BATCH_ADD.getPath();
 		case APP_RULE:
 		case APP_RULE_ADD_OR_UPDATE_SUBMIT:
 		case APP_RULE_DELETE:
