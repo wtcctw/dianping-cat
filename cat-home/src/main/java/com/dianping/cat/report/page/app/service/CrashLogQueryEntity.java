@@ -94,7 +94,7 @@ public class CrashLogQueryEntity {
 			} catch (ParseException e) {
 			}
 		}
-		return TimeHelper.getCurrentMinute();
+		return TimeHelper.getCurrentDay();
 	}
 
 	public String getQuery() {
