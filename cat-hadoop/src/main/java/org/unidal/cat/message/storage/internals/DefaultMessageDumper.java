@@ -128,7 +128,6 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 		DefaultBlock.DEFLATE_LEVEL = m_configManager.getStorageDeflateLevel();
 		DefaultBlock.MAX_SIZE = m_configManager.getStorageMaxBlockSize();
 		
-		
 		m_logger.info("set compress type :" + DefaultBlock.COMMPRESS_TYPE.toString());
 		m_logger.info("set compress level:" + DefaultBlock.DEFLATE_LEVEL);
 		m_logger.info("set default block size:" + DefaultBlock.MAX_SIZE);
