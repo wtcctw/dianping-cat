@@ -7,7 +7,6 @@ import java.util.Map;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.state.model.transform.DefaultNativeParser;
@@ -24,9 +23,6 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 
 	@Inject
 	private ReportBucketManager m_bucketManager;
-
-	@Inject
-	private ServerConfigManager m_serverConfigManager;
 
 	@Override
 	public void afterLoad(Map<String, StateReport> reports) {
