@@ -1,6 +1,7 @@
 package com.dianping.cat.system.page.router.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.unidal.dal.jdbc.DalException;
@@ -69,6 +70,21 @@ public class RouterConfigService extends AbstractReportService<RouterConfig> {
 	@Override
 	public RouterConfig queryHourlyReport(String domain, Date start, Date end) {
 		throw new RuntimeException("router report don't support hourly report");
+	}
+
+	public RouterConfig queryLastReport(String domain) {
+		try {
+			List<DailyReport> reports = m_dailyReportDao.queryLatestReportsByDomainName(domain, Constants.REPORT_ROUTER,
+			      1, DailyReportEntity.READSET_FULL);
+			RouterConfig config = queryFromDailyBinary(reports.get(0).getId());
+
+			return config;
+		} catch (DalNotFoundException e) {
+			// ignore
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return null;
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import java.util.Map;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.state.model.transform.DefaultNativeParser;
@@ -23,6 +24,9 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 
 	@Inject
 	private ReportBucketManager m_bucketManager;
+
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	@Override
 	public void afterLoad(Map<String, StateReport> reports) {
@@ -48,6 +52,7 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 		String domain = report.getDomain();
 
 		m_taskManager.createTask(startTime, domain, StateAnalyzer.ID, TaskProlicy.ALL);
+		m_taskManager.createTask(startTime, domain, Constants.REPORT_ROUTER, TaskProlicy.HOULY);
 		m_taskManager.createTask(startTime, domain, Constants.APP_DATABASE_PRUNER, TaskProlicy.DAILY);
 		m_taskManager.createTask(startTime, domain, Constants.METRIC_GRAPH_PRUNER, TaskProlicy.DAILY);
 		m_taskManager.createTask(startTime, domain, Constants.WEB_DATABASE_PRUNER, TaskProlicy.DAILY);
@@ -64,7 +69,6 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 
 		// for daily report aggreation done
 		if (hour >= 4) {
-			m_taskManager.createTask(startTime, domain, Constants.REPORT_ROUTER, TaskProlicy.DAILY);
 			m_taskManager.createTask(startTime, domain, Constants.CURRENT_REPORT, TaskProlicy.DAILY);
 			m_taskManager.createTask(startTime, domain, Constants.REPORT_CLIENT, TaskProlicy.DAILY);
 			m_taskManager.createTask(startTime, domain, Constants.APP, TaskProlicy.DAILY);

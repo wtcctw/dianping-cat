@@ -8,6 +8,9 @@ import java.util.zip.GZIPInputStream;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.xerial.snappy.SnappyInputStream;
+
+import com.dianping.cat.Cat;
 
 public class MessageBlockReader {
 	private FSDataInputStream m_indexFile;
@@ -31,6 +34,21 @@ public class MessageBlockReader {
 		}
 	}
 
+	private DataInputStream createDataInputStream(byte[] buf) {
+		DataInputStream in = null;
+
+		try {
+			in = new DataInputStream(new SnappyInputStream(new ByteArrayInputStream(buf)));
+		} catch (IOException e) {
+			try {
+				in = new DataInputStream(new GZIPInputStream(new ByteArrayInputStream(buf)));
+			} catch (IOException ioe) {
+				Cat.logError(ioe);
+			}
+		}
+		return in;
+	}
+
 	public byte[] readMessage(int index) throws IOException {
 		int blockAddress;
 		int blockOffset;
@@ -48,23 +66,27 @@ public class MessageBlockReader {
 			m_dataFile.readFully(buf);
 		}
 
-		ByteArrayInputStream bais = new ByteArrayInputStream(buf);
-		DataInputStream in = new DataInputStream(new GZIPInputStream(bais));
+		DataInputStream in = createDataInputStream(buf);
 
-		try {
-			in.skip(blockOffset);
-
-			int len = in.readInt();
-			byte[] data = new byte[len];
-
-			in.readFully(data);
-			return data;
-		} finally {
+		if (in != null) {
 			try {
-				in.close();
-			} catch (Exception e) {
-				// ignore it
+				in.skip(blockOffset);
+
+				int len = in.readInt();
+				byte[] data = new byte[len];
+
+				in.readFully(data);
+				return data;
+			} finally {
+				try {
+					in.close();
+				} catch (Exception e) {
+					// ignore it
+				}
 			}
+		} else {
+			return null;
 		}
 	}
+
 }

@@ -105,6 +105,7 @@ import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
 import com.dianping.cat.report.task.current.CurrentReportBuilder;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
+import com.dianping.cat.system.page.router.config.RouterConfigAdjustor;
 import com.dianping.cat.system.page.router.config.RouterConfigHandler;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
 import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
@@ -162,8 +163,10 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class, HostinfoService.class, ProjectService.class) //
 		      .req(StateReportService.class, ServerFilterConfigManager.class));
 
+		all.add(A(RouterConfigAdjustor.class));
+
 		all.add(C(TaskBuilder.class, RouterConfigBuilder.ID, RouterConfigBuilder.class).req(RouterConfigService.class,
-		      RouterConfigHandler.class));
+		      RouterConfigHandler.class, RouterConfigAdjustor.class, ServerConfigManager.class));
 
 		all.add(C(TaskBuilder.class, HeavyReportBuilder.ID, HeavyReportBuilder.class).req(MatrixReportService.class,
 		      HeavyReportService.class, ServerFilterConfigManager.class));

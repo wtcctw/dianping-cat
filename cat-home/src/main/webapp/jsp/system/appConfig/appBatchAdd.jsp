@@ -17,7 +17,7 @@
 		});
 		
 		$(document).delegate('#updateSubmit', 'click', function(e){
-			var name = $("#commandName").val();
+			var name = $("#commandName").val()
 			var title = $("#commandTitle").val();
 			var domain = $("#commandDomain").val();
 			var id = $("#commandId").val();
@@ -37,48 +37,35 @@
 				}
 				return;
 			}
-			if(${payload.id} <= 0) {
-				$.ajax({
-					async: false,
-					type: "get",
-					dataType: "json",
-					url: "/cat/s/app?op=appNameCheck&name="+name,
-					success : function(response, textStatus) {
-						if(response['isNameUnique']){
-							if(title==undefined){
-								title = "";
-							}
-							if(domain==undefined){
-								domain="";
-							}
-							if(id==undefined){
-								id="";
-							}
-							
-							window.location.href = "/cat/s/app?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id=-1"+"&type=${payload.type}&threshold="+threshold+"&namespace="+namespace;
-						}else{
-							alert("该名称已存在，请修改名称！");
+			$.ajax({
+				async: false,
+				type: "get",
+				dataType: "json",
+				url: "/cat/s/app?op=appNameCheck&name="+name,
+				success : function(response, textStatus) {
+					if(response['isNameUnique']){
+						if(title==undefined){
+							title = "";
 						}
+						if(domain==undefined){
+							domain="";
+						}
+						if(id==undefined){
+							id="";
+						}
+						
+						window.location.href = "/cat/s/app?op=appBatchSubmit&name="+name+"&domain="+domain+"&type=${payload.type}&threshold="+threshold+"&namespace="+namespace;
+					}else{
+						alert("该名称已存在，请修改名称！");
 					}
-				});
-			}else{
-				if(title==undefined){
-					title = "";
 				}
-				if(domain==undefined){
-					domain="";
-				}
-				if(id==undefined){
-					id="";
-				}
-				window.location.href = "/cat/s/app?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id+"&type=${payload.type}&threshold="+threshold+"&namespace="+namespace;
-			}
+			});
 		})
 	</script>
 	
 	<table class="table table-striped table-condensed table-bordered table-hover">
 		<tr>
-			<td>名称</td><td><input name="name" value="${model.updateCommand.name}" id="commandName" /><br/>
+			<td>名称</td><td><textarea  id="commandName" class="form-control" id="form-field-8" placeholder="输入格式：命令字名称1|命令字标题1;命令字名称2|命令字标题2。eg. appurl1|appTitle1;appurl2|appTitle2;..."></textarea></td>
 		</td>
 		</tr>
 		<tr>
@@ -87,9 +74,6 @@
 		</tr>
 		<tr>
 			<td>项目名</td><td><input name="domain" value="${model.updateCommand.domain}" id="commandDomain" /><span class="text-danger">&nbsp;&nbsp;后续配置在这个规则的告警，会根据此项目名查找需要发送告警的联系人信息(告警人信息来源CMDB)</span><br/>
-			</td>
-		</tr>
-		<tr><td>标题</td><td><input name="title" value="${model.updateCommand.title}" id="commandTitle" /><span class="text-danger">（支持数字、字符）</span><br/>
 			</td>
 		</tr>
 		<tr><td>默认过滤时间</td><td><input name="threshold" value="${model.updateCommand.threshold}" id="threshold" /><span class="text-danger">（支持数字）</span><br/>

@@ -14,6 +14,8 @@ public enum JspFile {
 	APP_SPEED_UPDATE("/jsp/system/appConfig/speedUpdate.jsp"),
 
 	APP_UPDATE("/jsp/system/appConfig/appUpdate.jsp"),
+	
+	APP_BATCH_ADD("/jsp/system/appConfig/appBatchAdd.jsp"),
 
 	APP_RULE("/jsp/system/appRule/appRule.jsp"),
 

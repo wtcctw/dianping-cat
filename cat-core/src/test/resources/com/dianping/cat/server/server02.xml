@@ -6,7 +6,7 @@
       <property name="send-machine" value="true"/>
       <property name="alert-machine" value="true"/>
       <property name="hdfs-machine" value="true"/>
-      <property name="remote-servers" value="127.0.0.1:2281,10.66.13.115:2281"/>
+      <property name="remote-servers" value="127.0.0.1:2281"/>
       <property name="ldap" value="ldap://ldap.dianpingoa.com/DC=dianpingoa,DC=com"/>
    </properties>
    <storage local-base-dir="/data/appdatas/cat/bucket01/" max-hdfs-storage-time="10" local-report-storage-time="1" local-logivew-storage-time="1" har-mode="false" upload-thread="5">

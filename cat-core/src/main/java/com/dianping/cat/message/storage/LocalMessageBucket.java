@@ -7,11 +7,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.zip.GZIPOutputStream;
 
 import org.unidal.lookup.annotation.Inject;
+import org.xerial.snappy.SnappyOutputStream;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.internal.MessageId;
@@ -36,7 +37,7 @@ public class LocalMessageBucket implements MessageBucket {
 
 	private long m_lastAccessTime;
 
-	private GZIPOutputStream m_out;
+	private OutputStream m_out;
 
 	private ByteArrayOutputStream m_buf;
 
@@ -73,10 +74,15 @@ public class LocalMessageBucket implements MessageBucket {
 			m_lastAccessTime = System.currentTimeMillis();
 
 			byte[] data = reader.readMessage(index);
-			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(data.length);
 
-			buf.writeBytes(data);
-			return m_codec.decode(buf);
+			if (data != null) {
+				ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(data.length);
+
+				buf.writeBytes(data);
+				return m_codec.decode(buf);
+			} else {
+				return null;
+			}
 		} catch (EOFException e) {
 			Cat.logError(e);
 			return null;
@@ -96,7 +102,7 @@ public class LocalMessageBucket implements MessageBucket {
 					m_block.setData(data);
 					m_blockSize = 0;
 					m_buf.reset();
-					m_out = new GZIPOutputStream(m_buf);
+					m_out = new SnappyOutputStream(m_buf);
 					m_dirty.set(false);
 
 					return m_block;
@@ -126,7 +132,7 @@ public class LocalMessageBucket implements MessageBucket {
 		m_writer = new MessageBlockWriter(file);
 		m_block = new MessageBlock(m_dataFile);
 		m_buf = new ByteArrayOutputStream(16384);
-		m_out = new GZIPOutputStream(m_buf);
+		m_out = new SnappyOutputStream(m_buf);
 	}
 
 	public void setBaseDir(File baseDir) {
