@@ -4,8 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -116,8 +116,8 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 		m_logger = logger;
 	}
 
-	private int getIndex(String domain) {
-		int hash = Math.abs(domain.hashCode());
+	private int getIndex(String key) {
+		int hash = Math.abs(key.hashCode());
 		int index = hash % (m_processors.size());
 
 		return index;
@@ -136,7 +136,7 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 		int processThreads = m_configManager.getMessageProcessorThreads();
 
 		for (int i = 0; i < processThreads; i++) {
-			BlockingQueue<MessageTree> queue = new LinkedBlockingQueue<MessageTree>(10000);
+			BlockingQueue<MessageTree> queue = new ArrayBlockingQueue<MessageTree>(10000);
 			MessageProcessor processor = lookup(MessageProcessor.class);
 
 			m_queues.add(queue);
@@ -152,7 +152,7 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 		MessageId id = tree.getFormatMessageId();
 		String domain = id.getDomain();
 		// hash by ip address and block hash by domain
-		int index = getIndex(id.getIpAddress());
+		int index = getIndex(id.getIpAddressInHex());
 		BlockingQueue<MessageTree> queue = m_queues.get(index);
 		boolean success = queue.offer(tree);
 
