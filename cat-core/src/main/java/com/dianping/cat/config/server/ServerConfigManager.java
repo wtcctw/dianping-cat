@@ -76,6 +76,8 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 
 	public final static String HDFS_ENABLED = "hdfs-enabled";
 
+	public final static String ROUTER_ADJUST_ENABLED = "router-adjust-enabled";
+
 	public static final String DEFAULT = "default";
 
 	@Override
@@ -378,6 +380,10 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 
 	public boolean isLocalMode() {
 		return Boolean.parseBoolean(getProperty(LOCAL_MODE, "false"));
+	}
+
+	public boolean isRouterAdjustEnabled() {
+		return Boolean.parseBoolean(getProperty(ROUTER_ADJUST_ENABLED, "false"));
 	}
 
 	public boolean isRpcClient(String type) {

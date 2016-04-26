@@ -150,14 +150,14 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		ConfigSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
-			public void handle() throws Exception {
-				refreshConfigInfo();
-				refreshReportInfo();
+			public String getName() {
+				return CONFIG_NAME;
 			}
 
 			@Override
-			public String getName() {
-				return CONFIG_NAME;
+			public void handle() throws Exception {
+				refreshConfigInfo();
+				refreshReportInfo();
 			}
 		});
 	}
@@ -182,6 +182,19 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 			m_logger.error(e.getMessage(), e);
 			return false;
 		}
+	}
+
+	public boolean notCustomizedDomains(String group, Domain domainConfig) {
+		boolean noExist = domainConfig == null || domainConfig.findGroup(group) == null
+		      || domainConfig.findGroup(group).getServers().isEmpty();
+
+		return noExist;
+	}
+
+	public boolean notCustomizedDomains(String group, String domain) {
+		Domain domainConfig = m_routerConfig.findDomain(domain);
+
+		return notCustomizedDomains(group, domainConfig);
 	}
 
 	public Server queryBackUpServer() {
@@ -225,6 +238,15 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		return null;
 	}
 
+	public DefaultServer queryServerByIp(String ip) {
+		DefaultServer server = m_routerConfig.getDefaultServers().get(ip);
+
+		if (server != null) {
+			return server;
+		}
+		return null;
+	}
+
 	public String queryServerGroupByIp(String ip) {
 		String group = m_ipToGroupInfo.get(ip);
 
@@ -243,8 +265,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 	public List<Server> queryServersByDomain(String group, String domain) {
 		Domain domainConfig = m_routerConfig.findDomain(domain);
 		List<Server> result = new ArrayList<Server>();
-		boolean noExist = domainConfig == null || domainConfig.findGroup(group) == null
-		      || domainConfig.findGroup(group).getServers().isEmpty();
+		boolean noExist = notCustomizedDomains(group, domainConfig);
 
 		if (noExist) {
 			List<Server> servers = new ArrayList<Server>();
