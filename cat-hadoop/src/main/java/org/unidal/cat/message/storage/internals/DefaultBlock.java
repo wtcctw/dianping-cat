@@ -26,7 +26,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.message.internal.MessageId;
 
 public class DefaultBlock implements Block {
-	
+
 	private String m_domain;
 
 	private int m_hour;
@@ -42,13 +42,13 @@ public class DefaultBlock implements Block {
 	private OutputStream m_out;
 
 	private boolean m_isFulsh;
-	
+
 	private static final int BUFFER_SIZE = 1024;
 
 	public static int MAX_SIZE = 256 * 1024;
 
 	public static CompressTye COMMPRESS_TYPE = CompressTye.SNAPPY;
-	
+
 	public static int DEFLATE_LEVEL = 5;
 
 	public DefaultBlock(MessageId id, int offset, byte[] data) {
@@ -127,8 +127,7 @@ public class DefaultBlock implements Block {
 
 			try {
 				ByteBuf copyData = Unpooled.copiedBuffer(m_data);
-				@SuppressWarnings("resource")
-				DataInputStream in = new DataInputStream(new GZIPInputStream(new ByteBufInputStream(copyData)));
+				DataInputStream in = new DataInputStream(createInputSteam(copyData, COMMPRESS_TYPE));
 
 				in.skip(offset);
 				int length = in.readInt();
