@@ -126,10 +126,6 @@
 					</form>
 	            </div>
 	            <div class="input-group" style="float:left;width:120px">
-	              	<span class="input-group-addon">返回码</span>
-					<select id="code2" style="width:120px"><option value=''>All</option></select>
-	            </div>
-	             <div class="input-group" style="float:left;width:120px">
 	              	<span class="input-group-addon">来源</span>
 					<select id="source2" style="width: 100px;">
 						<option value=''>All</option>
@@ -138,6 +134,10 @@
 							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
+	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">返回码</span>
+					<select id="code2" style="width:120px"><option value=''>All</option></select>
 	            </div>
 				</th>
 				</tr>
@@ -311,7 +311,7 @@
 		
 		<c:choose>
 		<c:when test="${empty channelCode}">
-			<td><button class="btn btn-xs btn-info" onclick="query('connnect-type', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}','${sourceCode}');">展开⬇</button></td>
+			<td><button class="btn btn-xs btn-info" onclick="query('connect-type', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}','${sourceCode}');">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<c:choose>
