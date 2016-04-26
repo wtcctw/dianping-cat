@@ -234,7 +234,7 @@ public class LocalIndex implements Index {
 			if (segment != null) {
 				segment.writeLong(offset, value);
 			} else {
-				Cat.logEvent("Block", "Abnormal:" + id.getDomain(), Event.SUCCESS, id.toString());
+				Cat.logEvent("Block", "Abnormal:" + id.getDomain(), Event.SUCCESS, null);
 				m_indexChannel.position(position);
 
 				ByteBuffer buf = ByteBuffer.allocate(8);

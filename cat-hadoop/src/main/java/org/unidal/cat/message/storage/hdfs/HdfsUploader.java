@@ -3,7 +3,7 @@ package org.unidal.cat.message.storage.hdfs;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -64,7 +64,7 @@ public class HdfsUploader implements LogEnabled, Initializable {
 
 		m_localBaseDir = new File(m_serverConfigManager.getHdfsLocalBaseDir(FileSystemManager.DUMP));
 		m_executors = new ThreadPoolExecutor(thread, thread, 3, TimeUnit.SECONDS,
-		      new LinkedBlockingQueue<Runnable>(5000), new ThreadPoolExecutor.CallerRunsPolicy());
+		      new ArrayBlockingQueue<Runnable>(5000), new ThreadPoolExecutor.CallerRunsPolicy());
 	}
 
 	private FSDataOutputStream makeHdfsOutputStream(String path) throws IOException {

@@ -1,7 +1,7 @@
 package com.dianping.cat.report.alert.thirdParty;
 
 import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +37,7 @@ public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 	private static final int MAX_THREADS = 3;
 
 	private static ThreadPoolExecutor s_threadPool = new ThreadPoolExecutor(MAX_THREADS, MAX_THREADS, 10,
-	      TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10), new ThreadPoolExecutor.CallerRunsPolicy());
+	      TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10), new ThreadPoolExecutor.CallerRunsPolicy());
 
 	private void buildAlertEntities(long current) {
 		List<Http> https = m_configManager.queryHttps();
