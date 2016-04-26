@@ -24,6 +24,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.router.entity.Domain;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.entity.Server;
+import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
 import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
@@ -42,8 +43,8 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ServerFilterConfigManager m_filterManager;
 
-	@Inject
-	private RouterConfigBuilder m_routerConfigBuilder;
+	@Inject(RouterConfigBuilder.ID)
+	private TaskBuilder m_routerConfigBuilder;
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 

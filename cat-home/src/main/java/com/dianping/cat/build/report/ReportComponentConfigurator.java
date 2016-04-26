@@ -53,6 +53,9 @@ import com.dianping.cat.report.page.top.service.HistoricalTopService;
 import com.dianping.cat.report.page.top.service.LocalTopService;
 import com.dianping.cat.report.page.top.service.TopReportService;
 import com.dianping.cat.report.service.ModelService;
+import com.dianping.cat.system.page.router.config.RouterConfigAdjustor;
+import com.dianping.cat.system.page.router.config.RouterConfigHandler;
+import com.dianping.cat.system.page.router.config.RouterConfigManager;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
 import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
 
@@ -73,7 +76,10 @@ public class ReportComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(A(NetTopologyReportService.class));
 		all.add(A(NetTopologyReportBuilder.class));
 
+		all.add(A(RouterConfigManager.class));
+		all.add(A(RouterConfigHandler.class));
 		all.add(A(RouterConfigService.class));
+		all.add(A(RouterConfigAdjustor.class));
 		all.add(A(RouterConfigBuilder.class));
 
 		all.add(A(JarReportService.class));
