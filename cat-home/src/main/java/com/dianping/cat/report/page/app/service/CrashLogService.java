@@ -17,10 +17,12 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.GZIPInputStream;
 
+import org.codehaus.plexus.util.StringUtils;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.app.CrashLog;
 import com.dianping.cat.app.CrashLogContent;
 import com.dianping.cat.app.CrashLogContentDao;
@@ -31,7 +33,9 @@ import com.dianping.cat.config.Level;
 import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.app.MobileConfigManager;
 import com.dianping.cat.config.app.MobileConstants;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ErrorMsg;
+import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.page.app.display.CrashLogDetailInfo;
@@ -65,29 +69,15 @@ public class CrashLogService {
 
 	private String DEVICES = "devices";
 
-	public CrashLogDetailInfo queryCrashLogDetailInfo(int id) {
-		CrashLogDetailInfo info = new CrashLogDetailInfo();
+	private void addCount(String item, Map<String, AtomicInteger> distributions) {
+		AtomicInteger count = distributions.get(item);
 
-		try {
-			CrashLog crashLog = m_crashLogDao.findByPK(id, CrashLogEntity.READSET_FULL);
-			CrashLogContent detail = m_crashLogContentDao.findByPK(id, CrashLogContentEntity.READSET_FULL);
-
-			info.setAppName(crashLog.getAppName());
-			info.setPlatform(m_mobileConfigManager.getPlatformStr(crashLog.getPlatform()).getValue());
-			info.setAppVersion(crashLog.getAppVersion());
-			info.setPlatformVersion(crashLog.getPlatformVersion());
-			info.setModule(crashLog.getModule());
-			info.setLevel(Level.getNameByCode(crashLog.getLevel()));
-			info.setDeviceBrand(crashLog.getDeviceBrand());
-			info.setDeviceModel(crashLog.getDeviceModel());
-			info.setCrashTime(crashLog.getCrashTime());
-			info.setDpid(crashLog.getDpid());
-			info.setDetail(buildContent(detail.getContent()));
-		} catch (DalException e) {
-			Cat.logError(e);
+		if (count == null) {
+			count = new AtomicInteger(1);
+			distributions.put(item, count);
+		} else {
+			count.incrementAndGet();
 		}
-
-		return info;
 	}
 
 	private String buildContent(byte[] content) {
@@ -131,15 +121,6 @@ public class CrashLogService {
 				Cat.logError(e);
 			}
 		}
-	}
-
-	public CrashLogDisplayInfo buildCrashLogDisplayInfo(CrashLogQueryEntity entity) {
-		CrashLogDisplayInfo info = new CrashLogDisplayInfo();
-
-		buildCrashLogData(entity, info);
-		info.setAppNames(m_mobileConfigManager.queryConstantItem(MobileConstants.APP_NAME).values());
-
-		return info;
 	}
 
 	public CrashLogDisplayInfo buildCrashGraph(CrashLogQueryEntity entity) {
@@ -235,6 +216,35 @@ public class CrashLogService {
 		}
 	}
 
+	public CrashLogDisplayInfo buildCrashLogDisplayInfo(CrashLogQueryEntity entity) {
+		CrashLogDisplayInfo info = new CrashLogDisplayInfo();
+
+		buildCrashLogData(entity, info);
+		info.setAppNames(m_mobileConfigManager.queryConstantItem(MobileConstants.APP_NAME).values());
+
+		return info;
+	}
+
+	public CrashLogDisplayInfo buildCrashTrend(CrashLogQueryEntity entity1, CrashLogQueryEntity entity2) {
+		CrashLogDisplayInfo info = new CrashLogDisplayInfo();
+		Map<String, Set<String>> fieldsMap = new HashMap<String, Set<String>>();
+		Double[] current = getCrashTrendData(entity1, fieldsMap);
+		Double[] comparison = null;
+
+		if (entity2 != null) {
+			comparison = getCrashTrendData(entity2, fieldsMap);
+		}
+		LineChart lineChart = buildLineChart(current, comparison);
+
+		info.setLineChart(lineChart);
+
+		if (!fieldsMap.isEmpty()) {
+			info.setFieldsInfo(buildFiledsInfo(fieldsMap));
+		}
+		info.setAppNames(m_mobileConfigManager.queryConstantItem(MobileConstants.APP_NAME).values());
+		return info;
+	}
+
 	public Map<String, PieChart> buildDistributionChart(Map<String, Map<String, AtomicInteger>> distributions) {
 		Map<String, PieChart> charts = new HashMap<String, PieChart>();
 
@@ -276,25 +286,6 @@ public class CrashLogService {
 		addCount(log.getDeviceBrand() + "-" + log.getDeviceModel(), distributions.get(DEVICES));
 	}
 
-	private void addCount(String item, Map<String, AtomicInteger> distributions) {
-		AtomicInteger count = distributions.get(item);
-
-		if (count == null) {
-			count = new AtomicInteger(1);
-			distributions.put(item, count);
-		} else {
-			count.incrementAndGet();
-		}
-	}
-
-	private void buildFieldsMap(Map<String, Set<String>> fieldsMap, CrashLog log) {
-		findOrCreate(APP_VERSIONS, fieldsMap).add(log.getAppVersion());
-		findOrCreate(PLATFORM_VERSIONS, fieldsMap).add(log.getPlatformVersion());
-		findOrCreate(MODULES, fieldsMap).add(log.getModule());
-		findOrCreate(LEVELS, fieldsMap).add(Level.getNameByCode(log.getLevel()));
-		findOrCreate(DEVICES, fieldsMap).add(log.getDeviceBrand() + "-" + log.getDeviceModel());
-	}
-
 	private void buildErrorMsg(Map<String, ErrorMsg> errorMsgs, CrashLog log) {
 		String msg = log.getMsg();
 		ErrorMsg errorMsg = errorMsgs.get(msg);
@@ -307,6 +298,26 @@ public class CrashLogService {
 
 		errorMsg.addCount();
 		errorMsg.addId(log.getId());
+	}
+
+	private List<ErrorMsg> buildErrors(Map<String, ErrorMsg> errorMsgs) {
+		List<ErrorMsg> errorMsgList = new ArrayList<ErrorMsg>();
+		Iterator<Entry<String, ErrorMsg>> iter = errorMsgs.entrySet().iterator();
+
+		while (iter.hasNext()) {
+			errorMsgList.add(iter.next().getValue());
+		}
+
+		Collections.sort(errorMsgList);
+		return errorMsgList;
+	}
+
+	private void buildFieldsMap(Map<String, Set<String>> fieldsMap, CrashLog log) {
+		findOrCreate(APP_VERSIONS, fieldsMap).add(log.getAppVersion());
+		findOrCreate(PLATFORM_VERSIONS, fieldsMap).add(log.getPlatformVersion());
+		findOrCreate(MODULES, fieldsMap).add(log.getModule());
+		findOrCreate(LEVELS, fieldsMap).add(Level.getNameByCode(log.getLevel()));
+		findOrCreate(DEVICES, fieldsMap).add(log.getDeviceBrand() + "-" + log.getDeviceModel());
 	}
 
 	private FieldsInfo buildFiledsInfo(Map<String, Set<String>> fieldsMap) {
@@ -331,6 +342,23 @@ public class CrashLogService {
 		return fieldsInfo;
 	}
 
+	private LineChart buildLineChart(Double[] current, Double[] comparison) {
+		LineChart lineChart = new LineChart();
+		lineChart.setId(Constants.APP);
+		lineChart.setHtmlTitle("Crash数 (个/5分钟)");
+		lineChart.add(Constants.CURRENT_STR, current);
+		lineChart.add(Constants.COMPARISION_STR, comparison);
+		return lineChart;
+	}
+
+	private boolean check(String condition, String value) {
+		if (StringUtils.isBlank(condition) || condition.equals(value)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	private Set<String> findOrCreate(String key, Map<String, Set<String>> map) {
 		Set<String> value = map.get(key);
 
@@ -341,73 +369,74 @@ public class CrashLogService {
 		return value;
 	}
 
-	private List<ErrorMsg> buildErrors(Map<String, ErrorMsg> errorMsgs) {
-		List<ErrorMsg> errorMsgList = new ArrayList<ErrorMsg>();
-		Iterator<Entry<String, ErrorMsg>> iter = errorMsgs.entrySet().iterator();
+	private Double[] getCrashTrendData(CrashLogQueryEntity entity, Map<String, Set<String>> fieldsMap) {
+		Date startTime = entity.buildTrendStartTime();
+		Date endTime = entity.buildEndTime();
+		String appName = entity.getAppName();
+		String appVersion = entity.getAppVersion();
+		String platVersion = entity.getPlatformVersion();
+		String module = entity.getModule();
+		long day = entity.buildDay().getTime();
+		long step = TimeHelper.ONE_MINUTE * 5;
+		int duration = (int) ((endTime.getTime() - day) / step);
+		Double[] data = new Double[duration];
+		int offset = 0;
 
-		while (iter.hasNext()) {
-			errorMsgList.add(iter.next().getValue());
+		try {
+			while (true) {
+				List<CrashLog> result = m_crashLogDao.findDataByConditions(startTime, endTime, appName, -1, null, offset,
+				      LIMIT, CrashLogEntity.READSET_FULL);
+
+				for (CrashLog log : result) {
+					if (check(appVersion, log.getAppVersion()) && check(platVersion, log.getPlatformVersion())
+					      && check(module, log.getModule())) {
+						Date date = log.getCrashTime();
+						int index = (int) ((date.getTime() - day) / step);
+						Double minuteData = data[index];
+
+						if (minuteData == null) {
+							data[index] = new Double(0);
+						}
+						data[index]++;
+					}
+					buildFieldsMap(fieldsMap, log);
+				}
+				int count = result.size();
+				offset += count;
+
+				if (count < LIMIT) {
+					break;
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
-
-		Collections.sort(errorMsgList);
-		return errorMsgList;
+		return data;
 	}
 
-	public class FieldsInfo {
+	public CrashLogDetailInfo queryCrashLogDetailInfo(int id) {
+		CrashLogDetailInfo info = new CrashLogDetailInfo();
 
-		private List<String> m_platVersions;
+		try {
+			CrashLog crashLog = m_crashLogDao.findByPK(id, CrashLogEntity.READSET_FULL);
+			CrashLogContent detail = m_crashLogContentDao.findByPK(id, CrashLogContentEntity.READSET_FULL);
 
-		private List<String> m_appVersions;
-
-		private List<String> m_modules;
-
-		private List<String> m_levels;
-
-		private List<String> m_devices;
-
-		public List<String> getDevices() {
-			return m_devices;
+			info.setAppName(crashLog.getAppName());
+			info.setPlatform(m_mobileConfigManager.getPlatformStr(crashLog.getPlatform()).getValue());
+			info.setAppVersion(crashLog.getAppVersion());
+			info.setPlatformVersion(crashLog.getPlatformVersion());
+			info.setModule(crashLog.getModule());
+			info.setLevel(Level.getNameByCode(crashLog.getLevel()));
+			info.setDeviceBrand(crashLog.getDeviceBrand());
+			info.setDeviceModel(crashLog.getDeviceModel());
+			info.setCrashTime(crashLog.getCrashTime());
+			info.setDpid(crashLog.getDpid());
+			info.setDetail(buildContent(detail.getContent()));
+		} catch (DalException e) {
+			Cat.logError(e);
 		}
 
-		public void setDevices(List<String> devices) {
-			m_devices = devices;
-		}
-
-		public List<String> getAppVersions() {
-			return m_appVersions;
-		}
-
-		public List<String> getLevels() {
-			return m_levels;
-		}
-
-		public List<String> getModules() {
-			return m_modules;
-		}
-
-		public List<String> getPlatVersions() {
-			return m_platVersions;
-		}
-
-		public FieldsInfo setAppVersions(List<String> appVersions) {
-			m_appVersions = appVersions;
-			return this;
-		}
-
-		public FieldsInfo setLevels(List<String> levels) {
-			m_levels = levels;
-			return this;
-		}
-
-		public FieldsInfo setModules(List<String> modules) {
-			m_modules = modules;
-			return this;
-		}
-
-		public FieldsInfo setPlatVersions(List<String> platVersions) {
-			m_platVersions = platVersions;
-			return this;
-		}
+		return info;
 	}
 
 }

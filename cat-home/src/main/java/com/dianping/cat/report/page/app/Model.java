@@ -15,8 +15,6 @@ import com.dianping.cat.command.entity.Code;
 import com.dianping.cat.command.entity.Codes;
 import com.dianping.cat.command.entity.Command;
 import com.dianping.cat.configuration.mobile.entity.Item;
-import com.dianping.cat.configuration.server.filter.entity.CrashLogDomain;
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.app.entity.AppReport;
 import com.dianping.cat.mvc.AbstractReportModel;
@@ -75,10 +73,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private int m_commandId;
 
-	private ProblemStatistics m_problemStatistics;
-
-	private ProblemReport m_problemReport;
-
 	private Map<Integer, Code> m_codes;
 
 	private Set<String> m_codeDistributions;
@@ -95,8 +89,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private AppReport m_appReport;
 
 	private DisplayCommands m_displayCommands;
-
-	private Collection<CrashLogDomain> m_crashLogDomains;
 
 	private CrashLogDetailInfo m_crashLogDetailInfo;
 
@@ -188,10 +180,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_crashLogDisplayInfo;
 	}
 
-	public Collection<CrashLogDomain> getCrashLogDomains() {
-		return m_crashLogDomains;
-	}
-
 	public DashBoardInfo getDashBoardInfo() {
 		return m_dashBoardInfo;
 	}
@@ -249,14 +237,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public Map<Integer, Item> getPlatforms() {
 		return m_platforms;
-	}
-
-	public ProblemReport getProblemReport() {
-		return m_problemReport;
-	}
-
-	public ProblemStatistics getProblemStatistics() {
-		return m_problemStatistics;
 	}
 
 	public Map<Integer, Item> getSources() {
@@ -335,10 +315,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_crashLogDisplayInfo = crashLogDisplayInfo;
 	}
 
-	public void setCrashLogDomains(Collection<CrashLogDomain> crashLogDomains) {
-		m_crashLogDomains = crashLogDomains;
-	}
-
 	public void setDashBoardInfo(DashBoardInfo dashBoardInfo) {
 		m_dashBoardInfo = dashBoardInfo;
 	}
@@ -381,14 +357,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setPlatforms(Map<Integer, Item> platforms) {
 		m_platforms = platforms;
-	}
-
-	public void setProblemReport(ProblemReport problemReport) {
-		m_problemReport = problemReport;
-	}
-
-	public void setProblemStatistics(ProblemStatistics problemStatistics) {
-		m_problemStatistics = problemStatistics;
 	}
 
 	public void setSources(Map<Integer, Item> sources) {

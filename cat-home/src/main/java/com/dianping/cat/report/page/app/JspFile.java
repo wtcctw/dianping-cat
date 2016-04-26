@@ -18,6 +18,8 @@ public enum JspFile {
 	APP_CRASH_LOG_DETAIL("/jsp/report/app/appCrashLogDetail.jsp"),
 	
 	APP_CRASH_GRAPH("/jsp/report/app/appCrashGraph.jsp"),
+	
+	APP_CRASH_TREND("/jsp/report/app/appCrashTrend.jsp"),
 
 	SPEED("/jsp/report/app/speed.jsp"),
 

@@ -54,6 +54,9 @@
 							<li id="appCrashLog"><a href="/cat/r/app?op=appCrashLog">
 								<i class="menu-icon fa fa-caret-right"></i>AppCrash日志</a>
 								<b class="arrow"></b></li>
+							<li id="appCrashTrend"><a href="/cat/r/app?op=appCrashTrend">
+								<i class="menu-icon fa fa-caret-right"></i>AppCrash趋势</a>
+								<b class="arrow"></b></li>
 							<li id="eslog"><a href="/cat/r/eslog" target="_blank">
 								<i class="menu-icon fa fa-caret-right"></i>dpid实时日志</a>
 								<b class="arrow"></b></li>

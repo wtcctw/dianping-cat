@@ -6,8 +6,9 @@ import java.util.Map;
 
 import com.dianping.cat.configuration.mobile.entity.Item;
 import com.dianping.cat.report.ErrorMsg;
+import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
-import com.dianping.cat.report.page.app.service.CrashLogService.FieldsInfo;
+import com.dianping.cat.report.page.app.service.FieldsInfo;
 
 public class CrashLogDisplayInfo {
 
@@ -22,6 +23,16 @@ public class CrashLogDisplayInfo {
 	private Map<String, PieChart> m_distributions;
 
 	private Map<String, PieChart> m_msgDistributions;
+	
+	private LineChart m_lineChart;
+	
+	public LineChart getLineChart() {
+		return m_lineChart;
+	}
+
+	public void setLineChart(LineChart lineChart) {
+		m_lineChart = lineChart;
+	}
 
 	public Map<String, PieChart> getDistributions() {
 		return m_distributions;

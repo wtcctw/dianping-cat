@@ -437,6 +437,9 @@ public class Handler implements PageHandler<Context> {
 		case APP_CRASH_GRAPH:
 			buildAppCrashGraph(payload, model);
 			break;
+		case APP_CRASH_TREND:
+			buildAppCrashTrend(payload, model);
+			break;
 		case SPEED:
 			model.setAppSpeedDisplayInfo(buildSpeedTendency(payload));
 			break;
@@ -497,6 +500,12 @@ public class Handler implements PageHandler<Context> {
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
+	}
+
+	private void buildAppCrashTrend(Payload payload, Model model) {
+		CrashLogDisplayInfo info = m_crashLogService.buildCrashTrend(payload.getCrashLogTrendQuery1(),
+		      payload.getCrashLogTrendQuery2());
+		model.setCrashLogDisplayInfo(info);
 	}
 
 	private void normalize(Model model, Payload payload) {
