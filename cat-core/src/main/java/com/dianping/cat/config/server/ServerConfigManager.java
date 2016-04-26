@@ -435,10 +435,6 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		}
 	}
 
-	public boolean idRouterAdjustEnabled() {
-		return Boolean.parseBoolean(getProperty(ROUTER_ADJUST_ENABLED, "true"));
-	}
-
 	public boolean isHdfsOn() {
 		return Boolean.parseBoolean(getProperty(HDFS_ENABLED, "false"));
 	}
@@ -449,6 +445,10 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 
 	public boolean isLocalMode() {
 		return Boolean.parseBoolean(getProperty(LOCAL_MODE, "false"));
+	}
+
+	public boolean isRouterAdjustEnabled() {
+		return Boolean.parseBoolean(getProperty(ROUTER_ADJUST_ENABLED, "false"));
 	}
 
 	public boolean isRpcClient(String type) {

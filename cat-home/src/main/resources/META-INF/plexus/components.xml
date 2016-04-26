@@ -1398,6 +1398,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.page.router.config.RouterConfigAdjustor</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -7132,6 +7135,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

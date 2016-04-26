@@ -57,20 +57,20 @@ public class RouterConfigAdjustor {
 		Date end = new Date(period.getTime() + TimeHelper.ONE_HOUR);
 		RouterConfig routerConfig = m_routerService.queryLastReport(Constants.CAT);
 		StateReport report = m_stateReportService.queryHourlyReport(Constants.CAT, period, end);
+		
 		String remoteServers = m_serverConfigManager.getConsoleRemoteServers();
 		List<String> servers = Splitters.by(",").noEmptyItem().split(remoteServers);
+		
 		AdjustStateReportVisitor visitor = new AdjustStateReportVisitor(m_configManager, servers);
 
 		visitor.visitStateReport(report);
 
 		Map<String, Map<String, Machine>> statistics = visitor.getStatistics();
-		System.out.println(statistics);
 		Map<String, Map<Server, Long>> gaps = buildGroupServersGaps(statistics);
 		Map<String, Map<String, Server>> results = buildAdjustServers(gaps, routerConfig, statistics);
 
 		updateRouterConfig(routerConfig, results);
-		System.out.println(routerConfig);
-		// updateRouterConfigToDB(routerConfig);
+		updateRouterConfigToDB(routerConfig);
 	}
 
 	private Map<String, Map<String, Server>> buildAdjustServers(Map<String, Map<Server, Long>> gaps,

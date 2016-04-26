@@ -166,7 +166,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(A(RouterConfigAdjustor.class));
 
 		all.add(C(TaskBuilder.class, RouterConfigBuilder.ID, RouterConfigBuilder.class).req(RouterConfigService.class,
-		      RouterConfigHandler.class, RouterConfigAdjustor.class));
+		      RouterConfigHandler.class, RouterConfigAdjustor.class, ServerConfigManager.class));
 
 		all.add(C(TaskBuilder.class, HeavyReportBuilder.ID, HeavyReportBuilder.class).req(MatrixReportService.class,
 		      HeavyReportService.class, ServerFilterConfigManager.class));

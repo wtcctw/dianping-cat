@@ -50,7 +50,9 @@ public class RouterConfigBuilder implements TaskBuilder {
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
-		m_routerAdjustor.Adjust(period);
+		if (m_serverConfigManager.isRouterAdjustEnabled()) {
+			m_routerAdjustor.Adjust(period);
+		}
 		return true;
 	}
 
