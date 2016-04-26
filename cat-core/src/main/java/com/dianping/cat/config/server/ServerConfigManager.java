@@ -235,7 +235,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	}
 
 	public int getMessageProcessorThreads() {
-		return Integer.parseInt(getProperty("message-processor-thread", "24"));
+		return Integer.parseInt(getProperty("message-processor-thread", "12"));
 	}
 
 	public ExecutorService getModelServiceExecutorService() {
