@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 
@@ -67,25 +68,6 @@ public class AppReportBuilder implements TaskBuilder {
 
 	public static final int COMMAND_MIN_COUNT = 10;
 
-	private void pruneAppCommand(AppReport appReport) {
-		for (Entry<Integer, com.dianping.cat.home.app.entity.Command> command : appReport.getCommands().entrySet()) {
-			if (command.getValue().getCount() < COMMAND_MIN_COUNT) {
-				try {
-					int id = command.getKey();
-					String name = m_appConfigManager.getRawCommands().get(id).getName();
-					boolean success = m_appConfigManager.deleteCommand(id);
-
-					if (success) {
-						Cat.logEvent("AppCommandPrune", id + ":" + name, Event.SUCCESS, command.toString());
-						m_appRuleConfigManager.deleteByCommandId(id);
-					}
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-			}
-		}
-	}
-
 	private AppReport buildDailyReport(String id, Date period) {
 		AppReport report = m_appReportService.makeReport(id, period, TaskHelper.tomorrowZero(period));
 
@@ -97,34 +79,27 @@ public class AppReportBuilder implements TaskBuilder {
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
-		try {
-			m_autoCompleter.autoCompleteDomain(period);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
+		final String reportName = name;
+		final String reportDomain = domain;
+		final Date reportPeriod = period;
 
-		try {
-			AppReport appReport = buildDailyReport(domain, period);
+		Threads.forGroup("cat").start(new Threads.Task() {
 
-			if (m_mobileConfigManager.shouldAutoPrune()) {
-				pruneAppCommand(appReport);
+			@Override
+			public String getName() {
+				return "app-report-task";
 			}
 
-			DailyReport report = new DailyReport();
+			@Override
+			public void run() {
+				runDailyTask(reportName, reportDomain, reportPeriod);
+			}
 
-			report.setCreationDate(new Date());
-			report.setDomain(domain);
-			report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-			report.setName(name);
-			report.setPeriod(period);
-			report.setType(1);
-			byte[] binaryContent = DefaultNativeBuilder.build(appReport);
-
-			return m_appReportService.insertDailyReport(report, binaryContent);
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
-		}
+			@Override
+			public void shutdown() {
+			}
+		});
+		return true;
 	}
 
 	@Override
@@ -210,6 +185,56 @@ public class AppReportBuilder implements TaskBuilder {
 		Transaction transaction = visitor.getTransaction();
 
 		command.setTransaction(transaction);
+	}
+
+	private void pruneAppCommand(AppReport appReport) {
+		for (Entry<Integer, com.dianping.cat.home.app.entity.Command> command : appReport.getCommands().entrySet()) {
+			if (command.getValue().getCount() < COMMAND_MIN_COUNT) {
+				try {
+					int id = command.getKey();
+					String name = m_appConfigManager.getRawCommands().get(id).getName();
+					boolean success = m_appConfigManager.deleteCommand(id);
+
+					if (success) {
+						Cat.logEvent("AppCommandPrune", id + ":" + name, Event.SUCCESS, command.toString());
+						m_appRuleConfigManager.deleteByCommandId(id);
+					}
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+			}
+		}
+	}
+
+	private boolean runDailyTask(String name, String domain, Date period) {
+		try {
+			m_autoCompleter.autoCompleteDomain(period);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+
+		try {
+			AppReport appReport = buildDailyReport(domain, period);
+
+			if (m_mobileConfigManager.shouldAutoPrune()) {
+				pruneAppCommand(appReport);
+			}
+
+			DailyReport report = new DailyReport();
+
+			report.setCreationDate(new Date());
+			report.setDomain(domain);
+			report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+			report.setName(name);
+			report.setPeriod(period);
+			report.setType(1);
+			byte[] binaryContent = DefaultNativeBuilder.build(appReport);
+
+			return m_appReportService.insertDailyReport(report, binaryContent);
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
 	}
 
 	public static class TransactionReportVisitor extends BaseVisitor {

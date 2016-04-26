@@ -5,6 +5,7 @@ import java.util.Date;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.home.router.entity.RouterConfig;
@@ -22,6 +23,9 @@ public class RouterConfigBuilder implements TaskBuilder {
 
 	@Inject
 	private RouterConfigService m_reportService;
+
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {

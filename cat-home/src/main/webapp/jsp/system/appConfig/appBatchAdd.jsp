@@ -30,48 +30,42 @@
 				}
 				return;
 			}
-			if(${payload.id} <= 0) {
-				$.ajax({
-					async: false,
-					type: "get",
-					dataType: "json",
-					url: "/cat/s/app?op=appNameCheck&name="+name,
-					success : function(response, textStatus) {
-						if(response['isNameUnique']){
-							if(title==undefined){
-								title = "";
-							}
-							if(domain==undefined){
-								domain="";
-							}
-							if(id==undefined){
-								id="";
-							}
-							
-							window.location.href = "/cat/s/app?op=appBatchSubmit&name="+name+"&title="+title+"&domain="+domain+"&id=-1"+"&type=${payload.type}&threshold="+threshold+"&namespace="+namespace;
-						}else{
-							alert("该名称已存在，请修改名称！");
-						}
-					}
-				});
-			}else{
-				if(title==undefined){
-					title = "";
+			
+			if(namespace == undefined || namespace == ""){
+				if($("#errorMessage").length == 0){
+					$("#commandNamespace").after($("<span class=\"text-danger\" id=\"errorMessage\">   该字段不能为空</span>"));
 				}
-				if(domain==undefined){
-					domain="";
-				}
-				if(id==undefined){
-					id="";
-				}
-				window.location.href = "/cat/s/app?op=appBatchSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id+"&type=${payload.type}&threshold="+threshold+"&namespace="+namespace;
+				return;
 			}
+			$.ajax({
+				async: false,
+				type: "get",
+				dataType: "json",
+				url: "/cat/s/app?op=appNameCheck&name="+name,
+				success : function(response, textStatus) {
+					if(response['isNameUnique']){
+						if(title==undefined){
+							title = "";
+						}
+						if(domain==undefined){
+							domain="";
+						}
+						if(id==undefined){
+							id="";
+						}
+						
+						window.location.href = "/cat/s/app?op=appBatchSubmit&name="+name+"&domain="+domain+"&type=${payload.type}&threshold="+threshold+"&namespace="+namespace;
+					}else{
+						alert("该名称已存在，请修改名称！");
+					}
+				}
+			});
 		})
 	</script>
 	
 	<table class="table table-striped table-condensed table-bordered table-hover">
 		<tr>
-			<td>名称</td><td><textarea  id="commandName" class="form-control" id="form-field-8" placeholder="Default Text"></textarea></td>
+			<td>名称</td><td><textarea  id="commandName" class="form-control" id="form-field-8" placeholder="输入格式：命令字名称1|命令字标题1;命令字名称2|命令字标题2。eg. appurl1|appTitle1;appurl2|appTitle2;..."></textarea></td>
 		</td>
 		</tr>
 		<tr>

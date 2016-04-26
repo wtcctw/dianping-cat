@@ -79,6 +79,8 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 
 	public final static String HDFS_ENABLED = "hdfs-enabled";
 
+	public final static String ROUTER_ADJUST_ENABLED = "router-adjust-enabled";
+
 	public static final String CONFIG_FILE = "/data/appdatas/cat/server.xml";
 
 	public static final String DEFAULT = "default";
@@ -431,6 +433,10 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		} else {
 			return false;
 		}
+	}
+
+	public boolean idRouterAdjustEnabled() {
+		return Boolean.parseBoolean(getProperty(ROUTER_ADJUST_ENABLED, "true"));
 	}
 
 	public boolean isHdfsOn() {

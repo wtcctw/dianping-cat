@@ -1,6 +1,6 @@
 function hourlyGraphLineChart(cell,data){
 	cell.style.display = 'block';
-	cell.parentNode.style.display = 'block';
+	cell.parentNode.style.display = 'table-cell';
 	cell.innerHTML = data;
 	
 	data = $('#distributionChartMeta', cell).text();
@@ -12,7 +12,7 @@ function hourlyGraphLineChart(cell,data){
 
 function historyGraphLineChart(cell,response){
 	cell.style.display = 'block';
-	cell.parentNode.style.display = 'block';
+	cell.parentNode.style.display = 'table-cell';
 	cell.innerHTML = response;
 
 	var hitData = $('#hitTrendMeta',cell).text();
