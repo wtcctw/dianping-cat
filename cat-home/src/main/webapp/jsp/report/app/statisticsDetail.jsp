@@ -101,7 +101,7 @@
 		<tbody>
 		<c:forEach var="e" items="${model.displayCommands.commands}">
 		<c:set var="command" value="${model.displayCommands.commands[e.key]}" />
-		<tr><td><a href="/cat/r/app?op=piechart&query1=${payload.day};${e.value.id};;;;;;;;00:00;23:59" target="_blank">
+		<tr><td><a href="/cat/r/app?op=piechart&query1=${payload.day};${e.value.id};;;;;;;;;00:00;23:59&commandId=${e.value.key}" target="_blank">
 			<c:choose>
 				<c:when test="${not empty e.value.title }">
 					${e.value.title}
