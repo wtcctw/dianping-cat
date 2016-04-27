@@ -120,6 +120,15 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	@Override
+	public boolean isEligable(MessageTree tree) {
+		if (tree.getTransactions().size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
 	protected void loadReports() {
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 	}
@@ -260,15 +269,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 
 		return report;
-	}
-
-	@Override
-	public boolean isEligable(MessageTree tree) {
-		if (tree.getTransactions().size() > 0) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 }

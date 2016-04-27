@@ -94,8 +94,10 @@
 												<th width="30%">名称</th>
 												<th width="32%">标题</th>
 												<th width="10%">过滤阈值</th>
-												<th width="8%">操作 <a href="?op=appUpdate&type=api&id=-1" class="btn btn-primary btn-xs" >
-												<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
+												<th width="15%">
+													<a href="?op=appBatchAdd&type=api&id=-1" class="btn btn-primary btn-xs"><i class="ace-icon glyphicon glyphicon-plus bigger-120"></i>批量</a>
+												 	<a href="?op=appUpdate&type=api&id=-1" class="btn btn-primary btn-xs" >
+												<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i>单个</a></th>
 											</tr>
 										</thead>
 										

@@ -58,6 +58,15 @@ public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport>  i
 	}
 
 	@Override
+	public boolean isEligable(MessageTree tree) {
+		if (tree.getMetrics().size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
 	protected void loadReports() {
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 	}
@@ -109,7 +118,7 @@ public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport>  i
 			processMetric(report, metric, domain);
 		}
 	}
-
+	
 	private void processMetric(BusinessReport report, Metric metric, String domain) {
 		boolean isMonitor = Constants.CAT.equals(domain) && StringUtils.isNotEmpty(metric.getType());
 

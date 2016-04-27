@@ -30,6 +30,13 @@
 				}
 				return;
 			}
+			
+			if(namespace == undefined || namespace == ""){
+				if($("#errorMessage").length == 0){
+					$("#commandNamespace").after($("<span class=\"text-danger\" id=\"errorMessage\">   该字段不能为空</span>"));
+				}
+				return;
+			}
 			if(${payload.id} <= 0) {
 				$.ajax({
 					async: false,

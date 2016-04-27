@@ -3,9 +3,13 @@ package com.dianping.cat.report.page.app.service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.codehaus.plexus.util.StringUtils;
+import org.unidal.helper.Splitters;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.config.Level;
 import com.dianping.cat.helper.TimeHelper;
 
 public class CrashLogQueryEntity {
@@ -26,9 +30,39 @@ public class CrashLogQueryEntity {
 
 	private String m_msg = null;
 
+	private String m_appVersion;
+
+	private String m_platformVersion;
+
+	private String m_level = null;
+
+	private String m_device = null;
+
 	private SimpleDateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
+	private SimpleDateFormat m_day_format = new SimpleDateFormat("yyyy-MM-dd");
+
 	private String m_query;
+
+	public CrashLogQueryEntity() {
+		super();
+	}
+
+	public CrashLogQueryEntity(String origin) {
+		List<String> strs = Splitters.by(";").split(origin);
+
+		try {
+			m_day = strs.get(0);
+			m_startTime = strs.get(1);
+			m_endTime = strs.get(2);
+			m_appName = strs.get(3);
+			m_appVersion = strs.get(4);
+			m_platformVersion = strs.get(5);
+			m_module = strs.get(6);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
 
 	public Date buildEndTime() {
 		if (StringUtils.isNotBlank(m_day) && StringUtils.isNotBlank(m_endTime)) {
@@ -52,12 +86,34 @@ public class CrashLogQueryEntity {
 		return TimeHelper.getCurrentHour();
 	}
 
+	public Date buildTrendStartTime() {
+		if (StringUtils.isNotBlank(m_startTime)) {
+			try {
+				Date date = m_format.parse(m_day + " " + m_startTime);
+				return date;
+			} catch (ParseException e) {
+			}
+		}
+		return TimeHelper.getCurrentDay();
+	}
+
 	public String getQuery() {
 		return m_query;
 	}
 
 	public void setQuery(String query) {
 		m_query = query;
+	}
+
+	public Date buildDay() {
+		if (StringUtils.isNotBlank(m_day)) {
+			try {
+				Date date = m_day_format.parse(m_day);
+				return date;
+			} catch (ParseException e) {
+			}
+		}
+		return TimeHelper.getCurrentDay();
 	}
 
 	public String getDay() {
@@ -128,4 +184,47 @@ public class CrashLogQueryEntity {
 		m_msg = msg;
 	}
 
+	public String getAppVersion() {
+		return m_appVersion;
+	}
+
+	public void setAppVersion(String appVersion) {
+		m_appVersion = appVersion;
+	}
+
+	public String getPlatformVersion() {
+		return m_platformVersion;
+	}
+
+	public void setPlatformVersion(String platformVersion) {
+		m_platformVersion = platformVersion;
+	}
+
+	public int getLevel() {
+		if (StringUtils.isNotBlank(m_level)) {
+			return Level.getCodeByName(m_level);
+		} else {
+			return -1;
+		}
+	}
+
+	public void setLevel(String level) {
+		m_level = level;
+	}
+
+	public String getDevice() {
+		return m_device;
+	}
+
+	public void setDevice(String device) {
+		m_device = device;
+	}
+
+	public SimpleDateFormat getFormat() {
+		return m_format;
+	}
+
+	public void setFormat(SimpleDateFormat format) {
+		m_format = format;
+	}
 }

@@ -121,6 +121,22 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_crashLogQuery;
 	}
 
+	public CrashLogQueryEntity getCrashLogTrendQuery1() {
+		if (m_query1 != null && m_query1.length() > 0) {
+			return new CrashLogQueryEntity(m_query1);
+		} else {
+			return new CrashLogQueryEntity();
+		}
+	}
+
+	public CrashLogQueryEntity getCrashLogTrendQuery2() {
+		if (m_query2 != null && m_query2.length() > 0) {
+			return new CrashLogQueryEntity(m_query2);
+		} else {
+			return null;
+		}
+	}
+
 	public CommandQueryEntity getDashBoardQuery() {
 		if (m_query1 != null && m_query1.length() > 0) {
 			return new CommandQueryEntity(m_query1);

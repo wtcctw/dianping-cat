@@ -27,7 +27,7 @@ public class StateBuilder {
 	@Inject(type = ModelService.class, value = StateAnalyzer.ID)
 	private ModelService<StateReport> m_stateService;
 
-	private static final int COUNT = 500 * 10000;
+	public static final int COUNT = 500 * 10000;
 
 	public String buildStateMessage(long date, String ip) {
 		StateReport report = queryHourlyReport(date, ip);
@@ -46,7 +46,7 @@ public class StateBuilder {
 				}
 			}
 			for (Machine machine : report.getMachines().values()) {
-				if (machine.getTotalLoss() > COUNT) {
+				if (checkTooMuchLoss(machine)) {
 					errorServers.add(machine.getIp());
 				}
 			}
@@ -56,6 +56,10 @@ public class StateBuilder {
 			}
 		}
 		return null;
+	}
+
+	public static boolean checkTooMuchLoss(Machine machine) {
+		return machine.getTotalLoss() > COUNT;
 	}
 
 	private List<String> queryAllServers() {

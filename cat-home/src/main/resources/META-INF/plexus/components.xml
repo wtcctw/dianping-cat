@@ -1579,14 +1579,47 @@
 			</requirements>
 		</component>
 		<component>
+<<<<<<< HEAD
 			<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
 			<implementation>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</implementation>
+=======
+			<role>com.dianping.cat.system.page.router.config.RouterConfigAdjustor</role>
+			<implementation>com.dianping.cat.system.page.router.config.RouterConfigAdjustor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.state.service.StateReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role-hint>router</role-hint>
+			<implementation>com.dianping.cat.system.page.router.task.RouterConfigBuilder</implementation>
+>>>>>>> master
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.config.RouterConfigAdjustor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5580,6 +5613,10 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.TaskBuilder</role>
+					<role-hint>router</role-hint>
 				</requirement>
 			</requirements>
 		</component>
