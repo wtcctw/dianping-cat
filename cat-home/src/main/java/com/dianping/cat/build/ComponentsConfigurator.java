@@ -38,8 +38,6 @@ import com.dianping.cat.report.page.server.config.ServerMetricConfigManager;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.ReportFacade;
 import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
-import com.dianping.cat.system.page.router.config.RouterConfigHandler;
-import com.dianping.cat.system.page.router.config.RouterConfigManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {
@@ -121,8 +119,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(A(DomainGroupConfigManager.class));
 		all.add(A(NetGraphConfigManager.class));
-		all.add(A(RouterConfigManager.class));
-		all.add(A(RouterConfigHandler.class));
 		all.add(A(EsServerConfigManager.class));
 		all.add(A(ServerMetricConfigManager.class));
 

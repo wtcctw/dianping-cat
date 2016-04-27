@@ -78,8 +78,6 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 
 	public final static String ROUTER_ADJUST_ENABLED = "router-adjust-enabled";
 
-	public static final String CONFIG_FILE = "/data/appdatas/cat/server.xml";
-
 	public static final String DEFAULT = "default";
 
 	@Override
