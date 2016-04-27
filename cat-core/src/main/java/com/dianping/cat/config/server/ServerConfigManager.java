@@ -235,7 +235,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	}
 
 	public int getMessageProcessorThreads() {
-		return Integer.parseInt(getProperty("message-processor-thread", "12"));
+		return Integer.parseInt(getProperty("message-processor-thread", "20"));
 	}
 
 	public ExecutorService getModelServiceExecutorService() {
@@ -478,7 +478,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	}
 
 	public String getStorageCompressType() {
-		return getProperty("storage-compress-type", "gzip");
+		return getProperty("storage-compress-type", "snappy");
 	}
 
 	public int getStorageDeflateLevel() {
