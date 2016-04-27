@@ -112,7 +112,7 @@ public class MetricServiceImpl implements MetricService {
 			String format = "SHOW TAG VALUES FROM  /^%s.*/  WITH KEY = \"endPoint\"";
 			String query = String.format(format, category);
 			QueryResult result = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
-			List<String> results = parseData(result, 0);
+			List<String> results = parseData(result, 1);
 
 			return results;
 		} else {
@@ -128,7 +128,7 @@ public class MetricServiceImpl implements MetricService {
 			String format = "SHOW TAG VALUES FROM  /.*/  WITH KEY = \"endPoint\" WHERE %s =~ /.*%s.*/";
 			String query = String.format(format, tag, StringUtils.join(keywords, "|"));
 			QueryResult result = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
-			List<String> results = parseData(result, 0);
+			List<String> results = parseData(result, 1);
 
 			return results;
 		} else {
@@ -144,7 +144,7 @@ public class MetricServiceImpl implements MetricService {
 			String format = "SHOW TAG VALUES FROM  /.*/  WITH KEY = \"endPoint\" WHERE %s";
 			String query = String.format(format, StringUtils.join(tags, " AND "));
 			QueryResult result = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
-			List<String> results = parseData(result, 0);
+			List<String> results = parseData(result, 1);
 
 			return results;
 		} else {
@@ -227,7 +227,7 @@ public class MetricServiceImpl implements MetricService {
 			String format = "SHOW TAG VALUES FROM \"%s\" WITH KEY='%s'";
 			String query = String.format(format, measurement, tag);
 			QueryResult result = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
-			List<String> results = parseData(result, 0);
+			List<String> results = parseData(result, 1);
 
 			return results;
 		} else {
