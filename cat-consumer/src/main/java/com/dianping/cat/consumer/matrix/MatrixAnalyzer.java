@@ -60,6 +60,15 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 	}
 
 	@Override
+	public boolean isEligable(MessageTree tree) {
+		if (tree.getTransactions().size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 		MatrixReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
