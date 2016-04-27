@@ -98,17 +98,18 @@ public class TreeHelper {
 
 	public static DefaultMessageTree cacheTree(MessageCodec codec, MessageId id) {
 		DefaultMessageTree tree = new DefaultMessageTree();
+		String isStr = id.toString();
 
 		tree.setDomain(id.getDomain());
 		tree.setHostName("mock-host");
-		tree.setIpAddress(id.getIpAddress());
+		tree.setIpAddress(id.getIpAddressInHex());
 		tree.setThreadGroupName("test");
 		tree.setThreadId("test");
 		tree.setThreadName("test");
 		tree.setMessage(m_message);
-		tree.setMessageId(id.toString());
+		tree.setMessageId(isStr);
 		// test for rpc index
-		tree.setMessageMapId(id.toString());
+		tree.setMessageMapId(isStr);
 
 		if (codec != null) {
 			ByteBuf buf = Unpooled.copiedBuffer(m_data);
