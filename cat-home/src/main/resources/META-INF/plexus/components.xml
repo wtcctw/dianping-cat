@@ -82,42 +82,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
-			<implementation>com.dianping.cat.system.page.router.config.RouterConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.router.config.RouterConfigHandler</role>
-			<implementation>com.dianping.cat.system.page.router.config.RouterConfigHandler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.state.service.StateReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.eslog.EsServerConfigManager</role>
 			<implementation>com.dianping.cat.report.page.eslog.EsServerConfigManager</implementation>
 			<requirements>
@@ -1579,47 +1543,14 @@
 			</requirements>
 		</component>
 		<component>
-<<<<<<< HEAD
 			<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
 			<implementation>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</implementation>
-=======
-			<role>com.dianping.cat.system.page.router.config.RouterConfigAdjustor</role>
-			<implementation>com.dianping.cat.system.page.router.config.RouterConfigAdjustor</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.state.service.StateReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
-			<role-hint>router</role-hint>
-			<implementation>com.dianping.cat.system.page.router.task.RouterConfigBuilder</implementation>
->>>>>>> master
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.router.config.RouterConfigAdjustor</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2236,6 +2167,42 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
+			<implementation>com.dianping.cat.system.page.router.config.RouterConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.router.config.RouterConfigHandler</role>
+			<implementation>com.dianping.cat.system.page.router.config.RouterConfigHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.state.service.StateReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
 			<implementation>com.dianping.cat.system.page.router.service.RouterConfigService</implementation>
 			<requirements>
@@ -2269,6 +2236,27 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.page.router.config.RouterConfigAdjustor</role>
+			<implementation>com.dianping.cat.system.page.router.config.RouterConfigAdjustor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.state.service.StateReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>router</role-hint>
 			<implementation>com.dianping.cat.system.page.router.task.RouterConfigBuilder</implementation>
@@ -2277,7 +2265,13 @@
 					<role>com.dianping.cat.system.page.router.config.RouterConfigHandler</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.page.router.config.RouterConfigAdjustor</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
