@@ -89,7 +89,7 @@ public class DumperPerfomaceTest extends ComponentTestCase {
 		long start = System.currentTimeMillis();
 		List<Dumper> threads = new ArrayList<Dumper>();
 
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 2; i++) {
 			Dumper task = new Dumper(i);
 
 			Threads.forGroup("cat").start(task);
