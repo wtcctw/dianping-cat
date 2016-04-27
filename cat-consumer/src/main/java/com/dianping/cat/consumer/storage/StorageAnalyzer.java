@@ -41,6 +41,12 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	public static final String ID = "storage";
 
 	@Override
+   public void destroy() {
+		release(m_storageBuilders);
+	   super.destroy();
+   }
+
+	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB, m_index);
@@ -73,23 +79,26 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	public ReportManager<StorageReport> getReportManager() {
 		return m_reportManager;
 	}
-
+	
 	@Override
 	public void initialize() throws InitializationException {
 		m_storageBuilders = lookupMap(StorageBuilder.class);
 	}
-	
+
 	@Override
-   public void destroy() {
-		release(m_storageBuilders);
-	   super.destroy();
-   }
+	public boolean isEligable(MessageTree tree) {
+		if (tree.getTransactions().size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	@Override
 	protected void loadReports() {
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 	}
-
+	
 	@Override
 	protected void process(MessageTree tree) {
 		List<Transaction> transactions = tree.getTransactions();

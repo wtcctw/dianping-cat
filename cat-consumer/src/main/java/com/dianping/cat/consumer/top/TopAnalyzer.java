@@ -58,6 +58,15 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	}
 
 	@Override
+	public boolean isEligable(MessageTree tree) {
+		if (tree.getEvents().size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
 	protected void loadReports() {
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 	}
