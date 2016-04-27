@@ -186,8 +186,14 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		return null;
 	}
 
-	public int getHdfsUploadThreads() {
-		return Integer.parseInt(getProperty("hdfs-upload-thread", "3"));
+	public int getHdfsUploadThreadsCount() {
+		if (m_server != null) {
+			StorageConfig storage = m_server.getStorage();
+
+			return storage.getUploadThread();
+		} else {
+			return 5;
+		}
 	}
 
 	public int getLocalReportStroageTime() {
