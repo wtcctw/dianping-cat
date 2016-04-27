@@ -18,18 +18,69 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
-public class DumperPerfomaceTest  extends ComponentTestCase{
+public class DumperPerfomaceTest extends ComponentTestCase {
 	private MessageCodec m_codec;
 
 	@Before
 	public void before() {
 		File baseDir = new File("target");
-
 		Files.forDir().delete(new File(baseDir, "dump"), true);
 
 		lookup(StorageConfiguration.class).setBaseDataDir(baseDir);
 		m_codec = lookup(MessageCodec.class, PlainTextMessageCodec.ID);
 		System.setProperty("devMode", "true");
+	}
+	
+	@Test
+	public void testWithIndex(){
+		long start = System.currentTimeMillis();
+		for (int i = 0; i < 100000; i++) {
+			for (int domainIndex = 0; domainIndex < 255; domainIndex++) {
+				String domain = "domain_" + domainIndex;
+				int hour = 405746;
+
+				for (int ipIndex = 0; ipIndex < 10; ipIndex++) {
+					String ip = "0a01" + getHex(ipIndex) + getHex(domainIndex);
+					MessageId id = new MessageId(domain, ip, hour, i * 10 + ipIndex);
+				
+					getIndex(id.getDomain());
+				}
+			}
+		}
+		
+		System.out.println("domain hash duration:" + (System.currentTimeMillis()-start));
+		
+		 start = System.currentTimeMillis();
+		
+		for (int i = 0; i < 100000; i++) {
+			for (int domainIndex = 0; domainIndex < 255; domainIndex++) {
+				String domain = "domain_" + domainIndex;
+				int hour = 405746;
+
+				for (int ipIndex = 0; ipIndex < 10; ipIndex++) {
+					String ip = "0a01" + getHex(ipIndex) + getHex(domainIndex);
+					MessageId id = new MessageId(domain, ip, hour, i * 10 + ipIndex);
+				
+					getIndex(id.getIpAddressInHex());
+				}
+			}
+		}
+		System.out.println("index hash duration:" + (System.currentTimeMillis()-start));
+		
+	}
+
+	private int getIndex(String key) {
+		return (Math.abs(key.hashCode())) % (12);
+	}
+	
+	private String getHex(int index) {
+		String s = Integer.toHexString(index);
+
+		if (s.length() == 1) {
+			return '0' + s;
+		} else {
+			return s;
+		}
 	}
 
 	@Test
@@ -61,6 +112,7 @@ public class DumperPerfomaceTest  extends ComponentTestCase{
 			}
 		}
 	}
+
 	public class Dumper implements Task {
 
 		public AtomicInteger m_totalCount = new AtomicInteger(0);
@@ -83,14 +135,14 @@ public class DumperPerfomaceTest  extends ComponentTestCase{
 			MessageDumper dumper = manager.findOrCreate(hour);
 
 			for (int i = 0; i < 10000000; i++) {
-				for (int domainIndex = 0; domainIndex < 300; domainIndex++) {
+				for (int domainIndex = 0; domainIndex < 255; domainIndex++) {
 					String domain = "domain_" + domainIndex;
 
 					for (int ipIndex = 0; ipIndex < 10; ipIndex++) {
-						String ip = "0a01020" + ipIndex;
+						String ip = "0a01" + getHex(ipIndex) + getHex(domainIndex);
 						MessageId id = new MessageId(domain, ip, hour, i * 10 + ipIndex);
 						MessageTree tree = TreeHelper.cacheTree(m_codec, id);
-
+						
 						((DefaultMessageTree) tree).setMessageId(id.toString());
 						tree.setFormatMessageId(id);
 
@@ -105,4 +157,5 @@ public class DumperPerfomaceTest  extends ComponentTestCase{
 		public void shutdown() {
 		}
 	}
+	
 }

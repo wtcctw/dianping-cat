@@ -1,8 +1,8 @@
 package org.unidal.cat.message.storage.internals;
 
 import java.nio.ByteBuffer;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -14,7 +14,7 @@ import org.unidal.lookup.annotation.Named;
 @Named(type = ByteBufCache.class)
 public class DefaultByteBufCache implements ByteBufCache, Initializable, LogEnabled {
 
-	private BlockingQueue<ByteBuffer> m_bufs = new LinkedBlockingQueue<ByteBuffer>(8000);
+	private BlockingQueue<ByteBuffer> m_bufs = new ArrayBlockingQueue<ByteBuffer>(8000);
 
 	private AtomicInteger m_counts = new AtomicInteger(0);
 

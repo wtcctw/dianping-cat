@@ -4,8 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -51,8 +51,6 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 	@Inject
 	private ServerConfigManager m_configManager;
 
-	private long m_total;
-
 	private List<BlockingQueue<MessageTree>> m_queues = new ArrayList<BlockingQueue<MessageTree>>();
 
 	private List<MessageProcessor> m_processors = new ArrayList<MessageProcessor>();
@@ -60,6 +58,10 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 	private AtomicInteger m_failCount = new AtomicInteger(-1);
 
 	private Logger m_logger;
+
+	private long m_total;
+
+	private int m_processThreads;
 
 	@Override
 	public void awaitTermination(int hour) throws InterruptedException {
@@ -116,27 +118,24 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 		m_logger = logger;
 	}
 
-	private int getIndex(String domain) {
-		int hash = Math.abs(domain.hashCode());
-		int index = hash % (m_processors.size());
-
-		return index;
+	private int getIndex(String key) {
+		return (Math.abs(key.hashCode())) % (m_processThreads);
 	}
 
 	public void initialize(int hour) {
 		DefaultBlock.COMMPRESS_TYPE = CompressTye.getCompressTye(m_configManager.getStorageCompressType());
 		DefaultBlock.DEFLATE_LEVEL = m_configManager.getStorageDeflateLevel();
 		DefaultBlock.MAX_SIZE = m_configManager.getStorageMaxBlockSize();
-		
-		
+
 		m_logger.info("set compress type :" + DefaultBlock.COMMPRESS_TYPE.toString());
 		m_logger.info("set compress level:" + DefaultBlock.DEFLATE_LEVEL);
 		m_logger.info("set default block size:" + DefaultBlock.MAX_SIZE);
-		
+
 		int processThreads = m_configManager.getMessageProcessorThreads();
+		m_processThreads = processThreads;
 
 		for (int i = 0; i < processThreads; i++) {
-			BlockingQueue<MessageTree> queue = new LinkedBlockingQueue<MessageTree>(10000);
+			BlockingQueue<MessageTree> queue = new ArrayBlockingQueue<MessageTree>(10000);
 			MessageProcessor processor = lookup(MessageProcessor.class);
 
 			m_queues.add(queue);
@@ -152,7 +151,9 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 		MessageId id = tree.getFormatMessageId();
 		String domain = id.getDomain();
 		// hash by ip address and block hash by domain
-		int index = getIndex(id.getIpAddress());
+		// int index = getIndex(id.getDomain());
+		int index = getIndex(id.getIpAddressInHex());
+
 		BlockingQueue<MessageTree> queue = m_queues.get(index);
 		boolean success = queue.offer(tree);
 

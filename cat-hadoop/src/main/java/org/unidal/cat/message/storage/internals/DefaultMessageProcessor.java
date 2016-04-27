@@ -24,6 +24,7 @@ import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 
@@ -51,6 +52,8 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 	private AtomicBoolean m_enabled;
 
 	private CountDownLatch m_latch;
+
+	private int m_count;
 
 	@Override
 	public ByteBuf find(MessageId id) {
@@ -80,6 +83,14 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 		m_hour = hour;
 		m_latch = new CountDownLatch(1);
 		m_finderManager.register(hour, this);
+	}
+
+	private boolean isMonitor() {
+		return (++m_count) % 1000 == 0;
+	}
+
+	private MessageTree pollMessage() throws InterruptedException {
+		return m_queue.poll(5, TimeUnit.MILLISECONDS);
 	}
 
 	private void processMessage(MessageTree tree) {
@@ -130,10 +141,18 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 
 		try {
 			while (m_enabled.get() || !m_queue.isEmpty()) {
-				tree = m_queue.poll(5, TimeUnit.MILLISECONDS);
+				tree = pollMessage();
 
 				if (tree != null) {
-					processMessage(tree);
+					if (isMonitor()) {
+						Transaction t = Cat.newTransaction("Processor", "index-" + m_index);
+
+						processMessage(tree);
+						t.setStatus(Transaction.SUCCESS);
+						t.complete();
+					} else {
+						processMessage(tree);
+					}
 				}
 			}
 		} catch (InterruptedException e) {

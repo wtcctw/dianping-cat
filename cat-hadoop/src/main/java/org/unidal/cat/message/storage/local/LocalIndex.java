@@ -204,7 +204,7 @@ public class LocalIndex implements Index {
 
 			int segmentId = (int) (position / SEGMENT_SIZE);
 			int offset = (int) (position % SEGMENT_SIZE);
-			Segment segment = getSegment(id.getIpAddress(), segmentId);
+			Segment segment = getSegment(id.getIpAddressInHex(), segmentId);
 
 			if (segment != null) {
 				try {
@@ -229,12 +229,12 @@ public class LocalIndex implements Index {
 			long position = m_header.getOffset(id.getIpAddressValue(), id.getIndex(), true);
 			long address = position / SEGMENT_SIZE;
 			int offset = (int) (position % SEGMENT_SIZE);
-			Segment segment = getSegment(id.getIpAddress(), address);
+			Segment segment = getSegment(id.getIpAddressInHex(), address);
 
 			if (segment != null) {
 				segment.writeLong(offset, value);
 			} else {
-				Cat.logEvent("Block", "Abnormal:" + id.getDomain(), Event.SUCCESS, id.toString());
+				Cat.logEvent("Block", "Abnormal:" + id.getDomain(), Event.SUCCESS, null);
 				m_indexChannel.position(position);
 
 				ByteBuffer buf = ByteBuffer.allocate(8);

@@ -137,11 +137,7 @@
 							<li id="routerConfigUpdate"><a href="/cat/s/config?op=routerConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>客户端路由</a>
 								<b class="arrow"></b></li>
-<<<<<<< HEAD
-							<li id="serverConfigUpdate"  style="display:none"><a href="/cat/s/config?op=serverConfigUpdate">
-=======
 							<li id="serverConfigUpdate" style="display:none"><a href="/cat/s/config?op=serverConfigUpdate">
->>>>>>> d7a51b9ae3339efca83f8739bd4f8e4814c5894c
 								<i class="menu-icon fa fa-caret-right"></i>服务端配置</a>
 								<b class="arrow"></b></li>
 						</ul></li>

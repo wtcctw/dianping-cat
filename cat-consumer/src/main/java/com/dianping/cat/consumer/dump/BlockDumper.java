@@ -1,8 +1,8 @@
 package com.dianping.cat.consumer.dump;
 
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -32,7 +32,7 @@ public class BlockDumper implements Task {
 		m_messageBlocks = messageBlock;
 		m_serverStateManager = stateManager;
 		m_executors = new ThreadPoolExecutor(thread, thread, 10, TimeUnit.SECONDS,
-		      new LinkedBlockingQueue<Runnable>(5000), new ThreadPoolExecutor.CallerRunsPolicy());
+		      new ArrayBlockingQueue<Runnable>(5000), new ThreadPoolExecutor.CallerRunsPolicy());
 	}
 
 	@Override

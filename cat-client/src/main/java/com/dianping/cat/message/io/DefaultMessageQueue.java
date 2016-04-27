@@ -1,7 +1,7 @@
 package com.dianping.cat.message.io;
 
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import com.dianping.cat.message.spi.MessageQueue;
@@ -12,7 +12,7 @@ public class DefaultMessageQueue implements MessageQueue {
 	private BlockingQueue<MessageTree> m_queue;
 
 	public DefaultMessageQueue(int size) {
-		m_queue = new LinkedBlockingQueue<MessageTree>(size);
+		m_queue = new ArrayBlockingQueue<MessageTree>(size);
 	}
 
 	@Override
