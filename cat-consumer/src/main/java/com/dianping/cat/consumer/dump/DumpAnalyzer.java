@@ -14,9 +14,11 @@ import org.unidal.lookup.annotation.Named;
 import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.storage.MessageBucketManager;
 import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
@@ -32,6 +34,11 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 	@Inject
 	private MessageFinderManager m_finderManager;
+
+	@Inject(type = MessageBucketManager.class, value = LocalMessageBucketManager.ID)
+	private MessageBucketManager m_bucketManager;
+
+	private boolean m_useNewStorage;
 
 	private Logger m_logger;
 
@@ -86,8 +93,12 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 		super.initialize(startTime, duration, extraTime);
 
 		int hour = (int) TimeUnit.MILLISECONDS.toHours(startTime);
+		m_useNewStorage = m_serverConfigManager.isUseNewStorage();
 
-		m_dumperManager.findOrCreate(hour);
+		System.err.println("use storage " + m_useNewStorage);
+		if (m_useNewStorage) {
+			m_dumperManager.findOrCreate(hour);
+		}
 	}
 
 	private boolean invalid(String domain) {
@@ -104,20 +115,40 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 		MessageId messageId = MessageId.parse(tree.getMessageId());
 		int hour = messageId.getHour();
 		String domain = messageId.getDomain();
-		
+
 		if (invalid(domain)) {
 			return;
 		} else {
-			MessageDumper dumper = m_dumperManager.find(hour);
-
-			tree.setFormatMessageId(messageId);
-
-			if (dumper != null) {
-				dumper.process(tree);
-
+			if (m_useNewStorage) {
+				processWithStorage(tree, messageId, hour);
 			} else {
-				m_serverStateManager.addPigeonTimeError(1);
+				processWithBucket(tree, messageId);
 			}
+		}
+	}
+
+	private void processWithBucket(MessageTree tree, MessageId messageId) {
+	   long time = tree.getMessage().getTimestamp();
+	   long fixedTime = time - time % (TimeHelper.ONE_HOUR);
+	   long idTime = messageId.getTimestamp();
+	   long duration = fixedTime - idTime;
+
+	   if (duration == 0 || duration == ONE_HOUR || duration == -ONE_HOUR) {
+	   	m_bucketManager.storeMessage(tree, messageId);
+	   } else {
+	   	m_serverStateManager.addPigeonTimeError(1);
+	   }
+   }
+
+	private void processWithStorage(MessageTree tree, MessageId messageId, int hour) {
+		MessageDumper dumper = m_dumperManager.find(hour);
+
+		tree.setFormatMessageId(messageId);
+
+		if (dumper != null) {
+			dumper.process(tree);
+		} else {
+			m_serverStateManager.addPigeonTimeError(1);
 		}
 	}
 

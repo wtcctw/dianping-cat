@@ -10,8 +10,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>org.unidal.cat.message.storage.hdfs.HdfsUploader</role>
-			<implementation>org.unidal.cat.message.storage.hdfs.HdfsUploader</implementation>
+			<role>com.dianping.cat.hadoop.hdfs.HdfsUploader</role>
+			<implementation>com.dianping.cat.hadoop.hdfs.HdfsUploader</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>

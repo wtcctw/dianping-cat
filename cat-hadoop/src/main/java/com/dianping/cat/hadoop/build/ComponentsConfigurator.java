@@ -65,7 +65,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(FileSystemManager.class) //
 		      .req(ServerConfigManager.class));
 
-		all.add(C(HdfsUploader.class) //
+		all.add(C(com.dianping.cat.hadoop.hdfs.HdfsUploader.class) //
 		      .req(FileSystemManager.class, ServerConfigManager.class));
 
 		all.add(C(MessageBucket.class, HdfsMessageBucket.ID, HdfsMessageBucket.class) //

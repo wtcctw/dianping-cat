@@ -453,6 +453,10 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 			return false;
 		}
 	}
+	
+	public boolean isUseNewStorage(){
+		return Boolean.parseBoolean(getProperty("new-use-storage", "false"));	
+	}
 
 	public boolean isAlertMachine() {
 		return Boolean.parseBoolean(getProperty(ALARM_MACHINE, "false"));

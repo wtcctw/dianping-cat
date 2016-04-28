@@ -17,6 +17,7 @@ import org.unidal.lookup.annotation.Named;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
+import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.codec.HtmlMessageCodec;
@@ -25,6 +26,7 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
+import com.dianping.cat.message.storage.MessageBucketManager;
 import com.dianping.cat.mvc.ApiPayload;
 import com.dianping.cat.report.service.LocalModelService;
 import com.dianping.cat.report.service.ModelPeriod;
@@ -54,12 +56,49 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 	@Inject(PlainTextMessageCodec.ID)
 	private MessageCodec m_plainText;
 
+	@Inject(type = MessageBucketManager.class, value = LocalMessageBucketManager.ID)
+	private MessageBucketManager m_messageBucketManager;
+
 	public LocalMessageService() {
 		super("logview");
 	}
 
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
+	      throws Exception {
+		if (m_configManager.isUseNewStorage()) {
+			return buildNewReport(request, period, domain, payload);
+		} else {
+			return buildOldReport(request, period, domain, payload);
+		}
+	}
+
+	public String buildOldReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
+	      throws Exception {
+		String messageId = payload.getMessageId();
+		boolean waterfull = payload.isWaterfall();
+		MessageTree tree = m_messageBucketManager.loadMessage(messageId);
+
+		if (tree != null) {
+			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(8192);
+
+			if (tree.getMessage() instanceof Transaction && waterfull) {
+				m_waterfall.encode(tree, buf);
+			} else {
+				m_html.encode(tree, buf);
+			}
+
+			try {
+				buf.readInt(); // get rid of length
+				return buf.toString(Charset.forName("utf-8"));
+			} catch (Exception e) {
+				// ignore it
+			}
+		}
+		return null;
+	}
+
+	public String buildNewReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		String messageId = payload.getMessageId();
 		boolean waterfull = payload.isWaterfall();
@@ -162,7 +201,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 
 	@Override
 	public boolean isEligable(ModelRequest request) {
-		if (m_manager.isHdfsOn()) {
+		if (m_configManager.isHdfsOn()) {
 			boolean eligibale = request.getPeriod().isCurrent();
 
 			return eligibale;

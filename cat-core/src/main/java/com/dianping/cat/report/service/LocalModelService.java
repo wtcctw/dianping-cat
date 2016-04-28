@@ -21,7 +21,7 @@ public abstract class LocalModelService<T> implements Initializable {
 	private MessageConsumer m_consumer;
 
 	@Inject
-	protected ServerConfigManager m_manager;
+	protected ServerConfigManager m_configManager;
 
 	public static final int DEFAULT_SIZE = 32 * 1024;
 
@@ -79,7 +79,7 @@ public abstract class LocalModelService<T> implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_defaultDomain = m_manager.getConsoleDefaultDomain();
+		m_defaultDomain = m_configManager.getConsoleDefaultDomain();
 	}
 
 	public boolean isEligable(ModelRequest request) {

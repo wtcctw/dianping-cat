@@ -10,6 +10,7 @@ import org.unidal.cat.message.storage.hdfs.HdfsIndexManager;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.codec.HtmlMessageCodec;
@@ -18,6 +19,7 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
+import com.dianping.cat.message.storage.MessageBucketManager;
 import com.dianping.cat.report.service.BaseHistoricalModelService;
 import com.dianping.cat.report.service.ModelRequest;
 
@@ -38,12 +40,36 @@ public class HistoricalMessageService extends BaseHistoricalModelService<String>
 	@Inject
 	private HdfsIndexManager m_indexManager;
 
+	@Inject(type = MessageBucketManager.class, value = HdfsMessageBucketManager.ID)
+	private MessageBucketManager m_hdfsBucketManager;
+
 	public HistoricalMessageService() {
 		super("logview");
 	}
 
 	@Override
 	protected String buildModel(ModelRequest request) throws Exception {
+		String result = buildOldMessageModel(request);
+
+		if (result == null) {
+			result = buildNewMessageModel(request);
+		}
+		return result;
+	}
+
+	protected String buildOldMessageModel(ModelRequest request) throws Exception {
+		String messageId = request.getProperty("messageId");
+		Cat.logEvent("LoadMessage", "messageTree", Event.SUCCESS, messageId);
+		MessageTree tree = m_hdfsBucketManager.loadMessage(messageId);
+
+		if (tree != null) {
+			return toString(request, tree);
+		} else {
+			return null;
+		}
+	}
+
+	protected String buildNewMessageModel(ModelRequest request) throws Exception {
 		String messageId = request.getProperty("messageId");
 		Cat.logEvent("LoadMessage", "messageTree", Event.SUCCESS, messageId);
 		MessageId id = MessageId.parse(messageId);
