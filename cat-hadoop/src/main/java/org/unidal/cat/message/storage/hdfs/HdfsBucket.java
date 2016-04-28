@@ -217,8 +217,6 @@ public class HdfsBucket implements Bucket {
 					int ip = segment.readInt();
 					int index = segment.readInt();
 					
-					System.err.println("init ip:" + ip +",index:" + index );
-
 					readerIndex++;
 
 					if (ip != 0) {
