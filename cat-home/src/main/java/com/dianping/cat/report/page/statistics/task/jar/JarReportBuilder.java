@@ -44,7 +44,7 @@ public class JarReportBuilder implements TaskBuilder {
 
 	public static List<String> s_jars = Arrays.asList("cat-client", "cat-core", "dpsf-net", "lion-client",
 	      "avatar-cache", "zebra-ds-monitor-client", "zebra-api", "swallow-client", "swallow-consumerclient",
-	      "swallow-producerclient", "platform-sdk");
+	      "swallow-producerclient", "platform-sdk", "squirrel-client");
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -57,9 +57,10 @@ public class JarReportBuilder implements TaskBuilder {
 		Set<String> domains = m_reportService.queryAllDomainNames(period, end, HeartbeatAnalyzer.ID);
 		JarReport jarReport = new JarReport();
 		HeartbeatReportVisitor visitor = new HeartbeatReportVisitor(jarReport);
+		System.out.println(domains);
 
 		for (String domainName : domains) {
-			if (m_configManager.validateDomain(domainName)) {
+			if (m_configManager.validateDomain(domainName) && "squirrel-web".equals(domainName)) {
 				HeartbeatReport heartbeatReport = m_heartbeatReportService.queryReport(domainName, period, end);
 
 				visitor.visitHeartbeatReport(heartbeatReport);
@@ -78,6 +79,16 @@ public class JarReportBuilder implements TaskBuilder {
 		report.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(jarReport);
 		return m_reportService.insertHourlyReport(report, binaryContent);
+	}
+
+	@Override
+	public boolean buildMonthlyTask(String name, String domain, Date period) {
+		throw new RuntimeException(ID + " don't support monthly update");
+	}
+
+	@Override
+	public boolean buildWeeklyTask(String name, String domain, Date period) {
+		throw new RuntimeException(ID + " don't support weekly update");
 	}
 
 	public class HeartbeatReportVisitor extends BaseVisitor {
@@ -108,8 +119,14 @@ public class JarReportBuilder implements TaskBuilder {
 				for (String base : s_jars) {
 					result.put(base, "-");
 				}
+
 				for (String jar : jars) {
 					int lastIndex = jar.lastIndexOf("-");
+
+					if (jar.contains("-SNAPSHOT")) {
+						lastIndex = jar.lastIndexOf("-SNAPSHOT");
+						lastIndex = jar.lastIndexOf("-", lastIndex - 1);
+					}
 
 					if (lastIndex > -1) {
 						String jarName = jar.substring(0, lastIndex);
@@ -133,16 +150,6 @@ public class JarReportBuilder implements TaskBuilder {
 				}
 			}
 		}
-	}
-
-	@Override
-	public boolean buildMonthlyTask(String name, String domain, Date period) {
-		throw new RuntimeException(ID + " don't support monthly update");
-	}
-
-	@Override
-	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		throw new RuntimeException(ID + " don't support weekly update");
 	}
 
 }
