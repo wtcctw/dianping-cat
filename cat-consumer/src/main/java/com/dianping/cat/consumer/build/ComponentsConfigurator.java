@@ -22,6 +22,7 @@ import com.dianping.cat.consumer.cross.IpConvertManager;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyDelegate;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
+import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.EventDelegate;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
@@ -50,12 +51,16 @@ import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionDelegate;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
+import com.dianping.cat.hadoop.hdfs.HdfsUploader;
+import com.dianping.cat.message.PathBuilder;
+import com.dianping.cat.message.storage.MessageBucketManager;
 import com.dianping.cat.report.DefaultReportManager;
 import com.dianping.cat.report.DomainValidator;
 import com.dianping.cat.report.ReportBucketManager;
 import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.service.ProjectService;
+import com.dianping.cat.statistic.ServerStatisticManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {
@@ -122,6 +127,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	private Collection<Component> defineDumpComponents() {
 		final List<Component> all = new ArrayList<Component>();
 		all.add(A(DumpAnalyzer.class));
+		
+		all.add(C(MessageBucketManager.class, LocalMessageBucketManager.ID, LocalMessageBucketManager.class) //
+		      .req(ServerConfigManager.class, PathBuilder.class, ServerStatisticManager.class)//
+		      .req(HdfsUploader.class));
 
 		return all;
 	}

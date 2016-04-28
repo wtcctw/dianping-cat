@@ -1,6 +1,73 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
+			<implementation>com.dianping.cat.hadoop.hdfs.FileSystemManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.cat.message.storage.hdfs.HdfsUploader</role>
+			<implementation>org.unidal.cat.message.storage.hdfs.HdfsUploader</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.storage.MessageBucket</role>
+			<role-hint>HdfsMessageBucket</role-hint>
+			<implementation>com.dianping.cat.hadoop.hdfs.bucket.HdfsMessageBucket</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>plain-text</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.storage.MessageBucket</role>
+			<role-hint>HarfsMessageBucket</role-hint>
+			<implementation>com.dianping.cat.hadoop.hdfs.bucket.HarfsMessageBucket</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>plain-text</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.storage.MessageBucketManager</role>
+			<role-hint>hdfs</role-hint>
+			<implementation>com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.PathBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.cat.message.storage.MessageDumperManager</role>
 			<implementation>org.unidal.cat.message.storage.internals.DefaultMessageDumperManager</implementation>
 			<requirements>
@@ -93,8 +160,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>org.unidal.cat.message.storage.hdfs.FileSystemManager</role>
-			<implementation>org.unidal.cat.message.storage.hdfs.FileSystemManager</implementation>
+			<role>org.unidal.cat.message.storage.hdfs.HdfsSystemManager</role>
+			<implementation>org.unidal.cat.message.storage.hdfs.HdfsSystemManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
@@ -107,7 +174,7 @@
 			<implementation>org.unidal.cat.message.storage.hdfs.HdfsMessageConsumerFinder</implementation>
 			<requirements>
 				<requirement>
-					<role>org.unidal.cat.message.storage.hdfs.FileSystemManager</role>
+					<role>org.unidal.cat.message.storage.hdfs.HdfsSystemManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -147,7 +214,7 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>org.unidal.cat.message.storage.hdfs.FileSystemManager</role>
+					<role>org.unidal.cat.message.storage.hdfs.HdfsSystemManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
@@ -166,7 +233,7 @@
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>org.unidal.cat.message.storage.hdfs.FileSystemManager</role>
+					<role>org.unidal.cat.message.storage.hdfs.HdfsSystemManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
@@ -215,7 +282,7 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>org.unidal.cat.message.storage.hdfs.FileSystemManager</role>
+					<role>org.unidal.cat.message.storage.hdfs.HdfsSystemManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
@@ -238,7 +305,7 @@
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>org.unidal.cat.message.storage.hdfs.FileSystemManager</role>
+					<role>org.unidal.cat.message.storage.hdfs.HdfsSystemManager</role>
 				</requirement>
 				<requirement>
 					<role>org.unidal.cat.message.storage.hdfs.MessageConsumerFinder</role>
@@ -262,7 +329,7 @@
 			<implementation>org.unidal.cat.message.storage.hdfs.HdfsFileBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>org.unidal.cat.message.storage.hdfs.FileSystemManager</role>
+					<role>org.unidal.cat.message.storage.hdfs.HdfsSystemManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -285,7 +352,7 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>org.unidal.cat.message.storage.hdfs.FileSystemManager</role>
+					<role>org.unidal.cat.message.storage.hdfs.HdfsSystemManager</role>
 				</requirement>
 				<requirement>
 					<role>org.unidal.cat.message.storage.PathBuilder</role>
@@ -316,7 +383,7 @@
 			<implementation>org.unidal.cat.message.storage.hdfs.HdfsUploader</implementation>
 			<requirements>
 				<requirement>
-					<role>org.unidal.cat.message.storage.hdfs.FileSystemManager</role>
+					<role>org.unidal.cat.message.storage.hdfs.HdfsSystemManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>

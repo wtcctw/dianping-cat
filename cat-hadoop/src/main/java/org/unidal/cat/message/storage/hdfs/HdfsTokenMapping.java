@@ -32,7 +32,7 @@ public class HdfsTokenMapping implements TokenMapping {
 	private static final String MAGIC_CODE = "TokenMapping"; // token mapping
 
 	@Inject
-	protected FileSystemManager m_manager;
+	protected HdfsSystemManager m_manager;
 
 	@Inject("hdfs")
 	private PathBuilder m_bulider;

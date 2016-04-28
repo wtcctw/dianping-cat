@@ -28,6 +28,7 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.server.entity.Domain;
+import com.dianping.cat.configuration.server.entity.HarfsConfig;
 import com.dianping.cat.configuration.server.entity.HdfsConfig;
 import com.dianping.cat.configuration.server.entity.LongConfig;
 import com.dianping.cat.configuration.server.entity.Property;
@@ -63,6 +64,10 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	private Logger m_logger;
 
 	public ExecutorService m_threadPool;
+	
+	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
+
+	public static final String DUMP_DIR = "dump";
 
 	public final static String REMOTE_SERVERS = "remote-servers";
 
@@ -92,7 +97,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	public String getConsoleDefaultDomain() {
 		return Constants.CAT;
 	}
-
+	
 	public List<Pair<String, Integer>> getConsoleEndpoints() {
 		String remoteServers = getProperty(REMOTE_SERVERS, "");
 		List<String> endpoints = Splitters.by(',').noEmptyItem().trim().split(remoteServers);
@@ -109,6 +114,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		return pairs;
 	}
 
+
 	public String getConsoleRemoteServers() {
 		String remoteServers = getProperty(REMOTE_SERVERS, "");
 
@@ -118,6 +124,52 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 			return "";
 		}
 	}
+	
+	public boolean getEnableOfRealtimeAnalyzer(String name) {
+		return Boolean.parseBoolean(getProperty(name + "-analyzer-enable", "true"));
+	}
+
+	public String getHarfsBaseDir(String id) {
+		if (m_server != null) {
+			HarfsConfig harfsConfig = m_server.getStorage().findHarfs(id);
+
+			if (harfsConfig != null) {
+				String baseDir = harfsConfig.getBaseDir();
+
+				if (baseDir != null && baseDir.trim().length() > 0) {
+					return baseDir;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public long getHarfsFileMaxSize(String id) {
+		if (m_server != null) {
+			HarfsConfig hdfsConfig = m_server.getStorage().findHarfs(id);
+
+			return toLong(hdfsConfig == null ? null : hdfsConfig.getMaxSize(), DEFAULT_HDFS_FILE_MAX_SIZE);
+		} else {
+			return DEFAULT_HDFS_FILE_MAX_SIZE;
+		}
+	}
+
+	public String getHarfsServerUri(String id) {
+		if (m_server != null) {
+			HarfsConfig hdfsConfig = m_server.getStorage().findHarfs(id);
+
+			if (hdfsConfig != null) {
+				String serverUri = hdfsConfig.getServerUri();
+
+				if (serverUri != null && serverUri.trim().length() > 0) {
+					return serverUri;
+				}
+			}
+		}
+
+		return null;
+	}
+
 
 	public String getHdfsBaseDir(String id) {
 		if (m_server != null) {
@@ -133,7 +185,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		}
 		return null;
 	}
-
+	
 	public String getHdfsLocalBaseDir(String id) {
 		if (m_server != null) {
 			StorageConfig storage = m_server.getStorage();
@@ -184,6 +236,16 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		}
 
 		return null;
+	}
+
+	public int getHdfsUploadThreadCount() {
+		if (m_server != null) {
+			StorageConfig storage = m_server.getStorage();
+
+			return storage.getUploadThread();
+		} else {
+			return 5;
+		}
 	}
 
 	public int getHdfsUploadThreadsCount() {
@@ -267,6 +329,26 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 
 	public ServerConfig getServerConfig() {
 		return m_config;
+	}
+
+	public String getStorageCompressType() {
+		return getProperty("storage-compress-type", "snappy");
+	}
+
+	public int getStorageDeflateLevel() {
+		return Integer.parseInt(getProperty("storage-deflate-level", "5"));
+	}
+
+	public int getStorageMaxBlockSize() {
+		return Integer.parseInt(getProperty("storage-max-block-size", "131072"));
+	}
+
+	public boolean getStroargeNioEnable() {
+		return Boolean.parseBoolean(getProperty("storage-nio-enable", "true"));
+	}
+
+	public int getThreadsOfRealtimeAnalyzer(String name) {
+		return Integer.parseInt(getProperty(name + "-analyzer-threads", "1"));
 	}
 
 	@Override
@@ -376,6 +458,14 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		return Boolean.parseBoolean(getProperty(ALARM_MACHINE, "false"));
 	}
 
+	public boolean isHarMode() {
+		if (m_server != null) {
+			return m_server.getStorage().isHarMode();
+		} else {
+			return false;
+		}
+	}
+
 	public boolean isHdfsOn() {
 		return Boolean.parseBoolean(getProperty(HDFS_ENABLED, "false"));
 	}
@@ -471,34 +561,33 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		return true;
 	}
 
+	private long toLong(String str, long defaultValue) {
+		long value = 0;
+		int len = str == null ? 0 : str.length();
+
+		for (int i = 0; i < len; i++) {
+			char ch = str.charAt(i);
+
+			if (Character.isDigit(ch)) {
+				value = value * 10L + (ch - '0');
+			} else if (ch == 'm' || ch == 'M') {
+				value *= 1024 * 1024L;
+			} else if (ch == 'k' || ch == 'K') {
+				value *= 1024L;
+			}
+		}
+
+		if (value > 0) {
+			return value;
+		} else {
+			return defaultValue;
+		}
+	}
+
 	public boolean validateIp(String str) {
 		Pattern pattern = Pattern
 		      .compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
 		return pattern.matcher(str).matches();
-	}
-
-	public int getThreadsOfRealtimeAnalyzer(String name) {
-		return Integer.parseInt(getProperty(name + "-analyzer-threads", "1"));
-	}
-
-	public boolean getEnableOfRealtimeAnalyzer(String name) {
-		return Boolean.parseBoolean(getProperty(name + "-analyzer-enable", "true"));
-	}
-
-	public boolean getStroargeNioEnable() {
-		return Boolean.parseBoolean(getProperty("storage-nio-enable", "true"));
-	}
-
-	public String getStorageCompressType() {
-		return getProperty("storage-compress-type", "snappy");
-	}
-
-	public int getStorageDeflateLevel() {
-		return Integer.parseInt(getProperty("storage-deflate-level", "5"));
-	}
-
-	public int getStorageMaxBlockSize() {
-		return Integer.parseInt(getProperty("storage-max-block-size", "131072"));
 	}
 
 }

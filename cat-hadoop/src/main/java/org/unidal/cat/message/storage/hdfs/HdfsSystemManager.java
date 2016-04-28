@@ -17,7 +17,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 
 @Named
-public class FileSystemManager implements Initializable {
+public class HdfsSystemManager implements Initializable {
 	@Inject
 	private ServerConfigManager m_configManager;
 

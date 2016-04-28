@@ -12,7 +12,7 @@ import org.unidal.lookup.annotation.Named;
 public class HdfsFileBuilder implements PathBuilder {
 
 	@Inject
-	private FileSystemManager m_fileSystemManager;
+	private HdfsSystemManager m_fileSystemManager;
 
 	@Override
 	public String getPath(String domain, Date startTime, String consumerId, FileType type) {

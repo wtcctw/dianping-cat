@@ -27,7 +27,7 @@ public class HdfsIndexManager extends ContainerHolder implements Initializable, 
 	private ServerConfigManager m_configManager;
 
 	@Inject
-	private FileSystemManager m_fileSystemManager;
+	private HdfsSystemManager m_fileSystemManager;
 
 	@Inject(value = "hdfs")
 	private MessageConsumerFinder m_consumerFinder;

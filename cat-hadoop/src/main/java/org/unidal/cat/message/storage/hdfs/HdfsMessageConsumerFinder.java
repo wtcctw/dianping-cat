@@ -21,7 +21,7 @@ import com.dianping.cat.helper.TimeHelper;
 public class HdfsMessageConsumerFinder implements MessageConsumerFinder {
 
 	@Inject
-	private FileSystemManager m_fileSystemManager;
+	private HdfsSystemManager m_fileSystemManager;
 
 	private Map<String, Set<String>> m_caches = new LinkedHashMap<String, Set<String>>();
 

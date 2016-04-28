@@ -32,7 +32,7 @@ public class HdfsBucketManager extends ContainerHolder implements Initializable,
 	private ServerConfigManager m_configManager;
 
 	@Inject
-	private FileSystemManager m_fileSystemManager;
+	private HdfsSystemManager m_fileSystemManager;
 
 	@Inject(PlainTextMessageCodec.ID)
 	private MessageCodec m_plainTextCodec;

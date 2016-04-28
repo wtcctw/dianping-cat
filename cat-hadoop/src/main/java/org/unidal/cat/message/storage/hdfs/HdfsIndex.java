@@ -28,7 +28,7 @@ public class HdfsIndex implements Index {
 	public static final String ID = "hdfs";
 
 	@Inject
-	protected FileSystemManager m_manager;
+	protected HdfsSystemManager m_manager;
 
 	@Inject
 	private ServerConfigManager m_serverConfigManager;

@@ -31,7 +31,7 @@ public class HdfsBucket implements Bucket {
 	public static final String ID = "hdfs";
 
 	@Inject
-	protected FileSystemManager m_manager;
+	protected HdfsSystemManager m_manager;
 
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
