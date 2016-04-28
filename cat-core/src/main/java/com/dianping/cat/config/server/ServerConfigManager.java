@@ -170,7 +170,6 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		return null;
 	}
 
-
 	public String getHdfsBaseDir(String id) {
 		if (m_server != null) {
 			HdfsConfig hdfsConfig = m_server.getStorage().findHdfs(id);
@@ -455,7 +454,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	}
 	
 	public boolean isUseNewStorage(){
-		return Boolean.parseBoolean(getProperty("new-use-storage", "false"));	
+		return Boolean.parseBoolean(getProperty("use-new-storage", "false"));	
 	}
 
 	public boolean isAlertMachine() {

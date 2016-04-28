@@ -42,6 +42,29 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 	private Logger m_logger;
 
+	private void checkpointAsyc(final long startTime) {
+		Threads.forGroup("cat").start(new Threads.Task() {
+			@Override
+			public String getName() {
+				return "DumpAnalyzer-Checkpoint";
+			}
+
+			@Override
+			public void run() {
+				try {
+					m_bucketManager.archive(startTime);
+					m_logger.info("Dump analyzer checkpoint is completed!");
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+			}
+
+			@Override
+			public void shutdown() {
+			}
+		});
+	}
+
 	private void closeStorage() {
 		Transaction t = Cat.newTransaction("Dumper", "Storage");
 		try {
@@ -60,16 +83,22 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
-		if (atEnd) {
-			Threads.forGroup("cat").start(new Runnable() {
-				@Override
-				public void run() {
-					closeStorage();
-				}
+		if (m_useNewStorage) {
+			if (atEnd) {
+				Threads.forGroup("cat").start(new Runnable() {
+					@Override
+					public void run() {
+						closeStorage();
+					}
 
-			});
+				});
+			} else {
+				closeStorage();
+			}
 		} else {
-			closeStorage();
+			long startTime = getStartTime();
+
+			checkpointAsyc(startTime);
 		}
 	}
 
@@ -127,17 +156,17 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	}
 
 	private void processWithBucket(MessageTree tree, MessageId messageId) {
-	   long time = tree.getMessage().getTimestamp();
-	   long fixedTime = time - time % (TimeHelper.ONE_HOUR);
-	   long idTime = messageId.getTimestamp();
-	   long duration = fixedTime - idTime;
+		long time = tree.getMessage().getTimestamp();
+		long fixedTime = time - time % (TimeHelper.ONE_HOUR);
+		long idTime = messageId.getTimestamp();
+		long duration = fixedTime - idTime;
 
-	   if (duration == 0 || duration == ONE_HOUR || duration == -ONE_HOUR) {
-	   	m_bucketManager.storeMessage(tree, messageId);
-	   } else {
-	   	m_serverStateManager.addPigeonTimeError(1);
-	   }
-   }
+		if (duration == 0 || duration == ONE_HOUR || duration == -ONE_HOUR) {
+			m_bucketManager.storeMessage(tree, messageId);
+		} else {
+			m_serverStateManager.addPigeonTimeError(1);
+		}
+	}
 
 	private void processWithStorage(MessageTree tree, MessageId messageId, int hour) {
 		MessageDumper dumper = m_dumperManager.find(hour);

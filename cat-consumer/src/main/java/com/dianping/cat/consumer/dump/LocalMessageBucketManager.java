@@ -84,6 +84,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private BlockingQueue<MessageItem> m_last;
 
+	@Override
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getLogviewPath(new Date(startTime), "");
 		List<String> keys = new ArrayList<String>();
