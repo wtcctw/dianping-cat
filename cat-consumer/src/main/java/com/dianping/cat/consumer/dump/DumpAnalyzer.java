@@ -95,7 +95,6 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 		int hour = (int) TimeUnit.MILLISECONDS.toHours(startTime);
 		m_useNewStorage = m_serverConfigManager.isUseNewStorage();
 
-		System.err.println("use storage " + m_useNewStorage);
 		if (m_useNewStorage) {
 			m_dumperManager.findOrCreate(hour);
 		}

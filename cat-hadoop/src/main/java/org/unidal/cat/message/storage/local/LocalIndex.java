@@ -111,11 +111,6 @@ public class LocalIndex implements Index {
 		}
 	}
 
-	@Override
-	public String toString() {
-		return String.format("%s[%s]", getClass().getSimpleName(), m_index);
-	}
-
 	private class IndexHelper {
 		private static final int BYTE_PER_MESSAGE = 8;
 

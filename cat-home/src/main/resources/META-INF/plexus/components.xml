@@ -2763,6 +2763,10 @@
 					<field-name>m_plainText</field-name>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.message.storage.MessageBucketManager</role>
+					<role-hint>local</role-hint>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.analysis.MessageConsumer</role>
 				</requirement>
 				<requirement>
@@ -2789,6 +2793,10 @@
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>plain-text</role-hint>
 					<field-name>m_plainText</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.storage.MessageBucketManager</role>
+					<role-hint>hdfs</role-hint>
 				</requirement>
 				<requirement>
 					<role>org.unidal.cat.message.storage.hdfs.HdfsBucketManager</role>

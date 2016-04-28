@@ -13,10 +13,12 @@ import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.top.TopAnalyzer;
+import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
 import com.dianping.cat.message.codec.HtmlMessageCodec;
 import com.dianping.cat.message.codec.WaterfallMessageCodec;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
+import com.dianping.cat.message.storage.MessageBucketManager;
 import com.dianping.cat.report.page.cross.service.CompositeCrossService;
 import com.dianping.cat.report.page.cross.service.CrossReportService;
 import com.dianping.cat.report.page.cross.service.HistoricalCrossService;
@@ -138,6 +140,7 @@ public class ReportComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageCodec.class, HtmlMessageCodec.ID, "m_html") //
 		      .req(MessageCodec.class, WaterfallMessageCodec.ID, "m_waterfall") //
 		      .req(MessageCodec.class, PlainTextMessageCodec.ID, "m_plainText") //
+		      .req(MessageBucketManager.class, HdfsMessageBucketManager.ID) //
 		      .req(HdfsBucketManager.class, HdfsIndexManager.class).req(ServerConfigManager.class));
 		all.add(C(ModelService.class, "logview", CompositeLogViewService.class) //
 		      .req(ServerConfigManager.class) //

@@ -47,8 +47,6 @@ public class HdfsIndex implements Index {
 
 	private long m_lastAccessTime;
 
-	private String m_fileName;
-
 	@Override
 	public void close() {
 		if (m_index.isOpen()) {
@@ -110,11 +108,6 @@ public class HdfsIndex implements Index {
 	@Override
 	public void maps(Map<MessageId, MessageId> maps) throws IOException {
 		throw new RuntimeException("unsupport operation");
-	}
-
-	@Override
-	public String toString() {
-		return String.format("%s[%s]", getClass().getSimpleName(), m_fileName);
 	}
 
 	private class IndexHelper {

@@ -2,7 +2,6 @@ package org.unidal.cat.message.storage.hdfs;
 
 import io.netty.buffer.ByteBuf;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Date;
@@ -98,13 +97,7 @@ public class HdfsBucket implements Bucket {
 		throw new RuntimeException("unsupport operation");
 	}
 
-	@Override
-	public String toString() {
-		return String.format("%s[%s]", getClass().getSimpleName(), m_data.getPath());
-	}
-
 	private class DataHelper {
-		private File m_path;
 
 		private FSDataInputStream m_dataStream;
 
@@ -114,10 +107,6 @@ public class HdfsBucket implements Bucket {
 			} catch (IOException e) {
 				Cat.logError(e);
 			}
-		}
-
-		public File getPath() {
-			return m_path;
 		}
 
 		public void init(FSDataInputStream dataStream) throws IOException {
@@ -227,6 +216,8 @@ public class HdfsBucket implements Bucket {
 				while (readerIndex < ENTRY_PER_SEGMENT) {
 					int ip = segment.readInt();
 					int index = segment.readInt();
+					
+					System.err.println("init ip:" + ip +",index:" + index );
 
 					readerIndex++;
 
