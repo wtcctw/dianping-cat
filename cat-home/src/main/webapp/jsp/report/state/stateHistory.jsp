@@ -101,9 +101,9 @@
 		<td><a
 					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${payload.reportType}&date=${model.date}&key=dump"
 					data-status="dump" class="state_graph_link">[:: show ::]</a></td>
-		<td>gzip压缩成功消息数量</td>
+		<td>压缩成功消息数量</td>
 		<td class="right">${w:format(model.state.machine.dump,'###,###,###,##0')}</td>
-		<td>将消息进行gzip压缩消息数目</td>
+		<td>将消息进行压缩消息数目</td>
 	</tr>
 	<tr></tr>
 	<tr class="graphs">
@@ -113,7 +113,7 @@
 		<td><a
 					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${payload.reportType}&date=${model.date}&key=dumpLoss"
 					data-status="dumpLoss" class="state_graph_link">[:: show ::]</a></td>
-		<td>gzip来不及压缩丢失消息数量</td>
+		<td>来不及压缩丢失消息数量</td>
 		<c:choose>
 			<c:when test="${model.state.machine.dumpLoss > 0}">
 						<td class="right" style="color: red;">${w:format(model.state.machine.dumpLoss,'#,###,###,###,##0.#')}</td>
@@ -122,7 +122,7 @@
 						<td class="right">${w:format(model.state.machine.dumpLoss,'#,###,###,###,##0.#')}</td>
 					</c:otherwise>
 		</c:choose>
-		<td>将消息进行gzip压缩，gzip线程太忙而丢失消息丢失数目</td>
+		<td>将消息进行压缩，线程太忙而丢失消息丢失数目</td>
 	</tr>
 	<tr></tr>
 	<tr class="graphs">

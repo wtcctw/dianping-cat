@@ -4,14 +4,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
@@ -31,10 +35,12 @@ import com.dianping.cat.metric.MetricService;
 import com.dianping.cat.metric.QueryParameter;
 
 @Named(type = MetricService.class, value = InfluxDB.ID)
-public class MetricServiceImpl implements MetricService {
+public class MetricServiceImpl implements MetricService, LogEnabled {
 
 	@Inject(InfluxDB.ID)
 	private DataSourceService<InfluxDBConnection> m_dataSourceService;
+
+	private Logger m_logger;
 
 	private Map<String, List<MetricEntity>> buildCategories(List<MetricEntity> entities) {
 		Map<String, List<MetricEntity>> categories = new LinkedHashMap<String, List<MetricEntity>>();
@@ -51,6 +57,11 @@ public class MetricServiceImpl implements MetricService {
 			list.add(entity);
 		}
 		return categories;
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 	@Override
@@ -114,7 +125,7 @@ public class MetricServiceImpl implements MetricService {
 			String format = "SHOW TAG VALUES FROM  /^%s.*/  WITH KEY = \"endPoint\"";
 			String query = String.format(format, category);
 			QueryResult result = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
-			List<String> results = parseData(result, 1);
+			List<String> results = removeDuplicates(parseData(result, 1));
 
 			return results;
 		} else {
@@ -130,7 +141,7 @@ public class MetricServiceImpl implements MetricService {
 			String format = "SHOW TAG VALUES FROM  /.*/  WITH KEY = \"endPoint\" WHERE %s =~ /.*%s.*/";
 			String query = String.format(format, tag, StringUtils.join(keywords, "|"));
 			QueryResult result = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
-			List<String> results = parseData(result, 1);
+			List<String> results = removeDuplicates(parseData(result, 1));
 
 			return results;
 		} else {
@@ -146,7 +157,7 @@ public class MetricServiceImpl implements MetricService {
 			String format = "SHOW TAG VALUES FROM  /.*/  WITH KEY = \"endPoint\" WHERE %s";
 			String query = String.format(format, StringUtils.join(tags, " AND "));
 			QueryResult result = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
-			List<String> results = parseData(result, 1);
+			List<String> results = removeDuplicates(parseData(result, 1));
 
 			return results;
 		} else {
@@ -229,7 +240,7 @@ public class MetricServiceImpl implements MetricService {
 			String format = "SHOW TAG VALUES FROM \"%s\" WITH KEY='%s'";
 			String query = String.format(format, measurement, tag);
 			QueryResult result = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
-			List<String> results = parseData(result, 1);
+			List<String> results = removeDuplicates(parseData(result, 1));
 
 			return results;
 		} else {
@@ -268,7 +279,7 @@ public class MetricServiceImpl implements MetricService {
 										datas.put(date.getTime(), data);
 									} catch (Exception e) {
 										Cat.logError(e);
-										System.out.println(v.get(0) + ":" + v.get(1));
+										m_logger.error("error parse influx query:" + query + v.get(0) + ":" + v.get(1));
 									}
 								}
 							}
@@ -280,5 +291,12 @@ public class MetricServiceImpl implements MetricService {
 		} else {
 			return Collections.emptyMap();
 		}
+	}
+
+	private List<String> removeDuplicates(List<String> datas) {
+		Set<String> hs = new HashSet<String>();
+
+		hs.addAll(datas);
+		return new ArrayList<String>(hs);
 	}
 }

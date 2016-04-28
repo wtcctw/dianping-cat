@@ -9,7 +9,6 @@ import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.hadoop.hdfs.MessageBlockReader;
@@ -57,7 +56,6 @@ public abstract class AbstractHdfsMessageBucket implements MessageBucket {
 				return null;
 			}
 		} catch (EOFException e) {
-			Cat.logError(e);
 			return null;
 		} finally {
 			m_codec.reset();

@@ -15,7 +15,6 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 import org.xerial.snappy.SnappyOutputStream;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
@@ -87,7 +86,6 @@ public class LocalMessageBucket implements MessageBucket {
 				return null;
 			}
 		} catch (EOFException e) {
-			Cat.logError(e);
 			return null;
 		} finally {
 			reader.close();
