@@ -414,6 +414,7 @@ public class Cat {
 	 * used in rpc server，use clild id as server message tree id.
 	 * 
 	 * @param ctx
+	 *           ctx is rpc context ,such as duboo context , please use rpc context implement Context
 	 */
 	public static void logRemoteCallServer(Context ctx) {
 		try {
