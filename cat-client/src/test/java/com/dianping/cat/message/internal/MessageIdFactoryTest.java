@@ -28,11 +28,6 @@ public class MessageIdFactoryTest {
 		}
 	};
 
-	@After
-	public void clear() {
-		m_factory.close();
-	}
-
 	@Before
 	public void before() {
 		final List<String> paths = new ArrayList<String>();
@@ -55,23 +50,23 @@ public class MessageIdFactoryTest {
 		}
 	}
 
-	@Test
-	public void testMapId() throws IOException {
-		m_factory.initialize("test");
+	private void check(String domain, String expected) {
+		m_factory.setDomain(domain);
+		m_factory.setIpAddress("c0a83f99"); // 192.168.63.153
 
-		for (int i = 0; i < 100; i++) {
-			for (int j = 0; j < 100; j++) {
-				String domain = "domain" + j;
-				System.out.println(m_factory.getNextId(domain));
-			}
-		}
+		String actual = m_factory.getNextId().toString();
 
-		m_factory.saveMark();
+		Assert.assertEquals(expected, actual);
+
+		MessageId id = MessageId.parse(actual);
+
+		Assert.assertEquals(domain, id.getDomain());
+		Assert.assertEquals("c0a83f99", id.getIpAddressInHex());
 	}
 
-	@Test
-	public void testInit() throws IOException {
-		m_factory.initialize("test");
+	@After
+	public void clear() {
+		m_factory.close();
 	}
 
 	@Test
@@ -93,18 +88,38 @@ public class MessageIdFactoryTest {
 
 	}
 
-	private void check(String domain, String expected) {
-		m_factory.setDomain(domain);
-		m_factory.setIpAddress("c0a83f99"); // 192.168.63.153
+	@Test(timeout = 500)
+	public void test_performance() throws IOException {
+		MessageIdFactory f1 = new MessageIdFactory();
 
-		String actual = m_factory.getNextId().toString();
+		f1.initialize("test");
 
-		Assert.assertEquals(expected, actual);
+		for (int i = 0; i < 10000; i++) {
+			f1.getNextId();
+		}
+	}
 
-		MessageId id = MessageId.parse(actual);
+	@Test
+	public void testInit() throws IOException {
+		m_factory.initialize("test");
+	}
 
-		Assert.assertEquals(domain, id.getDomain());
-		Assert.assertEquals("c0a83f99", id.getIpAddressInHex());
+	@Test
+	public void testMultithreads() throws IOException, InterruptedException {
+		m_factory.initialize("test");
+		int count = 50;
+		CountDownLatch latch = new CountDownLatch(count);
+		CountDownLatch mainLatch = new CountDownLatch(count);
+
+		for (int i = 0; i < count; i++) {
+			Threads.forGroup("cat").start(new CreateMessageIdTask(i, latch, mainLatch));
+
+			latch.countDown();
+		}
+
+		mainLatch.await();
+		
+		Assert.assertEquals(500000, MessageId.parse(m_factory.getNextId()).getIndex());
 	}
 
 	@Test
@@ -125,47 +140,6 @@ public class MessageIdFactoryTest {
 		check("domain1", "domain1-c0a83f99-369537-0");
 		check("domain1", "domain1-c0a83f99-369537-1");
 		check("domain1", "domain1-c0a83f99-369537-2");
-	}
-
-	@Test
-	public void testMultithreads() throws IOException, InterruptedException {
-		m_factory.initialize("test");
-		int count = 50;
-		CountDownLatch latch = new CountDownLatch(count);
-		CountDownLatch mainLatch = new CountDownLatch(count);
-
-		for (int i = 0; i < count; i++) {
-			Threads.forGroup("cat").start(new CreateMessageIdTask(i, latch, mainLatch));
-
-			latch.countDown();
-		}
-
-		mainLatch.await();
-		;
-		Assert.assertEquals(500000, MessageId.parse(m_factory.getNextId()).getIndex());
-	}
-
-	@Test
-	public void testMapIdMultithreads() throws IOException, InterruptedException {
-		m_factory.initialize("test");
-		int count = 50;
-		CountDownLatch latch = new CountDownLatch(count);
-		CountDownLatch mainLatch = new CountDownLatch(count);
-
-		for (int i = 0; i < count; i++) {
-			Threads.forGroup("cat").start(new CreateMapIdTask(i, latch, mainLatch));
-
-			latch.countDown();
-		}
-		mainLatch.await();
-
-		for (int j = 0; j < 50; j++) {
-			String domain = "domain_" + j;
-			String id = m_factory.getNextId(domain);
-
-			Assert.assertEquals(500000, MessageId.parse(id).getIndex());
-		}
-
 	}
 
 	@Test
@@ -195,15 +169,41 @@ public class MessageIdFactoryTest {
 		Assert.assertEquals(false, id2.equals(id4));
 	}
 
-	@Test(timeout = 500)
-	public void test_performance() throws IOException {
-		MessageIdFactory f1 = new MessageIdFactory();
+	@Test
+	public void testRpcServerId() throws IOException {
+		m_factory.initialize("test");
 
-		f1.initialize("test");
-
-		for (int i = 0; i < 10000; i++) {
-			f1.getNextId();
+		for (int i = 0; i < 100; i++) {
+			for (int j = 0; j < 100; j++) {
+				String domain = "domain" + j;
+				System.out.println(m_factory.getNextId(domain));
+			}
 		}
+
+		m_factory.saveMark();
+	}
+
+	@Test
+	public void testRpcServerIdMultithreads() throws IOException, InterruptedException {
+		m_factory.initialize("test");
+		int count = 50;
+		CountDownLatch latch = new CountDownLatch(count);
+		CountDownLatch mainLatch = new CountDownLatch(count);
+
+		for (int i = 0; i < count; i++) {
+			Threads.forGroup("cat").start(new CreateMapIdTask(i, latch, mainLatch));
+
+			latch.countDown();
+		}
+		mainLatch.await();
+
+		for (int j = 0; j < 50; j++) {
+			String domain = "domain_" + j;
+			String id = m_factory.getNextId(domain);
+
+			Assert.assertEquals(500000, MessageId.parse(id).getIndex());
+		}
+
 	}
 
 	void toHexString(StringBuilder sb, long value) {
@@ -244,6 +244,11 @@ public class MessageIdFactoryTest {
 		}
 
 		@Override
+		public String getName() {
+			return "create-message-" + m_thread;
+		}
+
+		@Override
 		public void run() {
 			try {
 				m_latch.await();
@@ -266,11 +271,6 @@ public class MessageIdFactoryTest {
 		}
 
 		@Override
-		public String getName() {
-			return "create-message-" + m_thread;
-		}
-
-		@Override
 		public void shutdown() {
 		}
 	}
@@ -287,6 +287,11 @@ public class MessageIdFactoryTest {
 			m_thread = thread;
 			m_latch = latch;
 			m_mainLatch = mainLatch;
+		}
+
+		@Override
+		public String getName() {
+			return "create-message-" + m_thread;
 		}
 
 		@Override
@@ -307,11 +312,6 @@ public class MessageIdFactoryTest {
 				e.printStackTrace();
 			}
 			m_mainLatch.countDown();
-		}
-
-		@Override
-		public String getName() {
-			return "create-message-" + m_thread;
 		}
 
 		@Override
