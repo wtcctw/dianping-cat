@@ -20,7 +20,6 @@ import org.unidal.cat.message.storage.MessageFinderManager;
 import org.unidal.cat.message.storage.MessageProcessor;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
-import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
@@ -121,17 +120,6 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 			Cat.logError(e);
 		} finally {
 			// buffer.release();
-		}
-		String mapId = tree.getSessionToken();
-		// String mapId = tree.getMessageId();
-
-		if (StringUtils.isNotEmpty(mapId) && !mapId.equals("null")) {
-			MessageId messageId = tree.getFormatMessageId();
-			try {
-				block.map(MessageId.parse(mapId), messageId);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
 		}
 	}
 

@@ -421,7 +421,7 @@ public class Cat {
 	}
 
 	/**
-	 * used in rpc server
+	 * used in rpc server，use clild id as server message tree id.
 	 * 
 	 * @param ctx
 	 */

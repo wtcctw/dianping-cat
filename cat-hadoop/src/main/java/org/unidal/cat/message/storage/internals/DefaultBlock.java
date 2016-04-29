@@ -37,8 +37,6 @@ public class DefaultBlock implements Block {
 
 	private Map<MessageId, Integer> m_offsets = new LinkedHashMap<MessageId, Integer>();
 
-	private Map<MessageId, MessageId> m_mappingIds = new LinkedHashMap<MessageId, MessageId>();
-
 	private OutputStream m_out;
 
 	private boolean m_isFulsh;
@@ -174,11 +172,6 @@ public class DefaultBlock implements Block {
 	}
 
 	@Override
-	public Map<MessageId, MessageId> getMappIds() {
-		return m_mappingIds;
-	}
-
-	@Override
 	public Map<MessageId, Integer> getOffsets() {
 		return m_offsets;
 	}
@@ -186,11 +179,6 @@ public class DefaultBlock implements Block {
 	@Override
 	public boolean isFull() {
 		return m_offset >= MAX_SIZE || m_isFulsh;
-	}
-
-	@Override
-	public void map(MessageId from, MessageId to) {
-		m_mappingIds.put(from, to);
 	}
 
 	@Override
