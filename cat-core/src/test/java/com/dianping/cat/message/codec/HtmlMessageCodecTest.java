@@ -116,7 +116,7 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		tree.setMessageId("messageId");
 		tree.setParentMessageId("parentMessageId");
 		tree.setRootMessageId("rootMessageId");
-		tree.setMessageMapId("sessionToken");
+		tree.setSessionToken("sessionToken");
 		tree.setThreadGroupName("threadGroupName");
 		tree.setThreadId("threadId");
 		tree.setThreadName("threadName");

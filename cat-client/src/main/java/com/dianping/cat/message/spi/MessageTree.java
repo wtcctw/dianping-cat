@@ -30,7 +30,7 @@ public interface MessageTree extends Cloneable {
 
 	public String getIpAddress();
 
-	public String getMapMessageId();
+	public String getSessionToken();
 
 	public Message getMessage();
 
@@ -66,7 +66,7 @@ public interface MessageTree extends Cloneable {
 
 	public void setMessageId(String messageId);
 
-	public void setMessageMapId(String mapId);
+	public void setSessionToken(String session);
 
 	public void setParentMessageId(String parentMessageId);
 

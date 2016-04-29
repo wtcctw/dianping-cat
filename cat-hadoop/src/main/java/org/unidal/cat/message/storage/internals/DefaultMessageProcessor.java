@@ -122,7 +122,7 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 		} finally {
 			// buffer.release();
 		}
-		String mapId = tree.getMapMessageId();
+		String mapId = tree.getSessionToken();
 		// String mapId = tree.getMessageId();
 
 		if (StringUtils.isNotEmpty(mapId) && !mapId.equals("null")) {
