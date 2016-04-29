@@ -428,7 +428,7 @@ public class Cat {
 	public static void logRemoteCallServer(Context ctx) {
 		try {
 			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
-			String mapId = ctx.getProperty(Context.CHILD);
+			String childId = ctx.getProperty(Context.CHILD);
 			String rootId = ctx.getProperty(Context.ROOT);
 			String parentId = ctx.getProperty(Context.PARENT);
 
@@ -438,9 +438,8 @@ public class Cat {
 			if (rootId != null) {
 				tree.setRootMessageId(rootId);
 			}
-			// use session token first TODO
-			if (mapId != null) {
-				tree.setSessionToken(mapId);
+			if (childId != null) {
+				tree.setMessageId(childId);
 			}
 		} catch (Exception e) {
 			errorHandler(e);
