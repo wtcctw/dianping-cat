@@ -67,15 +67,6 @@ public class Cat {
 		}
 	}
 
-	public static String createMapMessageId(String domain) {
-		try {
-			return Cat.getProducer().createMapMessageId(domain);
-		} catch (Exception e) {
-			errorHandler(e);
-			return NullMessageProducer.NULL_MESSAGE_PRODUCER.createMessageId();
-		}
-	}
-
 	public static void destroy() {
 		try {
 			s_instance.m_container.dispose();
@@ -402,8 +393,7 @@ public class Cat {
 				tree.setMessageId(messageId);
 			}
 
-			// create next map id
-			String childId = Cat.createMapMessageId(domain);
+			String childId = Cat.getProducer().createRpcServerId(domain);
 			Cat.logEvent(CatConstants.TYPE_REMOTE_CALL, "", Event.SUCCESS, childId);
 
 			String root = tree.getRootMessageId();

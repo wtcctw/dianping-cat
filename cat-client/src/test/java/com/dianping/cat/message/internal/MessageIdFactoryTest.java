@@ -62,7 +62,7 @@ public class MessageIdFactoryTest {
 		for (int i = 0; i < 100; i++) {
 			for (int j = 0; j < 100; j++) {
 				String domain = "domain" + j;
-				System.out.println(m_factory.getNextMapId(domain));
+				System.out.println(m_factory.getNextId(domain));
 			}
 		}
 
@@ -161,7 +161,7 @@ public class MessageIdFactoryTest {
 
 		for (int j = 0; j < 50; j++) {
 			String domain = "domain_" + j;
-			String id = m_factory.getNextMapId(domain);
+			String id = m_factory.getNextId(domain);
 
 			Assert.assertEquals(500000, MessageId.parse(id).getIndex());
 		}
@@ -256,7 +256,7 @@ public class MessageIdFactoryTest {
 					for (int j = 0; j < 50; j++) {
 						String domain = "domain_" + j;
 
-						m_factory.getNextMapId(domain);
+						m_factory.getNextId(domain);
 					}
 				}
 			} catch (Exception e) {

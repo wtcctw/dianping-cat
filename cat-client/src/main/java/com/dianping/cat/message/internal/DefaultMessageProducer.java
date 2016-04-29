@@ -28,8 +28,8 @@ public class DefaultMessageProducer implements MessageProducer {
 	private MessageIdFactory m_factory;
 
 	@Override
-	public String createMapMessageId(String domain) {
-		return m_factory.getNextMapId(domain);
+	public String createRpcServerId(String domain) {
+		return m_factory.getNextId(domain);
 	}
 
 	@Override
