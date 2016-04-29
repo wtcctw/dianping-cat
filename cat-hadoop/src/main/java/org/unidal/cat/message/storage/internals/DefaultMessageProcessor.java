@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.unidal.cat.message.storage.Block;
 import org.unidal.cat.message.storage.BlockDumper;
 import org.unidal.cat.message.storage.BlockDumperManager;
-import org.unidal.cat.message.storage.IndexManager;
 import org.unidal.cat.message.storage.MessageFinder;
 import org.unidal.cat.message.storage.MessageFinderManager;
 import org.unidal.cat.message.storage.MessageProcessor;
@@ -34,9 +33,6 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 
 	@Inject
 	private MessageFinderManager m_finderManager;
-
-	@Inject
-	private IndexManager m_indexManager;
 
 	private BlockDumper m_dumper;
 

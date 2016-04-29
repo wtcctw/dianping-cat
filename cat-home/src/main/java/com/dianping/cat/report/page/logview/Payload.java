@@ -22,9 +22,6 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	@FieldMeta("waterfall")
 	private boolean m_waterfall = false;
 	
-	@FieldMeta("map")
-	private boolean m_map = false;
-
 	public Payload() {
 		super(ReportPage.LOGVIEW);
 	}
@@ -38,10 +35,6 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		return m_path;
 	}
 
-	public boolean isMap() {
-		return m_map;
-	}
-
 	public boolean isShowHeader() {
 		return m_showHeader;
 	}
@@ -52,10 +45,6 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, m_action);
-	}
-
-	public void setMap(boolean map) {
-		m_map = map;
 	}
 
 	@Override

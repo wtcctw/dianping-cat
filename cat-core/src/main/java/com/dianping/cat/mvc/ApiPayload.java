@@ -46,9 +46,6 @@ public class ApiPayload {
 	@FieldMeta("max")
 	private int m_max = -1;
 
-	@FieldMeta("map")
-	private boolean m_map = false;
-
 	@FieldMeta("cdn")
 	private String m_cdn = "ALL";
 
@@ -108,10 +105,6 @@ public class ApiPayload {
 		return m_type;
 	}
 
-	public boolean isMap() {
-		return m_map;
-	}
-
 	public boolean isWaterfall() {
 		return m_waterfall;
 	}
@@ -134,10 +127,6 @@ public class ApiPayload {
 
 	public void setIpAddress(String ipAddress) {
 		m_ipAddress = ipAddress;
-	}
-
-	public void setMap(boolean map) {
-		m_map = map;
 	}
 
 	public void setMax(int max) {

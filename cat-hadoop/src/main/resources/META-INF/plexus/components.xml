@@ -93,14 +93,6 @@
 					<role-hint>local</role-hint>
 				</requirement>
 				<requirement>
-					<role>org.unidal.cat.message.storage.IndexManager</role>
-					<role-hint>local</role-hint>
-				</requirement>
-				<requirement>
-					<role>org.unidal.cat.message.storage.TokenMappingManager</role>
-					<role-hint>local</role-hint>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 				</requirement>
 				<requirement>
@@ -118,9 +110,6 @@
 				</requirement>
 				<requirement>
 					<role>org.unidal.cat.message.storage.MessageFinderManager</role>
-				</requirement>
-				<requirement>
-					<role>org.unidal.cat.message.storage.IndexManager</role>
 				</requirement>
 			</requirements>
 		</component>

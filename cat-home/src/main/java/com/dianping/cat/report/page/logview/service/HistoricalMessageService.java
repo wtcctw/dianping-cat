@@ -6,7 +6,6 @@ import io.netty.buffer.ByteBufAllocator;
 import java.nio.charset.Charset;
 
 import org.unidal.cat.message.storage.hdfs.HdfsBucketManager;
-import org.unidal.cat.message.storage.hdfs.HdfsIndexManager;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -36,9 +35,6 @@ public class HistoricalMessageService extends BaseHistoricalModelService<String>
 
 	@Inject
 	private HdfsBucketManager m_bucketManager;
-
-	@Inject
-	private HdfsIndexManager m_indexManager;
 
 	@Inject(type = MessageBucketManager.class, value = HdfsMessageBucketManager.ID)
 	private MessageBucketManager m_hdfsBucketManager;
@@ -73,15 +69,6 @@ public class HistoricalMessageService extends BaseHistoricalModelService<String>
 		String messageId = request.getProperty("messageId");
 		Cat.logEvent("LoadMessage", "messageTree", Event.SUCCESS, messageId);
 		MessageId id = MessageId.parse(messageId);
-
-		if (request.getProperty("map").equalsIgnoreCase("true")) {
-			MessageId mapId = m_indexManager.loadMessage(id);
-
-			if (mapId != null) {
-				id = mapId;
-			}
-		}
-
 		MessageTree tree = m_bucketManager.loadMessage(id);
 
 		if (tree != null) {
