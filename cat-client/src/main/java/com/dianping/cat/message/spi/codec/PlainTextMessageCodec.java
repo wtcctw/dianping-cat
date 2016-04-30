@@ -109,7 +109,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			tree.setMessageId(messageId);
 			tree.setParentMessageId(parentMessageId);
 			tree.setRootMessageId(rootMessageId);
-			tree.setMessageMapId(sessionToken);
+			tree.setSessionToken(sessionToken);
 		} else {
 			throw new RuntimeException(String.format("Unrecognized id(%s) for plain text message codec!", id));
 		}
@@ -315,7 +315,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		count += helper.write(buf, TAB);
 		count += helper.write(buf, tree.getRootMessageId());
 		count += helper.write(buf, TAB);
-		count += helper.write(buf, tree.getMapMessageId());
+		count += helper.write(buf, tree.getSessionToken());
 		count += helper.write(buf, LF);
 
 		return count;

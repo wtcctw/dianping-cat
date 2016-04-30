@@ -14,13 +14,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.unidal.cat.message.storage.Block;
 import org.unidal.cat.message.storage.BlockDumper;
 import org.unidal.cat.message.storage.BlockDumperManager;
-import org.unidal.cat.message.storage.IndexManager;
 import org.unidal.cat.message.storage.MessageFinder;
 import org.unidal.cat.message.storage.MessageFinderManager;
 import org.unidal.cat.message.storage.MessageProcessor;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
-import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
@@ -35,9 +33,6 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 
 	@Inject
 	private MessageFinderManager m_finderManager;
-
-	@Inject
-	private IndexManager m_indexManager;
 
 	private BlockDumper m_dumper;
 
@@ -121,17 +116,6 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 			Cat.logError(e);
 		} finally {
 			// buffer.release();
-		}
-		String mapId = tree.getMapMessageId();
-		// String mapId = tree.getMessageId();
-
-		if (StringUtils.isNotEmpty(mapId) && !mapId.equals("null")) {
-			MessageId messageId = tree.getFormatMessageId();
-			try {
-				block.map(MessageId.parse(mapId), messageId);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
 		}
 	}
 

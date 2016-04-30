@@ -118,12 +118,12 @@ package com.dianping.cat.message;
  */
 public interface MessageProducer {
 	/**
-	 * Create a new message id used in rpc message id map.
+	 * Create rpc server message id.
 	 * 
 	 * domain is the rpc server 
 	 * @return new message id
 	 */
-	public String createMapMessageId(String domain);
+	public String createRpcServerId(String domain);
 
 	/**
 	 * Create a new message id.

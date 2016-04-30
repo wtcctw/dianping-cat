@@ -20,13 +20,9 @@ public interface Block {
 
 	public int getHour();
 
-	public Map<MessageId, MessageId> getMappIds();
-
 	public Map<MessageId, Integer> getOffsets();
 
 	public boolean isFull();
-
-	public void map(MessageId from, MessageId to);
 
 	public void pack(MessageId id, ByteBuf buf) throws IOException;
 

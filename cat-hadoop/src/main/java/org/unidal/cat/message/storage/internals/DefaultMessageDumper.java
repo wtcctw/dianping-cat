@@ -13,10 +13,8 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.cat.message.storage.BlockDumperManager;
 import org.unidal.cat.message.storage.BucketManager;
-import org.unidal.cat.message.storage.IndexManager;
 import org.unidal.cat.message.storage.MessageDumper;
 import org.unidal.cat.message.storage.MessageProcessor;
-import org.unidal.cat.message.storage.TokenMappingManager;
 import org.unidal.cat.message.storage.exception.MessageQueueFullException;
 import org.unidal.helper.Threads;
 import org.unidal.lookup.ContainerHolder;
@@ -38,12 +36,6 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 
 	@Inject("local")
 	private BucketManager m_bucketManager;
-
-	@Inject("local")
-	private IndexManager m_indexManager;
-
-	@Inject("local")
-	private TokenMappingManager m_tokenManager;
 
 	@Inject
 	private ServerStatisticManager m_statisticManager;
@@ -79,14 +71,6 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 		m_logger.info("starting close bucket manager " + date);
 		m_bucketManager.closeBuckets(hour);
 		m_logger.info("end close bucket manager " + date);
-
-		m_logger.info("starting close index manager " + date);
-		m_indexManager.close(hour);
-		m_logger.info("end close index manager " + date);
-
-		m_logger.info("starting close token manager " + date);
-		m_tokenManager.close(hour);
-		m_logger.info("end close token manager " + date);
 	}
 
 	private void closeMessageProcessor() throws InterruptedException {

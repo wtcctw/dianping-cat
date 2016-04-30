@@ -534,17 +534,6 @@ public class BucketTest extends ComponentTestCase {
 		public ByteBuf unpack(MessageId id) throws IOException {
 			throw new UnsupportedOperationException();
 		}
-
-		@Override
-      public Map<MessageId, MessageId> getMappIds() {
-	      return null;
-      }
-
-		@Override
-      public void map(MessageId from, MessageId to) {
-      }
-
 	}
-
 	
 }

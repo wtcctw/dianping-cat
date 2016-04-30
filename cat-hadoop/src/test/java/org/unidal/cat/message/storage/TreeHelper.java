@@ -59,7 +59,7 @@ public class TreeHelper {
 		tree.setThreadName("test");
 		tree.setMessageId(id.toString());
 		// test for rpc index
-		tree.setMessageMapId(id.toString());
+		tree.setSessionToken(id.toString());
 
 		if (codec != null) {
 			ByteBuf buf = Unpooled.buffer();
@@ -84,7 +84,7 @@ public class TreeHelper {
 		tree.setMessage(m_message);
 		tree.setMessageId(id.toString());
 		// test for rpc index
-		tree.setMessageMapId(id.toString());
+		tree.setSessionToken(id.toString());
 
 		if (codec != null) {
 			ByteBuf buf = Unpooled.buffer();
@@ -109,7 +109,7 @@ public class TreeHelper {
 		tree.setMessage(m_message);
 		tree.setMessageId(isStr);
 		// test for rpc index
-		tree.setMessageMapId(isStr);
+		tree.setSessionToken(isStr);
 
 		if (codec != null) {
 			ByteBuf buf = Unpooled.copiedBuffer(m_data);

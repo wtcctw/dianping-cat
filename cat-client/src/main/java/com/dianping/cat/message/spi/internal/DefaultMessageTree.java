@@ -36,7 +36,7 @@ public class DefaultMessageTree implements MessageTree {
 
 	private String m_rootMessageId;
 
-	private String m_mapId;
+	private String m_sessionToken;
 
 	private String m_threadGroupName;
 
@@ -73,7 +73,7 @@ public class DefaultMessageTree implements MessageTree {
 		tree.setMessageId(m_messageId);
 		tree.setParentMessageId(m_parentMessageId);
 		tree.setRootMessageId(m_rootMessageId);
-		tree.setMessageMapId(m_mapId);
+		tree.setSessionToken(m_sessionToken);
 		tree.setThreadGroupName(m_threadGroupName);
 		tree.setThreadId(m_threadId);
 		tree.setThreadName(m_threadName);
@@ -136,8 +136,8 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
-	public String getMapMessageId() {
-		return m_mapId;
+	public String getSessionToken() {
+		return m_sessionToken;
 	}
 
 	@Override
@@ -228,8 +228,8 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
-	public void setMessageMapId(String mapId) {
-		m_mapId = mapId;
+	public void setSessionToken(String sessionToken) {
+		m_sessionToken = sessionToken;
 	}
 
 	@Override

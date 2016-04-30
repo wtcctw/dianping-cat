@@ -41,7 +41,7 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private String getLogView(String messageId, boolean waterfall, boolean map) {
+	private String getLogView(String messageId, boolean waterfall) {
 		try {
 			if (messageId != null) {
 				MessageId id = MessageId.parse(messageId);
@@ -49,7 +49,6 @@ public class Handler implements PageHandler<Context> {
 				ModelRequest request = new ModelRequest(id.getDomain(), timestamp) //
 				      .setProperty("messageId", messageId) //
 				      .setProperty("waterfall", String.valueOf(waterfall)) //
-				      .setProperty("map", String.valueOf(map)) //
 				      .setProperty("timestamp", String.valueOf(timestamp));
 
 				if (m_service.isEligable(request)) {
@@ -102,7 +101,7 @@ public class Handler implements PageHandler<Context> {
 		MessageId msgId = MessageId.parse(messageId);
 
 		if (checkStorageTime(msgId)) {
-			logView = getLogView(messageId, payload.isWaterfall(), payload.isMap());
+			logView = getLogView(messageId, payload.isWaterfall());
 
 			if (logView == null || logView.length() == 0) {
 				Cat.logEvent("Logview", msgId.getDomain() + ":Fail", Event.SUCCESS, messageId);

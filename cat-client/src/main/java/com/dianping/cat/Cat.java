@@ -67,15 +67,6 @@ public class Cat {
 		}
 	}
 
-	public static String createMapMessageId(String domain) {
-		try {
-			return Cat.getProducer().createMapMessageId(domain);
-		} catch (Exception e) {
-			errorHandler(e);
-			return NullMessageProducer.NULL_MESSAGE_PRODUCER.createMessageId();
-		}
-	}
-
 	public static void destroy() {
 		try {
 			s_instance.m_container.dispose();
@@ -402,8 +393,7 @@ public class Cat {
 				tree.setMessageId(messageId);
 			}
 
-			// create next map id
-			String childId = Cat.createMapMessageId(domain);
+			String childId = Cat.getProducer().createRpcServerId(domain);
 			Cat.logEvent(CatConstants.TYPE_REMOTE_CALL, "", Event.SUCCESS, childId);
 
 			String root = tree.getRootMessageId();
@@ -421,14 +411,15 @@ public class Cat {
 	}
 
 	/**
-	 * used in rpc server
+	 * used in rpc server，use clild id as server message tree id.
 	 * 
 	 * @param ctx
+	 *           ctx is rpc context ,such as duboo context , please use rpc context implement Context
 	 */
 	public static void logRemoteCallServer(Context ctx) {
 		try {
 			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
-			String mapId = ctx.getProperty(Context.CHILD);
+			String childId = ctx.getProperty(Context.CHILD);
 			String rootId = ctx.getProperty(Context.ROOT);
 			String parentId = ctx.getProperty(Context.PARENT);
 
@@ -438,9 +429,8 @@ public class Cat {
 			if (rootId != null) {
 				tree.setRootMessageId(rootId);
 			}
-			// use session token first TODO
-			if (mapId != null) {
-				tree.setMessageMapId(mapId);
+			if (childId != null) {
+				tree.setMessageId(childId);
 			}
 		} catch (Exception e) {
 			errorHandler(e);
