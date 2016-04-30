@@ -76,7 +76,8 @@ public class RouterConfigService extends AbstractReportService<RouterConfig> {
 		try {
 			List<DailyReport> reports = m_dailyReportDao.queryLatestReportsByDomainName(domain, Constants.REPORT_ROUTER,
 			      1, DailyReportEntity.READSET_FULL);
-			RouterConfig config = queryFromDailyBinary(reports.get(0).getId());
+			DailyReport report = reports.get(0);
+			RouterConfig config = queryFromDailyBinary(report.getId());
 
 			return config;
 		} catch (DalNotFoundException e) {

@@ -111,9 +111,7 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
-		Date start = payload.getDate();
-		Date end = new Date(start.getTime() + TimeHelper.ONE_DAY);
-		RouterConfig report = queryAvailableConfig(start, end);
+		RouterConfig report = m_reportService.queryLastReport(Constants.CAT);
 		String domain = payload.getDomain();
 		String ip = payload.getIp();
 
@@ -147,16 +145,5 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		ctx.getHttpServletResponse().getWriter().write(model.getContent());
-	}
-
-	private RouterConfig queryAvailableConfig(Date start, Date end) {
-		RouterConfig report = m_reportService.queryReport(Constants.CAT, start, end);
-
-		if (report == null) {
-			Date lastStart = new Date(start.getTime() - TimeHelper.ONE_DAY);
-
-			report = m_reportService.queryDailyReport(Constants.CAT, lastStart, start);
-		}
-		return report;
 	}
 }
