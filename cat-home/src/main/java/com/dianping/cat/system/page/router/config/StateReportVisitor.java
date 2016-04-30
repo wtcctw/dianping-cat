@@ -50,11 +50,12 @@ public class StateReportVisitor extends BaseVisitor {
 
 			String domain = processDomain.getName();
 			Long value = datas.get(domain);
+			long sumValue = (long) (total * entry.getValue());
 
 			if (value == null) {
-				datas.put(domain, 0L);
+				datas.put(domain, sumValue);
 			} else {
-				datas.put(domain, value + (long) (total * entry.getValue()));
+				datas.put(domain, value + sumValue);
 			}
 		}
 	}
