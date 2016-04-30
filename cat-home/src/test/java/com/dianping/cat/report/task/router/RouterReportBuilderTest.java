@@ -27,7 +27,7 @@ public class RouterReportBuilderTest extends ComponentTestCase {
 	@Test
 	public void test2() throws ParseException {
 		RouterConfigHandler handler = (RouterConfigHandler) lookup(RouterConfigHandler.class);
-		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2015-11-03 00:00:00");
+		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2016-04-20 00:00:00");
 
 		RouterConfig routerConfig = handler.buildRouterConfig("cat", period);
 
