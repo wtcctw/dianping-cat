@@ -438,7 +438,14 @@ public class LocalIndex implements Index {
 		}
 	}
 
-	protected class MessageIdCodec {
+	/**
+	 * domain 15bits
+	 * ip     15bits
+	 * hour   2 bits
+	 * seq    32bits
+	 *
+	 */
+	class MessageIdCodec {
 
 		private int bytesToInt(byte[] src, int offset) {
 			int value = (int) (((src[offset] & 0xFF) << 24) | ((src[offset + 1] & 0xFF) << 16)
