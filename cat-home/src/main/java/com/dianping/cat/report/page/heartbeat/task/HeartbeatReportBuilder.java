@@ -10,7 +10,6 @@ import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyReport;
-import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
 import com.dianping.cat.report.task.TaskBuilder;
@@ -19,9 +18,6 @@ import com.dianping.cat.report.task.TaskHelper;
 public class HeartbeatReportBuilder implements TaskBuilder {
 
 	public static final String ID = HeartbeatAnalyzer.ID;
-
-	@Inject
-	protected GraphDao m_graphDao;
 
 	@Inject
 	protected HeartbeatReportService m_reportService;

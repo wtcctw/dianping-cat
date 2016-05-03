@@ -23,7 +23,6 @@ import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.DailyReportContentDao;
 import com.dianping.cat.core.dal.DailyReportDao;
-import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.MonthlyReportContentDao;
@@ -150,7 +149,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ProblemReportService.class));//
 
 		all.add(C(TaskBuilder.class, HeartbeatReportBuilder.ID, HeartbeatReportBuilder.class) //
-		      .req(GraphDao.class, HeartbeatReportService.class));
+		      .req(HeartbeatReportService.class));
 
 		all.add(C(TaskBuilder.class, ServiceReportBuilder.ID, ServiceReportBuilder.class).req(CrossReportService.class,
 		      ServiceReportService.class, ServerFilterConfigManager.class));
