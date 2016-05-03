@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager;
+import org.unidal.dal.jdbc.mapping.TableProvider;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
@@ -13,9 +14,13 @@ import com.dianping.cat.analysis.DefaultMessageAnalyzerManager;
 import com.dianping.cat.analysis.DefaultMessageHandler;
 import com.dianping.cat.analysis.RealtimeConsumer;
 import com.dianping.cat.analysis.TcpSocketReceiver;
+import com.dianping.cat.config.app.AppCmdDailyTableProvider;
 import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.app.AppCommandGroupConfigManager;
+import com.dianping.cat.config.app.AppCommandTableProvider;
+import com.dianping.cat.config.app.AppConnectionTableProvider;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
+import com.dianping.cat.config.app.AppSpeedTableProvider;
 import com.dianping.cat.config.app.CrashLogConfigManager;
 import com.dianping.cat.config.app.MobileConfigManager;
 import com.dianping.cat.config.app.command.CommandFormatConfigManager;
@@ -25,6 +30,7 @@ import com.dianping.cat.config.content.LocalResourceContentFetcher;
 import com.dianping.cat.config.sample.SampleConfigManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
+import com.dianping.cat.config.web.AjaxDataTableProvider;
 import com.dianping.cat.config.web.WebConfigManager;
 import com.dianping.cat.config.web.WebSpeedConfigManager;
 import com.dianping.cat.config.web.js.DefaultAggregationHandler;
@@ -92,6 +98,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(defineStorageComponents());
 		all.addAll(defineCodecComponents());
 
+		all.add(C(TableProvider.class, "app-command-data", AppCommandTableProvider.class));
+		all.add(C(TableProvider.class, "app-command-data-daily", AppCmdDailyTableProvider.class));
+		all.add(C(TableProvider.class, "app-connection-data", AppConnectionTableProvider.class));
+		all.add(C(TableProvider.class, "app-speed-data", AppSpeedTableProvider.class));
+		all.add(C(TableProvider.class, "ajax-data", AjaxDataTableProvider.class));
+		
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
