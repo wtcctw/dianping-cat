@@ -59,17 +59,17 @@
 			<dependency>
 				<groupId>org.unidal.framework</groupId>
 				<artifactId>dal-jdbc</artifactId>
-				<version>2.2.0</version>
+				<version>2.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.unidal.framework</groupId>
 				<artifactId>foundation-service</artifactId>
-				<version>2.2.0</version>
+				<version>2.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.unidal.framework</groupId>
 				<artifactId>web-framework</artifactId>
-				<version>2.2.1</version>
+				<version>2.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.unidal.framework</groupId>
@@ -141,6 +141,11 @@
          		<groupId>org.freemarker</groupId>
          		<artifactId>freemarker</artifactId>
          		<version>2.3.9</version>
+      		</dependency>
+			<dependency>
+         		<groupId>com.mchange.v2</groupId>
+         		<artifactId>c3p0</artifactId>
+         		<version>0.9.5.1</version>
       		</dependency>
 		</dependencies>
 	</dependencyManagement>

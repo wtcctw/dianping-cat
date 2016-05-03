@@ -3,7 +3,6 @@ package com.dianping.cat.influxdb.build;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
@@ -21,9 +20,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		// database
-		all.add(C(JdbcDataSourceDescriptorManager.class) //
-		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
+//		// database
+//		all.add(C(JdbcDataSourceDescriptorManager.class) //
+//		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 

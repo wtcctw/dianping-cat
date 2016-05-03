@@ -13,35 +13,20 @@ public class AppConnectionTableProvider implements TableProvider {
 
 	public final static String LOGIC_TABLE_NAME = "app-connection-data";
 
-	private String m_logicalTableName = LOGIC_TABLE_NAME;
-
 	private String m_physicalTableName = "app_connection_data";
 
 	private String m_dataSourceName = "app";
 
 	@Override
-	public String getDataSourceName(Map<String, Object> hints) {
+	public String getDataSourceName(Map<String, Object> hints, String logicalTableName) {
 		return m_dataSourceName;
 	}
 
 	@Override
-	public String getLogicalTableName() {
-		return m_logicalTableName;
-	}
-
-	@Override
-	public String getPhysicalTableName(Map<String, Object> hints) {
+	public String getPhysicalTableName(Map<String, Object> hints, String logicalTableName) {
 		AppConnectionData data = (AppConnectionData) hints.get(QueryEngine.HINT_DATA_OBJECT);
 
 		return m_physicalTableName + "_" + data.getCommandId();
-	}
-
-	public void setDataSourceName(String dataSourceName) {
-		m_dataSourceName = dataSourceName;
-	}
-
-	public void setLogicalTableName(String logicalTableName) {
-		m_logicalTableName = logicalTableName;
 	}
 
 }

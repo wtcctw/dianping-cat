@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager;
 import org.unidal.dal.jdbc.mapping.TableProvider;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
@@ -105,8 +104,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TableProvider.class, "ajax-data", AjaxDataTableProvider.class));
 		
 		// database
-		all.add(C(JdbcDataSourceDescriptorManager.class) //
-		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
+//		all.add(C(JdbcDataSourceDescriptorManager.class) //
+//		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 
 		all.addAll(new CatCoreDatabaseConfigurator().defineComponents());
 		all.addAll(new AppDatabaseConfigurator().defineComponents());
