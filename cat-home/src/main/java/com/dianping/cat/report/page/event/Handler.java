@@ -3,7 +3,6 @@ package com.dianping.cat.report.page.event;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -41,9 +40,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private GraphBuilder m_builder;
-
-	@Inject
-	private HistoryGraphs m_historyGraphs;
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -226,13 +222,8 @@ public class Handler implements PageHandler<Context> {
 			}
 
 			report = m_mergeHelper.mergeAllIps(report, ipAddress);
-			boolean isOld = checkIfOldReport(report);
 
-			if (isOld) {
-				m_historyGraphs.buildTrendGraph(model, payload);
-			} else {
-				new EventTrendGraphBuilder().buildTrendGraph(model, payload, report);
-			}
+			new EventTrendGraphBuilder().buildTrendGraph(model, payload, report);
 			break;
 		case GRAPHS:
 			report = getHourlyGraphReport(model, payload);
@@ -291,34 +282,11 @@ public class Handler implements PageHandler<Context> {
 			buildDistributionInfo(model, type, name, report);
 
 			report = m_mergeHelper.mergeAllIps(report, ip);
-			isOld = checkIfOldReport(report);
 
-			if (isOld) {
-				List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
-				m_historyGraphs.buildGroupTrendGraph(model, payload, ips);
-			} else {
-				new EventTrendGraphBuilder().buildTrendGraph(model, payload, report);
-			}
+			new EventTrendGraphBuilder().buildTrendGraph(model, payload, report);
 			break;
 		}
 		m_jspViewer.view(ctx, model);
-	}
-
-	private boolean checkIfOldReport(EventReport report) {
-		Map<String, Machine> machines = report.getMachines();
-
-		if (machines != null && machines.size() > 0) {
-			Map<String, EventType> types = machines.entrySet().iterator().next().getValue().getTypes();
-
-			if (types != null && types.size() > 0) {
-				EventType type = types.entrySet().iterator().next().getValue();
-
-				if (type.getGraphTrend() == null) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	private void normalize(Model model, Payload payload) {

@@ -1,17 +1,3 @@
-CREATE TABLE `dailygraph` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(20) NOT NULL COMMENT '报表名称',
-  `ip` varchar(50) NULL COMMENT '报表来自于哪台cat-client机器ip, 空串表示合并同domain所有ip',
-  `domain` varchar(50) NOT NULL COMMENT '报表处理的Domain信息',
-  `period` datetime NOT NULL  COMMENT '报表时间段',
-  `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 3/csv, 默认3',
-  `detail_content` mediumtext NOT NULL COMMENT '详细绘图内容',
-  `summary_content` mediumtext NOT NULL COMMENT '概要绘图内容',
-  `creation_date` datetime NOT NULL COMMENT '报表创建时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `dailygraph_period_ip_domain_name` (`period`,`ip`,`domain`,`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于月报的画图曲线';
-
 CREATE TABLE `dailyreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
@@ -47,20 +33,6 @@ CREATE TABLE `monthreport` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `period` (`period`,`domain`,`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='月报表';
-
-CREATE TABLE `graph` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(20) NOT NULL COMMENT '报表名称',
-  `ip` varchar(50) NULL COMMENT '报表来自于哪台cat-client机器ip, NULL表示合并同domain所有ip',
-  `domain` varchar(50) NOT NULL COMMENT '报表处理的Domain信息',
-  `period` datetime NOT NULL  COMMENT '报表时间段',
-  `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 3/csv, 默认3',
-  `detail_content` mediumtext NOT NULL COMMENT '详细绘图内容',
-  `summary_content` mediumtext NOT NULL COMMENT '概要绘图内容',
-  `creation_date` datetime NOT NULL COMMENT '报表创建时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `graph_period_ip_domain_name` (`period`,`ip`,`domain`,`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='小时图表曲线';
 
 CREATE TABLE `hostinfo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
