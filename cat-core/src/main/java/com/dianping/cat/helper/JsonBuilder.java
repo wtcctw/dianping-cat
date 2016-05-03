@@ -50,10 +50,6 @@ public class JsonBuilder {
 		return m_gson.toJson(o);
 	}
 
-	public String toJsonWithEnter(Object o) {
-		return m_gson.toJson(o) + "\n";
-	}
-
 	public class TimestampTypeAdapter implements JsonSerializer<Timestamp>, JsonDeserializer<Timestamp> {
 		private final DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
