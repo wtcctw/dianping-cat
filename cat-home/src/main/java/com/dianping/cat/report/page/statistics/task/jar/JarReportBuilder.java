@@ -57,10 +57,9 @@ public class JarReportBuilder implements TaskBuilder {
 		Set<String> domains = m_reportService.queryAllDomainNames(period, end, HeartbeatAnalyzer.ID);
 		JarReport jarReport = new JarReport();
 		HeartbeatReportVisitor visitor = new HeartbeatReportVisitor(jarReport);
-		System.out.println(domains);
 
 		for (String domainName : domains) {
-			if (m_configManager.validateDomain(domainName) && "squirrel-web".equals(domainName)) {
+			if (m_configManager.validateDomain(domainName)) {
 				HeartbeatReport heartbeatReport = m_heartbeatReportService.queryReport(domainName, period, end);
 
 				visitor.visitHeartbeatReport(heartbeatReport);

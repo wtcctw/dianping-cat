@@ -362,18 +362,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.transaction.HistoryGraphs</role>
-			<implementation>com.dianping.cat.report.page.transaction.HistoryGraphs</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
 			<implementation>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</implementation>
 		</component>
@@ -1285,9 +1273,6 @@
 			<role-hint>heartbeat</role-hint>
 			<implementation>com.dianping.cat.report.page.heartbeat.task.HeartbeatReportBuilder</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService</role>
 				</requirement>
@@ -3545,9 +3530,6 @@
 			<implementation>com.dianping.cat.report.page.problem.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.problem.HistoryGraphs</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.problem.JspViewer</role>
 				</requirement>
 				<requirement>
@@ -3573,36 +3555,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.problem.HistoryGraphs</role>
-			<implementation>com.dianping.cat.report.page.problem.HistoryGraphs</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.GraphDao</role>
-			<implementation>com.dianping.cat.core.dal.GraphDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-			<implementation>com.dianping.cat.core.dal.DailyGraphDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.problem.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.problem.JspViewer</implementation>
 			<requirements>
@@ -3617,9 +3569,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.graph.svg.GraphBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.transaction.HistoryGraphs</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.transaction.JspViewer</role>
@@ -3667,9 +3616,6 @@
 					<role>com.dianping.cat.report.graph.svg.GraphBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.event.HistoryGraphs</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.event.JspViewer</role>
 				</requirement>
 				<requirement>
@@ -3688,18 +3634,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.DomainGroupConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.event.HistoryGraphs</role>
-			<implementation>com.dianping.cat.report.page.event.HistoryGraphs</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
 				</requirement>
 			</requirements>
 		</component>

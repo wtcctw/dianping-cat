@@ -15,7 +15,6 @@ import com.dianping.cat.report.alert.transaction.TransactionAlert;
 import com.dianping.cat.report.alert.transaction.TransactionContactor;
 import com.dianping.cat.report.alert.transaction.TransactionDecorator;
 import com.dianping.cat.report.alert.transaction.TransactionRuleConfigManager;
-import com.dianping.cat.report.page.transaction.HistoryGraphs;
 import com.dianping.cat.report.page.transaction.service.CompositeTransactionService;
 import com.dianping.cat.report.page.transaction.service.HistoricalTransactionService;
 import com.dianping.cat.report.page.transaction.service.LocalTransactionService;
@@ -29,8 +28,6 @@ public class TransactionComponentConfigurator extends AbstractResourceConfigurat
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-
-		all.add(A(HistoryGraphs.class));
 
 		all.add(A(TransactionMergeHelper.class));
 		all.add(A(TransactionReportService.class));

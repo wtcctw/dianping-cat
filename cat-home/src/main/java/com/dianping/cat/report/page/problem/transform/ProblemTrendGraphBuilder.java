@@ -173,15 +173,17 @@ public class ProblemTrendGraphBuilder {
 		}
 
 		private void resolveGraphTrend(GraphTrend graph) {
-			m_duration = graph.getDuration();
-			double[] tmp = parseToDouble(graph.getFails());
+			if (graph != null) {
+				m_duration = graph.getDuration();
+				double[] tmp = parseToDouble(graph.getFails());
 
-			if (m_fails == null) {
-				m_fails = new double[tmp.length];
-			}
+				if (m_fails == null) {
+					m_fails = new double[tmp.length];
+				}
 
-			for (int i = 0; i < m_fails.length; i++) {
-				m_fails[i] += tmp[i];
+				for (int i = 0; i < m_fails.length; i++) {
+					m_fails[i] += tmp[i];
+				}
 			}
 		}
 
