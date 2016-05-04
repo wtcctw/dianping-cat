@@ -9,7 +9,7 @@
 
 <style type="text/css">
 .graph {
-	width: 45%;
+ 	width: 47%;
 	height: 400px;
     margin: 0px;
 }
@@ -31,7 +31,7 @@
 </table>
 </c:when>
 <c:otherwise>
-<table width=50%>
+<table>
 	<tr>
 		<td><div id="trendGraph" class="graph"></div></td>
 	</tr>

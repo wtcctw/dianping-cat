@@ -22,7 +22,6 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.JsonBuilder;
@@ -45,9 +44,6 @@ public class Handler implements PageHandler<Context> {
 	private static final String DETAIL = "detail";
 
 	private static final String VIEW = "view";
-
-	@Inject
-	private HistoryGraphs m_historyGraphs;
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -226,13 +222,8 @@ public class Handler implements PageHandler<Context> {
 		case HISTORY_GRAPH:
 			report = showSummarizeReport(model, payload);
 			buildDistributionChart(model, payload, report);
-			boolean isOld = checkIfOldReport(report);
 
-			if (isOld) {
-				m_historyGraphs.buildTrendGraph(model, payload);
-			} else {
-				new ProblemTrendGraphBuilder().buildTrendGraph(model, payload, report);
-			}
+			new ProblemTrendGraphBuilder().buildTrendGraph(model, payload, report);
 			break;
 		case GROUP:
 			report = showHourlyReport(model, payload);
@@ -296,14 +287,7 @@ public class Handler implements PageHandler<Context> {
 
 			buildDistributionChart(model, payload, report);
 
-			isOld = checkIfOldReport(report);
-
-			if (isOld) {
-				List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
-				m_historyGraphs.buildGroupTrendGraph(model, payload, ips);
-			} else {
-				new ProblemTrendGraphBuilder().buildTrendGraph(model, payload, report);
-			}
+			new ProblemTrendGraphBuilder().buildTrendGraph(model, payload, report);
 			break;
 		case THREAD:
 			report = showHourlyReport(model, payload);
@@ -318,23 +302,6 @@ public class Handler implements PageHandler<Context> {
 			break;
 		}
 		m_jspViewer.view(ctx, model);
-	}
-
-	private boolean checkIfOldReport(ProblemReport report) {
-		Map<String, Machine> machines = report.getMachines();
-
-		if (machines != null && machines.size() > 0) {
-			Map<String, Entity> entities = machines.entrySet().iterator().next().getValue().getEntities();
-
-			if (entities != null && entities.size() > 0) {
-				Entity entity = entities.entrySet().iterator().next().getValue();
-
-				if (entity.getGraphTrend() == null) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	private void normalize(Model model, Payload payload) {

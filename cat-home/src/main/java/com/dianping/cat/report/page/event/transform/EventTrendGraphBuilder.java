@@ -37,7 +37,7 @@ public class EventTrendGraphBuilder {
 		item.setSubTitles(buildSubTitles(start, end));
 		return item;
 	}
-	
+
 	private String buildSubTitle(Date start, Date end) {
 		SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat to = new SimpleDateFormat("MM-dd");
@@ -46,7 +46,7 @@ public class EventTrendGraphBuilder {
 		sb.append(from.format(start)).append("~").append(to.format(end));
 		return sb.toString();
 	}
-	
+
 	private List<String> buildSubTitles(Date start, Date end) {
 		List<String> subTitles = new ArrayList<String>();
 
@@ -170,7 +170,7 @@ public class EventTrendGraphBuilder {
 
 		private String m_name;
 
-		private Map<String, double[]> m_datas;
+		private Map<String, double[]> m_datas = new HashMap<String, double[]>(); ;
 
 		public EventReportVisitor(String ip, String type, String name) {
 			m_ip = ip;
@@ -202,10 +202,11 @@ public class EventTrendGraphBuilder {
 		}
 
 		private void resolveGraphTrend(GraphTrend graph) {
-			m_duration = graph.getDuration();
-			m_datas = new HashMap<String, double[]>();
-			m_datas.put(COUNT, parseToDouble(graph.getCount()));
-			m_datas.put(FAIL, parseToDouble(graph.getFails()));
+			if (graph != null) {
+				m_duration = graph.getDuration();
+				m_datas.put(COUNT, parseToDouble(graph.getCount()));
+				m_datas.put(FAIL, parseToDouble(graph.getFails()));
+			}
 		}
 
 		@Override

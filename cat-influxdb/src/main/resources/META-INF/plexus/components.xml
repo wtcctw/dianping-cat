@@ -11,6 +11,7 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+<<<<<<< HEAD
 			<role-hint>dailygraph</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -20,6 +21,8 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+=======
+>>>>>>> storage
 			<role-hint>dailyreport</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -29,6 +32,7 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+<<<<<<< HEAD
 			<role-hint>graph</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -38,6 +42,8 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+=======
+>>>>>>> storage
 			<role-hint>hostinfo</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -127,26 +133,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-			<implementation>com.dianping.cat.core.dal.DailyGraphDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.core.dal.DailyReportDao</role>
 			<implementation>com.dianping.cat.core.dal.DailyReportDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.GraphDao</role>
-			<implementation>com.dianping.cat.core.dal.GraphDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
