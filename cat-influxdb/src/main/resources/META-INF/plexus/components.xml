@@ -12,6 +12,7 @@
 			<role-hint>daily-report-content</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
+				<logical-table-name>daily-report-content</logical-table-name>
 				<physical-table-name>daily_report_content</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -21,6 +22,7 @@
 			<role-hint>dailyreport</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
+				<logical-table-name>dailyreport</logical-table-name>
 				<physical-table-name>dailyreport</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -30,6 +32,7 @@
 			<role-hint>hostinfo</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
+				<logical-table-name>hostinfo</logical-table-name>
 				<physical-table-name>hostinfo</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -39,6 +42,7 @@
 			<role-hint>monthly-report-content</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
+				<logical-table-name>monthly-report-content</logical-table-name>
 				<physical-table-name>monthly_report_content</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -48,6 +52,7 @@
 			<role-hint>monthreport</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
+				<logical-table-name>monthreport</logical-table-name>
 				<physical-table-name>monthreport</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -57,6 +62,7 @@
 			<role-hint>project</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
+				<logical-table-name>project</logical-table-name>
 				<physical-table-name>project</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -66,6 +72,7 @@
 			<role-hint>report</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
+				<logical-table-name>report</logical-table-name>
 				<physical-table-name>report</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -75,6 +82,7 @@
 			<role-hint>report-content</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
+				<logical-table-name>report-content</logical-table-name>
 				<physical-table-name>report_content</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -84,6 +92,7 @@
 			<role-hint>task</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
+				<logical-table-name>task</logical-table-name>
 				<physical-table-name>task</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -93,6 +102,7 @@
 			<role-hint>weekly-report-content</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
+				<logical-table-name>weekly-report-content</logical-table-name>
 				<physical-table-name>weekly_report_content</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -102,6 +112,7 @@
 			<role-hint>weeklyreport</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
+				<logical-table-name>weeklyreport</logical-table-name>
 				<physical-table-name>weeklyreport</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -210,6 +221,7 @@
 			<role-hint>business-config</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
+				<logical-table-name>business-config</logical-table-name>
 				<physical-table-name>business_config</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -219,6 +231,7 @@
 			<role-hint>config</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
+				<logical-table-name>config</logical-table-name>
 				<physical-table-name>config</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
