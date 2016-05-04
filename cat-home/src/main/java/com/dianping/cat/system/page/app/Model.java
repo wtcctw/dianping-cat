@@ -48,9 +48,9 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private Map<Integer, Command> m_commands;
 
-	private AppCommandConfigManager m_appConfigManager;
+	private transient AppCommandConfigManager m_appConfigManager;
 
-	private MobileConfigManager m_mobileConfigManager;
+	private transient MobileConfigManager m_mobileConfigManager;
 
 	private String m_nameUniqueResult;
 
@@ -78,7 +78,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private String m_configHeader;
 
-	private AppCommandGroupConfig m_commandGroupConfig;
+	private transient AppCommandGroupConfig m_commandGroupConfig;
 
 	public Model(Context ctx) {
 		super(ctx);

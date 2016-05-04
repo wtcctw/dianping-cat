@@ -64,7 +64,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private String m_configHeader;
 
-	private WebConfigManager m_webConfigManager;
+	private transient WebConfigManager m_webConfigManager;
 
 	public Model(Context ctx) {
 		super(ctx);
