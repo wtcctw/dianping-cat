@@ -16,17 +16,17 @@ import com.dianping.cat.report.graph.ValueTranslaterTest;
 import com.dianping.cat.report.page.cross.CrossReportMergerTest;
 import com.dianping.cat.report.page.database.DatabaseReportFilterTest;
 import com.dianping.cat.report.page.dependency.DependencyReportMergerTest;
-import com.dianping.cat.report.page.event.EventGraphDataTest;
 import com.dianping.cat.report.page.event.EventReportFilterTest;
+import com.dianping.cat.report.page.event.EventTrendGraphBuilderTest;
 import com.dianping.cat.report.page.metric.MetricReportMergerTest;
 import com.dianping.cat.report.page.metric.MetricReportParseTest;
-import com.dianping.cat.report.page.problem.ProblemGraphDataTest;
 import com.dianping.cat.report.page.problem.ProblemReportMergerTest;
+import com.dianping.cat.report.page.problem.ProblemTrendGraphBuilderTest;
 import com.dianping.cat.report.page.state.StateReportMergerTest;
 import com.dianping.cat.report.page.system.SystemReportConvertorTest;
 import com.dianping.cat.report.page.transaction.PayloadTest;
-import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
 import com.dianping.cat.report.page.transaction.TransactionReportFilterTest;
+import com.dianping.cat.report.page.transaction.TransactionTrendGraphBuilderTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
 import com.dianping.cat.report.task.event.EventGraphCreatorTest;
@@ -60,13 +60,6 @@ PayloadTest.class,
 /* . report.page.cross */
 CrossReportMergerTest.class,
 
-/* graph test */
-EventGraphDataTest.class,
-
-ProblemGraphDataTest.class,
-
-TransactionGraphDataTest.class,
-
 /* .report.task */
 TaskConsumerTest.class,
 
@@ -85,6 +78,13 @@ TransactionReportGraphCreatorTest.class,
 EventGraphCreatorTest.class,
 
 StateReportMergerTest.class,
+
+/* Graph */
+EventTrendGraphBuilderTest.class,
+
+ProblemTrendGraphBuilderTest.class,
+
+TransactionTrendGraphBuilderTest.class,
 
 /* Metric */
 MetricReportParseTest.class,

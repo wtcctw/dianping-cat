@@ -194,7 +194,7 @@ public class TransactionTrendGraphBuilder {
 
 		private String m_name;
 
-		private Map<String, double[]> m_datas;
+		private Map<String, double[]> m_datas = new HashMap<String, double[]>();
 
 		public TransactionReportVisitor(String ip, String type, String name) {
 			m_ip = ip;
@@ -226,11 +226,12 @@ public class TransactionTrendGraphBuilder {
 		}
 
 		private void resolveGraphTrend(GraphTrend graph) {
-			m_duration = graph.getDuration();
-			m_datas = new HashMap<String, double[]>();
-			m_datas.put(AVG, parseToDouble(graph.getAvg()));
-			m_datas.put(COUNT, parseToDouble(graph.getCount()));
-			m_datas.put(FAIL, parseToDouble(graph.getFails()));
+			if (graph != null) {
+				m_duration = graph.getDuration();
+				m_datas.put(AVG, parseToDouble(graph.getAvg()));
+				m_datas.put(COUNT, parseToDouble(graph.getCount()));
+				m_datas.put(FAIL, parseToDouble(graph.getFails()));
+			}
 		}
 
 		@Override

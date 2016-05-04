@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -17,7 +16,6 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.consumer.transaction.model.entity.Graph2;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -47,9 +45,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private GraphBuilder m_builder;
-
-	@Inject
-	private HistoryGraphs m_historyGraph;
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -132,24 +127,6 @@ public class Handler implements PageHandler<Context> {
 
 		chart.addItems(items);
 		model.setPieChart(new JsonBuilder().toJson(chart));
-	}
-
-	private boolean checkIfOldReport(TransactionReport report) {
-		Map<String, Machine> machines = report.getMachines();
-
-		if (machines != null && machines.size() > 0) {
-			Map<String, TransactionType> types = machines.entrySet().iterator().next().getValue().getTypes();
-
-			if (types != null && types.size() > 0) {
-				TransactionType type = types.entrySet().iterator().next().getValue();
-				Map<Integer, Graph2> graph2s = type.getGraph2s();
-
-				if ((graph2s == null || graph2s.size() == 0) && type.getGraphTrend() == null) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	private TransactionReport filterReportByGroup(TransactionReport report, String domain, String group) {
@@ -262,13 +239,7 @@ public class Handler implements PageHandler<Context> {
 			}
 
 			report = m_mergeHelper.mergeAllMachines(report, ip);
-			boolean isOld = checkIfOldReport(report);
-
-			if (isOld) {
-				m_historyGraph.buildTrendGraph(model, payload);
-			} else {
-				new TransactionTrendGraphBuilder().buildTrendGraph(model, payload, report);
-			}
+			new TransactionTrendGraphBuilder().buildTrendGraph(model, payload, report);
 			break;
 		case GRAPHS:
 			report = getHourlyGraphReport(model, payload);
@@ -326,14 +297,7 @@ public class Handler implements PageHandler<Context> {
 			buildDistributionInfo(model, type, name, report);
 
 			report = m_mergeHelper.mergeAllMachines(report, ip);
-			isOld = checkIfOldReport(report);
-
-			if (isOld) {
-				List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
-				m_historyGraph.buildGroupTrendGraph(model, payload, ips);
-			} else {
-				new TransactionTrendGraphBuilder().buildTrendGraph(model, payload, report);
-			}
+			new TransactionTrendGraphBuilder().buildTrendGraph(model, payload, report);
 			break;
 		}
 

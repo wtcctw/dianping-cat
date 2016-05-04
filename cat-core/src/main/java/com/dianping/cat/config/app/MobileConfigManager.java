@@ -61,7 +61,7 @@ public class MobileConfigManager implements Initializable {
 
 				item.getItems().put(id, data);
 			}
-			return true;
+			return storeConfig();
 		} else {
 			return false;
 		}
