@@ -19,7 +19,9 @@ import com.dianping.cat.system.SystemPage;
 
 import org.unidal.lookup.ContainerLoader;
 import org.unidal.web.mvc.ViewModel;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
 
+@ModelMeta("model")
 public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private Map<String, Speed> m_speeds;

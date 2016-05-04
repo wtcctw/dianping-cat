@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.unidal.lookup.ContainerLoader;
 import org.unidal.web.mvc.ViewModel;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.rule.entity.Rule;
@@ -22,6 +23,7 @@ import com.dianping.cat.configuration.mobile.entity.Item;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.system.SystemPage;
 
+@ModelMeta("model")
 public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private Map<Integer, Item> m_cities;
