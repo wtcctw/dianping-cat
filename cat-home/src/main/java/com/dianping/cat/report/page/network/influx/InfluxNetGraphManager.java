@@ -111,7 +111,7 @@ public class InfluxNetGraphManager implements Initializable, LogEnabled {
 
 		@Override
 		public void run() {
-			boolean active = TimeHelper.sleepToNextMinute();
+			boolean active = TimeHelper.sleepToNextMinute(TimeHelper.ONE_SECOND * 60);
 
 			while (active) {
 				long start = System.currentTimeMillis();
