@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
@@ -25,13 +27,15 @@ import com.dianping.cat.task.ConfigSyncTask;
 import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
 
 @Named
-public class MobileConfigManager implements Initializable {
+public class MobileConfigManager implements Initializable, LogEnabled {
 
 	@Inject
 	protected ConfigDao m_configDao;
 
 	@Inject
 	protected ContentFetcher m_fetcher;
+
+	private Logger m_logger;
 
 	private int m_configId;
 
@@ -65,6 +69,25 @@ public class MobileConfigManager implements Initializable {
 		} else {
 			return false;
 		}
+	}
+
+	private Map<String, Integer> buildConstantCache(String key) {
+		ConstantItem items = m_config.findConstantItem(key);
+		Map<String, Integer> results = new ConcurrentHashMap<String, Integer>();
+
+		if (items != null && items.getItems() != null) {
+			for (Item item : items.getItems().values()) {
+				results.put(item.getValue(), item.getId());
+			}
+		} else {
+			Cat.logError(new RuntimeException("Mobile config has no constants for the key [" + key + "]"));
+		}
+		return results;
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 	public String getBrokerName() {
@@ -190,9 +213,11 @@ public class MobileConfigManager implements Initializable {
 				m_config = DefaultSaxParser.parse(content);
 			} catch (Exception ex) {
 				Cat.logError(ex);
+				m_logger.error(ex.getMessage());
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
+			m_logger.error(e.getMessage());
 		}
 		if (m_config == null) {
 			m_config = new MobileConfig();
@@ -276,32 +301,9 @@ public class MobileConfigManager implements Initializable {
 	}
 
 	private void refreshData() {
-		Map<String, Integer> cityMap = new ConcurrentHashMap<String, Integer>();
-		ConstantItem cities = m_config.findConstantItem((MobileConstants.CITY));
-
-		if (cities != null && cities.getItems() != null) {
-			for (Item item : cities.getItems().values()) {
-				cityMap.put(item.getValue(), item.getId());
-			}
-		}
-
-		m_cities = cityMap;
-
-		Map<String, Integer> operatorMap = new ConcurrentHashMap<String, Integer>();
-		ConstantItem operations = m_config.findConstantItem(MobileConstants.OPERATOR);
-
-		for (Item item : operations.getItems().values()) {
-			operatorMap.put(item.getValue(), item.getId());
-		}
-		m_operators = operatorMap;
-
-		Map<String, Integer> platformMap = new ConcurrentHashMap<String, Integer>();
-		ConstantItem platforms = m_config.findConstantItem(MobileConstants.PLATFORM);
-
-		for (Item item : platforms.getItems().values()) {
-			platformMap.put(item.getValue(), item.getId());
-		}
-		m_platforms = platformMap;
+		m_cities = buildConstantCache(MobileConstants.CITY);
+		m_operators = buildConstantCache(MobileConstants.OPERATOR);
+		m_platforms = buildConstantCache(MobileConstants.PLATFORM);
 	}
 
 	public boolean shouldAutoPrune() {
