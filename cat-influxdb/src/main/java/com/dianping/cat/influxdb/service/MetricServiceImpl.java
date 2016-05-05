@@ -258,7 +258,6 @@ public class MetricServiceImpl implements MetricService, LogEnabled {
 			String query = String.format(format, parameter.getType().getName(), parameter.getMeasurement(),
 			      parameter.getSqlTags(), sdf.format(parameter.getStart()), sdf.format(parameter.getEnd()),
 			      parameter.getInterval());
-
 			QueryResult queryResult = conn.getInfluxDB().query(new Query(query, conn.getDataBase()));
 			Map<Long, Double> datas = new LinkedHashMap<Long, Double>();
 
