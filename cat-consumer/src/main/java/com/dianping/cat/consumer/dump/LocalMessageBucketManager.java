@@ -138,23 +138,25 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_baseDir = new File(m_configManager.getHdfsLocalBaseDir(ServerConfigManager.DUMP_DIR));
+		if (!m_configManager.isUseNewStorage()) {
+			m_baseDir = new File(m_configManager.getHdfsLocalBaseDir(ServerConfigManager.DUMP_DIR));
 
-		Threads.forGroup("cat").start(new BlockDumper(m_buckets, m_messageBlocks, m_serverStateManager));
-		Threads.forGroup("cat").start(new LogviewUploader(this, m_hdfsUploader, m_configManager));
-		Threads.forGroup("cat").start(new CloseBucketChecker());
+			Threads.forGroup("cat").start(new BlockDumper(m_buckets, m_messageBlocks, m_serverStateManager));
+			Threads.forGroup("cat").start(new LogviewUploader(this, m_hdfsUploader, m_configManager));
+			Threads.forGroup("cat").start(new CloseBucketChecker());
 
-		if (m_configManager.isLocalMode()) {
-			m_gzipThreads = 2;
+			if (m_configManager.isLocalMode()) {
+				m_gzipThreads = 2;
+			}
+
+			for (int i = 0; i < m_gzipThreads; i++) {
+				LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<MessageItem>(m_gzipMessageSize);
+
+				m_messageQueues.add(messageQueue);
+				Threads.forGroup("cat").start(new MessageGzip(messageQueue, i));
+			}
+			m_last = m_messageQueues.get(m_gzipThreads - 1);
 		}
-
-		for (int i = 0; i < m_gzipThreads; i++) {
-			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<MessageItem>(m_gzipMessageSize);
-
-			m_messageQueues.add(messageQueue);
-			Threads.forGroup("cat").start(new MessageGzip(messageQueue, i));
-		}
-		m_last = m_messageQueues.get(m_gzipThreads - 1);
 	}
 
 	@Override
