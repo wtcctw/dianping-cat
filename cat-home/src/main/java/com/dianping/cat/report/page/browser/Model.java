@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
 import com.dianping.cat.configuration.web.entity.Item;
 import com.dianping.cat.configuration.web.speed.entity.Speed;
 import com.dianping.cat.configuration.web.url.entity.Code;
@@ -15,11 +17,12 @@ import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.mvc.AbstractReportModel;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.browser.display.AjaxDataDisplayInfo;
-import com.dianping.cat.report.page.browser.display.JsErrorDisplayInfo;
 import com.dianping.cat.report.page.browser.display.JsErrorDetailInfo;
+import com.dianping.cat.report.page.browser.display.JsErrorDisplayInfo;
 import com.dianping.cat.report.page.browser.display.WebSpeedDetail;
 import com.dianping.cat.report.page.browser.display.WebSpeedDisplayInfo;
 
+@ModelMeta("model")
 public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Map<String, PatternItem> m_pattermItems;

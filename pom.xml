@@ -59,17 +59,17 @@
 			<dependency>
 				<groupId>org.unidal.framework</groupId>
 				<artifactId>dal-jdbc</artifactId>
-				<version>2.2.0</version>
+				<version>2.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.unidal.framework</groupId>
 				<artifactId>foundation-service</artifactId>
-				<version>2.2.0</version>
+				<version>2.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.unidal.framework</groupId>
 				<artifactId>web-framework</artifactId>
-				<version>2.2.1</version>
+				<version>2.4.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.unidal.framework</groupId>
@@ -108,6 +108,11 @@
 				<version>6.1.14</version>
 			</dependency>
 			<dependency>
+			 	<groupId>javax.servlet</groupId>
+				 <artifactId>jstl</artifactId>
+				 <version>1.2</version>
+			</dependency>
+			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>servlet-api</artifactId>
 				<version>2.5</version>
@@ -123,6 +128,11 @@
 				<version>5.1.20</version>
 			</dependency>
 			<dependency>
+				<groupId>org.apache.hadoop</groupId>
+				<artifactId>hadoop-client</artifactId>
+			<version>2.4.1</version>
+			</dependency>
+			<dependency>
 				<groupId>io.netty</groupId>
 				<artifactId>netty-all</artifactId>
 				<version>4.0.24.Final</version>
@@ -133,6 +143,16 @@
 				<version>2.3.1</version>
 			</dependency>
 			<dependency>
+         <groupId>commons-lang</groupId>
+         <artifactId>commons-lang</artifactId>
+         <version>2.6</version>
+      </dependency>
+		<dependency>
+			<groupId>org.xerial.snappy</groupId>
+			<artifactId>snappy-java</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+			<dependency>
 				<groupId>log4j</groupId>
 				<artifactId>log4j</artifactId>
 				<version>1.2.14</version>
@@ -141,6 +161,11 @@
          		<groupId>org.freemarker</groupId>
          		<artifactId>freemarker</artifactId>
          		<version>2.3.9</version>
+      		</dependency>
+			<dependency>
+         		<groupId>com.mchange.v2</groupId>
+         		<artifactId>c3p0</artifactId>
+         		<version>0.9.5.1</version>
       		</dependency>
 		</dependencies>
 	</dependencyManagement>

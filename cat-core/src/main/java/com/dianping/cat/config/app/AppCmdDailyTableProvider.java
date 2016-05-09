@@ -13,35 +13,20 @@ public class AppCmdDailyTableProvider implements TableProvider {
 
 	public final static String LOGIC_TABLE_NAME = "app-command-data-daily";
 
-	private String m_logicalTableName = LOGIC_TABLE_NAME;
-
 	private String m_physicalTableName = "app_command_data_daily";
 
 	private String m_dataSourceName = "app";
 
 	@Override
-	public String getDataSourceName(Map<String, Object> hints) {
+	public String getDataSourceName(Map<String, Object> hints, String logicalTableName) {
 		return m_dataSourceName;
 	}
 
 	@Override
-	public String getLogicalTableName() {
-		return m_logicalTableName;
-	}
-
-	@Override
-	public String getPhysicalTableName(Map<String, Object> hints) {
+	public String getPhysicalTableName(Map<String, Object> hints, String logicalTableName) {
 		AppCommandDataDaily command = (AppCommandDataDaily) hints.get(QueryEngine.HINT_DATA_OBJECT);
 
 		return m_physicalTableName + "_" + command.getCommandId();
-	}
-
-	public void setDataSourceName(String dataSourceName) {
-		m_dataSourceName = dataSourceName;
-	}
-
-	public void setLogicalTableName(String logicalTableName) {
-		m_logicalTableName = logicalTableName;
 	}
 
 }

@@ -12,7 +12,7 @@ public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalS
       Initializable {
 
 	@Inject
-	private ServerConfigManager m_configManager;
+	protected ServerConfigManager m_configManager;
 
 	private boolean m_localMode = true;
 

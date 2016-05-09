@@ -3,10 +3,9 @@ package com.dianping.cat.build;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager;
+import org.unidal.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
 import org.unidal.initialization.DefaultModuleManager;
 import org.unidal.initialization.ModuleManager;
-import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatHomeModule;
@@ -39,7 +38,7 @@ import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.ReportFacade;
 import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
 
-public class ComponentsConfigurator extends AbstractResourceConfigurator {
+public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 	public static void main(String[] args) {
 		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
 	}
@@ -101,8 +100,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(new OfflineComponentConfigurator().defineComponents());
 
 		// database
-		all.add(C(JdbcDataSourceDescriptorManager.class) //
-		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
+//		all.add(C(JdbcDataSourceDescriptorManager.class) //
+//		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
+//		
+		all.add(defineJdbcDataSourceConfigurationManagerComponent("/data/appdatas/cat/datasources.xml"));
+		
+		
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 
 		// for alarm module

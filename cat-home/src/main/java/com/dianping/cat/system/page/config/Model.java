@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.unidal.web.mvc.ViewModel;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.alarm.rule.entity.Rule;
 import com.dianping.cat.configuration.web.js.entity.AggregationRule;
@@ -28,6 +29,7 @@ import com.dianping.cat.home.group.entity.DomainGroup;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.processor.BaseProcesser.RuleItem;
 
+@ModelMeta("model")
 public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private Project m_project;
