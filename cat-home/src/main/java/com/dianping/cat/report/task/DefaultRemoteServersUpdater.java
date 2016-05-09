@@ -75,15 +75,17 @@ public class DefaultRemoteServersUpdater implements ServersUpdater {
 
 		@Override
 		public void visitProcessDomain(ProcessDomain processDomain) {
-			String domain = processDomain.getName();
-			Set<String> servers = m_servers.get(domain);
+			if (processDomain.getTotal() > 0) {
+				String domain = processDomain.getName();
+				Set<String> servers = m_servers.get(domain);
 
-			if (servers == null) {
-				servers = new HashSet<String>();
+				if (servers == null) {
+					servers = new HashSet<String>();
 
-				m_servers.put(domain, servers);
+					m_servers.put(domain, servers);
+				}
+				servers.add(m_ip);
 			}
-			servers.add(m_ip);
 		}
 	}
 
