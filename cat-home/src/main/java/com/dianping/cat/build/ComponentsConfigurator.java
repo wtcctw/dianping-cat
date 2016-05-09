@@ -34,6 +34,8 @@ import com.dianping.cat.report.page.DomainGroupConfigManager;
 import com.dianping.cat.report.page.eslog.EsServerConfigManager;
 import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
 import com.dianping.cat.report.page.server.config.ServerMetricConfigManager;
+import com.dianping.cat.report.server.RemoteServersManager;
+import com.dianping.cat.report.task.DefaultRemoteServersUpdater;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.ReportFacade;
 import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
@@ -47,6 +49,10 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(A(JsonBuilder.class));
+
+		all.add(A(RemoteServersManager.class));
+
+		all.add(A(DefaultRemoteServersUpdater.class));
 
 		all.add(A(DefaultValueTranslater.class));
 

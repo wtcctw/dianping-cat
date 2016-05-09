@@ -47,6 +47,7 @@ import com.dianping.cat.report.page.server.display.LineChartBuilder;
 import com.dianping.cat.report.page.server.display.MetricScreenTransformer;
 import com.dianping.cat.report.page.server.service.MetricGraphService;
 import com.dianping.cat.report.page.server.service.MetricScreenService;
+import com.dianping.cat.report.server.RemoteServersManager;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ProjectService;
 
@@ -79,14 +80,14 @@ public class MetricComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "metric-historical", HistoricalMetricService.class) //
 		      .req(MetricReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, MetricAnalyzer.ID, CompositeMetricService.class) //
-		      .req(ServerConfigManager.class) //
+		      .req(ServerConfigManager.class, RemoteServersManager.class) //
 		      .req(ModelService.class, new String[] { "metric-historical" }, "m_services"));
 
 		all.add(A(LocalBusinessService.class));
 		all.add(C(ModelService.class, "business-historical", HistoricalBusinessService.class) //
 		      .req(BusinessReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, BusinessAnalyzer.ID, CompositeBusinessService.class) //
-		      .req(ServerConfigManager.class) //
+		      .req(ServerConfigManager.class, RemoteServersManager.class) //
 		      .req(ModelService.class, new String[] { "business-historical" }, "m_services"));
 
 		all.add(A(MetricPointParser.class));

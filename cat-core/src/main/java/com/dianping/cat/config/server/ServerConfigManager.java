@@ -39,8 +39,8 @@ import com.dianping.cat.configuration.server.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.task.ConfigSyncTask;
-import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
 @Named
 public class ServerConfigManager implements LogEnabled, Initializable {
@@ -387,7 +387,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 			Cat.logError(e);
 		}
 
-		ConfigSyncTask.getInstance().register(new SyncHandler() {
+		TimerSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
 			public String getName() {
@@ -483,6 +483,10 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 
 	public boolean isRouterAdjustEnabled() {
 		return Boolean.parseBoolean(getProperty(ROUTER_ADJUST_ENABLED, "false"));
+	}
+
+	public boolean isRemoteServersFixed() {
+		return Boolean.parseBoolean(getProperty("remote-servers-fixed", "false"));
 	}
 
 	public boolean isRpcClient(String type) {

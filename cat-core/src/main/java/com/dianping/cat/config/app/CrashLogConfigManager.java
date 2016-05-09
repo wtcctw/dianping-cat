@@ -19,8 +19,8 @@ import com.dianping.cat.configuration.app.crash.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.task.ConfigSyncTask;
-import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
 @Named
 public class CrashLogConfigManager implements Initializable {
@@ -79,7 +79,7 @@ public class CrashLogConfigManager implements Initializable {
 		if (m_config == null) {
 			m_config = new CrashLogConfig();
 		}
-		ConfigSyncTask.getInstance().register(new SyncHandler() {
+		TimerSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
 			public String getName() {

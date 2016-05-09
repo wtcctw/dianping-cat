@@ -27,6 +27,7 @@ import com.dianping.cat.report.page.problem.service.HistoricalProblemService;
 import com.dianping.cat.report.page.problem.service.LocalProblemService;
 import com.dianping.cat.report.page.problem.service.ProblemReportService;
 import com.dianping.cat.report.page.problem.task.ProblemReportBuilder;
+import com.dianping.cat.report.server.RemoteServersManager;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ProjectService;
 
@@ -44,7 +45,7 @@ public class ProblemComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "problem-historical", HistoricalProblemService.class) //
 		      .req(ProblemReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, ProblemAnalyzer.ID, CompositeProblemService.class) //
-		      .req(ServerConfigManager.class) //
+		      .req(ServerConfigManager.class, RemoteServersManager.class) //
 		      .req(ModelService.class, new String[] { "problem-historical" }, "m_services"));
 
 		all.add(C(Contactor.class, ExceptionContactor.ID, ExceptionContactor.class).req(ProjectService.class,

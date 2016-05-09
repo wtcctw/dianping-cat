@@ -20,6 +20,7 @@ import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
 import com.dianping.cat.report.page.heartbeat.service.HistoricalHeartbeatService;
 import com.dianping.cat.report.page.heartbeat.service.LocalHeartbeatService;
 import com.dianping.cat.report.page.heartbeat.task.HeartbeatReportBuilder;
+import com.dianping.cat.report.server.RemoteServersManager;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ProjectService;
 
@@ -36,7 +37,7 @@ public class HeartbeatComponentConfigurator extends AbstractResourceConfigurator
 		all.add(C(ModelService.class, "heartbeat-historical", HistoricalHeartbeatService.class) //
 		      .req(HeartbeatReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, HeartbeatAnalyzer.ID, CompositeHeartbeatService.class) //
-		      .req(ServerConfigManager.class) //
+		      .req(ServerConfigManager.class, RemoteServersManager.class) //
 		      .req(ModelService.class, new String[] { "heartbeat-historical" }, "m_services"));
 
 		all.add(C(Contactor.class, HeartbeatContactor.ID, HeartbeatContactor.class).req(ProjectService.class,

@@ -30,6 +30,7 @@ import com.dianping.cat.report.page.storage.service.HistoricalStorageService;
 import com.dianping.cat.report.page.storage.service.LocalStorageService;
 import com.dianping.cat.report.page.storage.task.StorageReportBuilder;
 import com.dianping.cat.report.page.storage.task.StorageReportService;
+import com.dianping.cat.report.server.RemoteServersManager;
 import com.dianping.cat.report.service.ModelService;
 
 public class StorageComponentConfigurator extends AbstractResourceConfigurator {
@@ -46,7 +47,7 @@ public class StorageComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "storage-historical", HistoricalStorageService.class) //
 		      .req(StorageReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, StorageAnalyzer.ID, CompositeStorageService.class) //
-		      .req(ServerConfigManager.class) //
+		      .req(ServerConfigManager.class, RemoteServersManager.class) //
 		      .req(ModelService.class, new String[] { "storage-historical" }, "m_services"));
 
 		all.add(A(StorageReportBuilder.class));

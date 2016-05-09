@@ -47,8 +47,8 @@ import com.dianping.cat.home.router.entity.ServerGroup;
 import com.dianping.cat.home.router.transform.DefaultNativeParser;
 import com.dianping.cat.home.router.transform.DefaultSaxParser;
 import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
-import com.dianping.cat.task.ConfigSyncTask;
-import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
 @Named
 public class RouterConfigManager implements Initializable, LogEnabled {
@@ -147,7 +147,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 
 		refreshNetInfo();
 
-		ConfigSyncTask.getInstance().register(new SyncHandler() {
+		TimerSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
 			public String getName() {
