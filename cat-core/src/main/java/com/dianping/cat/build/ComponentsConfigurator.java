@@ -44,6 +44,8 @@ import com.dianping.cat.message.storage.LocalMessageBucket;
 import com.dianping.cat.report.DefaultReportBucketManager;
 import com.dianping.cat.report.DomainValidator;
 import com.dianping.cat.report.LocalReportBucket;
+import com.dianping.cat.report.server.RemoteServersManager;
+import com.dianping.cat.report.server.ServersUpdaterManager;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.statistic.ServerStatisticManager;
@@ -97,13 +99,16 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.addAll(defineStorageComponents());
 		all.addAll(defineCodecComponents());
+		
+		all.add(A(RemoteServersManager.class));
+		all.add(A(ServersUpdaterManager.class));
 
 		all.add(C(TableProvider.class, "app-command-data", AppCommandTableProvider.class));
 		all.add(C(TableProvider.class, "app-command-data-daily", AppCmdDailyTableProvider.class));
 		all.add(C(TableProvider.class, "app-connection-data", AppConnectionTableProvider.class));
 		all.add(C(TableProvider.class, "app-speed-data", AppSpeedTableProvider.class));
 		all.add(C(TableProvider.class, "ajax-data", AjaxDataTableProvider.class));
-		
+
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));

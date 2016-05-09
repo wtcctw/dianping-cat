@@ -18,8 +18,8 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.server.entity.ServerMetricConfig;
 import com.dianping.cat.home.server.transform.DefaultSaxParser;
-import com.dianping.cat.task.ConfigSyncTask;
-import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
 @Named
 public class ServerMetricConfigManager implements Initializable {
@@ -75,7 +75,7 @@ public class ServerMetricConfigManager implements Initializable {
 			m_config = new ServerMetricConfig();
 		}
 
-		ConfigSyncTask.getInstance().register(new SyncHandler() {
+		TimerSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
 			public void handle() throws Exception {

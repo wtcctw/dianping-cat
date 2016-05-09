@@ -15,14 +15,6 @@ public class RemoteServersManager {
 
 	private volatile Map<String, Set<String>> m_lastServers = new ConcurrentHashMap<String, Set<String>>();
 
-	public Map<String, Set<String>> getCurrentServers() {
-		return m_currentServers;
-	}
-
-	public Map<String, Set<String>> getLastServers() {
-		return m_lastServers;
-	}
-
 	public Set<String> queryServers(String domain, long time) {
 		ModelPeriod period = ModelPeriod.getByTime(time);
 

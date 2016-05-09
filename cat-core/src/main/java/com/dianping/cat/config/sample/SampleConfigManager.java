@@ -13,8 +13,8 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.sample.entity.SampleConfig;
 import com.dianping.cat.sample.transform.DefaultSaxParser;
-import com.dianping.cat.task.ConfigSyncTask;
-import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
 @Named(type = SampleConfigManager.class)
 public class SampleConfigManager implements Initializable {
@@ -66,7 +66,7 @@ public class SampleConfigManager implements Initializable {
 			m_config = new SampleConfig();
 		}
 
-		ConfigSyncTask.getInstance().register(new SyncHandler() {
+		TimerSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
 			public void handle() throws Exception {

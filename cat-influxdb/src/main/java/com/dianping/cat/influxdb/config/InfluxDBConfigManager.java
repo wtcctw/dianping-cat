@@ -13,8 +13,8 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.influxdb.config.entity.InfluxdbConfig;
 import com.dianping.cat.influxdb.config.transform.DefaultSaxParser;
-import com.dianping.cat.task.ConfigSyncTask;
-import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
 @Named
 public class InfluxDBConfigManager implements Initializable {
@@ -65,7 +65,7 @@ public class InfluxDBConfigManager implements Initializable {
 			m_config = new InfluxdbConfig();
 		}
 
-		ConfigSyncTask.getInstance().register(new SyncHandler() {
+		TimerSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
 			public void handle() throws Exception {
