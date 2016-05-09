@@ -11,6 +11,7 @@ import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.report.alert.AlarmManager;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
+import com.dianping.cat.report.task.RemoteServersUpdater;
 
 public class CatHomeModule extends AbstractModule {
 	public static final String ID = "cat-home";
@@ -23,8 +24,10 @@ public class CatHomeModule extends AbstractModule {
 
 		if (serverConfigManager.isJobMachine()) {
 			DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
+			RemoteServersUpdater remoteServersupdater = ctx.lookup(RemoteServersUpdater.class);
 
 			Threads.forGroup("cat").start(taskConsumer);
+			Threads.forGroup("cat").start(remoteServersupdater);
 		}
 
 		AlarmManager alarmManager = ctx.lookup(AlarmManager.class);

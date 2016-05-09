@@ -1806,6 +1806,27 @@
 			<implementation>com.dianping.cat.report.task.ReportFacade</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.server.RemoteServersManager</role>
+			<implementation>com.dianping.cat.report.server.RemoteServersManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.RemoteServersUpdater</role>
+			<implementation>com.dianping.cat.report.task.RemoteServersUpdater</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.ReportManager</role>
+					<role-hint>state</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>state</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.server.RemoteServersManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.service.LocalModelService</role>
 			<role-hint>transaction</role-hint>
 			<implementation>com.dianping.cat.report.page.transaction.service.LocalTransactionService</implementation>
@@ -1841,6 +1862,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.server.RemoteServersManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
@@ -1889,6 +1913,9 @@
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.server.RemoteServersManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hints>
 						<role-hint>event-historical</role-hint>
@@ -1933,6 +1960,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.server.RemoteServersManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
@@ -1981,6 +2011,9 @@
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.server.RemoteServersManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hints>
 						<role-hint>heartbeat-historical</role-hint>
@@ -2025,6 +2058,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.server.RemoteServersManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
@@ -2073,6 +2109,9 @@
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.server.RemoteServersManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hints>
 						<role-hint>state-historical</role-hint>
@@ -2117,6 +2156,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.server.RemoteServersManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
@@ -2165,6 +2207,9 @@
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.server.RemoteServersManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hints>
 						<role-hint>top-historical</role-hint>
@@ -2211,6 +2256,9 @@
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.server.RemoteServersManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hints>
 						<role-hint>dependency-historical</role-hint>
@@ -2255,6 +2303,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.server.RemoteServersManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
@@ -2306,6 +2357,9 @@
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.server.RemoteServersManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hints>
 						<role-hint>metric-historical</role-hint>
@@ -2352,6 +2406,9 @@
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.server.RemoteServersManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hints>
 						<role-hint>business-historical</role-hint>
@@ -2367,6 +2424,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.server.RemoteServersManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>

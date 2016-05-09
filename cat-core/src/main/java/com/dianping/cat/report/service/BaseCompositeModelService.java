@@ -13,15 +13,20 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.server.RemoteServersManager;
 
 public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>,
       Initializable {
 
 	@Inject
 	protected ServerConfigManager m_configManager;
+
+	@Inject
+	private RemoteServersManager m_serverManager;
 
 	@Inject
 	private List<ModelService<T>> m_services;
@@ -50,14 +55,25 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 
 		for (String endpoint : endpoints) {
 			int pos = endpoint.indexOf(':');
-			String host = (pos > 0 ? endpoint.substring(0, pos) : endpoint);
+			String host = buildHost(endpoint, pos);
 			int port = (pos > 0 ? Integer.parseInt(endpoint.substring(pos + 1)) : 2281);
 			BaseRemoteModelService<T> remote = createRemoteService();
 
 			remote.setHost(host);
 			remote.setPort(port);
+			remote.setServerConfigManager(m_configManager);
+			remote.setRemoteServersManager(m_serverManager);
 			m_allServices.add(remote);
 		}
+	}
+
+	private String buildHost(String endpoint, int pos) {
+		String host = (pos > 0 ? endpoint.substring(0, pos) : endpoint);
+
+		if ("127.0.0.1".equals(host)) {
+			host = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+		}
+		return host;
 	}
 
 	@Override
