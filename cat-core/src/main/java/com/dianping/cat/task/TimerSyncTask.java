@@ -11,11 +11,11 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
 
-public class ConfigSyncTask implements Task {
+public class TimerSyncTask implements Task {
 
 	private List<SyncHandler> m_handlers = new ArrayList<SyncHandler>();
 
-	private static ConfigSyncTask m_instance = new ConfigSyncTask();
+	private static TimerSyncTask m_instance = new TimerSyncTask();
 
 	private static ExecutorService s_threadPool = Threads.forPool().getFixedThreadPool("Cat-ConfigSyncTask", 3);
 
@@ -23,9 +23,9 @@ public class ConfigSyncTask implements Task {
 
 	private static boolean m_actvie = false;
 
-	public static ConfigSyncTask getInstance() {
+	public static TimerSyncTask getInstance() {
 		if (m_actvie == false) {
-			synchronized (ConfigSyncTask.class) {
+			synchronized (TimerSyncTask.class) {
 				if (m_actvie == false) {
 					Threads.forGroup("cat").start(m_instance);
 					m_actvie = true;
@@ -58,7 +58,7 @@ public class ConfigSyncTask implements Task {
 
 					@Override
 					public void run() {
-						final Transaction t = Cat.newTransaction("SyncConfig", handler.getName());
+						final Transaction t = Cat.newTransaction("TimerSync", handler.getName());
 
 						try {
 							handler.handle();

@@ -22,8 +22,8 @@ import com.dianping.cat.configuration.business.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.BusinessConfig;
 import com.dianping.cat.core.config.BusinessConfigDao;
 import com.dianping.cat.core.config.BusinessConfigEntity;
-import com.dianping.cat.task.ConfigSyncTask;
-import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
 public class BusinessConfigManager extends ContainerHolder implements Initializable {
 
@@ -97,7 +97,7 @@ public class BusinessConfigManager extends ContainerHolder implements Initializa
 
 		loadData();
 
-		ConfigSyncTask.getInstance().register(new SyncHandler() {
+		TimerSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
 			public void handle() throws Exception {

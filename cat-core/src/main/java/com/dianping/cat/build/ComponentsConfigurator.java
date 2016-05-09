@@ -46,6 +46,8 @@ import com.dianping.cat.message.PathBuilder;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.report.DomainValidator;
+import com.dianping.cat.report.server.RemoteServersManager;
+import com.dianping.cat.report.server.ServersUpdaterManager;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.statistic.ServerStatisticManager;
@@ -110,6 +112,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(UrlPatternConfigManager.class).req(ConfigDao.class, UrlPatternHandler.class, ContentFetcher.class));
 
 		all.add(A(MobileConfigManager.class));
+
+		all.add(A(RemoteServersManager.class));
+		all.add(A(ServersUpdaterManager.class));
 
 		all.add(C(Module.class, CatCoreModule.ID, CatCoreModule.class));
 

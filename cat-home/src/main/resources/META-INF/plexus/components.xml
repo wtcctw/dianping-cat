@@ -1806,23 +1806,12 @@
 			<implementation>com.dianping.cat.report.task.ReportFacade</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.server.RemoteServersManager</role>
-			<implementation>com.dianping.cat.report.server.RemoteServersManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.RemoteServersUpdater</role>
-			<implementation>com.dianping.cat.report.task.RemoteServersUpdater</implementation>
+			<role>com.dianping.cat.report.server.ServersUpdater</role>
+			<implementation>com.dianping.cat.report.task.DefaultRemoteServersUpdater</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportManager</role>
-					<role-hint>state</role-hint>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>state</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.server.RemoteServersManager</role>
 				</requirement>
 			</requirements>
 		</component>

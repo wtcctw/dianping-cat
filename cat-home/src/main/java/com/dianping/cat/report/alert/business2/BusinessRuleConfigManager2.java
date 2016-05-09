@@ -25,8 +25,8 @@ import com.dianping.cat.core.config.BusinessConfig;
 import com.dianping.cat.core.config.BusinessConfigDao;
 import com.dianping.cat.core.config.BusinessConfigEntity;
 import com.dianping.cat.helper.MetricType;
-import com.dianping.cat.task.ConfigSyncTask;
-import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
 public class BusinessRuleConfigManager2 implements Initializable {
 
@@ -96,7 +96,7 @@ public class BusinessRuleConfigManager2 implements Initializable {
 	public void initialize() throws InitializationException {
 		loadData();
 
-		ConfigSyncTask.getInstance().register(new SyncHandler() {
+		TimerSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
 			public String getName() {

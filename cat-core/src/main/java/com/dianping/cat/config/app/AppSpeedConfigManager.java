@@ -26,8 +26,8 @@ import com.dianping.cat.configuration.app.speed.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.task.ConfigSyncTask;
-import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
 public class AppSpeedConfigManager implements Initializable {
 
@@ -76,7 +76,7 @@ public class AppSpeedConfigManager implements Initializable {
 		if (m_config == null) {
 			m_config = new AppSpeedConfig();
 		}
-		ConfigSyncTask.getInstance().register(new SyncHandler() {
+		TimerSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
 			public void handle() throws Exception {

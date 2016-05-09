@@ -21,8 +21,8 @@ import com.dianping.cat.configuration.app.command.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.task.ConfigSyncTask;
-import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
 public class CommandFormatConfigManager implements Initializable {
 	@Inject
@@ -99,7 +99,7 @@ public class CommandFormatConfigManager implements Initializable {
 			m_urlFormat = new CommandFormat();
 		}
 		
-		ConfigSyncTask.getInstance().register(new SyncHandler() {
+		TimerSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
 			public void handle() throws Exception {

@@ -81,7 +81,7 @@ import com.dianping.cat.report.page.transaction.service.TransactionReportService
 import com.dianping.cat.report.server.RemoteServersManager;
 import com.dianping.cat.report.service.LocalModelService;
 import com.dianping.cat.report.service.ModelService;
-import com.dianping.cat.report.task.RemoteServersUpdater;
+import com.dianping.cat.report.task.DefaultRemoteServersUpdater;
 import com.dianping.cat.service.IpService;
 
 class ServiceComponentConfigurator extends AbstractResourceConfigurator {
@@ -89,8 +89,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(A(RemoteServersManager.class));
-		all.add(A(RemoteServersUpdater.class));
+		all.add(A(DefaultRemoteServersUpdater.class));
 
 		all.add(C(LocalModelService.class, LocalTransactionService.ID, LocalTransactionService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
