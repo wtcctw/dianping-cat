@@ -74,8 +74,6 @@ public class InfluxNetGraphManager implements Initializable, LogEnabled {
 
 		if (graph == null) {
 			graph = buildGraph(new Date(current));
-
-			m_netGraphs.put(current, graph);
 		}
 
 		for (NetTopology netTopology : graph.getNetTopologies()) {
@@ -111,7 +109,7 @@ public class InfluxNetGraphManager implements Initializable, LogEnabled {
 
 		@Override
 		public void run() {
-			boolean active = TimeHelper.sleepToNextMinute();
+			boolean active = TimeHelper.sleepToNextMinute(TimeHelper.ONE_SECOND * 10);
 
 			while (active) {
 				long start = System.currentTimeMillis();
@@ -120,7 +118,7 @@ public class InfluxNetGraphManager implements Initializable, LogEnabled {
 					Transaction t = Cat.newTransaction("ReloadTask", "networkGraph");
 
 					try {
-						Date minute = TimeHelper.getCurrentMinute();
+						Date minute = TimeHelper.getCurrentMinute(-1);
 						long time = minute.getTime();
 						NetGraph netGraph = m_netGraphs.get(time);
 

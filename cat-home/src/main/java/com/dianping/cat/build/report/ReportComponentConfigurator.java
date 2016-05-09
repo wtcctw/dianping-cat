@@ -53,6 +53,7 @@ import com.dianping.cat.report.page.top.service.CompositeTopService;
 import com.dianping.cat.report.page.top.service.HistoricalTopService;
 import com.dianping.cat.report.page.top.service.LocalTopService;
 import com.dianping.cat.report.page.top.service.TopReportService;
+import com.dianping.cat.report.server.RemoteServersManager;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.system.page.router.config.RouterConfigAdjustor;
 import com.dianping.cat.system.page.router.config.RouterConfigHandler;
@@ -97,7 +98,7 @@ public class ReportComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "cross-historical", HistoricalCrossService.class) //
 		      .req(CrossReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, CrossAnalyzer.ID, CompositeCrossService.class) //
-		      .req(ServerConfigManager.class) //
+		      .req(ServerConfigManager.class, RemoteServersManager.class) //
 		      .req(ModelService.class, new String[] { "cross-historical" }, "m_services"));
 
 		// matrix report
@@ -108,7 +109,7 @@ public class ReportComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "matrix-historical", HistoricalMatrixService.class) //
 		      .req(MatrixReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, MatrixAnalyzer.ID, CompositeMatrixService.class) //
-		      .req(ServerConfigManager.class) //
+		      .req(ServerConfigManager.class, RemoteServersManager.class) //
 		      .req(ModelService.class, new String[] { "matrix-historical" }, "m_services"));
 
 		// state report
@@ -120,7 +121,7 @@ public class ReportComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "state-historical", HistoricalStateService.class) //
 		      .req(StateReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, StateAnalyzer.ID, CompositeStateService.class) //
-		      .req(ServerConfigManager.class) //
+		      .req(ServerConfigManager.class, RemoteServersManager.class) //
 		      .req(ModelService.class, new String[] { "state-historical" }, "m_services"));
 
 		// top report
@@ -130,7 +131,7 @@ public class ReportComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "top-historical", HistoricalTopService.class) //
 		      .req(TopReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, TopAnalyzer.ID, CompositeTopService.class) //
-		      .req(ServerConfigManager.class) //
+		      .req(ServerConfigManager.class, RemoteServersManager.class) //
 		      .req(ModelService.class, new String[] { "top-historical" }, "m_services"));
 
 		// message service
@@ -142,7 +143,7 @@ public class ReportComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageBucketManager.class, HdfsMessageBucketManager.ID) //
 		      .req(HdfsBucketManager.class).req(ServerConfigManager.class));
 		all.add(C(ModelService.class, "logview", CompositeLogViewService.class) //
-		      .req(ServerConfigManager.class) //
+		      .req(ServerConfigManager.class, RemoteServersManager.class) //
 		      .req(ModelService.class, new String[] { "logview-historical" }, "m_services"));
 
 		return all;

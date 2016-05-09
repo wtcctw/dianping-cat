@@ -35,7 +35,9 @@ import com.dianping.cat.report.page.DomainGroupConfigManager;
 import com.dianping.cat.report.page.eslog.EsServerConfigManager;
 import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
 import com.dianping.cat.report.page.server.config.ServerMetricConfigManager;
+import com.dianping.cat.report.server.RemoteServersManager;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
+import com.dianping.cat.report.task.RemoteServersUpdater;
 import com.dianping.cat.report.task.ReportFacade;
 import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
 
@@ -116,6 +118,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 	private List<Component> defineConfigComponents() {
 		List<Component> all = new ArrayList<Component>();
+
+		all.add(A(RemoteServersManager.class));
+		all.add(A(RemoteServersUpdater.class));
 
 		all.add(A(DomainGroupConfigManager.class));
 		all.add(A(NetGraphConfigManager.class));

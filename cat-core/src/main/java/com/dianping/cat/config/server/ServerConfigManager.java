@@ -485,6 +485,10 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		return Boolean.parseBoolean(getProperty(ROUTER_ADJUST_ENABLED, "false"));
 	}
 
+	public boolean isRemoteServersFixed() {
+		return Boolean.parseBoolean(getProperty("remote-servers-fixed", "false"));
+	}
+
 	public boolean isRpcClient(String type) {
 		return "PigeonCall".equals(type) || "Call".equals(type);
 	}

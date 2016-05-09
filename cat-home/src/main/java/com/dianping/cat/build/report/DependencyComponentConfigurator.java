@@ -18,6 +18,7 @@ import com.dianping.cat.report.page.dependency.service.DependencyReportService;
 import com.dianping.cat.report.page.dependency.service.HistoricalDependencyService;
 import com.dianping.cat.report.page.dependency.service.LocalDependencyService;
 import com.dianping.cat.report.page.dependency.task.DependencyReportBuilder;
+import com.dianping.cat.report.server.RemoteServersManager;
 import com.dianping.cat.report.service.ModelService;
 
 public class DependencyComponentConfigurator extends AbstractResourceConfigurator {
@@ -41,7 +42,7 @@ public class DependencyComponentConfigurator extends AbstractResourceConfigurato
 		all.add(C(ModelService.class, "dependency-historical", HistoricalDependencyService.class) //
 		      .req(DependencyReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, DependencyAnalyzer.ID, CompositeDependencyService.class) //
-		      .req(ServerConfigManager.class) //
+		      .req(ServerConfigManager.class, RemoteServersManager.class) //
 		      .req(ModelService.class, new String[] { "dependency-historical" }, "m_services"));
 
 		all.add(A(DependencyReportBuilder.class));

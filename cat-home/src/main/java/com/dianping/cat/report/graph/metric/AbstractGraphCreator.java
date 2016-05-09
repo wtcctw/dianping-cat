@@ -122,7 +122,7 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 			Map<Long, Double> convertedData = new LinkedHashMap<Long, Double>();
 
 			for (Entry<Long, Double> currentEntry : current.entrySet()) {
-				double result = currentEntry.getValue() / 1000000.0 / 60;
+				double result = currentEntry.getValue() / (1024 * 1024) / 60 / 8;
 
 				convertedData.put(currentEntry.getKey(), result);
 			}

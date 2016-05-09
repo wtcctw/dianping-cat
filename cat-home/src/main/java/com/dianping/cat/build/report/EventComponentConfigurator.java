@@ -20,6 +20,7 @@ import com.dianping.cat.report.page.event.service.EventReportService;
 import com.dianping.cat.report.page.event.service.HistoricalEventService;
 import com.dianping.cat.report.page.event.service.LocalEventService;
 import com.dianping.cat.report.page.event.task.EventReportBuilder;
+import com.dianping.cat.report.server.RemoteServersManager;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ProjectService;
 
@@ -41,7 +42,7 @@ public class EventComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "event-historical", HistoricalEventService.class) //
 		      .req(EventReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, EventAnalyzer.ID, CompositeEventService.class) //
-		      .req(ServerConfigManager.class) //
+		      .req(ServerConfigManager.class, RemoteServersManager.class) //
 		      .req(ModelService.class, new String[] { "event-historical" }, "m_services"));
 
 		all.add(A(EventReportBuilder.class));
