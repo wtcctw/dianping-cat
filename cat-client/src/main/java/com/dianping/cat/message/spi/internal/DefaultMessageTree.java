@@ -1,8 +1,5 @@
 package com.dianping.cat.message.spi.internal;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.*;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
@@ -11,6 +8,13 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.Event;
+import com.dianping.cat.message.Heartbeat;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Metric;
+import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 
@@ -39,6 +43,8 @@ public class DefaultMessageTree implements MessageTree {
 	private String m_threadId;
 
 	private String m_threadName;
+
+	private MessageId m_formatMessageId;
 
 	private boolean m_discard = true;
 
@@ -107,6 +113,14 @@ public class DefaultMessageTree implements MessageTree {
 		return events;
 	}
 
+	public MessageId getFormatMessageId() {
+		if (m_formatMessageId == null) {
+			m_formatMessageId = MessageId.parse(m_messageId);
+		}
+
+		return m_formatMessageId;
+	}
+
 	public List<Heartbeat> getHeartbeats() {
 		return heartbeats;
 	}
@@ -119,6 +133,11 @@ public class DefaultMessageTree implements MessageTree {
 	@Override
 	public String getIpAddress() {
 		return m_ipAddress;
+	}
+
+	@Override
+	public String getSessionToken() {
+		return m_sessionToken;
 	}
 
 	@Override
@@ -143,11 +162,6 @@ public class DefaultMessageTree implements MessageTree {
 	@Override
 	public String getRootMessageId() {
 		return m_rootMessageId;
-	}
-
-	@Override
-	public String getSessionToken() {
-		return m_sessionToken;
 	}
 
 	@Override
@@ -187,6 +201,10 @@ public class DefaultMessageTree implements MessageTree {
 		m_domain = domain;
 	}
 
+	public void setFormatMessageId(MessageId formatMessageId) {
+		m_formatMessageId = formatMessageId;
+	}
+
 	@Override
 	public void setHostName(String hostName) {
 		m_hostName = hostName;
@@ -210,6 +228,11 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
+	public void setSessionToken(String sessionToken) {
+		m_sessionToken = sessionToken;
+	}
+
+	@Override
 	public void setParentMessageId(String parentMessageId) {
 		if (parentMessageId != null && parentMessageId.length() > 0) {
 			m_parentMessageId = parentMessageId;
@@ -226,11 +249,6 @@ public class DefaultMessageTree implements MessageTree {
 		if (rootMessageId != null && rootMessageId.length() > 0) {
 			m_rootMessageId = rootMessageId;
 		}
-	}
-
-	@Override
-	public void setSessionToken(String sessionToken) {
-		m_sessionToken = sessionToken;
 	}
 
 	@Override

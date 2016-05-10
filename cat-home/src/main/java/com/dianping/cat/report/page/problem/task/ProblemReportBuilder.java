@@ -6,6 +6,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
@@ -24,6 +25,7 @@ import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask;
 import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask.CurrentWeeklyMonthlyTask;
 
+@Named(type = TaskBuilder.class, value = ProblemReportBuilder.ID)
 public class ProblemReportBuilder implements TaskBuilder, Initializable {
 
 	public static final String ID = ProblemAnalyzer.ID;
@@ -145,10 +147,10 @@ public class ProblemReportBuilder implements TaskBuilder, Initializable {
 	      throws DalException {
 		long startTime = start.getTime();
 		long endTime = endDate.getTime();
-		
+
 		ProblemReportMerger merger = new HistoryProblemReportMerger(new ProblemReport(domain));
 		ProblemReportHourlyGraphCreator graphCreator = new ProblemReportHourlyGraphCreator(merger.getProblemReport(), 10);
-		
+
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			ProblemReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
 			      + TimeHelper.ONE_HOUR));
@@ -156,7 +158,7 @@ public class ProblemReportBuilder implements TaskBuilder, Initializable {
 			graphCreator.createGraph(report);
 			report.accept(merger);
 		}
-		
+
 		ProblemReport dailyReport = merger.getProblemReport();
 		Date date = dailyReport.getStartTime();
 		Date end = new Date(TaskHelper.tomorrowZero(date).getTime() - 1000);

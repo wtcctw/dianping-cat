@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -30,6 +31,7 @@ import com.dianping.cat.home.heavy.transform.DefaultNativeParser;
 import com.dianping.cat.report.page.statistics.task.heavy.HeavyReportMerger;
 import com.dianping.cat.report.service.AbstractReportService;
 
+@Named
 public class HeavyReportService extends AbstractReportService<HeavyReport> {
 
 	@Override

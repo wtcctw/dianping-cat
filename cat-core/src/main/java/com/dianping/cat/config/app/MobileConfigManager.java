@@ -23,8 +23,8 @@ import com.dianping.cat.configuration.mobile.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.task.ConfigSyncTask;
-import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
 @Named
 public class MobileConfigManager implements Initializable, LogEnabled {
@@ -224,7 +224,7 @@ public class MobileConfigManager implements Initializable, LogEnabled {
 		}
 		refreshData();
 
-		ConfigSyncTask.getInstance().register(new SyncHandler() {
+		TimerSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
 			public String getName() {

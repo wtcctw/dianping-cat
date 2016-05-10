@@ -11,6 +11,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.report.MetricScreen;
@@ -19,6 +20,7 @@ import com.dianping.cat.home.dal.report.MetricScreenEntity;
 import com.dianping.cat.report.page.server.display.MetricScreenInfo;
 import com.dianping.cat.report.page.server.display.MetricScreenTransformer;
 
+@Named
 public class MetricScreenService implements Initializable {
 
 	@Inject

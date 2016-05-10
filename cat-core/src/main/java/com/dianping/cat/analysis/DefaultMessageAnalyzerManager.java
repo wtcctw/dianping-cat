@@ -12,9 +12,12 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.server.ServerConfigManager;
 
+@Named(type = MessageAnalyzerManager.class)
 public class DefaultMessageAnalyzerManager extends ContainerHolder implements MessageAnalyzerManager, Initializable,
       LogEnabled {
 	private static final long MINUTE = 60 * 1000L;
@@ -74,7 +77,7 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 					analyzer.initialize(startTime, m_duration, m_extraTime);
 					analyzers.add(analyzer);
 
-					int count = analyzer.getAnanlyzerCount();
+					int count = analyzer.getAnanlyzerCount(name);
 
 					for (int i = 1; i < count; i++) {
 						MessageAnalyzer tempAnalyzer = lookup(MessageAnalyzer.class, name);
@@ -105,7 +108,7 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 		}
 
 		m_analyzerNames = new ArrayList<String>(map.keySet());
-		
+
 		Collections.sort(m_analyzerNames, new Comparator<String>() {
 			@Override
 			public int compare(String str1, String str2) {
@@ -125,6 +128,19 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 				return str1.compareTo(str2);
 			}
 		});
+		
+		ServerConfigManager manager = lookup(ServerConfigManager.class);
+		List<String> disables = new ArrayList<String>();
+		
+		for (String name : m_analyzerNames) {
+
+			if (!manager.getEnableOfRealtimeAnalyzer(name)) {
+				disables.add(name);
+			}
+		}
+		for (String name : disables) {
+			m_analyzerNames.remove(name);
+		}
 	}
 
 	@Override

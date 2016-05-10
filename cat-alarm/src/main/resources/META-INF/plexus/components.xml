@@ -1,18 +1,10 @@
 <plexus>
 	<components>
 		<component>
-			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
-			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</implementation>
-			<configuration>
-				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
-			</configuration>
-		</component>
-		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>alert</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>alert</logical-table-name>
 				<physical-table-name>alert</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -22,7 +14,6 @@
 			<role-hint>server-alarm-rule</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>server-alarm-rule</logical-table-name>
 				<physical-table-name>server_alarm_rule</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -32,7 +23,6 @@
 			<role-hint>user-define-rule</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>user-define-rule</logical-table-name>
 				<physical-table-name>user_define_rule</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>

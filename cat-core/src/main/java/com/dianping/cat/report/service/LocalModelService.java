@@ -12,19 +12,19 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.analysis.MessageConsumer;
-import com.dianping.cat.analysis.RealtimeConsumer;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.mvc.ApiPayload;
 
 public abstract class LocalModelService<T> implements Initializable {
-	@Inject(type = MessageConsumer.class)
-	private RealtimeConsumer m_consumer;
 
 	@Inject
-	protected ServerConfigManager m_manager;
+	private MessageConsumer m_consumer;
+
+	@Inject
+	protected ServerConfigManager m_configManager;
 
 	public static final int DEFAULT_SIZE = 32 * 1024;
-	
+
 	public static final int ANALYZER_COUNT = 2;
 
 	private String m_defaultDomain = Constants.CAT;
@@ -79,7 +79,7 @@ public abstract class LocalModelService<T> implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_defaultDomain = m_manager.getConsoleDefaultDomain();
+		m_defaultDomain = m_configManager.getConsoleDefaultDomain();
 	}
 
 	public boolean isEligable(ModelRequest request) {

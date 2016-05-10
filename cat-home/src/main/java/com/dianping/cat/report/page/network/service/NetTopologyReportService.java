@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -15,6 +16,7 @@ import com.dianping.cat.home.network.entity.NetGraphSet;
 import com.dianping.cat.home.network.transform.DefaultNativeParser;
 import com.dianping.cat.report.service.AbstractReportService;
 
+@Named
 public class NetTopologyReportService extends AbstractReportService<NetGraphSet> {
 
 	@Override

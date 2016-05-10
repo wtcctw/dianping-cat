@@ -1,7 +1,9 @@
 package com.dianping.cat.report.alert.spi.data;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.report.alert.spi.data.MetricReportGroup.State;
 import com.dianping.cat.report.service.ModelPeriod;
@@ -9,9 +11,10 @@ import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
 
+@Named
 public class MetricReportGroupService {
 
-	@Inject
+	@Inject(MetricAnalyzer.ID)
 	private ModelService<MetricReport> m_service;
 
 	private MetricReport fetchMetricReport(String product, ModelPeriod period, int min, int max) {
@@ -70,7 +73,7 @@ public class MetricReportGroupService {
 		} else {
 			int lastLength = duration - minute - 1;
 			int lastMin = 60 - lastLength;
-			
+
 			type = State.CURRENT_LAST;
 			currentReport = fetchMetricReport(product, ModelPeriod.CURRENT, 0, minute);
 			lastReport = fetchMetricReport(product, ModelPeriod.LAST, lastMin, 59);

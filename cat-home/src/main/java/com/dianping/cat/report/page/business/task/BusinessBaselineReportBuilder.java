@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.config.business.BusinessConfigManager;
 import com.dianping.cat.configuration.business.entity.BusinessItemConfig;
@@ -24,6 +25,7 @@ import com.dianping.cat.report.page.metric.task.BaselineConfigManager;
 import com.dianping.cat.report.page.metric.task.BaselineCreator;
 import com.dianping.cat.report.task.TaskBuilder;
 
+@Named(type = TaskBuilder.class, value = BusinessBaselineReportBuilder.ID)
 public class BusinessBaselineReportBuilder implements TaskBuilder {
 
 	public static final String ID = BusinessAnalyzer.ID;

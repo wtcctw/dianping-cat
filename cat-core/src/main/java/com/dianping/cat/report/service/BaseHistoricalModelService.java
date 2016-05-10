@@ -12,7 +12,7 @@ public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalS
       Initializable {
 
 	@Inject
-	private ServerConfigManager m_manager;
+	protected ServerConfigManager m_configManager;
 
 	private boolean m_localMode = true;
 
@@ -31,7 +31,7 @@ public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalS
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_localMode = m_manager.isLocalMode();
+		m_localMode = m_configManager.isLocalMode();
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeHelper;
@@ -21,6 +22,7 @@ import com.dianping.cat.alarm.spi.AlertLevel;
 import com.dianping.cat.alarm.spi.AlertManager;
 import com.dianping.cat.alarm.spi.AlertType;
 
+@Named
 public class ThirdPartyAlert implements Task {
 
 	@Inject

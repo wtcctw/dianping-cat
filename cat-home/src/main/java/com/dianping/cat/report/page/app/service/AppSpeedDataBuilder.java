@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppSpeedData;
@@ -21,6 +22,7 @@ import com.dianping.cat.report.page.app.display.AppSpeedDetail;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 import com.site.lookup.util.StringUtils;
 
+@Named
 public class AppSpeedDataBuilder {
 
 	@Inject

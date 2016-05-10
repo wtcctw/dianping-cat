@@ -4,6 +4,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
@@ -12,9 +13,10 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.sample.entity.SampleConfig;
 import com.dianping.cat.sample.transform.DefaultSaxParser;
-import com.dianping.cat.task.ConfigSyncTask;
-import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
+@Named(type = SampleConfigManager.class)
 public class SampleConfigManager implements Initializable {
 
 	@Inject
@@ -64,7 +66,7 @@ public class SampleConfigManager implements Initializable {
 			m_config = new SampleConfig();
 		}
 
-		ConfigSyncTask.getInstance().register(new SyncHandler() {
+		TimerSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
 			public void handle() throws Exception {

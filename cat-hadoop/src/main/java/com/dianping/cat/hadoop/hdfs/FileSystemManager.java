@@ -30,14 +30,6 @@ public class FileSystemManager implements Initializable {
 
 	private Configuration m_config;
 
-	public long getFileMaxSize(String id) {
-		return m_configManager.getHdfsFileMaxSize(id);
-	}
-
-	public long getHarFileMaxSize(String id) {
-		return m_configManager.getHarfsFileMaxSize(id);
-	}
-
 	public FileSystem getFileSystem(String id, StringBuilder basePath) throws IOException {
 		String serverUri = m_configManager.getHdfsServerUri(id);
 		String baseDir = m_configManager.getHdfsBaseDir(id);

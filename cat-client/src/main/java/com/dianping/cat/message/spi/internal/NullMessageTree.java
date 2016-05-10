@@ -1,5 +1,7 @@
 package com.dianping.cat.message.spi.internal;
 
+import io.netty.buffer.ByteBuf;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +10,7 @@ import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.internal.NullMessage;
 import com.dianping.cat.message.spi.MessageTree;
 
@@ -175,4 +178,19 @@ public class NullMessageTree implements MessageTree {
 	public void setThreadName(String id) {
 
 	}
+
+	@Override
+   public ByteBuf getBuffer() {
+	   return null;
+   }
+
+	@Override
+   public MessageId getFormatMessageId() {
+	   return null;
+   }
+
+	@Override
+   public void setFormatMessageId(MessageId messageId) {
+   }
+	
 }

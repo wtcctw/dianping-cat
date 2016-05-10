@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.server.display;
 import java.util.List;
 
 import org.unidal.helper.Splitters;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
@@ -10,6 +11,7 @@ import com.dianping.cat.home.dal.report.MetricScreen;
 import com.dianping.cat.home.graph.entity.Graph;
 import com.dianping.cat.home.graph.transform.DefaultSaxParser;
 
+@Named
 public class MetricScreenTransformer {
 
 	public final static String SEPARATOR = ",";

@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
@@ -29,6 +30,7 @@ import com.dianping.cat.metric.QueryParameter;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.server.service.MetricGraphBuilder;
 
+@Named
 public class LineChartBuilder {
 
 	@Inject

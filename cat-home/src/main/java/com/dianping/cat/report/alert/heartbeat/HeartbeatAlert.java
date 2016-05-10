@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
@@ -37,6 +38,7 @@ import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ProjectService;
 
+@Named
 public class HeartbeatAlert implements Task {
 
 	@Inject(type = ModelService.class, value = HeartbeatAnalyzer.ID)

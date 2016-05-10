@@ -363,7 +363,27 @@ public class Cat {
 		}
 	}
 
+	/**
+	 * logRemoteCallClient is used in rpc client
+	 * 
+	 * @param ctx
+	 *           ctx is rpc context ,such as duboo context , please use rpc context implement Context
+	 * @param domain
+	 *           domain is default, if use default config, the performance of server storage is bad
+	 */
 	public static void logRemoteCallClient(Context ctx) {
+		logRemoteCallClient(ctx, "default");
+	}
+
+	/**
+	 * logRemoteCallClient is used in rpc client
+	 * 
+	 * @param ctx
+	 *           ctx is rpc context ,such as duboo context , please use rpc context implement Context
+	 * @param domain
+	 *           domain is project name of rpc server name
+	 */
+	public static void logRemoteCallClient(Context ctx, String domain) {
 		try {
 			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 			String messageId = tree.getMessageId();
@@ -373,7 +393,7 @@ public class Cat {
 				tree.setMessageId(messageId);
 			}
 
-			String childId = Cat.createMessageId();
+			String childId = Cat.getProducer().createRpcServerId(domain);
 			Cat.logEvent(CatConstants.TYPE_REMOTE_CALL, "", Event.SUCCESS, childId);
 
 			String root = tree.getRootMessageId();
@@ -390,21 +410,27 @@ public class Cat {
 		}
 	}
 
+	/**
+	 * used in rpc server，use clild id as server message tree id.
+	 * 
+	 * @param ctx
+	 *           ctx is rpc context ,such as duboo context , please use rpc context implement Context
+	 */
 	public static void logRemoteCallServer(Context ctx) {
 		try {
 			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
-			String messageId = ctx.getProperty(Context.CHILD);
+			String childId = ctx.getProperty(Context.CHILD);
 			String rootId = ctx.getProperty(Context.ROOT);
 			String parentId = ctx.getProperty(Context.PARENT);
 
-			if (messageId != null) {
-				tree.setMessageId(messageId);
-			}
 			if (parentId != null) {
 				tree.setParentMessageId(parentId);
 			}
 			if (rootId != null) {
 				tree.setRootMessageId(rootId);
+			}
+			if (childId != null) {
+				tree.setMessageId(childId);
 			}
 		} catch (Exception e) {
 			errorHandler(e);

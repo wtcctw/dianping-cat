@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
@@ -37,6 +38,7 @@ import com.dianping.cat.report.page.metric.service.BaselineService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.page.business.config.BusinessTagConfigManager;
 
+@Named
 public class BusinessAlert2 implements Task {
 
 	@Inject

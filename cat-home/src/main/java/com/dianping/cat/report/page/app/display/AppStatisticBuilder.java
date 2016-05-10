@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.command.entity.Command;
@@ -27,6 +28,7 @@ import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.page.app.service.AppReportService;
 import com.dianping.cat.service.ProjectService;
 
+@Named
 public class AppStatisticBuilder {
 
 	@Inject

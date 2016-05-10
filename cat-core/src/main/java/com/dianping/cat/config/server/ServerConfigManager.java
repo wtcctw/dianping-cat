@@ -19,6 +19,7 @@ import org.unidal.helper.Files;
 import org.unidal.helper.Splitters;
 import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 import org.xml.sax.SAXException;
 
@@ -38,9 +39,10 @@ import com.dianping.cat.configuration.server.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.task.ConfigSyncTask;
-import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
+@Named
 public class ServerConfigManager implements LogEnabled, Initializable {
 
 	@Inject
@@ -62,7 +64,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	private Logger m_logger;
 
 	public ExecutorService m_threadPool;
-
+	
 	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
 
 	public static final String DUMP_DIR = "dump";
@@ -81,8 +83,6 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 
 	public final static String ROUTER_ADJUST_ENABLED = "router-adjust-enabled";
 
-	public static final String CONFIG_FILE = "/data/appdatas/cat/server.xml";
-
 	public static final String DEFAULT = "default";
 
 	@Override
@@ -97,7 +97,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	public String getConsoleDefaultDomain() {
 		return Constants.CAT;
 	}
-
+	
 	public List<Pair<String, Integer>> getConsoleEndpoints() {
 		String remoteServers = getProperty(REMOTE_SERVERS, "");
 		List<String> endpoints = Splitters.by(',').noEmptyItem().trim().split(remoteServers);
@@ -114,6 +114,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		return pairs;
 	}
 
+
 	public String getConsoleRemoteServers() {
 		String remoteServers = getProperty(REMOTE_SERVERS, "");
 
@@ -122,6 +123,10 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		} else {
 			return "";
 		}
+	}
+	
+	public boolean getEnableOfRealtimeAnalyzer(String name) {
+		return Boolean.parseBoolean(getProperty(name + "-analyzer-enable", "true"));
 	}
 
 	public String getHarfsBaseDir(String id) {
@@ -138,7 +143,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		}
 		return null;
 	}
-
+	
 	public long getHarfsFileMaxSize(String id) {
 		if (m_server != null) {
 			HarfsConfig hdfsConfig = m_server.getStorage().findHarfs(id);
@@ -179,17 +184,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		}
 		return null;
 	}
-
-	public long getHdfsFileMaxSize(String id) {
-		if (m_server != null) {
-			HdfsConfig hdfsConfig = m_server.getStorage().findHdfs(id);
-
-			return toLong(hdfsConfig == null ? null : hdfsConfig.getMaxSize(), DEFAULT_HDFS_FILE_MAX_SIZE);
-		} else {
-			return DEFAULT_HDFS_FILE_MAX_SIZE;
-		}
-	}
-
+	
 	public String getHdfsLocalBaseDir(String id) {
 		if (m_server != null) {
 			StorageConfig storage = m_server.getStorage();
@@ -252,6 +247,16 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		}
 	}
 
+	public int getHdfsUploadThreadsCount() {
+		if (m_server != null) {
+			StorageConfig storage = m_server.getStorage();
+
+			return storage.getUploadThread();
+		} else {
+			return 5;
+		}
+	}
+
 	public int getLocalReportStroageTime() {
 		if (m_server != null) {
 			StorageConfig storage = m_server.getStorage();
@@ -294,8 +299,20 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		return 1000; // 1 second
 	}
 
+	public int getMessageDumpThreads() {
+		return Integer.parseInt(getProperty("message-dumper-thread", "5"));
+	}
+
+	public int getMessageProcessorThreads() {
+		return Integer.parseInt(getProperty("message-processor-thread", "20"));
+	}
+
 	public ExecutorService getModelServiceExecutorService() {
 		return m_threadPool;
+	}
+
+	public int getModelServiceThreads() {
+		return Integer.parseInt(getProperty("model-service-thread", "100"));
 	}
 
 	public String getProperty(String name, String defaultValue) {
@@ -311,6 +328,26 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 
 	public ServerConfig getServerConfig() {
 		return m_config;
+	}
+
+	public String getStorageCompressType() {
+		return getProperty("storage-compress-type", "snappy");
+	}
+
+	public int getStorageDeflateLevel() {
+		return Integer.parseInt(getProperty("storage-deflate-level", "5"));
+	}
+
+	public int getStorageMaxBlockSize() {
+		return Integer.parseInt(getProperty("storage-max-block-size", "131072"));
+	}
+
+	public boolean getStroargeNioEnable() {
+		return Boolean.parseBoolean(getProperty("storage-nio-enable", "true"));
+	}
+
+	public int getThreadsOfRealtimeAnalyzer(String name) {
+		return Integer.parseInt(getProperty(name + "-analyzer-threads", "1"));
 	}
 
 	@Override
@@ -350,7 +387,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 			Cat.logError(e);
 		}
 
-		ConfigSyncTask.getInstance().register(new SyncHandler() {
+		TimerSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
 			public String getName() {
@@ -401,7 +438,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		if (isLocalMode()) {
 			m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 5);
 		} else {
-			m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 100);
+			m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", getModelServiceThreads());
 		}
 	}
 
@@ -415,16 +452,13 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 			return false;
 		}
 	}
+	
+	public boolean isUseNewStorage(){
+		return Boolean.parseBoolean(getProperty("use-new-storage", "false"));	
+	}
 
 	public boolean isAlertMachine() {
-		boolean alert = Boolean.parseBoolean(getProperty(ALARM_MACHINE, "false"));
-		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-
-		if ("10.1.6.128".equals(ip) || alert) {
-			return true;
-		} else {
-			return false;
-		}
+		return Boolean.parseBoolean(getProperty(ALARM_MACHINE, "false"));
 	}
 
 	public boolean isHarMode() {
@@ -451,6 +485,10 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		return Boolean.parseBoolean(getProperty(ROUTER_ADJUST_ENABLED, "false"));
 	}
 
+	public boolean isRemoteServersFixed() {
+		return Boolean.parseBoolean(getProperty("remote-servers-fixed", "false"));
+	}
+
 	public boolean isRpcClient(String type) {
 		return "PigeonCall".equals(type) || "Call".equals(type);
 	}
@@ -470,12 +508,15 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		m_logger.info("CAT server is running with hdfs," + isHdfsOn());
 		m_logger.info("CAT server is running with alert," + isAlertMachine());
 		m_logger.info("CAT server is running with job," + isJobMachine());
-		m_logger.info(m_server.toString());
 
-		if (isLocalMode()) {
-			m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 5);
-		} else {
-			m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 100);
+		if (m_server != null) {
+			m_logger.info(m_server.toString());
+
+			if (isLocalMode()) {
+				m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 5);
+			} else {
+				m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", getModelServiceThreads());
+			}
 		}
 	}
 

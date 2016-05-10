@@ -6,9 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.rule.entity.Condition;
+import com.dianping.cat.alarm.rule.entity.Config;
+import com.dianping.cat.alarm.spi.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertType;
+import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.config.ProductLineConfig;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
@@ -21,12 +27,8 @@ import com.dianping.cat.report.alert.spi.BaseAlert;
 import com.dianping.cat.report.alert.spi.config.BaseRuleConfigManager;
 import com.dianping.cat.report.alert.spi.data.MetricReportGroup;
 import com.dianping.cat.report.page.metric.service.BaselineService;
-import com.dianping.cat.alarm.rule.entity.Condition;
-import com.dianping.cat.alarm.rule.entity.Config;
-import com.dianping.cat.alarm.spi.AlertEntity;
-import com.dianping.cat.alarm.spi.AlertType;
-import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
 
+@Named
 public class BusinessAlert extends BaseAlert {
 
 	public static final String ID = AlertType.Business.getName();

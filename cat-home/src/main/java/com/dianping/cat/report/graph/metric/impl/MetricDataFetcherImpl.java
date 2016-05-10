@@ -3,6 +3,8 @@ package com.dianping.cat.report.graph.metric.impl;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.unidal.lookup.annotation.Named;
+
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
@@ -10,6 +12,7 @@ import com.dianping.cat.consumer.metric.model.transform.BaseVisitor;
 import com.dianping.cat.helper.MetricType;
 import com.dianping.cat.report.graph.metric.MetricDataFetcher;
 
+@Named(type = MetricDataFetcher.class)
 public class MetricDataFetcherImpl implements MetricDataFetcher {
 
 	@Override

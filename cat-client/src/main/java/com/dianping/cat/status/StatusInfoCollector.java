@@ -259,7 +259,7 @@ public class StatusInfoCollector extends BaseVisitor {
 	public void visitThread(ThreadsInfo thread) {
 		Extension frameworkThread = m_statusInfo.findOrCreateExtension("FrameworkThread");
 		ThreadMXBean bean = ManagementFactory.getThreadMXBean();
-
+		
 		bean.setThreadContentionMonitoringEnabled(true);
 
 		ThreadInfo[] threads;

@@ -40,19 +40,17 @@
 			<implementation>com.dianping.cat.message.io.TcpSocketSender</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>plain-text</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageStatistics</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.configuration.ClientConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.internal.MessageIdFactory</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageStatistics</role>
-					<field-name>m_statistics</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>plain-text</role-hint>
-					<field-name>m_codec</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -98,12 +96,6 @@
 			<role>com.dianping.cat.message.spi.MessageCodec</role>
 			<role-hint>plain-text</role-hint>
 			<implementation>com.dianping.cat.message.spi.codec.PlainTextMessageCodec</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
-					<role-hint>escape</role-hint>
-				</requirement>
-			</requirements>
 		</component>
 	</components>
 </plexus>

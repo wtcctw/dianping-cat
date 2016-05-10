@@ -9,6 +9,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.helper.Threads;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
@@ -17,6 +18,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
+@Named(type = MessageConsumer.class)
 public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable, LogEnabled {
 
 	@Inject
@@ -83,6 +85,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		m_logger = logger;
 	}
 
+	@Override
 	public List<MessageAnalyzer> getCurrentAnalyzer(String name) {
 		long currentStartTime = getCurrentStartTime();
 		Period period = m_periodManager.findPeriod(currentStartTime);
@@ -101,6 +104,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		return time;
 	}
 
+	@Override
 	public List<MessageAnalyzer> getLastAnalyzer(String name) {
 		long lastStartTime = getCurrentStartTime() - HOUR;
 		Period period = m_periodManager.findPeriod(lastStartTime);

@@ -9,9 +9,11 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.DatabaseParser;
 import com.dianping.cat.consumer.storage.StorageReportUpdater.StorageUpdateItem;
 import com.dianping.cat.consumer.storage.builder.StorageBuilder;
@@ -22,10 +24,8 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportManager;
 
+@Named(type = MessageAnalyzer.class, value = StorageAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> implements LogEnabled, Initializable {
-
-	@Inject
-	private StorageDelegate m_storageDelegate;
 
 	@Inject(ID)
 	private ReportManager<StorageReport> m_reportManager;
@@ -39,12 +39,6 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	private Map<String, StorageBuilder> m_storageBuilders;
 
 	public static final String ID = "storage";
-
-	@Override
-   public void destroy() {
-		release(m_storageBuilders);
-	   super.destroy();
-   }
 
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
@@ -62,11 +56,6 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	}
 
 	@Override
-	public int getAnanlyzerCount() {
-		return 2;
-	}
-
-	@Override
 	public StorageReport getReport(String id) {
 		long period = getStartTime();
 		StorageReport report = m_reportManager.getHourlyReport(period, id, false);
@@ -79,7 +68,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	public ReportManager<StorageReport> getReportManager() {
 		return m_reportManager;
 	}
-	
+
 	@Override
 	public void initialize() throws InitializationException {
 		m_storageBuilders = lookupMap(StorageBuilder.class);
@@ -98,7 +87,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	protected void loadReports() {
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 	}
-	
+
 	@Override
 	protected void process(MessageTree tree) {
 		List<Transaction> transactions = tree.getTransactions();
@@ -124,5 +113,5 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 			}
 		}
 	}
-	
+
 }

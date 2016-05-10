@@ -7,6 +7,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
@@ -18,6 +19,7 @@ import com.dianping.cat.home.js.entity.ExceptionLimit;
 import com.dianping.cat.home.js.entity.JsRuleConfig;
 import com.site.lookup.util.StringUtils;
 
+@Named
 public class JsRuleConfigManager implements Initializable {
 
 	@Inject
@@ -73,12 +75,12 @@ public class JsRuleConfigManager implements Initializable {
 
 	public boolean insertExceptionLimit(ExceptionLimit limit) {
 		String id = limit.getId();
-		
+
 		if (StringUtils.isEmpty(id)) {
 			id = limit.getDomain() + SPLITTER + limit.getLevel();
 			limit.setId(id);
-		} 
-		
+		}
+
 		m_jsRuleConfig.getExceptionLimits().put(id, limit);
 		return storeConfig();
 	}

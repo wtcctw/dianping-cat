@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel.MapMode;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.unidal.helper.Splitters;
@@ -17,8 +20,6 @@ public class MessageIdFactory {
 
 	private volatile AtomicInteger m_index;
 
-	private volatile AtomicInteger m_mapIndex;
-
 	private String m_domain;
 
 	private String m_ipAddress;
@@ -26,6 +27,8 @@ public class MessageIdFactory {
 	private MappedByteBuffer m_byteBuffer;
 
 	private RandomAccessFile m_markFile;
+
+	private Map<String, AtomicInteger> m_maps = new LinkedHashMap<String, AtomicInteger>(100);
 
 	public static final long HOUR = 3600 * 1000L;
 
@@ -76,38 +79,43 @@ public class MessageIdFactory {
 
 		StringBuilder sb = new StringBuilder(m_domain.length() + 32);
 
-		sb.append(m_domain);
-		sb.append('-');
-		sb.append(m_ipAddress);
-		sb.append('-');
-		sb.append(timestamp);
-		sb.append('-');
-		sb.append(index);
+		sb.append(m_domain).append('-').append(m_ipAddress).append('-').append(timestamp).append('-').append(index);
 
 		return sb.toString();
 	}
 
-	public String getNextMapId() {
+	public String getNextId(String domain) {
 		long timestamp = getTimestamp();
 
 		if (timestamp != m_timestamp) {
-			m_mapIndex.set(0);
+			synchronized (m_maps) {
+				for (Entry<String, AtomicInteger> entry : m_maps.entrySet()) {
+					entry.getValue().set(0);
+				}
+			}
 			m_timestamp = timestamp;
 		}
 
-		int index = m_mapIndex.getAndIncrement();
+		AtomicInteger value = m_maps.get(domain);
+
+		if (value == null) {
+			synchronized (m_maps) {
+				value = m_maps.get(domain);
+
+				if (value == null) {
+					value = new AtomicInteger(0);
+					m_maps.put(domain, value);
+				}
+			}
+		}
+		int index = value.getAndIncrement();
 
 		StringBuilder sb = new StringBuilder(m_domain.length() + 32);
 
-		sb.append(m_domain);
-		sb.append('-');
-		sb.append(m_ipAddress);
-		sb.append('-');
-		sb.append(timestamp);
-		sb.append('-');
-		sb.append(index);
+		sb.append(domain).append('-').append(m_ipAddress).append('-').append(timestamp).append('-').append(index);
 
 		return sb.toString();
+
 	}
 
 	protected long getTimestamp() {
@@ -140,20 +148,30 @@ public class MessageIdFactory {
 		File mark = createMarkFile(domain);
 
 		m_markFile = new RandomAccessFile(mark, "rw");
-		m_byteBuffer = m_markFile.getChannel().map(MapMode.READ_WRITE, 0, 20);
+		m_byteBuffer = m_markFile.getChannel().map(MapMode.READ_WRITE, 0, 1024 * 1024);
 
 		if (m_byteBuffer.limit() > 0) {
 			long lastTimestamp = m_byteBuffer.getLong();
 			int index = m_byteBuffer.getInt();
-			int rpcIndex = m_byteBuffer.getInt();
 
 			if (lastTimestamp == m_timestamp) { // for same hour
 				m_index = new AtomicInteger(index + 1000);
-				m_mapIndex = new AtomicInteger(rpcIndex + 1000);
+
+				int mapLength = m_byteBuffer.getInt();
+
+				for (int i = 0; i < mapLength; i++) {
+					int domainLength = m_byteBuffer.getInt();
+					byte[] domainArray = new byte[domainLength];
+
+					m_byteBuffer.get(domainArray);
+					int value = m_byteBuffer.getInt();
+
+					m_maps.put(new String(domainArray), new AtomicInteger(value + 1000));
+				}
 			} else {
 				m_index = new AtomicInteger(0);
-				m_mapIndex = new AtomicInteger(0);
 			}
+
 		}
 
 		saveMark();
@@ -176,7 +194,16 @@ public class MessageIdFactory {
 			m_byteBuffer.rewind();
 			m_byteBuffer.putLong(m_timestamp);
 			m_byteBuffer.putInt(m_index.get());
-			m_byteBuffer.putInt(m_mapIndex.get());
+			m_byteBuffer.putInt(m_maps.size());
+
+			for (Entry<String, AtomicInteger> entry : m_maps.entrySet()) {
+				byte[] bytes = entry.getKey().toString().getBytes();
+
+				m_byteBuffer.putInt(bytes.length);
+				m_byteBuffer.put(bytes);
+				m_byteBuffer.putInt(entry.getValue().get());
+			}
+
 			m_byteBuffer.force();
 		} catch (Exception e) {
 			// ignore it

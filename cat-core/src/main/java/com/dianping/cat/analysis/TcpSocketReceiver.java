@@ -21,6 +21,7 @@ import java.util.List;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.config.server.ServerConfigManager;
@@ -29,6 +30,7 @@ import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
+@Named(type = TcpSocketReceiver.class)
 public final class TcpSocketReceiver implements LogEnabled {
 
 	@Inject(type = MessageCodec.class, value = PlainTextMessageCodec.ID)
@@ -112,7 +114,7 @@ public final class TcpSocketReceiver implements LogEnabled {
 		bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
 		bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
 		bootstrap.childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
-		
+
 		try {
 			m_future = bootstrap.bind(port).sync();
 			m_logger.info("start netty server!");
@@ -137,12 +139,13 @@ public final class TcpSocketReceiver implements LogEnabled {
 			try {
 				if (length > 0) {
 					ByteBuf readBytes = buffer.readBytes(length + 4);
-					
+
 					readBytes.markReaderIndex();
 					readBytes.readInt();
 
 					DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(readBytes);
 
+					// readBytes.retain();
 					readBytes.resetReaderIndex();
 					tree.setBuffer(readBytes);
 					m_handler.handle(tree);

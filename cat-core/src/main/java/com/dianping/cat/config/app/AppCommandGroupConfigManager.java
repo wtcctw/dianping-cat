@@ -12,6 +12,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.command.entity.Command;
@@ -22,9 +23,10 @@ import com.dianping.cat.configuration.group.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.task.ConfigSyncTask;
-import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
+@Named
 public class AppCommandGroupConfigManager implements Initializable {
 
 	@Inject
@@ -114,7 +116,7 @@ public class AppCommandGroupConfigManager implements Initializable {
 			Cat.logError(e);
 		}
 
-		ConfigSyncTask.getInstance().register(new SyncHandler() {
+		TimerSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
 			public String getName() {

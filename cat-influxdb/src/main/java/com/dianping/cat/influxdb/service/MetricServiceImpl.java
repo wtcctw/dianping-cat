@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
@@ -33,6 +34,7 @@ import com.dianping.cat.metric.MetricEntity;
 import com.dianping.cat.metric.MetricService;
 import com.dianping.cat.metric.QueryParameter;
 
+@Named(type = MetricService.class, value = InfluxDB.ID)
 public class MetricServiceImpl implements MetricService, LogEnabled {
 
 	@Inject(InfluxDB.ID)

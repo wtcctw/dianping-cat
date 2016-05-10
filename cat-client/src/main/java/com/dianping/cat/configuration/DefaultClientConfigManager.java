@@ -13,6 +13,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.helper.Files;
 import org.unidal.helper.Urls;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
@@ -22,6 +23,7 @@ import com.dianping.cat.configuration.client.transform.DefaultSaxParser;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.helper.JsonBuilder;
 
+@Named(type = ClientConfigManager.class)
 public class DefaultClientConfigManager implements LogEnabled, ClientConfigManager, Initializable {
 
 	private static final String PROPERTIES_FILE = "/META-INF/app.properties";
@@ -242,7 +244,7 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 
 	public void refreshConfig() {
 		String url = getServerConfigUrl();
-		
+
 		try {
 			InputStream inputstream = Urls.forIO().readTimeout(2000).connectTimeout(1000).openStream(url);
 			String content = Files.forIO().readFrom(inputstream, "utf-8");

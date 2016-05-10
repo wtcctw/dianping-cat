@@ -7,6 +7,7 @@ import java.util.Map;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
@@ -20,6 +21,7 @@ import com.dianping.cat.home.router.transform.DefaultNativeParser;
 import com.dianping.cat.report.service.AbstractReportService;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
 
+@Named
 public class RouterConfigService extends AbstractReportService<RouterConfig> {
 
 	@Inject

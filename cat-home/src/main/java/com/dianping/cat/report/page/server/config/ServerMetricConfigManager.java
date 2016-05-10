@@ -8,6 +8,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
@@ -17,9 +18,10 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.server.entity.ServerMetricConfig;
 import com.dianping.cat.home.server.transform.DefaultSaxParser;
-import com.dianping.cat.task.ConfigSyncTask;
-import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
+@Named
 public class ServerMetricConfigManager implements Initializable {
 
 	@Inject
@@ -73,7 +75,7 @@ public class ServerMetricConfigManager implements Initializable {
 			m_config = new ServerMetricConfig();
 		}
 
-		ConfigSyncTask.getInstance().register(new SyncHandler() {
+		TimerSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
 			public void handle() throws Exception {

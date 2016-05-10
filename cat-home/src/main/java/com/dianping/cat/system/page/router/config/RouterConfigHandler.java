@@ -10,8 +10,8 @@ import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -33,6 +33,7 @@ import com.dianping.cat.report.page.state.service.StateReportService;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
 import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
 
+@Named
 public class RouterConfigHandler implements LogEnabled {
 
 	@Inject
@@ -261,7 +262,7 @@ public class RouterConfigHandler implements LogEnabled {
 
 			m_reportService.insertDailyReport(dailyReport, binaryContent);
 			return true;
-		} catch (DalException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 			return false;
 		}

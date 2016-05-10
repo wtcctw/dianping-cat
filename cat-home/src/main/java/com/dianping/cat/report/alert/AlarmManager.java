@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.unidal.helper.Threads;
 import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.alarm.server.ServerAlarm;
 import com.dianping.cat.report.alert.app.AppAlert;
@@ -24,6 +25,7 @@ import com.dianping.cat.report.alert.thirdParty.ThirdPartyAlert;
 import com.dianping.cat.report.alert.thirdParty.ThirdPartyAlertBuilder;
 import com.dianping.cat.report.alert.transaction.TransactionAlert;
 
+@Named
 public class AlarmManager extends ContainerHolder {
 
 	public void startAlarm() {

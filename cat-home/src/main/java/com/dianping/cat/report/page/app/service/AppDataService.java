@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppCommandData;
@@ -21,6 +22,7 @@ import com.dianping.cat.report.page.DataSequence;
 import com.dianping.cat.report.page.app.QueryType;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
 
+@Named
 public class AppDataService {
 
 	@Inject

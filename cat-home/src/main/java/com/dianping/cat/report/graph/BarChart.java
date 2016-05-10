@@ -16,8 +16,6 @@ public class BarChart {
 
 	private List<Double> m_values;
 	
-	private JsonBuilder m_jsonBuilder = new JsonBuilder();
-	
 	public String getTitle() {
 		return m_title;
 	}
@@ -58,11 +56,11 @@ public class BarChart {
 	}
 	
 	public String getxAxisJson() {
-		return m_jsonBuilder.toJson(m_xAxis);
+		return new JsonBuilder().toJson(m_xAxis);
 	}
 	
 	public String getValuesJson() {
-		return m_jsonBuilder.toJson(m_values);
+		return new JsonBuilder().toJson(m_values);
 	}
 
 	public List<Double> getValues() {

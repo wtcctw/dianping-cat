@@ -9,9 +9,11 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.metric.CachedMetricReportService;
@@ -23,12 +25,13 @@ import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.IpService;
 
+@Named(type = CachedMetricReportService.class)
 public class CachedMetricReportServiceImpl implements CachedMetricReportService {
 
 	@Inject
 	private MetricReportService m_reportService;
 
-	@Inject
+	@Inject(type = ModelService.class, value = MetricAnalyzer.ID)
 	private ModelService<MetricReport> m_service;
 
 	@Inject

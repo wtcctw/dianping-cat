@@ -14,6 +14,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 import org.xml.sax.SAXException;
 
@@ -26,9 +27,10 @@ import com.dianping.cat.configuration.web.url.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.task.ConfigSyncTask;
-import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
+@Named(type = UrlPatternConfigManager.class)
 public class UrlPatternConfigManager implements Initializable {
 
 	@Inject
@@ -161,7 +163,7 @@ public class UrlPatternConfigManager implements Initializable {
 		m_handler.register(queryUrlPatternRules());
 		refreshData();
 
-		ConfigSyncTask.getInstance().register(new SyncHandler() {
+		TimerSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
 			public void handle() throws Exception {

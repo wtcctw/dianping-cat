@@ -18,6 +18,11 @@ public class NullMessageProducer implements MessageProducer {
 	private AtomicInteger seq = new AtomicInteger(0);
 
 	@Override
+	public String createRpcServerId(String domain) {
+		return createMessageId();
+	}
+
+	@Override
 	public String createMessageId() {
 		return NullMessageTree.UNKNOWN + "-00000000-000000-" + seq.getAndIncrement();
 	}
@@ -28,12 +33,12 @@ public class NullMessageProducer implements MessageProducer {
 	}
 
 	@Override
-	public void logError(Throwable cause) {
+	public void logError(String message, Throwable cause) {
 
 	}
 
 	@Override
-	public void logError(String message, Throwable cause) {
+	public void logError(Throwable cause) {
 
 	}
 
@@ -43,17 +48,8 @@ public class NullMessageProducer implements MessageProducer {
 	}
 
 	@Override
-	public void logTrace(String type, String name) {
-
-	}
-
-	@Override
 	public void logEvent(String type, String name, String status, String nameValuePairs) {
 
-	}
-
-	@Override
-	public void logTrace(String type, String name, String status, String nameValuePairs) {
 	}
 
 	@Override
@@ -65,13 +61,22 @@ public class NullMessageProducer implements MessageProducer {
 	}
 
 	@Override
+	public void logTrace(String type, String name) {
+
+	}
+
+	@Override
+	public void logTrace(String type, String name, String status, String nameValuePairs) {
+	}
+
+	@Override
 	public Event newEvent(String type, String name) {
 		return NullMessage.EVENT;
 	}
 
 	@Override
-	public Trace newTrace(String type, String name) {
-		return NullMessage.TRACE;
+	public ForkedTransaction newForkedTransaction(String type, String name) {
+		return NullMessage.TRANSACTION;
 	}
 
 	@Override
@@ -85,17 +90,17 @@ public class NullMessageProducer implements MessageProducer {
 	}
 
 	@Override
-	public Transaction newTransaction(String type, String name) {
-		return NullMessage.TRANSACTION;
-	}
-
-	@Override
-	public ForkedTransaction newForkedTransaction(String type, String name) {
-		return NullMessage.TRANSACTION;
-	}
-
-	@Override
 	public TaggedTransaction newTaggedTransaction(String type, String name, String tag) {
+		return NullMessage.TRANSACTION;
+	}
+
+	@Override
+	public Trace newTrace(String type, String name) {
+		return NullMessage.TRACE;
+	}
+
+	@Override
+	public Transaction newTransaction(String type, String name) {
 		return NullMessage.TRANSACTION;
 	}
 

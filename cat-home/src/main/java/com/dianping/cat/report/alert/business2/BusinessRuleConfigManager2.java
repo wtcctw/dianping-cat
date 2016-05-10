@@ -11,6 +11,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.rule.entity.Condition;
@@ -25,9 +26,10 @@ import com.dianping.cat.core.config.BusinessConfig;
 import com.dianping.cat.core.config.BusinessConfigDao;
 import com.dianping.cat.core.config.BusinessConfigEntity;
 import com.dianping.cat.helper.MetricType;
-import com.dianping.cat.task.ConfigSyncTask;
-import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
+@Named
 public class BusinessRuleConfigManager2 implements Initializable {
 
 	@Inject
@@ -96,7 +98,7 @@ public class BusinessRuleConfigManager2 implements Initializable {
 	public void initialize() throws InitializationException {
 		loadData();
 
-		ConfigSyncTask.getInstance().register(new SyncHandler() {
+		TimerSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
 			public String getName() {

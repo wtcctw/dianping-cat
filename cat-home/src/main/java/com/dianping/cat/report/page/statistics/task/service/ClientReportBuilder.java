@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -20,6 +21,7 @@ import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.service.ProjectService;
 
+@Named(type = TaskBuilder.class, value = ClientReportBuilder.ID)
 public class ClientReportBuilder implements TaskBuilder {
 
 	public static final String ID = Constants.REPORT_CLIENT;
@@ -35,7 +37,7 @@ public class ClientReportBuilder implements TaskBuilder {
 
 	@Inject
 	private ProjectService m_projectService;
-	
+
 	@Inject
 	private TransactionMergeHelper m_mergeHelper;
 
@@ -65,7 +67,7 @@ public class ClientReportBuilder implements TaskBuilder {
 				if (m_configManger.validateDomain(domain)) {
 					TransactionReport r = m_transactionReportService.queryReport(domain, startTime, endTime);
 					r = m_mergeHelper.mergeAllMachines(r, Constants.ALL);
-					
+
 					if (r != null) {
 						statistics.visitTransactionReport(r);
 					}

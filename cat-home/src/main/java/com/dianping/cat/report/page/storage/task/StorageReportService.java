@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
@@ -32,6 +33,7 @@ import com.dianping.cat.core.dal.WeeklyReportEntity;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.AbstractReportService;
 
+@Named
 public class StorageReportService extends AbstractReportService<StorageReport> {
 
 	@Override

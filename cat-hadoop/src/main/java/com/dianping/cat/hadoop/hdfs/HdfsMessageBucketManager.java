@@ -50,6 +50,11 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 
 	public static final String HARFS_BUCKET = "HarfsMessageBucket";
 
+	@Override
+	public void archive(long startTime) {
+		throw new RuntimeException("not support in hdfs message bucket manager");
+	}
+
 	private void closeIdleBuckets() throws IOException {
 		long now = System.currentTimeMillis();
 		long hour = 3600 * 1000L;

@@ -50,7 +50,6 @@
       <dependency>
          <groupId>javax.servlet</groupId>
          <artifactId>jstl</artifactId>
-         <version>1.2</version>
       </dependency>
       <dependency>
          <groupId>org.mortbay.jetty</groupId>
@@ -159,15 +158,7 @@
                      <goal>dal-jdbc</goal>
                   </goals>
                   <configuration>
-                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,,
-                        ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
-                     ,,
-                        ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
-                     ,,
-                        ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
-                     ,,
-                        ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
-                     ,]]></manifest>
+                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,]]></manifest>
                   </configuration>
                </execution>
             </executions>

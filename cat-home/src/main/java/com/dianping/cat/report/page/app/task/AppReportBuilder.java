@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
@@ -38,6 +39,7 @@ import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 
+@Named(type = TaskBuilder.class, value = AppReportBuilder.ID)
 public class AppReportBuilder implements TaskBuilder {
 
 	@Inject
@@ -53,7 +55,7 @@ public class AppReportBuilder implements TaskBuilder {
 	private TransactionReportService m_transactionReportService;
 
 	@Inject
-	private CommandAutoCompleter m_autoCompleter;
+	private AppCommandAutoCompleter m_autoCompleter;
 
 	@Inject
 	private AppRuleConfigManager m_appRuleConfigManager;

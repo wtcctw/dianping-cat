@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -27,6 +28,7 @@ import com.dianping.cat.alarm.spi.AlertEntity;
 import com.dianping.cat.alarm.spi.AlertManager;
 import com.dianping.cat.alarm.spi.AlertType;
 
+@Named
 public class ExceptionAlert implements Task {
 
 	@Inject

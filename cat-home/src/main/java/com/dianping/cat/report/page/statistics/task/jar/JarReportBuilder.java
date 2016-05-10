@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
@@ -27,6 +28,7 @@ import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
 import com.dianping.cat.report.page.statistics.service.JarReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 
+@Named(type = TaskBuilder.class, value = JarReportBuilder.ID)
 public class JarReportBuilder implements TaskBuilder {
 
 	public static final String ID = Constants.REPORT_JAR;

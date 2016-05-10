@@ -3,6 +3,7 @@ package com.dianping.cat.system.page.router.task;
 import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.server.ServerConfigManager;
@@ -15,6 +16,7 @@ import com.dianping.cat.system.page.router.config.RouterConfigAdjustor;
 import com.dianping.cat.system.page.router.config.RouterConfigHandler;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
 
+@Named(type = TaskBuilder.class, value = RouterConfigBuilder.ID)
 public class RouterConfigBuilder implements TaskBuilder {
 
 	public static final String ID = Constants.REPORT_ROUTER;

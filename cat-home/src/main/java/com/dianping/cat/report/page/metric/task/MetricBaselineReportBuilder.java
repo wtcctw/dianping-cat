@@ -9,6 +9,7 @@ import java.util.Map;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
@@ -24,6 +25,7 @@ import com.dianping.cat.report.page.metric.service.BaselineService;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 
+@Named(type = TaskBuilder.class, value = MetricBaselineReportBuilder.ID)
 public class MetricBaselineReportBuilder implements TaskBuilder, LogEnabled {
 
 	public static final String ID = MetricAnalyzer.ID;

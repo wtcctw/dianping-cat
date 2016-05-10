@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.influxdb.InfluxDB;
@@ -14,9 +15,10 @@ import com.dianping.cat.influxdb.config.InfluxDBConfigManager;
 import com.dianping.cat.influxdb.config.entity.Influxdb;
 import com.dianping.cat.influxdb.config.entity.InfluxdbConfig;
 import com.dianping.cat.metric.DataSourceService;
-import com.dianping.cat.task.ConfigSyncTask;
-import com.dianping.cat.task.ConfigSyncTask.SyncHandler;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
+@Named(type = DataSourceService.class, value = InfluxDB.ID)
 public class DataSourceServiceImpl implements DataSourceService<InfluxDBConnection> {
 
 	@Inject
@@ -66,7 +68,7 @@ public class DataSourceServiceImpl implements DataSourceService<InfluxDBConnecti
 		m_influxdbConfig = m_configManager.getConfig();
 		m_connections = buildConnections(m_influxdbConfig);
 
-		ConfigSyncTask.getInstance().register(new SyncHandler() {
+		TimerSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
 			public void handle() throws Exception {

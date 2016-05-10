@@ -25,7 +25,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	@EntityMeta
 	private HeartbeatReport m_report;
 
-	private HeartbeatSvgGraph m_result;
+	private transient HeartbeatSvgGraph m_result;
 
 	private List<String> m_extensionGroups = new ArrayList<String>();
 

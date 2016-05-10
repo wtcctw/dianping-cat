@@ -112,7 +112,7 @@ public class ChannelManager implements Task {
 
 		if (future != null) {
 			Channel channel = future.channel();
-			
+
 			if (channel.isActive() && channel.isOpen()) {
 				isActive = true;
 			} else {
@@ -148,10 +148,11 @@ public class ChannelManager implements Task {
 
 	private boolean checkWritable(ChannelFuture future) {
 		boolean isWriteable = false;
-		Channel channel = future.channel();
 
-		if (future != null && channel.isOpen()) {
-			if (channel.isActive() && channel.isWritable()) {
+		if (future != null) {
+			Channel channel = future.channel();
+
+			if (channel.isActive() && channel.isOpen() && channel.isWritable()) {
 				isWriteable = true;
 			} else {
 				int count = m_attempts.incrementAndGet();

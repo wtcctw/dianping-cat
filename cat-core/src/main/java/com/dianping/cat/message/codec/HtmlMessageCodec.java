@@ -16,6 +16,7 @@ import java.util.concurrent.BlockingQueue;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
@@ -30,15 +31,15 @@ import com.dianping.cat.message.spi.codec.BufferWriter;
 /**
  * Local use only, do not use it over network since it only supports one-way encoding
  */
+@Named(type = MessageCodec.class, value = HtmlMessageCodec.ID)
 public class HtmlMessageCodec implements MessageCodec, Initializable {
 	public static final String ID = "html";
 
 	private static final String VERSION = "HT2"; // HTML version 2 since Mar 20, 2013
 
-	@Inject
+	@Inject(HtmlEncodingBufferWriter.ID)
 	private BufferWriter m_writer;
 
-	@Inject
 	private String m_logViewPrefix = "/cat/r/m/";
 
 	private BufferHelper m_bufferHelper;
@@ -267,10 +268,9 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 		count += helper.td1(buf);
 		count += helper.nbsp(buf, level * 2); // 2 spaces per level
-		
-		count += helper.write(buf,
-		      String.format("<a href=\"%s%s\" onclick=\"return show(this,'%s');\">[:: %s ::]</a>", //
-		            m_logViewPrefix, link, link, name));
+
+		count += helper.write(buf, String.format("<a href=\"%s%s\" onclick=\"return show(this,'%s');\">[:: %s ::]</a>", //
+		      m_logViewPrefix, link, link, name));
 		count += helper.td2(buf);
 		count += helper.td(buf, "<div id=\"" + link + "\"></div>", "colspan=\"4\"");
 		count += helper.tr2(buf);
@@ -328,8 +328,8 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 	}
 
 	@Override
-   public void reset() {
-   }
+	public void reset() {
+	}
 
 	public void setBufferWriter(BufferWriter writer) {
 		m_writer = writer;
