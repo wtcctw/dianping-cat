@@ -58,6 +58,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private boolean m_active;
 
+	private AtomicInteger m_count = new AtomicInteger();
+
 	private AtomicInteger m_errors = new AtomicInteger();
 
 	private AtomicInteger m_sampleCount = new AtomicInteger();
@@ -217,10 +219,14 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			m_codec.encode(tree, buf);
 
 			int size = buf.readableBytes();
-
 			Channel channel = future.channel();
 
-			channel.writeAndFlush(buf);
+			if (m_count.incrementAndGet() % 10 == 0) {
+				channel.writeAndFlush(buf);
+			} else {
+				channel.write(buf);
+			}
+
 			if (m_statistics != null) {
 				m_statistics.onBytes(size);
 			}
