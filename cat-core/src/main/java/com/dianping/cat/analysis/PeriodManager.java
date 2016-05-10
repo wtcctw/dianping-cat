@@ -47,8 +47,8 @@ public class PeriodManager implements Task {
 			Period period = m_periods.get(i);
 
 			if (period.isIn(startTime)) {
-				period.finish();
 				m_periods.remove(i);
+				period.finish();
 				break;
 			}
 		}
