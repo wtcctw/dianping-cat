@@ -5349,6 +5349,9 @@
 				<requirement>
 					<role>com.dianping.cat.config.app.MobileConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.CrashLogConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5366,6 +5369,18 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.CrashLogConfigManager</role>
+			<implementation>com.dianping.cat.config.app.CrashLogConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -7223,18 +7238,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.command.CommandFormatHandler</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.app.CrashLogConfigManager</role>
-			<implementation>com.dianping.cat.config.app.CrashLogConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>

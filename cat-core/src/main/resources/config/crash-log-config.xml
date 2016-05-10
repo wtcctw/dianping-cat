@@ -54,4 +54,6 @@
       <Module id="QUEUE" name="主App-排队" project="Queue"/>
       <Module id="CAR" name="主App-汽车" project="Car"/>
    </Modules>
+   <Server id="mapper" url="http://10.6.1.107:8080/mobile-task-service/api/crash"/>
+   <Server id="symbolize" url="http://10.66.5.200:9292/symbol"/>
 </crash-log-config>

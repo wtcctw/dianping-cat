@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.app.service;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,7 +19,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.GZIPInputStream;
 
 import org.codehaus.plexus.util.StringUtils;
-import org.unidal.dal.jdbc.DalException;
+import org.unidal.helper.Files;
+import org.unidal.helper.Urls;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -31,8 +33,10 @@ import com.dianping.cat.app.CrashLogDao;
 import com.dianping.cat.app.CrashLogEntity;
 import com.dianping.cat.config.Level;
 import com.dianping.cat.config.app.AppCommandConfigManager;
+import com.dianping.cat.config.app.CrashLogConfigManager;
 import com.dianping.cat.config.app.MobileConfigManager;
 import com.dianping.cat.config.app.MobileConstants;
+import com.dianping.cat.helper.Status;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ErrorMsg;
 import com.dianping.cat.report.graph.LineChart;
@@ -42,6 +46,8 @@ import com.dianping.cat.report.page.app.display.CrashLogDetailInfo;
 import com.dianping.cat.report.page.app.display.CrashLogDisplayInfo;
 
 public class CrashLogService {
+
+	private static final String MAPPER = "mapper";
 
 	private final int LIMIT = 10000;
 
@@ -58,6 +64,9 @@ public class CrashLogService {
 
 	@Inject
 	private MobileConfigManager m_mobileConfigManager;
+
+	@Inject
+	private CrashLogConfigManager m_crashLogConfig;
 
 	private String APP_VERSIONS = "appVersions";
 
@@ -419,7 +428,13 @@ public class CrashLogService {
 
 		try {
 			CrashLog crashLog = m_crashLogDao.findByPK(id, CrashLogEntity.READSET_FULL);
-			CrashLogContent detail = m_crashLogContentDao.findByPK(id, CrashLogContentEntity.READSET_FULL);
+			int tag = crashLog.getTag();
+
+			if (tag == Status.NOT_MAPPED.getStatus() || tag == Status.FAILED.getStatus()) {
+				String url = m_crashLogConfig.findServerUrl(MAPPER) + "&id=" + id;
+				InputStream in = Urls.forIO().readTimeout(5000).connectTimeout(1000).openStream(url);
+				Files.forIO().readFrom(in, "utf-8");
+			}
 
 			info.setAppName(crashLog.getAppName());
 			info.setPlatform(m_mobileConfigManager.getPlatformStr(crashLog.getPlatform()).getValue());
@@ -431,8 +446,11 @@ public class CrashLogService {
 			info.setDeviceModel(crashLog.getDeviceModel());
 			info.setCrashTime(crashLog.getCrashTime());
 			info.setDpid(crashLog.getDpid());
+
+			CrashLogContent detail = m_crashLogContentDao.findByPK(id, CrashLogContentEntity.READSET_FULL);
+
 			info.setDetail(buildContent(detail.getContent()));
-		} catch (DalException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 		}
 
