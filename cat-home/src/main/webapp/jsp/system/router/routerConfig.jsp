@@ -21,13 +21,40 @@
 					</td></tr>
 					<tr>
 						<td  style="text-align:center"><input class='btn btn-primary' id="addOrUpdateEdgeSubmit"
-							type="submit" name="submit" value="提交" /></td>
+							type="submit" name="submit" value="提交" /> &nbsp; &nbsp;&nbsp;&nbsp;
+							<a href="/cat/s/router?op=build" class='btn btn-primary' id="routerRebuild" target="_blank">重算路由</a></td>
 					</tr>
 				</table>
 			</form>
 			<h4 class="text-center text-danger" id="state">&nbsp;</h4>
 </a:config>
 <script type="text/javascript">
+		$("#routerRebuild").on('click', function(e) {
+			e.preventDefault();
+			var anchor = this;
+			var dialog = $( "#dialog-message" ).removeClass('hide').dialog({
+				modal: true,
+				title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='ace-icon fa fa-check'></i>CAT提示</h4></div>",
+				title_html: true,
+				buttons: [ 
+					{
+						text: "Cancel",
+						"class" : "btn btn-xs",
+						click: function() {
+							$( this ).dialog( "close" ); 
+						} 
+					},
+					{
+						text: "OK",
+						"class" : "btn btn-primary btn-xs",
+						click: function() {
+							$( this ).dialog( "close" ); 
+							window.open(anchor.href);
+						} 
+					}
+				]
+			});
+		});
 		$(document).ready(function() {
 			$('#overall_config').addClass('active open');
 			$('#routerConfigUpdate').addClass('active');

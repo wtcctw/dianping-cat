@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
@@ -263,7 +262,7 @@ public class RouterConfigHandler implements LogEnabled {
 
 			m_reportService.insertDailyReport(dailyReport, binaryContent);
 			return true;
-		} catch (DalException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 			return false;
 		}
