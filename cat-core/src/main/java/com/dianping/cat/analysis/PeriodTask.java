@@ -1,6 +1,8 @@
 package com.dianping.cat.analysis;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -48,7 +50,10 @@ public class PeriodTask implements Task, LogEnabled {
 				m_queueOverflow++;
 
 				if (m_queueOverflow % (10 * CatConstants.ERROR_COUNT) == 0) {
-					m_logger.warn(m_analyzer.getClass().getSimpleName() + " queue overflow number " + m_queueOverflow);
+					String date = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(m_analyzer.getStartTime()));
+					
+					m_logger.warn(m_analyzer.getClass().getSimpleName() + " queue overflow number " + m_queueOverflow
+					      + " analyzer time:" + date);
 				}
 			}
 			return result;
