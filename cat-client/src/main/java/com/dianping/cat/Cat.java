@@ -198,7 +198,7 @@ public class Cat {
 			Files.forIO().writeTo(configFile, config.toString());
 
 			initialize(configFile);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			errorHandler(e);
 		}
 	}
@@ -230,8 +230,8 @@ public class Cat {
 
 			Files.forIO().writeTo(configFile, config.toString());
 			initialize(configFile);
-		} catch (Exception ex) {
-			errorHandler(ex);
+		} catch (Exception e) {
+			errorHandler(e);
 		}
 	}
 
