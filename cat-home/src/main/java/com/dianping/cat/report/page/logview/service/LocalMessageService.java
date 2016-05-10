@@ -61,7 +61,13 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		if (m_configManager.isUseNewStorage()) {
-			return buildNewReport(request, period, domain, payload);
+			String result = buildNewReport(request, period, domain, payload);
+
+			if (result == null) {
+				result = buildOldReport(request, period, domain, payload);
+			}
+			return result;
+
 		} else {
 			return buildOldReport(request, period, domain, payload);
 		}
