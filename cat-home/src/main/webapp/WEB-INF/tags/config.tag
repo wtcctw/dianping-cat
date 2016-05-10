@@ -157,7 +157,7 @@
 			<div class="main-content">
  				<div id="dialog-message" class="hide">
 					<p>
-						你确定要删除吗？(不可恢复)
+						你确定要重算路由吗？(不可恢复)
 					</p>
 				</div>
  				<div style="padding-top:2px;padding-right:8px;">

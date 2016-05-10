@@ -25,6 +25,7 @@ import com.dianping.cat.home.router.entity.Domain;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.entity.Server;
 import com.dianping.cat.report.task.TaskBuilder;
+import com.dianping.cat.system.page.router.config.RouterConfigHandler;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
 import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
@@ -45,6 +46,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject(RouterConfigBuilder.ID)
 	private TaskBuilder m_routerConfigBuilder;
+
+	@Inject
+	private RouterConfigHandler m_routerConfigHandler;
 
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
@@ -135,8 +139,9 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case BUILD:
 			Date period = TimeHelper.getCurrentDay(-1);
+			boolean ret = m_routerConfigHandler.updateRouterConfig(period);
 
-			m_routerConfigBuilder.buildDailyTask(RouterConfigBuilder.ID, Constants.CAT, period);
+			model.setContent(String.valueOf(ret));
 			break;
 		case MODEL:
 			if (report != null) {
