@@ -10,14 +10,13 @@ import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.alarm.spi.config.SenderConfigManager;
 import com.dianping.cat.config.sample.SampleConfigManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.group.entity.Domain;
-import com.dianping.cat.alarm.spi.config.SenderConfigManager;
 import com.dianping.cat.report.page.DomainGroupConfigManager;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
 import com.dianping.cat.service.ProjectService;
@@ -25,7 +24,6 @@ import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.ConfigHtmlParser;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
-import com.dianping.cat.system.page.router.config.RouterConfigHandler;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
 
 public class GlobalConfigProcessor {
@@ -53,9 +51,6 @@ public class GlobalConfigProcessor {
 
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
-
-	@Inject
-	private RouterConfigHandler m_routerConfigHandler;
 
 	@Inject
 	private SampleConfigManager m_sampleConfigManager;
@@ -128,12 +123,7 @@ public class GlobalConfigProcessor {
 			String routerConfig = payload.getContent();
 
 			if (!StringUtils.isEmpty(routerConfig)) {
-				boolean ret = m_routerConfigManager.insert(routerConfig);
-
-				if (ret) {
-					m_routerConfigHandler.updateRouterConfig(TimeHelper.getCurrentDay(-1));
-				}
-				model.setOpState(ret);
+				model.setOpState(m_routerConfigManager.insert(routerConfig));
 			}
 			model.setContent(m_configHtmlParser.parse(m_routerConfigManager.getRouterConfig().toString()));
 			break;

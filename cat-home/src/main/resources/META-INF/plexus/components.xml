@@ -5263,9 +5263,6 @@
 					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.router.config.RouterConfigHandler</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.config.sample.SampleConfigManager</role>
 				</requirement>
 				<requirement>
@@ -5531,6 +5528,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.task.TaskBuilder</role>
 					<role-hint>router</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.config.RouterConfigHandler</role>
 				</requirement>
 			</requirements>
 		</component>
