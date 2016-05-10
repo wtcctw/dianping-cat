@@ -105,12 +105,7 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 
 		all.addAll(new OfflineComponentConfigurator().defineComponents());
 
-		// database
-//		all.add(C(JdbcDataSourceDescriptorManager.class) //
-//		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
-//		
 		all.add(defineJdbcDataSourceConfigurationManagerComponent("/data/appdatas/cat/datasources.xml"));
-		
 		
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 

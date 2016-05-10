@@ -38,10 +38,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-//		// database
-//		all.add(C(JdbcDataSourceDescriptorManager.class) //
-//		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
-
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 
 		all.addAll(new AlarmComponentConfigurator().defineComponents());

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.unidal.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
 import org.unidal.dal.jdbc.mapping.TableProvider;
-import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatCoreModule;
@@ -50,7 +50,7 @@ import com.dianping.cat.service.IpService;
 import com.dianping.cat.statistic.ServerStatisticManager;
 import com.dianping.cat.task.TaskManager;
 
-public class ComponentsConfigurator extends AbstractResourceConfigurator {
+public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 	public static void main(String[] args) {
 		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
 	}
@@ -108,11 +108,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TableProvider.class, "app-speed-data", AppSpeedTableProvider.class));
 		all.add(C(TableProvider.class, "ajax-data", AjaxDataTableProvider.class));
 
-		// database
-//		all.add(C(JdbcDataSourceDescriptorManager.class) //
-//		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
+		all.add(defineJdbcDataSourceConfigurationManagerComponent("/data/appdatas/cat/datasources.xml"));
 
 		all.addAll(new CatCoreDatabaseConfigurator().defineComponents());
+		all.addAll(new CatDatabaseConfigurator().defineComponents());
 		all.addAll(new AppDatabaseConfigurator().defineComponents());
 		all.addAll(new WebDatabaseConfigurator().defineComponents());
 
