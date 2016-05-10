@@ -3,6 +3,7 @@
   <entity name="crash-log-config" root="true">
     <entity-ref name="App" type="list" names="Apps" />
     <entity-ref name="Modules" type="list" names="Moduleses" />
+    <entity-ref name="Server" type="list" names="Servers" />
   </entity>
   <entity name="App">
     <attribute name="id" value-type="String" />
@@ -17,6 +18,10 @@
     <attribute name="id" value-type="String" />
     <attribute name="name" value-type="String" />
     <attribute name="project" value-type="String" />
+  </entity>
+  <entity name="Server">
+    <attribute name="id" value-type="String" />
+    <attribute name="url" value-type="String" />
   </entity>
 </model>
 

@@ -4500,6 +4500,9 @@
 				<requirement>
 					<role>com.dianping.cat.config.app.MobileConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.CrashLogConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

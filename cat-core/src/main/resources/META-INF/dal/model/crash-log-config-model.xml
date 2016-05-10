@@ -4,6 +4,7 @@
   <entity name="crash-log-config" root="true">
     <entity-ref name="App" type="map" names="Apps" />
     <entity-ref name="Modules" type="map" names="modules" />
+    <entity-ref name="Server" type="map" names="Servers" />
   </entity>
   <entity name="App">
     <attribute name="id" value-type="String" key="true"/>
@@ -18,5 +19,9 @@
     <attribute name="id" value-type="String" key="true"/>
     <attribute name="name" value-type="String" />
     <attribute name="project" value-type="String" />
+  </entity>
+  <entity name="Server">
+    <attribute name="id" value-type="String" key="true"/>
+    <attribute name="url" value-type="String" />
   </entity>
 </model>

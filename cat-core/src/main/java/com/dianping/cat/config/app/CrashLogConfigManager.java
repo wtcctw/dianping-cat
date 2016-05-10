@@ -15,6 +15,7 @@ import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.configuration.app.crash.entity.App;
 import com.dianping.cat.configuration.app.crash.entity.CrashLogConfig;
 import com.dianping.cat.configuration.app.crash.entity.Modules;
+import com.dianping.cat.configuration.app.crash.entity.Server;
 import com.dianping.cat.configuration.app.crash.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
@@ -38,6 +39,16 @@ public class CrashLogConfigManager implements Initializable {
 	private long m_modifyTime;
 
 	private static final String CONFIG_NAME = "crash-log-config";
+
+	public String findServerUrl(String id) {
+		Server server = m_config.findServer(id);
+
+		if (server != null) {
+			return server.getUrl();
+		} else {
+			return null;
+		}
+	}
 
 	public App findApp(String id) {
 		return m_config.findApp(id);
