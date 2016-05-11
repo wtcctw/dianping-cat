@@ -76,12 +76,8 @@ public class Cat {
 	}
 
 	private static void errorHandler(Exception e) {
-		if (m_errorCount++ % 100 == 0 || m_errorCount <= 10) {
-			String log = Properties.forString().fromEnv().fromSystem().getProperty("CAT_INIT_LOG", "true");
-
-			if ("true".equals(log)) {
-				e.printStackTrace();
-			}
+		if (m_errorCount++ % 100 == 0 || m_errorCount <= 3) {
+			e.printStackTrace();
 		}
 	}
 
