@@ -57,7 +57,7 @@ public class AppCommandConfigManager implements Initializable {
 
 	private static final String CONFIG_NAME = "app-command-config";
 
-	public static final String DEFAULT_NAMESPACE = "default";
+	public static final String DEFAULT_NAMESPACE = "点评主APP";
 
 	public static final int ALL_COMMAND_ID = 0;
 

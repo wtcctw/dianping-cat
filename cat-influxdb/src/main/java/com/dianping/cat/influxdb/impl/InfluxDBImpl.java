@@ -148,7 +148,7 @@ public class InfluxDBImpl implements InfluxDB {
 			t.setStatus(Transaction.SUCCESS);
 			return response;
 		} catch (Exception e) {
-			Cat.logError(e);
+			Cat.logError("Query command: " + query.getCommand(), e);
 			t.setStatus(e);
 			return null;
 		} finally {
@@ -167,7 +167,7 @@ public class InfluxDBImpl implements InfluxDB {
 			t.setStatus(Transaction.SUCCESS);
 			return response;
 		} catch (Exception e) {
-			Cat.logError(e);
+			Cat.logError("Query command: " + query.getCommand(), e);
 			t.setStatus(e);
 			return null;
 		} finally {
@@ -214,7 +214,7 @@ public class InfluxDBImpl implements InfluxDB {
 			      .value(), lineProtocol);
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception e) {
-			Cat.logError(e);
+			Cat.logError(batchPoints.toString(), e);
 			t.setStatus(e);
 		} finally {
 			t.complete();
@@ -236,7 +236,7 @@ public class InfluxDBImpl implements InfluxDB {
 				this.write(batchPoints);
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
-				Cat.logError(e);
+				Cat.logError(batchPoints.toString(), e);
 				t.setStatus(e);
 			} finally {
 				t.complete();

@@ -492,7 +492,7 @@ public class AppDataService {
 		      .setRequestPackageAvg(requestPackageAvg).setResponsePackageAvg(responsePackageAvg)
 		      .setOperator(entity.getOperator()).setCity(entity.getCity()).setNetwork(entity.getNetwork())
 		      .setAppVersion(entity.getVersion()).setPlatform(entity.getPlatfrom())
-		      .setConnectType(entity.getConnectType());
+		      .setConnectType(entity.getConnectType()).setSource(entity.getSource());
 
 		setFieldValue(info, field, key);
 	}

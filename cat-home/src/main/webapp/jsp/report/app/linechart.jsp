@@ -16,7 +16,13 @@
 		var queryCodeByCommand = function queryCode(commandId){
 			var value = commandInfo[commandId];
 			var command = commandsMap[commandId];
-			var globalcodes = globalInfo[command.namespace].codes;
+			var globalValue = globalInfo[command.namespace];
+			
+			if(typeof globalValue == "undefined") {
+				globalValue = globalInfo['点评主APP'];
+			}
+			
+			var globalcodes = globalValue.codes;
 			var result = {};
 			
 			for(var tmp in globalcodes){
