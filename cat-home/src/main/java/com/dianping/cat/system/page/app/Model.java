@@ -42,6 +42,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private Map<Integer, Item> m_platforms;
 
+	private Map<Integer, Item> m_apps;
+	
 	private String m_id;
 
 	private String m_domain;
@@ -169,6 +171,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public String getNameUniqueResult() {
 		return m_nameUniqueResult;
+	}
+	
+	public Map<Integer, Item> getApps() {
+		return m_apps;
+	}
+
+	public void setApps(Map<Integer, Item> apps) {
+		m_apps = apps;
 	}
 
 	public Map<Integer, Item> getNetworks() {

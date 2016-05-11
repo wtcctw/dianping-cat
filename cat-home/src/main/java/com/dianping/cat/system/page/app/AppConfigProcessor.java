@@ -175,6 +175,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			break;
 		case APP_COMMAND_UPDATE:
 			id = payload.getId();
+			model.setApps(m_brokerConfigManager.queryConstantItem(MobileConstants.SOURCE));
 
 			if (m_appConfigManager.containCommand(id)) {
 				Command command = m_appConfigManager.getConfig().findCommand(id);
@@ -186,6 +187,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			}
 			break;
 		case APP_COMMAND_BATCH_ADD:
+			model.setApps(m_brokerConfigManager.queryConstantItem(MobileConstants.SOURCE));
 			break;
 		case APP_COMMAND_BATCH_SUBMIT:
 			id = payload.getId();
@@ -261,6 +263,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			}
 			break;
 		case APP_CODE_UPDATE:
+			model.setApps(m_brokerConfigManager.queryConstantItem(MobileConstants.SOURCE));
 			id = payload.getId();
 			int codeId = payload.getCode();
 
@@ -305,16 +308,17 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			break;
 		case APP_CODE_ADD:
 			id = payload.getId();
-
+			model.setApps(m_brokerConfigManager.queryConstantItem(MobileConstants.SOURCE));
 			model.setId(String.valueOf(id));
 			break;
 		case APP_CODE_DELETE:
 			try {
 				id = payload.getId();
 				codeId = payload.getCode();
+				namespace = payload.getNamespace();
 
 				if (payload.isConstant()) {
-					m_appConfigManager.getCodes().remove(codeId);
+					m_appConfigManager.deleteCode(namespace, codeId);
 				} else {
 					m_appConfigManager.deleteCode(id, codeId);
 				}
@@ -422,19 +426,15 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 		case APP_CONSTATN_DELETE:
 			// TODO
 			break;
+		case APP_SOURCES_SUBMIT:
+			model.setApps(m_brokerConfigManager.queryConstantItem(MobileConstants.SOURCE));
+			submitConstant(payload, model);
+			break;
 		case APP_CONSTATN_SUBMIT:
-			try {
-				id = payload.getId();
-				String content = payload.getContent();
-				String[] strs = content.split(":");
-				String type = strs[0];
-				int constantId = Integer.valueOf(strs[1]);
-				String value = strs[2];
-
-				model.setOpState(m_brokerConfigManager.addConstant(type, constantId, value));
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
+			submitConstant(payload, model);
+			break;
+		case APP_SOURCES:
+			model.setApps(m_brokerConfigManager.queryConstantItem(MobileConstants.SOURCE));
 			break;
 		case APP_COMMAND_FORMAT_CONFIG:
 			String content = payload.getContent();
@@ -470,6 +470,20 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			break;
 		}
 	}
+
+	private void submitConstant(Payload payload, Model model) {
+	   try {
+	   	String content = payload.getContent();
+	   	String[] strs = content.split(":");
+	   	String type = strs[0];
+	   	int constantId = Integer.valueOf(strs[1]);
+	   	String value = strs[2];
+
+	   	model.setOpState(m_brokerConfigManager.addConstant(type, constantId, value));
+	   } catch (Exception e) {
+	   	Cat.logError(e);
+	   }
+   }
 
 	public class EventReportVisitor extends BaseVisitor {
 		private Set<String> m_paths = new HashSet<String>();

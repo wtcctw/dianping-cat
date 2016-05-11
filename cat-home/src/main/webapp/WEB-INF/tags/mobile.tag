@@ -79,6 +79,9 @@
 							<li id="appCodes"><a href="/cat/s/app?op=appCodes">
 								<i class="menu-icon fa fa-caret-right"></i>App返回码</a>
 								<b class="arrow"></b></li>
+							<li id="appSources"><a href="/cat/s/app?op=appSources">
+								<i class="menu-icon fa fa-caret-right"></i>App来源</a>
+								<b class="arrow"></b></li>
 							<li id="appConstants"><a href="/cat/s/app?op=appConstants">
 								<i class="menu-icon fa fa-caret-right"></i>App常量</a>
 								<b class="arrow"></b></li>

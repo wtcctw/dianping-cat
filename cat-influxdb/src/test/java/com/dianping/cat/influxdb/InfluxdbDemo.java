@@ -5,6 +5,7 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.influxdb.dto.Query;
 import com.dianping.cat.influxdb.dto.QueryResult;
+import com.dianping.cat.influxdb.dto.QueryResult.Result;
 
 public class InfluxdbDemo extends ComponentTestCase {
 
@@ -30,5 +31,18 @@ public class InfluxdbDemo extends ComponentTestCase {
 		System.out.println(result);
 		System.out.println(result2);
 		// influxDB.deleteDatabase(dbName);
+	}
+
+	@Test
+	public void testQuery() {
+		InfluxDB influxDB = InfluxDBFactory.connect("http://10.3.40.12:8086", "root", "root");
+		String dbName = "cat";
+		Query query = new Query(
+		      "select sum(value) from /^network.*/ where endPoint =~ /^switch-*./ and port =~ /GigabitEthernet1\\/0\\/[02]*./ and TIME >= '2016-05-10T06:01:00Z' AND TIME < '2016-05-10T06:02:00Z' GROUP BY endPoint, port, time(1m) fill(0)",
+		      dbName);
+		QueryResult result = influxDB.query(query);
+		for (Result r : result.getResults()) {
+			System.out.println(r.getSeries());
+		}
 	}
 }
