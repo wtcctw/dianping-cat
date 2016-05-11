@@ -52,7 +52,6 @@ public class HdfsSystemManager implements Initializable {
 	}
 
 	// prepare file /etc/krb5.conf
-	// prepare file /data/appdatas/cat/cat.keytab
 	// prepare mapping [host] => [ip] at /etc/hosts
 	// put core-site.xml at / of classpath
 	// use "hdfs://dev80.hadoop:9000/user/cat" as example. Notes: host name can't
