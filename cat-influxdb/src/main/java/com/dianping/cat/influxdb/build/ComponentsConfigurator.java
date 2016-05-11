@@ -20,12 +20,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-//		// database
-//		all.add(C(JdbcDataSourceDescriptorManager.class) //
-//		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
-
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
-
 		all.add(A(InfluxDBConfigManager.class));
 		all.add(A(MetricServiceImpl.class));
 		all.add(A(DataSourceServiceImpl.class));
