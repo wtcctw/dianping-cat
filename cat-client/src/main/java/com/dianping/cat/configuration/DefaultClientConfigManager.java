@@ -124,9 +124,10 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 
 	@Override
 	public void initialize() throws InitializationException {
-		String xml = Cat.getCatHome() + "/client.xml";
+		String xml = Cat.getCatHome() + "client.xml";
 		File configFile = new File(xml);
 
+		m_logger.info("client xml path " + xml);
 		initialize(configFile);
 	}
 

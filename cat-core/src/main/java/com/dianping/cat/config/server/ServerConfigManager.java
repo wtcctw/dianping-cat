@@ -83,8 +83,6 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 
 	public final static String ROUTER_ADJUST_ENABLED = "router-adjust-enabled";
 
-	public static final String CONFIG_FILE = "/data/appdatas/cat/server.xml";
-
 	public static final String DEFAULT = "default";
 
 	@Override
@@ -381,7 +379,10 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 
 		if (m_config == null) {
 			try {
-				initialize(new File(CONFIG_FILE));
+				String localServerFile = Cat.getCatHome() + "server.xml";
+				
+				m_logger.info("init cat server with cat server xml " + localServerFile);
+				initialize(new File(localServerFile));
 			} catch (Exception e) {
 				m_logger.error(e.getMessage());
 				Cat.logError(e);

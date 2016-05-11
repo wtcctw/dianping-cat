@@ -82,10 +82,13 @@ public class Cat {
 	}
 
 	public static String getCatHome() {
-		String catHome = Properties.forString().fromEnv().fromSystem().getProperty("CAT_HOME", "/data/appdatas/cat");
+		String catHome = Properties.forString().fromEnv().fromSystem().getProperty("CAT_HOME", "/data/appdatas/cat/");
 
 		return catHome;
 	}
+	
+	
+	
 
 	public static String getCurrentMessageId() {
 		try {
