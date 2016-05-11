@@ -175,6 +175,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			break;
 		case APP_COMMAND_UPDATE:
 			id = payload.getId();
+			model.setApps(m_brokerConfigManager.queryConstantItem(MobileConstants.SOURCE));
 
 			if (m_appConfigManager.containCommand(id)) {
 				Command command = m_appConfigManager.getConfig().findCommand(id);
@@ -186,6 +187,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			}
 			break;
 		case APP_COMMAND_BATCH_ADD:
+			model.setApps(m_brokerConfigManager.queryConstantItem(MobileConstants.SOURCE));
 			break;
 		case APP_COMMAND_BATCH_SUBMIT:
 			id = payload.getId();
@@ -261,6 +263,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			}
 			break;
 		case APP_CODE_UPDATE:
+			model.setApps(m_brokerConfigManager.queryConstantItem(MobileConstants.SOURCE));
 			id = payload.getId();
 			int codeId = payload.getCode();
 
@@ -305,7 +308,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			break;
 		case APP_CODE_ADD:
 			id = payload.getId();
-
+			model.setApps(m_brokerConfigManager.queryConstantItem(MobileConstants.SOURCE));
 			model.setId(String.valueOf(id));
 			break;
 		case APP_CODE_DELETE:

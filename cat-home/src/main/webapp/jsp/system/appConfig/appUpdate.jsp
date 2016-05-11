@@ -14,6 +14,11 @@
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');
 			$('#appList').addClass('active');
+			var namespace = '${model.updateCommand.namespace}';
+			
+			if(namespace != '') {
+				$("#commandNamespace").val(namespace);
+			}
 		});
 		
 		$(document).delegate('#updateSubmit', 'click', function(e){
@@ -82,7 +87,13 @@
 		</td>
 		</tr>
 		<tr>
-			<td>App</td><td><input name="namespace" value="${model.updateCommand.namespace}" id="commandNamespace" /><span class="text-danger">&nbsp;&nbsp;命令字归属于哪个App</span><br/>
+			<td>App</td><td>
+			<select id="commandNamespace" style="width: 150px;">
+				<c:forEach var="item" items="${model.apps}" varStatus="status">
+					<option value='${item.value.value}'>${item.value.value}</option>
+				</c:forEach>
+			</select>
+			<span class="text-danger">&nbsp;&nbsp;命令字归属于哪个App</span><br/>
 			</td>
 		</tr>
 		<tr>
