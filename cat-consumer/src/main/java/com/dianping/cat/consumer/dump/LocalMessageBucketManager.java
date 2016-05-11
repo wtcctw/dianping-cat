@@ -30,7 +30,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.hadoop.hdfs.HdfsUploader;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
@@ -58,9 +57,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	@Inject
 	private PathBuilder m_pathBuilder;
-
-	@Inject
-	private HdfsUploader m_hdfsUploader;
 
 	private ConcurrentHashMap<String, LocalMessageBucket> m_buckets = new ConcurrentHashMap<String, LocalMessageBucket>();
 
@@ -142,7 +138,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			m_baseDir = new File(m_configManager.getHdfsLocalBaseDir(ServerConfigManager.DUMP_DIR));
 
 			Threads.forGroup("cat").start(new BlockDumper(m_buckets, m_messageBlocks, m_serverStateManager));
-			Threads.forGroup("cat").start(new LogviewUploader(this, m_hdfsUploader, m_configManager));
 			Threads.forGroup("cat").start(new CloseBucketChecker());
 
 			if (m_configManager.isLocalMode()) {
@@ -311,7 +306,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 			for (String path : paths) {
-				LocalMessageBucket bucket = m_buckets.get(path);
+				LocalMessageBucket bucket = m_buckets.remove(path);
 
 				if (bucket != null) {
 					try {

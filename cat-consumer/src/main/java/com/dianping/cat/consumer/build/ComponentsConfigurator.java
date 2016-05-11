@@ -51,7 +51,6 @@ import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionDelegate;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
-import com.dianping.cat.hadoop.hdfs.HdfsUploader;
 import com.dianping.cat.message.PathBuilder;
 import com.dianping.cat.message.storage.MessageBucketManager;
 import com.dianping.cat.report.DefaultReportManager;
@@ -129,8 +128,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(DumpAnalyzer.class));
 		
 		all.add(C(MessageBucketManager.class, LocalMessageBucketManager.ID, LocalMessageBucketManager.class) //
-		      .req(ServerConfigManager.class, PathBuilder.class, ServerStatisticManager.class)//
-		      .req(HdfsUploader.class));
+		      .req(ServerConfigManager.class, PathBuilder.class, ServerStatisticManager.class));
 
 		return all;
 	}

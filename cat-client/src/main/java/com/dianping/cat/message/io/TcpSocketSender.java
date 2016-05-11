@@ -6,7 +6,9 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 
 import java.net.InetSocketAddress;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -26,6 +28,8 @@ import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.status.StatusExtension;
+import com.dianping.cat.status.StatusExtensionRegister;
 
 @Named
 public class TcpSocketSender implements Task, MessageSender, LogEnabled {
@@ -53,6 +57,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	private Logger m_logger;
 
 	private boolean m_active;
+
+	private AtomicInteger m_count = new AtomicInteger();
 
 	private AtomicInteger m_errors = new AtomicInteger();
 
@@ -84,6 +90,28 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			public void run() {
 				m_logger.info("shut down cat client in runtime shut down hook!");
 				shutdown();
+			}
+		});
+
+		StatusExtensionRegister.getInstance().register(new StatusExtension() {
+
+			@Override
+			public Map<String, String> getProperties() {
+				Map<String, String> map = new HashMap<String, String>();
+
+				map.put("msg-queue", String.valueOf(m_queue.size()));
+				map.put("atomic-queue", String.valueOf(m_queue.size()));
+				return map;
+			}
+
+			@Override
+			public String getId() {
+				return "client-send-queue";
+			}
+
+			@Override
+			public String getDescription() {
+				return "client-send-queue";
 			}
 		});
 	}
@@ -191,10 +219,14 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			m_codec.encode(tree, buf);
 
 			int size = buf.readableBytes();
-
 			Channel channel = future.channel();
 
-			channel.writeAndFlush(buf);
+			if (m_count.incrementAndGet() % 10 == 0) {
+				channel.writeAndFlush(buf);
+			} else {
+				channel.write(buf);
+			}
+
 			if (m_statistics != null) {
 				m_statistics.onBytes(size);
 			}

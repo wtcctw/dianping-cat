@@ -1,7 +1,6 @@
 package com.dianping.cat;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Date;
 
@@ -78,7 +77,11 @@ public class Cat {
 
 	private static void errorHandler(Exception e) {
 		if (m_errorCount++ % 100 == 0 || m_errorCount <= 10) {
-			e.printStackTrace();
+			String log = Properties.forString().fromEnv().fromSystem().getProperty("CAT_INIT_LOG", "true");
+
+			if ("true".equals(log)) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -198,7 +201,7 @@ public class Cat {
 			Files.forIO().writeTo(configFile, config.toString());
 
 			initialize(configFile);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			errorHandler(e);
 		}
 	}
@@ -230,8 +233,8 @@ public class Cat {
 
 			Files.forIO().writeTo(configFile, config.toString());
 			initialize(configFile);
-		} catch (Exception ex) {
-			errorHandler(ex);
+		} catch (Exception e) {
+			errorHandler(e);
 		}
 	}
 

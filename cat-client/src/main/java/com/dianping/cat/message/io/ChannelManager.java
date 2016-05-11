@@ -152,13 +152,17 @@ public class ChannelManager implements Task {
 		if (future != null) {
 			Channel channel = future.channel();
 
-			if (channel.isActive() && channel.isOpen() && channel.isWritable()) {
-				isWriteable = true;
+			if (channel.isActive() && channel.isOpen()) {
+				if (channel.isWritable()) {
+					isWriteable = true;
+				} else {
+					channel.flush();
+				}
 			} else {
 				int count = m_attempts.incrementAndGet();
 
 				if (count % 1000 == 0 || count == 1) {
-					m_logger.warn("channel buf is is full when send msg! Attempts: " + count);
+					m_logger.warn("channel buf is is close when send msg! Attempts: " + count);
 				}
 			}
 		}

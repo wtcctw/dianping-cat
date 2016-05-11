@@ -12,18 +12,12 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.cat.message.storage.MessageDumper;
 import org.unidal.cat.message.storage.MessageDumperManager;
-import org.unidal.cat.message.storage.hdfs.LogviewProcessor;
-import org.unidal.helper.Threads;
 import org.unidal.lookup.ContainerHolder;
-import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 @Named(type = MessageDumperManager.class)
 public class DefaultMessageDumperManager extends ContainerHolder implements LogEnabled, MessageDumperManager,
       Initializable {
-
-	@Inject
-	private LogviewProcessor m_logviewProcessor;
 
 	private Map<Integer, MessageDumper> m_dumpers = new LinkedHashMap<Integer, MessageDumper>();
 
@@ -78,6 +72,5 @@ public class DefaultMessageDumperManager extends ContainerHolder implements LogE
 
 	@Override
 	public void initialize() throws InitializationException {
-		Threads.forGroup("cat").start(m_logviewProcessor);
 	}
 }

@@ -64,7 +64,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	private Logger m_logger;
 
 	public ExecutorService m_threadPool;
-	
+
 	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
 
 	public static final String DUMP_DIR = "dump";
@@ -83,6 +83,8 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 
 	public final static String ROUTER_ADJUST_ENABLED = "router-adjust-enabled";
 
+	public static final String CONFIG_FILE = "/data/appdatas/cat/server.xml";
+
 	public static final String DEFAULT = "default";
 
 	@Override
@@ -97,7 +99,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	public String getConsoleDefaultDomain() {
 		return Constants.CAT;
 	}
-	
+
 	public List<Pair<String, Integer>> getConsoleEndpoints() {
 		String remoteServers = getProperty(REMOTE_SERVERS, "");
 		List<String> endpoints = Splitters.by(',').noEmptyItem().trim().split(remoteServers);
@@ -114,7 +116,6 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		return pairs;
 	}
 
-
 	public String getConsoleRemoteServers() {
 		String remoteServers = getProperty(REMOTE_SERVERS, "");
 
@@ -124,7 +125,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 			return "";
 		}
 	}
-	
+
 	public boolean getEnableOfRealtimeAnalyzer(String name) {
 		return Boolean.parseBoolean(getProperty(name + "-analyzer-enable", "true"));
 	}
@@ -143,7 +144,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		}
 		return null;
 	}
-	
+
 	public long getHarfsFileMaxSize(String id) {
 		if (m_server != null) {
 			HarfsConfig hdfsConfig = m_server.getStorage().findHarfs(id);
@@ -184,7 +185,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		}
 		return null;
 	}
-	
+
 	public String getHdfsLocalBaseDir(String id) {
 		if (m_server != null) {
 			StorageConfig storage = m_server.getStorage();
@@ -370,11 +371,23 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 				m_configId = config.getId();
 				m_config = DefaultSaxParser.parse(content);
 			} catch (Exception ex) {
+				m_logger.error(e.getMessage());
 				Cat.logError(ex);
 			}
 		} catch (Exception e) {
+			m_logger.error(e.getMessage());
 			Cat.logError(e);
 		}
+
+		if (m_config == null) {
+			try {
+				initialize(new File(CONFIG_FILE));
+			} catch (Exception e) {
+				m_logger.error(e.getMessage());
+				Cat.logError(e);
+			}
+		}
+
 		if (m_config == null) {
 			m_config = new ServerConfig();
 		}
@@ -384,8 +397,11 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		try {
 			refreshServer();
 		} catch (Exception e) {
+			m_logger.error(e.getMessage());
 			Cat.logError(e);
 		}
+
+		prepare();
 
 		TimerSyncTask.getInstance().register(new SyncHandler() {
 
@@ -399,8 +415,6 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 				refreshConfig();
 			}
 		});
-
-		prepare();
 	}
 
 	public void initialize(File configFile) throws Exception {
@@ -408,37 +422,13 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 			m_logger.info(String.format("Loading configuration file(%s) ...", configFile.getCanonicalPath()));
 
 			String xml = Files.forIO().readFrom(configFile, "utf-8");
-			ServerConfig config = DefaultSaxParser.parse(xml);
-
-			// do validation
-			config.accept(new ServerConfigValidator());
-			m_config = config;
+			m_config = DefaultSaxParser.parse(xml);
 		} else {
 			if (configFile != null) {
 				m_logger.warn(String.format("Configuration file(%s) not found, IGNORED.", configFile.getCanonicalPath()));
 			}
 
-			ServerConfig config = new ServerConfig();
-
-			// do validation
-			config.accept(new ServerConfigValidator());
-			m_config = config;
-		}
-
-		refreshServer();
-
-		if (isLocalMode()) {
-			m_logger.warn("CAT server is running in LOCAL mode! No HDFS or MySQL will be accessed!");
-		}
-		m_logger.info("CAT server is running with hdfs," + isHdfsOn());
-		m_logger.info("CAT server is running with alert," + isAlertMachine());
-		m_logger.info("CAT server is running with job," + isJobMachine());
-		m_logger.info(m_config.toString());
-
-		if (isLocalMode()) {
-			m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 5);
-		} else {
-			m_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", getModelServiceThreads());
+			m_config = new ServerConfig();
 		}
 	}
 
@@ -452,9 +442,9 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 			return false;
 		}
 	}
-	
-	public boolean isUseNewStorage(){
-		return Boolean.parseBoolean(getProperty("use-new-storage", "false"));	
+
+	public boolean isUseNewStorage() {
+		return Boolean.parseBoolean(getProperty("use-new-storage", "false"));
 	}
 
 	public boolean isAlertMachine() {
