@@ -92,7 +92,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 		for (String key : keys) {
 			try {
-				LocalMessageBucket bucket = m_buckets.remove(key);
+				LocalMessageBucket bucket = m_buckets.get(key);
 				MessageBlock block = bucket.flushBlock();
 
 				if (block != null) {
@@ -306,7 +306,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 			for (String path : paths) {
-				LocalMessageBucket bucket = m_buckets.get(path);
+				LocalMessageBucket bucket = m_buckets.remove(path);
 
 				if (bucket != null) {
 					try {
