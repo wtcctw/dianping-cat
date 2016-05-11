@@ -53,6 +53,10 @@ public enum Action implements org.unidal.web.mvc.Action {
 	APP_SPEED_DELETE("appSpeedDelete"),
 
 	APP_CONSTANTS("appConstants"),
+	
+	APP_SOURCES("appSources"),
+	
+	APP_SOURCES_SUBMIT("appSourcesSubmit"),
 
 	APP_CONSTANT_ADD("appConstantAdd"),
 

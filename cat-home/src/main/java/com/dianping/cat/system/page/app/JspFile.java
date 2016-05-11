@@ -32,6 +32,8 @@ public enum JspFile {
 	APP_RULE_BATCH("/jsp/system/appConfig/appConfigBatch.jsp"),
 
 	APP_CONSTANTS("/jsp/system/appConfig/constants.jsp"),
+	
+	APP_SOURCES("/jsp/system/appConfig/appSources.jsp"),
 
 	APP_CONSTANT_UPDATE("/jsp/system/appConfig/constantUpdate.jsp"),
 
