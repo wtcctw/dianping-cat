@@ -54,6 +54,9 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		case APP_CONSTATN_DELETE:
 		case APP_CONSTATN_SUBMIT:
 			return JspFile.APP_CONSTANTS.getPath();
+		case APP_SOURCES:
+		case APP_SOURCES_SUBMIT:
+			return JspFile.APP_SOURCES.getPath();
 		case APP_CONSTANT_ADD:
 		case APP_CONSTANT_UPDATE:
 			return JspFile.APP_CONSTANT_UPDATE.getPath();
