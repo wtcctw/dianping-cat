@@ -1,6 +1,5 @@
 package com.dianping.cat.message.internal;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -204,8 +203,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		// initialize domain and IP address
 		try {
 			m_factory.initialize(m_domain.getId());
-		} catch (IOException e) {
-			throw new InitializationException("Error while initializing MessageIdFactory!", e);
+		} catch (Exception e) {
+			m_logger.error("error when create mark file", e);
 		}
 
 		// initialize the tagged transaction cache
