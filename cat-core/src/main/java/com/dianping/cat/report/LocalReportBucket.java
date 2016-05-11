@@ -131,7 +131,7 @@ public class LocalReportBucket implements ReportBucket, LogEnabled {
 
 	@Override
 	public void initialize(String name, Date timestamp, int index) throws IOException {
-		m_baseDir = Cat.getCatHome() + "report";
+		m_baseDir = Cat.getCatHome() + "bucket/report";
 		m_writeLock = new ReentrantLock();
 		m_readLock = new ReentrantLock();
 
