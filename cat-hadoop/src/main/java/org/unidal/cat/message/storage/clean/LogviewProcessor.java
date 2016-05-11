@@ -1,4 +1,4 @@
-package org.unidal.cat.message.storage.hdfs;
+package org.unidal.cat.message.storage.clean;
 
 import java.io.File;
 import java.text.SimpleDateFormat;

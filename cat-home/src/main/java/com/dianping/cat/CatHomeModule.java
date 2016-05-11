@@ -10,6 +10,7 @@ import com.dianping.cat.analysis.MessageConsumer;
 import com.dianping.cat.analysis.TcpSocketReceiver;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.CatConsumerModule;
+import com.dianping.cat.hadoop.CatHadoopModule;
 import com.dianping.cat.report.alert.AlarmManager;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 
@@ -47,7 +48,7 @@ public class CatHomeModule extends AbstractModule {
 
 	@Override
 	public Module[] getDependencies(ModuleContext ctx) {
-		return ctx.getModules(CatConsumerModule.ID);
+		return ctx.getModules(CatConsumerModule.ID, CatHadoopModule.ID);
 	}
 
 	@Override
