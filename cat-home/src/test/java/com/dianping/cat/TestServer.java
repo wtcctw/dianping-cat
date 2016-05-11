@@ -22,7 +22,6 @@ public class TestServer extends JettyServer {
 	@Before
 	public void before() throws Exception {
 		System.setProperty("devMode", "true");
-		super.startServer();
 	}
 
 	@Override
@@ -42,7 +41,15 @@ public class TestServer extends JettyServer {
 
 	@Test
 	public void startWebApp() throws Exception {
-		// open the page in the default browser
+		super.startServer();
+		display("/cat/r");
+		waitForAnyKey();
+	}
+	
+
+	@Test
+	public void startWebAppWithCatHome() throws Exception {
+		super.startServer();
 		display("/cat/r");
 		waitForAnyKey();
 	}
