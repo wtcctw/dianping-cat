@@ -22,6 +22,7 @@ import org.unidal.helper.Splitters.StringSplitter;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.PathBuilder;
 
@@ -130,7 +131,7 @@ public class LocalReportBucket implements ReportBucket, LogEnabled {
 
 	@Override
 	public void initialize(String name, Date timestamp, int index) throws IOException {
-		m_baseDir = m_configManager.getHdfsLocalBaseDir("report");
+		m_baseDir = Cat.getCatHome() + "report";
 		m_writeLock = new ReentrantLock();
 		m_readLock = new ReentrantLock();
 

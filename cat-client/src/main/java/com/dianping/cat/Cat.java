@@ -86,9 +86,6 @@ public class Cat {
 
 		return catHome;
 	}
-	
-	
-	
 
 	public static String getCurrentMessageId() {
 		try {

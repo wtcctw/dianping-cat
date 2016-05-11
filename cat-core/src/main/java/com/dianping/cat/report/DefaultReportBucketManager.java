@@ -95,7 +95,7 @@ public class DefaultReportBucketManager extends ContainerHolder implements Repor
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_reportBaseDir = m_configManager.getHdfsLocalBaseDir("report");
+		m_reportBaseDir = Cat.getCatHome() + "report";
 	}
 
 	private Set<String> queryValidPath(int day) {
