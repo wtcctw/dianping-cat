@@ -13,12 +13,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.unidal.helper.Splitters;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 
 public class MessageIdFactory {
 	private volatile long m_timestamp = getTimestamp();
 
-	private volatile AtomicInteger m_index;
+	private volatile AtomicInteger m_index = new AtomicInteger(0);
 
 	private String m_domain;
 
@@ -42,7 +43,7 @@ public class MessageIdFactory {
 	}
 
 	private File createMarkFile(String domain) {
-		File mark = new File("/data/appdatas/cat/", "cat-" + domain + ".mark");
+		File mark = new File(Cat.getCatHome(), "cat-" + domain + ".mark");
 
 		if (!mark.exists()) {
 			boolean success = true;
@@ -171,7 +172,6 @@ public class MessageIdFactory {
 			} else {
 				m_index = new AtomicInteger(0);
 			}
-
 		}
 
 		saveMark();
