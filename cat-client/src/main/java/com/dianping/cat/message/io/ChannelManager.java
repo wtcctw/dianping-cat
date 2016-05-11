@@ -91,7 +91,7 @@ public class ChannelManager implements Task {
 			} else {
 				m_activeChannelHolder = new ChannelHolder();
 				m_activeChannelHolder.setServerAddresses(serverAddresses);
-				m_logger.error("error when init cat module due to error config xml in /data/appdatas/cat/client.xml");
+				m_logger.error("error when init cat module due to error config xml in client.xml");
 			}
 		}
 	}
