@@ -28,8 +28,6 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 
 	private static final String PROPERTIES_FILE = "/META-INF/app.properties";
 
-	private static final String XML = "/data/appdatas/cat/client.xml";
-
 	private ClientConfig m_config;
 
 	private volatile double m_sample = 1d;
@@ -126,7 +124,8 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 
 	@Override
 	public void initialize() throws InitializationException {
-		File configFile = new File(XML);
+		String xml = Cat.getCatHome() + "/client.xml";
+		File configFile = new File(xml);
 
 		initialize(configFile);
 	}
