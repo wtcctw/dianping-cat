@@ -131,7 +131,7 @@
 								<th width="20%" class="text-info">返回码</th>
 								<th width="50%" class="text-info">局部设置</th>
 								<th width="20%" class="text-info">局部状态</th>
-								<th width="10%" class="text-info">操作 <a href="?op=appCodeAdd&id=${model.id eq '0' ? '1' : model.id}&domain=${payload.domain}&type=code" class="btn btn-primary btn-xs" >
+								<th width="10%" class="text-info">操作 <a href="?op=appCodeAdd&id=${model.id eq '0' ? '1' : model.id}&domain=${payload.domain}&type=code&namespace=${item.key}" class="btn btn-primary btn-xs" >
 												<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 							</tr></thead>
 							
@@ -166,7 +166,7 @@
 								<th width="20%" class="text-info">返回码</th>
 								<th width="50%" class="text-info">全局设置</th>
 								<th width="20%" class="text-info">全局状态</th>
-								<th width="10%" class="text-info">操作 <a href="?op=appCodeAdd&id=${model.id eq '0' ? '1' : model.id}&domain=${payload.domain}&type=code&constant=true" class="btn btn-primary btn-xs" >
+								<th width="10%" class="text-info">操作 <a href="?op=appCodeAdd&id=${model.id eq '0' ? '1' : model.id}&domain=${payload.domain}&type=code&constant=true&namespace=${item.key}" class="btn btn-primary btn-xs" >
 												<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 							</tr></thead>
 								<c:forEach var="code" items="${item.value.codes}">

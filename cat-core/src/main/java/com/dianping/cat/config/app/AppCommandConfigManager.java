@@ -120,6 +120,15 @@ public class AppCommandConfigManager implements Initializable {
 		return storeConfig();
 	}
 
+	public boolean deleteCode(String namespace, int codeId) {
+		Codes codes = m_config.findCodes(namespace);
+
+		if (codes != null) {
+			codes.removeCode(codeId);
+		}
+		return storeConfig();
+	}
+
 	public boolean deleteCommand(int id) {
 		m_config.removeCommand(id);
 		return storeConfig();

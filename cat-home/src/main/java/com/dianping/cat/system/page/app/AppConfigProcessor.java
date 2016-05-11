@@ -315,9 +315,10 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			try {
 				id = payload.getId();
 				codeId = payload.getCode();
+				namespace = payload.getNamespace();
 
 				if (payload.isConstant()) {
-					m_appConfigManager.getCodes().remove(codeId);
+					m_appConfigManager.deleteCode(namespace, codeId);
 				} else {
 					m_appConfigManager.deleteCode(id, codeId);
 				}

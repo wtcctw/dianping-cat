@@ -76,14 +76,27 @@
 		</c:otherwise>
 		</c:choose>
 		<tr>
+		<c:choose>
+		<c:when test="${payload.action.name eq 'appCodeUpdate' }">
+			<td>返回码所属域</td><td>
+			<select id="codeNamespace" style="width: 150px;" disabled>
+				<c:forEach var="item" items="${model.apps}" varStatus="status" >
+					<option value='${item.value.value}'>${item.value.value}</option>
+				</c:forEach>
+			</select>
+			</td>
+		</c:when>
+		<c:otherwise>
 			<td>返回码所属域</td><td>
 			<select id="codeNamespace" style="width: 150px;">
 				<c:forEach var="item" items="${model.apps}" varStatus="status">
 					<option value='${item.value.value}'>${item.value.value}</option>
 				</c:forEach>
 			</select>
-			</td>
-			</tr>
+			</td>		
+		</c:otherwise>
+		</c:choose>
+		</tr>
 		<tr>
 			<td>返回码说明</td><td><input name="codeName" value="${model.code.name}" id="codeName" /><span class="text-danger">（* 支持数字、字符）</span><br/>
 		</td>
