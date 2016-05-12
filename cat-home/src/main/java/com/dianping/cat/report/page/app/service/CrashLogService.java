@@ -44,6 +44,7 @@ import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.page.app.display.CrashLogDetailInfo;
 import com.dianping.cat.report.page.app.display.CrashLogDisplayInfo;
+import com.dianping.cat.system.page.config.ConfigHtmlParser;
 
 public class CrashLogService {
 
@@ -67,6 +68,9 @@ public class CrashLogService {
 
 	@Inject
 	private CrashLogConfigManager m_crashLogConfig;
+
+	@Inject
+	private ConfigHtmlParser m_configHtmlParser;
 
 	private String APP_VERSIONS = "appVersions";
 
@@ -103,7 +107,7 @@ public class CrashLogService {
 			} catch (IOException e) {
 				Cat.logError(e);
 			}
-			return new String(content).replace("\n", "<br/>");
+			return m_configHtmlParser.parse(new String(content)).replace("\n", "<br/>");
 		}
 
 		try {
@@ -117,10 +121,10 @@ public class CrashLogService {
 			byte[] result = baos.toByteArray();
 
 			baos.flush();
-			return new String(result).replace("\n", "<br/>");
+			return m_configHtmlParser.parse(new String(result)).replace("\n", "<br/>");
 		} catch (IOException e) {
 			Cat.logError(e);
-			return new String(content).replace("\n", "<br/>");
+			return m_configHtmlParser.parse(new String(content)).replace("\n", "<br/>");
 		} finally {
 			try {
 				gis.close();

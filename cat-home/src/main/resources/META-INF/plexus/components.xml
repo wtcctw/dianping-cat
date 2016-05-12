@@ -4503,6 +4503,9 @@
 				<requirement>
 					<role>com.dianping.cat.config.app.CrashLogConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4512,6 +4515,10 @@
 		<component>
 			<role>com.dianping.cat.app.CrashLogDao</role>
 			<implementation>com.dianping.cat.app.CrashLogDao</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
+			<implementation>com.dianping.cat.system.page.config.ConfigHtmlParser</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.app.service.DashBoardBuilder</role>
@@ -4955,10 +4962,6 @@
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
-			<implementation>com.dianping.cat.system.page.config.ConfigHtmlParser</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.server.service.MetricGraphBuilder</role>
