@@ -21,7 +21,7 @@ public class MessageIdFactory {
 
 	private volatile AtomicInteger m_index = new AtomicInteger(0);
 
-	private String m_domain;
+	private String m_domain = "UNKNOWN";
 
 	private String m_ipAddress;
 
