@@ -9,6 +9,7 @@
 <p>用途：提供外部监控的Http接口，用于监控用户端的错误信息。</p>
 <p>1、为了保留以后的扩展性，移动端和Web端的暂定用不同的API接口。</p>
 <p>2、公网IP，<span class="text-danger">114.80.165.63</span>，文档后面{ip}使用这个</p>
+<p>2、公网IP，<span class="text-danger">http://catdot.dianping.com/</span>，也可以使用此域名</p>
 <br/>
 
 <h4 class="text-danger">APP用户访问批量上报接口</h4>
