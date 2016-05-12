@@ -38,7 +38,7 @@
 						<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
-							<li id="metricConfigList"><a href="/cat/s/config?op=metricConfigList">
+							<li id="businessConfig"><a href="/cat/s/business?op=list">
 								<i class="menu-icon fa fa-caret-right"></i>业务监控配置</a>
 								<b class="arrow"></b></li>
 							<li id="metricRuleConfigUpdate" style="display:none"><a href="/cat/s/config?op=metricRuleConfigUpdate">
@@ -85,9 +85,6 @@
 								<b class="arrow"></b></li>
 							<li id="storageGroupConfigUpdate"><a href="/cat/s/config?op=storageGroupConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>存储分组配置</a>
-								<b class="arrow"></b></li>
-							<li id="businessConfig"><a href="/cat/s/business?op=list">
-								<i class="menu-icon fa fa-caret-right"></i>业务监控配置</a>
 								<b class="arrow"></b></li>
 							<li id="businessTag"><a href="/cat/s/business?op=tagConfig">
 								<i class="menu-icon fa fa-caret-right"></i>业务标签配置</a>
