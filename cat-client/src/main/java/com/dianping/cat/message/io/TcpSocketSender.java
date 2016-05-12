@@ -221,10 +221,10 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			int size = buf.readableBytes();
 			Channel channel = future.channel();
 
+			channel.write(buf);
+
 			if (m_count.incrementAndGet() % 10 == 0) {
-				channel.writeAndFlush(buf);
-			} else {
-				channel.write(buf);
+				channel.flush();
 			}
 
 			if (m_statistics != null) {
