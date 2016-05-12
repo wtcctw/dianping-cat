@@ -95,8 +95,8 @@
 												<th width="32%">标题</th>
 												<th width="10%">过滤阈值</th>
 												<th width="15%">
-													<a href="?op=appBatchAdd&type=api&id=-1" class="btn btn-primary btn-xs"><i class="ace-icon glyphicon glyphicon-plus bigger-120"></i>批量</a>
-												 	<a href="?op=appUpdate&type=api&id=-1" class="btn btn-primary btn-xs" >
+													<a href="?op=appBatchAdd&type=api&id=-1&namespace=${item.key}" class="btn btn-primary btn-xs"><i class="ace-icon glyphicon glyphicon-plus bigger-120"></i>批量</a>
+												 	<a href="?op=appUpdate&type=api&id=-1&namespace=${item.key}" class="btn btn-primary btn-xs" >
 												<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i>单个</a></th>
 											</tr>
 										</thead>
@@ -106,7 +106,7 @@
 											<td>${command.title}</td>
 											<td>${command.threshold}</td>
 											<c:if test="${command.id ne 0 }">
-												<td><a href="?op=appUpdate&id=${command.id}&type=api" class="btn btn-primary btn-xs">
+												<td><a href="?op=appUpdate&id=${command.id}&type=api&namespace=${item.key}" class="btn btn-primary btn-xs">
 													<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
 													<a href="?op=appPageDelete&id=${command.id}&type=api" class="btn btn-danger btn-xs delete" >
 													<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>

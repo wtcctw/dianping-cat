@@ -162,10 +162,26 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 
 		switch (action) {
 		case APP_NAME_CHECK:
-			if (m_appConfigManager.isNameDuplicate(payload.getName())) {
-				model.setNameUniqueResult("{\"isNameUnique\" : false}");
-			} else {
+			String name = payload.getName();
+			List<String> commands = Splitters.by(";").noEmptyItem().split(name);
+			List<String> names = new ArrayList<String>();
+
+			for (String cmd : commands) {
+				String cmdName = cmd;
+				int index = cmd.lastIndexOf("|");
+
+				if (index > 0) {
+					cmdName = cmd.substring(0, index);
+				}
+				names.add(cmdName);
+			}
+
+			List<String> duplicates = m_appConfigManager.queryDuplicateNames(names);
+
+			if (duplicates.isEmpty()) {
 				model.setNameUniqueResult("{\"isNameUnique\" : true}");
+			} else {
+				model.setNameUniqueResult("{\"isNameUnique\" : false, \"domain\" : \"" + duplicates + "\"}");
 			}
 			break;
 		case APP_LIST:
@@ -192,11 +208,10 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 		case APP_COMMAND_BATCH_SUBMIT:
 			id = payload.getId();
 			String domain = payload.getDomain();
-			String name = payload.getName();
-			String title = name;
 			String namespace = payload.getNamespace();
 			int timeThreshold = payload.getThreshold();
-			List<String> commands = Splitters.by(";").noEmptyItem().split(name);
+			commands = Splitters.by(";").noEmptyItem().split(payload.getName());
+			String title = "";
 
 			for (String cmd : commands) {
 				try {
@@ -205,6 +220,8 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 					if (index > 0) {
 						name = cmd.substring(0, index);
 						title = cmd.substring(index + 1);
+					} else {
+						name = title = cmd;
 					}
 					Command command = new Command().setDomain(domain).setTitle(title).setName(name).setNamespace(namespace)
 					      .setThreshold(timeThreshold);
@@ -472,18 +489,18 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 	}
 
 	private void submitConstant(Payload payload, Model model) {
-	   try {
-	   	String content = payload.getContent();
-	   	String[] strs = content.split(":");
-	   	String type = strs[0];
-	   	int constantId = Integer.valueOf(strs[1]);
-	   	String value = strs[2];
+		try {
+			String content = payload.getContent();
+			String[] strs = content.split(":");
+			String type = strs[0];
+			int constantId = Integer.valueOf(strs[1]);
+			String value = strs[2];
 
-	   	model.setOpState(m_brokerConfigManager.addConstant(type, constantId, value));
-	   } catch (Exception e) {
-	   	Cat.logError(e);
-	   }
-   }
+			model.setOpState(m_brokerConfigManager.addConstant(type, constantId, value));
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
 
 	public class EventReportVisitor extends BaseVisitor {
 		private Set<String> m_paths = new HashSet<String>();

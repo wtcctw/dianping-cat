@@ -262,12 +262,7 @@ public class AppCommandConfigManager implements Initializable {
 	}
 
 	public boolean isNameDuplicate(String name) {
-		for (Command command : m_config.getCommands().values()) {
-			if (command.getName().equals(name)) {
-				return true;
-			}
-		}
-		return false;
+		return m_commands.containsKey(name);
 	}
 
 	public boolean isSuccessCode(int commandId, int code) {
@@ -375,6 +370,17 @@ public class AppCommandConfigManager implements Initializable {
 			Map<String, List<Command>> cmds = buildSortedCommands(entry.getValue().getCommands());
 
 			results.put(entry.getKey(), new AppCommandDisplayInfo(cmds));
+		}
+		return results;
+	}
+
+	public List<String> queryDuplicateNames(List<String> names) {
+		List<String> results = new ArrayList<String>();
+
+		for (String name : names) {
+			if (m_commands.containsKey(name)) {
+				results.add(name);
+			}
 		}
 		return results;
 	}
