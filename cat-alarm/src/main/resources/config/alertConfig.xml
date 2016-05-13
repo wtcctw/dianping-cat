@@ -1,6 +1,8 @@
 <alert-config>
 	<receiver id="network" enable="true">
 		<email>test1@dianping.com</email>
+		<dx>test1@dianping.com</dx>
+		<dx>test1@dianping.com</dx>
 		<phone>12345678901</phone>
 	</receiver>
 	<receiver id="metric" enable="true">

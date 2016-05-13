@@ -30,6 +30,26 @@ public class ServerSystemContactor extends DefaultContactor implements Contactor
 	}
 
 	@Override
+	public List<String> queryDXContactors(String id) {
+		List<String> mailReceivers = new ArrayList<String>();
+		Receiver receiver = m_configManager.queryReceiverById(getId());
+
+		if (receiver != null && !receiver.isEnable()) {
+			return mailReceivers;
+		} else {
+			mailReceivers.addAll(buildDefaultDXReceivers(receiver));
+
+			String domain = TagSplitHelper.queryDomain(id);
+			Project project = m_projectService.findByDomain(domain);
+
+			if (project != null) {
+				mailReceivers.addAll(split(project.getEmail()));
+			}
+			return mailReceivers;
+		}
+	}
+
+	@Override
 	public List<String> queryEmailContactors(String id) {
 		List<String> mailReceivers = new ArrayList<String>();
 		Receiver receiver = m_configManager.queryReceiverById(getId());

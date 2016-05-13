@@ -24,6 +24,17 @@ public class ServerDatabaseContactor extends DefaultContactor implements Contact
 	}
 
 	@Override
+	public List<String> queryDXContactors(String id) {
+		Receiver receiver = m_configManager.queryReceiverById(getId());
+
+		if (receiver != null && receiver.isEnable()) {
+			return buildDefaultDXReceivers(receiver);
+		} else {
+			return Collections.emptyList();
+		}
+	}
+
+	@Override
 	public List<String> queryEmailContactors(String id) {
 		Receiver receiver = m_configManager.queryReceiverById(getId());
 
@@ -35,22 +46,22 @@ public class ServerDatabaseContactor extends DefaultContactor implements Contact
 	}
 
 	@Override
-	public List<String> queryWeiXinContactors(String id) {
+	public List<String> querySmsContactors(String id) {
 		Receiver receiver = m_configManager.queryReceiverById(getId());
 
 		if (receiver != null && receiver.isEnable()) {
-			return buildDefaultWeixinReceivers(receiver);
+			return buildDefaultSMSReceivers(receiver);
 		} else {
 			return Collections.emptyList();
 		}
 	}
 
 	@Override
-	public List<String> querySmsContactors(String id) {
+	public List<String> queryWeiXinContactors(String id) {
 		Receiver receiver = m_configManager.queryReceiverById(getId());
 
 		if (receiver != null && receiver.isEnable()) {
-			return buildDefaultSMSReceivers(receiver);
+			return buildDefaultWeixinReceivers(receiver);
 		} else {
 			return Collections.emptyList();
 		}

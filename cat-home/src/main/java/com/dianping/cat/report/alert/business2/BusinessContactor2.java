@@ -24,6 +24,19 @@ public class BusinessContactor2 extends DefaultContactor implements Contactor {
 	}
 
 	@Override
+   public List<String> queryDXContactors(String id) {
+		List<String> receivers = new ArrayList<String>();
+		Receiver receiver = m_configManager.queryReceiverById(getId());
+
+		if (receiver != null && !receiver.isEnable()) {
+			return receivers;
+		} else {
+			receivers.addAll(buildDefaultDXReceivers(receiver));
+			return receivers;
+		}
+   }
+
+	@Override
 	public List<String> queryEmailContactors(String id) {
 		List<String> mailReceivers = new ArrayList<String>();
 		Receiver receiver = m_configManager.queryReceiverById(getId());
@@ -33,6 +46,19 @@ public class BusinessContactor2 extends DefaultContactor implements Contactor {
 		} else {
 			mailReceivers.addAll(buildDefaultMailReceivers(receiver));
 			return mailReceivers;
+		}
+	}
+
+	@Override
+	public List<String> querySmsContactors(String id) {
+		List<String> smsReceivers = new ArrayList<String>();
+		Receiver receiver = m_configManager.queryReceiverById(getId());
+
+		if (receiver != null && !receiver.isEnable()) {
+			return smsReceivers;
+		} else {
+			smsReceivers.addAll(buildDefaultSMSReceivers(receiver));
+			return smsReceivers;
 		}
 	}
 
@@ -47,19 +73,6 @@ public class BusinessContactor2 extends DefaultContactor implements Contactor {
 			weixinReceivers.addAll(buildDefaultWeixinReceivers(receiver));
 
 			return weixinReceivers;
-		}
-	}
-
-	@Override
-	public List<String> querySmsContactors(String id) {
-		List<String> smsReceivers = new ArrayList<String>();
-		Receiver receiver = m_configManager.queryReceiverById(getId());
-
-		if (receiver != null && !receiver.isEnable()) {
-			return smsReceivers;
-		} else {
-			smsReceivers.addAll(buildDefaultSMSReceivers(receiver));
-			return smsReceivers;
 		}
 	}
 

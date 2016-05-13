@@ -18,11 +18,13 @@ import com.dianping.cat.alarm.spi.decorator.DecoratorManager;
 import com.dianping.cat.alarm.spi.receiver.ContactorManager;
 import com.dianping.cat.alarm.spi.rule.DataChecker;
 import com.dianping.cat.alarm.spi.rule.DefaultDataChecker;
+import com.dianping.cat.alarm.spi.sender.DXSender;
 import com.dianping.cat.alarm.spi.sender.MailSender;
 import com.dianping.cat.alarm.spi.sender.Sender;
 import com.dianping.cat.alarm.spi.sender.SenderManager;
 import com.dianping.cat.alarm.spi.sender.SmsSender;
 import com.dianping.cat.alarm.spi.sender.WeixinSender;
+import com.dianping.cat.alarm.spi.spliter.DXSpliter;
 import com.dianping.cat.alarm.spi.spliter.MailSpliter;
 import com.dianping.cat.alarm.spi.spliter.SmsSpliter;
 import com.dianping.cat.alarm.spi.spliter.Spliter;
@@ -58,6 +60,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Spliter.class, WeixinSpliter.ID, WeixinSpliter.class));
 
+		all.add(C(Spliter.class, DXSpliter.ID, DXSpliter.class));
+
 		all.add(C(SpliterManager.class));
 
 		all.add(C(Sender.class, MailSender.ID, MailSender.class).req(SenderConfigManager.class));
@@ -65,6 +69,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Sender.class, SmsSender.ID, SmsSender.class).req(SenderConfigManager.class));
 
 		all.add(C(Sender.class, WeixinSender.ID, WeixinSender.class).req(SenderConfigManager.class));
+
+		all.add(C(Sender.class, DXSender.ID, DXSender.class).req(SenderConfigManager.class));
 
 		all.add(C(SenderManager.class).req(ServerConfigManager.class));
 

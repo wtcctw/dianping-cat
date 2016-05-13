@@ -83,4 +83,25 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 		}
 	}
 
+	@Override
+	public List<String> queryDXContactors(String id) {
+		List<String> receivers = new ArrayList<String>();
+		Receiver receiver = m_configManager.queryReceiverById(getId());
+
+		if (receiver != null && !receiver.isEnable()) {
+			return receivers;
+		} else {
+			receivers.addAll(buildDefaultDXReceivers(receiver));
+
+			if (StringUtils.isNotEmpty(id)) {
+				Project project = m_projectService.findByDomain(id);
+
+				if (project != null) {
+					receivers.addAll(split(project.getEmail()));
+				}
+			}
+			return receivers;
+		}
+	}
+
 }

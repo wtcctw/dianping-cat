@@ -28,6 +28,8 @@ public class ContactorManager extends ContainerHolder implements Initializable {
 			return contactor.querySmsContactors(group);
 		} else if (AlertChannel.WEIXIN == channel) {
 			return contactor.queryWeiXinContactors(group);
+		} else if (AlertChannel.DX == channel) {
+			return contactor.queryDXContactors(group);
 		} else {
 			throw new RuntimeException("unsupported channnel");
 		}
