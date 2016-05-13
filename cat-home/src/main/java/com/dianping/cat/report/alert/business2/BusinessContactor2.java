@@ -3,20 +3,13 @@ package com.dianping.cat.report.alert.business2;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.unidal.lookup.annotation.Inject;
-
 import com.dianping.cat.alarm.receiver.entity.Receiver;
 import com.dianping.cat.alarm.spi.AlertType;
-import com.dianping.cat.alarm.spi.config.AlertConfigManager;
-import com.dianping.cat.alarm.spi.receiver.Contactor;
-import com.dianping.cat.alarm.spi.receiver.DefaultContactor;
+import com.dianping.cat.alarm.spi.receiver.ProjectContactor;
 
-public class BusinessContactor2 extends DefaultContactor implements Contactor {
+public class BusinessContactor2 extends ProjectContactor {
 
 	public static final String ID = AlertType.Business2.getName();
-
-	@Inject
-	protected AlertConfigManager m_configManager;
 
 	@Override
 	public String getId() {
@@ -24,7 +17,7 @@ public class BusinessContactor2 extends DefaultContactor implements Contactor {
 	}
 
 	@Override
-   public List<String> queryDXContactors(String id) {
+	public List<String> queryDXContactors(String id) {
 		List<String> receivers = new ArrayList<String>();
 		Receiver receiver = m_configManager.queryReceiverById(getId());
 
@@ -34,7 +27,7 @@ public class BusinessContactor2 extends DefaultContactor implements Contactor {
 			receivers.addAll(buildDefaultDXReceivers(receiver));
 			return receivers;
 		}
-   }
+	}
 
 	@Override
 	public List<String> queryEmailContactors(String id) {
@@ -75,5 +68,4 @@ public class BusinessContactor2 extends DefaultContactor implements Contactor {
 			return weixinReceivers;
 		}
 	}
-
 }

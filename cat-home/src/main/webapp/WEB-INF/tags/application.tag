@@ -23,7 +23,7 @@
 						<li id="dashbord_system"><a href="/cat/r/top?op=view&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>报错大盘</a>
 							<b class="arrow"></b></li>
-						<li id="dashbord_metric"><a href="/cat/r/metric?op=dashboard&domain=${model.domain}">
+						<li id="dashbord_metric"><a href="/cat/r/business?name=业务大盘&type=tag">
 							<i class="menu-icon fa fa-caret-right"></i>业务大盘</a>
 							<b class="arrow"></b></li>
 						<li id="dashbord_network"><a href="/cat/r/network?op=view&domain=${model.domain}">

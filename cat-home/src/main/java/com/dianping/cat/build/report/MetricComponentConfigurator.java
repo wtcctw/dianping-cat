@@ -101,7 +101,8 @@ public class MetricComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
-		all.add(C(Contactor.class, BusinessContactor2.ID, BusinessContactor2.class).req(AlertConfigManager.class));
+		all.add(C(Contactor.class, BusinessContactor2.ID, BusinessContactor2.class).req(ProjectService.class,
+				AlertConfigManager.class));
 
 		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProductLineConfigManager.class,
 		      AlertSummaryExecutor.class, ProjectService.class));
