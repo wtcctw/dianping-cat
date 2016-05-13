@@ -116,27 +116,11 @@
                      <goal>dal-jdbc</goal>
                   </goals>
                   <configuration>
-                     <manifest>${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml, <![CDATA[,
+                    <manifest>${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml, <![CDATA[,
                         ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,
-                     ,,
+                     ,]]><![CDATA[,
                         ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,
                      ,]]></manifest>
-                  </configuration>
-               </execution>
-               <execution>
-                  <id>generate dal model files</id>
-                  <phase>generate-sources</phase>
-                  <goals>
-                     <goal>dal-model</goal>
-                  </goals>
-                  <configuration>
-                     <manifest><![CDATA[
-                        ${basedir}/src/main/resources/META-INF/dal/model/server-alarm-rule-manifest.xml,
-                        ${basedir}/src/main/resources/META-INF/dal/model/sender-config-manifest.xml,
-                        ${basedir}/src/main/resources/META-INF/dal/model/alert-policy-manifest.xml,
-                        ${basedir}/src/main/resources/META-INF/dal/model/monitor-rules-manifest.xml,
-                        ${basedir}/src/main/resources/META-INF/dal/model/alert-receiver-manifest.xml,
-                     ]]></manifest>
                   </configuration>
                </execution>
             </executions>
