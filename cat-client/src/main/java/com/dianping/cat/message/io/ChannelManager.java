@@ -100,7 +100,7 @@ public class ChannelManager implements Task {
 		if (m_activeChannelHolder != null) {
 			ChannelFuture future = m_activeChannelHolder.getActiveFuture();
 
-			if (future != null && checkWritable(future)) {
+			if (checkWritable(future)) {
 				return future;
 			}
 		}

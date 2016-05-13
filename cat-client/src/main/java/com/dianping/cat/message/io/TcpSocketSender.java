@@ -158,7 +158,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 					MessageTree tree = m_queue.poll();
 
 					if (tree != null) {
-						sendInternal(tree);
+						sendInternal(channel, tree);
 						tree.setMessage(null);
 					}
 
@@ -179,8 +179,13 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			MessageTree tree = m_queue.poll();
 
 			if (tree != null) {
-				sendInternal(tree);
-				tree.setMessage(null);
+				ChannelFuture channel = m_channelManager.channel();
+
+				if (channel != null) {
+					sendInternal(channel, tree);
+				} else {
+					offer(tree);
+				}
 			} else {
 				break;
 			}
@@ -206,7 +211,29 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		}
 	}
 
-	private void sendInternal(MessageTree tree) {
+	public void sendInternal(ChannelFuture channel, MessageTree tree) {
+		if (tree.getMessageId() == null) {
+			tree.setMessageId(m_factory.getNextId());
+		}
+
+		ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(4 * 1024); // 4K
+
+		m_codec.encode(tree, buf);
+
+		int size = buf.readableBytes();
+
+		channel.channel().write(buf);
+
+		if (m_count.incrementAndGet() % 10 == 0) {
+			channel.channel().flush();
+		}
+
+		if (m_statistics != null) {
+			m_statistics.onBytes(size);
+		}
+	}
+
+	public void sendInternal(MessageTree tree) {
 		if (tree.getMessageId() == null) {
 			tree.setMessageId(m_factory.getNextId());
 		}
@@ -219,14 +246,14 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			m_codec.encode(tree, buf);
 
 			int size = buf.readableBytes();
+
 			Channel channel = future.channel();
 
 			channel.write(buf);
 
-			if (m_count.incrementAndGet() % 10 == 0) {
+			if (m_count.getAndIncrement() % 10 == 0) {
 				channel.flush();
 			}
-
 			if (m_statistics != null) {
 				m_statistics.onBytes(size);
 			}
