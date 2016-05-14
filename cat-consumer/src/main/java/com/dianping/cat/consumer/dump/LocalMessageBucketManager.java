@@ -137,7 +137,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		if (!m_configManager.isUseNewStorage()) {
 			m_baseDir = new File(m_configManager.getHdfsLocalBaseDir(ServerConfigManager.DUMP_DIR));
 
-			Threads.forGroup("cat").start(new BlockDumper(m_buckets, m_messageBlocks, m_serverStateManager));
+			Threads.forGroup("cat").start(new BlockDumper(m_buckets, m_messageBlocks, m_serverStateManager,m_configManager));
 			Threads.forGroup("cat").start(new CloseBucketChecker());
 
 			if (m_configManager.isLocalMode()) {
