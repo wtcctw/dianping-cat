@@ -60,4 +60,18 @@ public abstract class AbstractStorageContactor extends DefaultContactor implemen
 		}
 	}
 
+	@Override
+	public List<String> queryDXContactors(String id) {
+		List<String> dxReceivers = new ArrayList<String>();
+		Receiver receiver = m_alertConfigManager.queryReceiverById(getId());
+
+		if (receiver != null && !receiver.isEnable()) {
+			return dxReceivers;
+		} else {
+			dxReceivers.addAll(buildDefaultSMSReceivers(receiver));
+
+			return dxReceivers;
+		}
+	}
+
 }

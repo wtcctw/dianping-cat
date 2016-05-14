@@ -101,7 +101,7 @@ public class AlertInfoBuilder {
 		alertSummary.setAlertDate(date);
 
 		alertSummary.addCategory(generateCategoryByTimeCategory(date, AlertType.Network.getName()));
-		alertSummary.addCategory(generateCategoryByTimeCateDomain(date, AlertType.Business.getName(), domain));
+		alertSummary.addCategory(generateCategoryByTimeCateDomain(date, AlertType.Business2.getName(), domain));
 		alertSummary.addCategory(generateCategoryByTimeCateDomain(date, AlertType.Exception.getName(), domain));
 		alertSummary.addCategory(generateCategoryByTimeCateDomain(date, AlertType.System.getName(), domain));
 

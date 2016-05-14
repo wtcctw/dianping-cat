@@ -14,11 +14,7 @@
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');
 			$('#appList').addClass('active');
-			var namespace = '${model.updateCommand.namespace}';
-			
-			if(namespace != '') {
-				$("#commandNamespace").val(namespace);
-			}
+			$("#commandNamespace").val("${payload.namespace}");
 		});
 		
 		$(document).delegate('#updateSubmit', 'click', function(e){

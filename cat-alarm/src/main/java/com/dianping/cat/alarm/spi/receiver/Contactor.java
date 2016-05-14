@@ -11,4 +11,6 @@ public interface Contactor {
 	public List<String> queryWeiXinContactors(String id);
 
 	public List<String> querySmsContactors(String id);
+
+	public List<String> queryDXContactors(String id);
 }

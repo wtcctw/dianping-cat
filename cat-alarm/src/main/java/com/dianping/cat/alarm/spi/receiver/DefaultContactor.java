@@ -27,6 +27,15 @@ public abstract class DefaultContactor {
 		return smsReceivers;
 	}
 
+	protected List<String> buildDefaultDXReceivers(Receiver receiver) {
+		List<String> receivers = new ArrayList<String>();
+
+		if (receiver != null) {
+			receivers.addAll(receiver.getDxs());
+		}
+		return receivers;
+	}
+
 	protected List<String> buildDefaultWeixinReceivers(Receiver receiver) {
 		List<String> weixinReceivers = new ArrayList<String>();
 

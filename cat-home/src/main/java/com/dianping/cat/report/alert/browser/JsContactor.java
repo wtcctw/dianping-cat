@@ -28,6 +28,29 @@ public class JsContactor extends DefaultContactor implements Contactor {
 	}
 
 	@Override
+	public List<String> queryDXContactors(String id) {
+		List<String> receivers = new ArrayList<String>();
+		Receiver receiver = m_alertConfigManager.queryReceiverById(getId());
+
+		if (receiver != null && !receiver.isEnable()) {
+			return receivers;
+		} else {
+			receivers.addAll(buildDefaultDXReceivers(receiver));
+			String[] domainAndLevel = id.split(JsRuleConfigManager.SPLITTER);
+
+			if (domainAndLevel.length > 1) {
+				ExceptionLimit rule = m_jsRuleConfigManager.queryExceptionLimit(domainAndLevel[0], domainAndLevel[1]);
+
+				if (rule != null) {
+					receivers.addAll(split(rule.getMails()));
+				}
+			}
+
+			return receivers;
+		}
+	}
+
+	@Override
 	public List<String> queryEmailContactors(String id) {
 		List<String> mailReceivers = new ArrayList<String>();
 		Receiver receiver = m_alertConfigManager.queryReceiverById(getId());
@@ -51,6 +74,20 @@ public class JsContactor extends DefaultContactor implements Contactor {
 	}
 
 	@Override
+	public List<String> querySmsContactors(String id) {
+		List<String> smsReceivers = new ArrayList<String>();
+		Receiver receiver = m_alertConfigManager.queryReceiverById(getId());
+
+		if (receiver != null && !receiver.isEnable()) {
+			return smsReceivers;
+		} else {
+			smsReceivers.addAll(buildDefaultSMSReceivers(receiver));
+
+			return smsReceivers;
+		}
+	}
+
+	@Override
 	public List<String> queryWeiXinContactors(String id) {
 		List<String> weixinReceivers = new ArrayList<String>();
 		Receiver receiver = m_alertConfigManager.queryReceiverById(getId());
@@ -69,20 +106,6 @@ public class JsContactor extends DefaultContactor implements Contactor {
 				}
 			}
 			return weixinReceivers;
-		}
-	}
-
-	@Override
-	public List<String> querySmsContactors(String id) {
-		List<String> smsReceivers = new ArrayList<String>();
-		Receiver receiver = m_alertConfigManager.queryReceiverById(getId());
-
-		if (receiver != null && !receiver.isEnable()) {
-			return smsReceivers;
-		} else {
-			smsReceivers.addAll(buildDefaultSMSReceivers(receiver));
-
-			return smsReceivers;
 		}
 	}
 

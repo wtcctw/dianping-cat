@@ -7,12 +7,12 @@
       <sample-model>src/main/resources/config/senderConfig.xml</sample-model>
    </model>
    <model package="com.dianping.cat.alarm.policy" name="alert-policy">
-      <sample-model>src/main/resources/config/alert-policy.xml</sample-model>
+      <sample-model>src/main/resources/config/alertPolicy.xml</sample-model>
    </model>
    <model package="com.dianping.cat.alarm.rule" name="monitor-rules">
       <sample-model>src/main/resources/config/monitor-rule.xml</sample-model>
    </model>
    <model package="com.dianping.cat.alarm.receiver" name="alert-receiver">
-      <sample-model>src/main/resources/config/alert-config.xml</sample-model>
+      <sample-model>src/main/resources/config/alertConfig.xml</sample-model>
    </model>
 </wizard>

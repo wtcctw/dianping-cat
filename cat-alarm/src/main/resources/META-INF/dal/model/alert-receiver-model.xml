@@ -10,6 +10,7 @@
 		<attribute name="id" value-type="String" key="true" />
 		<attribute name="enable" value-type="boolean" />
 		<element name="email" value-type="String" type="list" names="emails" />
+    	<element name="dx" value-type="String" type="list" names="dxs" />
 		<element name="phone" value-type="String" type="list" names="phones" />
 		<element name="weixin" value-type="String" type="list" names="weixins" />
 	</entity>
