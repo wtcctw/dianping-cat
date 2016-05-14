@@ -304,7 +304,8 @@ public class Handler implements PageHandler<Context> {
 				try {
 					Command command = new Command();
 
-					command.setDomain(domain).setTitle(title).setName(name);
+					// all use lowcase
+					command.setDomain(domain).setTitle(title).setName(name.toLowerCase());
 
 					Pair<Boolean, Integer> addCommandResult = m_appConfigManager.addCommand(command);
 

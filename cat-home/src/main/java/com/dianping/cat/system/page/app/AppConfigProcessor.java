@@ -77,7 +77,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 				if (StringUtils.isNotEmpty(path) && !m_appConfigManager.getCommands().containsKey(path)) {
 					Command command = new Command();
 
-					command.setDomain("").setTitle(path).setName(path).setNamespace("");
+					command.setDomain("").setTitle(path).setName(path.toLowerCase()).setNamespace("");
 					m_appConfigManager.addCommand(command);
 				}
 			} catch (Exception e) {
@@ -223,7 +223,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 					} else {
 						name = title = cmd;
 					}
-					Command command = new Command().setDomain(domain).setTitle(title).setName(name).setNamespace(namespace)
+					Command command = new Command().setDomain(domain).setTitle(title).setName(name.toLowerCase()).setNamespace(namespace)
 					      .setThreshold(timeThreshold);
 
 					if (m_appConfigManager.addCommand(command).getKey()) {
