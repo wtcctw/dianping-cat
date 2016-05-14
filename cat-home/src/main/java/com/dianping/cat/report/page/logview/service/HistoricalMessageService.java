@@ -45,16 +45,12 @@ public class HistoricalMessageService extends BaseHistoricalModelService<String>
 
 	@Override
 	protected String buildModel(ModelRequest request) throws Exception {
-		if (m_configManager.isUseNewStorage()) {
-			String result = buildNewMessageModel(request);
+		String result = buildNewMessageModel(request);
 
-			if (result == null) {
-				result = buildOldMessageModel(request);
-			}
-			return result;
-		} else {
-			return buildOldMessageModel(request);
+		if (result == null) {
+			result = buildOldMessageModel(request);
 		}
+		return result;
 	}
 
 	protected String buildOldMessageModel(ModelRequest request) throws Exception {
