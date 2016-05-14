@@ -292,7 +292,7 @@ public class Handler implements PageHandler<Context> {
 
 	private void commandAdd(Payload payload, Model model) {
 		String domain = payload.getDomain();
-		String name = payload.getName();
+		String name = payload.getName().toLowerCase();
 		String title = payload.getTitle();
 
 		if (StringUtils.isEmpty(name)) {
@@ -305,7 +305,7 @@ public class Handler implements PageHandler<Context> {
 					Command command = new Command();
 
 					// all use lowcase
-					command.setDomain(domain).setTitle(title).setName(name.toLowerCase());
+					command.setDomain(domain).setTitle(title).setName(name);
 
 					Pair<Boolean, Integer> addCommandResult = m_appConfigManager.addCommand(command);
 

@@ -479,7 +479,7 @@ public class AppCommandConfigManager implements Initializable {
 		Command c = m_config.findCommand(id);
 
 		c.setDomain(command.getDomain());
-		c.setName(command.getName());
+		c.setName(command.getName().toLowerCase());
 		c.setTitle(command.getTitle());
 		c.setThreshold(command.getThreshold());
 		c.setNamespace(command.getNamespace());
