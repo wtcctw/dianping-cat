@@ -19,6 +19,8 @@ public class HourlyReportTableProvider implements TableProvider, Initializable {
 
 	public final static String LOGIC_TABLE_NAME = "report";
 
+	private String m_logicalTableName = LOGIC_TABLE_NAME;
+
 	private String m_physicalTableName = LOGIC_TABLE_NAME;
 
 	private String m_dataSourceName = "cat";
@@ -26,12 +28,17 @@ public class HourlyReportTableProvider implements TableProvider, Initializable {
 	private Date m_historyDate;
 
 	@Override
-	public String getDataSourceName(Map<String, Object> hints, String logicalTableName) {
+	public String getDataSourceName(Map<String, Object> hints) {
 		return m_dataSourceName;
 	}
 
 	@Override
-	public String getPhysicalTableName(Map<String, Object> hints, String logicalTableName) {
+	public String getLogicalTableName() {
+		return m_logicalTableName;
+	}
+
+	@Override
+	public String getPhysicalTableName(Map<String, Object> hints) {
 		HourlyReport command = (HourlyReport) hints.get(QueryEngine.HINT_DATA_OBJECT);
 
 		if (command.getPeriod().before(m_historyDate)) {
@@ -50,6 +57,10 @@ public class HourlyReportTableProvider implements TableProvider, Initializable {
 		} catch (ParseException e) {
 			Cat.logError(e);
 		}
+	}
+
+	public void setLogicalTableName(String logicalTableName) {
+		m_logicalTableName = logicalTableName;
 	}
 
 }

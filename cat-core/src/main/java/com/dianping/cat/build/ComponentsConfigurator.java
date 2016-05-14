@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.unidal.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
+import org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager;
 import org.unidal.dal.jdbc.mapping.TableProvider;
 import org.unidal.lookup.configuration.Component;
 
@@ -98,7 +99,7 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 
 		all.addAll(defineStorageComponents());
 		all.addAll(defineCodecComponents());
-		
+
 		all.add(A(RemoteServersManager.class));
 		all.add(A(ServersUpdaterManager.class));
 
@@ -108,7 +109,10 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 		all.add(C(TableProvider.class, "app-speed-data", AppSpeedTableProvider.class));
 		all.add(C(TableProvider.class, "ajax-data", AjaxDataTableProvider.class));
 
-		all.add(defineJdbcDataSourceConfigurationManagerComponent("/data/appdatas/cat/datasources.xml"));
+		all.add(C(JdbcDataSourceDescriptorManager.class) //
+		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
+
+		// all.add(defineJdbcDataSourceConfigurationManagerComponent("/data/appdatas/cat/datasources.xml"));
 
 		all.addAll(new CatCoreDatabaseConfigurator().defineComponents());
 		all.addAll(new CatDatabaseConfigurator().defineComponents());

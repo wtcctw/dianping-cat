@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.unidal.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
+import org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager;
 import org.unidal.initialization.DefaultModuleManager;
 import org.unidal.initialization.ModuleManager;
 import org.unidal.lookup.configuration.Component;
@@ -105,7 +106,10 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 
 		all.addAll(new OfflineComponentConfigurator().defineComponents());
 
-		all.add(defineJdbcDataSourceConfigurationManagerComponent("/data/appdatas/cat/datasources.xml"));
+		all.add(C(JdbcDataSourceDescriptorManager.class) //
+		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
+				
+//		all.add(defineJdbcDataSourceConfigurationManagerComponent("/data/appdatas/cat/datasources.xml"));
 		
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 

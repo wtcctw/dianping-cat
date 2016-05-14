@@ -19,6 +19,8 @@ public class AppCommandTableProvider implements TableProvider, Initializable {
 
 	public final static String LOGIC_TABLE_NAME = "app-command-data";
 
+	private String m_logicalTableName = "app-command-data";
+
 	private String m_physicalTableName = "app_command_data";
 
 	private String m_dataSourceName = "app";
@@ -26,7 +28,7 @@ public class AppCommandTableProvider implements TableProvider, Initializable {
 	private Date m_historyDate;
 
 	@Override
-	public String getDataSourceName(Map<String, Object> hints, String logicalTableName) {
+	public String getDataSourceName(Map<String, Object> hints) {
 		AppCommandData command = (AppCommandData) hints.get(QueryEngine.HINT_DATA_OBJECT);
 
 		if (command.getPeriod().before(m_historyDate)) {
@@ -37,10 +39,23 @@ public class AppCommandTableProvider implements TableProvider, Initializable {
 	}
 
 	@Override
-	public String getPhysicalTableName(Map<String, Object> hints, String logicalTableName) {
+	public String getLogicalTableName() {
+		return m_logicalTableName;
+	}
+
+	@Override
+	public String getPhysicalTableName(Map<String, Object> hints) {
 		AppCommandData command = (AppCommandData) hints.get(QueryEngine.HINT_DATA_OBJECT);
 
 		return m_physicalTableName + "_" + command.getCommandId();
+	}
+
+	public void setDataSourceName(String dataSourceName) {
+		m_dataSourceName = dataSourceName;
+	}
+
+	public void setLogicalTableName(String logicalTableName) {
+		m_logicalTableName = logicalTableName;
 	}
 
 	@Override
