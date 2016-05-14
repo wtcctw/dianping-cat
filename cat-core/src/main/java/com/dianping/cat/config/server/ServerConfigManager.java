@@ -328,6 +328,10 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	public ServerConfig getServerConfig() {
 		return m_config;
 	}
+	
+	public int getBlockDumpThread() {
+		return Integer.parseInt(getProperty("block-dump-thread", "5"));
+	}
 
 	public String getStorageCompressType() {
 		return getProperty("storage-compress-type", "snappy");
