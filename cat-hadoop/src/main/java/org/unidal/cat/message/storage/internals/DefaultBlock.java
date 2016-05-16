@@ -109,7 +109,7 @@ public class DefaultBlock implements Block {
 				Cat.logError(e);
 			}
 		} else if (type == CompressTye.DEFLATE) {
-			out = new DeflaterOutputStream(os, new Deflater(DEFLATE_LEVEL), BUFFER_SIZE);
+			out = new DeflaterOutputStream(os, new Deflater(DEFLATE_LEVEL), BUFFER_SIZE, true);
 		}
 		return out;
 	}
@@ -119,9 +119,9 @@ public class DefaultBlock implements Block {
 		Integer offset = m_offsets.get(id);
 
 		if (offset != null) {
-			finish();
-
 			m_isFulsh = true;
+			
+			finish();
 
 			try {
 				ByteBuf copyData = Unpooled.copiedBuffer(m_data);
