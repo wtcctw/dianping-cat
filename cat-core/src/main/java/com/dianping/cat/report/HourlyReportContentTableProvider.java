@@ -31,7 +31,7 @@ public class HourlyReportContentTableProvider implements TableProvider, Initiali
 		if (period != null && period.before(m_historyDate)) {
 			return "cat";
 		} else {
-			return "catReport";
+			return "cat_0";
 		}
 	}
 
