@@ -1,6 +1,8 @@
 package com.dianping.cat.config.app;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -34,6 +36,8 @@ public class CrashLogConfigManager implements Initializable {
 
 	private CrashLogConfig m_config;
 
+	private Map<Integer, Map<String, String>> m_apps;
+
 	private int m_configId;
 
 	private long m_modifyTime;
@@ -56,6 +60,15 @@ public class CrashLogConfigManager implements Initializable {
 
 	public Modules findModules(String id) {
 		return m_config.findModules(id);
+	}
+
+	public String findAppName(int appId, String platform) {
+		Map<String, String> theApp = m_apps.get(appId);
+
+		if (theApp != null) {
+			return theApp.get(platform);
+		}
+		return null;
 	}
 
 	public CrashLogConfig getConfig() {
@@ -90,6 +103,9 @@ public class CrashLogConfigManager implements Initializable {
 		if (m_config == null) {
 			m_config = new CrashLogConfig();
 		}
+
+		buildApps();
+
 		TimerSyncTask.getInstance().register(new SyncHandler() {
 
 			@Override
@@ -115,8 +131,25 @@ public class CrashLogConfigManager implements Initializable {
 
 				m_config = appConfig;
 				m_modifyTime = modifyTime;
+				buildApps();
 			}
 		}
+	}
+
+	private void buildApps() {
+		Map<Integer, Map<String, String>> apps = new HashMap<Integer, Map<String, String>>();
+
+		for (App app : m_config.getApps().values()) {
+			Map<String, String> theApp = apps.get(app.getAppId());
+
+			if (theApp == null) {
+				theApp = new HashMap<String, String>();
+				apps.put(app.getAppId(), theApp);
+			}
+
+			theApp.put(app.getPlatform(), app.getName());
+		}
+		m_apps = apps;
 	}
 
 	private boolean storeConfig() {
@@ -128,6 +161,9 @@ public class CrashLogConfigManager implements Initializable {
 			config.setName(CONFIG_NAME);
 			config.setContent(m_config.toString());
 			m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
+
+			buildApps();
+
 		} catch (Exception e) {
 			Cat.logError(e);
 			return false;

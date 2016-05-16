@@ -435,9 +435,13 @@ public class CrashLogService {
 			int tag = crashLog.getTag();
 
 			if (tag == Status.NOT_MAPPED.getStatus() || tag == Status.FAILED.getStatus()) {
-				String url = m_crashLogConfig.findServerUrl(MAPPER) + "&id=" + id;
-				InputStream in = Urls.forIO().readTimeout(5000).connectTimeout(1000).openStream(url);
-				Files.forIO().readFrom(in, "utf-8");
+				try {
+					String url = m_crashLogConfig.findServerUrl(MAPPER) + "&id=" + id;
+					InputStream in = Urls.forIO().readTimeout(5000).connectTimeout(1000).openStream(url);
+					Files.forIO().readFrom(in, "utf-8");
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
 			}
 
 			info.setAppName(crashLog.getAppName());
