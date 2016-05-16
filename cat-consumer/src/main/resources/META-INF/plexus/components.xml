@@ -833,6 +833,7 @@
 			<role-hint>business-report</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
+				<logical-table-name>business-report</logical-table-name>
 				<physical-table-name>businessReport</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
