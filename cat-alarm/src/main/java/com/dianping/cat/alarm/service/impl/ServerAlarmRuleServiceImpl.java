@@ -1,4 +1,4 @@
-package com.dianping.cat.alarm.service;
+package com.dianping.cat.alarm.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.ServerAlarmRule;
 import com.dianping.cat.alarm.ServerAlarmRuleDao;
 import com.dianping.cat.alarm.ServerAlarmRuleEntity;
+import com.dianping.cat.alarm.service.ServerAlarmRuleService;
 
 @Named(type = ServerAlarmRuleService.class)
 public class ServerAlarmRuleServiceImpl implements ServerAlarmRuleService, Initializable {

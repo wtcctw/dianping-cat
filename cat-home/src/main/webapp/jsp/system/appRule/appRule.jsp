@@ -45,19 +45,18 @@
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 				</tr></thead><tbody>
 
-				<c:forEach var="item" items="${model.rules}" varStatus="status">
-					<c:set var="strs" value="${fn:split(item.id, ':')}" />
-					<c:set var="conditions" value="${fn:split(strs[0], ';')}" />
-					<c:set var="command" value="${conditions[0]}" />
-					<c:set var="code" value="${conditions[1]}" />
-					<c:set var="network" value="${conditions[2]}" />
-					<c:set var="version" value="${conditions[3]}" />
-					<c:set var="connectType" value="${conditions[4]}" />
-					<c:set var="platform" value="${conditions[5]}" />
-					<c:set var="city" value="${conditions[6]}" />
-					<c:set var="operator" value="${conditions[7]}" />
-					<c:set var="type" value="${strs[1]}" />
-					<c:set var="name" value="${strs[2]}" />
+				<c:forEach var="entry" items="${model.ruleInfos}" varStatus="status">
+				 	<c:forEach var="item" items="${entry.value}">
+					<c:set var="command" value="${item.rule.dynamicAttributes['command']}" />
+					<c:set var="code" value="${item.rule.dynamicAttributes['code']}" />
+					<c:set var="network" value="${item.rule.dynamicAttributes['网络类型']}" />
+					<c:set var="version" value="${item.rule.dynamicAttributes['版本']}" />
+					<c:set var="connectType" value="${item.rule.dynamicAttributes['连接类型']}" />
+					<c:set var="platform" value="${item.rule.dynamicAttributes['平台']}" />
+					<c:set var="city" value="${item.rule.dynamicAttributes['城市']}" />
+					<c:set var="operator" value="${item.rule.dynamicAttributes['运营商']}" />
+					<c:set var="type" value="${item.rule.dynamicAttributes['metric']}" />
+					<c:set var="name" value="${item.rule.id}" />
 					<tr class="">
 						<td>${name}</td>
 						<c:choose>
@@ -172,12 +171,13 @@
 							<c:if test="${type eq 'success'}">成功率</c:if>  
 							<c:if test="${type eq 'delay'}">响应时间</c:if>
 						</td>
-						<td><a href="?op=appRuleUpdate&ruleId=${item.id}" class="btn btn-primary btn-xs">
+						<td><a href="?op=appRuleUpdate&id=${item.entity.id}" class="btn btn-primary btn-xs">
 						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
-						<a href="?op=appRuleDelete&ruleId=${item.id}" class="btn btn-danger btn-xs delete" >
+						<a href="?op=appRuleDelete&id=${item.entity.id}" class="btn btn-danger btn-xs delete" >
 						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 					</tr>
-				</c:forEach></tbody>
+					</c:forEach>
+				</c:forEach>
 				</tbody>
 			</table>
 </a:mobile>

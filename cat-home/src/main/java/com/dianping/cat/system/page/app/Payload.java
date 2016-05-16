@@ -45,6 +45,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("configs")
 	private String m_configs;
 
+	@FieldMeta("attributes")
+	private String m_attributes;
+
 	@FieldMeta("all")
 	private boolean m_all;
 
@@ -57,6 +60,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@Override
 	public Action getAction() {
 		return m_action;
+	}
+
+	public String getAttributes() {
+		return m_attributes;
 	}
 
 	public int getCode() {
@@ -130,6 +137,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setAll(boolean all) {
 		m_all = all;
+	}
+
+	public void setAttributes(String attributes) {
+		m_attributes = attributes;
 	}
 
 	public void setCode(int code) {

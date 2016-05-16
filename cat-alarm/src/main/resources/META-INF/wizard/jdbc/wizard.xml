@@ -12,6 +12,7 @@
          <table name="alert"/>
          <table name="user_define_rule"/>
          <table name="server_alarm_rule"/>
+         <table name="app_alarm_rule"/>
       </group>
    </jdbc>
 </wizard>

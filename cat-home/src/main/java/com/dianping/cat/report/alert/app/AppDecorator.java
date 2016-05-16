@@ -6,16 +6,26 @@ import java.util.Map;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.app.AppAlarmRuleParam;
 import com.dianping.cat.alarm.spi.AlertEntity;
 import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.alarm.spi.decorator.Decorator;
+import com.dianping.cat.config.app.AppCommandConfigManager;
+import com.dianping.cat.config.app.MobileConfigManager;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 public class AppDecorator extends Decorator implements Initializable {
+
+	@Inject
+	private AppCommandConfigManager m_appCommandConfigManager;
+
+	@Inject
+	private MobileConfigManager m_mobileConfigManager;
 
 	public static final String ID = AlertType.App.getName();
 
@@ -38,7 +48,9 @@ public class AppDecorator extends Decorator implements Initializable {
 
 	protected Map<Object, Object> generateExceptionMap(AlertEntity alert) {
 		Map<Object, Object> map = new HashMap<Object, Object>();
-		map.put("name", alert.getParas().get("name"));
+		AppAlarmRuleParam para = (AppAlarmRuleParam) alert.getPara("param");
+
+		map.put("para", para);
 		map.put("content", alert.getContent());
 		map.put("date", m_format.format(alert.getDate()));
 

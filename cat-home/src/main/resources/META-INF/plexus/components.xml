@@ -353,6 +353,14 @@
 			<role>com.dianping.cat.alarm.spi.decorator.Decorator</role>
 			<role-hint>App</role-hint>
 			<implementation>com.dianping.cat.report.alert.app.AppDecorator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppCommandConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.MobileConfigManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.app.AppAlert</role>
@@ -365,13 +373,16 @@
 					<role>com.dianping.cat.alarm.spi.AlertManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.app.AppRuleConfigManager</role>
+					<role>com.dianping.cat.alarm.service.AppAlarmRuleService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.rule.DataChecker</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppCommandConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.alarm.app.AppAlarmRuleParamBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5724,7 +5735,7 @@
 			<implementation>com.dianping.cat.system.page.app.AppConfigProcessor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.alert.app.AppRuleConfigManager</role>
+					<role>com.dianping.cat.alarm.service.AppAlarmRuleService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppCommandConfigManager</role>

@@ -1,6 +1,5 @@
 package com.dianping.cat.system.page.app;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +8,7 @@ import org.unidal.web.mvc.ViewModel;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.alarm.rule.entity.Rule;
+import com.dianping.cat.alarm.service.AppAlarmRuleInfo;
 import com.dianping.cat.command.entity.Code;
 import com.dianping.cat.command.entity.Codes;
 import com.dianping.cat.command.entity.Command;
@@ -43,7 +42,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private Map<Integer, Item> m_platforms;
 
 	private Map<Integer, Item> m_apps;
-	
+
 	private String m_id;
 
 	private String m_domain;
@@ -74,7 +73,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private String m_content;
 
-	private Collection<Rule> m_rules;
+	private Map<String, List<AppAlarmRuleInfo>> m_ruleInfos;
 
 	private Item m_appItem;
 
@@ -98,6 +97,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public Item getAppItem() {
 		return m_appItem;
+	}
+
+	public Map<Integer, Item> getApps() {
+		return m_apps;
 	}
 
 	public Map<Integer, Item> getCities() {
@@ -172,14 +175,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public String getNameUniqueResult() {
 		return m_nameUniqueResult;
 	}
-	
-	public Map<Integer, Item> getApps() {
-		return m_apps;
-	}
-
-	public void setApps(Map<Integer, Item> apps) {
-		m_apps = apps;
-	}
 
 	public Map<Integer, Item> getNetworks() {
 		return m_networks;
@@ -201,8 +196,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return "";
 	}
 
-	public Collection<Rule> getRules() {
-		return m_rules;
+	public Map<String, List<AppAlarmRuleInfo>> getRuleInfos() {
+		return m_ruleInfos;
 	}
 
 	public Speed getSpeed() {
@@ -227,6 +222,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setAppItem(Item appItem) {
 		m_appItem = appItem;
+	}
+
+	public void setApps(Map<Integer, Item> apps) {
+		m_apps = apps;
 	}
 
 	public void setCities(Map<Integer, Item> cities) {
@@ -297,8 +296,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_platforms = platforms;
 	}
 
-	public void setRules(Collection<Rule> rules) {
-		m_rules = rules;
+	public void setRuleInfos(Map<String, List<AppAlarmRuleInfo>> ruleInfos) {
+		m_ruleInfos = ruleInfos;
 	}
 
 	public void setSpeed(Speed speed) {

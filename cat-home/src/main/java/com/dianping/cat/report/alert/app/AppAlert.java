@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
@@ -15,10 +14,13 @@ import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.app.AppAlarmRuleParam;
+import com.dianping.cat.alarm.app.AppAlarmRuleParamBuilder;
 import com.dianping.cat.alarm.rule.entity.Condition;
 import com.dianping.cat.alarm.rule.entity.Config;
-import com.dianping.cat.alarm.rule.entity.MonitorRules;
 import com.dianping.cat.alarm.rule.entity.Rule;
+import com.dianping.cat.alarm.service.AppAlarmRuleInfo;
+import com.dianping.cat.alarm.service.AppAlarmRuleService;
 import com.dianping.cat.alarm.spi.AlertEntity;
 import com.dianping.cat.alarm.spi.AlertManager;
 import com.dianping.cat.alarm.spi.AlertType;
@@ -42,13 +44,16 @@ public class AppAlert implements Task {
 	private AlertManager m_sendManager;
 
 	@Inject
-	private AppRuleConfigManager m_appRuleConfigManager;
+	private AppAlarmRuleService m_appAlarmService;
 
 	@Inject
 	private DataChecker m_dataChecker;
 
 	@Inject
 	private AppCommandConfigManager m_appConfigManager;
+
+	@Inject
+	private AppAlarmRuleParamBuilder m_alarmRuleParamBuilder;
 
 	private static final long DURATION = TimeHelper.ONE_MINUTE * 5;
 
@@ -73,7 +78,7 @@ public class AppAlert implements Task {
 		return dayAndMinute;
 	}
 
-	private double[] fetchDatas(String conditions, QueryType type, int minute) {
+	private double[] fetchDatas(AppAlarmRuleParam param, QueryType type, int minute) {
 		long currentTime = System.currentTimeMillis();
 		long endTime = currentTime - DATA_AREADY_MINUTE * TimeHelper.ONE_MINUTE;
 		long startTime = endTime - minute * TimeHelper.ONE_MINUTE;
@@ -83,17 +88,16 @@ public class AppAlert implements Task {
 		Pair<Date, Integer> start = buildTimePair(startTime);
 
 		if (end.getKey().getTime() == start.getKey().getTime()) {
-			CommandQueryEntity queryEntity = new CommandQueryEntity(end.getKey(), conditions, start.getValue(),
-			      end.getValue());
-
-			datas = m_appDataService.queryAlertValue(queryEntity, type);
+			CommandQueryEntity queryEntity = new CommandQueryEntity(end.getKey(), param, start.getValue(),
+			      end.getValue() - 1);
+			datas = m_appDataService.queryAlertValue(queryEntity, type, minute);
 		} else {
-			CommandQueryEntity endQueryEntity = new CommandQueryEntity(end.getKey(), conditions,
-			      CommandQueryEntity.DEFAULT_VALUE, end.getValue());
-			CommandQueryEntity startQueryEntity = new CommandQueryEntity(start.getKey(), conditions, start.getValue(),
+			CommandQueryEntity endQueryEntity = new CommandQueryEntity(end.getKey(), param,
+			      CommandQueryEntity.DEFAULT_VALUE, end.getValue() - 1);
+			CommandQueryEntity startQueryEntity = new CommandQueryEntity(start.getKey(), param, start.getValue(),
 			      CommandQueryEntity.DEFAULT_VALUE);
-			double[] endDatas = m_appDataService.queryAlertValue(endQueryEntity, type);
-			double[] startDatas = m_appDataService.queryAlertValue(startQueryEntity, type);
+			double[] endDatas = m_appDataService.queryAlertValue(endQueryEntity, type, minute);
+			double[] startDatas = m_appDataService.queryAlertValue(startQueryEntity, type, minute);
 
 			datas = mergerArray(endDatas, startDatas);
 		}
@@ -146,31 +150,29 @@ public class AppAlert implements Task {
 	}
 
 	private void processRule(Rule rule) {
-		String id = rule.getId();
-		int index1 = id.indexOf(":");
-		int index2 = id.indexOf(":", index1 + 1);
-		String conditions = id.substring(0, index1);
-		String type = id.substring(index1 + 1, index2);
-		QueryType queryType = QueryType.findByName(type);
-		String name = id.substring(index2 + 1);
-		int command = Integer.valueOf(conditions.split(";")[0]);
-		Pair<Integer, List<Condition>> pair = queryCheckMinuteAndConditions(rule.getConfigs());
-		double[] datas = fetchDatas(conditions, queryType, pair.getKey());
+		List<AppAlarmRuleParam> params = m_alarmRuleParamBuilder.build(rule);
 
-		if (datas != null && datas.length > 0) {
-			List<Condition> checkedConditions = pair.getValue();
-			List<DataCheckEntity> alertResults = m_dataChecker.checkDataForApp(datas, checkedConditions);
-			String commandName = queryCommand(command);
+		for (AppAlarmRuleParam param : params) {
+			QueryType queryType = QueryType.findByName(param.getMetric());
+			int command = param.getCommand();
+			Pair<Integer, List<Condition>> pair = queryCheckMinuteAndConditions(rule.getConfigs());
+			double[] datas = fetchDatas(param, queryType, pair.getKey());
 
-			for (DataCheckEntity alertResult : alertResults) {
-				Map<String, Object> par = new HashMap<String, Object>();
-				par.put("name", name);
-				AlertEntity entity = new AlertEntity();
+			if (datas != null && datas.length > 0) {
+				List<Condition> checkedConditions = pair.getValue();
+				List<DataCheckEntity> alertResults = m_dataChecker.checkDataForApp(datas, checkedConditions);
+				String commandName = queryCommand(command);
 
-				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-				      .setLevel(alertResult.getAlertLevel());
-				entity.setMetric(queryType.getTitle()).setType(getName()).setGroup(commandName).setParas(par);
-				m_sendManager.addAlert(entity);
+				for (DataCheckEntity alertResult : alertResults) {
+					Map<String, Object> par = new HashMap<String, Object>();
+					par.put("param", param);
+					AlertEntity entity = new AlertEntity();
+
+					entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
+					      .setLevel(alertResult.getAlertLevel());
+					entity.setMetric(queryType.getTitle()).setType(getName()).setGroup(commandName).setParas(par);
+					m_sendManager.addAlert(entity);
+				}
 			}
 		}
 	}
@@ -219,14 +221,15 @@ public class AppAlert implements Task {
 			long current = System.currentTimeMillis();
 
 			try {
-				MonitorRules monitorRules = m_appRuleConfigManager.getMonitorRules();
-				Map<String, Rule> rules = monitorRules.getRules();
+				Map<String, List<AppAlarmRuleInfo>> alarmRules = m_appAlarmService.queryAllRules();
 
-				for (Entry<String, Rule> entry : rules.entrySet()) {
-					try {
-						processRule(entry.getValue());
-					} catch (Exception e) {
-						Cat.logError(e);
+				for (List<AppAlarmRuleInfo> rules : alarmRules.values()) {
+					for (AppAlarmRuleInfo rule : rules) {
+						try {
+							processRule(rule.getRule());
+						} catch (Exception e) {
+							Cat.logError(e);
+						}
 					}
 				}
 				t.setStatus(Transaction.SUCCESS);

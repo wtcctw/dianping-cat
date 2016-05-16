@@ -1,4 +1,4 @@
-package com.dianping.cat.alarm.build;
+package com.dianping.cat.build;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dianping.cat.alarm.app.AppAlarmRuleParamBuilder;
 import com.dianping.cat.alarm.server.ServerAlarm;
 import com.dianping.cat.alarm.server.database.ServerDatabaseAlarm;
 import com.dianping.cat.alarm.server.database.ServerDatabaseContactor;
@@ -17,7 +18,8 @@ import com.dianping.cat.alarm.server.system.ServerSystemAlarm;
 import com.dianping.cat.alarm.server.system.ServerSystemContactor;
 import com.dianping.cat.alarm.server.system.ServerSystemDecorator;
 import com.dianping.cat.alarm.service.ServerAlarmRuleService;
-import com.dianping.cat.alarm.service.ServerAlarmRuleServiceImpl;
+import com.dianping.cat.alarm.service.impl.AppAlarmRuleServiceImpl;
+import com.dianping.cat.alarm.service.impl.ServerAlarmRuleServiceImpl;
 import com.dianping.cat.alarm.spi.config.AlertConfigManager;
 import com.dianping.cat.alarm.spi.decorator.Decorator;
 import com.dianping.cat.alarm.spi.receiver.Contactor;
@@ -33,6 +35,8 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(A(ServerAlarmRuleServiceImpl.class));
+		all.add(A(AppAlarmRuleServiceImpl.class));
+		all.add(A(AppAlarmRuleParamBuilder.class));
 
 		all.add(C(ServerAlarm.class, ServerSystemAlarm.ID, ServerSystemAlarm.class).req(ServerAlarmRuleService.class)
 		      .req(MetricService.class, InfluxDB.ID));

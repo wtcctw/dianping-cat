@@ -21,7 +21,7 @@ public class SpliterManager extends ContainerHolder implements Initializable {
 	public String process(String content, AlertChannel channel) {
 		String channelName = channel.getName();
 		Spliter splitter = m_spliters.get(channelName);
-		
+
 		return splitter.process(content);
 	}
 

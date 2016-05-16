@@ -400,7 +400,7 @@ public class AppDataService {
 		}
 	}
 
-	public double[] queryAlertValue(CommandQueryEntity entity, QueryType type) {
+	public double[] queryAlertValue(CommandQueryEntity entity, QueryType type, int minutes) {
 		List<AppCommandData> datas = queryByMinute(entity, type);
 		int i = 0;
 
@@ -415,7 +415,7 @@ public class AppDataService {
 			}
 			return successRatios;
 		case REQUEST:
-			double[] requestSum = new double[datas.size()];
+			double[] requestSum = new double[minutes / 5];
 
 			for (AppCommandData data : datas) {
 				requestSum[i] = data.getAccessNumberSum();

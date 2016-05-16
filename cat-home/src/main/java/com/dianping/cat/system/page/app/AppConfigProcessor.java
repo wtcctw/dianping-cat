@@ -15,8 +15,15 @@ import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.AppAlarmRule;
+import com.dianping.cat.alarm.app.AppAlarmRuleParamBuilder;
+import com.dianping.cat.alarm.rule.entity.Config;
 import com.dianping.cat.alarm.rule.entity.Rule;
 import com.dianping.cat.alarm.rule.transform.DefaultJsonBuilder;
+import com.dianping.cat.alarm.rule.transform.DefaultJsonParser;
+import com.dianping.cat.alarm.service.AppAlarmRuleInfo;
+import com.dianping.cat.alarm.service.AppAlarmRuleService;
+import com.dianping.cat.alarm.spi.decorator.RuleFTLDecorator;
 import com.dianping.cat.command.entity.Code;
 import com.dianping.cat.command.entity.Command;
 import com.dianping.cat.config.app.AppCommandConfigManager;
@@ -33,16 +40,13 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.alert.app.AppRuleConfigManager;
-import com.dianping.cat.report.alert.spi.config.BaseRuleConfigManager;
 import com.dianping.cat.report.page.event.service.EventReportService;
 import com.dianping.cat.system.page.config.ConfigHtmlParser;
-import com.dianping.cat.system.page.config.processor.BaseProcesser;
 
-public class AppConfigProcessor extends BaseProcesser implements Initializable {
+public class AppConfigProcessor implements Initializable {
 
 	@Inject
-	private AppRuleConfigManager m_appRuleConfigManager;
+	private AppAlarmRuleService m_appAlarmRuleService;
 
 	@Inject
 	private AppCommandConfigManager m_appConfigManager;
@@ -67,6 +71,9 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 
 	@Inject
 	private CrashLogConfigManager m_crashLogConfigManager;
+
+	@Inject
+	private RuleFTLDecorator m_ruleDecorator;
 
 	public void appCommandBatchUpdate(Payload payload, Model model) {
 		String content = payload.getContent();
@@ -133,25 +140,17 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 		model.setCommands(m_appConfigManager.queryCommands());
 	}
 
-	public void generateRuleConfigContent(String key, BaseRuleConfigManager manager, Model model) {
+	public String generateRuleConfigContent(int id) {
 		String configsStr = "";
-		String ruleId = "";
 
-		if (StringUtils.isNotEmpty(key)) {
-			Rule rule = manager.queryRule(key);
+		if (id > 0) {
+			AppAlarmRuleInfo rule = m_appAlarmRuleService.queryById(id);
 
 			if (rule != null) {
-				ruleId = rule.getId();
-				configsStr = new DefaultJsonBuilder(true).buildArray(rule.getConfigs());
-				String configHeader = new DefaultJsonBuilder(true).buildArray(rule.getMetricItems());
-
-				model.setConfigHeader(configHeader);
+				configsStr = new DefaultJsonBuilder(true).buildArray(rule.getRule().getConfigs());
 			}
 		}
-		String content = m_ruleDecorator.generateConfigsHtml(configsStr);
-
-		model.setContent(content);
-		model.setId(ruleId);
+		return m_ruleDecorator.generateConfigsHtml(configsStr);
 	}
 
 	@Override
@@ -275,7 +274,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			id = payload.getId();
 
 			if (m_appConfigManager.deleteCommand(id)) {
-				m_appRuleConfigManager.deleteByCommandId(id);
+				m_appAlarmRuleService.delete(id);
 				model.setOpState(true);
 			} else {
 				model.setOpState(false);
@@ -410,21 +409,21 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			break;
 		case APP_RULE:
 			buildAppConfigInfo(model);
-			model.setRules(m_appRuleConfigManager.getMonitorRules().getRules().values());
+			model.setRuleInfos(m_appAlarmRuleService.queryAllRules());
 			break;
 		case APP_RULE_ADD_OR_UPDATE:
 			buildAppConfigInfo(model);
-			generateRuleConfigContent(payload.getRuleId(), m_appRuleConfigManager, model);
+			model.setContent(generateRuleConfigContent(payload.getId()));
 			break;
 		case APP_RULE_ADD_OR_UPDATE_SUBMIT:
 			buildAppConfigInfo(model);
-			model.setOpState(addSubmitRule(m_appRuleConfigManager, payload.getRuleId(), "", payload.getConfigs()));
-			model.setRules(m_appRuleConfigManager.getMonitorRules().getRules().values());
+			model.setOpState(submitAppRule(payload));
+			model.setRuleInfos(m_appAlarmRuleService.queryAllRules());
 			break;
 		case APP_RULE_DELETE:
 			buildAppConfigInfo(model);
-			model.setOpState(deleteRule(m_appRuleConfigManager, payload.getRuleId()));
-			model.setRules(m_appRuleConfigManager.getMonitorRules().getRules().values());
+			model.setOpState(m_appAlarmRuleService.delete(payload.getId()));
+			model.setRuleInfos(m_appAlarmRuleService.queryAllRules());
 			break;
 		case APP_COMMAND_BATCH:
 			buildBatchApiConfig(payload, model);
@@ -488,6 +487,70 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			model.setContent(m_configHtmlParser.parse(m_appCommandGroupManager.getConfig().toString()));
 			break;
 		}
+	}
+
+	private boolean submitAppRule(Payload payload) {
+		try {
+			List<Config> configs = DefaultJsonParser.parseArray(Config.class, payload.getConfigs());
+			String ruleId = payload.getRuleId();
+			Rule rule = buildRuleAttributes(ruleId);
+
+			for (Config config : configs) {
+				rule.addConfig(config);
+			}
+
+			int id = payload.getId();
+			AppAlarmRule entity = new AppAlarmRule();
+
+			entity.setId(id);
+			entity.setKeyId(id);
+			entity.setApp(payload.getNamespace());
+			entity.setName(rule.getId());
+			entity.setContent(rule.toString());
+			entity.setCreationDate(new Date());
+			entity.setUpdatetime(new Date());
+
+			if (id > 0) {
+				AppAlarmRuleInfo info = m_appAlarmRuleService.queryById(id);
+
+				if (info != null && info.getEntity() != null) {
+					return m_appAlarmRuleService.update(entity);
+				}
+			}
+			return m_appAlarmRuleService.insert(entity);
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
+	private Rule buildRuleAttributes(String ruleId) {
+		String[] fields = ruleId.split(";");
+		String command = fields[0];
+		String code = fields[1];
+		String network = fields[2];
+		String version = fields[3];
+		String connectType = fields[4];
+		String platform = fields[5];
+		String city = fields[6];
+		String operator = fields[7];
+		String metric = fields[8];
+		String name = fields[9];
+		Rule rule = new Rule(name);
+
+		rule.setDynamicAttribute(AppAlarmRuleParamBuilder.COMMAND, command);
+		rule.setDynamicAttribute(AppAlarmRuleParamBuilder.COMMAND_NAME, m_appConfigManager.getRawCommands().get(command)
+		      .getName());
+		rule.setDynamicAttribute(AppAlarmRuleParamBuilder.CODE, code);
+		rule.setDynamicAttribute(AppAlarmRuleParamBuilder.NETWORK, network);
+		rule.setDynamicAttribute(AppAlarmRuleParamBuilder.VERSION, version);
+		rule.setDynamicAttribute(AppAlarmRuleParamBuilder.CONNECT_TYPE, connectType);
+		rule.setDynamicAttribute(AppAlarmRuleParamBuilder.PLATFORM, platform);
+		rule.setDynamicAttribute(AppAlarmRuleParamBuilder.CITY, city);
+		rule.setDynamicAttribute(AppAlarmRuleParamBuilder.OPERATOR, operator);
+		rule.setDynamicAttribute(AppAlarmRuleParamBuilder.METRIC, metric);
+
+		return rule;
 	}
 
 	private void submitConstant(Payload payload, Model model) {

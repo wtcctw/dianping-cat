@@ -7,6 +7,7 @@ import java.util.List;
 import org.unidal.helper.Splitters;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.app.AppAlarmRuleParam;
 
 public class CommandQueryEntity extends BaseQueryEntity {
 
@@ -25,6 +26,20 @@ public class CommandQueryEntity extends BaseQueryEntity {
 	public CommandQueryEntity() {
 		super();
 		m_id = DEFAULT_COMMAND;
+	}
+
+	public CommandQueryEntity(Date date, AppAlarmRuleParam param, int start, int end) {
+		m_date = date;
+		m_startMinuteOrder = start - start % 5;
+		m_endMinuteOrder = end - end % 5;
+		m_id = param.getCommand();
+		m_code = param.getCode();
+		m_network = param.getNetwork();
+		m_version = param.getVersion();
+		m_connectType = param.getConnectType();
+		m_platfrom = param.getPlatform();
+		m_city = param.getCity();
+		m_operator = param.getOperator();
 	}
 
 	public CommandQueryEntity(Date date, String conditions, int start, int end) {
