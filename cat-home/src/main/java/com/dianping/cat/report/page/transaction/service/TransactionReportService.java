@@ -59,7 +59,7 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 		// for old report, can be removed later.
 		AllMachineRemover remover = new AllMachineRemover();
 		report.accept(remover);
-		
+
 		GraphTrendParser graphTrendParser = new GraphTrendParser();
 		report.accept(graphTrendParser);
 
@@ -112,8 +112,9 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 		}
 	}
 
-	private TransactionReport queryFromHourlyBinary(int id, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+	private TransactionReport queryFromHourlyBinary(int id, Date period, String domain) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
+		      HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
@@ -160,7 +161,7 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 			if (reports != null) {
 				for (HourlyReport report : reports) {
 					try {
-						TransactionReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+						TransactionReport reportModel = queryFromHourlyBinary(report.getId(), report.getPeriod(), domain);
 
 						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {

@@ -83,8 +83,9 @@ public class ProblemReportService extends AbstractReportService<ProblemReport> {
 		}
 	}
 
-	private ProblemReport queryFromHourlyBinary(int id, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+	private ProblemReport queryFromHourlyBinary(int id, Date period, String domain) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
+		      HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
@@ -131,7 +132,7 @@ public class ProblemReportService extends AbstractReportService<ProblemReport> {
 			if (reports != null) {
 				for (HourlyReport report : reports) {
 					try {
-						ProblemReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+						ProblemReport reportModel = queryFromHourlyBinary(report.getId(), report.getPeriod(), domain);
 
 						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {

@@ -28,6 +28,7 @@ import com.dianping.cat.config.web.AjaxDataTableProvider;
 import com.dianping.cat.config.web.WebSpeedDataTableProvider;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.mvc.PayloadNormalizer;
+import com.dianping.cat.report.HourlyReportContentTableProvider;
 import com.dianping.cat.report.HourlyReportTableProvider;
 import com.dianping.cat.report.graph.svg.DefaultGraphBuilder;
 import com.dianping.cat.report.graph.svg.DefaultValueTranslater;
@@ -108,9 +109,9 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
-				
-//		all.add(defineJdbcDataSourceConfigurationManagerComponent("/data/appdatas/cat/datasources.xml"));
-		
+
+		// all.add(defineJdbcDataSourceConfigurationManagerComponent("/data/appdatas/cat/datasources.xml"));
+
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 
 		// for alarm module
@@ -143,6 +144,7 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 		all.add(A(AjaxDataTableProvider.class));
 		all.add(A(WebSpeedDataTableProvider.class));
 		all.add(A(HourlyReportTableProvider.class));
+		all.add(A(HourlyReportContentTableProvider.class));
 
 		return all;
 	}

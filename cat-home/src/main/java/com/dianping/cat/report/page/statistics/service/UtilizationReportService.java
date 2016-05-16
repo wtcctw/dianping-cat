@@ -79,8 +79,9 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 		}
 	}
 
-	private UtilizationReport queryFromHourlyBinary(int id, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+	private UtilizationReport queryFromHourlyBinary(int id, Date period, String domain) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
+		      HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
@@ -127,7 +128,7 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 			if (reports != null) {
 				for (HourlyReport report : reports) {
 					try {
-						UtilizationReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+						UtilizationReport reportModel = queryFromHourlyBinary(report.getId(), report.getPeriod(), domain);
 						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {
 						// ignore

@@ -28,8 +28,8 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 
 /**
- * Hourly report manager by domain of one report type(such as Transaction, Event, Problem, Heartbeat etc.) produced in
- * one machine for a couple of hours.
+ * Hourly report manager by domain of one report type(such as Transaction, Event, Problem, Heartbeat etc.) produced in one machine
+ * for a couple of hours.
  */
 public class DefaultReportManager<T> extends ContainerHolder implements ReportManager<T>, Initializable, LogEnabled {
 	@Inject
@@ -228,6 +228,7 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 
 				content.setReportId(id);
 				content.setContent(binaryContent);
+				content.setPeriod(period);
 				m_reportContentDao.insert(content);
 				m_reportDelegate.createHourlyTask(report);
 			} catch (Throwable e) {

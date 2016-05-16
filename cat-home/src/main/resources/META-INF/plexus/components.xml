@@ -155,6 +155,11 @@
 			<implementation>com.dianping.cat.report.HourlyReportTableProvider</implementation>
 		</component>
 		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>report-content</role-hint>
+			<implementation>com.dianping.cat.report.HourlyReportContentTableProvider</implementation>
+		</component>
+		<component>
 			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-home</role-hint>
 			<implementation>com.dianping.cat.CatHomeModule</implementation>

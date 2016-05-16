@@ -36,8 +36,9 @@ public class DependencyReportService extends AbstractReportService<DependencyRep
 		throw new UnsupportedOperationException("Dependency report don't support daily report");
 	}
 
-	private DependencyReport queryFromHourlyBinary(int id, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+	private DependencyReport queryFromHourlyBinary(int id, Date period, String domain) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
+		      HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
@@ -64,7 +65,7 @@ public class DependencyReportService extends AbstractReportService<DependencyRep
 			if (reports != null) {
 				for (HourlyReport report : reports) {
 					try {
-						DependencyReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+						DependencyReport reportModel = queryFromHourlyBinary(report.getId(), report.getPeriod(), domain);
 						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {
 						// ignore
