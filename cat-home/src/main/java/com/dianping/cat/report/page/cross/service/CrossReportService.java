@@ -80,8 +80,9 @@ public class CrossReportService extends AbstractReportService<CrossReport> {
 		}
 	}
 
-	private CrossReport queryFromHourlyBinary(int id, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+	private CrossReport queryFromHourlyBinary(int id, Date period, String domain) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
+		      HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
@@ -128,7 +129,7 @@ public class CrossReportService extends AbstractReportService<CrossReport> {
 			if (reports != null) {
 				for (HourlyReport report : reports) {
 					try {
-						CrossReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+						CrossReport reportModel = queryFromHourlyBinary(report.getId(), report.getPeriod(), domain);
 
 						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {
@@ -166,7 +167,7 @@ public class CrossReportService extends AbstractReportService<CrossReport> {
 		try {
 			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, CrossAnalyzer.ID,
 			      WeeklyReportEntity.READSET_FULL);
-			
+
 			return queryFromWeeklyBinary(entity.getId(), domain);
 		} catch (DalNotFoundException e) {
 			// ignore

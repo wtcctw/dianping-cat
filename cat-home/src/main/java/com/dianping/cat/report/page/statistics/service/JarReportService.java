@@ -30,8 +30,9 @@ public class JarReportService extends AbstractReportService<JarReport> {
 		throw new RuntimeException("JarReportService do not suppot queryDailyReport feature");
 	}
 
-	private JarReport queryFromHourlyBinary(int id, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+	private JarReport queryFromHourlyBinary(int id, Date period, String domain) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
+		      HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
@@ -56,7 +57,7 @@ public class JarReportService extends AbstractReportService<JarReport> {
 			if (reports != null) {
 				for (HourlyReport report : reports) {
 					try {
-						return queryFromHourlyBinary(report.getId(), domain);
+						return queryFromHourlyBinary(report.getId(), report.getPeriod(), domain);
 					} catch (DalException e) {
 						Cat.logError(e);
 					}

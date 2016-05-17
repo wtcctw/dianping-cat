@@ -23,38 +23,40 @@ import com.dianping.cat.report.service.AbstractReportService;
 public class BusinessReportService extends AbstractReportService<BusinessReport> {
 
 	@Override
-   public BusinessReport makeReport(String domain, Date start, Date end) {
+	public BusinessReport makeReport(String domain, Date start, Date end) {
 		BusinessReport report = new BusinessReport(domain);
-		
+
 		report.setStartTime(start);
 		report.setEndTime(end);
 		return report;
-   }
+	}
 
 	@Override
-   public BusinessReport queryDailyReport(String domain, Date start, Date end) {
+	public BusinessReport queryDailyReport(String domain, Date start, Date end) {
 		throw new UnsupportedOperationException("Business report don't support daily report");
 	}
 
 	@Override
-   public BusinessReport queryHourlyReport(String domain, Date start, Date end) {
+	public BusinessReport queryHourlyReport(String domain, Date start, Date end) {
 		BusinessReportMerger merger = new BusinessReportMerger(new BusinessReport(domain));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
 		String name = BusinessAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
+			Date period = new Date(startTime);
 			List<HourlyReport> reports = null;
+
 			try {
-				reports = m_hourlyReportDao.findAllByDomainNamePeriod(new Date(startTime), domain, name,
-				      HourlyReportEntity.READSET_FULL);
+				reports = m_hourlyReportDao
+				      .findAllByDomainNamePeriod(period, domain, name, HourlyReportEntity.READSET_FULL);
 			} catch (DalException e) {
 				Cat.logError(e);
 			}
 			if (reports != null) {
 				for (HourlyReport report : reports) {
 					try {
-						BusinessReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+						BusinessReport reportModel = queryFromHourlyBinary(report.getId(), period, domain);
 						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {
 						// ignore
@@ -69,26 +71,28 @@ public class BusinessReportService extends AbstractReportService<BusinessReport>
 		businessReport.setStartTime(start);
 		businessReport.setEndTime(new Date(end.getTime() - 1));
 
-		return businessReport;	
-   }
+		return businessReport;
+	}
 
-	private BusinessReport queryFromHourlyBinary(int id, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+	private BusinessReport queryFromHourlyBinary(int id, Date period, String domain) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
+		      HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
 		} else {
 			return new BusinessReport(domain);
-		}   }
+		}
+	}
 
 	@Override
-   public BusinessReport queryMonthlyReport(String domain, Date start) {
+	public BusinessReport queryMonthlyReport(String domain, Date start) {
 		throw new UnsupportedOperationException("Business report don't support monthly report");
-   }
+	}
 
 	@Override
-   public BusinessReport queryWeeklyReport(String domain, Date start) {
+	public BusinessReport queryWeeklyReport(String domain, Date start) {
 		throw new UnsupportedOperationException("Business report don't support weekly report");
-   }
+	}
 
 }

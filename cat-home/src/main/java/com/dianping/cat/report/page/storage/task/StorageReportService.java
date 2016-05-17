@@ -108,8 +108,9 @@ public class StorageReportService extends AbstractReportService<StorageReport> {
 		}
 	}
 
-	private StorageReport queryFromHourlyBinary(int id, String reportId) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+	private StorageReport queryFromHourlyBinary(int id, Date period, String reportId) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
+		      HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
@@ -156,7 +157,7 @@ public class StorageReportService extends AbstractReportService<StorageReport> {
 			if (reports != null) {
 				for (HourlyReport report : reports) {
 					try {
-						StorageReport reportModel = queryFromHourlyBinary(report.getId(), reportId);
+						StorageReport reportModel = queryFromHourlyBinary(report.getId(), report.getPeriod(), reportId);
 						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {
 						// ignore

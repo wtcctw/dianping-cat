@@ -36,8 +36,9 @@ public class TopReportService extends AbstractReportService<TopReport> {
 		throw new RuntimeException("Top report don't support daily report");
 	}
 
-	private TopReport queryFromHourlyBinary(int id, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+	private TopReport queryFromHourlyBinary(int id, Date period, String domain) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
+		      HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
@@ -64,7 +65,7 @@ public class TopReportService extends AbstractReportService<TopReport> {
 			if (reports != null) {
 				for (HourlyReport report : reports) {
 					try {
-						TopReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+						TopReport reportModel = queryFromHourlyBinary(report.getId(), report.getPeriod(), domain);
 						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {
 						// ignore

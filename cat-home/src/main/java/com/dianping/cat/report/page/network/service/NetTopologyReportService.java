@@ -31,8 +31,9 @@ public class NetTopologyReportService extends AbstractReportService<NetGraphSet>
 		throw new RuntimeException("net topology report don't support daily report");
 	}
 
-	private NetGraphSet queryFromHourlyBinary(int id) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+	private NetGraphSet queryFromHourlyBinary(int id, Date period) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
+		      HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
@@ -57,7 +58,8 @@ public class NetTopologyReportService extends AbstractReportService<NetGraphSet>
 
 		if (reports != null && reports.size() > 0) {
 			try {
-				netGraphs = queryFromHourlyBinary(reports.get(0).getId());
+				HourlyReport report = reports.get(0);
+				netGraphs = queryFromHourlyBinary(report.getId(), report.getPeriod());
 			} catch (DalException e) {
 				Cat.logError(e);
 			}

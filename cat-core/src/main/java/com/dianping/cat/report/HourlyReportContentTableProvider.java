@@ -12,24 +12,27 @@ import org.unidal.dal.jdbc.mapping.TableProvider;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportContent;
 
-@Named(type = TableProvider.class, value = HourlyReportTableProvider.LOGIC_TABLE_NAME)
-public class HourlyReportTableProvider implements TableProvider, Initializable {
+@Named(type = TableProvider.class, value = HourlyReportContentTableProvider.LOGIC_TABLE_NAME)
+public class HourlyReportContentTableProvider implements TableProvider, Initializable {
 
-	public final static String LOGIC_TABLE_NAME = "report";
+	public final static String LOGIC_TABLE_NAME = "report-content";
 
 	private String m_logicalTableName = LOGIC_TABLE_NAME;
-
-	private String m_physicalTableName = LOGIC_TABLE_NAME;
-
-	private String m_dataSourceName = "cat";
 
 	private Date m_historyDate;
 
 	@Override
 	public String getDataSourceName(Map<String, Object> hints) {
-		return m_dataSourceName;
+		HourlyReportContent report = (HourlyReportContent) hints.get(QueryEngine.HINT_DATA_OBJECT);
+		Date period = report.getPeriod();
+
+		if (period != null && period.before(m_historyDate)) {
+			return "cat";
+		} else {
+			return "cat_0";
+		}
 	}
 
 	@Override
@@ -39,12 +42,13 @@ public class HourlyReportTableProvider implements TableProvider, Initializable {
 
 	@Override
 	public String getPhysicalTableName(Map<String, Object> hints) {
-		HourlyReport report = (HourlyReport) hints.get(QueryEngine.HINT_DATA_OBJECT);
+		HourlyReportContent report = (HourlyReportContent) hints.get(QueryEngine.HINT_DATA_OBJECT);
+		Date period = report.getPeriod();
 
-		if (report.getPeriod().before(m_historyDate)) {
-			return m_physicalTableName;
+		if (period != null && period.before(m_historyDate)) {
+			return "report_content";
 		} else {
-			return "hourlyreport";
+			return "hourly_report_content";
 		}
 	}
 
@@ -53,7 +57,7 @@ public class HourlyReportTableProvider implements TableProvider, Initializable {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 		try {
-			m_historyDate = sdf.parse("2016-04-16 00:00");
+			m_historyDate = sdf.parse("2016-05-16 20:00:00");
 		} catch (ParseException e) {
 			Cat.logError(e);
 		}

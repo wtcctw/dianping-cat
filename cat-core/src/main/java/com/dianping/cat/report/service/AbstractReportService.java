@@ -64,7 +64,7 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 
 	@Inject
 	protected MonthlyReportContentDao m_monthlyReportContentDao;
-	
+
 	@Override
 	public boolean insertDailyReport(DailyReport report, byte[] content) {
 		try {
@@ -93,6 +93,7 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 
 			proto.setReportId(id);
 			proto.setContent(content);
+			proto.setPeriod(report.getPeriod());
 			m_hourlyReportContentDao.insert(proto);
 			return true;
 		} catch (DalException e) {
@@ -171,7 +172,6 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 			return false;
 		}
 	}
-
 
 	private Map<String, Set<String>> m_domains = new LinkedHashMap<String, Set<String>>() {
 
