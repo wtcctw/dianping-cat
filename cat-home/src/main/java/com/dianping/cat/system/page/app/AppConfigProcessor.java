@@ -64,7 +64,7 @@ public class AppConfigProcessor implements Initializable {
 	private AppCommandGroupConfigManager m_appCommandGroupManager;
 
 	@Inject
-	private MobileConfigManager m_brokerConfigManager;
+	private MobileConfigManager m_mobileConfigManager;
 
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
@@ -95,19 +95,22 @@ public class AppConfigProcessor implements Initializable {
 	}
 
 	private void buildAppConfigInfo(Model model) {
-		model.setConnectionTypes(m_brokerConfigManager.queryConstantItem(MobileConstants.CONNECT_TYPE));
-		model.setCities(m_brokerConfigManager.queryConstantItem(MobileConstants.CITY));
-		model.setNetworks(m_brokerConfigManager.queryConstantItem(MobileConstants.NETWORK));
-		model.setOperators(m_brokerConfigManager.queryConstantItem(MobileConstants.OPERATOR));
-		model.setPlatforms(m_brokerConfigManager.queryConstantItem(MobileConstants.PLATFORM));
-		model.setVersions(m_brokerConfigManager.queryConstantItem(MobileConstants.VERSION));
+		model.setConnectionTypes(m_mobileConfigManager.queryConstantItem(MobileConstants.CONNECT_TYPE));
+		model.setCities(m_mobileConfigManager.queryConstantItem(MobileConstants.CITY));
+		model.setNetworks(m_mobileConfigManager.queryConstantItem(MobileConstants.NETWORK));
+		model.setOperators(m_mobileConfigManager.queryConstantItem(MobileConstants.OPERATOR));
+		model.setPlatforms(m_mobileConfigManager.queryConstantItem(MobileConstants.PLATFORM));
+		model.setVersions(m_mobileConfigManager.queryConstantItem(MobileConstants.VERSION));
 		model.setCommands(m_appConfigManager.queryCommands());
+		model.setCommand2Codes(m_appConfigManager.queryCommand2Codes());
+		model.setGlobalCodes(m_appConfigManager.getConfig().getCodeses());
+		model.setCommand2Id(m_appConfigManager.getCommands());
 	}
 
 	public void buildBatchApiConfig(Payload payload, Model model) {
 		Date start = TimeHelper.getCurrentDay(-1);
 		Date end = TimeHelper.getCurrentDay();
-		EventReport report = m_eventReportService.queryReport(m_brokerConfigManager.getBrokerName(), start, end);
+		EventReport report = m_eventReportService.queryReport(m_mobileConfigManager.getBrokerName(), start, end);
 		EventReportVisitor visitor = new EventReportVisitor();
 
 		visitor.visitEventReport(report);
@@ -191,7 +194,7 @@ public class AppConfigProcessor implements Initializable {
 			break;
 		case APP_COMMAND_UPDATE:
 			id = payload.getId();
-			model.setApps(m_brokerConfigManager.queryConstantItem(MobileConstants.SOURCE));
+			model.setApps(m_mobileConfigManager.queryConstantItem(MobileConstants.SOURCE));
 
 			if (m_appConfigManager.containCommand(id)) {
 				Command command = m_appConfigManager.getConfig().findCommand(id);
@@ -203,7 +206,7 @@ public class AppConfigProcessor implements Initializable {
 			}
 			break;
 		case APP_COMMAND_BATCH_ADD:
-			model.setApps(m_brokerConfigManager.queryConstantItem(MobileConstants.SOURCE));
+			model.setApps(m_mobileConfigManager.queryConstantItem(MobileConstants.SOURCE));
 			break;
 		case APP_COMMAND_BATCH_SUBMIT:
 			id = payload.getId();
@@ -281,7 +284,7 @@ public class AppConfigProcessor implements Initializable {
 			}
 			break;
 		case APP_CODE_UPDATE:
-			model.setApps(m_brokerConfigManager.queryConstantItem(MobileConstants.SOURCE));
+			model.setApps(m_mobileConfigManager.queryConstantItem(MobileConstants.SOURCE));
 			id = payload.getId();
 			int codeId = payload.getCode();
 
@@ -326,7 +329,7 @@ public class AppConfigProcessor implements Initializable {
 			break;
 		case APP_CODE_ADD:
 			id = payload.getId();
-			model.setApps(m_brokerConfigManager.queryConstantItem(MobileConstants.SOURCE));
+			model.setApps(m_mobileConfigManager.queryConstantItem(MobileConstants.SOURCE));
 			model.setId(String.valueOf(id));
 			break;
 		case APP_CODE_DELETE:
@@ -396,9 +399,9 @@ public class AppConfigProcessor implements Initializable {
 		case BROKER_CONFIG_UPDATE:
 			String brokerConfig = payload.getContent();
 			if (!StringUtils.isEmpty(brokerConfig)) {
-				model.setOpState(m_brokerConfigManager.insert(brokerConfig));
+				model.setOpState(m_mobileConfigManager.insert(brokerConfig));
 			}
-			model.setContent(m_configHtmlParser.parse(m_brokerConfigManager.getConfig().toString()));
+			model.setContent(m_configHtmlParser.parse(m_mobileConfigManager.getConfig().toString()));
 			break;
 		case CRASH_LOG_CONFIG_UPDATE:
 			String crashLogConfig = payload.getContent();
@@ -413,7 +416,10 @@ public class AppConfigProcessor implements Initializable {
 			break;
 		case APP_RULE_ADD_OR_UPDATE:
 			buildAppConfigInfo(model);
-			model.setContent(generateRuleConfigContent(payload.getId()));
+			id = payload.getId();
+
+			model.setContent(generateRuleConfigContent(id));
+			model.setRuleInfo(m_appAlarmRuleService.queryById(id));
 			break;
 		case APP_RULE_ADD_OR_UPDATE_SUBMIT:
 			buildAppConfigInfo(model);
@@ -437,7 +443,7 @@ public class AppConfigProcessor implements Initializable {
 		case APP_CONSTANT_ADD:
 			break;
 		case APP_CONSTANT_UPDATE:
-			Item item = m_brokerConfigManager.queryConstantItem(payload.getType(), payload.getId());
+			Item item = m_mobileConfigManager.queryConstantItem(payload.getType(), payload.getId());
 
 			model.setAppItem(item);
 			break;
@@ -445,14 +451,14 @@ public class AppConfigProcessor implements Initializable {
 			// TODO
 			break;
 		case APP_SOURCES_SUBMIT:
-			model.setApps(m_brokerConfigManager.queryConstantItem(MobileConstants.SOURCE));
+			model.setApps(m_mobileConfigManager.queryConstantItem(MobileConstants.SOURCE));
 			submitConstant(payload, model);
 			break;
 		case APP_CONSTATN_SUBMIT:
 			submitConstant(payload, model);
 			break;
 		case APP_SOURCES:
-			model.setApps(m_brokerConfigManager.queryConstantItem(MobileConstants.SOURCE));
+			model.setApps(m_mobileConfigManager.queryConstantItem(MobileConstants.SOURCE));
 			break;
 		case APP_COMMAND_FORMAT_CONFIG:
 			String content = payload.getContent();
@@ -500,11 +506,13 @@ public class AppConfigProcessor implements Initializable {
 			}
 
 			int id = payload.getId();
+			int commandId = Integer.parseInt(rule.getDynamicAttribute(AppAlarmRuleParamBuilder.COMMAND));
+			Command cmd = m_appConfigManager.getRawCommands().get(commandId);
 			AppAlarmRule entity = new AppAlarmRule();
 
 			entity.setId(id);
 			entity.setKeyId(id);
-			entity.setApp(payload.getNamespace());
+			entity.setApp(cmd.getNamespace());
 			entity.setName(rule.getId());
 			entity.setContent(rule.toString());
 			entity.setCreationDate(new Date());
@@ -527,6 +535,7 @@ public class AppConfigProcessor implements Initializable {
 	private Rule buildRuleAttributes(String ruleId) {
 		String[] fields = ruleId.split(";");
 		String command = fields[0];
+		int commandId = Integer.parseInt(command);
 		String code = fields[1];
 		String network = fields[2];
 		String version = fields[3];
@@ -539,8 +548,8 @@ public class AppConfigProcessor implements Initializable {
 		Rule rule = new Rule(name);
 
 		rule.setDynamicAttribute(AppAlarmRuleParamBuilder.COMMAND, command);
-		rule.setDynamicAttribute(AppAlarmRuleParamBuilder.COMMAND_NAME, m_appConfigManager.getRawCommands().get(command)
-		      .getName());
+		rule.setDynamicAttribute(AppAlarmRuleParamBuilder.COMMAND_NAME, m_appConfigManager.getRawCommands()
+		      .get(commandId).getName());
 		rule.setDynamicAttribute(AppAlarmRuleParamBuilder.CODE, code);
 		rule.setDynamicAttribute(AppAlarmRuleParamBuilder.NETWORK, network);
 		rule.setDynamicAttribute(AppAlarmRuleParamBuilder.VERSION, version);
@@ -561,7 +570,7 @@ public class AppConfigProcessor implements Initializable {
 			int constantId = Integer.valueOf(strs[1]);
 			String value = strs[2];
 
-			model.setOpState(m_brokerConfigManager.addConstant(type, constantId, value));
+			model.setOpState(m_mobileConfigManager.addConstant(type, constantId, value));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -581,7 +590,7 @@ public class AppConfigProcessor implements Initializable {
 		}
 
 		private boolean invalidate(String name) {
-			List<String> invalids = m_brokerConfigManager.getInvalidatePatterns();
+			List<String> invalids = m_mobileConfigManager.getInvalidatePatterns();
 
 			for (String str : invalids) {
 				if (StringUtils.isEmpty(str) || name.indexOf(str) > -1) {

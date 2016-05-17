@@ -26,8 +26,27 @@
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');
 			$('#appRule').addClass('active');
+			
+			var namespace = "${payload.namespace}";
+			
+			if(typeof namespace != "undefined" && namespace.length > 0) {
+				$('#tab-'+ namespace).addClass('active');
+				$('#tabContent-'+ namespace).addClass('active');
+			}else{
+				$('#tab-点评主APP').addClass('active');
+				$('#tabContent-点评主APP').addClass('active');
+			}
  		});
 	</script>
+		<div class="tabbable" id="content"> <!-- Only required for left/right tabs -->
+			<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height:50px;" id="myTab">
+				<c:forEach var="item" items="${model.ruleInfos}">
+					<li id="tab-${item.key}" class="text-right"><a href="#tabContent-${item.key}" data-toggle="tab"> <strong>${item.key}</strong></a></li>
+				</c:forEach>
+			</ul>
+			<div class="tab-content">
+			<c:forEach var="item" items="${model.ruleInfos}">
+			<div class="tab-pane" id="tabContent-${item.key}">
 			<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
 			<thead>
 				<tr >
@@ -45,8 +64,7 @@
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 				</tr></thead><tbody>
 
-				<c:forEach var="entry" items="${model.ruleInfos}" varStatus="status">
-				 	<c:forEach var="item" items="${entry.value}">
+				 	<c:forEach var="item" items="${item.value}">
 					<c:set var="command" value="${item.rule.dynamicAttributes['command']}" />
 					<c:set var="code" value="${item.rule.dynamicAttributes['code']}" />
 					<c:set var="network" value="${item.rule.dynamicAttributes['网络类型']}" />
@@ -74,15 +92,7 @@
 						
 						<c:choose>
 							<c:when test="${code ne -1}">
-							<td>
-							<c:forEach var="i" items="${model.command}">
-								<c:if test="${i.key eq command}">
-								<c:forEach var="i2" items="${i.value}">
-									<c:if test="${i2.id eq code}">${i2.name}</c:if>
-								</c:forEach>
-								</c:if>  
-							</c:forEach>
-							</td>
+							<td>${code}</td>
 							</c:when>
 						<c:otherwise>
 							<td>All</td>
@@ -91,11 +101,16 @@
 						
 						<c:choose>
 							<c:when test="${network ne -1}">
-							<td>
-							<c:forEach var="i" items="${model.networks}">
-							<c:if test="${i.value.id eq network}">${i.value.value}</c:if>  
-							</c:forEach>
-							</td>
+								<c:if test="${network eq '*'}">
+									<td>任意</td>
+								</c:if>
+								<c:if test="${network ne '*'}">
+									<td>
+									<c:forEach var="i" items="${model.networks}">
+									<c:if test="${i.value.id eq network}">${i.value.value}</c:if>  
+									</c:forEach>
+									</td>
+								</c:if>
 							</c:when>
 						<c:otherwise>
 							<td>All</td>
@@ -104,11 +119,17 @@
 						
 						<c:choose>
 							<c:when test="${version ne -1}">
-							<td>
-							<c:forEach var="i" items="${model.versions}">
-							<c:if test="${i.value.id eq version}">${i.value.value}</c:if>  
-							</c:forEach>
-							</td>
+								<c:if test="${version eq '*'}">
+									<td>任意</td>
+								</c:if>
+								<c:if test="${version ne '*'}">
+									<td>
+									<c:forEach var="i" items="${model.versions}">
+									<c:if test="${i.value.id eq version}">${i.value.value}</c:if>  
+									</c:forEach>
+									</td>
+								</c:if>
+							
 							</c:when>
 						<c:otherwise>
 							<td>All</td>
@@ -117,11 +138,19 @@
 						
 						<c:choose>
 							<c:when test="${connectType ne -1}">
-							<td>
-							<c:forEach var="i" items="${model.connectionTypes}">
-							<c:if test="${i.value.id eq connectType}">${i.value.value}</c:if>  
-							</c:forEach>
-							</td>
+								<c:if test="${connectType eq '*'}">
+									<td>任意</td>
+								</c:if>
+								<c:if test="${connectType ne '*'}">
+									<td>
+									<c:forEach var="i" items="${model.connectionTypes}">
+									<c:if test="${i.value.id eq connectType}">${i.value.value}</c:if>  
+									</c:forEach>
+									</td>
+								</c:if>
+							</c:when>
+							<c:when test="${connectType eq '*'}">
+							<td>任意</td>
 							</c:when>
 						<c:otherwise>
 							<td>All</td>
@@ -130,11 +159,16 @@
 						
 						<c:choose>
 							<c:when test="${platform ne -1}">
-							<td>
-							<c:forEach var="i" items="${model.platforms}">
-							<c:if test="${i.value.id eq platform}">${i.value.value}</c:if>  
-							</c:forEach>
-							</td>
+								<c:if test="${platform eq '*'}">
+									<td>任意</td>
+								</c:if>
+								<c:if test="${platform ne '*'}">
+									<td>
+									<c:forEach var="i" items="${model.platforms}">
+									<c:if test="${i.value.id eq platform}">${i.value.value}</c:if>  
+									</c:forEach>
+									</td>
+								</c:if>
 							</c:when>
 						<c:otherwise>
 							<td>All</td>
@@ -143,11 +177,19 @@
 						
 						<c:choose>
 							<c:when test="${city ne -1}">
-							<td>
-							<c:forEach var="i" items="${model.cities}">
-							<c:if test="${i.value.id eq city}">${i.value.value}</c:if>  
-							</c:forEach>
-							</td>
+							<c:if test="${city eq '*'}">
+									<td>任意</td>
+								</c:if>
+								<c:if test="${city ne '*'}">
+									<td>
+									<c:forEach var="i" items="${model.cities}">
+									<c:if test="${i.value.id eq city}">${i.value.value}</c:if>  
+									</c:forEach>
+									</td>
+								</c:if>
+							</c:when>
+							<c:when test="${city eq '*'}">
+							<td>任意</td>
 							</c:when>
 						<c:otherwise>
 							<td>All</td>
@@ -156,11 +198,16 @@
 						
 						<c:choose>
 							<c:when test="${operator ne -1}">
-							<td>
-							<c:forEach var="i" items="${model.operators}">
-							<c:if test="${i.value.id eq operator}">${i.value.value}</c:if>  
-							</c:forEach>
-							</td>
+								<c:if test="${operator eq '*'}">
+									<td>任意</td>
+								</c:if>
+								<c:if test="${operator ne '*'}">
+									<td>
+									<c:forEach var="i" items="${model.operators}">
+									<c:if test="${i.value.id eq operator}">${i.value.value}</c:if>  
+									</c:forEach>
+									</td>
+								</c:if>
 							</c:when>
 						<c:otherwise>
 							<td>All</td>
@@ -177,7 +224,8 @@
 						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 					</tr>
 					</c:forEach>
-				</c:forEach>
 				</tbody>
-			</table>
+			</table></div>
+			</c:forEach>
+			</div></div>
 </a:mobile>

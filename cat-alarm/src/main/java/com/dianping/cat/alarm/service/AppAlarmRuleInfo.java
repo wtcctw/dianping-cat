@@ -4,6 +4,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.AppAlarmRule;
 import com.dianping.cat.alarm.rule.entity.Rule;
 import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
+import com.dianping.cat.helper.JsonBuilder;
 
 public class AppAlarmRuleInfo {
 
@@ -23,6 +24,10 @@ public class AppAlarmRuleInfo {
 
 	public AppAlarmRule getEntity() {
 		return m_entity;
+	}
+
+	public String getJsonString() {
+		return new JsonBuilder().toJson(this);
 	}
 
 	public Rule getRule() {

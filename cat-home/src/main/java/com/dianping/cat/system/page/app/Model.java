@@ -75,11 +75,19 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private Map<String, List<AppAlarmRuleInfo>> m_ruleInfos;
 
+	private AppAlarmRuleInfo m_ruleInfo;
+
 	private Item m_appItem;
 
 	private String m_configHeader;
 
 	private transient AppCommandGroupConfig m_commandGroupConfig;
+
+	private Map<Integer, List<Code>> m_command2Codes;
+
+	private Map<String, Codes> m_globalCodes;
+
+	private Map<String, Command> m_command2Id;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -115,6 +123,18 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_codes;
 	}
 
+	public Map<Integer, List<Code>> getCommand2Codes() {
+		return m_command2Codes;
+	}
+
+	public String getCommand2CodesJson() {
+		return new JsonBuilder().toJson(m_command2Codes);
+	}
+
+	public String getCommand2IdJson() {
+		return new JsonBuilder().toJson(m_command2Id);
+	}
+
 	public AppCommandGroupConfig getCommandGroupConfig() {
 		return m_commandGroupConfig;
 	}
@@ -125,6 +145,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public Map<Integer, Command> getCommands() {
 		return m_commands;
+	}
+
+	public String getCommandsJson() {
+		return new JsonBuilder().toJson(m_commands);
 	}
 
 	public String getConfigHeader() {
@@ -158,6 +182,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public String getDomain2CommandsJson() {
 		return new JsonBuilder().toJson(m_appConfigManager.queryDomain2Commands());
+	}
+
+	public String getGlobalCodesJson() {
+		return new JsonBuilder().toJson(m_globalCodes);
 	}
 
 	public String getId() {
@@ -194,6 +222,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public String getReportType() {
 		return "";
+	}
+
+	public AppAlarmRuleInfo getRuleInfo() {
+		return m_ruleInfo;
 	}
 
 	public Map<String, List<AppAlarmRuleInfo>> getRuleInfos() {
@@ -240,6 +272,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_codes = codes;
 	}
 
+	public void setCommand2Codes(Map<Integer, List<Code>> command2Codes) {
+		m_command2Codes = command2Codes;
+	}
+
+	public void setCommand2Id(Map<String, Command> command2Id) {
+		m_command2Id = command2Id;
+	}
+
 	public void setCommandGroupConfig(AppCommandGroupConfig commandGroupConfig) {
 		m_commandGroupConfig = commandGroupConfig;
 	}
@@ -262,6 +302,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setDomain(String domain) {
 		m_domain = domain;
+	}
+
+	public void setGlobalCodes(Map<String, Codes> globalCodeses) {
+		m_globalCodes = globalCodeses;
 	}
 
 	public void setId(String id) {
@@ -294,6 +338,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setPlatforms(Map<Integer, Item> platforms) {
 		m_platforms = platforms;
+	}
+
+	public void setRuleInfo(AppAlarmRuleInfo ruleInfo) {
+		m_ruleInfo = ruleInfo;
 	}
 
 	public void setRuleInfos(Map<String, List<AppAlarmRuleInfo>> ruleInfos) {
