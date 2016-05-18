@@ -2136,11 +2136,13 @@
 		<query name="find-by-tag" type="SELECT">
 			<param name="tag" />
 			<param name="id" />
+			<param name="platform" />
 			<statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE 
         	<FIELD name='tag'/> = ${tag} 
 			AND  <FIELD name='id'/> >= ${id}
+			AND <FIELD name='platform'/> = ${platform}
 		LIMIT 1
          ]]></statement>
 		</query>
