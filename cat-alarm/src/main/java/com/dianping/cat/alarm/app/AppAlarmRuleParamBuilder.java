@@ -11,9 +11,9 @@ import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.rule.entity.Rule;
+import com.dianping.cat.app.AppDataField;
 import com.dianping.cat.config.app.MobileConfigManager;
 import com.dianping.cat.config.app.MobileConstants;
-import com.dianping.cat.configuration.mobile.entity.Item;
 
 @Named
 public class AppAlarmRuleParamBuilder {
@@ -43,28 +43,34 @@ public class AppAlarmRuleParamBuilder {
 
 	public List<AppAlarmRuleParam> build(Rule rule) {
 		List<AppAlarmRuleParam> results = new ArrayList<AppAlarmRuleParam>();
-		Map<String, String> dynamicAttrs = rule.getDynamicAttributes();
-		List<String> keys = new ArrayList<String>();
+		Map<String, String> attributes = new LinkedHashMap<String, String>();
+		List<String> starKeys = new ArrayList<String>();
 
-		for (Entry<String, String> entry : dynamicAttrs.entrySet()) {
-			if (entry.getValue().equals("*")) {
-				keys.add(entry.getKey());
+		for (Entry<String, String> entry : rule.getDynamicAttributes().entrySet()) {
+			String key = entry.getKey();
+			String value = entry.getValue();
+
+			if ("*".equals(value)) {
+				value = "-1";
+				starKeys.add(key);
 			}
+			attributes.put(key, value);
 		}
 
-		if (keys.isEmpty()) {
-			results.add(buildParam(dynamicAttrs));
-		} else {
-			for (String key : keys) {
+		if (starKeys.size() > 0) {
+			for (String key : starKeys) {
 				try {
-					Map<String, String> attributes = new LinkedHashMap<String, String>(dynamicAttrs);
-					List<AppAlarmRuleParam> params = buildParams(keys, key, attributes);
+					AppAlarmRuleParam param = buildParam(attributes);
+					AppDataField dataField = AppDataField.getByTitle(key);
 
-					results.addAll(params);
+					param.setGroupBy(dataField);
+					results.add(param);
 				} catch (Exception e) {
 					Cat.logError(rule.toString(), e);
 				}
 			}
+		} else {
+			results.add(buildParam(attributes));
 		}
 		return results;
 	}
@@ -94,24 +100,6 @@ public class AppAlarmRuleParamBuilder {
 		param.setOperator(operator);
 		param.setMetric(metric);
 		return param;
-	}
-
-	private List<AppAlarmRuleParam> buildParams(List<String> keys, String key, Map<String, String> attributes) {
-		List<AppAlarmRuleParam> results = new ArrayList<AppAlarmRuleParam>();
-
-		for (String k : keys) {
-			if (!k.equals(key)) {
-				attributes.put(k, "-1");
-			}
-		}
-
-		for (Entry<Integer, Item> entry : m_mobileConfigManager.queryConstantItem(key).entrySet()) {
-			attributes.put(key, String.valueOf(entry.getKey()));
-			AppAlarmRuleParam param = buildParam(attributes);
-
-			results.add(param);
-		}
-		return results;
 	}
 
 	public void setMobileConfigManager(MobileConfigManager manager) {

@@ -3,6 +3,8 @@ package com.dianping.cat.alarm.spi.dx.api;
 import java.util.Collection;
 import java.util.Date;
 
+import com.dianping.cat.alarm.spi.dx.http.MtHttpUtil;
+
 public class Pusher {
 
 	private String baseUrl;

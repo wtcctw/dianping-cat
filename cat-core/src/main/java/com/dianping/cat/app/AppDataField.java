@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.app.service;
+package com.dianping.cat.app;
 
 import org.unidal.lookup.util.StringUtils;
 
@@ -32,6 +32,17 @@ public enum AppDataField {
 			}
 		}
 		return defaultField;
+	}
+
+	public static AppDataField getByTitle(String title) {
+		if (StringUtils.isNotEmpty(title)) {
+			for (AppDataField field : AppDataField.values()) {
+				if (field.getTitle().equals(title)) {
+					return field;
+				}
+			}
+		}
+		return null;
 	}
 
 	AppDataField(String name, String title) {

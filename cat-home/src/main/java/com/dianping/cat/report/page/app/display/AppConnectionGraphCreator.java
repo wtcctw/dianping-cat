@@ -11,6 +11,7 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.app.AppConnectionData;
+import com.dianping.cat.app.AppDataField;
 import com.dianping.cat.command.entity.Code;
 import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.app.MobileConfigManager;
@@ -22,7 +23,6 @@ import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.graph.DistributeDetailInfo;
 import com.dianping.cat.report.page.app.QueryType;
 import com.dianping.cat.report.page.app.service.AppConnectionService;
-import com.dianping.cat.report.page.app.service.AppDataField;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 
 public class AppConnectionGraphCreator {

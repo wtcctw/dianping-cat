@@ -1,5 +1,7 @@
 package com.dianping.cat.alarm.app;
 
+import com.dianping.cat.app.AppDataField;
+
 public class AppAlarmRuleParam {
 
 	private int m_command;
@@ -22,6 +24,8 @@ public class AppAlarmRuleParam {
 
 	private String m_metric;
 
+	private AppDataField m_groupBy;
+
 	public int getCity() {
 		return m_city;
 	}
@@ -40,6 +44,10 @@ public class AppAlarmRuleParam {
 
 	public int getConnectType() {
 		return m_connectType;
+	}
+
+	public AppDataField getGroupBy() {
+		return m_groupBy;
 	}
 
 	public String getMetric() {
@@ -62,6 +70,10 @@ public class AppAlarmRuleParam {
 		return m_version;
 	}
 
+	public boolean isEachAlarm() {
+		return m_groupBy != null;
+	}
+
 	public void setCity(int city) {
 		m_city = city;
 	}
@@ -80,6 +92,10 @@ public class AppAlarmRuleParam {
 
 	public void setConnectType(int connectType) {
 		m_connectType = connectType;
+	}
+
+	public void setGroupBy(AppDataField groupBy) {
+		m_groupBy = groupBy;
 	}
 
 	public void setMetric(String metric) {

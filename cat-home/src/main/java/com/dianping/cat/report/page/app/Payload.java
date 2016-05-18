@@ -10,10 +10,10 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import org.unidal.web.mvc.payload.annotation.ObjectMeta;
 
+import com.dianping.cat.app.AppDataField;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.app.service.AppDataField;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 import com.dianping.cat.report.page.app.service.CrashLogQueryEntity;
 import com.dianping.cat.report.page.app.service.DailyCommandQueryEntity;

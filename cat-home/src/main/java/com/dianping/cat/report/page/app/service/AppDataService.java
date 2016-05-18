@@ -17,6 +17,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppCommandData;
 import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppCommandDataEntity;
+import com.dianping.cat.app.AppDataField;
 import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.report.page.DataSequence;
 import com.dianping.cat.report.page.app.QueryType;
@@ -48,7 +49,7 @@ public class AppDataService {
 		return infos;
 	}
 
-	private Map<Integer, List<AppCommandData>> buildDataMap(List<AppCommandData> datas) {
+	public Map<Integer, List<AppCommandData>> buildDataMap(List<AppCommandData> datas) {
 		Map<Integer, List<AppCommandData>> dataMap = new LinkedHashMap<Integer, List<AppCommandData>>();
 
 		for (AppCommandData data : datas) {
@@ -157,7 +158,7 @@ public class AppDataService {
 		return value;
 	}
 
-	private double computeSuccessRatio(int commandId, List<AppCommandData> datas) {
+	public double computeSuccessRatio(int commandId, List<AppCommandData> datas) {
 		long success = 0;
 		long sum = 0;
 
@@ -278,7 +279,7 @@ public class AppDataService {
 			case APP_VERSION:
 				datas = m_dao.findDataByAppVersionCode(commandId, period, city, operator, network, appVersion,
 				      connnectType, code, platform, source, startMinuteOrder, endMinuteOrder,
-				      AppCommandDataEntity.READSET_APP_VERSION_CODE__DATA);
+				      AppCommandDataEntity.READSET_APP_VERSION_CODE_DATA);
 				break;
 			case CONNECT_TYPE:
 				datas = m_dao.findDataByConnectTypeCode(commandId, period, city, operator, network, appVersion,
@@ -310,7 +311,7 @@ public class AppDataService {
 		return datas;
 	}
 
-	private int queryFieldValue(AppCommandData data, AppDataField field) {
+	public int queryFieldValue(AppCommandData data, AppDataField field) {
 		switch (field) {
 		case OPERATOR:
 			return data.getOperator();

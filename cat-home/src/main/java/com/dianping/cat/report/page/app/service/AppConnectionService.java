@@ -17,6 +17,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppConnectionData;
 import com.dianping.cat.app.AppConnectionDataDao;
 import com.dianping.cat.app.AppConnectionDataEntity;
+import com.dianping.cat.app.AppDataField;
 import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.report.page.DataSequence;
 import com.dianping.cat.report.page.app.QueryType;
