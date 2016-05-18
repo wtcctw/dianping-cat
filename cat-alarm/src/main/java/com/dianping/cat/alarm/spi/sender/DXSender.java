@@ -30,8 +30,9 @@ public class DXSender extends AbstractSender implements Initializable {
 	public boolean send(SendMessageEntity message) {
 		try {
 			List<String> receivers = message.getReceivers();
+			String content = message.getTitle() + "\n" + message.getContent();
 
-			PushUtil.push(message.getContent(), receivers.toArray(new String[receivers.size()]));
+			PushUtil.push(content, receivers);
 			return true;
 		} catch (Exception e) {
 			Cat.logError(e);
