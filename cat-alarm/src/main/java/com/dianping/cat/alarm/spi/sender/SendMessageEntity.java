@@ -20,7 +20,7 @@ public class SendMessageEntity {
 		m_content = content;
 		m_receivers = receivers;
 	}
-	
+
 	public String getContent() {
 		return m_content;
 	}
@@ -57,12 +57,13 @@ public class SendMessageEntity {
 	}
 
 	public void setContent(String content) {
-   	m_content = content;
-   }
+		m_content = content;
+	}
 
 	@Override
 	public String toString() {
-		return "title: " + m_title + " content: " + m_content + " type: " + m_type + " receiver: " + getReceiverString();
+		return "SendMessageEntity [group=" + m_group + ", title=" + m_title + ", type=" + m_type + ", content="
+		      + m_content + ", receivers=" + m_receivers + "]";
 	}
 
 }
