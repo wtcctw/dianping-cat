@@ -38,10 +38,10 @@ public class SenderManager extends ContainerHolder implements Initializable {
 				result = sender.send(message);
 				str = String.valueOf(result);
 			}
-			Cat.logEvent("Channel:" + channelName, message.getType() + ":" + str, Event.SUCCESS, null);
+			Cat.logEvent("Channel:" + channel, message.getType() + ":" + str, Event.SUCCESS, null);
 			return result;
 		} catch (Exception e) {
-			Cat.logError(e);
+			Cat.logError("Channel [" + channel + "] " + message.toString(), e);
 			return false;
 		}
 	}
