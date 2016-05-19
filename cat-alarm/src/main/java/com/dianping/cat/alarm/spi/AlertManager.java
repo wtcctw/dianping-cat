@@ -134,19 +134,27 @@ public class AlertManager implements Initializable {
 				m_sendedAlerts.put(alertKey, alert);
 			}
 		}
+
 		SendMessageEntity message = null;
 
 		for (AlertChannel channel : channels) {
-			String rawContent = pair.getValue();
-			if (suspendMinute > 0) {
-				rawContent = rawContent + "<br/>[告警间隔时间]" + suspendMinute + "分钟";
-			}
-			String content = m_splitterManager.process(rawContent, channel);
-			List<String> receivers = m_contactorManager.queryReceivers(alert.getContactGroup(), channel, type);
-			message = new SendMessageEntity(group, title, type, content, receivers);
+			String contactGroup = alert.getContactGroup();
+			List<String> receivers = m_contactorManager.queryReceivers(contactGroup, channel, type);
 
-			if (m_senderManager.sendAlert(channel, message)) {
-				result = true;
+			if (receivers.size() > 0) {
+				String rawContent = pair.getValue();
+
+				if (suspendMinute > 0) {
+					rawContent = rawContent + "<br/>[告警间隔时间]" + suspendMinute + "分钟";
+				}
+				String content = m_splitterManager.process(rawContent, channel);
+				message = new SendMessageEntity(group, title, type, content, receivers);
+
+				if (m_senderManager.sendAlert(channel, message)) {
+					result = true;
+				}
+			} else {
+				Cat.logEvent("NoneReceiver:" + channel, type + ":" + contactGroup, Event.SUCCESS, null);
 			}
 		}
 
@@ -172,10 +180,13 @@ public class AlertManager implements Initializable {
 			String title = "[告警恢复] [告警类型 " + alterType.getTitle() + "][" + group + " " + alert.getMetric() + "]";
 			String content = "[告警已恢复][恢复时间]" + currentMinute;
 			List<String> receivers = m_contactorManager.queryReceivers(alert.getContactGroup(), channel, type);
-			SendMessageEntity message = new SendMessageEntity(group, title, type, content, receivers);
 
-			if (m_senderManager.sendAlert(channel, message)) {
-				return true;
+			if (receivers.size() > 0) {
+				SendMessageEntity message = new SendMessageEntity(group, title, type, content, receivers);
+
+				if (m_senderManager.sendAlert(channel, message)) {
+					return true;
+				}
 			}
 		}
 

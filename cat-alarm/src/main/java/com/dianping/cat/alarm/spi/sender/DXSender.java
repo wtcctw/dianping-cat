@@ -5,7 +5,6 @@ import java.util.List;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.spi.AlertChannel;
 import com.sankuai.xm.pub.push.Pusher;
 import com.sankuai.xm.pub.push.PusherBuilder;
@@ -42,7 +41,7 @@ public class DXSender extends AbstractSender implements Initializable {
 			m_pusher.push(content, receivers.toArray(new String[receivers.size()]));
 			return true;
 		} catch (Exception e) {
-			Cat.logError(e);
+			m_logger.error(message.toString(), e);
 			return false;
 		}
 	}
@@ -52,4 +51,5 @@ public class DXSender extends AbstractSender implements Initializable {
 		m_pusher = PusherBuilder.defaultBuilder().withAppkey(APP_KEY).withApptoken(APP_TOKEN).withTargetUrl(URL)
 		      .withFromUid(Long.parseLong(PUB_ID)).withFromName(SENDER).withToAppid(Short.parseShort(APP_ID)).build();
 	}
+
 }
