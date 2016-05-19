@@ -7,19 +7,26 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.spi.AlertChannel;
-import com.dianping.cat.alarm.spi.dx.api.PushUtil;
+import com.sankuai.xm.pub.push.Pusher;
+import com.sankuai.xm.pub.push.PusherBuilder;
 
 public class DXSender extends AbstractSender implements Initializable {
 
+	private Pusher m_pusher;
+
 	public static final String ID = AlertChannel.DX.getName();
 
-	public static final String APP_KEY = "0513021Rv2124712";
+	public static final String APP_ID = "1";
 
-	public static final String APP_SECRET = "415be4e6561846323d5fc48b83fa7a2c";
+	public static final String PUB_ID = "137438953912";
 
-	public static final String SENDER = "cat2281@meituan.com";
+	public static final String APP_KEY = "261113r52017m011";
 
-	public static final String URL = "http://xm-in.sankuai.com/api";
+	public static final String APP_TOKEN = "90cae3c52970bb90a0e52b8a4b06c649";
+
+	public static final String SENDER = "实时监控CAT";
+
+	public static final String URL = "http://dxw-in.sankuai.com/api/pub/push";
 
 	@Override
 	public String getId() {
@@ -32,7 +39,7 @@ public class DXSender extends AbstractSender implements Initializable {
 			List<String> receivers = message.getReceivers();
 			String content = message.getTitle() + "\n" + message.getContent();
 
-			PushUtil.push(content, receivers);
+			m_pusher.push(content, receivers.toArray(new String[receivers.size()]));
 			return true;
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -42,6 +49,7 @@ public class DXSender extends AbstractSender implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		PushUtil.init(APP_KEY, APP_SECRET, SENDER, URL);
+		m_pusher = PusherBuilder.defaultBuilder().withAppkey(APP_KEY).withApptoken(APP_TOKEN).withTargetUrl(URL)
+		      .withFromUid(Long.parseLong(PUB_ID)).withFromName(SENDER).withToAppid(Short.parseShort(APP_ID)).build();
 	}
 }
