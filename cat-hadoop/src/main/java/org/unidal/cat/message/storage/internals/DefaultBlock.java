@@ -90,7 +90,6 @@ public class DefaultBlock implements Block {
 			}
 		} else if (type == CompressTye.DEFLATE) {
 			Inflater inflater = new Inflater(true);
-
 			in = new DataInputStream(new InflaterInputStream(os, inflater, BUFFER_SIZE));
 		}
 		return in;
@@ -123,10 +122,10 @@ public class DefaultBlock implements Block {
 			
 			finish();
 
-			try {
-				ByteBuf copyData = Unpooled.copiedBuffer(m_data);
-				DataInputStream in = new DataInputStream(createInputSteam(copyData, COMMPRESS_TYPE));
+			ByteBuf copyData = Unpooled.copiedBuffer(m_data);
+			DataInputStream in = new DataInputStream(createInputSteam(copyData, COMMPRESS_TYPE));
 
+			try {
 				in.skip(offset);
 				int length = in.readInt();
 				byte[] result = new byte[length];
@@ -136,6 +135,12 @@ public class DefaultBlock implements Block {
 				return Unpooled.wrappedBuffer(result);
 			} catch (IOException e) {
 				Cat.logError(e);
+			} finally{
+				try {
+	            in.close();
+            } catch (Exception e) {
+            	//ignore
+            }
 			}
 		}
 
@@ -149,7 +154,7 @@ public class DefaultBlock implements Block {
 				m_out.flush();
 				m_out.close();
 			} catch (IOException e) {
-				// ignore it
+				Cat.logError(e);
 			}
 
 			m_out = null;
@@ -188,7 +193,6 @@ public class DefaultBlock implements Block {
 		buf.readBytes(m_out, len);
 		m_offsets.put(id, m_offset);
 		m_offset += len;
-
 	}
 
 	@Override

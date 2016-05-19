@@ -40,4 +40,12 @@ public class SystemContactor extends ProjectContactor {
 		return super.queryWeiXinContactors(domain);
 	}
 
+	@Override
+	public List<String> queryDXContactors(String domain) {
+		if (domain.startsWith(prefix)) {
+			domain = domain.substring(7);
+		}
+		return super.queryDXContactors(domain);
+	}
+
 }
