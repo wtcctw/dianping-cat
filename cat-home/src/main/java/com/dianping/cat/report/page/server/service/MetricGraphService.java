@@ -61,6 +61,8 @@ public class MetricGraphService implements Initializable {
 	public void initialize() throws InitializationException {
 		try {
 			m_last = m_dao.findLast(1, MetricGraphEntity.READSET_FULL);
+		} catch (DalNotFoundException e) {
+			// Ignore
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
