@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.dianping.cat.configuration.mobile.entity.Item;
+import com.dianping.cat.configuration.app.crash.entity.App;
 import com.dianping.cat.report.ErrorMsg;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
@@ -12,7 +12,7 @@ import com.dianping.cat.report.page.app.service.FieldsInfo;
 
 public class CrashLogDisplayInfo {
 
-	private Collection<Item> m_appNames;
+	private Collection<App> m_appNames;
 
 	private FieldsInfo m_fieldsInfo;
 
@@ -50,7 +50,7 @@ public class CrashLogDisplayInfo {
 		m_msgDistributions = msgDistributions;
 	}
 
-	public Collection<Item> getAppNames() {
+	public Collection<App> getAppNames() {
 		return m_appNames;
 	}
 
@@ -70,7 +70,7 @@ public class CrashLogDisplayInfo {
 		return m_totalCount;
 	}
 
-	public void setAppNames(Collection<Item> appNames) {
+	public void setAppNames(Collection<App> appNames) {
 		m_appNames = appNames;
 	}
 

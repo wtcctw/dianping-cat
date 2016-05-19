@@ -1,6 +1,7 @@
 package com.dianping.cat.config.app;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,6 +53,10 @@ public class CrashLogConfigManager implements Initializable {
 		} else {
 			return null;
 		}
+	}
+
+	public Collection<App> findApps() {
+		return m_config.getApps().values();
 	}
 
 	public App findApp(String id) {

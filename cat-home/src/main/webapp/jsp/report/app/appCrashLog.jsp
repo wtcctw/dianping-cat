@@ -14,9 +14,7 @@
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<script src="${model.webapp}/assets/js/select2.min.js"></script>
 	<script src="${model.webapp}/assets/js/chosen.jquery.min.js"></script>
-	
-	<div class="report">
-		<c:set var="navUrlPrefix" value="op=${payload.action.name}&query1=${payload.query1}"/> 
+		<div class="report">
 		<table class="table ">
 		<tr>
 		<td colspan="2">
@@ -31,7 +29,7 @@
 	              <span class="input-group-addon">APP Name</span>  
 				<select id="appName" style="width: 200px; height:33px">
 						<c:forEach var="appName" items="${model.crashLogDisplayInfo.appNames}">
-							<option value="${appName.value}">${appName.des}</option>
+							<option value="${appName.name}">${appName.desc}</option>
 						</c:forEach>
 				</select></div>
 				    <div class="input-group" style="float:left;">
@@ -40,7 +38,14 @@
 	            </div>
 					&nbsp;&nbsp;&nbsp;<input class="btn btn-primary btn-sm "
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
-					type="submit" /></td></tr>
+					type="submit" /></td>
+					<td>
+						<div class="nav-search nav" id="nav-search">
+						&nbsp;[ <a href="${model.baseUri}?op=appCrashLog&crashLogQuery.day=${payload.crashLogQuery.day}&crashLogQuery.appName=${payload.crashLogQuery.appName}&crashLogQuery.dpid=${payload.crashLogQuery.dpid}&crashLogQuery.query=${payload.crashLogQuery.query}&crashLogQuery.step=-1">-1d</a> ]&nbsp;
+						&nbsp;[ <a href="${model.baseUri}?op=appCrashLog&crashLogQuery.day=${payload.crashLogQuery.day}&crashLogQuery.appName=${payload.crashLogQuery.appName}&crashLogQuery.dpid=${payload.crashLogQuery.dpid}&crashLogQuery.query=${payload.crashLogQuery.query}&crashLogQuery.step=1">+1d</a> ]&nbsp;
+						&nbsp;[ <a href="${model.baseUri}?op=appCrashLog&crashLogQuery.appName=${payload.crashLogQuery.appName}&crashLogQuery.dpid=${payload.crashLogQuery.dpid}&crashLogQuery.query=${payload.crashLogQuery.query}">now</a> ]&nbsp;
+						</div>
+					</td></tr>
 					<tr><td width="100px;">APP版本</td><td>
 						<div>
 						<label class="btn btn-info btn-sm">

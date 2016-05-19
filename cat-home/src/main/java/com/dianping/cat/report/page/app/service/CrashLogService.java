@@ -35,7 +35,6 @@ import com.dianping.cat.config.Level;
 import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.app.CrashLogConfigManager;
 import com.dianping.cat.config.app.MobileConfigManager;
-import com.dianping.cat.config.app.MobileConstants;
 import com.dianping.cat.helper.Status;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ErrorMsg;
@@ -233,7 +232,7 @@ public class CrashLogService {
 		CrashLogDisplayInfo info = new CrashLogDisplayInfo();
 
 		buildCrashLogData(entity, info);
-		info.setAppNames(m_mobileConfigManager.queryConstantItem(MobileConstants.APP_NAME).values());
+		info.setAppNames(m_crashLogConfig.findApps());
 
 		return info;
 	}
@@ -254,7 +253,7 @@ public class CrashLogService {
 		if (!fieldsMap.isEmpty()) {
 			info.setFieldsInfo(buildFiledsInfo(fieldsMap));
 		}
-		info.setAppNames(m_mobileConfigManager.queryConstantItem(MobileConstants.APP_NAME).values());
+		info.setAppNames(m_crashLogConfig.findApps());
 		return info;
 	}
 

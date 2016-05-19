@@ -25,6 +25,9 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@FieldMeta("name")
 	private String m_name;
 
+	@FieldMeta("timeRange")
+	private int m_timeRange;
+
 	private SimpleDateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	public Payload() {
@@ -58,19 +61,27 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		try {
 			if (m_customStart != null && m_customStart.length() > 0) {
 				start = m_format.parse(m_customStart);
+				start = buildDate(start);
 			} else {
-				start = TimeHelper.getCurrentHour(-3);
+				start = new Date(getEndDate().getTime() - TimeHelper.ONE_HOUR * getTimeRange(4));
 			}
-			return buildDate(start);
+			return start;
 		} catch (Exception e) {
-			return TimeHelper.getCurrentHour(-3);
+			return TimeHelper.getCurrentHour(1 - getTimeRange(4));
 		}
 
 	}
 
+	public int getTimeRange(int d) {
+		if (m_timeRange == 0) {
+			return d;
+		}
+		return m_timeRange;
+	}
+
 	private Date buildDate(Date date) {
 		long time = date.getTime();
-		return new Date(time - time % TimeHelper.ONE_HOUR);
+		return new Date(time - time % TimeHelper.ONE_HOUR + m_step * TimeHelper.ONE_HOUR);
 	}
 
 	public Date getEndDate() {
@@ -81,6 +92,7 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 			} else {
 				end = TimeHelper.getCurrentHour(1);
 			}
+
 			return buildDate(end);
 		} catch (Exception e) {
 			return TimeHelper.getCurrentHour(1);
@@ -102,6 +114,14 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public void setName(String name) {
 		m_name = name;
+	}
+
+	public int getTimeRange() {
+		return m_timeRange;
+	}
+
+	public void setTimeRange(int timeRange) {
+		m_timeRange = timeRange;
 	}
 
 	@Override

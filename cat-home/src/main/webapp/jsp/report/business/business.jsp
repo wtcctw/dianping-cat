@@ -115,6 +115,25 @@
 				
 			});
 	</script>
+		<div class="breadcrumbs" id="breadcrumbs">
+		&nbsp;&nbsp;时间段 
+					<c:forEach var="range" items="${model.allRange}">
+						<c:choose>
+							<c:when test="${payload.timeRange eq range.duration}">
+								&nbsp;&nbsp;&nbsp;[ <a href="?op=view&name=${payload.name}&type=${payload.type}&timeRange=${range.duration}&endDate=${w:format(model.endTime,'yyyy-MM-dd HH:mm')}" class="current">${range.title}</a> ]
+							</c:when>
+							<c:otherwise>
+								&nbsp;&nbsp;&nbsp;[ <a href="?op=view&name=${payload.name}&type=${payload.type}&timeRange=${range.duration}&endDate=${w:format(model.endTime,'yyyy-MM-dd HH:mm')}">${range.title}</a> ]
+							</c:otherwise>
+							</c:choose>
+					</c:forEach>
+			<!-- #section:basics/content.searchbox -->
+			<div class="nav-search nav" id="nav-search">
+				<c:forEach var="nav" items="${model.navs}">
+					&nbsp;[ <a href="${model.baseUri}?op=view&name=${payload.name}&type=${payload.type}&endDate=${w:format(model.endTime,'yyyy-MM-dd HH:mm')}&step=${nav.hours}&timeRange=${payload.timeRange}">${nav.title}</a> ]&nbsp;
+				</c:forEach>
+				&nbsp;[ <a href="${model.baseUri}?op=view&name=${payload.name}&type=${payload.type}&timeRange=${payload.timeRange}">now</a> ]&nbsp;
+			</div></div>
 	<table>
 		<tr>
 			<th class="left">
