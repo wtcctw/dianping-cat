@@ -27,10 +27,6 @@ public class KafKaProducerTest {
 		for (int i = 0; i < 10000; i++){
 			LogItem item = new LogItem();
 			
-			item.setEventAction("action");
-			item.setEventLabel("label");
-			item.setEventValue("value");
-			
 			String value = item.toString();
 			producer.send(new ProducerRecord<String, String>("test", value));
 		}
