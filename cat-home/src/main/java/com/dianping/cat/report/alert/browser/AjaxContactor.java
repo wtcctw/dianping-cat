@@ -45,4 +45,9 @@ public class AjaxContactor extends ProjectContactor {
 	public List<String> querySmsContactors(String id) {
 		return super.querySmsContactors(queryDomainByUrl(id));
 	}
+
+	@Override
+	public List<String> queryDXContactors(String id) {
+		return super.queryDXContactors(queryDomainByUrl(id));
+	}
 }

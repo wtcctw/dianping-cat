@@ -38,9 +38,9 @@ public class AppContactor extends ProjectContactor {
 	}
 
 	@Override
-   public List<String> queryDXContactors(String id) {
-		return super.queryDXContactors(id);
-   }
+	public List<String> queryDXContactors(String id) {
+		return super.queryDXContactors(queryDomainByCommand(id));
+	}
 
 	@Override
 	public List<String> queryEmailContactors(String id) {

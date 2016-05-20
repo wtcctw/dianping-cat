@@ -32,6 +32,7 @@ import com.dianping.cat.report.page.storage.task.StorageReportBuilder;
 import com.dianping.cat.report.page.storage.task.StorageReportService;
 import com.dianping.cat.report.server.RemoteServersManager;
 import com.dianping.cat.report.service.ModelService;
+import com.dianping.cat.service.ProjectService;
 
 public class StorageComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -56,7 +57,8 @@ public class StorageComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Contactor.class, StorageSQLContactor.ID, StorageSQLContactor.class).req(AlertConfigManager.class));
 		all.add(C(Contactor.class, StorageCacheContactor.ID, StorageCacheContactor.class).req(AlertConfigManager.class));
-		all.add(C(Contactor.class, StorageRPCContactor.ID, StorageRPCContactor.class).req(AlertConfigManager.class));
+		all.add(C(Contactor.class, StorageRPCContactor.ID, StorageRPCContactor.class).req(AlertConfigManager.class,
+		      ProjectService.class));
 
 		all.add(C(Decorator.class, StorageSQLDecorator.ID, StorageSQLDecorator.class));
 		all.add(C(Decorator.class, StorageCacheDecorator.ID, StorageCacheDecorator.class));

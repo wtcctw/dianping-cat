@@ -68,7 +68,7 @@ public abstract class AbstractStorageContactor extends DefaultContactor implemen
 		if (receiver != null && !receiver.isEnable()) {
 			return dxReceivers;
 		} else {
-			dxReceivers.addAll(buildDefaultSMSReceivers(receiver));
+			dxReceivers.addAll(buildDefaultDXReceivers(receiver));
 
 			return dxReceivers;
 		}

@@ -10,6 +10,7 @@ import org.unidal.web.mvc.view.annotation.ModelMeta;
 import com.dianping.cat.mvc.AbstractReportModel;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.page.metric.Range;
 
 @ModelMeta("business")
 public class Model extends AbstractReportModel<Action, ReportPage, Context> {
@@ -37,6 +38,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	@Override
 	public String getDomain() {
 		return getDisplayDomain();
+	}
+	
+	public Range[] getAllRange() {
+		return Range.values();
 	}
 
 	public List<LineChart> getLineCharts() {
