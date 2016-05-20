@@ -30,6 +30,4 @@ public class MobileConstants {
 
 	public static final String CONNECT_TYPE = "连接类型";
 
-	public static final String APP_NAME = "APP类型";
-
 }

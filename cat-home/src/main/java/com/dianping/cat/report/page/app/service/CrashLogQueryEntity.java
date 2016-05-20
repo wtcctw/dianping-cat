@@ -44,6 +44,8 @@ public class CrashLogQueryEntity {
 
 	private String m_query;
 
+	private int m_step;
+
 	public CrashLogQueryEntity() {
 		super();
 	}
@@ -65,6 +67,10 @@ public class CrashLogQueryEntity {
 	}
 
 	public Date buildEndTime() {
+		if (m_step != 0) {
+			m_endTime = "23:59";
+		}
+
 		if (StringUtils.isNotBlank(m_day) && StringUtils.isNotBlank(m_endTime)) {
 			try {
 				Date date = m_format.parse(m_day + " " + m_endTime);
@@ -76,6 +82,10 @@ public class CrashLogQueryEntity {
 	}
 
 	public Date buildStartTime() {
+		if (m_step != 0) {
+			m_day = m_day_format.format(buildDay());
+			m_startTime = "00:00";
+		}
 		if (StringUtils.isNotBlank(m_day) && StringUtils.isNotBlank(m_startTime)) {
 			try {
 				Date date = m_format.parse(m_day + " " + m_startTime);
@@ -106,14 +116,22 @@ public class CrashLogQueryEntity {
 	}
 
 	public Date buildDay() {
+		Date date = null;
+		
 		if (StringUtils.isNotBlank(m_day)) {
 			try {
-				Date date = m_day_format.parse(m_day);
-				return date;
+				date = m_day_format.parse(m_day);
 			} catch (ParseException e) {
+				date = TimeHelper.getCurrentDay();
 			}
+		} else {
+			date = TimeHelper.getCurrentDay();
 		}
-		return TimeHelper.getCurrentDay();
+
+		if (m_step != 0) {
+			date = new Date(date.getTime() + m_step * TimeHelper.ONE_DAY);
+		}
+		return date;
 	}
 
 	public String getDay() {
@@ -227,4 +245,13 @@ public class CrashLogQueryEntity {
 	public void setFormat(SimpleDateFormat format) {
 		m_format = format;
 	}
+
+	public int getStep() {
+		return m_step;
+	}
+
+	public void setStep(int step) {
+		m_step = step;
+	}
+
 }
