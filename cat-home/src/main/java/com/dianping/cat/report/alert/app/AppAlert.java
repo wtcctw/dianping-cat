@@ -31,7 +31,6 @@ import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
 import com.dianping.cat.alarm.spi.rule.DataChecker;
 import com.dianping.cat.app.AppCommandData;
 import com.dianping.cat.app.AppDataField;
-import com.dianping.cat.command.entity.Command;
 import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.app.MobileConfigManager;
 import com.dianping.cat.configuration.mobile.entity.ConstantItem;
@@ -69,6 +68,23 @@ public class AppAlert implements Task {
 
 	private static final int DATA_AREADY_MINUTE = 10;
 
+	private Map<Integer, List<AppCommandData>> buildDataMap(List<AppCommandData> datas, AppDataField appDataField) {
+		Map<Integer, List<AppCommandData>> dataMap = new LinkedHashMap<Integer, List<AppCommandData>>();
+
+		for (AppCommandData data : datas) {
+			int value = m_appDataService.queryFieldValue(data, appDataField);
+			List<AppCommandData> list = dataMap.get(value);
+
+			if (list == null) {
+				list = new LinkedList<AppCommandData>();
+
+				dataMap.put(value, list);
+			}
+			list.add(data);
+		}
+		return dataMap;
+	}
+
 	private Long buildMillsByString(String time) throws Exception {
 		String[] times = time.split(":");
 		int hour = Integer.parseInt(times[0]);
@@ -76,6 +92,42 @@ public class AppAlert implements Task {
 		long result = hour * 60 * 60 * 1000 + minute * 60 * 1000;
 
 		return result;
+	}
+
+	private List<CommandQueryEntity> buildQueries(long start, long end, AppAlarmRuleParam param) {
+		List<CommandQueryEntity> queries = new LinkedList<CommandQueryEntity>();
+		long fiveMinutes = TimeHelper.ONE_MINUTE * 5;
+
+		for (long t = end - fiveMinutes; t >= start; t -= fiveMinutes) {
+			Date day = TimeHelper.getCurrentDay(t);
+			int startMinute = (int) ((t - day.getTime()) / TimeHelper.ONE_MINUTE);
+			CommandQueryEntity query = new CommandQueryEntity(day, param, startMinute, startMinute + 4);
+
+			queries.add(query);
+		}
+
+		return queries;
+	}
+
+	private List<AlarmReusltInfo> buildResultInfos(AppAlarmRuleParam param, Map<Integer, double[]> datas, Date start,
+	      Date end) {
+		List<AlarmReusltInfo> infos = new LinkedList<AlarmReusltInfo>();
+
+		for (Entry<Integer, double[]> data : datas.entrySet()) {
+			try {
+				AppAlarmRuleParam p = param.clone();
+				int key = data.getKey();
+
+				m_alarmRuleParamBuilder.setField(p, key);
+				AlarmReusltInfo info = new AlarmReusltInfo(data.getValue(), p, start, end);
+
+				infos.add(info);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+
+		}
+		return infos;
 	}
 
 	private Pair<Date, Integer> buildTimePair(long time) {
@@ -88,10 +140,27 @@ public class AppAlert implements Task {
 		return dayAndMinute;
 	}
 
-	public double[] fetchDatas(AppAlarmRuleParam param, QueryType type, int minute) {
+	private List<AlarmReusltInfo> fetchBatchDatas(AppAlarmRuleParam param, QueryType type, int minute) {
 		long currentTime = System.currentTimeMillis();
 		long endTime = currentTime - DATA_AREADY_MINUTE * TimeHelper.ONE_MINUTE;
 		long startTime = endTime - minute * TimeHelper.ONE_MINUTE;
+		List<Map<Integer, Double>> results = new LinkedList<Map<Integer, Double>>();
+		List<CommandQueryEntity> queries = buildQueries(startTime, endTime, param);
+
+		for (CommandQueryEntity query : queries) {
+			results.add(queryAlertValue(query, type, param.getGroupBy()));
+		}
+
+		Map<Integer, double[]> datas = mergeBatchDatas(results);
+
+		return buildResultInfos(param, datas, new Date(startTime), new Date(endTime));
+	}
+
+	public AlarmReusltInfo fetchDatas(AppAlarmRuleParam param, QueryType type, int minute) {
+		long currentTime = System.currentTimeMillis();
+		long endTime = currentTime - DATA_AREADY_MINUTE * TimeHelper.ONE_MINUTE;
+		long startTime = endTime - minute * TimeHelper.ONE_MINUTE;
+
 		double[] datas = null;
 		Pair<Date, Integer> end = buildTimePair(endTime);
 		Pair<Date, Integer> start = buildTimePair(startTime);
@@ -110,84 +179,12 @@ public class AppAlert implements Task {
 
 			datas = mergerArray(endDatas, startDatas);
 		}
-		return datas;
+		return new AlarmReusltInfo(datas, param, new Date(startTime), new Date(endTime));
 	}
 
-	private Map<Integer, double[]> fetchBatchDatas(AppAlarmRuleParam param, QueryType type, int minute) {
-		long currentTime = System.currentTimeMillis();
-		long endTime = currentTime - DATA_AREADY_MINUTE * TimeHelper.ONE_MINUTE;
-		long startTime = endTime - minute * TimeHelper.ONE_MINUTE;
-		List<Map<Integer, Double>> results = new LinkedList<Map<Integer, Double>>();
-		List<CommandQueryEntity> queries = buildQueries(startTime, endTime, param);
-
-		for (CommandQueryEntity query : queries) {
-			results.add(queryAlertValue(query, type, param.getGroupBy()));
-		}
-
-		Map<Integer, double[]> field2Datas = mergeBatchDatas(results);
-
-		return field2Datas;
-	}
-
-	private Map<Integer, double[]> mergeBatchDatas(List<Map<Integer, Double>> results) {
-		Map<Integer, double[]> field2Datas = new LinkedHashMap<Integer, double[]>();
-		int size = results.size();
-		int i = 0;
-
-		for (Map<Integer, Double> result : results) {
-			for (Entry<Integer, Double> entry : result.entrySet()) {
-				int key = entry.getKey();
-				double[] ds = field2Datas.get(key);
-
-				if (ds == null) {
-					ds = new double[size];
-					field2Datas.put(key, ds);
-				}
-				ds[i] = entry.getValue();
-			}
-			i++;
-		}
-		return field2Datas;
-	}
-
-	private Map<Integer, Double> queryAlertValue(CommandQueryEntity query, QueryType type, AppDataField appDataField) {
-		List<AppCommandData> datas = queryByAlarm(query, type, appDataField);
-		Map<Integer, Double> results = new LinkedHashMap<Integer, Double>();
-
-		switch (type) {
-		case SUCCESS:
-			Map<Integer, List<AppCommandData>> dataMap = buildDataMap(datas, appDataField);
-
-			for (Entry<Integer, List<AppCommandData>> entry : dataMap.entrySet()) {
-				double value = m_appDataService.computeSuccessRatio(query.getId(), entry.getValue());
-
-				results.put(entry.getKey(), value);
-			}
-		case REQUEST:
-			initValue(appDataField, results);
-
-			for (AppCommandData data : datas) {
-				int filed = m_appDataService.queryFieldValue(data, appDataField);
-
-				results.put(filed, (double) data.getAccessNumberSum());
-			}
-		case DELAY:
-			for (AppCommandData data : datas) {
-				long accessSumNum = data.getAccessNumberSum();
-				int field = m_appDataService.queryFieldValue(data, appDataField);
-				double value = 0;
-
-				if (accessSumNum > 0) {
-					value = data.getResponseSumTimeSum() / accessSumNum;
-				}
-
-				results.put(field, value);
-			}
-		case REQUEST_PACKAGE:
-		case RESPONSE_PACKAGE:
-			throw new RuntimeException("unexpected query type, type:" + type);
-		}
-		return results;
+	@Override
+	public String getName() {
+		return AlertType.App.getName();
 	}
 
 	private void initValue(AppDataField appDataField, Map<Integer, Double> results) {
@@ -196,65 +193,6 @@ public class AppAlert implements Task {
 		for (Integer items : constants.getItems().keySet()) {
 			results.put(items, 0D);
 		}
-	}
-
-	private Map<Integer, List<AppCommandData>> buildDataMap(List<AppCommandData> datas, AppDataField appDataField) {
-		Map<Integer, List<AppCommandData>> dataMap = new LinkedHashMap<Integer, List<AppCommandData>>();
-
-		for (AppCommandData data : datas) {
-			int value = m_appDataService.queryFieldValue(data, appDataField);
-			List<AppCommandData> list = dataMap.get(value);
-
-			if (list == null) {
-				list = new LinkedList<AppCommandData>();
-
-				dataMap.put(value, list);
-			}
-			list.add(data);
-		}
-		return dataMap;
-	}
-
-	public List<AppCommandData> queryByAlarm(CommandQueryEntity entity, QueryType type, AppDataField groupByField) {
-		List<AppCommandData> datas = new ArrayList<AppCommandData>();
-
-		try {
-			switch (type) {
-			case SUCCESS:
-				datas = m_appDataService.queryByFieldCode(entity, groupByField);
-				break;
-			case REQUEST:
-			case DELAY:
-				datas = m_appDataService.queryByField(entity, groupByField);
-				break;
-			case REQUEST_PACKAGE:
-			case RESPONSE_PACKAGE:
-				throw new RuntimeException("unexpected query type, type:" + type);
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return datas;
-	}
-
-	private List<CommandQueryEntity> buildQueries(long start, long end, AppAlarmRuleParam param) {
-		List<CommandQueryEntity> queries = new LinkedList<CommandQueryEntity>();
-		long fiveMinutes = TimeHelper.ONE_MINUTE * 5;
-
-		for (long t = end - fiveMinutes; t >= start; t -= fiveMinutes) {
-			Date day = TimeHelper.getCurrentDay(t);
-			int startMinute = (int) ((t - day.getTime()) / TimeHelper.ONE_MINUTE);
-			CommandQueryEntity query = new CommandQueryEntity(day, param, startMinute, startMinute + 4);
-
-			queries.add(query);
-		}
-
-		return queries;
-	}
-
-	@Override
-	public String getName() {
-		return AlertType.App.getName();
 	}
 
 	private boolean judgeCurrentInConfigRange(Config config) {
@@ -280,6 +218,27 @@ public class AppAlert implements Task {
 		return true;
 	}
 
+	private Map<Integer, double[]> mergeBatchDatas(List<Map<Integer, Double>> results) {
+		Map<Integer, double[]> field2Datas = new LinkedHashMap<Integer, double[]>();
+		int size = results.size();
+		int i = 0;
+
+		for (Map<Integer, Double> result : results) {
+			for (Entry<Integer, Double> entry : result.entrySet()) {
+				int key = entry.getKey();
+				double[] ds = field2Datas.get(key);
+
+				if (ds == null) {
+					ds = new double[size];
+					field2Datas.put(key, ds);
+				}
+				ds[i] = entry.getValue();
+			}
+			i++;
+		}
+		return field2Datas;
+	}
+
 	protected double[] mergerArray(double[] from, double[] to) {
 		int fromLength = from.length;
 		int toLength = to.length;
@@ -300,44 +259,85 @@ public class AppAlert implements Task {
 		List<AppAlarmRuleParam> params = m_alarmRuleParamBuilder.build(rule);
 
 		for (AppAlarmRuleParam param : params) {
+
 			QueryType queryType = QueryType.findByName(param.getMetric());
 			int command = param.getCommand();
+
 			Pair<Integer, List<Condition>> pair = queryCheckMinuteAndConditions(rule.getConfigs());
+			List<AlarmReusltInfo> infos = new LinkedList<AppAlert.AlarmReusltInfo>();
 
 			if (param.isEachAlarm()) {
-				Map<Integer, double[]> results = fetchBatchDatas(param, queryType, pair.getKey());
-
-				for (Entry<Integer, double[]> entry : results.entrySet()) {
-					double[] datas = entry.getValue();
-
-					sendAlarm(param, queryType, command, pair.getValue(), datas);
-				}
+				infos.addAll(fetchBatchDatas(param, queryType, pair.getKey()));
 			} else {
-				double[] datas = fetchDatas(param, queryType, pair.getKey());
-
-				sendAlarm(param, queryType, command, pair.getValue(), datas);
+				infos.add(fetchDatas(param, queryType, pair.getKey()));
 			}
-
+			sendAlarm(queryType, command, pair.getValue(), infos);
 		}
 	}
 
-	private void sendAlarm(AppAlarmRuleParam param, QueryType queryType, int command, List<Condition> checkedConditions,
-	      double[] datas) {
-		if (datas != null && datas.length > 0) {
-			List<DataCheckEntity> alertResults = m_dataChecker.checkDataForApp(datas, checkedConditions);
-			String commandName = queryCommand(command);
+	private Map<Integer, Double> queryAlertValue(CommandQueryEntity query, QueryType type, AppDataField appDataField) {
+		List<AppCommandData> datas = queryByAlarm(query, type, appDataField);
+		Map<Integer, Double> results = new LinkedHashMap<Integer, Double>();
 
-			for (DataCheckEntity alertResult : alertResults) {
-				Map<String, Object> par = new HashMap<String, Object>();
-				par.put("param", param);
-				AlertEntity entity = new AlertEntity();
+		switch (type) {
+		case SUCCESS:
+			Map<Integer, List<AppCommandData>> dataMap = buildDataMap(datas, appDataField);
 
-				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-				      .setLevel(alertResult.getAlertLevel());
-				entity.setMetric(queryType.getTitle()).setType(getName()).setGroup(commandName).setParas(par);
-				m_sendManager.addAlert(entity);
+			for (Entry<Integer, List<AppCommandData>> entry : dataMap.entrySet()) {
+				double value = m_appDataService.computeSuccessRatio(query.getId(), entry.getValue());
+
+				results.put(entry.getKey(), value);
 			}
+			break;
+		case REQUEST:
+			initValue(appDataField, results);
+
+			for (AppCommandData data : datas) {
+				int filed = m_appDataService.queryFieldValue(data, appDataField);
+
+				results.put(filed, (double) data.getAccessNumberSum());
+			}
+			break;
+		case DELAY:
+			for (AppCommandData data : datas) {
+				long accessSumNum = data.getAccessNumberSum();
+				int field = m_appDataService.queryFieldValue(data, appDataField);
+				double value = 0;
+
+				if (accessSumNum > 0) {
+					value = data.getResponseSumTimeSum() / accessSumNum;
+				}
+
+				results.put(field, value);
+			}
+			break;
+		case REQUEST_PACKAGE:
+		case RESPONSE_PACKAGE:
+			throw new RuntimeException("unexpected query type, type:" + type);
 		}
+		return results;
+	}
+
+	public List<AppCommandData> queryByAlarm(CommandQueryEntity entity, QueryType type, AppDataField groupByField) {
+		List<AppCommandData> datas = new ArrayList<AppCommandData>();
+
+		try {
+			switch (type) {
+			case SUCCESS:
+				datas = m_appDataService.queryByFieldCode(entity, groupByField);
+				break;
+			case REQUEST:
+			case DELAY:
+				datas = m_appDataService.queryByField(entity, groupByField);
+				break;
+			case REQUEST_PACKAGE:
+			case RESPONSE_PACKAGE:
+				throw new RuntimeException("unexpected query type, type:" + type);
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return datas;
 	}
 
 	private Pair<Integer, List<Condition>> queryCheckMinuteAndConditions(List<Config> configs) {
@@ -362,17 +362,6 @@ public class AppAlert implements Task {
 			}
 		}
 		return new Pair<Integer, List<Condition>>(maxMinute, conditions);
-	}
-
-	private String queryCommand(int command) {
-		Map<Integer, Command> commands = m_appConfigManager.getRawCommands();
-		Command value = commands.get(command);
-
-		if (value != null) {
-			return value.getName();
-		} else {
-			throw new RuntimeException("Error config in command code: " + command);
-		}
 	}
 
 	@Override
@@ -414,7 +403,73 @@ public class AppAlert implements Task {
 		}
 	}
 
+	private void sendAlarm(QueryType queryType, int command, List<Condition> checkedConditions,
+	      List<AlarmReusltInfo> results) {
+		for (AlarmReusltInfo result : results) {
+			try {
+				List<DataCheckEntity> alertResults = m_dataChecker.checkDataForApp(result.getDatas(), checkedConditions);
+				AppAlarmRuleParam param = result.getParam();
+				String commandName = param.getCommandName();
+
+				for (DataCheckEntity alertResult : alertResults) {
+					try {
+						Map<String, Object> par = new HashMap<String, Object>();
+
+						par.put("param", param);
+						par.put("start", result.getStart());
+						par.put("end", result.getEnd());
+						AlertEntity entity = new AlertEntity();
+
+						entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
+						      .setLevel(alertResult.getAlertLevel());
+						entity.setMetric(queryType.getTitle()).setType(getName()).setGroup(commandName).setParas(par);
+						m_sendManager.addAlert(entity);
+					} catch (Exception e) {
+						Cat.logError(e);
+					}
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+	}
+
 	@Override
 	public void shutdown() {
+	}
+
+	public static class AlarmReusltInfo {
+
+		private double[] m_datas;
+
+		private AppAlarmRuleParam m_param;
+
+		private Date m_start;
+
+		private Date m_end;
+
+		public AlarmReusltInfo(double[] datas, AppAlarmRuleParam param, Date start, Date end) {
+			m_datas = datas;
+			m_param = param;
+			m_start = start;
+			m_end = end;
+		}
+
+		public double[] getDatas() {
+			return m_datas;
+		}
+
+		public Date getEnd() {
+			return m_end;
+		}
+
+		public AppAlarmRuleParam getParam() {
+			return m_param;
+		}
+
+		public Date getStart() {
+			return m_start;
+		}
+
 	}
 }

@@ -15,6 +15,7 @@ import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.alarm.spi.decorator.Decorator;
 import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.app.MobileConfigManager;
+import com.dianping.cat.config.app.MobileConstants;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -31,6 +32,31 @@ public class AppDecorator extends Decorator implements Initializable {
 
 	public Configuration m_configuration;
 
+	private AppAlarmDisplay buildAlarmDisplay(AppAlarmRuleParam para) {
+		AppAlarmDisplay display = new AppAlarmDisplay();
+
+		display.setCommand(para.getCommand());
+		display.setCommandName(para.getCommandName());
+		display.setGroupBy(para.getGroupBy());
+		display.setMetric(para.getMetric());
+		display.setCode(para.getCode() == -1 ? "所有" : String.valueOf(para.getCode()));
+		display.setCity(buildFieldValue(para.getCity(), MobileConstants.CITY));
+		display.setConnectType((buildFieldValue(para.getConnectType(), MobileConstants.CONNECT_TYPE)));
+		display.setNetwork(buildFieldValue(para.getNetwork(), MobileConstants.NETWORK));
+		display.setOperator(buildFieldValue(para.getOperator(), MobileConstants.OPERATOR));
+		display.setPlatform(buildFieldValue(para.getPlatform(), MobileConstants.PLATFORM));
+		display.setVersion(buildFieldValue(para.getVersion(), MobileConstants.VERSION));
+		return display;
+	}
+
+	private String buildFieldValue(int id, String type) {
+		if (id != -1) {
+			return m_mobileConfigManager.getConstantItemValue(type, id, "未知 [" + id + "]");
+		} else {
+			return "所有";
+		}
+	}
+
 	@Override
 	public String generateContent(AlertEntity alert) {
 		Map<Object, Object> dataMap = generateExceptionMap(alert);
@@ -40,6 +66,7 @@ public class AppDecorator extends Decorator implements Initializable {
 			Template t = m_configuration.getTemplate("appAlert.ftl");
 			t.process(dataMap, sw);
 		} catch (Exception e) {
+			e.printStackTrace();
 			Cat.logError("build front end content error:" + alert.toString(), e);
 		}
 
@@ -49,10 +76,12 @@ public class AppDecorator extends Decorator implements Initializable {
 	protected Map<Object, Object> generateExceptionMap(AlertEntity alert) {
 		Map<Object, Object> map = new HashMap<Object, Object>();
 		AppAlarmRuleParam para = (AppAlarmRuleParam) alert.getPara("param");
+		AppAlarmDisplay display = buildAlarmDisplay(para);
 
-		map.put("para", para);
+		map.put("start", alert.getPara("start"));
+		map.put("end", alert.getPara("end"));
+		map.put("para", display);
 		map.put("content", alert.getContent());
-		map.put("date", m_format.format(alert.getDate()));
 
 		return map;
 	}

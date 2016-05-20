@@ -1,6 +1,11 @@
 [App告警 命令字: ${para.commandName} 告警指标: ${para.metric}] <br/>
-${content}[时间: ${date}] <br/><br/>
+${content}
+触发时间段 开始：[ ${start?string("yyyy-MM-dd HH:mm")} ] --> 结束：[ ${end?string("yyyy-MM-dd HH:mm")} ]<br/>
 
+<#if para.eachAlarm>
+	告警存在任意维度： ${para.groupBy.title}<br/>
+</#if>
+	${para.alarmDesc}
 <table rules="all" border="1" style="font-size: medium;">
 	<tr style="background-color:#336699; color:#fff;" align="center">
 		<td>告警指标</td>
@@ -26,4 +31,4 @@ ${content}[时间: ${date}] <br/><br/>
 	</tr>
 </table>
 <br/>
-<a href='http://cat.dianpingoa.com/cat/r/app?query1=;${para.command};;;;;;;;;;23:59'>点击此处查看详情</a><br/>
+<a href="http://cat.dianpingoa.com/cat/r/app?query1=;${para.command};;;;;;;;;;23:59">点击此处查看详情</a><br/>

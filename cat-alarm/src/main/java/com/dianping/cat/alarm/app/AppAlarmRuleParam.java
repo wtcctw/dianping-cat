@@ -2,7 +2,7 @@ package com.dianping.cat.alarm.app;
 
 import com.dianping.cat.app.AppDataField;
 
-public class AppAlarmRuleParam {
+public class AppAlarmRuleParam implements Cloneable {
 
 	private int m_command;
 
@@ -74,6 +74,10 @@ public class AppAlarmRuleParam {
 		return m_groupBy != null;
 	}
 
+	public boolean getEachAlarm() {
+		return m_groupBy != null;
+	}
+
 	public void setCity(int city) {
 		m_city = city;
 	}
@@ -119,10 +123,29 @@ public class AppAlarmRuleParam {
 	}
 
 	@Override
+	public AppAlarmRuleParam clone() throws CloneNotSupportedException {
+		AppAlarmRuleParam param = new AppAlarmRuleParam();
+
+		param.setCommand(m_command);
+		param.setCommandName(m_commandName);
+		param.setCode(m_code);
+		param.setConnectType(m_connectType);
+		param.setMetric(m_metric);
+		param.setGroupBy(m_groupBy);
+		param.setNetwork(m_network);
+		param.setCity(m_city);
+		param.setOperator(m_operator);
+		param.setPlatform(m_platform);
+		param.setVersion(m_version);
+		return param;
+	}
+
+	@Override
 	public String toString() {
 		return "AppAlarmRuleParam [m_command=" + m_command + ", m_commandName=" + m_commandName + ", m_code=" + m_code
 		      + ", m_network=" + m_network + ", m_version=" + m_version + ", m_connectType=" + m_connectType
 		      + ", m_platform=" + m_platform + ", m_city=" + m_city + ", m_operator=" + m_operator + ", m_metric="
-		      + m_metric + "]";
+		      + m_metric + ", m_groupBy=" + m_groupBy + "]";
 	}
+
 }

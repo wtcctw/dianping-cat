@@ -307,10 +307,10 @@
 					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.app.task.AppCommandAutoCompleter</role>
+					<role>com.dianping.cat.alarm.service.AppAlarmRuleService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.app.AppRuleConfigManager</role>
+					<role>com.dianping.cat.report.page.app.task.AppCommandAutoCompleter</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
@@ -385,6 +385,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppCommandConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.MobileConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.app.AppAlarmRuleParamBuilder</role>
@@ -4450,9 +4453,6 @@
 					<role>com.dianping.cat.report.page.app.service.AppConnectionService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.app.AppRuleConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.app.service.CrashLogService</role>
 				</requirement>
 				<requirement>
@@ -4508,24 +4508,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.MobileConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.app.AppRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.alert.app.AppRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.spi.config.UserDefinedRuleManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
 				</requirement>
 			</requirements>
 		</component>

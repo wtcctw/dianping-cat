@@ -102,6 +102,32 @@ public class AppAlarmRuleParamBuilder {
 		return param;
 	}
 
+	public void setField(AppAlarmRuleParam param, int value) {
+		switch (param.getGroupBy()) {
+		case OPERATOR:
+			param.setOperator(value);
+			break;
+		case APP_VERSION:
+			param.setVersion(value);
+			break;
+		case CITY:
+			param.setCity(value);
+			break;
+		case CONNECT_TYPE:
+			param.setConnectType(value);
+			break;
+		case NETWORK:
+			param.setNetwork(value);
+			break;
+		case PLATFORM:
+			param.setPlatform(value);
+			break;
+		case CODE:
+		case SOURCE:
+			break;
+		}
+	}
+
 	public void setMobileConfigManager(MobileConfigManager manager) {
 		m_mobileConfigManager = manager;
 	}
