@@ -7,6 +7,8 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.Test;
 
+import com.dianping.log.LogItem;
+
 public class KafKaProducerTest {
 
 	@Test
@@ -22,8 +24,16 @@ public class KafKaProducerTest {
 		props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 
 		Producer<String, String> producer = new KafkaProducer<String, String>(props);
-		for (int i = 0; i < 10000; i++)
-			producer.send(new ProducerRecord<String, String>("test", "key", "value"));
+		for (int i = 0; i < 10000; i++){
+			LogItem item = new LogItem();
+			
+			item.setEventAction("action");
+			item.setEventLabel("label");
+			item.setEventValue("value");
+			
+			String value = item.toString();
+			producer.send(new ProducerRecord<String, String>("test", value));
+		}
 
 		producer.close();
 	}
