@@ -455,8 +455,12 @@ public class CrashLogService {
 			info.setDpid(crashLog.getDpid());
 
 			CrashLogContent detail = m_crashLogContentDao.findByPK(id, CrashLogContentEntity.READSET_FULL);
+			byte[] compressed = detail.getContentMapped();
 
-			info.setDetail(buildContent(detail.getContent()));
+			if (compressed == null || compressed.length == 0) {
+				compressed = detail.getContent();
+			}
+			info.setDetail(buildContent(compressed));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
