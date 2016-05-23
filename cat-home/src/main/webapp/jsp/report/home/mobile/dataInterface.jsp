@@ -102,6 +102,8 @@
 <br/>
 
 <h4 class="text-danger">APP Crash日志上报接口</h4>
+ <pre>最新接口见wiki：<a href="http://wiki.sankuai.com/pages/viewpage.action?pageId=499041379">http://wiki.sankuai.com/pages/viewpage.action?pageId=499041379</a></pre>
+原有接口：
 	<pre>	http://{ip}/broker-service/api/crash</pre>
 		<p class="text-danger">参数可以post上来，需要对value进行encode。</p>
 	<table class="table table-bordered table-striped table-condensed  ">
@@ -158,6 +160,9 @@
 		<p>其他所有参数的设置可以在<a href="http://cat.dianpingoa.com/cat/r/app?op=appCrashLog">页面</a>点击查询后自动拼接生成，<span class="text-danger">将op参数设置为appCrashLogJson</span>就可以获取网页上的各个统计信息的JSON数据</p>
 <br/>
 
+<h4 class="text-danger">代码级日志上报接口</h4>
+ <pre>接口定义见wiki：<a href="http://wiki.sankuai.com/pages/viewpage.action?pageId=499041379">http://wiki.sankuai.com/pages/viewpage.action?pageId=499041379</a></pre>
+<br/>
 
 <h4 class="text-danger">APP 长连访问批量上报接口</h4>
 	<pre>	http://{ip}/broker-service/api/connection</pre>
