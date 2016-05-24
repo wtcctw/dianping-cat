@@ -1,4 +1,4 @@
-package com.dianping.cat.metric;
+package com.dianping.cat.server;
 
 import java.util.List;
 import java.util.Map;
@@ -9,7 +9,7 @@ public interface MetricService {
 
 	public Map<Long, Double> query(QueryParameter parameter);
 
-	public Map<Long, Double> queryFillNone(QueryParameter parameter);
+	public List<ServerGroupByEntity> queryByFields(QueryParameter parameter);
 
 	public List<String> queryEndPoints(String category);
 

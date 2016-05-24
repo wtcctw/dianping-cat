@@ -1,4 +1,4 @@
-package com.dianping.cat.metric;
+package com.dianping.cat.server;
 
 import java.util.Date;
 import java.util.List;
@@ -22,6 +22,10 @@ public class QueryParameter {
 
 	private Date m_end;
 
+	private String m_groupBy;
+
+	private String m_fillValue = "0";
+
 	public String getCategory() {
 		return m_category;
 	}
@@ -30,16 +34,20 @@ public class QueryParameter {
 		return m_end;
 	}
 
+	public String getFillValue() {
+		return m_fillValue;
+	}
+
+	public String getGroupBy() {
+		return m_groupBy;
+	}
+
 	public String getInterval() {
 		return m_interval;
 	}
 
 	public String getMeasurement() {
 		return m_measurement;
-	}
-
-	public Date getStart() {
-		return m_start;
 	}
 
 	public String getSqlTags() {
@@ -51,6 +59,10 @@ public class QueryParameter {
 		}
 
 		return tag;
+	}
+
+	public Date getStart() {
+		return m_start;
 	}
 
 	public String getTags() {
@@ -69,6 +81,15 @@ public class QueryParameter {
 	public QueryParameter setEnd(Date end) {
 		m_end = end;
 		return this;
+	}
+
+	public QueryParameter setFillValue(String fillValue) {
+		m_fillValue = fillValue;
+		return this;
+	}
+
+	public void setGroupBy(String groupBy) {
+		m_groupBy = groupBy;
 	}
 
 	public QueryParameter setInterval(String interval) {

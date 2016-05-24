@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
@@ -11,8 +12,9 @@ import com.dianping.cat.alarm.server.entity.Condition;
 import com.dianping.cat.alarm.server.entity.SubCondition;
 import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
 import com.dianping.cat.alarm.spi.rule.RuleType;
-import com.dianping.cat.metric.MetricService;
+import com.dianping.cat.server.MetricService;
 
+@Named
 public class ServerDataChecker {
 
 	@Inject

@@ -13,10 +13,10 @@ import org.unidal.web.mvc.payload.annotation.ObjectMeta;
 import com.dianping.cat.Constants;
 import com.dianping.cat.alarm.ServerAlarmRule;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.metric.MetricType;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.server.service.GraphParam;
+import com.dianping.cat.server.MetricType;
 
 public class Payload extends AbstractReportPayload<Action, ReportPage> {
 

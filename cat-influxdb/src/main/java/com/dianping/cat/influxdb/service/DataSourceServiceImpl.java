@@ -14,7 +14,7 @@ import com.dianping.cat.influxdb.InfluxDBFactory;
 import com.dianping.cat.influxdb.config.InfluxDBConfigManager;
 import com.dianping.cat.influxdb.config.entity.Influxdb;
 import com.dianping.cat.influxdb.config.entity.InfluxdbConfig;
-import com.dianping.cat.metric.DataSourceService;
+import com.dianping.cat.server.DataSourceService;
 import com.dianping.cat.task.TimerSyncTask;
 import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 

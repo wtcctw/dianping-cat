@@ -24,11 +24,11 @@ import com.dianping.cat.home.graph.entity.Item;
 import com.dianping.cat.home.graph.entity.Segment;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.metric.MetricService;
-import com.dianping.cat.metric.MetricType;
-import com.dianping.cat.metric.QueryParameter;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.server.service.MetricGraphBuilder;
+import com.dianping.cat.server.MetricService;
+import com.dianping.cat.server.MetricType;
+import com.dianping.cat.server.QueryParameter;
 
 @Named
 public class LineChartBuilder {
@@ -61,7 +61,7 @@ public class LineChartBuilder {
 
 						parameter.setCategory(segment.getCategory()).setStart(start).setEnd(end)
 						      .setMeasurement(segment.getMeasure()).setType(type).setTags(segment.getTags())
-						      .setInterval(interval);
+						      .setInterval(interval).setFillValue("0");
 						parameters.add(new LinechartParameter(entry.getKey(), segment.getId(), parameter));
 					} catch (Exception ex) {
 						Cat.logError(ex);
@@ -92,7 +92,7 @@ public class LineChartBuilder {
 
 						parameter.setCategory(segment.getCategory()).setStart(start).setEnd(end)
 						      .setMeasurement(segment.getId()).setType(type).setTags(m_graphBuilder.buildTag(tag, endPoint))
-						      .setInterval(interval);
+						      .setInterval(interval).setFillValue("0");
 						parameters.add(new LinechartParameter(measurement, tag, parameter));
 					}
 				} else {
@@ -100,7 +100,8 @@ public class LineChartBuilder {
 					QueryParameter parameter = new QueryParameter();
 
 					parameter.setCategory(segment.getCategory()).setStart(start).setEnd(end).setMeasurement(segment.getId())
-					      .setType(type).setTags(m_graphBuilder.buildTag("", endPoint)).setInterval(interval);
+					      .setType(type).setTags(m_graphBuilder.buildTag("", endPoint)).setInterval(interval)
+					      .setFillValue("0");
 					parameters.add(new LinechartParameter(measurement, measurement, parameter));
 				}
 			}

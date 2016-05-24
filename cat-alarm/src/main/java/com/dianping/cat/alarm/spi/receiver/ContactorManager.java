@@ -7,9 +7,11 @@ import java.util.Map;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.alarm.spi.AlertChannel;
 
+@Named
 public class ContactorManager extends ContainerHolder implements Initializable {
 
 	private Map<String, Contactor> m_contactors = new HashMap<String, Contactor>();

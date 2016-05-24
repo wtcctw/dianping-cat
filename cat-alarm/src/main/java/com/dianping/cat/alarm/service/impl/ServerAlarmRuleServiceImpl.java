@@ -74,7 +74,13 @@ public class ServerAlarmRuleServiceImpl implements ServerAlarmRuleService, Initi
 
 	@Override
 	public List<ServerAlarmRule> queryRules(String category) {
-		return m_alarmRules.get(category);
+		List<ServerAlarmRule> rules = m_alarmRules.get(category);
+
+		if (rules == null) {
+			rules = new ArrayList<ServerAlarmRule>();
+		}
+
+		return rules;
 	}
 
 	@Override

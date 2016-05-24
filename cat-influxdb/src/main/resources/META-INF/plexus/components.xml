@@ -260,18 +260,18 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.metric.MetricService</role>
+			<role>com.dianping.cat.server.MetricService</role>
 			<role-hint>Influx</role-hint>
 			<implementation>com.dianping.cat.influxdb.service.MetricServiceImpl</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.metric.DataSourceService</role>
+					<role>com.dianping.cat.server.DataSourceService</role>
 					<role-hint>Influx</role-hint>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.metric.DataSourceService</role>
+			<role>com.dianping.cat.server.DataSourceService</role>
 			<role-hint>Influx</role-hint>
 			<implementation>com.dianping.cat.influxdb.service.DataSourceServiceImpl</implementation>
 			<requirements>

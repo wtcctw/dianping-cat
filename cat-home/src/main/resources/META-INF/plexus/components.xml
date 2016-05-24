@@ -842,7 +842,7 @@
 			<implementation>com.dianping.cat.report.page.server.display.LineChartBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.metric.MetricService</role>
+					<role>com.dianping.cat.server.MetricService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.server.service.MetricGraphBuilder</role>
@@ -4040,84 +4040,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.alarm.spi.AlertManager</role>
-			<implementation>com.dianping.cat.alarm.spi.AlertManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.alarm.spi.config.AlertPolicyManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.alarm.spi.decorator.DecoratorManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.alarm.spi.receiver.ContactorManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.alarm.spi.spliter.SpliterManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.alarm.spi.sender.SenderManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.alarm.service.AlertService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.alarm.spi.config.AlertPolicyManager</role>
-			<implementation>com.dianping.cat.alarm.spi.config.AlertPolicyManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.alarm.spi.decorator.DecoratorManager</role>
-			<implementation>com.dianping.cat.alarm.spi.decorator.DecoratorManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.alarm.spi.receiver.ContactorManager</role>
-			<implementation>com.dianping.cat.alarm.spi.receiver.ContactorManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.alarm.spi.spliter.SpliterManager</role>
-			<implementation>com.dianping.cat.alarm.spi.spliter.SpliterManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.alarm.spi.sender.SenderManager</role>
-			<implementation>com.dianping.cat.alarm.spi.sender.SenderManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.alarm.service.AlertService</role>
-			<implementation>com.dianping.cat.alarm.service.AlertService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.alarm.AlertDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.alarm.AlertDao</role>
-			<implementation>com.dianping.cat.alarm.AlertDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.dependency.Handler</role>
 			<implementation>com.dianping.cat.report.page.dependency.Handler</implementation>
 			<requirements>
@@ -4345,7 +4267,7 @@
 			<implementation>com.dianping.cat.report.page.network.influx.InfluxNetGraphManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.metric.MetricService</role>
+					<role>com.dianping.cat.server.MetricService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
@@ -4366,7 +4288,7 @@
 			<implementation>com.dianping.cat.report.page.network.influx.InfluxNetGraphBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.metric.MetricService</role>
+					<role>com.dianping.cat.server.MetricService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4620,6 +4542,15 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.AlertDao</role>
+			<implementation>com.dianping.cat.alarm.AlertDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4991,7 +4922,7 @@
 					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.metric.MetricService</role>
+					<role>com.dianping.cat.server.MetricService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.graph.metric.DataExtractor</role>
@@ -5340,18 +5271,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.alarm.spi.config.SenderConfigManager</role>
-			<implementation>com.dianping.cat.alarm.spi.config.SenderConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>

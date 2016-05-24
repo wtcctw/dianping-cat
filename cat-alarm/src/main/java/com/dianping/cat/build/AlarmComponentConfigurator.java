@@ -24,7 +24,7 @@ import com.dianping.cat.alarm.spi.config.AlertConfigManager;
 import com.dianping.cat.alarm.spi.decorator.Decorator;
 import com.dianping.cat.alarm.spi.receiver.Contactor;
 import com.dianping.cat.influxdb.InfluxDB;
-import com.dianping.cat.metric.MetricService;
+import com.dianping.cat.server.MetricService;
 import com.dianping.cat.service.ProjectService;
 
 public class AlarmComponentConfigurator extends AbstractResourceConfigurator {

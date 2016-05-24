@@ -3,12 +3,14 @@ package com.dianping.cat.alarm.spi.rule;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.rule.entity.Condition;
 import com.dianping.cat.alarm.rule.entity.SubCondition;
 
+@Named(type = DataChecker.class)
 public class DefaultDataChecker implements DataChecker {
 
 	private double[] buildLastMinutesDoubleArray(double[] doubleList, int remainCount) {

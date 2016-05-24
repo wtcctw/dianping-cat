@@ -156,6 +156,15 @@ public class TimeHelper {
 		return "M" + minuteStr;
 	}
 
+	public static Date getStepSecond(int step) {
+		long current = System.currentTimeMillis();
+		long gap = current % ONE_MINUTE;
+		long minute = current - gap;
+		int index = (int) gap / (int) (step * ONE_SECOND);
+
+		return new Date(minute + index * step * ONE_SECOND);
+	}
+
 	public static Date getYesterday() {
 		Calendar cal = Calendar.getInstance();
 

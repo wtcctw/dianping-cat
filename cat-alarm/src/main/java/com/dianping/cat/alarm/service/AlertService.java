@@ -7,6 +7,7 @@ import java.util.List;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.Alert;
@@ -15,6 +16,7 @@ import com.dianping.cat.alarm.spi.AlertEntity;
 import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.alarm.spi.sender.SendMessageEntity;
 
+@Named
 public class AlertService {
 
 	@Inject

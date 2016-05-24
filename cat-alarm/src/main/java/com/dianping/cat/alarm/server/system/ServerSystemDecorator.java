@@ -16,6 +16,7 @@ public class ServerSystemDecorator extends Decorator {
 		sb.append("[CAT 系统告警] [项目: ").append(TagSplitHelper.queryDomain(alert.getGroup())).append("] [机器：")
 		      .append(TagSplitHelper.queryByKey(alert.getGroup(), "endPoint")).append("] [监控项: ")
 		      .append(alert.getMetric()).append("]<br/>").append(alert.getContent());
+
 		return sb.toString();
 	}
 

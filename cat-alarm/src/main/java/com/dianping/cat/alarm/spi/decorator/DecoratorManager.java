@@ -6,11 +6,13 @@ import java.util.Map;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.alarm.spi.AlertEntity;
 import com.dianping.cat.alarm.spi.AlertType;
 
+@Named
 public class DecoratorManager extends ContainerHolder implements Initializable {
 
 	private Map<String, Decorator> m_decorators = new HashMap<String, Decorator>();

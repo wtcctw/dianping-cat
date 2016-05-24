@@ -1,4 +1,4 @@
-package com.dianping.cat.metric;
+package com.dianping.cat.server;
 
 
 public enum MetricType {

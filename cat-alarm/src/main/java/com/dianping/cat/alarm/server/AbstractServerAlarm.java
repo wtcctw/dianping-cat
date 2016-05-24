@@ -2,26 +2,22 @@ package com.dianping.cat.alarm.server;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.ServerAlarmRule;
-import com.dianping.cat.alarm.server.AlarmTask.AlarmParameter;
+import com.dianping.cat.alarm.server.ServerAlarmTask.AlarmParameter;
 import com.dianping.cat.alarm.server.entity.Condition;
 import com.dianping.cat.alarm.server.entity.Rule;
 import com.dianping.cat.alarm.server.entity.ServerAlarmRuleConfig;
@@ -30,9 +26,9 @@ import com.dianping.cat.alarm.service.ServerAlarmRuleService;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.influxdb.InfluxDB;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.metric.MetricService;
-import com.dianping.cat.metric.MetricType;
-import com.dianping.cat.metric.QueryParameter;
+import com.dianping.cat.server.MetricService;
+import com.dianping.cat.server.MetricType;
+import com.dianping.cat.server.QueryParameter;
 
 public abstract class AbstractServerAlarm extends ContainerHolder implements ServerAlarm {
 
@@ -59,12 +55,12 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 		      }
 	      });
 
-	private List<AlarmTask> buildAlarmTasks(Map<Integer, RuleEndPointEntity> ruleEndpoints) {
+	private List<ServerAlarmTask> buildAlarmTasks() {
 		long current = System.currentTimeMillis();
-		List<AlarmTask> tasks = new ArrayList<AlarmTask>();
+		List<ServerAlarmTask> tasks = new ArrayList<ServerAlarmTask>();
+		List<ServerAlarmRule> rules = m_ruleService.queryRules(getCategory());
 
-		for (Entry<Integer, RuleEndPointEntity> entry : ruleEndpoints.entrySet()) {
-			ServerAlarmRule rule = entry.getValue().getRule();
+		for (ServerAlarmRule rule : rules) {
 			int ruleId = rule.getId();
 			Long meta = m_times.get(ruleId);
 
@@ -73,12 +69,11 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 					try {
 						ServerAlarmRuleConfig ruleConfig = DefaultSaxParser.parse(rule.getContent());
 						Pair<Long, List<Rule>> pair = buildDuration(ruleConfig);
-						List<String> endpoints = entry.getValue().getEndpoints();
-						AlarmTask task = lookup(AlarmTask.class);
+						ServerAlarmTask task = lookup(ServerAlarmTask.class);
 
 						task.setCategory(getCategory());
 						task.setAlarmId(getID());
-						buildQueries(endpoints, rule, task, pair.getValue());
+						buildQueries(rule, task, pair.getValue());
 						tasks.add(task);
 						m_times.put(ruleId, current + pair.getKey());
 					} catch (Exception e) {
@@ -118,27 +113,27 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 		return new Pair<Long, List<Rule>>(sleeptime, rets);
 	}
 
-	private void buildQueries(List<String> endPoints, ServerAlarmRule rule, AlarmTask task, List<Rule> rules) {
+	private void buildQueries(ServerAlarmRule rule, ServerAlarmTask task, List<Rule> rules) {
 		for (Rule r : rules) {
 			List<Condition> conditions = r.getConditions();
 			AlarmParameter alarmParameter = new AlarmParameter(conditions);
 
 			for (Condition condition : conditions) {
 				try {
-					Date end = new Date();
 					int duration = condition.getDuration();
 					String intval = condition.getInterval();
-					Date start = new Date(end.getTime() - queryInterval(intval) * (duration - 1));
+					Date end = buildEndDate(intval, duration);
+					Date start = new Date(end.getTime() - queryInterval(intval) * duration);
 					MetricType metricType = MetricType.getByName(rule.getType(), MetricType.AVG);
+					QueryParameter parameter = new QueryParameter();
+					String originalTags = rule.getTags();
+					String tags = "endPoint =~ " + rule.getEndPoint() + ";" + originalTags;
+					String groupBy = buildGroupByField(originalTags);
 
-					for (String ep : endPoints) {
-						String tags = "endPoint='" + ep + "';" + rule.getTags();
-						QueryParameter parameter = new QueryParameter();
-
-						parameter.setCategory(rule.getCategory()).setType(metricType).setTags(tags).setInterval(intval)
-						      .setStart(start).setEnd(end).setMeasurement(rule.getMeasurement());
-						alarmParameter.addParameter(parameter);
-					}
+					parameter.setCategory(rule.getCategory()).setType(metricType).setTags(tags).setInterval(intval)
+					      .setFillValue("none").setStart(start).setEnd(end).setMeasurement(rule.getMeasurement())
+					      .setGroupBy(groupBy);
+					alarmParameter.addParameter(parameter);
 				} catch (Exception e) {
 					Cat.logError(condition.toString(), e);
 				}
@@ -147,28 +142,36 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 		}
 	}
 
-	private Map<Integer, RuleEndPointEntity> buildRuleEndpoints(String category) {
-		Map<Integer, RuleEndPointEntity> results = new HashMap<Integer, RuleEndPointEntity>();
-		List<ServerAlarmRule> rules = m_ruleService.queryRules(category);
+	private Date buildEndDate(String intval, int duration) {
+		if (intval.endsWith("s")) {
+			return TimeHelper.getStepSecond(duration);
+		} else {
+			return TimeHelper.getCurrentMinute();
+		}
+	}
 
-		if (rules != null) {
-			for (String endpoint : m_metricService.queryEndPoints(category)) {
-				ServerAlarmRule rule = findRule(endpoint, rules);
+	private String buildGroupByField(String originalTags) {
+		String[] fields = originalTags.split(";");
+		List<String> groups = new LinkedList<String>();
 
-				if (rule != null) {
-					int ruleId = rule.getId();
-					RuleEndPointEntity entity = results.get(ruleId);
+		for (int i = 0; i < fields.length; i++) {
+			try {
+				String field = fields[i].split("=")[0].trim();
 
-					if (entity == null) {
-						entity = new RuleEndPointEntity(rule);
-
-						results.put(ruleId, entity);
-					}
-					entity.addEndpoint(endpoint);
-				}
+				groups.add(field);
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
-		return results;
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("endPoint, ");
+
+		for (String g : groups) {
+			sb.append(g).append(", ");
+		}
+
+		return sb.toString();
 	}
 
 	private boolean checkTime(Rule r) {
@@ -185,22 +188,6 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 			Cat.logError(r.toString(), e);
 			return false;
 		}
-	}
-
-	private ServerAlarmRule findRule(String endPoint, List<ServerAlarmRule> rules) {
-		int min = 0;
-		ServerAlarmRule rule = null;
-
-		for (ServerAlarmRule r : rules) {
-			String dp = r.getEndPoint();
-			int ret = validateRegex(dp, endPoint);
-
-			if (ret > min) {
-				min = ret;
-				rule = r;
-			}
-		}
-		return rule;
 	}
 
 	@Override
@@ -230,16 +217,15 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 
 	@Override
 	public void run() {
-		boolean active = true;
+		boolean active = TimeHelper.sleepToNextMinute();
 
 		while (active) {
 			long current = System.currentTimeMillis();
 
 			try {
-				Map<Integer, RuleEndPointEntity> ruleEndpoints = buildRuleEndpoints(getCategory());
-				List<AlarmTask> tasks = buildAlarmTasks(ruleEndpoints);
+				List<ServerAlarmTask> tasks = buildAlarmTasks();
 
-				for (AlarmTask task : tasks) {
+				for (ServerAlarmTask task : tasks) {
 					Transaction t = Cat.newTransaction("AlertServer", task.getCategory());
 
 					try {
@@ -272,49 +258,4 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 	public void shutdown() {
 
 	}
-
-	/**
-	 * @return 0: not match; 1: global match; 2: regex match; 3: full match
-	 */
-	public int validateRegex(String regexText, String text) {
-		if (StringUtils.isEmpty(regexText) || "*".equals(regexText)) {
-			return 1;
-		} else if (regexText.equalsIgnoreCase(text)) {
-			return 3;
-		} else {
-			Pattern p = Pattern.compile(regexText);
-			Matcher m = p.matcher(text);
-
-			if (m.find()) {
-				return 2;
-			} else {
-				return 0;
-			}
-		}
-	}
-
-	public static class RuleEndPointEntity {
-
-		private ServerAlarmRule m_rule;
-
-		private List<String> m_endpoints = new ArrayList<String>();
-
-		public RuleEndPointEntity(ServerAlarmRule rule) {
-			m_rule = rule;
-		}
-
-		public void addEndpoint(String endpiont) {
-			m_endpoints.add(endpiont);
-		}
-
-		public List<String> getEndpoints() {
-			return m_endpoints;
-		}
-
-		public ServerAlarmRule getRule() {
-			return m_rule;
-		}
-
-	}
-
 }

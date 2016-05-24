@@ -25,8 +25,8 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.network.entity.NetGraph;
 import com.dianping.cat.home.network.entity.NetTopology;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.metric.MetricService;
 import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
+import com.dianping.cat.server.MetricService;
 
 public class InfluxNetGraphManager implements Initializable, LogEnabled {
 

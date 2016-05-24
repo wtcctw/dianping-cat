@@ -7,6 +7,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.sender.entity.Par;
@@ -18,6 +19,7 @@ import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 
+@Named
 public class SenderConfigManager implements Initializable {
 
 	@Inject

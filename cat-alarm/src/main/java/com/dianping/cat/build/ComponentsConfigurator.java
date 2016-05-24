@@ -6,8 +6,7 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.alarm.AlertDao;
-import com.dianping.cat.alarm.server.AlarmTask;
+import com.dianping.cat.alarm.server.ServerAlarmTask;
 import com.dianping.cat.alarm.server.ServerDataChecker;
 import com.dianping.cat.alarm.service.AlertService;
 import com.dianping.cat.alarm.spi.AlertManager;
@@ -16,7 +15,6 @@ import com.dianping.cat.alarm.spi.config.AlertPolicyManager;
 import com.dianping.cat.alarm.spi.config.SenderConfigManager;
 import com.dianping.cat.alarm.spi.decorator.DecoratorManager;
 import com.dianping.cat.alarm.spi.receiver.ContactorManager;
-import com.dianping.cat.alarm.spi.rule.DataChecker;
 import com.dianping.cat.alarm.spi.rule.DefaultDataChecker;
 import com.dianping.cat.alarm.spi.sender.DXSender;
 import com.dianping.cat.alarm.spi.sender.MailSender;
@@ -30,10 +28,6 @@ import com.dianping.cat.alarm.spi.spliter.SmsSpliter;
 import com.dianping.cat.alarm.spi.spliter.Spliter;
 import com.dianping.cat.alarm.spi.spliter.SpliterManager;
 import com.dianping.cat.alarm.spi.spliter.WeixinSpliter;
-import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.core.config.ConfigDao;
-import com.dianping.cat.metric.MetricService;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -44,15 +38,15 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.addAll(new AlarmComponentConfigurator().defineComponents());
 
-		all.add(C(AlertService.class).req(AlertDao.class));
-		all.add(C(AlertConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(A(AlertService.class));
+		all.add(A(AlertConfigManager.class));
+		all.add(A(SenderConfigManager.class));
 
-		all.add(C(DataChecker.class, DefaultDataChecker.class));
-		all.add(C(DecoratorManager.class));
-		all.add(C(ContactorManager.class));
+		all.add(A(DefaultDataChecker.class));
+		all.add(A(DecoratorManager.class));
+		all.add(A(ContactorManager.class));
 
-		all.add(C(AlertPolicyManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(A(AlertPolicyManager.class));
 
 		all.add(C(Spliter.class, MailSpliter.ID, MailSpliter.class));
 
@@ -62,7 +56,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Spliter.class, DXSpliter.ID, DXSpliter.class));
 
-		all.add(C(SpliterManager.class));
+		all.add(A(SpliterManager.class));
 
 		all.add(C(Sender.class, MailSender.ID, MailSender.class).req(SenderConfigManager.class));
 
@@ -72,13 +66,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Sender.class, DXSender.ID, DXSender.class).req(SenderConfigManager.class));
 
-		all.add(C(SenderManager.class).req(ServerConfigManager.class));
+		all.add(A(SenderManager.class));
 
-		all.add(C(AlertManager.class).req(AlertPolicyManager.class, DecoratorManager.class, ContactorManager.class,
-		      AlertService.class, SpliterManager.class, SenderManager.class, ServerConfigManager.class));
+		all.add(A(AlertManager.class));
 
-		all.add(C(ServerDataChecker.class).req(MetricService.class));
-		all.add(C(AlarmTask.class).is(PER_LOOKUP).req(MetricService.class, ServerDataChecker.class, AlertManager.class));
+		all.add(A(ServerDataChecker.class));
+		all.add(A(ServerAlarmTask.class));
 
 		return all;
 	}

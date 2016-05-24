@@ -1,6 +1,6 @@
 package com.dianping.cat.report.page.server.display;
 
-import com.dianping.cat.metric.QueryParameter;
+import com.dianping.cat.server.QueryParameter;
 
 public class LinechartParameter {
 

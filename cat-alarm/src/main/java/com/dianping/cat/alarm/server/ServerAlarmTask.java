@@ -8,17 +8,21 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.alarm.server.entity.Condition;
 import com.dianping.cat.alarm.spi.AlertEntity;
 import com.dianping.cat.alarm.spi.AlertManager;
 import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
 import com.dianping.cat.helper.SortHelper;
-import com.dianping.cat.metric.MetricService;
-import com.dianping.cat.metric.QueryParameter;
+import com.dianping.cat.server.MetricService;
+import com.dianping.cat.server.QueryParameter;
+import com.dianping.cat.server.ServerGroupByEntity;
 
-public class AlarmTask implements Task {
+@Named(type = ServerAlarmTask.class, instantiationStrategy = Named.PER_LOOKUP)
+public class ServerAlarmTask extends ContainerHolder implements Task {
 
 	@Inject
 	private MetricService m_metricService;
@@ -62,34 +66,39 @@ public class AlarmTask implements Task {
 			List<Condition> conditions = parameter.getCondition();
 
 			for (QueryParameter query : parameter.getQueries()) {
-				Map<Long, Double> results = m_metricService.queryFillNone(query);
+				List<ServerGroupByEntity> entities = m_metricService.queryByFields(query);
 
-				if (!results.isEmpty()) {
-					SortHelper.sortMap(results, new Comparator<Entry<Long, Double>>() {
-						@Override
-						public int compare(Entry<Long, Double> o1, Entry<Long, Double> o2) {
-							if (o1.getKey() > o2.getKey()) {
-								return 1;
-							} else if (o1.getKey() < o2.getKey()) {
-								return -1;
-							} else {
-								return 0;
+				for (ServerGroupByEntity e : entities) {
+					Map<Long, Double> results = e.getValues();
+
+					if (!results.isEmpty()) {
+						SortHelper.sortMap(results, new Comparator<Entry<Long, Double>>() {
+							@Override
+							public int compare(Entry<Long, Double> o1, Entry<Long, Double> o2) {
+								if (o1.getKey() > o2.getKey()) {
+									return 1;
+								} else if (o1.getKey() < o2.getKey()) {
+									return -1;
+								} else {
+									return 0;
+								}
 							}
+						});
+						Double[] values = new Double[results.size()];
+
+						results.values().toArray(values);
+
+						List<DataCheckEntity> alertResults = m_dataChecker.checkData(ArrayUtils.toPrimitive(values),
+						      conditions);
+
+						for (DataCheckEntity alertResult : alertResults) {
+							AlertEntity entity = new AlertEntity();
+
+							entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
+							      .setLevel(alertResult.getAlertLevel());
+							entity.setMetric(e.getMeasurement()).setType(m_alarmId).setGroup(e.getEndPoint());
+							m_sendManager.addAlert(entity);
 						}
-					});
-					Double[] values = new Double[results.size()];
-
-					results.values().toArray(values);
-
-					List<DataCheckEntity> alertResults = m_dataChecker.checkData(ArrayUtils.toPrimitive(values), conditions);
-
-					for (DataCheckEntity alertResult : alertResults) {
-						AlertEntity entity = new AlertEntity();
-
-						entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-						      .setLevel(alertResult.getAlertLevel());
-						entity.setMetric(query.getMeasurement()).setType(m_alarmId).setGroup(query.getTags());
-						m_sendManager.addAlert(entity);
 					}
 				}
 			}
@@ -106,6 +115,7 @@ public class AlarmTask implements Task {
 
 	@Override
 	public void shutdown() {
+		release(this);
 	}
 
 	public static class AlarmParameter {
