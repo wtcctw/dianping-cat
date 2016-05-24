@@ -16,7 +16,7 @@
       </dependency>
       <dependency>
          <groupId>com.dianping.cat</groupId>
-         <artifactId>cat-storage</artifactId>
+         <artifactId>cat-hadoop</artifactId>
       </dependency>
       <dependency>
          <groupId>com.dianping.cat</groupId>

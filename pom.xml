@@ -12,7 +12,7 @@
 		<module>cat-client</module>
 		<module>cat-core</module>
 		<module>cat-consumer</module>
-		<module>cat-storage</module>
+		<module>cat-hadoop</module>
 		<module>cat-home</module>
 		<module>cat-log</module>
 		<module>cat-influxdb</module>
@@ -33,7 +33,7 @@
 			</dependency>
 			<dependency>
 				<groupId>com.dianping.cat</groupId>
-				<artifactId>cat-storage</artifactId>
+				<artifactId>cat-hadoop</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
