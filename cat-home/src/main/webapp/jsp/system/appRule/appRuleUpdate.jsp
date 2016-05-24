@@ -211,6 +211,7 @@ function update() {
 			$("#metric").val(metric);
 		}
 		commandChange("command","code");
+		$("#code").val(code);
 		$('#userMonitor_config').addClass('active open');
 		$('#appRule').addClass('active');
 		

@@ -100,119 +100,113 @@
 						</c:choose>
 						
 						<c:choose>
-							<c:when test="${network ne -1}">
-								<c:if test="${network eq '*'}">
+							<c:when test="${network['class'].simpleName eq 'String' and network eq '*'}">
 									<td>任意</td>
-								</c:if>
-								<c:if test="${network ne '*'}">
-									<td>
+							</c:when>
+						<c:otherwise>
+							<c:if test="${network ne -1}">
+								<td>
 									<c:forEach var="i" items="${model.networks}">
 									<c:if test="${i.value.id eq network}">${i.value.value}</c:if>  
 									</c:forEach>
-									</td>
-								</c:if>
-							</c:when>
-						<c:otherwise>
+								</td>
+							</c:if>
+							<c:if test="${network eq -1}">
 							<td>All</td>
+							</c:if>
 						</c:otherwise>
 						</c:choose>
 						
 						<c:choose>
-							<c:when test="${version ne -1}">
-								<c:if test="${version eq '*'}">
+							<c:when test="${version['class'].simpleName eq 'String' and version eq '*'}">
 									<td>任意</td>
-								</c:if>
-								<c:if test="${version ne '*'}">
-									<td>
+							</c:when>
+						<c:otherwise>
+							<c:if test="${version ne -1}">
+								<td>
 									<c:forEach var="i" items="${model.versions}">
 									<c:if test="${i.value.id eq version}">${i.value.value}</c:if>  
 									</c:forEach>
-									</td>
-								</c:if>
-							
-							</c:when>
-						<c:otherwise>
+								</td>
+							</c:if>
+							<c:if test="${version eq -1}">
 							<td>All</td>
+							</c:if>
 						</c:otherwise>
 						</c:choose>
 						
 						<c:choose>
-							<c:when test="${connectType ne -1}">
-								<c:if test="${connectType eq '*'}">
+							<c:when test="${connectType['class'].simpleName eq 'String' and connectType eq '*'}">
 									<td>任意</td>
-								</c:if>
-								<c:if test="${connectType ne '*'}">
-									<td>
+							</c:when>
+						<c:otherwise>
+							<c:if test="${connectType ne -1}">
+								<td>
 									<c:forEach var="i" items="${model.connectionTypes}">
 									<c:if test="${i.value.id eq connectType}">${i.value.value}</c:if>  
 									</c:forEach>
-									</td>
-								</c:if>
-							</c:when>
-							<c:when test="${connectType eq '*'}">
-							<td>任意</td>
-							</c:when>
-						<c:otherwise>
+								</td>
+							</c:if>
+							<c:if test="${connectType eq -1 }">
 							<td>All</td>
+							</c:if>
 						</c:otherwise>
 						</c:choose>
 						
 						<c:choose>
-							<c:when test="${platform ne -1}">
-								<c:if test="${platform eq '*'}">
-									<td>任意</td>
-								</c:if>
-								<c:if test="${platform ne '*'}">
-									<td>
+							<c:when test="${platform['class'].simpleName eq 'String' and platform eq '*'}">
+								<td>任意</td>
+							</c:when>
+						<c:otherwise>
+						<c:if test="${platform ne -1}">
+								<td>
 									<c:forEach var="i" items="${model.platforms}">
-									<c:if test="${i.value.id eq platform}">${i.value.value}</c:if>  
+									<c:if test="${i.value.id eq city}">${i.value.value}</c:if>  
 									</c:forEach>
-									</td>
-								</c:if>
-							</c:when>
-						<c:otherwise>
+								</td>
+						</c:if>
+						<c:if test="${platform eq -1}">
 							<td>All</td>
+						</c:if>
 						</c:otherwise>
 						</c:choose>
 						
 						<c:choose>
-							<c:when test="${city ne -1}">
-							<c:if test="${city eq '*'}">
-									<td>任意</td>
-								</c:if>
-								<c:if test="${city ne '*'}">
-									<td>
+							<c:when test="${city['class'].simpleName eq 'String' and city eq '*'}">
+								<td>任意</td>
+							</c:when>
+						<c:otherwise>
+						<c:if test="${city ne -1}">
+								<td>
 									<c:forEach var="i" items="${model.cities}">
 									<c:if test="${i.value.id eq city}">${i.value.value}</c:if>  
 									</c:forEach>
-									</td>
-								</c:if>
-							</c:when>
-							<c:when test="${city eq '*'}">
-							<td>任意</td>
-							</c:when>
-						<c:otherwise>
+								</td>
+						</c:if>
+						<c:if test="${city eq -1}">
 							<td>All</td>
+						</c:if>
 						</c:otherwise>
 						</c:choose>
 						
 						<c:choose>
-							<c:when test="${operator ne -1}">
-								<c:if test="${operator eq '*'}">
+							<c:when test="${operator['class'].simpleName eq 'String' and operator eq '*'}">
 									<td>任意</td>
-								</c:if>
-								<c:if test="${operator ne '*'}">
-									<td>
+							</c:when>
+						<c:otherwise>
+						<c:if test="${operator ne -1}">
+								<td>
 									<c:forEach var="i" items="${model.operators}">
 									<c:if test="${i.value.id eq operator}">${i.value.value}</c:if>  
 									</c:forEach>
-									</td>
-								</c:if>
-							</c:when>
-						<c:otherwise>
+								</td>
+						</c:if>
+						<c:if test="${operator eq -1 }">
 							<td>All</td>
+						</c:if>
 						</c:otherwise>
 						</c:choose>
+						
 						<td>
 							<c:if test="${type eq 'request'}">请求数</c:if> 
 							<c:if test="${type eq 'success'}">成功率</c:if>  
