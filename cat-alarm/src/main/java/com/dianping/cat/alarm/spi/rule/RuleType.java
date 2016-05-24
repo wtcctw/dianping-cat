@@ -518,7 +518,7 @@ public enum RuleType {
 		}
 	}
 
-	protected static final long MbS = 1 * 60 * 1024 * 1024 / 8;
+	protected static final long MbS = 1 * 60 * 1024 * 1024;
 
 	protected static final long GbS = MbS * 1024;
 
@@ -553,9 +553,9 @@ public enum RuleType {
 		if (value < MbS) {
 			return m_df.format(value);
 		} else if (value < GbS) {
-			return m_df.format(value / MbS) + "Mb/s";
+			return m_df.format(value / MbS / 8) + "MB/s";
 		} else {
-			return m_df.format(value / GbS) + "Gb/s";
+			return m_df.format(value / GbS / 8) + "GB/s";
 		}
 	}
 
@@ -576,28 +576,28 @@ public enum RuleType {
 	protected double parseStringToDouble(String text) {
 		if (text.endsWith("Mb/s")) {
 			double value = Double.parseDouble(text.replaceAll("Mb/s", ""));
-			return value * 60 * 1024 * 1024 / 8;
+			return value * 60 * 1024 * 1024;
 		} else if (text.endsWith("Gb/s")) {
 			double value = Double.parseDouble(text.replaceAll("Gb/s", ""));
-			return value * 60 * 1024 * 1024 * 1024 / 8;
+			return value * 60 * 1024 * 1024 * 1024;
 		} else if (text.endsWith("MB/s")) {
 			double value = Double.parseDouble(text.replaceAll("MB/s", ""));
-			return value * 60 * 1024 * 1024;
+			return value * 60 * 1024 * 1024 * 8;
 		} else if (text.endsWith("GB/s")) {
 			double value = Double.parseDouble(text.replaceAll("GB/s", ""));
-			return value * 60 * 1024 * 1024 * 1024;
+			return value * 60 * 1024 * 1024 * 1024 * 8;
 		} else if (text.endsWith("Mb")) {
 			double value = Double.parseDouble(text.replaceAll("Mb", ""));
-			return value * 1024 * 1024 / 8;
+			return value * 1024 * 1024;
 		} else if (text.endsWith("Gb")) {
 			double value = Double.parseDouble(text.replaceAll("Gb", ""));
-			return value * 1024 * 1024 * 1024 / 8;
+			return value * 1024 * 1024 * 1024;
 		} else if (text.endsWith("MB")) {
 			double value = Double.parseDouble(text.replaceAll("MB", ""));
-			return value * 1024 * 1024;
+			return value * 1024 * 1024 * 8;
 		} else if (text.endsWith("GB")) {
 			double value = Double.parseDouble(text.replaceAll("GB", ""));
-			return value * 1024 * 1024 * 1024;
+			return value * 1024 * 1024 * 1024 * 8;
 		}
 
 		return Double.parseDouble(text);

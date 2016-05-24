@@ -40,7 +40,6 @@ import com.dianping.cat.home.graph.entity.Segment;
 import com.dianping.cat.home.server.entity.Group;
 import com.dianping.cat.home.server.entity.ServerMetricConfig;
 import com.dianping.cat.influxdb.config.InfluxDBConfigManager;
-import com.dianping.cat.metric.MetricService;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
@@ -51,6 +50,7 @@ import com.dianping.cat.report.page.server.display.MetricScreenInfo;
 import com.dianping.cat.report.page.server.service.MetricGraphBuilder;
 import com.dianping.cat.report.page.server.service.MetricGraphService;
 import com.dianping.cat.report.page.server.service.MetricScreenService;
+import com.dianping.cat.server.MetricService;
 import com.dianping.cat.system.page.config.ConfigHtmlParser;
 
 public class Handler implements PageHandler<Context> {

@@ -13,6 +13,7 @@ import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.alarm.service.AppAlarmRuleService;
 import com.dianping.cat.app.AppCommandData;
 import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppCommandDataEntity;
@@ -32,7 +33,6 @@ import com.dianping.cat.home.app.entity.Code;
 import com.dianping.cat.home.app.entity.Transaction;
 import com.dianping.cat.home.app.transform.DefaultNativeBuilder;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.page.app.service.AppReportService;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
@@ -55,10 +55,10 @@ public class AppReportBuilder implements TaskBuilder {
 	private TransactionReportService m_transactionReportService;
 
 	@Inject
-	private AppCommandAutoCompleter m_autoCompleter;
+	private AppAlarmRuleService m_appAlarmRuleService;
 
 	@Inject
-	private AppRuleConfigManager m_appRuleConfigManager;
+	private AppCommandAutoCompleter m_autoCompleter;
 
 	@Inject
 	private TransactionMergeHelper m_mergeHelper;
@@ -199,7 +199,7 @@ public class AppReportBuilder implements TaskBuilder {
 
 					if (success) {
 						Cat.logEvent("AppCommandPrune", id + ":" + name, Event.SUCCESS, command.toString());
-						m_appRuleConfigManager.deleteByCommandId(id);
+						m_appAlarmRuleService.deleteByCommand(id);
 					}
 				} catch (Exception e) {
 					Cat.logError(e);

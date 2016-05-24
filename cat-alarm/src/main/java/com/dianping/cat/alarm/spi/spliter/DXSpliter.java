@@ -16,7 +16,10 @@ public class DXSpliter implements Spliter {
 	@Override
 	public String process(String content) {
 		String dxContent = content.replaceAll("<br/>", " ");
-		return Pattern.compile("<div.*(?=</div>)</div>", Pattern.DOTALL).matcher(dxContent).replaceAll("");
+		dxContent = Pattern.compile("<div.*(?=</div>)</div>", Pattern.DOTALL).matcher(dxContent).replaceAll("");
+		dxContent = Pattern.compile("<table.*(?=</table>)</table>", Pattern.DOTALL).matcher(dxContent).replaceAll("");
+
+		return dxContent;
 	}
 
 }

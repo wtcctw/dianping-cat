@@ -1,6 +1,5 @@
 package com.dianping.cat.system.page.app;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +8,7 @@ import org.unidal.web.mvc.ViewModel;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.alarm.rule.entity.Rule;
+import com.dianping.cat.alarm.service.AppAlarmRuleInfo;
 import com.dianping.cat.command.entity.Code;
 import com.dianping.cat.command.entity.Codes;
 import com.dianping.cat.command.entity.Command;
@@ -43,7 +42,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private Map<Integer, Item> m_platforms;
 
 	private Map<Integer, Item> m_apps;
-	
+
 	private String m_id;
 
 	private String m_domain;
@@ -74,13 +73,21 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private String m_content;
 
-	private Collection<Rule> m_rules;
+	private Map<String, List<AppAlarmRuleInfo>> m_ruleInfos;
+
+	private AppAlarmRuleInfo m_ruleInfo;
 
 	private Item m_appItem;
 
 	private String m_configHeader;
 
 	private transient AppCommandGroupConfig m_commandGroupConfig;
+
+	private Map<Integer, List<Code>> m_command2Codes;
+
+	private Map<String, Codes> m_globalCodes;
+
+	private Map<String, Command> m_command2Id;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -100,6 +107,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_appItem;
 	}
 
+	public Map<Integer, Item> getApps() {
+		return m_apps;
+	}
+
 	public Map<Integer, Item> getCities() {
 		return m_cities;
 	}
@@ -112,6 +123,18 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_codes;
 	}
 
+	public Map<Integer, List<Code>> getCommand2Codes() {
+		return m_command2Codes;
+	}
+
+	public String getCommand2CodesJson() {
+		return new JsonBuilder().toJson(m_command2Codes);
+	}
+
+	public String getCommand2IdJson() {
+		return new JsonBuilder().toJson(m_command2Id);
+	}
+
 	public AppCommandGroupConfig getCommandGroupConfig() {
 		return m_commandGroupConfig;
 	}
@@ -122,6 +145,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public Map<Integer, Command> getCommands() {
 		return m_commands;
+	}
+
+	public String getCommandsJson() {
+		return new JsonBuilder().toJson(m_commands);
 	}
 
 	public String getConfigHeader() {
@@ -157,6 +184,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return new JsonBuilder().toJson(m_appConfigManager.queryDomain2Commands());
 	}
 
+	public String getGlobalCodesJson() {
+		return new JsonBuilder().toJson(m_globalCodes);
+	}
+
 	public String getId() {
 		return m_id;
 	}
@@ -171,14 +202,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public String getNameUniqueResult() {
 		return m_nameUniqueResult;
-	}
-	
-	public Map<Integer, Item> getApps() {
-		return m_apps;
-	}
-
-	public void setApps(Map<Integer, Item> apps) {
-		m_apps = apps;
 	}
 
 	public Map<Integer, Item> getNetworks() {
@@ -201,8 +224,12 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return "";
 	}
 
-	public Collection<Rule> getRules() {
-		return m_rules;
+	public AppAlarmRuleInfo getRuleInfo() {
+		return m_ruleInfo;
+	}
+
+	public Map<String, List<AppAlarmRuleInfo>> getRuleInfos() {
+		return m_ruleInfos;
 	}
 
 	public Speed getSpeed() {
@@ -229,6 +256,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_appItem = appItem;
 	}
 
+	public void setApps(Map<Integer, Item> apps) {
+		m_apps = apps;
+	}
+
 	public void setCities(Map<Integer, Item> cities) {
 		m_cities = cities;
 	}
@@ -239,6 +270,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setCodes(Map<String, Codes> codes) {
 		m_codes = codes;
+	}
+
+	public void setCommand2Codes(Map<Integer, List<Code>> command2Codes) {
+		m_command2Codes = command2Codes;
+	}
+
+	public void setCommand2Id(Map<String, Command> command2Id) {
+		m_command2Id = command2Id;
 	}
 
 	public void setCommandGroupConfig(AppCommandGroupConfig commandGroupConfig) {
@@ -263,6 +302,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setDomain(String domain) {
 		m_domain = domain;
+	}
+
+	public void setGlobalCodes(Map<String, Codes> globalCodeses) {
+		m_globalCodes = globalCodeses;
 	}
 
 	public void setId(String id) {
@@ -297,8 +340,12 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_platforms = platforms;
 	}
 
-	public void setRules(Collection<Rule> rules) {
-		m_rules = rules;
+	public void setRuleInfo(AppAlarmRuleInfo ruleInfo) {
+		m_ruleInfo = ruleInfo;
+	}
+
+	public void setRuleInfos(Map<String, List<AppAlarmRuleInfo>> ruleInfos) {
+		m_ruleInfos = ruleInfos;
 	}
 
 	public void setSpeed(Speed speed) {

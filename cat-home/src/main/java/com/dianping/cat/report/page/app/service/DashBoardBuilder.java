@@ -18,6 +18,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.app.AppCommandData;
+import com.dianping.cat.app.AppDataField;
 import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.app.MobileConfigManager;
 import com.dianping.cat.helper.JsonBuilder;

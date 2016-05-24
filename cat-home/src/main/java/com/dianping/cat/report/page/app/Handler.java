@@ -25,6 +25,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.app.AppDataField;
 import com.dianping.cat.command.entity.Command;
 import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
@@ -34,7 +35,6 @@ import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.app.entity.AppReport;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.page.app.display.AppCommandDisplayInfo;
@@ -49,9 +49,7 @@ import com.dianping.cat.report.page.app.display.CrashLogDetailInfo;
 import com.dianping.cat.report.page.app.display.CrashLogDisplayInfo;
 import com.dianping.cat.report.page.app.display.DashBoardInfo;
 import com.dianping.cat.report.page.app.display.DisplayCommands;
-import com.dianping.cat.report.page.app.display.UpdateStatus;
 import com.dianping.cat.report.page.app.service.AppConnectionService;
-import com.dianping.cat.report.page.app.service.AppDataField;
 import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.app.service.AppSpeedService;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
@@ -88,9 +86,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private AppConnectionService m_appConnectionService;
-
-	@Inject
-	private AppRuleConfigManager m_appRuleConfigManager;
 
 	@Inject
 	private CrashLogService m_crashLogService;
@@ -130,6 +125,12 @@ public class Handler implements PageHandler<Context> {
 		CrashLogDetailInfo info = m_crashLogService.queryCrashLogDetailInfo(payload.getId());
 
 		model.setCrashLogDetailInfo(info);
+	}
+
+	private void buildAppCrashTrend(Payload payload, Model model) {
+		CrashLogDisplayInfo info = m_crashLogService.buildCrashTrend(payload.getCrashLogTrendQuery1(),
+		      payload.getCrashLogTrendQuery2());
+		model.setCrashLogDisplayInfo(info);
 	}
 
 	private List<AppDataDetail> buildAppDataDetails(Payload payload) {
@@ -290,56 +291,6 @@ public class Handler implements PageHandler<Context> {
 		model.setCodeDistributions(codeKeys);
 	}
 
-	private void commandAdd(Payload payload, Model model) {
-		String domain = payload.getDomain();
-		String name = payload.getName().toLowerCase();
-		String title = payload.getTitle();
-
-		if (StringUtils.isEmpty(name)) {
-			model.setContent(UpdateStatus.NO_NAME.getStatusJson());
-		} else {
-			if (m_appConfigManager.isNameDuplicate(name)) {
-				model.setContent(UpdateStatus.DUPLICATE_NAME.getStatusJson());
-			} else {
-				try {
-					Command command = new Command();
-
-					// all use lowcase
-					command.setDomain(domain).setTitle(title).setName(name);
-
-					Pair<Boolean, Integer> addCommandResult = m_appConfigManager.addCommand(command);
-
-					if (addCommandResult.getKey()) {
-						m_appRuleConfigManager.addDefultRule(name, addCommandResult.getValue());
-						model.setContent(UpdateStatus.SUCCESS.getStatusJson());
-					} else {
-						model.setContent(UpdateStatus.INTERNAL_ERROR.getStatusJson());
-					}
-				} catch (Exception e) {
-					model.setContent(UpdateStatus.INTERNAL_ERROR.getStatusJson());
-				}
-			}
-		}
-	}
-
-	private void commandDelete(Payload payload, Model model) {
-		String domain = payload.getDomain();
-		String name = payload.getName();
-
-		if (StringUtils.isEmpty(name)) {
-			model.setContent(UpdateStatus.NO_NAME.getStatusJson());
-
-		} else {
-			Pair<Boolean, List<Integer>> deleteCommandResult = m_appConfigManager.deleteCommand(domain, name);
-			if (deleteCommandResult.getKey()) {
-				m_appRuleConfigManager.deleteDefaultRule(name, deleteCommandResult.getValue());
-				model.setContent(UpdateStatus.SUCCESS.getStatusJson());
-			} else {
-				model.setContent(UpdateStatus.INTERNAL_ERROR.getStatusJson());
-			}
-		}
-	}
-
 	private void fetchConfig(Payload payload, Model model) {
 		String type = payload.getType();
 
@@ -412,12 +363,6 @@ public class Handler implements PageHandler<Context> {
 			pieChartObjs.put("pieCharts", appCommandDisplayInfo.getPieChart());
 			pieChartObjs.put("pieChartDetails", appCommandDisplayInfo.getDistributeDetails());
 			model.setFetchData(m_jsonBuilder.toJson(pieChartObjs));
-			break;
-		case APP_ADD:
-			commandAdd(payload, model);
-			break;
-		case APP_DELETE:
-			commandDelete(payload, model);
 			break;
 		case APP_CONFIG_FETCH:
 			fetchConfig(payload, model);
@@ -501,12 +446,6 @@ public class Handler implements PageHandler<Context> {
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
-	}
-
-	private void buildAppCrashTrend(Payload payload, Model model) {
-		CrashLogDisplayInfo info = m_crashLogService.buildCrashTrend(payload.getCrashLogTrendQuery1(),
-		      payload.getCrashLogTrendQuery2());
-		model.setCrashLogDisplayInfo(info);
 	}
 
 	private void normalize(Model model, Payload payload) {

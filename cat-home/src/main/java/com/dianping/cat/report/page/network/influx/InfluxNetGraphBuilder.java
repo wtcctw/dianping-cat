@@ -16,9 +16,9 @@ import com.dianping.cat.home.network.entity.Interface;
 import com.dianping.cat.home.network.entity.NetGraph;
 import com.dianping.cat.home.network.entity.NetTopology;
 import com.dianping.cat.home.network.entity.Switch;
-import com.dianping.cat.metric.MetricService;
-import com.dianping.cat.metric.MetricType;
-import com.dianping.cat.metric.QueryParameter;
+import com.dianping.cat.server.MetricService;
+import com.dianping.cat.server.MetricType;
+import com.dianping.cat.server.QueryParameter;
 
 public class InfluxNetGraphBuilder {
 

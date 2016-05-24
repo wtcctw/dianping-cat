@@ -7,9 +7,9 @@ import java.util.Map;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.metric.MetricService;
-import com.dianping.cat.metric.MetricType;
-import com.dianping.cat.metric.QueryParameter;
+import com.dianping.cat.server.MetricService;
+import com.dianping.cat.server.MetricType;
+import com.dianping.cat.server.QueryParameter;
 
 public class MetricServiceImplTest extends ComponentTestCase {
 

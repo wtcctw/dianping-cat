@@ -12,7 +12,7 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.home.graph.entity.Graph;
 import com.dianping.cat.home.graph.entity.Item;
 import com.dianping.cat.home.graph.entity.Segment;
-import com.dianping.cat.metric.MetricType;
+import com.dianping.cat.server.MetricType;
 
 public class MetricGraphBuilder {
 

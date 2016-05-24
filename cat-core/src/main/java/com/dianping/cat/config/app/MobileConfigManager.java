@@ -306,6 +306,10 @@ public class MobileConfigManager implements Initializable, LogEnabled {
 		m_platforms = buildConstantCache(MobileConstants.PLATFORM);
 	}
 
+	public void setConfigDao(ConfigDao dao) {
+		m_configDao = dao;
+	}
+
 	public boolean shouldAutoPrune() {
 		return Boolean.parseBoolean(getConfigByKey(MobileConstants.AUTO_PRUNE_KEY, "false"));
 	}

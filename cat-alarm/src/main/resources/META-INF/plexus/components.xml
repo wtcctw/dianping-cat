@@ -12,6 +12,16 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-alarm-rule</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>app-alarm-rule</logical-table-name>
+				<physical-table-name>app_alarm_rule</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>server-alarm-rule</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -40,6 +50,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.alarm.AppAlarmRuleDao</role>
+			<implementation>com.dianping.cat.alarm.AppAlarmRuleDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.alarm.ServerAlarmRuleDao</role>
 			<implementation>com.dianping.cat.alarm.ServerAlarmRuleDao</implementation>
 			<requirements>
@@ -59,10 +78,28 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.alarm.service.ServerAlarmRuleService</role>
-			<implementation>com.dianping.cat.alarm.service.ServerAlarmRuleServiceImpl</implementation>
+			<implementation>com.dianping.cat.alarm.service.impl.ServerAlarmRuleServiceImpl</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.alarm.ServerAlarmRuleDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.service.AppAlarmRuleService</role>
+			<implementation>com.dianping.cat.alarm.service.impl.AppAlarmRuleServiceImpl</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.alarm.AppAlarmRuleDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.app.AppAlarmRuleParamBuilder</role>
+			<implementation>com.dianping.cat.alarm.app.AppAlarmRuleParamBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.app.MobileConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -75,7 +112,7 @@
 					<role>com.dianping.cat.alarm.service.ServerAlarmRuleService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.metric.MetricService</role>
+					<role>com.dianping.cat.server.MetricService</role>
 					<role-hint>Influx</role-hint>
 				</requirement>
 			</requirements>
@@ -89,7 +126,7 @@
 					<role>com.dianping.cat.alarm.service.ServerAlarmRuleService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.metric.MetricService</role>
+					<role>com.dianping.cat.server.MetricService</role>
 					<role-hint>Influx</role-hint>
 				</requirement>
 			</requirements>
@@ -103,7 +140,7 @@
 					<role>com.dianping.cat.alarm.service.ServerAlarmRuleService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.metric.MetricService</role>
+					<role>com.dianping.cat.server.MetricService</role>
 					<role-hint>Influx</role-hint>
 				</requirement>
 			</requirements>
@@ -300,13 +337,13 @@
 					<role>com.dianping.cat.alarm.spi.receiver.ContactorManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.alarm.service.AlertService</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.alarm.spi.spliter.SpliterManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.sender.SenderManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.alarm.service.AlertService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
@@ -318,17 +355,17 @@
 			<implementation>com.dianping.cat.alarm.server.ServerDataChecker</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.metric.MetricService</role>
+					<role>com.dianping.cat.server.MetricService</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.alarm.server.AlarmTask</role>
-			<implementation>com.dianping.cat.alarm.server.AlarmTask</implementation>
+			<role>com.dianping.cat.alarm.server.ServerAlarmTask</role>
+			<implementation>com.dianping.cat.alarm.server.ServerAlarmTask</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.metric.MetricService</role>
+					<role>com.dianping.cat.server.MetricService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.server.ServerDataChecker</role>

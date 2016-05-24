@@ -12,10 +12,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	APP_COMMAND_DAILY("commandDaily"),
 
-	APP_ADD("appAdd"),
-
-	APP_DELETE("appDelete"),
-
 	APP_CONFIG_FETCH("appConfigFetch"),
 
 	APP_CRASH_LOG("appCrashLog"),
@@ -25,7 +21,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	APP_CRASH_LOG_DETAIL("appCrashLogDetail"),
 
 	APP_CRASH_GRAPH("appCrashGraph"),
-	
+
 	APP_CRASH_TREND("appCrashTrend"),
 
 	SPEED("speed"),

@@ -7,6 +7,7 @@ import java.util.List;
 import org.unidal.helper.Splitters;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.app.AppAlarmRuleParam;
 
 public class CommandQueryEntity extends BaseQueryEntity {
 
@@ -27,29 +28,18 @@ public class CommandQueryEntity extends BaseQueryEntity {
 		m_id = DEFAULT_COMMAND;
 	}
 
-	public CommandQueryEntity(Date date, String conditions, int start, int end) {
+	public CommandQueryEntity(Date date, AppAlarmRuleParam param, int start, int end) {
 		m_date = date;
-		m_startMinuteOrder = start - start % 5;
-		m_endMinuteOrder = end - end % 5;
-
-		List<String> strs = Splitters.by(";").split(conditions);
-
-		try {
-			m_id = parseValue(strs.get(0));
-			m_code = parseValue(strs.get(1));
-			m_network = parseValue(strs.get(2));
-			m_version = parseValue(strs.get(3));
-			m_connectType = parseValue(strs.get(4));
-			m_platfrom = parseValue(strs.get(5));
-			m_city = parseValue(strs.get(6));
-			m_operator = parseValue(strs.get(7));
-
-			if (strs.size() > 8) {
-				m_source = parseValue(strs.get(8));
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
+		m_startMinuteOrder = start;
+		m_endMinuteOrder = end;
+		m_id = param.getCommand();
+		m_code = param.getCode();
+		m_network = param.getNetwork();
+		m_version = param.getVersion();
+		m_connectType = param.getConnectType();
+		m_platfrom = param.getPlatform();
+		m_city = param.getCity();
+		m_operator = param.getOperator();
 	}
 
 	public CommandQueryEntity(int id) {

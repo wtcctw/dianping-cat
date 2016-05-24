@@ -165,7 +165,7 @@
       	<member name="request-package-sum"/>
       	<member name="response-package-sum"/>
       </readset>
-      <readset name="APP-VERSION-CODE--DATA">
+      <readset name="APP-VERSION-CODE-DATA">
       	<member name="code"/>
       	<member name="app-version"/>
       	<member name="access-number-sum"/>

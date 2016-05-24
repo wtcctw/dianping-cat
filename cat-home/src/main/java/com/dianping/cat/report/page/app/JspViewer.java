@@ -18,9 +18,6 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.CONN_LINECHART.getPath();
 		case CONN_PIECHART:
 			return JspFile.CONN_PIECHART.getPath();
-		case APP_ADD:
-		case APP_DELETE:
-			return JspFile.APP_MODIFY_RESULT.getPath();
 		case LINECHART_JSON:
 		case PIECHART_JSON:
 		case SPEED_JSON:

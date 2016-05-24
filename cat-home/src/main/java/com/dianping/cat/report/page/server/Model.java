@@ -15,12 +15,12 @@ import org.unidal.web.mvc.view.annotation.ModelMeta;
 import com.dianping.cat.alarm.ServerAlarmRule;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.server.entity.ServerMetricConfig;
-import com.dianping.cat.metric.MetricType;
 import com.dianping.cat.mvc.AbstractReportModel;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.metric.Range;
 import com.dianping.cat.report.page.server.display.MetricScreenInfo;
+import com.dianping.cat.server.MetricType;
 
 @ModelMeta("model")
 public class Model extends AbstractReportModel<Action, ReportPage, Context> {
