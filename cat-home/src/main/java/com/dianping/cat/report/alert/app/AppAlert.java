@@ -407,25 +407,29 @@ public class AppAlert implements Task {
 	      List<AlarmReusltInfo> results) {
 		for (AlarmReusltInfo result : results) {
 			try {
-				List<DataCheckEntity> alertResults = m_dataChecker.checkDataForApp(result.getDatas(), checkedConditions);
-				AppAlarmRuleParam param = result.getParam();
-				String commandName = param.getCommandName();
+				double[] datas = result.getDatas();
 
-				for (DataCheckEntity alertResult : alertResults) {
-					try {
-						Map<String, Object> par = new HashMap<String, Object>();
+				if (datas != null && datas.length > 0) {
+					List<DataCheckEntity> alertResults = m_dataChecker.checkDataForApp(datas, checkedConditions);
+					AppAlarmRuleParam param = result.getParam();
+					String commandName = param.getCommandName();
 
-						par.put("param", param);
-						par.put("start", result.getStart());
-						par.put("end", result.getEnd());
-						AlertEntity entity = new AlertEntity();
+					for (DataCheckEntity alertResult : alertResults) {
+						try {
+							Map<String, Object> par = new HashMap<String, Object>();
 
-						entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-						      .setLevel(alertResult.getAlertLevel());
-						entity.setMetric(queryType.getTitle()).setType(getName()).setGroup(commandName).setParas(par);
-						m_sendManager.addAlert(entity);
-					} catch (Exception e) {
-						Cat.logError(e);
+							par.put("param", param);
+							par.put("start", result.getStart());
+							par.put("end", result.getEnd());
+							AlertEntity entity = new AlertEntity();
+
+							entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
+							      .setLevel(alertResult.getAlertLevel());
+							entity.setMetric(queryType.getTitle()).setType(getName()).setGroup(commandName).setParas(par);
+							m_sendManager.addAlert(entity);
+						} catch (Exception e) {
+							Cat.logError(e);
+						}
 					}
 				}
 			} catch (Exception e) {
