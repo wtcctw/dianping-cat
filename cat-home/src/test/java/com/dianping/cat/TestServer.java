@@ -45,12 +45,5 @@ public class TestServer extends JettyServer {
 		display("/cat/r");
 		waitForAnyKey();
 	}
-	
 
-	@Test
-	public void startWebAppWithCatHome() throws Exception {
-		super.startServer();
-		display("/cat/r");
-		waitForAnyKey();
-	}
 }

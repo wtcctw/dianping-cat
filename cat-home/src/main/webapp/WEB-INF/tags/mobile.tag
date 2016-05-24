@@ -57,14 +57,8 @@
 							<li id="appCrashTrend"><a href="/cat/r/app?op=appCrashTrend">
 								<i class="menu-icon fa fa-caret-right"></i>AppCrash趋势</a>
 								<b class="arrow"></b></li>
-							<li id="eslog"><a href="/cat/r/eslog" target="_blank">
-								<i class="menu-icon fa fa-caret-right"></i>dpid实时日志</a>
-								<b class="arrow"></b></li>
-							<li id="esConfig" style="display:none"><a href="/cat/r/eslog?op=config" target="_blank">
-								<i class="menu-icon fa fa-caret-right"></i>es日志配置</a>
-								<b class="arrow"></b></li>
 							<li id="traceLog"><a href="http://mobile-tracer-web01.nh/" target="_blank">
-								<i class="menu-icon fa fa-caret-right"></i>dpid离线日志</a>
+								<i class="menu-icon fa fa-caret-right"></i>移动日志查询</a>
 								<b class="arrow"></b></li>
 						</ul>
 					</li>
