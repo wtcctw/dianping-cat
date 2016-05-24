@@ -1,9 +1,7 @@
 package org.unidal.cat.message.storage.hdfs;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashSet;
+import io.netty.buffer.ByteBuf;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,110 +9,127 @@ import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.cat.message.storage.Bucket;
-import org.unidal.cat.message.storage.BucketManager;
-import org.unidal.cat.message.storage.FileBuilder;
-import org.unidal.cat.message.storage.FileBuilder.FileType;
-import org.unidal.cat.metric.Benchmark;
-import org.unidal.cat.metric.BenchmarkManager;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
-@Named(type = BucketManager.class, value = HdfsBucket.ID)
-public class HdfsBucketManager extends ContainerHolder implements BucketManager, LogEnabled {
+import com.dianping.cat.Cat;
+import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.MessageId;
+import com.dianping.cat.message.spi.MessageCodec;
+import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
+
+@Named
+public class HdfsBucketManager extends ContainerHolder implements Initializable, LogEnabled {
+
 	@Inject
-	private BenchmarkManager m_benchmarkManager;
+	private ServerConfigManager m_configManager;
 
-	@Inject(HdfsBucket.ID)
-	private FileBuilder m_bulider;
+	@Inject
+	private HdfsSystemManager m_fileSystemManager;
 
-	private Map<Integer, Map<String, Bucket>> m_buckets = new LinkedHashMap<Integer, Map<String, Bucket>>();
+	@Inject(PlainTextMessageCodec.ID)
+	private MessageCodec m_plainTextCodec;
 
-	private Logger m_logger;
+	@Inject(value = "hdfs")
+	private MessageConsumerFinder m_consumerFinder;
 
-	private boolean bucketFilesExsits(String domain, String ip, int hour) {
-		long timestamp = hour * 3600 * 1000L;
-		Date startTime = new Date(timestamp);
-		File dataPath = m_bulider.getFile(domain, startTime, ip, FileType.DATA);
-		File indexPath = m_bulider.getFile(domain, startTime, ip, FileType.INDEX);
+	private Map<String, HdfsBucket> m_buckets = new LinkedHashMap<String, HdfsBucket>() {
 
-		return dataPath.exists() && indexPath.exists();
-	}
+		private static final long serialVersionUID = 1L;
 
-	@Override
-	public void closeBuckets(int hour) {
-		Set<Integer> removed = new HashSet<Integer>();
-
-		for (Entry<Integer, Map<String, Bucket>> e : m_buckets.entrySet()) {
-			int h = e.getKey().intValue();
-
-			if (h <= hour) {
-				removed.add(h);
-			}
+		@Override
+		protected boolean removeEldestEntry(Entry<String, HdfsBucket> eldest) {
+			return size() > 1000;
 		}
+	};
 
-		for (Integer h : removed) {
-			Map<String, Bucket> buckets = m_buckets.remove(h);
-
-			for (Bucket bucket : buckets.values()) {
-				bucket.close();
-
-				Benchmark benchmark = bucket.getBechmark();
-				m_benchmarkManager.remove(benchmark.getType());
-
-				super.release(bucket);
-
-				m_logger.info("Close bucket " + bucket);
-			}
-		}
-	}
+	protected Logger m_logger;
 
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
 
-	private Map<String, Bucket> findOrCreateMap(Map<Integer, Map<String, Bucket>> map, int hour) {
-		Map<String, Bucket> m = map.get(hour);
-
-		if (m == null) {
-			synchronized (map) {
-				m = map.get(hour);
-
-				if (m == null) {
-					m = new LinkedHashMap<String, Bucket>();
-					map.put(hour, m);
-				}
-			}
-		}
-
-		return m;
+	@Override
+	public void initialize() throws InitializationException {
 	}
 
-	@Override
-	public Bucket getBucket(String domain, String ip, int hour, boolean createIfNotExists) throws IOException {
-		Map<String, Bucket> map = findOrCreateMap(m_buckets, hour);
-		Bucket bucket = map.get(domain);
-		boolean shouldCreate = createIfNotExists && bucket == null || !createIfNotExists
-		      && bucketFilesExsits(domain, ip, hour);
+	public MessageTree loadMessage(MessageId id) {
+		if (m_configManager.isHdfsOn()) {
+			Transaction t = Cat.newTransaction("Hdfs", getClass().getSimpleName());
+			t.setStatus(Message.SUCCESS);
 
-		if (shouldCreate) {
-			synchronized (map) {
-				bucket = map.get(domain);
+			try {
+				Set<String> ips = m_consumerFinder.findConsumerIps(id.getDomain(), id.getHour());
+
+				t.addData(ips.toString());
+
+				return readMessage(id, ips);
+			} catch (RuntimeException e) {
+				t.setStatus(e);
+				Cat.logError(e);
+				throw e;
+			} catch (Exception e) {
+				t.setStatus(e);
+				Cat.logError(e);
+			} finally {
+				t.complete();
+			}
+		}
+		return null;
+	}
+
+	private MessageTree readMessage(MessageId id, Set<String> ips) {
+		for (String ip : ips) {
+			String domain = id.getDomain();
+			int hour = id.getHour();
+			String key = domain + '-' + ip + '-' + hour;
+
+			try {
+				HdfsBucket bucket = m_buckets.get(key);
 
 				if (bucket == null) {
-					String benchmarkId = domain + ":" + hour;
-					Benchmark benchmark = m_benchmarkManager.get(benchmarkId);
+					synchronized (m_buckets) {
+						bucket = m_buckets.get(key);
 
-					bucket = lookup(Bucket.class, "local");
-					bucket.setBenchmark(benchmark);
-					bucket.initialize(domain, ip, hour);
-					map.put(domain, bucket);
+						if (bucket == null) {
+							bucket = (HdfsBucket) lookup(Bucket.class, HdfsBucket.ID);
+
+							bucket.initialize(domain, ip, hour);
+							m_buckets.put(key, bucket);
+
+							super.release(bucket);
+						}
+					}
 				}
+
+				if (bucket != null) {
+					ByteBuf data = bucket.get(id);
+
+					if (data != null) {
+						try {
+							MessageTree tree = m_plainTextCodec.decode(data);
+
+							if (tree.getMessageId().equals(id.toString())) {
+								return tree;
+							}
+						} finally {
+							m_plainTextCodec.reset();
+						}
+					}
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
-
-		return bucket;
+		return null;
 	}
+
 }

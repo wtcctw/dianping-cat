@@ -3,38 +3,41 @@ package org.unidal.cat.message.storage.hdfs;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.unidal.cat.message.storage.FileBuilder;
-import org.unidal.cat.message.storage.FileBuilder.FileType;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.unidal.cat.message.storage.FileType;
+import org.unidal.cat.message.storage.PathBuilder;
 import org.unidal.cat.message.storage.TokenMapping;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.helper.TimeHelper;
 
 /**
  * Supports up to 64K tokens mapping from <code>String</code> to <code>int</code>, or reverse by local file system.
  */
-@Named(type = TokenMapping.class, value = HdfsBucket.ID, instantiationStrategy = Named.PER_LOOKUP)
+@Named(type = TokenMapping.class, value = "hdfs", instantiationStrategy = Named.PER_LOOKUP)
 public class HdfsTokenMapping implements TokenMapping {
 	private static final int BLOCK_SIZE = 32 * 1024;
 
 	private static final String MAGIC_CODE = "TokenMapping"; // token mapping
 
-	@Inject(HdfsBucket.ID)
-	private FileBuilder m_bulider;
+	@Inject
+	protected HdfsSystemManager m_manager;
 
-	private RandomAccessFile m_file;
+	@Inject("hdfs")
+	private PathBuilder m_bulider;
 
-	private File m_path;
+	private FSDataInputStream m_file;
 
 	private List<String> m_tokens = new ArrayList<String>(1024);
 
@@ -46,16 +49,8 @@ public class HdfsTokenMapping implements TokenMapping {
 
 	private long m_lastAccessTime;
 
-	private boolean m_dirty;
-
 	@Override
 	public void close() {
-		try {
-			flush();
-		} catch (IOException e) {
-			Cat.logError(e);
-		}
-
 		try {
 			m_file.close();
 		} catch (IOException e) {
@@ -66,11 +61,16 @@ public class HdfsTokenMapping implements TokenMapping {
 		m_map.clear();
 	}
 
-	private void flush() throws IOException {
-		if (m_dirty) {
-			m_file.seek(1L * m_block * BLOCK_SIZE);
-			m_file.write(m_data.array());
-			m_dirty = false;
+	@Override
+	public String find(int index) throws IOException {
+		int len = m_tokens.size();
+
+		if (index < len) {
+			m_lastAccessTime = System.currentTimeMillis();
+
+			return m_tokens.get(index);
+		} else {
+			return null;
 		}
 	}
 
@@ -105,52 +105,16 @@ public class HdfsTokenMapping implements TokenMapping {
 	}
 
 	@Override
-	public String lookup(int index) throws IOException {
-		int len = m_tokens.size();
-
-		if (index < len) {
-			m_lastAccessTime = System.currentTimeMillis();
-
-			return m_tokens.get(index);
-		} else {
-			return null;
-		}
-	}
-
-	@Override
 	public int map(String token) throws IOException {
-		Integer index = m_map.get(token);
-
-		if (index == null) {
-			byte[] ba = token.getBytes("utf-8");
-			int len = ba.length;
-
-			if (!m_data.isWritable(2 + len)) { // no enough space
-				flush();
-
-				m_data.clear();
-				m_data.setZero(0, m_data.capacity());
-				m_block++;
-			}
-
-			index = m_tokens.size();
-
-			m_data.writeShort(len);
-			m_data.writeBytes(ba);
-			m_tokens.add(token);
-			m_map.put(token, index);
-			m_dirty = true;
-			m_lastAccessTime = System.currentTimeMillis();
-		}
-
-		return index.intValue();
+		throw new RuntimeException("unsupport operation");
 	}
 
 	@Override
-	public void open(Date startTime, String ip) throws IOException {
-		m_path = m_bulider.getFile(null, startTime, ip, FileType.MAPPING);
-		m_path.getParentFile().mkdirs();
-		m_file = new RandomAccessFile(m_path, "rwd"); // read-write without meta sync
+	public void open(int hour, String ip) throws IOException {
+		String path = m_bulider.getPath(null, new Date(hour * TimeHelper.ONE_HOUR), ip, FileType.TOKEN);
+		FileSystem fs = m_manager.getFileSystem();
+		m_file = fs.open(new Path(path));
+
 		m_data = Unpooled.buffer(BLOCK_SIZE);
 		m_block = 0;
 
@@ -176,4 +140,5 @@ public class HdfsTokenMapping implements TokenMapping {
 			m_map.put(MAGIC_CODE, 0);
 		}
 	}
+
 }

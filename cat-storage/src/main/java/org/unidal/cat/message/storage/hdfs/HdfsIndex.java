@@ -1,225 +1,286 @@
 package org.unidal.cat.message.storage.hdfs;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-
-import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.unidal.cat.message.storage.FileBuilder;
-import org.unidal.cat.message.storage.FileBuilder.FileType;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.unidal.cat.message.storage.FileType;
 import org.unidal.cat.message.storage.Index;
+import org.unidal.cat.message.storage.PathBuilder;
 import org.unidal.cat.message.storage.TokenMapping;
 import org.unidal.cat.message.storage.TokenMappingManager;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.internal.MessageId;
 
 @Named(type = Index.class, value = HdfsBucket.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class HdfsIndex implements Index {
-	private static final int BLOCK_SIZE = 32 * 1024;
+	private static final int SEGMENT_SIZE = 32 * 1024;
 
-	private static final int BYTE_PER_MESSAGE = 8;
+	public static final String ID = "hdfs";
 
-	private static final int MESSAGE_PER_BLOCK = BLOCK_SIZE / BYTE_PER_MESSAGE;
+	@Inject
+	protected HdfsSystemManager m_manager;
 
-	@Inject(HdfsBucket.ID)
-	private FileBuilder m_bulider;
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
-	@Inject(HdfsBucket.ID)
-	private TokenMappingManager m_manager;
+	@Inject("hdfs")
+	private PathBuilder m_bulider;
+
+	@Inject("hdfs")
+	private TokenMappingManager m_hdfsTokenManager;
 
 	private TokenMapping m_mapping;
 
-	private RandomAccessFile m_file;
-
-	private File m_path;
-
-	private Header m_header = new Header();
-
 	private MessageIdCodec m_codec = new MessageIdCodec();
+
+	private IndexHelper m_index = new IndexHelper();
+
+	private long m_lastAccessTime;
 
 	@Override
 	public void close() {
-		if (m_file != null) {
-			try {
-				m_header.flush();
-			} catch (IOException e) {
-				Cat.logError(e);
-			}
-
-			try {
-				m_file.close();
-			} catch (IOException e) {
-				Cat.logError(e);
-			}
-
-			m_file = null;
-		}
-	}
-
-	private void ensureOpen(MessageId from) throws IOException {
-		if (m_file == null) {
-			String domain = from.getDomain();
-			Date startTime = new Date(from.getTimestamp());
-			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-
-			m_path = m_bulider.getFile(domain, startTime, ip, FileType.INDEX);
-			m_path.getParentFile().mkdirs();
-			m_file = new RandomAccessFile(m_path, "rwd"); // read-write without meta sync
-
-			m_mapping = m_manager.getTokenMapping(startTime, ip);
-			m_header.load();
+		if (m_index.isOpen()) {
+			m_index.close();
 		}
 	}
 
 	@Override
-	public MessageId lookup(MessageId from) throws IOException {
-		ensureOpen(from);
+	public MessageId find(MessageId id) throws IOException {
+		long value = m_index.read(id);
 
-		int offset = m_header.getOffset(from.getIpAddressValue(), from.getIndex());
-		byte[] data = new byte[8];
+		if (value != 0) {
+			byte[] data = getBytes(value);
 
-		m_file.seek(offset);
-		m_file.read(data);
+			return m_codec.decode(data, id.getHour());
+		} else {
+			return null;
+		}
+	}
 
-		return m_codec.decode(data, from.getHour());
+	public void flush() {
+		throw new RuntimeException("unsupport operation");
+	}
+
+	private byte[] getBytes(long data) {
+		byte[] bytes = new byte[8];
+		bytes[0] = (byte) (data & 0xff);
+		bytes[1] = (byte) ((data >> 8) & 0xff);
+		bytes[2] = (byte) ((data >> 16) & 0xff);
+		bytes[3] = (byte) ((data >> 24) & 0xff);
+		bytes[4] = (byte) ((data >> 32) & 0xff);
+		bytes[5] = (byte) ((data >> 40) & 0xff);
+		bytes[6] = (byte) ((data >> 48) & 0xff);
+		bytes[7] = (byte) ((data >> 56) & 0xff);
+		return bytes;
+	}
+
+	public long getLastAccessTime() {
+		return m_lastAccessTime;
+	}
+
+	@Override
+	public void initialize(String domain, String ip, int hour) throws IOException {
+		long timestamp = hour * 3600 * 1000L;
+		Date startTime = new Date(timestamp);
+		FileSystem fs = m_manager.getFileSystem();
+		String dataPath = m_bulider.getPath(domain, startTime, ip, FileType.MAPPING);
+		FSDataInputStream indexStream = fs.open(new Path(dataPath));
+
+		m_index.init(indexStream);
+		m_mapping = m_hdfsTokenManager.getTokenMapping(hour, ip);
 	}
 
 	@Override
 	public void map(MessageId from, MessageId to) throws IOException {
-		ensureOpen(from);
-
-		int offset = m_header.getOffset(from.getIpAddressValue(), from.getIndex());
-		byte[] data = m_codec.encode(to, from.getHour());
-
-		m_file.seek(offset);
-		m_file.write(data);
+		throw new RuntimeException("unsupport operation");
 	}
 
-	private class Header {
-		private static final String MAGIC_CODE = "CAT2 Local Index";
+	@Override
+	public void maps(Map<MessageId, MessageId> maps) throws IOException {
+		throw new RuntimeException("unsupport operation");
+	}
 
-		private ByteBuf m_data;
+	private class IndexHelper {
+		private static final int BYTE_PER_MESSAGE = 8;
 
-		private Map<Integer, Map<Integer, Integer>> m_blockTable = new LinkedHashMap<Integer, Map<Integer, Integer>>();
+		private static final int BYTE_PER_ENTRY = 8;
 
-		private int m_nextBlock = 2;
+		private static final int MESSAGE_PER_SEGMENT = SEGMENT_SIZE / BYTE_PER_MESSAGE;
 
-		private boolean m_dirty;
+		private static final int ENTRY_PER_SEGMENT = SEGMENT_SIZE / BYTE_PER_ENTRY;
 
-		public void flush() throws IOException {
-			if (m_dirty) {
-				m_file.seek(0);
-				m_file.write(m_data.array());
-				m_file.getChannel().force(false);
+		private Header m_header = new Header();
+
+		private FSDataInputStream m_indexSteam;
+
+		public void close() {
+		}
+
+		public void init(FSDataInputStream indexStream) throws IOException {
+			m_indexSteam = indexStream;
+			int size = indexStream.available();
+			int totalHeaders = (int) Math.ceil((size * 1.0 / (ENTRY_PER_SEGMENT * SEGMENT_SIZE)));
+
+			if (totalHeaders == 0) {
+				totalHeaders = 1;
+			}
+
+			for (int i = 0; i < totalHeaders; i++) {
+				m_header.load(i);
 			}
 		}
 
-		public int getOffset(int ip, int seq) {
-			int blockIndex = seq / MESSAGE_PER_BLOCK;
-			int blockOffset = (seq % MESSAGE_PER_BLOCK) * BYTE_PER_MESSAGE;
-			int block = getOrCreateBlock(ip, blockIndex);
-			int offset = block * BLOCK_SIZE + blockOffset;
-
-			return offset;
+		public boolean isOpen() {
+			return m_indexSteam != null;
 		}
 
-		private int getOrCreateBlock(int ip, int index) {
-			Map<Integer, Integer> blocks = m_blockTable.get(ip);
+		public long read(MessageId id) throws IOException {
+			int index = id.getIndex();
+			long position = m_header.getOffset(id.getIpAddressValue(), index);
 
-			if (blocks == null) {
-				blocks = new HashMap<Integer, Integer>();
-				m_blockTable.put(ip, blocks);
+			if (position > 0) {
+				m_indexSteam.seek(position);
+
+				long address = m_indexSteam.readLong();
+
+				return address;
 			}
-
-			Integer block = blocks.get(index);
-
-			if (block == null) {
-				block = m_nextBlock++;
-				blocks.put(index, block);
-				m_data.writeInt(ip);
-				m_data.writeInt(index);
-				m_dirty = true;
-			}
-
-			return block;
+			return -1;
 		}
 
-		public void load() throws IOException {
-			m_data = Unpooled.buffer(2 * BLOCK_SIZE);
+		private class Header {
+			private Map<Integer, Map<Integer, Integer>> m_table = new LinkedHashMap<Integer, Map<Integer, Integer>>();
 
-			if (m_file.length() < m_data.capacity()) {
-				m_data.writeBytes(MAGIC_CODE.getBytes());
-				return; // empty or invalid header
+			private int m_nextSegment;
+
+			private Integer findSegment(int ip, int index) throws IOException {
+				Map<Integer, Integer> map = m_table.get(ip);
+
+				if (map != null) {
+					return map.get(index);
+				}
+				return null;
 			}
 
-			m_file.seek(0);
-			m_file.readFully(m_data.array());
+			public long getOffset(int ip, int seq) throws IOException {
+				int segmentIndex = seq / MESSAGE_PER_SEGMENT;
+				int segmentOffset = (seq % MESSAGE_PER_SEGMENT) * BYTE_PER_MESSAGE;
+				Integer segmentId = findSegment(ip, segmentIndex);
 
-			byte[] magic = new byte[16];
+				if (segmentId != null) {
+					long offset = segmentId.intValue() * SEGMENT_SIZE + segmentOffset;
 
-			m_data.writerIndex(m_data.capacity());
-			m_data.readBytes(magic);
-
-			if (!new String(magic).equals(MAGIC_CODE)) {
-				throw new IOException("Invalid index file: " + m_path);
-			}
-
-			while (m_data.isReadable()) {
-				int ip = m_data.readInt();
-				int index = m_data.readInt();
-
-				if (ip != 0) {
-					getOrCreateBlock(ip, index);
+					return offset;
 				} else {
-					break;
+					return -1;
 				}
 			}
 
-			m_data.writerIndex(m_data.readerIndex());
-			m_dirty = false;
+			public void load(int headBlockIndex) throws IOException {
+				Segment segment = new Segment(m_indexSteam, headBlockIndex * ENTRY_PER_SEGMENT * SEGMENT_SIZE);
+				long magicCode = segment.readLong();
+
+				if (magicCode != -1) {
+					throw new IOException("Invalid index file: " + m_indexSteam);
+				}
+
+				m_nextSegment = 1 + ENTRY_PER_SEGMENT * headBlockIndex;
+
+				int readerIndex = 1;
+
+				while (readerIndex < ENTRY_PER_SEGMENT) {
+					int ip = segment.readInt();
+					int index = segment.readInt();
+
+					readerIndex++;
+
+					if (ip != 0) {
+						Map<Integer, Integer> map = m_table.get(ip);
+
+						if (map == null) {
+							map = new HashMap<Integer, Integer>();
+							m_table.put(ip, map);
+						}
+
+						Integer segmentNo = map.get(index);
+
+						if (segmentNo == null) {
+							segmentNo = m_nextSegment++;
+
+							map.put(index, segmentNo);
+						}
+					} else {
+						break;
+					}
+				}
+			}
+		}
+
+		private class Segment {
+
+			private long m_address;
+
+			private ByteBuffer m_buf;
+
+			private Segment(FSDataInputStream channel, long address) throws IOException {
+				m_address = address;
+				byte[] b = new byte[SEGMENT_SIZE];
+
+				channel.readFully(b);
+				m_buf = ByteBuffer.wrap(b);
+			}
+
+			public int readInt() throws IOException {
+				return m_buf.getInt();
+			}
+
+			public long readLong() throws IOException {
+				return m_buf.getLong();
+			}
+
+			@Override
+			public String toString() {
+				return String.format("%s[address=%s]", getClass().getSimpleName(), m_address);
+			}
 		}
 	}
 
-	class MessageIdCodec {
-		public MessageId decode(byte[] data, int currentHour) throws IOException {
-			int s1 = ((data[0] << 8) + data[1]) & 0XFFFF;
-			int s2 = ((data[2] << 8) + data[3]) & 0XFFFF;
-			int s3 = ((data[4] << 8) + data[5]) & 0XFFFF;
-			int s4 = ((data[6] << 8) + data[7]) & 0XFFFF;
+	protected class MessageIdCodec {
 
-			String domain = m_mapping.lookup(s1);
-			String ipAddressInHex = m_mapping.lookup(s2);
+		private int bytesToInt(byte[] src, int offset) {
+			int value = (int) (((src[offset] & 0xFF) << 24) | ((src[offset + 1] & 0xFF) << 16)
+			      | ((src[offset + 2] & 0xFF) << 8) | (src[offset + 3] & 0xFF));
+			return value;
+		}
+
+		private MessageId decode(byte[] data, int currentHour) throws IOException {
+			int value = bytesToInt(data, 0);
+			int index = bytesToInt(data, 4);
+
+			int s1 = (value >> 17) & 0x00007FFF;
+			int s2 = (value >> 2) & 0x00007FFF;
+			int s3 = value & 0x0003;
+			String domain = m_mapping.find(s1);
+			String ipAddressInHex = m_mapping.find(s2);
 			int flag = (s3 >> 14) & 0x03;
 			int hour = currentHour + (flag == 3 ? -1 : flag);
-			int index = ((s3 & 0X3F) << 16) + s4;
 
-			return new MessageId(domain, ipAddressInHex, hour, index);
-		}
-
-		public byte[] encode(MessageId to, int currentHour) throws IOException {
-			int domainIndex = m_mapping.map(to.getDomain());
-			int ipIndex = m_mapping.map(to.getIpAddressInHex());
-			int hour = to.getHour() - currentHour;
-			int seq = to.getIndex();
-			ByteBuf buf = Unpooled.buffer(8);
-
-			buf.writeShort(domainIndex);
-			buf.writeShort(ipIndex);
-			buf.writeShort((hour & 0x03) << 14 + (seq >> 16) & 0xFFFF);
-			buf.writeShort(seq & 0xFFFF);
-			byte[] data = buf.array();
-
-			return data;
+			if (domain != null && ipAddressInHex != null) {
+				return new MessageId(domain, ipAddressInHex, hour, index);
+			} else {
+				return null;
+			}
 		}
 	}
+
 }
