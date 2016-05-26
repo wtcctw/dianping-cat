@@ -4,8 +4,6 @@ public enum AlertType {
 
 	Business("Business", "业务告警"),
 
-	Business2("Business2", "业务告警"),
-
 	Network("Network", "网络告警"),
 
 	DataBase("Database", "数据库告警"),

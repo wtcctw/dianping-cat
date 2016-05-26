@@ -17,18 +17,6 @@ public enum JspFile {
 
 	TOPO_GRAPH_CONFIG_UPDATE("/jsp/system/topology/topoGraphFormatConfig.jsp"),
 
-	METRIC_CONFIG_ADD_OR_UPDATE("/jsp/system/metric/metricConfigAdd.jsp"),
-
-	METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT("/jsp/system/metric/metricConfigs.jsp"),
-
-	METRIC_RULE_ADD_OR_UPDATE("/jsp/system/metric/metricRuleAdd.jsp"),
-
-	METRIC_RULE_ADD_OR_UPDATE_SUBMIT("/jsp/system/metric/metricConfigs.jsp"),
-
-	METRIC_CONFIG_LIST("/jsp/system/metric/metricConfigs.jsp"),
-
-	METRIC_RULE_CONFIG_UPDATE("/jsp/system/metric/metricRuleConfig.jsp"),
-
 	NETWORK_RULE_CONFIG_LIST("/jsp/system/networkRule/networkConfigs.jsp"),
 
 	NETWORK_RULE_ADD_OR_UPDATE("/jsp/system/networkRule/networkRuleAdd.jsp"),

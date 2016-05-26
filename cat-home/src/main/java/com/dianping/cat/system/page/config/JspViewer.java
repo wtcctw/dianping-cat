@@ -45,21 +45,6 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.TOPOLOGY_GRAPH_PRODUCT_LINE.getPath();
 		case TOPO_GRAPH_FORMAT_CONFIG_UPDATE:
 			return JspFile.TOPO_GRAPH_CONFIG_UPDATE.getPath();
-			// Metric
-		case METRIC_CONFIG_ADD_OR_UPDATE:
-			return JspFile.METRIC_CONFIG_ADD_OR_UPDATE.getPath();
-		case METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT:
-			return JspFile.METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT.getPath();
-		case METRIC_CONFIG_LIST:
-		case METRIC_CONFIG_DELETE:
-		case METRIC_CONFIG_BATCH_DELETE:
-			return JspFile.METRIC_CONFIG_LIST.getPath();
-		case METRIC_RULE_CONFIG_UPDATE:
-			return JspFile.METRIC_RULE_CONFIG_UPDATE.getPath();
-		case METRIC_RULE_ADD_OR_UPDATE:
-			return JspFile.METRIC_RULE_ADD_OR_UPDATE.getPath();
-		case METRIC_RULE_ADD_OR_UPDATE_SUBMIT:
-			return JspFile.METRIC_RULE_ADD_OR_UPDATE_SUBMIT.getPath();
 		case NETWORK_RULE_CONFIG_LIST:
 			return JspFile.NETWORK_RULE_CONFIG_LIST.getPath();
 		case NETWORK_RULE_ADD_OR_UPDATE:

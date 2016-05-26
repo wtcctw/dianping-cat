@@ -26,7 +26,6 @@ import com.dianping.cat.system.page.config.processor.EventConfigProcessor;
 import com.dianping.cat.system.page.config.processor.ExceptionConfigProcessor;
 import com.dianping.cat.system.page.config.processor.GlobalConfigProcessor;
 import com.dianping.cat.system.page.config.processor.HeartbeatConfigProcessor;
-import com.dianping.cat.system.page.config.processor.MetricConfigProcessor;
 import com.dianping.cat.system.page.config.processor.NetworkConfigProcessor;
 import com.dianping.cat.system.page.config.processor.StorageConfigProcessor;
 import com.dianping.cat.system.page.config.processor.SystemConfigProcessor;
@@ -45,9 +44,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private DependencyConfigProcessor m_topologyConfigProcessor;
-
-	@Inject
-	private MetricConfigProcessor m_metricConfigProcessor;
 
 	@Inject
 	private ExceptionConfigProcessor m_exceptionConfigProcessor;
@@ -138,17 +134,6 @@ public class Handler implements PageHandler<Context> {
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE_SUBMIT:
 		case TOPO_GRAPH_FORMAT_CONFIG_UPDATE:
 			m_topologyConfigProcessor.process(action, payload, model);
-			break;
-
-		case METRIC_CONFIG_ADD_OR_UPDATE:
-		case METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT:
-		case METRIC_RULE_ADD_OR_UPDATE:
-		case METRIC_RULE_ADD_OR_UPDATE_SUBMIT:
-		case METRIC_CONFIG_LIST:
-		case METRIC_CONFIG_DELETE:
-		case METRIC_CONFIG_BATCH_DELETE:
-		case METRIC_RULE_CONFIG_UPDATE:
-			m_metricConfigProcessor.process(action, payload, model);
 			break;
 
 		case EXCEPTION:

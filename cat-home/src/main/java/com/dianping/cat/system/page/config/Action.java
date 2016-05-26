@@ -33,22 +33,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	TOPO_GRAPH_FORMAT_CONFIG_UPDATE("topoGraphFormatUpdate"),
 
-	METRIC_CONFIG_LIST("metricConfigList"),
-
-	METRIC_CONFIG_ADD_OR_UPDATE("metricConfigAdd"),
-
-	METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT("metricConfigAddSubmit"),
-
-	METRIC_RULE_ADD_OR_UPDATE("metricRuleAdd"),
-
-	METRIC_RULE_ADD_OR_UPDATE_SUBMIT("metricRuleAddSubmit"),
-
-	METRIC_CONFIG_DELETE("metricConfigDelete"),
-
-	METRIC_CONFIG_BATCH_DELETE("metricConfigBatchDelete"),
-
-	METRIC_RULE_CONFIG_UPDATE("metricRuleConfigUpdate"),
-
 	NETWORK_RULE_CONFIG_LIST("networkRuleConfigList"),
 
 	NETWORK_RULE_ADD_OR_UPDATE("networkRuleUpdate"),

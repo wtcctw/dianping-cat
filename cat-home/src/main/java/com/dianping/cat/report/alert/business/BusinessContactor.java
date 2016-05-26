@@ -11,5 +11,4 @@ public class BusinessContactor extends ProjectContactor {
 	public String getId() {
 		return ID;
 	}
-
 }

@@ -10,7 +10,7 @@ import com.dianping.cat.alarm.server.ServerAlarm;
 import com.dianping.cat.report.alert.app.AppAlert;
 import com.dianping.cat.report.alert.browser.AjaxAlert;
 import com.dianping.cat.report.alert.browser.JsAlert;
-import com.dianping.cat.report.alert.business2.BusinessAlert2;
+import com.dianping.cat.report.alert.business.BusinessAlert;
 import com.dianping.cat.report.alert.database.DatabaseAlert;
 import com.dianping.cat.report.alert.event.EventAlert;
 import com.dianping.cat.report.alert.exception.ExceptionAlert;
@@ -34,7 +34,7 @@ public class AlarmManager extends ContainerHolder {
 			Threads.forGroup("cat").start(serverAlarm);
 		}
 
-		BusinessAlert2 businessAlert = lookup(BusinessAlert2.class);
+		BusinessAlert businessAlert = lookup(BusinessAlert.class);
 		NetworkAlert networkAlert = lookup(NetworkAlert.class);
 		DatabaseAlert databaseAlert = lookup(DatabaseAlert.class);
 		SystemAlert systemAlert = lookup(SystemAlert.class);

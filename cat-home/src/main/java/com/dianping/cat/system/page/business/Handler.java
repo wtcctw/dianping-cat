@@ -18,7 +18,7 @@ import com.dianping.cat.config.business.ConfigItem;
 import com.dianping.cat.configuration.business.entity.BusinessItemConfig;
 import com.dianping.cat.configuration.business.entity.BusinessReportConfig;
 import com.dianping.cat.configuration.business.entity.CustomConfig;
-import com.dianping.cat.report.alert.business2.BusinessRuleConfigManager2;
+import com.dianping.cat.report.alert.business.BusinessRuleConfigManager;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.business.config.BusinessTagConfigManager;
@@ -47,7 +47,7 @@ public class Handler implements PageHandler<Context> {
 	private BusinessTagConfigManager m_tagConfigManger;
 
 	@Inject
-	private BusinessRuleConfigManager2 m_alertConfigManager;
+	private BusinessRuleConfigManager m_alertConfigManager;
 
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;

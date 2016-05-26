@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.business2;
+package com.dianping.cat.report.alert.business;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;

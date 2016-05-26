@@ -37,7 +37,7 @@ public class AlertSummaryVisitor extends BaseVisitor {
 		if (name.equals(AlertType.Network.getName())) {
 			return "网络告警";
 		}
-		if (name.equals(AlertType.Business2.getName())) {
+		if (name.equals(AlertType.Business.getName())) {
 			return "业务告警";
 		}
 		if (name.equals(AlertType.Exception.getName())) {

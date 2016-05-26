@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.business2;
+package com.dianping.cat.report.alert.business;
 
 import java.util.Map;
 import java.util.Map.Entry;
