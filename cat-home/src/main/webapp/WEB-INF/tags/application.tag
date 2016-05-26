@@ -71,7 +71,7 @@
 					</a>
 				</li>
 				<li id="Business_report" >
-					<a href="/cat/r/business?domain=${model.domain}&date=${model.date}">
+					<a href="/cat/r/business?name=${model.domain}&type=domain">
 						<i class="menu-icon fa fa-list-alt"></i>
 						<span class="menu-text">Business</span>
 					</a>

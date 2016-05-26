@@ -60,9 +60,15 @@ public class Handler implements PageHandler<Context> {
 
 		switch (action) {
 		case VIEW:
-			Map<String, LineChart> allCharts = buildLineCharts(payload, startDate, endDate);
+			Type type = Type.getType(payload.getType(), Type.Domain);
+			String name = payload.getName();
+			Map<String, LineChart> allCharts = buildLineCharts(type, name, startDate, endDate);
 
 			model.setLineCharts(new ArrayList<LineChart>(allCharts.values()));
+
+			if (type == Type.Domain) {
+				model.setDisplayDomain(name);
+			}
 			break;
 		}
 		if (!ctx.isProcessStopped()) {
@@ -70,11 +76,8 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private Map<String, LineChart> buildLineCharts(Payload payload, Date start, Date end) {
+	private Map<String, LineChart> buildLineCharts(Type type, String name, Date start, Date end) {
 		Map<String, LineChart> allCharts = null;
-		Type type = Type.getType(payload.getType(), Type.Domain);
-
-		String name = payload.getName();
 
 		if (type == Type.Tag) {
 			allCharts = m_graphCreator.buildGraphByTag(start, end, name);

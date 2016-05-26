@@ -102,13 +102,48 @@
 <br/>
 
 <h4 class="text-danger">APP Crash日志上报接口</h4>
- <pre>最新接口见wiki：<a href="http://wiki.sankuai.com/pages/viewpage.action?pageId=499041379">http://wiki.sankuai.com/pages/viewpage.action?pageId=499041379</a></pre>
-原有接口：
+	<pre>
+	beta: http://broker-service01.beta/broker-service/crashlog
+	线上: http://catdot.dianping.com/broker-service/crashlog	</pre>
+	 <h5>HTTP Body : </h5>
+	<p class="text-danger">key-value形式，json格式传上来</p>
+	<table class="table table-bordered table-striped table-condensed  ">
+		<tr><th>参数名</th><th>描述</th></tr>
+		<tr><td>appId</td><td>app在cat中的唯一ID，可在<a href="http://cat.dp/cat/s/app?op=appSources">APP来源</a>中查询或注册。</td><td>String</td></tr>
+		<tr><td>appVersion</td><td>App版本号</td></tr>
+		<tr><td>platVersion</td><td>系统版本号</td></tr>
+		<tr><td>deviceBrand</td><td>设备品牌</td></tr>
+		<tr><td>deviceModel</td><td>设备硬件型号</td></tr>
+		<tr><td>crashTime</td><td>crash发生时间</td></tr>
+		<tr><td>unionId</td><td>用于查询个案的id值</td></tr>
+		<tr><td>platform</td><td>平台类型，分为android和ios</td></tr>
+		<tr><td>reason</td><td>crash简要原因</td></tr>
+		<tr><td>mapId</td><td>可为空，Android混淆map的id，ios不传</td></tr>
+		<tr><td>crashContent</td><td>crash的详细内容</td></tr>
+	</table>
+	<pre>
+	Http Body示例：
+	{
+		"crashContent":"xxxxx",
+		"platform":"ios",
+		"platVersion":"9.3.0",
+		"crashTime":"2016-05-17 14:24:30",
+		"appId":"1",
+		"appVersion":"1.1.1",
+		"reason":"test 123",
+		"deviceBrand":"iphone",
+		"deviceModel":"8,0",
+		"unionId":"4765514784693486078"
+	}
+	</pre>
+	
+<br/>
+ <h5>原有接口：</h5>
 	<pre>	http://{ip}/broker-service/api/crash</pre>
 		<p class="text-danger">参数可以post上来，需要对value进行encode。</p>
 	<table class="table table-bordered table-striped table-condensed  ">
 		<tr><th>参数名</th><th>描述</th><th>类型</th></tr>
-		<tr><td>v</td><td>版本号，默认为1</td><td>String</td></tr>
+		<tr><td>v</td><td>版本号,v=1</td><td>String</td></tr>
 		<tr><td>an</td><td>appname</td><td>String</td></tr>
 		<tr><td>p</td><td>手机类型，andriod传入1，ios传入2</td><td>int</td></tr>
 		<tr><td>av</td><td>app版本</td><td>String</td></tr>
@@ -123,8 +158,17 @@
 		<tr><td>mi</td><td>混淆map id</td><td>String</td></tr>
 		<tr><td>d</td><td>详细的错误日志</td><td>String</td></tr>
 	</table>
-	
-	<h5>原有crash日志兼容接口：<br/></h5>
+	<h5>mobile-log-web中的crash上报接口：</h5><br/>
+	<pre>http://stat.api.dianping.com/utm.js?v=\${appname}&mi=\${mapid}</pre>
+	<table class="table table-bordered table-striped table-condensed  ">
+		<tr><th>参数名</th><th>描述</th><th>类型</th></tr>
+		<tr><td>v</td><td>appname,每个app有一个特定的名称</td><td>String</td></tr>
+		<tr><td>mi</td><td>混淆map id</td><td>String</td></tr>
+	</table>
+	<pre class="text-danger">将错误的详细信息放在post的内容中。</pre>
+	<br/>
+	<h5>接收mobile-log-web发送的crash日志的接口：</h5>
+	<pre>	http://{ip}/broker-service/api/crash</pre>
 	<table class="table table-bordered table-striped table-condensed  ">
 		<tr><th>参数名</th><th>描述</th><th>类型</th></tr>
 		<tr><td>v</td><td>版本号，兼容之前的接口,v=2</td><td>String</td></tr>
@@ -133,14 +177,6 @@
 		<tr><td>d</td><td>详细的错误日志</td><td>String</td></tr>
 	</table>
 	
-	<h5>mobile-log-web中的crash日志接口：<br/></h5>
-	<pre>http://stat.api.dianping.com/utm.js?v=\${appname}&mi=\${mapid}</pre>
-	<table class="table table-bordered table-striped table-condensed  ">
-		<tr><th>参数名</th><th>描述</th><th>类型</th></tr>
-		<tr><td>v</td><td>appname,每个app有一个特定的名称</td><td>String</td></tr>
-		<tr><td>mi</td><td>混淆map id</td><td>String</td></tr>
-	</table>
-	<pre class="text-danger">将错误的详细信息放在post的内容中。</pre>
 <br/>
 
 <h4 class="text-danger">APP Crash日志混淆map上传接口</h4>
@@ -161,7 +197,50 @@
 <br/>
 
 <h4 class="text-danger">代码级日志上报接口</h4>
- <pre>接口定义见wiki：<a href="http://wiki.sankuai.com/pages/viewpage.action?pageId=499041379">http://wiki.sankuai.com/pages/viewpage.action?pageId=499041379</a></pre>
+ <pre>
+	beta: http://broker-service01.beta/broker-service/applog
+	线上:  http://catdot.dianping.com/broker-service/applog</pre>
+ 	 <h5>HTTP Body : </h5>
+	<p class="text-danger">key-value形式，json格式传上来</p>
+	<table class="table table-bordered table-striped table-condensed  ">
+	<tr><th>参数名</th><th>参数内容</th></tr>
+	<tr><td>customParam</td>
+		<td>
+		key-value形式，json格式传上来<br/>
+		appId: app在cat中的唯一ID，可在<a href="http://cat.dp/cat/s/app?op=appSources">APP来源</a>中查询或注册。<br/>
+		appVersion: App版本号<br/>
+		platVersion: 系统版本号<br/>
+		deviceBrand: 设备品牌<br/>
+		deviceModel: 设备硬件型号<br/>
+		unionId: 用于查询个案的id值<br/>
+		platform: 平台类型，分为android和ios<br/>
+		</td>
+	</tr>
+	<tr><td>content</td>
+		<td>
+		key-value形式，json格式传上来，支持批量上传，每条日志的格式定义如下:<br/>
+		time: 日志发生时间<br/>
+		level: 日志类型，normal表示普通日志，error表示错误日志<br/>
+		category: 用于聚合分类<br/>
+		log: app日志的详细内容</td>
+	</tr>
+	</table>
+	<pre>
+	Http Body示例：
+	{
+	"content":
+    		"[{"category":"testcategory","time":1463541358023,"level":"normal","log":"testlog"},
+      		  {"category":"testcategory","time":1463541358023,"level":"normal","log":"testlog"}]",
+	"customParam":
+    		"{"platform":"ios",
+     	 	"platVersion":"9.3.0",
+      		"appId":"1",
+      		"appVersion":"1.1.1",
+      		"deviceBrand":"iphone",
+      		"deviceModel":"8,0",
+      		"unionId":"4765514784693486078"}"
+	}
+	</pre>
 <br/>
 
 <h4 class="text-danger">APP 长连访问批量上报接口</h4>
