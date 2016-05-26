@@ -90,7 +90,7 @@
 		var namespace = "${payload.namespace}";
 		
 		if(namespace == ""){
-			for (var ns in ${model.domain2CommandsJson}) {
+			for (var ns in ${model.codesJson}) {
 				namespace = ns;
 				break;
 			}
@@ -99,6 +99,9 @@
 		if(typeof namespace != "undefined" && namespace.length > 0) {
 			$('#tab-'+ namespace).addClass('active');
 			$('#tabContent-'+ namespace).addClass('active');
+		}else{
+			$('#tab-点评主APP').addClass('active');
+			$('#tabContent-点评主APP').addClass('active');
 		}
 		
 		<c:forEach var="item" items="${model.codes}">

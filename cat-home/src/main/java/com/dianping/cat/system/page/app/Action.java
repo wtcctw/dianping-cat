@@ -4,7 +4,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	APP_CONFIG_UPDATE("appConfigUpdate"),
 
-	BROKER_CONFIG_UPDATE("brokerConfigUpdate"),
+	MOBILE_CONFIG_UPDATE("mobileConfigUpdate"),
 
 	CRASH_LOG_CONFIG_UPDATE("crashLogConfigUpdate"),
 
@@ -53,9 +53,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 	APP_SPEED_DELETE("appSpeedDelete"),
 
 	APP_CONSTANTS("appConstants"),
-	
+
 	APP_SOURCES("appSources"),
-	
+
 	APP_SOURCES_SUBMIT("appSourcesSubmit"),
 
 	APP_CONSTANT_ADD("appConstantAdd"),

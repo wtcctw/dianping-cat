@@ -37,6 +37,9 @@
 			if(typeof namespace != "undefined" && namespace.length > 0) {
 				$('#tab-'+ namespace).addClass('active');
 				$('#tabContent-'+ namespace).addClass('active');
+			}else{
+				$('#tab-点评主APP').addClass('active');
+				$('#tabContent-点评主APP').addClass('active');
 			}
 			
 			<c:forEach var="item" items="${model.apiCommands}">
@@ -83,12 +86,12 @@
 						
 						  <ul class="nav nav-tabs padding-12 ">
 						  	<c:forEach var="entry" items="${item.value.commands}" varStatus="status">
-							    <li id="tab-${item.key}-${entry.key}" class="text-right"><a href="#tabContent-${item.key}-${entry.key}" data-toggle="tab"> ${entry.key}</a></li>
+							    <li id="tab-${item.key}-${entry.key}" class="text-right"><a href="#tabContent-${item.key}-${status.index}" data-toggle="tab"> ${entry.key}</a></li>
 							</c:forEach>
 						  </ul>
 						  <div class="tab-content">
 						  	<c:forEach var="entry" items="${item.value.commands}" varStatus="status">
-							  	<div class="tab-pane" id="tabContent-${item.key}-${entry.key}">
+							  	<div class="tab-pane" id="tabContent-${item.key}-${status.index}">
 								    <table class="table table-striped table-condensed table-bordered table-hover">
 									    <thead><tr>
 												<th width="30%">名称</th>

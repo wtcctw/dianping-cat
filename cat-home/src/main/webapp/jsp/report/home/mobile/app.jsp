@@ -53,14 +53,27 @@
 <p>用户可以在该界面对Command命令字进行修改操作。</p>
 <img  class="img-polaroid"  width='80%'  src="${model.webapp}/images/userMonitor/userMonitor05.png"/>
 <br/><br/>
+<pre>
+1) 单个添加
+   <span class="text-danger">名称：</span>命令字（如：shop.bin，api.baymax.adp.meituan.com, http://bddeal.meishi.sankuai.com/m/list等）
+   <span class="text-danger">App: </span>命令字属于哪个App
+   <span class="text-danger">项目名：</span>对应的服务项目名，会根据此项目名查找需要发送告警的联系人信息(告警人信息来源CMDB)
+   <span class="text-danger">标题：</span>方便记住的标题名字
+   <span class="text-danger">默认过滤时间：</span>响应时间超过该阈值的访问数据不予统计
+2) 批量
+   <span class="text-danger">名称：</span>输入格式（命令字名称1|命令字标题1;命令字名称2|命令字标题2;...）
+   	不设置标题默认展示命令字名称，所以格式也可为（命令字名称1;命令字名称2;...）
+</pre>
+<br/><br/>
 <h4 class="text-danger">3、APP端到端告警&nbsp;&nbsp;&nbsp;&nbsp;<a href="/cat/s/config?op=appRule">访问链接</a></h4>
 <h5 class="text-success">A) 配置一览表</h5>
 <img  class="img-polaroid"  width='80%'  src="${model.webapp}/images/userMonitor/userMonitor06.png"/>
 <h5 class="text-success">B) 配置告警规则</h5>
 <p>（1）告警名自定义，方便区分告警项。可对<span class="text-danger">请求数、访问成功率、响应时间</span>进行监控。</p>
-<p>（2）多个监控规则构成了告警的主体，分别对不同时间段进行配置，以方便准确地进行告警。</p>
-<p>（3）监控规则诠释着某个时间段内如何进行告警，由任意多个监控条件组成。任何一条监控条件触发都会引起监控规则触发，从而告警。</p>
-<p>（4）监控条件诠释着什么条件会触发监控规则，由任意多个监控子条件组成。当所有子条件同时被触发时，才会触发该监控规则。</p>
+<p>（2）告警维度：可以根据每个维度进行选择，可以选择<span class="text-danger">All（某一维度的所有聚合），*（某一维度任意条件，如地区中*是对所有地区分别进行告警），具体条件（如地区维度中选择上海市）</span></p>
+<p>（3）多个监控规则构成了告警的主体，分别对不同时间段进行配置，以方便准确地进行告警。</p>
+<p>（4）监控规则诠释着某个时间段内如何进行告警，由任意多个监控条件组成。任何一条监控条件触发都会引起监控规则触发，从而告警。</p>
+<p>（5）监控条件诠释着什么条件会触发监控规则，由任意多个监控子条件组成。当所有子条件同时被触发时，才会触发该监控规则。</p>
 
 <img  class="img-polaroid"  width='80%'  src="${model.webapp}/images/userMonitor/userMonitor07.png"/>
 

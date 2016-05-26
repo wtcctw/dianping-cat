@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
@@ -151,26 +152,28 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 	}
 
 	private String buildGroupByField(String originalTags) {
-		String[] fields = originalTags.split(";");
-		List<String> groups = new LinkedList<String>();
-
-		for (int i = 0; i < fields.length; i++) {
-			try {
-				String field = fields[i].split("=")[0].trim();
-
-				groups.add(field);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-
 		StringBuilder sb = new StringBuilder();
+
 		sb.append("endPoint, ");
 
-		for (String g : groups) {
-			sb.append(g).append(", ");
-		}
+		if (StringUtils.isNotEmpty(originalTags)) {
+			String[] fields = originalTags.split(";");
+			List<String> groups = new LinkedList<String>();
 
+			for (int i = 0; i < fields.length; i++) {
+				try {
+					String field = fields[i].split("=")[0].trim();
+
+					groups.add(field);
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+			}
+
+			for (String g : groups) {
+				sb.append(g).append(", ");
+			}
+		}
 		return sb.toString();
 	}
 

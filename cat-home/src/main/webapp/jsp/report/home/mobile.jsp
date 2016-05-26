@@ -4,7 +4,6 @@
     <li class="active"><a href="#report" data-toggle="tab"><strong>API访问</strong></a></li>
     <li><a href="#speed" data-toggle="tab"><strong>APP测速</strong></a></li>
     <li><a href="#interface" data-toggle="tab"><strong>接口文档</strong></a></a></li>
-    <li><a href="#appconfig" data-toggle="tab"><strong>APP配置</strong></a></li>
     <li><a href="#sdk" data-toggle="tab"><strong>sdk接入</strong></a></li>
   </ul>
   
@@ -12,7 +11,6 @@
     <div class="tab-pane active" id="report"><%@ include file="mobile/app.jsp"%></div>
     <div class="tab-pane" id="speed"><%@ include file="mobile/speed.jsp"%></div>
     <div class="tab-pane" id="interface"><%@ include file="mobile/dataInterface.jsp"%></div>
-    <div class="tab-pane" id="appconfig"><%@ include file="mobile/configInterface.jsp"%></div>
      <div class="tab-pane" id="sdk"><%@ include file="mobile/sdk.jsp"%></div>
    </div>
 </div>

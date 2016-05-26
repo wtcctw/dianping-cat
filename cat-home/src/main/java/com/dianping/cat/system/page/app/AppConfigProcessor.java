@@ -396,7 +396,7 @@ public class AppConfigProcessor implements Initializable {
 			}
 			model.setContent(m_configHtmlParser.parse(m_appConfigManager.getConfig().toString()));
 			break;
-		case BROKER_CONFIG_UPDATE:
+		case MOBILE_CONFIG_UPDATE:
 			String brokerConfig = payload.getContent();
 			if (!StringUtils.isEmpty(brokerConfig)) {
 				model.setOpState(m_mobileConfigManager.insert(brokerConfig));

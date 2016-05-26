@@ -23,7 +23,7 @@ public enum JspFile {
 
 	APP_CONFIG_UPDATE("/jsp/system/appConfig/appConfig.jsp"),
 
-	BROKER_CONFIG_UPDATE("/jsp/system/appConfig/brokerConfigUpdate.jsp"),
+	MOBILE_CONFIG_UPDATE("/jsp/system/appConfig/mobileConfigUpdate.jsp"),
 
 	CRASH_LOG_CONFIG_UPDATE("/jsp/system/appConfig/crashLogConfigUpdate.jsp"),
 

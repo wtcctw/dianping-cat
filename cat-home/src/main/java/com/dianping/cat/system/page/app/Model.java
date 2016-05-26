@@ -123,6 +123,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_codes;
 	}
 
+	public String getCodesJson() {
+		return new JsonBuilder().toJson(m_codes);
+	}
+
 	public Map<Integer, List<Code>> getCommand2Codes() {
 		return m_command2Codes;
 	}

@@ -85,7 +85,7 @@
 							<li id="appSpeedList"><a href="/cat/s/app?op=appSpeedList">
 								<i class="menu-icon fa fa-caret-right"></i>App测速</a>
 								<b class="arrow"></b></li>
-							<li id="brokerConfigUpdate"><a href="/cat/s/app?op=brokerConfigUpdate">
+							<li id="brokerConfigUpdate"><a href="/cat/s/app?op=mobileConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>Mobile配置</a>
 								<b class="arrow"></b></li>
 							<li id="appCommandBatch"  style="display:none"><a href="/cat/s/app?op=appCommandBatch">

@@ -9,7 +9,7 @@
 	<res:useJs value="${res.js.local['editor.js']}" target="head-js" />
 	<script src='${model.webapp}/assets/js/editor/ace.js'></script>
 			<form name="brokerConfigUpdate" id="form" method="post"
-				action="${model.pageUri}?op=brokerConfigUpdate">
+				action="${model.pageUri}?op=mobileConfigUpdate">
 				<table class="table table-striped table-condensed   table-hover">
 					<tr><td>
 						<input id="content" name="content" value="" type="hidden"/>
