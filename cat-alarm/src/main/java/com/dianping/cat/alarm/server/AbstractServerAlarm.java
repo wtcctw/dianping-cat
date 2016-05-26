@@ -2,9 +2,11 @@ package com.dianping.cat.alarm.server;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
@@ -74,6 +76,7 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 
 						task.setCategory(getCategory());
 						task.setAlarmId(getID());
+
 						buildQueries(rule, task, pair.getValue());
 						tasks.add(task);
 						m_times.put(ruleId, current + pair.getKey());
@@ -114,35 +117,6 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 		return new Pair<Long, List<Rule>>(sleeptime, rets);
 	}
 
-	private void buildQueries(ServerAlarmRule rule, ServerAlarmTask task, List<Rule> rules) {
-		for (Rule r : rules) {
-			List<Condition> conditions = r.getConditions();
-			AlarmParameter alarmParameter = new AlarmParameter(conditions);
-
-			for (Condition condition : conditions) {
-				try {
-					int duration = condition.getDuration();
-					String intval = condition.getInterval();
-					Date end = buildEndDate(intval, duration);
-					Date start = new Date(end.getTime() - queryInterval(intval) * duration);
-					MetricType metricType = MetricType.getByName(rule.getType(), MetricType.AVG);
-					QueryParameter parameter = new QueryParameter();
-					String originalTags = rule.getTags();
-					String tags = "endPoint =~ " + rule.getEndPoint() + ";" + originalTags;
-					String groupBy = buildGroupByField(originalTags);
-
-					parameter.setCategory(rule.getCategory()).setType(metricType).setTags(tags).setInterval(intval)
-					      .setFillValue("none").setStart(start).setEnd(end).setMeasurement(rule.getMeasurement())
-					      .setGroupBy(groupBy);
-					alarmParameter.addParameter(parameter);
-				} catch (Exception e) {
-					Cat.logError(condition.toString(), e);
-				}
-			}
-			task.addParameter(alarmParameter);
-		}
-	}
-
 	private Date buildEndDate(String intval, int duration) {
 		if (intval.endsWith("s")) {
 			return TimeHelper.getStepSecond(duration);
@@ -162,7 +136,14 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 
 			for (int i = 0; i < fields.length; i++) {
 				try {
-					String field = fields[i].split("=")[0].trim();
+					String f = fields[i].trim();
+					String symbol = "=";
+
+					if (f.contains("!~")) {
+						symbol = "!~";
+					}
+
+					String field = f.split(symbol)[0].trim();
 
 					groups.add(field);
 				} catch (Exception e) {
@@ -175,6 +156,53 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 			}
 		}
 		return sb.toString();
+	}
+
+	private void buildQueries(ServerAlarmRule rule, ServerAlarmTask task, List<Rule> rules) {
+		for (Rule r : rules) {
+			Map<Long, List<Condition>> sameIntervalRules = buildSameIntervalRules(r);
+
+			for (Entry<Long, List<Condition>> entry : sameIntervalRules.entrySet()) {
+				List<Condition> cs = entry.getValue();
+				long interval = entry.getKey();
+				String intval = cs.iterator().next().getInterval();
+
+				int duration = queryMaxDuration(cs);
+				Date end = buildEndDate(intval, duration);
+				Date start = new Date(end.getTime() - interval * duration);
+
+				MetricType metricType = MetricType.getByName(rule.getType(), MetricType.AVG);
+				QueryParameter parameter = new QueryParameter();
+				String originalTags = rule.getTags();
+				String tags = "endPoint " + rule.getEndPoint() + ";" + originalTags;
+				String groupBy = buildGroupByField(originalTags);
+
+				parameter.setCategory(rule.getCategory()).setType(metricType).setTags(tags).setInterval(intval)
+				      .setFillValue("none").setStart(start).setEnd(end).setMeasurement(rule.getMeasurement())
+				      .setGroupBy(groupBy);
+
+				AlarmParameter alarmParameter = new AlarmParameter(parameter, cs);
+
+				task.addParameter(alarmParameter);
+			}
+		}
+	}
+
+	private Map<Long, List<Condition>> buildSameIntervalRules(Rule rule) {
+		Map<Long, List<Condition>> results = new HashMap<Long, List<Condition>>();
+
+		for (Condition condition : rule.getConditions()) {
+			long interval = queryInterval(condition.getInterval());
+			List<Condition> rets = results.get(interval);
+
+			if (rets == null) {
+				rets = new ArrayList<Condition>();
+
+				results.put(interval, rets);
+			}
+			rets.add(condition);
+		}
+		return results;
 	}
 
 	private boolean checkTime(Rule r) {
@@ -216,6 +244,20 @@ public abstract class AbstractServerAlarm extends ContainerHolder implements Ser
 		} else {
 			throw new RuntimeException("Unrecognized interval: " + interval);
 		}
+	}
+
+	private int queryMaxDuration(List<Condition> conditions) {
+		int max = 0;
+
+		for (Condition condition : conditions) {
+			int duration = condition.getDuration();
+
+			if (max < duration) {
+				max = duration;
+			}
+		}
+
+		return max;
 	}
 
 	@Override

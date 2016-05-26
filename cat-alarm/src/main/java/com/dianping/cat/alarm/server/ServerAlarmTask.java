@@ -63,42 +63,39 @@ public class ServerAlarmTask extends ContainerHolder implements Task {
 	@Override
 	public void run() {
 		for (AlarmParameter parameter : m_paramters) {
-			List<Condition> conditions = parameter.getCondition();
+			List<Condition> conditions = parameter.getConditions();
+			QueryParameter query = parameter.getQuery();
+			List<ServerGroupByEntity> entities = m_metricService.queryByFields(query);
 
-			for (QueryParameter query : parameter.getQueries()) {
-				List<ServerGroupByEntity> entities = m_metricService.queryByFields(query);
+			for (ServerGroupByEntity e : entities) {
+				Map<Long, Double> results = e.getValues();
 
-				for (ServerGroupByEntity e : entities) {
-					Map<Long, Double> results = e.getValues();
-
-					if (!results.isEmpty()) {
-						SortHelper.sortMap(results, new Comparator<Entry<Long, Double>>() {
-							@Override
-							public int compare(Entry<Long, Double> o1, Entry<Long, Double> o2) {
-								if (o1.getKey() > o2.getKey()) {
-									return 1;
-								} else if (o1.getKey() < o2.getKey()) {
-									return -1;
-								} else {
-									return 0;
-								}
+				if (!results.isEmpty()) {
+					SortHelper.sortMap(results, new Comparator<Entry<Long, Double>>() {
+						@Override
+						public int compare(Entry<Long, Double> o1, Entry<Long, Double> o2) {
+							if (o1.getKey() > o2.getKey()) {
+								return 1;
+							} else if (o1.getKey() < o2.getKey()) {
+								return -1;
+							} else {
+								return 0;
 							}
-						});
-						Double[] values = new Double[results.size()];
-
-						results.values().toArray(values);
-
-						List<DataCheckEntity> alertResults = m_dataChecker.checkData(ArrayUtils.toPrimitive(values),
-						      conditions);
-
-						for (DataCheckEntity alertResult : alertResults) {
-							AlertEntity entity = new AlertEntity();
-
-							entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-							      .setLevel(alertResult.getAlertLevel());
-							entity.setMetric(e.getMeasurement()).setType(m_alarmId).setGroup(e.getEndPoint());
-							m_sendManager.addAlert(entity);
 						}
+					});
+					Double[] values = new Double[results.size()];
+
+					results.values().toArray(values);
+
+					List<DataCheckEntity> alertResults = m_dataChecker.checkData(ArrayUtils.toPrimitive(values), conditions);
+
+					for (DataCheckEntity alertResult : alertResults) {
+						AlertEntity entity = new AlertEntity();
+
+						entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
+						      .setLevel(alertResult.getAlertLevel());
+						entity.setMetric(e.getMeasurement()).setType(m_alarmId).setGroup(e.getEndPoint());
+						m_sendManager.addAlert(entity);
 					}
 				}
 			}
@@ -120,25 +117,23 @@ public class ServerAlarmTask extends ContainerHolder implements Task {
 
 	public static class AlarmParameter {
 
-		private List<QueryParameter> m_queries = new ArrayList<QueryParameter>();
+		private QueryParameter m_query;
 
 		private List<Condition> m_conditions = new ArrayList<Condition>();
 
-		public AlarmParameter(List<Condition> conditions) {
+		public AlarmParameter(QueryParameter query, List<Condition> conditions) {
+			m_query = query;
 			m_conditions = conditions;
 		}
 
-		public void addParameter(QueryParameter query) {
-			m_queries.add(query);
+		public QueryParameter getQuery() {
+			return m_query;
 		}
 
-		public List<Condition> getCondition() {
+		public List<Condition> getConditions() {
 			return m_conditions;
 		}
 
-		public List<QueryParameter> getQueries() {
-			return m_queries;
-		}
 	}
 
 }
