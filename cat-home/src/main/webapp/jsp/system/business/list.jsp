@@ -50,7 +50,8 @@
 				
 				var action = '${payload.action.name}';
 
-				if (action == 'metricConfigDelete'	|| action == 'metricConfigAddSumbit' || action == 'metricRuleAddSubmit') {
+				if (action == 'addSubmit'	|| action == 'alertRuleAddSubmit' ||
+					action == 'customAddSubmit' || action == 'customDelete' || action == 'delete') {
 					var state = '${model.opState}';
 					if (state == 'Success') {
 						$('#state').html('操作成功');
@@ -61,6 +62,13 @@
 						$('#state').html('&nbsp;');
 					}, 3000);
 				}
+			
+				$('#wrap_search').submit(
+						function(){
+							query();
+							return false;
+						}		
+					);
 			});
 
 		function query() {
@@ -70,6 +78,7 @@
 		}
 	</script>
 	<div>
+		<form id="wrap_search" >
 		<table align="center">
 			<tr>
 				<th>
@@ -87,7 +96,9 @@
 				</th>
 			</tr>
 		</table>
+		</form>
 	    <h4 class="text-center text-danger">业务大盘标签会默认进行基线告警</h4>
+	    <h4 class="text-center text-danger" id="state">&nbsp;</h4>
      	<table class="table table-striped table-condensed table-bordered table-hover">
      		<tr class="text-success">
      			<th width="9%"><h5 class='text-center'>项目</h5></th>

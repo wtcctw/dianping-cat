@@ -13,16 +13,16 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		case CustomDelete:
 		case LIST:
 		case AlertRuleAddSubmit:
+		case AddSubmit:
+		case CustomAddSubmit:
 			return JspFile.VIEW.getPath();
 		case ADD:
-		case AddSubmit:
 			return JspFile.ADD.getPath();
 		case AlertRuleAdd:
 			return JspFile.AlertAdd.getPath();
 		case TagConfig:
 			return JspFile.TAG.getPath();
 		case CustomAdd:
-		case CustomAddSubmit:
 			return JspFile.CustomAdd.getPath();
 		}
 

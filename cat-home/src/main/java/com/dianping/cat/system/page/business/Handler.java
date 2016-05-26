@@ -92,6 +92,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case AddSubmit:
 			updateConfig(model, payload, domain);
+			listConfigs(domain, model);
 			break;
 		case DELETE:
 			String key = payload.getKey();
@@ -125,6 +126,7 @@ public class Handler implements PageHandler<Context> {
 
 			if (config != null) {
 				CustomConfig itemConfig = config.findCustomConfig(payload.getKey());
+				
 				if (itemConfig != null) {
 					model.setCustomConfig(itemConfig);
 				}
@@ -132,6 +134,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case CustomAddSubmit:
 			updateCustomConfig(model, payload, domain);
+			listConfigs(domain, model);
 			break;
 		}
 
@@ -225,7 +228,7 @@ public class Handler implements PageHandler<Context> {
 
 			result = m_configManager.insertBusinessConfigIfNotExist(domain, key, item);
 		}
-		model.setBusinessItemConfig(itemConfig);
+
 		model.setOpState(result);
 	}
 
@@ -245,7 +248,6 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 
-		model.setCustomConfig(itemConfig);
 		model.setOpState(result);
 	}
 

@@ -17,9 +17,7 @@
 	<res:useJs value="${res.js.local['jquery.multiple.select.js']}" target="head-js" />
 	
 		<h4 class="text-success text-center">修改业务监控规则</h4>
-		<h4 class="text-center text-danger" id="state">&nbsp;</h4>
 		<form name="addSubmit" id="form" method="post" action="${model.pageUri}?op=addSubmit&domain=${payload.domain}">
-			<span class="text-center text-danger" id="state">&nbsp;</span>
 			<table class="table table-striped table-condensed  ">
 				<tr>
 					<td width="20%" style="text-align:right"  class="text-success">项目名称</td>
@@ -110,15 +108,6 @@
 		$(document).ready(function(){
 			$('#application_config').addClass('active open');
 			$('#businessConfig').addClass('active');
-			var state = '${model.opState}';
-			if(state=='Success'){
-				$('#state').html('操作成功');
-			}else if(state=='Fail'){
-				$('#state').html('操作失败');
-			}
-			setInterval(function(){
-				$('#state').html('&nbsp;');
-			},3000);
 		})
 	</script>
 </a:config>
